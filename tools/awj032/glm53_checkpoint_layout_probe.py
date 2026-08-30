@@ -209,6 +209,7 @@ def classify_layer_layout(
         expert_keys = sorted(k for k in keys if k.startswith(prefix))
         if expert_keys:
             layout = "CHUNKED_OR_VENDOR_LAYOUT"
+            reasons.append("CHUNK_MAPPING_UNRESOLVED")
         else:
             layout = "PHYSICAL_LAYOUT_UNRESOLVED"
             reasons.append("EXPERT_KEYS_NOT_FOUND")
@@ -277,6 +278,8 @@ def probe_checkpoint(
     ):
         if not isinstance(value, str) or not value.strip():
             raise ProbeError("CURRENTNESS_FIELD_REQUIRED", name)
+    if not isinstance(security_hard_false_remote_code, bool):
+        raise ProbeError("SECURITY_HARD_FALSE_REMOTE_CODE_BOOL_REQUIRED")
 
     layer = classify_layer_layout(
         config, weight_map, layer=representative_sparse_layer, shard_sizes=shard_sizes
@@ -285,6 +288,7 @@ def probe_checkpoint(
     layer_indices = _all_layer_indices(weight_map)
     extra_indices = [idx for idx in layer_indices if idx >= hidden_layers]
     mtp_present = hidden_layers in extra_indices
+    unexpected_extra_indices = [idx for idx in extra_indices if idx != hidden_layers]
 
     blockers: list[str] = []
     if not security_hard_false_remote_code:
@@ -293,21 +297,27 @@ def probe_checkpoint(
         blockers.append("GLM53_EXPERT_PHYSICAL_LAYOUT_UNRESOLVED")
     if layer["layout"] == "PARTIAL_PER_EXPERT_LAYOUT":
         blockers.append("GLM53_EXPERT_PHYSICAL_LAYOUT_PARTIAL")
+    if layer["layout"] == "CHUNKED_OR_VENDOR_LAYOUT":
+        blockers.append("GLM53_CHUNK_MAPPING_REQUIRED")
     if "FP8_SCALE_KEYS_UNRESOLVED" in layer["reasons"]:
         blockers.append("GLM53_FP8_SCALE_LAYOUT_UNRESOLVED")
     if "PACKED_GATE_TENSOR_EXCEEDS_ASSIGNED_SHARD" in layer["reasons"]:
         blockers.append("GLM53_INDEX_GEOMETRY_CONFLICT")
     if mtp_present:
-        # Presence is not itself an error, but it requires an explicit non-decoder
-        # classification because native runtime decoder count is num_hidden_layers.
+        # Layer num_hidden_layers is an extra checkpoint role, not a decoder layer.
+        # Presence requires an explicit typed MTP/non-decoder classification.
         blockers.append("GLM53_MTP_CHECKPOINT_CLASSIFICATION_REQUIRED")
+    if unexpected_extra_indices:
+        blockers.append("GLM53_UNEXPECTED_CHECKPOINT_LAYER_CLASSIFICATION_REQUIRED")
 
     if "AIRLLM_REMOTE_CODE_SECURITY_BLOCK" in blockers:
         status = "BLOCKED_SECURITY"
-    elif any(code.endswith("UNRESOLVED") or code.endswith("PARTIAL") for code in blockers):
-        status = "PARTIAL"
     elif "GLM53_INDEX_GEOMETRY_CONFLICT" in blockers:
         status = "BLOCKED_ARCHITECTURE"
+    elif blockers:
+        # READY is reserved for metadata states with no unresolved required
+        # prerequisite. Typed MTP/chunk/scale/layout work therefore stays PARTIAL.
+        status = "PARTIAL"
     else:
         # Metadata readiness is intentionally below G1 PASS. Numerical tiny-fixture
         # parity and actual header dtypes/shapes are still separately required.
@@ -319,12 +329,13 @@ def probe_checkpoint(
         "config_sha256": config_sha256.strip(),
         "index_sha256": index_sha256.strip(),
         "airllm_revision": airllm_revision.strip(),
-        "security_hard_false_remote_code": bool(security_hard_false_remote_code),
+        "security_hard_false_remote_code": security_hard_false_remote_code,
         "representative_sparse_layer": representative_sparse_layer,
         "layer": layer,
         "num_hidden_layers": hidden_layers,
         "checkpoint_layer_indices": layer_indices,
         "extra_checkpoint_layer_indices": extra_indices,
+        "unexpected_extra_checkpoint_layer_indices": unexpected_extra_indices,
         "mtp_index_present": mtp_present,
         "status": status,
         "blockers": sorted(set(blockers)),
