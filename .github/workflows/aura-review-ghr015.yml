@@ -1,0 +1,31 @@
+name: Aura Review GHR-015 Cache QDKT V2
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_review/aura_review_context_compiler.py'
+      - 'tools/aura_review/test_aura_review_context_compiler.py'
+      - 'tools/aura_review/aura_review_cache_policy.py'
+      - 'tools/aura_review/test_aura_review_cache_policy.py'
+      - '.github/workflows/aura-review-ghr015.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile review context and cache policy
+        run: |
+          python -m py_compile tools/aura_review/aura_review_context_compiler.py
+          python -m py_compile tools/aura_review/aura_review_cache_policy.py
+      - name: Run affected-cone V2 regressions
+        run: python -m unittest tools.aura_review.test_aura_review_context_compiler -v
+      - name: Run GHR-015 cache/QDKT V2 regressions
+        run: python -m unittest tools.aura_review.test_aura_review_cache_policy -v
