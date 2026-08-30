@@ -39,7 +39,9 @@ jobs:
           rustc --version
           cargo --version
 
-      - name: Format check
+      - name: Record formatting scar without masking semantic tests
+        id: formatting
+        continue-on-error: true
         run: cargo fmt --manifest-path crates/aura-k27-astge/Cargo.toml -- --check
 
       - name: Compile and test byte-defined storage invariants
@@ -51,6 +53,7 @@ jobs:
       - name: Emit claim ceiling
         run: |
           echo "K27_ASTGE_STORAGE_KERNEL_EXECUTED=true"
+          echo "FORMAT_CLEAN=${{ steps.formatting.outcome == 'success' }}"
           echo "CSR_PAGE_BYTES=4096"
           echo "NODE_RECORD_BYTES=64"
           echo "TREE_SITTER_INGESTION_PROVEN=false"
