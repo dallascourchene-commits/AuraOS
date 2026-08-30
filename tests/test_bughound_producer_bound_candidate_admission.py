@@ -8,17 +8,22 @@ from tools.bughound.bounty_candidate_admission import (
     IndependentBountyReproductionReceiptV1,
 )
 from tools.bughound.bounty_mission import BugHoundCashMissionInputV1
+from tools.bughound.candidate_evidence_registry import (
+    CandidateEvidenceProducerRecordV1,
+    REGISTRY_GENERATION,
+    candidate_evidence_registry_receipt,
+)
 from tools.bughound.producer_bound_candidate_admission import (
     BugHoundCashCandidateEvidenceBundleV1,
+    _compose_registered_candidate_receipt,
     admit_producer_bound_cash_bounty_candidate_for_human_review,
     producer_bound_admission_parameter_names,
     seal_candidate_evidence_bundle,
+    validate_candidate_evidence_bundle,
 )
 
 
 class ProducerBoundCandidateAdmissionTests(unittest.TestCase):
-    SECRET = b"arena-held-producer-secret"
-
     def mission(self):
         return BugHoundCashMissionInputV1(
             profile_id="BUGHOUND_CASH_BOUNTY_V1",
@@ -64,10 +69,11 @@ class ProducerBoundCandidateAdmissionTests(unittest.TestCase):
             source_currentness_ref="source-v1",
         )
 
-    def bundle(self):
-        return BugHoundCashCandidateEvidenceBundleV1(
+    def bundle(self, **changes):
+        values = dict(
             producer_ref="producer://cash-evidence-registry",
             producer_generation="producer-gen-1",
+            producer_currentness_ref="producer-current-1",
             candidate=self.candidate(),
             independent_reproduction=self.repro(),
             duplicate_pressure_state="LOW_OBSERVED_DUPLICATE_PRESSURE",
@@ -77,23 +83,95 @@ class ProducerBoundCandidateAdmissionTests(unittest.TestCase):
             program_admissibility_state="CURRENTLY_ADMISSIBLE",
             program_admissibility_ref="program-admission-1",
         )
+        values.update(changes)
+        return BugHoundCashCandidateEvidenceBundleV1(**values)
 
-    def admit(self, *, bundle=None, envelope=None, secret=None, ref=None, generation=None):
+    def record(self, bundle=None, **changes):
         bundle = bundle or self.bundle()
-        envelope = envelope or seal_candidate_evidence_bundle(
-            bundle, producer_secret=self.SECRET
+        repro = bundle.independent_reproduction
+        values = dict(
+            producer_ref=bundle.producer_ref,
+            producer_generation=bundle.producer_generation,
+            producer_currentness_ref=bundle.producer_currentness_ref,
+            evidence_bundle_digest=bundle.bundle_digest,
+            target_ref=bundle.candidate.target_ref,
+            target_generation=bundle.candidate.target_generation,
+            scope_rules_digest=repro.scope_rules_digest,
+            source_currentness_ref=repro.source_currentness_ref,
+            independent_reproduction_digest=repro.receipt_digest,
+            duplicate_check_currentness_ref=bundle.duplicate_check_currentness_ref,
+            report_digest=bundle.report_digest,
+            program_admissibility_ref=bundle.program_admissibility_ref,
         )
-        return admit_producer_bound_cash_bounty_candidate_for_human_review(
-            mission_input=self.mission(),
-            evidence_bundle=bundle,
-            producer_envelope=envelope,
-            verifier_held_producer_secret=self.SECRET if secret is None else secret,
-            expected_producer_ref=ref or "producer://cash-evidence-registry",
-            expected_producer_generation=generation or "producer-gen-1",
+        values.update(changes)
+        return CandidateEvidenceProducerRecordV1(**values)
+
+    def validation(self, bundle=None):
+        return validate_candidate_evidence_bundle(
+            mission_input=self.mission(), evidence_bundle=bundle or self.bundle()
         )
 
-    def test_exact_producer_bound_bundle_can_reach_human_review_only(self):
-        receipt = self.admit()
+    def test_production_registry_is_source_owned_empty_hold(self):
+        registry = candidate_evidence_registry_receipt()
+        self.assertEqual("BUGHOUND_CANDIDATE_EVIDENCE_REGISTRY_HOLD_V1", REGISTRY_GENERATION)
+        self.assertEqual(0, registry.active_producer_count)
+        self.assertEqual((), registry.record_digests)
+        self.assertFalse(registry.authority)
+        self.assertFalse(registry.external_effect)
+
+    def test_public_consequence_abi_has_no_caller_trust_root(self):
+        self.assertEqual(
+            {"mission_input", "evidence_bundle"},
+            set(producer_bound_admission_parameter_names()),
+        )
+        for forbidden in (
+            "producer_envelope",
+            "producer_secret",
+            "verifier_held_producer_secret",
+            "expected_producer_ref",
+            "expected_producer_generation",
+            "registry",
+            "registry_record",
+            "trusted",
+            "producer_trust_proven",
+            "independent_reproduction",
+            "duplicate_pressure_state",
+            "report_lint_state",
+            "program_admissibility_state",
+        ):
+            self.assertNotIn(forbidden, producer_bound_admission_parameter_names())
+
+    def test_caller_hmac_is_integrity_only_not_authentication(self):
+        bundle = self.bundle()
+        a = seal_candidate_evidence_bundle(bundle, producer_secret=b"caller-a")
+        b = seal_candidate_evidence_bundle(bundle, producer_secret=b"caller-b")
+        self.assertNotEqual(a.mac_hex, b.mac_hex)
+        self.assertFalse(a.producer_authentication_proven)
+        self.assertFalse(a.authority)
+        self.assertFalse(a.external_effect)
+
+    def test_valid_lower_bundle_is_preserved_but_not_promoted(self):
+        receipt = self.validation()
+        self.assertTrue(receipt.lower_ready_for_human_submission_review)
+        self.assertEqual("READY_FOR_HUMAN_SUBMISSION_REVIEW", receipt.lower_status)
+        self.assertFalse(receipt.candidate_producer_trust_proven)
+        self.assertFalse(receipt.ready_for_human_submission_review)
+        self.assertFalse(receipt.authority)
+        self.assertFalse(receipt.external_effect)
+
+    def test_public_admission_fails_closed_without_source_owned_producer(self):
+        with self.assertRaisesRegex(ValueError, "CANDIDATE_EVIDENCE_PRODUCER_TRUST_UNPROVEN"):
+            admit_producer_bound_cash_bounty_candidate_for_human_review(
+                mission_input=self.mission(), evidence_bundle=self.bundle()
+            )
+
+    def test_private_future_registry_fixture_can_promote_only_exact_lower_result(self):
+        bundle = self.bundle()
+        receipt = _compose_registered_candidate_receipt(
+            validation=self.validation(bundle),
+            evidence_bundle=bundle,
+            record=self.record(bundle),
+        )
         self.assertTrue(receipt.candidate_producer_trust_proven)
         self.assertTrue(receipt.ready_for_human_submission_review)
         self.assertFalse(receipt.live_target_testing_authorized)
@@ -102,95 +180,71 @@ class ProducerBoundCandidateAdmissionTests(unittest.TestCase):
         self.assertFalse(receipt.claim_or_payment_authorized)
         self.assertFalse(receipt.external_effect)
 
-    def test_public_abi_has_no_bare_assertion_leaves(self):
-        names = set(producer_bound_admission_parameter_names())
-        for forbidden in (
-            "duplicate_pressure_state",
-            "report_lint_state",
-            "program_admissibility_state",
-            "independent_reproduction",
-            "expected_independent_reproduction_digest",
-            "benchmark_score",
-            "seeded_true_positive",
-            "adjudication",
-            "oracle",
-            "trusted",
-            "producer_trust_proven",
+    def test_registry_bundle_digest_substitution_fails(self):
+        bundle = self.bundle()
+        with self.assertRaisesRegex(ValueError, "CANDIDATE_EVIDENCE_REGISTRY_BINDING_MISMATCH"):
+            _compose_registered_candidate_receipt(
+                validation=self.validation(bundle),
+                evidence_bundle=bundle,
+                record=self.record(bundle, evidence_bundle_digest="0" * 64),
+            )
+
+    def test_registry_producer_currentness_substitution_fails(self):
+        bundle = self.bundle()
+        with self.assertRaisesRegex(ValueError, "CANDIDATE_EVIDENCE_REGISTRY_BINDING_MISMATCH"):
+            _compose_registered_candidate_receipt(
+                validation=self.validation(bundle),
+                evidence_bundle=bundle,
+                record=self.record(bundle, producer_currentness_ref="stale"),
+            )
+
+    def test_revoked_or_unobserved_registry_record_fails(self):
+        bundle = self.bundle()
+        for changes in (
+            {"revoked": True},
+            {"current": False},
+            {"independently_observed": False},
         ):
-            self.assertNotIn(forbidden, names)
+            with self.subTest(changes=changes):
+                with self.assertRaisesRegex(ValueError, "CANDIDATE_EVIDENCE_REGISTRY_NOT_CURRENT"):
+                    _compose_registered_candidate_receipt(
+                        validation=self.validation(bundle),
+                        evidence_bundle=bundle,
+                        record=self.record(bundle, **changes),
+                    )
 
-    def test_wrong_verifier_secret_fails(self):
-        with self.assertRaisesRegex(ValueError, "PRODUCER_AUTHENTICATION_FAILED"):
-            self.admit(secret=b"wrong")
+    def test_registry_authority_or_effect_widening_fails(self):
+        bundle = self.bundle()
+        for changes in ({"authority": True}, {"external_effect": True}):
+            with self.subTest(changes=changes):
+                with self.assertRaisesRegex(ValueError, "CANDIDATE_EVIDENCE_REGISTRY_AUTHORITY_WIDENED"):
+                    _compose_registered_candidate_receipt(
+                        validation=self.validation(bundle),
+                        evidence_bundle=bundle,
+                        record=self.record(bundle, **changes),
+                    )
 
-    def test_wrong_expected_producer_ref_fails(self):
-        with self.assertRaisesRegex(ValueError, "PRODUCER_REF_MISMATCH"):
-            self.admit(ref="producer://wrong")
+    def test_external_effect_reproduction_fails_before_registry_resolution(self):
+        bundle = self.bundle(
+            independent_reproduction=replace(self.repro(), external_effect=True)
+        )
+        with self.assertRaisesRegex(ValueError, "BOUNTY_REPRODUCTION_EXTERNAL_EFFECT_FORBIDDEN"):
+            self.validation(bundle)
 
-    def test_wrong_expected_producer_generation_fails(self):
-        with self.assertRaisesRegex(ValueError, "PRODUCER_GENERATION_MISMATCH"):
-            self.admit(generation="producer-gen-2")
-
-    def test_tampered_duplicate_state_fails_old_envelope(self):
-        original = self.bundle()
-        envelope = seal_candidate_evidence_bundle(original, producer_secret=self.SECRET)
-        tampered = replace(original, duplicate_pressure_state="LOW_OBSERVED_DUPLICATE_PRESSURE_X")
-        with self.assertRaisesRegex(ValueError, "EVIDENCE_BUNDLE_DIGEST_MISMATCH"):
-            self.admit(bundle=tampered, envelope=envelope)
-
-    def test_tampered_report_lint_fails_old_envelope(self):
-        original = self.bundle()
-        envelope = seal_candidate_evidence_bundle(original, producer_secret=self.SECRET)
-        tampered = replace(original, report_lint_state="REPORT_DRAFT")
-        with self.assertRaisesRegex(ValueError, "EVIDENCE_BUNDLE_DIGEST_MISMATCH"):
-            self.admit(bundle=tampered, envelope=envelope)
-
-    def test_tampered_program_admissibility_fails_old_envelope(self):
-        original = self.bundle()
-        envelope = seal_candidate_evidence_bundle(original, producer_secret=self.SECRET)
-        tampered = replace(original, program_admissibility_state="UNKNOWN")
-        with self.assertRaisesRegex(ValueError, "EVIDENCE_BUNDLE_DIGEST_MISMATCH"):
-            self.admit(bundle=tampered, envelope=envelope)
-
-    def test_tampered_reproduction_fails_old_envelope(self):
-        original = self.bundle()
-        envelope = seal_candidate_evidence_bundle(original, producer_secret=self.SECRET)
-        tampered_repro = replace(original.independent_reproduction, witness_digest="forged")
-        tampered = replace(original, independent_reproduction=tampered_repro)
-        with self.assertRaisesRegex(ValueError, "EVIDENCE_BUNDLE_DIGEST_MISMATCH"):
-            self.admit(bundle=tampered, envelope=envelope)
-
-    def test_freshly_sealed_external_effect_reproduction_still_fails_lower_gate(self):
-        original = self.bundle()
-        bad_repro = replace(original.independent_reproduction, external_effect=True)
-        bad = replace(original, independent_reproduction=bad_repro)
-        envelope = seal_candidate_evidence_bundle(bad, producer_secret=self.SECRET)
-        with self.assertRaisesRegex(ValueError, "REPRODUCTION_EXTERNAL_EFFECT_FORBIDDEN"):
-            self.admit(bundle=bad, envelope=envelope)
-
-    def test_freshly_sealed_public_known_root_still_blocks_candidate(self):
-        original = replace(self.bundle(), duplicate_pressure_state="PUBLICLY_KNOWN_ROOT_CAUSE")
-        envelope = seal_candidate_evidence_bundle(original, producer_secret=self.SECRET)
-        receipt = self.admit(bundle=original, envelope=envelope)
+    def test_public_known_root_stays_blocked_even_with_exact_private_registry_fixture(self):
+        bundle = self.bundle(duplicate_pressure_state="PUBLICLY_KNOWN_ROOT_CAUSE")
+        validation = self.validation(bundle)
+        self.assertFalse(validation.lower_ready_for_human_submission_review)
+        receipt = _compose_registered_candidate_receipt(
+            validation=validation,
+            evidence_bundle=bundle,
+            record=self.record(bundle),
+        )
         self.assertFalse(receipt.ready_for_human_submission_review)
-        self.assertEqual(receipt.status, "BOUNTY_CANDIDATE_BLOCKED")
+        self.assertEqual("BOUNTY_CANDIDATE_BLOCKED", receipt.status)
 
-    def test_envelope_producer_ref_substitution_fails(self):
-        bundle = self.bundle()
-        envelope = seal_candidate_evidence_bundle(bundle, producer_secret=self.SECRET)
-        forged = replace(envelope, producer_ref="producer://other")
-        with self.assertRaisesRegex(ValueError, "ENVELOPE_PRODUCER_REF_MISMATCH"):
-            self.admit(bundle=bundle, envelope=forged)
-
-    def test_envelope_generation_substitution_fails(self):
-        bundle = self.bundle()
-        envelope = seal_candidate_evidence_bundle(bundle, producer_secret=self.SECRET)
-        forged = replace(envelope, producer_generation="producer-gen-other")
-        with self.assertRaisesRegex(ValueError, "ENVELOPE_PRODUCER_GENERATION_MISMATCH"):
-            self.admit(bundle=bundle, envelope=forged)
-
-    def test_receipt_is_deterministic(self):
-        self.assertEqual(self.admit().receipt_digest, self.admit().receipt_digest)
+    def test_validation_digest_is_deterministic(self):
+        self.assertEqual(self.validation().validation_digest, self.validation().validation_digest)
 
 
 if __name__ == "__main__":
