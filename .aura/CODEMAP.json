@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788059096,
+  "generated_at_unix": 1788059184,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1661,
+    "repo_file_count": 1662,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1093,6 +1093,7 @@
       "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
       "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
       "docs/AWJ026_ARENA_TRIAD_ORCHESTRATION_IMPLEMENTATION.md",
+      "docs/AWJ026_OPENCODE_EXECUTE_FIRST.md",
       "docs/BENCHMARKS.md",
       "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
       "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
@@ -1777,12 +1778,12 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1661,
-      "bytes": 26451091,
-      "tokens_est": 6603162,
+      "files": 1662,
+      "bytes": 26475294,
+      "tokens_est": 6609207,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 243,
+        "knowledge_artifact": 244,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1010,
@@ -159497,7 +159498,8 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_CONSTRUCTION_FOUNDRY_DECISION_PR3.md",
       "docs/AURA_PASCAL_SPATIAL_PRESENTATION_PR2.md",
-      "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md"
+      "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
+      "docs/AWJ026_OPENCODE_EXECUTE_FIRST.md"
     ],
     "python -m pip": [
       ".github/workflows/amd-track3.yml",
@@ -159630,6 +159632,7 @@
       "docs/AURA_HUMAN_AGENT_ARENA.md",
       "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
       "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
+      "docs/AWJ026_OPENCODE_EXECUTE_FIRST.md",
       "docs/fragments/USER_GUIDE_REFACTOR_CODE_QUALITY.md"
     ],
     "python aura_codebase_navigator.py": [
@@ -160414,6 +160417,9 @@
     ],
     "python aura_showcase_server.py --demo-project winnipeg_pathways --no-auto-start": [
       "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
+    ],
+    "python -m ruff": [
+      "docs/AWJ026_OPENCODE_EXECUTE_FIRST.md"
     ],
     "python3 scripts/aura_benchmark_suite.py": [
       "docs/BENCHMARKS.md"
@@ -235713,6 +235719,67 @@
       ]
     },
     {
+      "path": "docs/AWJ026_OPENCODE_EXECUTE_FIRST.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 24203,
+      "lines": 636,
+      "tokens_est": 6045,
+      "symbol_count": 0,
+      "commands": [
+        "python -m pytest",
+        "python -m py_compile",
+        "python -m ruff"
+      ],
+      "command_lines": {
+        "python -m pytest": [
+          588
+        ],
+        "python -m py_compile": [
+          589
+        ],
+        "python -m ruff": [
+          590
+        ]
+      },
+      "topology": {},
+      "digest8": "90dc80d1e01e2b6f",
+      "vector": [
+        0.301845,
+        0.119054,
+        0.013228,
+        -0.12627,
+        0.272983,
+        0.061331,
+        0.080572,
+        -0.04209,
+        -0.013228,
+        -0.058926,
+        -0.265768,
+        0.058926,
+        -0.092598,
+        0.133485,
+        0.123865,
+        0.039685,
+        -0.068546,
+        0.169562,
+        0.164752,
+        -0.236906,
+        -0.280199,
+        0.140701,
+        -0.251337,
+        0.179183,
+        0.157537,
+        0.270578,
+        0.253742,
+        -0.229691,
+        0.070952,
+        0.164752,
+        0.285009,
+        0.179183
+      ]
+    },
+    {
       "path": "docs/BENCHMARKS.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -288862,12 +288929,12 @@
     }
   },
   "summary": {
-    "file_count": 1661,
-    "total_bytes": 26451091,
-    "text_tokens_est": 6603162,
+    "file_count": 1662,
+    "total_bytes": 26475294,
+    "text_tokens_est": 6609207,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 243,
+      "knowledge_artifact": 244,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1010,
@@ -289974,6 +290041,7 @@
       "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
       "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
       "docs/AWJ026_ARENA_TRIAD_ORCHESTRATION_IMPLEMENTATION.md",
+      "docs/AWJ026_OPENCODE_EXECUTE_FIRST.md",
       "docs/BENCHMARKS.md",
       "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
       "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
@@ -450263,6 +450331,6 @@
       }
     ],
     "record_fingerprint": "16c6db5851f6c4dbfc53d30b4d1d62ad",
-    "payload_hash": "5594defa919dc2023705da0006a924ca"
+    "payload_hash": "cf24a12595653291226133a2334ff209"
   }
 }

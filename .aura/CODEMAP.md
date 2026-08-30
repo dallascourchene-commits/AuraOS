@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1661
-- **total_bytes**: 26451091
-- **text_tokens_est**: 6603162
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1662
+- **total_bytes**: 26475294
+- **text_tokens_est**: 6609207
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 244, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1661,
+  "repo_file_count": 1662,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1111,6 +1111,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
     "docs/AWJ026_ARENA_TRIAD_ORCHESTRATION_IMPLEMENTATION.md",
+    "docs/AWJ026_OPENCODE_EXECUTE_FIRST.md",
     "docs/BENCHMARKS.md",
     "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
     "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
@@ -1801,12 +1802,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1661,
-  "bytes": 26451091,
-  "tokens_est": 6603162,
+  "files": 1662,
+  "bytes": 26475294,
+  "tokens_est": 6609207,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 243,
+    "knowledge_artifact": 244,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1010,
