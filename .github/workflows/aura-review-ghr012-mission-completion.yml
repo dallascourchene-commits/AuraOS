@@ -1,0 +1,32 @@
+name: Aura Review GHR-012 Mission Completion Firewall
+
+on:
+  pull_request:
+    paths:
+      - "tools/project030/mission_completion_evidence_firewall.py"
+      - "tools/project030/test_mission_completion_evidence_firewall.py"
+      - "tools/project030/aura_arena_workgraph.py"
+      - ".github/workflows/aura-review-ghr012-mission-completion.yml"
+
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile terminal completion membrane and WorkGraph
+        env:
+          PYTHONPATH: tools/project030
+        run: |
+          python -m py_compile tools/project030/mission_completion_evidence_firewall.py
+          python -m py_compile tools/project030/aura_arena_workgraph.py
+      - name: Mission-completion evidence regressions
+        env:
+          PYTHONPATH: tools/project030
+        run: python -m unittest -v tools.project030.test_mission_completion_evidence_firewall
+      - name: Inherited cross-lane harness regressions
+        env:
+          PYTHONPATH: tools/project030
+        run: python -m unittest -v tools.project030.test_creator_studio_harness_integration
