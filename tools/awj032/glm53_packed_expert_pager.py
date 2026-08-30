@@ -12,6 +12,7 @@ from dataclasses import dataclass
 import hashlib
 import json
 import math
+from types import MappingProxyType
 from typing import Any, Mapping, Protocol, Sequence
 
 
@@ -65,16 +66,26 @@ class ExpertSourceBinding:
     def __post_init__(self) -> None:
         if not self.model_revision or not self.index_digest or not self.layer_id:
             raise SourceBindingError("source identity fields must be non-empty")
-        if self.num_experts <= 0:
+        if not isinstance(self.representation, str) or not self.representation:
+            raise SourceBindingError("representation must be a non-empty string")
+        if isinstance(self.num_experts, bool) or not isinstance(self.num_experts, int) or self.num_experts <= 0:
             raise SourceBindingError("num_experts must be positive")
+
+        # Frozen dataclass fields can still retain caller-owned mutable dictionaries.
+        # Copy + freeze them so validation, digest and later reads remain tied to the
+        # exact source map admitted at construction time.
+        tensor_map = dict(self.tensor_map)
+        scale_map = dict(self.scale_map)
         required = {"gate_up", "down"}
-        if set(self.tensor_map) != required:
+        if set(tensor_map) != required:
             raise SourceBindingError(f"tensor_map must contain exactly {sorted(required)}")
-        values = list(self.tensor_map.values()) + list(self.scale_map.values())
+        values = list(tensor_map.values()) + list(scale_map.values())
         if not all(isinstance(v, str) and v for v in values):
             raise SourceBindingError("all tensor keys must be non-empty strings")
         if len(set(values)) != len(values):
             raise SourceBindingError("tensor/scale keys must be unambiguous")
+        object.__setattr__(self, "tensor_map", MappingProxyType(tensor_map))
+        object.__setattr__(self, "scale_map", MappingProxyType(scale_map))
 
     @property
     def digest(self) -> str:
@@ -114,6 +125,8 @@ class PagerReceipt:
     logical_bounded_row_requests: bool
     physical_io_attested: bool
     physical_selected_only: bool | None
+    physical_bytes_read: int | None
+    physical_read_operations: int | None
     whole_tensor_reads: int | None
     whole_bank_materialized: bool | None
     backend_attestation_id: str | None
@@ -170,19 +183,28 @@ def _backend_io_attestation(backend: Any, binding_digest: str) -> dict[str, Any]
         raise SourceBindingError("backend I/O attestation binding mismatch")
     attestation_id = raw.get("attestation_id")
     selected_only = raw.get("physical_selected_only")
+    physical_bytes_read = raw.get("physical_bytes_read")
+    physical_read_operations = raw.get("physical_read_operations")
     whole_bank_reads = raw.get("whole_bank_reads")
     whole_bank_materialized = raw.get("whole_bank_materialized")
     if not isinstance(attestation_id, str) or not attestation_id.strip():
         raise SourceBindingError("backend I/O attestation id required")
     if not isinstance(selected_only, bool):
         raise SourceBindingError("backend physical_selected_only must be bool")
-    if isinstance(whole_bank_reads, bool) or not isinstance(whole_bank_reads, int) or whole_bank_reads < 0:
-        raise SourceBindingError("backend whole_bank_reads must be a nonnegative int")
+    for name, value in (
+        ("physical_bytes_read", physical_bytes_read),
+        ("physical_read_operations", physical_read_operations),
+        ("whole_bank_reads", whole_bank_reads),
+    ):
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            raise SourceBindingError(f"backend {name} must be a nonnegative int")
     if not isinstance(whole_bank_materialized, bool):
         raise SourceBindingError("backend whole_bank_materialized must be bool")
     return {
         "attestation_id": attestation_id.strip(),
         "physical_selected_only": selected_only,
+        "physical_bytes_read": physical_bytes_read,
+        "physical_read_operations": physical_read_operations,
         "whole_bank_reads": whole_bank_reads,
         "whole_bank_materialized": whole_bank_materialized,
     }
@@ -258,7 +280,7 @@ class PackedExpertPager:
         )
         physical = _backend_io_attestation(self.backend, self.binding.digest)
         self._last_receipt = PagerReceipt(
-            schema="AuraPackedExpertPagerReceiptV1",
+            schema="AuraPackedExpertPagerReceiptV2",
             binding_digest=self.binding.digest,
             layer_id=self.binding.layer_id,
             selected_experts=selected,
@@ -267,6 +289,8 @@ class PackedExpertPager:
             logical_bounded_row_requests=True,
             physical_io_attested=physical is not None,
             physical_selected_only=None if physical is None else physical["physical_selected_only"],
+            physical_bytes_read=None if physical is None else physical["physical_bytes_read"],
+            physical_read_operations=None if physical is None else physical["physical_read_operations"],
             whole_tensor_reads=None if physical is None else physical["whole_bank_reads"],
             whole_bank_materialized=None if physical is None else physical["whole_bank_materialized"],
             backend_attestation_id=None if physical is None else physical["attestation_id"],
