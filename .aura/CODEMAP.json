@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788102435,
+  "generated_at_unix": 1788102960,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1642,
+    "repo_file_count": 1644,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1635,7 +1635,9 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project035/artifact_sync_core.py",
+      "tools/project035/cloud_drive_artifact_adapter.py",
       "tools/project035/test_artifact_sync_core.py",
+      "tools/project035/test_cloud_drive_artifact_adapter.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1758,15 +1760,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1642,
-      "bytes": 26442786,
-      "tokens_est": 6601049,
+      "files": 1644,
+      "bytes": 26467727,
+      "tokens_est": 6607285,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
+        "python_module": 1001,
         "schema_or_lexicon": 272,
         "support_file": 49
       }
@@ -3906,6 +3908,14 @@
         "end_line": 56,
         "semantic_id": "tools/project035/artifact_sync_core.py#function:_canonical:a906c84253d481c6",
         "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 44,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:_canonical:982c790b0ecd9ef7",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4355,6 +4365,14 @@
         "line": 59,
         "end_line": 60,
         "semantic_id": "tools/project035/artifact_sync_core.py#function:_digest:8ad93ee33fb266b0",
+        "signature_hash": "9edcae7e502cc579"
+      },
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:_digest:aa4fa6bee83dc361",
         "signature_hash": "9edcae7e502cc579"
       }
     ],
@@ -8086,6 +8104,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 53,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:_sha:d2e452c404a893e7",
+        "signature_hash": "0f41cfb6f6c841de"
       }
     ],
     "_repo": [
@@ -14687,6 +14713,14 @@
         "line": 39,
         "end_line": 43,
         "semantic_id": "tools/project035/artifact_sync_core.py#function:_text:99f4b9ad0f700473",
+        "signature_hash": "a4ea29b9a7789fe0"
+      },
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 38,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:_text:f8bf1f24f45464ed",
         "signature_hash": "a4ea29b9a7789fe0"
       }
     ],
@@ -149818,6 +149852,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_shadow_model_router.py#function:context:5df706d8ad1c9d52",
         "signature_hash": "5aa7478988a5dfbf"
+      },
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 47,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#function:context:19ef845ae52255b4",
+        "signature_hash": "f93bf49a989af09d"
       }
     ],
     "test_store_projects_complete_graph_pinned_candidate": [
@@ -157472,6 +157514,236 @@
         "signature_hash": "002d46d21929a9a6"
       }
     ],
+    "CloudAdapterError": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 32,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:CloudAdapterError:c76c0db71c4965af",
+        "signature_hash": "02035784e20e6fdf"
+      }
+    ],
+    "CloudAdapterError.__init__": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 32,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudAdapterError.__init__:d438f5d4b1bdf84a",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_nni": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 58,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:_nni:3fa5745f529e24e7",
+        "signature_hash": "0fb7c925998c7eb8"
+      }
+    ],
+    "CloudAdapterContextV1": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 80,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:CloudAdapterContextV1:fac93dca36110231",
+        "signature_hash": "59ab939b2cdf15d2"
+      }
+    ],
+    "CloudAdapterContextV1.validate": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 80,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudAdapterContextV1.validate:701f8c1f94215ac8",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "DriveArtifactHydrationV1": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "class",
+        "line": 83,
+        "end_line": 113,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:DriveArtifactHydrationV1:50b4c911696e382e",
+        "signature_hash": "6eb19a3297b222ce"
+      }
+    ],
+    "DriveArtifactHydrationV1.validate": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 113,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:DriveArtifactHydrationV1.validate:c15ef3af5c9f1d9d",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "NormalizedCloudMutationV1": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "class",
+        "line": 116,
+        "end_line": 123,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:NormalizedCloudMutationV1:4330fcb227a65c4e",
+        "signature_hash": "c91bc3c7375e6819"
+      }
+    ],
+    "translate_custodian_event": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 125,
+        "end_line": 145,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:translate_custodian_event:774fe101b3932531",
+        "signature_hash": "ce9b9b416c17559f"
+      }
+    ],
+    "CloudArtifactPublishPlanV1": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "class",
+        "line": 148,
+        "end_line": 171,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:CloudArtifactPublishPlanV1:e358236da32a116d",
+        "signature_hash": "00a2b7acda2dead3"
+      }
+    ],
+    "CloudArtifactPublishPlanV1.logical_payload": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 164,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudArtifactPublishPlanV1.logical_payload:7ea35984cebd971c",
+        "signature_hash": "c612902d452d55c3"
+      }
+    ],
+    "CloudArtifactPublishPlanV1.expected_plan_id": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 165,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudArtifactPublishPlanV1.expected_plan_id:feb8af55ad71720e",
+        "signature_hash": "0bae6b893500ddcb"
+      }
+    ],
+    "CloudArtifactPublishPlanV1.validate": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 171,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudArtifactPublishPlanV1.validate:aeace97d0d2a26d6",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "prepare_cloud_publish_plan": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 173,
+        "end_line": 179,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:prepare_cloud_publish_plan:e73d5b727497d185",
+        "signature_hash": "573cb225b5798bbb"
+      }
+    ],
+    "CloudArtifactEffectAdmissionV1": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "class",
+        "line": 182,
+        "end_line": 201,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:CloudArtifactEffectAdmissionV1:dde1447cc9caa4c1",
+        "signature_hash": "d2bcd93394e7db94"
+      }
+    ],
+    "CloudArtifactEffectAdmissionV1.validate_for": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 190,
+        "end_line": 201,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudArtifactEffectAdmissionV1.validate_for:3bdc5ac21e32fd02",
+        "signature_hash": "1a78391b9f690270"
+      }
+    ],
+    "admission_binding_digest": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 203,
+        "end_line": 204,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:admission_binding_digest:0aba93cfc35aab9d",
+        "signature_hash": "215318b36cd56e0f"
+      }
+    ],
+    "prepare_effect_handoff": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 206,
+        "end_line": 208,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:prepare_effect_handoff:bbde818a214e8ae8",
+        "signature_hash": "974233e2ac9e64cd"
+      }
+    ],
+    "CloudWriteEffectReceiptV1": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "class",
+        "line": 211,
+        "end_line": 227,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:CloudWriteEffectReceiptV1:a1d43f86f7f03ddc",
+        "signature_hash": "9eeb9eac81b5f8ce"
+      }
+    ],
+    "CloudWriteEffectReceiptV1.validate_for": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 220,
+        "end_line": 227,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudWriteEffectReceiptV1.validate_for:2b1828b67b8f5006",
+        "signature_hash": "8254d00547264af0"
+      }
+    ],
+    "CloudReadbackV1": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "class",
+        "line": 230,
+        "end_line": 236,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:CloudReadbackV1:8395b649fd148a50",
+        "signature_hash": "be84c059183dfe3a"
+      }
+    ],
+    "CloudReadbackV1.validate": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 235,
+        "end_line": 236,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudReadbackV1.validate:a571915c63df1da2",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "verify_cloud_write": [
+      {
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 238,
+        "end_line": 244,
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:verify_cloud_write:cb5ee65cc39392f3",
+        "signature_hash": "0685459822501f13"
+      }
+    ],
     "ArtifactMutationTests": [
       {
         "file": "tools/project035/test_artifact_sync_core.py",
@@ -157750,6 +158022,216 @@
         "end_line": 255,
         "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_out_of_order_samples_fail_closed:dcd96aa9fafd5f04",
         "signature_hash": "ecd42e0c44aefe7a"
+      }
+    ],
+    "Envelope": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 30,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#class:Envelope:7b73a3ae5f885784",
+        "signature_hash": "e9d0ca65a49d0ceb"
+      }
+    ],
+    "Envelope.event_key": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:Envelope.event_key:d40a5ccf6055f43f",
+        "signature_hash": "cf1695c4d34d7657"
+      }
+    ],
+    "hydration": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 63,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#function:hydration:231288a981820fb3",
+        "signature_hash": "b3ac8d0f0cc58af6"
+      }
+    ],
+    "normalized": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#function:normalized:feb7314404adf2b8",
+        "signature_hash": "1c509716977ca27c"
+      }
+    ],
+    "plan": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 75,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#function:plan:8bc1c84503a02468",
+        "signature_hash": "530bc96a57af43d4"
+      }
+    ],
+    "admission": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 89,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#function:admission:0bb4729daf9f9a4e",
+        "signature_hash": "0ff4b7f2c449ba1c"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "class",
+        "line": 92,
+        "end_line": 227,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#class:CloudDriveArtifactAdapterTests:76dbeaa4f025f8b0",
+        "signature_hash": "7f4244a6d49ac46c"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_translation_requires_durable_claim_and_preserves_nonexecution": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 98,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_translation_requires_durable_claim_and_preserves_nonexecution:2b9c45237c904b7b",
+        "signature_hash": "7eb156c1854ac0d8"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_observation_clock_does_not_change_logical_event_identity": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 109,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_observation_clock_does_not_change_logical_event_identity:f55798226fe4f100",
+        "signature_hash": "4f9c487926604937"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_observation_clock_does_not_change_logical_event_identity.LaterEnvelope": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "class",
+        "line": 103,
+        "end_line": 104,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#class:CloudDriveArtifactAdapterTests.test_observation_clock_does_not_change_logical_event_identity.LaterEnvelope:f339412c04524324",
+        "signature_hash": "123ce5b686cacba9"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_pending_intake_is_rejected": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 115,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_pending_intake_is_rejected:21f8e91d5740bcb0",
+        "signature_hash": "8113d6eb0c90174d"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_stale_currentness_rebases_before_hydration_translation": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 121,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_stale_currentness_rebases_before_hydration_translation:8d946d083c1d0dde",
+        "signature_hash": "6b8e8c117ed1e79c"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_hydration_currentness_must_match_context": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 129,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_hydration_currentness_must_match_context:280a053de25c96f6",
+        "signature_hash": "61745eb4cc0fc59f"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_delete_requires_prior_lineage": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 138,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_delete_requires_prior_lineage:bd7a98f2792fcbc7",
+        "signature_hash": "ea9098e7dd07c614"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_publish_plan_is_coordination_only_and_fenced": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 144,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_publish_plan_is_coordination_only_and_fenced:d818fcbc562f93dc",
+        "signature_hash": "bc3c70037f574678"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_reverse_mirror_bounce_is_suppressed": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 160,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_reverse_mirror_bounce_is_suppressed:12b4505b4128ff9b",
+        "signature_hash": "d92c16db475e6497"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_effect_admission_binds_exact_plan_but_does_not_prove_runtime": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 162,
+        "end_line": 167,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_effect_admission_binds_exact_plan_but_does_not_prove_runtime:2b655be83951e86f",
+        "signature_hash": "0b7af72ac959f4b6"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_effect_admission_cannot_widen_zero_provider_cost": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 172,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_effect_admission_cannot_widen_zero_provider_cost:abf0e92e9a3fda4e",
+        "signature_hash": "45d42d48484d0c3a"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_effect_receipt_must_match_cas_prior_revision": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 188,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_effect_receipt_must_match_cas_prior_revision:d87c6b4c3dceb915",
+        "signature_hash": "4a9c40d530b48c49"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_verified_readback_is_evidence_for_as06_not_as06_completion": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 190,
+        "end_line": 210,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_verified_readback_is_evidence_for_as06_not_as06_completion:30d94a04f42cb9d2",
+        "signature_hash": "40cd12d1ca9ac16f"
+      }
+    ],
+    "CloudDriveArtifactAdapterTests.test_landed_hash_mismatch_fails_closed": [
+      {
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "kind": "method",
+        "line": 212,
+        "end_line": 227,
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_landed_hash_mismatch_fails_closed:c3fe1495fd6e1326",
+        "signature_hash": "0c677e0bd2e1e50e"
       }
     ],
     "_coordinates": [
@@ -263419,6 +263901,53 @@
       ]
     },
     {
+      "path": "tools/project035/cloud_drive_artifact_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 17069,
+      "lines": 245,
+      "tokens_est": 4268,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3a984b607d0338a7",
+      "vector": [
+        -0.143574,
+        -0.001293,
+        0.125466,
+        0.009054,
+        -0.272921,
+        0.011641,
+        0.042684,
+        0.161683,
+        -0.252225,
+        -0.032337,
+        -0.322072,
+        -0.00388,
+        -0.055619,
+        -0.068554,
+        -0.050445,
+        0.252225,
+        0.021989,
+        -0.288442,
+        0.169444,
+        0.301377,
+        0.205661,
+        0.327246,
+        -0.143574,
+        0.327246,
+        -0.089249,
+        0.091836,
+        -0.218595,
+        0.094423,
+        0.042684,
+        0.021989,
+        0.135814,
+        -0.210834
+      ]
+    },
+    {
       "path": "tools/project035/test_artifact_sync_core.py",
       "role": "python_module",
       "binary": false,
@@ -263463,6 +263992,53 @@
         -0.194006,
         0.244072,
         0.276615
+      ]
+    },
+    {
+      "path": "tools/project035/test_cloud_drive_artifact_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7872,
+      "lines": 232,
+      "tokens_est": 1968,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ab60627384fc1ee5",
+      "vector": [
+        -0.241718,
+        0.293599,
+        -0.114374,
+        0.201629,
+        0.284167,
+        -0.024761,
+        -0.232285,
+        0.041269,
+        -0.074284,
+        -0.227569,
+        0.17333,
+        0.13324,
+        -0.215778,
+        -0.220494,
+        -0.057777,
+        0.220494,
+        0.123807,
+        -0.137956,
+        0.123807,
+        -0.043627,
+        0.083717,
+        -0.036553,
+        0.01297,
+        -0.045985,
+        -0.01297,
+        -0.270017,
+        0.237002,
+        -0.234644,
+        0.079001,
+        -0.218136,
+        -0.215778,
+        -0.255868
       ]
     },
     {
@@ -287370,15 +287946,15 @@
     }
   },
   "summary": {
-    "file_count": 1642,
-    "total_bytes": 26442786,
-    "text_tokens_est": 6601049,
+    "file_count": 1644,
+    "total_bytes": 26467727,
+    "text_tokens_est": 6607285,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
+      "python_module": 1001,
       "schema_or_lexicon": 272,
       "support_file": 49
     },
@@ -289024,7 +289600,9 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project035/artifact_sync_core.py",
+      "tools/project035/cloud_drive_artifact_adapter.py",
       "tools/project035/test_artifact_sync_core.py",
+      "tools/project035/test_cloud_drive_artifact_adapter.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -446651,6 +447229,276 @@
         "file_digest8": "5647e9c40777fafa"
       },
       {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:CloudAdapterContextV1:fac93dca36110231",
+        "name": "CloudAdapterContextV1",
+        "kind": "class",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 61,
+        "end_line": 80,
+        "signature_hash": "59ab939b2cdf15d2",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:CloudAdapterError:c76c0db71c4965af",
+        "name": "CloudAdapterError",
+        "kind": "class",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 28,
+        "end_line": 32,
+        "signature_hash": "02035784e20e6fdf",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:CloudArtifactEffectAdmissionV1:dde1447cc9caa4c1",
+        "name": "CloudArtifactEffectAdmissionV1",
+        "kind": "class",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 182,
+        "end_line": 201,
+        "signature_hash": "d2bcd93394e7db94",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:CloudArtifactPublishPlanV1:e358236da32a116d",
+        "name": "CloudArtifactPublishPlanV1",
+        "kind": "class",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 148,
+        "end_line": 171,
+        "signature_hash": "00a2b7acda2dead3",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:CloudReadbackV1:8395b649fd148a50",
+        "name": "CloudReadbackV1",
+        "kind": "class",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 230,
+        "end_line": 236,
+        "signature_hash": "be84c059183dfe3a",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:CloudWriteEffectReceiptV1:a1d43f86f7f03ddc",
+        "name": "CloudWriteEffectReceiptV1",
+        "kind": "class",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 211,
+        "end_line": 227,
+        "signature_hash": "9eeb9eac81b5f8ce",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:DriveArtifactHydrationV1:50b4c911696e382e",
+        "name": "DriveArtifactHydrationV1",
+        "kind": "class",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 83,
+        "end_line": 113,
+        "signature_hash": "6eb19a3297b222ce",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#class:NormalizedCloudMutationV1:4330fcb227a65c4e",
+        "name": "NormalizedCloudMutationV1",
+        "kind": "class",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 116,
+        "end_line": 123,
+        "signature_hash": "c91bc3c7375e6819",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:_canonical:982c790b0ecd9ef7",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 40,
+        "end_line": 44,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:_digest:aa4fa6bee83dc361",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "9edcae7e502cc579",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:_nni:3fa5745f529e24e7",
+        "name": "_nni",
+        "kind": "function",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 55,
+        "end_line": 58,
+        "signature_hash": "0fb7c925998c7eb8",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:_sha:d2e452c404a893e7",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 49,
+        "end_line": 53,
+        "signature_hash": "0f41cfb6f6c841de",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:_text:f8bf1f24f45464ed",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 34,
+        "end_line": 38,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:admission_binding_digest:0aba93cfc35aab9d",
+        "name": "admission_binding_digest",
+        "kind": "function",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 203,
+        "end_line": 204,
+        "signature_hash": "215318b36cd56e0f",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:prepare_cloud_publish_plan:e73d5b727497d185",
+        "name": "prepare_cloud_publish_plan",
+        "kind": "function",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 173,
+        "end_line": 179,
+        "signature_hash": "573cb225b5798bbb",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:prepare_effect_handoff:bbde818a214e8ae8",
+        "name": "prepare_effect_handoff",
+        "kind": "function",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 206,
+        "end_line": 208,
+        "signature_hash": "974233e2ac9e64cd",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:translate_custodian_event:774fe101b3932531",
+        "name": "translate_custodian_event",
+        "kind": "function",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 125,
+        "end_line": 145,
+        "signature_hash": "ce9b9b416c17559f",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#function:verify_cloud_write:cb5ee65cc39392f3",
+        "name": "verify_cloud_write",
+        "kind": "function",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 238,
+        "end_line": 244,
+        "signature_hash": "0685459822501f13",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudAdapterContextV1.validate:701f8c1f94215ac8",
+        "name": "CloudAdapterContextV1.validate",
+        "kind": "method",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 73,
+        "end_line": 80,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudAdapterError.__init__:d438f5d4b1bdf84a",
+        "name": "CloudAdapterError.__init__",
+        "kind": "method",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 29,
+        "end_line": 32,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudArtifactEffectAdmissionV1.validate_for:3bdc5ac21e32fd02",
+        "name": "CloudArtifactEffectAdmissionV1.validate_for",
+        "kind": "method",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 190,
+        "end_line": 201,
+        "signature_hash": "1a78391b9f690270",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudArtifactPublishPlanV1.expected_plan_id:feb8af55ad71720e",
+        "name": "CloudArtifactPublishPlanV1.expected_plan_id",
+        "kind": "method",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 165,
+        "end_line": 165,
+        "signature_hash": "0bae6b893500ddcb",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudArtifactPublishPlanV1.logical_payload:7ea35984cebd971c",
+        "name": "CloudArtifactPublishPlanV1.logical_payload",
+        "kind": "method",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 163,
+        "end_line": 164,
+        "signature_hash": "c612902d452d55c3",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudArtifactPublishPlanV1.validate:aeace97d0d2a26d6",
+        "name": "CloudArtifactPublishPlanV1.validate",
+        "kind": "method",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 166,
+        "end_line": 171,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudReadbackV1.validate:a571915c63df1da2",
+        "name": "CloudReadbackV1.validate",
+        "kind": "method",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 235,
+        "end_line": 236,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:CloudWriteEffectReceiptV1.validate_for:2b1828b67b8f5006",
+        "name": "CloudWriteEffectReceiptV1.validate_for",
+        "kind": "method",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 220,
+        "end_line": 227,
+        "signature_hash": "8254d00547264af0",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
+        "semantic_id": "tools/project035/cloud_drive_artifact_adapter.py#method:DriveArtifactHydrationV1.validate:c15ef3af5c9f1d9d",
+        "name": "DriveArtifactHydrationV1.validate",
+        "kind": "method",
+        "file": "tools/project035/cloud_drive_artifact_adapter.py",
+        "line": 99,
+        "end_line": 113,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "3a984b607d0338a7"
+      },
+      {
         "semantic_id": "tools/project035/test_artifact_sync_core.py#class:ArtifactIdentityTests:804dd38bfb514116",
         "name": "ArtifactIdentityTests",
         "kind": "class",
@@ -446939,6 +447787,226 @@
         "end_line": 227,
         "signature_hash": "55fe1190dd30cbae",
         "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#class:CloudDriveArtifactAdapterTests.test_observation_clock_does_not_change_logical_event_identity.LaterEnvelope:f339412c04524324",
+        "name": "CloudDriveArtifactAdapterTests.test_observation_clock_does_not_change_logical_event_identity.LaterEnvelope",
+        "kind": "class",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 103,
+        "end_line": 104,
+        "signature_hash": "123ce5b686cacba9",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#class:CloudDriveArtifactAdapterTests:76dbeaa4f025f8b0",
+        "name": "CloudDriveArtifactAdapterTests",
+        "kind": "class",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 92,
+        "end_line": 227,
+        "signature_hash": "7f4244a6d49ac46c",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#class:Envelope:7b73a3ae5f885784",
+        "name": "Envelope",
+        "kind": "class",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 21,
+        "end_line": 30,
+        "signature_hash": "e9d0ca65a49d0ceb",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#function:admission:0bb4729daf9f9a4e",
+        "name": "admission",
+        "kind": "function",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 78,
+        "end_line": 89,
+        "signature_hash": "0ff4b7f2c449ba1c",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#function:context:19ef845ae52255b4",
+        "name": "context",
+        "kind": "function",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 33,
+        "end_line": 47,
+        "signature_hash": "f93bf49a989af09d",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#function:hydration:231288a981820fb3",
+        "name": "hydration",
+        "kind": "function",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 50,
+        "end_line": 63,
+        "signature_hash": "b3ac8d0f0cc58af6",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#function:normalized:feb7314404adf2b8",
+        "name": "normalized",
+        "kind": "function",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 66,
+        "end_line": 67,
+        "signature_hash": "1c509716977ca27c",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#function:plan:8bc1c84503a02468",
+        "name": "plan",
+        "kind": "function",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 70,
+        "end_line": 75,
+        "signature_hash": "530bc96a57af43d4",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_delete_requires_prior_lineage:bd7a98f2792fcbc7",
+        "name": "CloudDriveArtifactAdapterTests.test_delete_requires_prior_lineage",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 131,
+        "end_line": 138,
+        "signature_hash": "ea9098e7dd07c614",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_effect_admission_binds_exact_plan_but_does_not_prove_runtime:2b655be83951e86f",
+        "name": "CloudDriveArtifactAdapterTests.test_effect_admission_binds_exact_plan_but_does_not_prove_runtime",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 162,
+        "end_line": 167,
+        "signature_hash": "0b7af72ac959f4b6",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_effect_admission_cannot_widen_zero_provider_cost:abf0e92e9a3fda4e",
+        "name": "CloudDriveArtifactAdapterTests.test_effect_admission_cannot_widen_zero_provider_cost",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 169,
+        "end_line": 172,
+        "signature_hash": "45d42d48484d0c3a",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_effect_receipt_must_match_cas_prior_revision:d87c6b4c3dceb915",
+        "name": "CloudDriveArtifactAdapterTests.test_effect_receipt_must_match_cas_prior_revision",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 174,
+        "end_line": 188,
+        "signature_hash": "4a9c40d530b48c49",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_hydration_currentness_must_match_context:280a053de25c96f6",
+        "name": "CloudDriveArtifactAdapterTests.test_hydration_currentness_must_match_context",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 123,
+        "end_line": 129,
+        "signature_hash": "61745eb4cc0fc59f",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_landed_hash_mismatch_fails_closed:c3fe1495fd6e1326",
+        "name": "CloudDriveArtifactAdapterTests.test_landed_hash_mismatch_fails_closed",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 212,
+        "end_line": 227,
+        "signature_hash": "0c677e0bd2e1e50e",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_observation_clock_does_not_change_logical_event_identity:f55798226fe4f100",
+        "name": "CloudDriveArtifactAdapterTests.test_observation_clock_does_not_change_logical_event_identity",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 100,
+        "end_line": 109,
+        "signature_hash": "4f9c487926604937",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_pending_intake_is_rejected:21f8e91d5740bcb0",
+        "name": "CloudDriveArtifactAdapterTests.test_pending_intake_is_rejected",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 111,
+        "end_line": 115,
+        "signature_hash": "8113d6eb0c90174d",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_publish_plan_is_coordination_only_and_fenced:d818fcbc562f93dc",
+        "name": "CloudDriveArtifactAdapterTests.test_publish_plan_is_coordination_only_and_fenced",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 140,
+        "end_line": 144,
+        "signature_hash": "bc3c70037f574678",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_reverse_mirror_bounce_is_suppressed:12b4505b4128ff9b",
+        "name": "CloudDriveArtifactAdapterTests.test_reverse_mirror_bounce_is_suppressed",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 146,
+        "end_line": 160,
+        "signature_hash": "d92c16db475e6497",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_stale_currentness_rebases_before_hydration_translation:8d946d083c1d0dde",
+        "name": "CloudDriveArtifactAdapterTests.test_stale_currentness_rebases_before_hydration_translation",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 117,
+        "end_line": 121,
+        "signature_hash": "6b8e8c117ed1e79c",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_translation_requires_durable_claim_and_preserves_nonexecution:2b9c45237c904b7b",
+        "name": "CloudDriveArtifactAdapterTests.test_translation_requires_durable_claim_and_preserves_nonexecution",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 93,
+        "end_line": 98,
+        "signature_hash": "7eb156c1854ac0d8",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:CloudDriveArtifactAdapterTests.test_verified_readback_is_evidence_for_as06_not_as06_completion:30d94a04f42cb9d2",
+        "name": "CloudDriveArtifactAdapterTests.test_verified_readback_is_evidence_for_as06_not_as06_completion",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 190,
+        "end_line": 210,
+        "signature_hash": "40cd12d1ca9ac16f",
+        "file_digest8": "ab60627384fc1ee5"
+      },
+      {
+        "semantic_id": "tools/project035/test_cloud_drive_artifact_adapter.py#method:Envelope.event_key:d40a5ccf6055f43f",
+        "name": "Envelope.event_key",
+        "kind": "method",
+        "file": "tools/project035/test_cloud_drive_artifact_adapter.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "cf1695c4d34d7657",
+        "file_digest8": "ab60627384fc1ee5"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -448191,7 +449259,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "dabc56c2b9e1d07d1a3322658e6bd71a",
-    "payload_hash": "c05526179f6cf1b3712cbf12fad080ff"
+    "record_fingerprint": "ac49dc57451f2f1892f72f35a5b62e87",
+    "payload_hash": "00f1d85a401fb802ecd40abc18f253b4"
   }
 }
