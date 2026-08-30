@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1644
-- **total_bytes**: 26468520
-- **text_tokens_est**: 6607483
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1001, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1645
+- **total_bytes**: 26473649
+- **text_tokens_est**: 6608766
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1001, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1644,
+  "repo_file_count": 1645,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -165,6 +165,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/coderabbit-waboose-learning.yml",
     ".github/workflows/construction-demo-asset-foundation.yml",
     ".github/workflows/cs-arena-sync-as02-c0.yml",
+    ".github/workflows/cs-arena-sync-as04.yml",
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
@@ -1784,16 +1785,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1644,
-  "bytes": 26468520,
-  "tokens_est": 6607483,
+  "files": 1645,
+  "bytes": 26473649,
+  "tokens_est": 6608766,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1001,
-    "schema_or_lexicon": 272,
+    "schema_or_lexicon": 273,
     "support_file": 49
   }
 }
