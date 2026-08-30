@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788114215,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -132,6 +132,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf10-economics.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1175,6 +1176,7 @@
       "requirements-amd-track3.txt",
       "requirements-spatial-s4b.txt",
       "requirements.txt",
+      "schemas/adoption_economics_receipt_v1.schema.json",
       "schemas/aura_coding_relationship_compass.schema.json",
       "schemas/aura_coding_waboose_contract.schema.json",
       "schemas/aura_compass_act_capsule.schema.json",
@@ -1631,6 +1633,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/adoption_economics.py",
+      "tools/aura_adopt/test_adoption_economics.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1643,
+      "bytes": 26481362,
+      "tokens_est": 6610693,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -3895,6 +3899,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 98,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_canonical:8c5df9661a144703",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4337,6 +4349,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 102,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_digest:bc21a6e1f7e00121",
+        "signature_hash": "9edcae7e502cc579"
       }
     ],
     "_token_proxy": [
@@ -14653,6 +14673,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 105,
+        "end_line": 108,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_text:4030e3e28ebb1578",
+        "signature_hash": "a4ea29b9a7789fe0"
       }
     ],
     "_bounded": [
@@ -27173,6 +27201,14 @@
         "end_line": 327,
         "semantic_id": "aura_st3gg_contracts.py#function:_ratio:260062431e85bf37",
         "signature_hash": "87bbd30c6a8d8629"
+      },
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 594,
+        "end_line": 597,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_ratio:34dc0ec7d45a849b",
+        "signature_hash": "2f2328429813484d"
       }
     ],
     "CodeMapFileHandler": [
@@ -48427,6 +48463,14 @@
         "end_line": 117,
         "semantic_id": "aura_financial_contracts.py#function:_currency:8bbab7fdc55bcf65",
         "signature_hash": "7db68f7132c4191e"
+      },
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 127,
+        "end_line": 131,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_currency:06a5dc6643eebf37",
+        "signature_hash": "29e630f32fc31b6d"
       }
     ],
     "_decimal": [
@@ -157181,6 +157225,976 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "EconomicsError": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 27,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:EconomicsError:3e2b0a863802d45e",
+        "signature_hash": "ab690f98709c6da1"
+      }
+    ],
+    "EconomicsError.__init__": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 27,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:EconomicsError.__init__:cdbd51371137b67f",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "ObservationStatus": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:ObservationStatus:0865e2b1ffd3f87e",
+        "signature_hash": "a017e9d4715cd522"
+      }
+    ],
+    "MoneyEvidenceClass": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 36,
+        "end_line": 42,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:MoneyEvidenceClass:e5a6e0e32697e86c",
+        "signature_hash": "3176c46ff2b7d72a"
+      }
+    ],
+    "AcceptedValueEvidenceClass": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 49,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:AcceptedValueEvidenceClass:519b0450795957fc",
+        "signature_hash": "ec0c0d5f6a9b02ae"
+      }
+    ],
+    "CostKind": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 52,
+        "end_line": 59,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:CostKind:b7e627790b780b03",
+        "signature_hash": "4f0dc91292404bcd"
+      }
+    ],
+    "ReuseKind": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 62,
+        "end_line": 67,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:ReuseKind:7f6cc6b8869afa55",
+        "signature_hash": "90670b49f86ba372"
+      }
+    ],
+    "_nn_int": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 111,
+        "end_line": 116,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_nn_int:0d74121ea8224261",
+        "signature_hash": "75726b9c44e6a1c0"
+      }
+    ],
+    "_bool_or_none": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 119,
+        "end_line": 124,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_bool_or_none:ba01dc8dd4cd9fdc",
+        "signature_hash": "ce21e7f9b1fc4e05"
+      }
+    ],
+    "_principal": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 134,
+        "end_line": 141,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_principal:b57c097840fa5e9a",
+        "signature_hash": "fc08e89f3fbf62a6"
+      }
+    ],
+    "_normalize_cohort": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 144,
+        "end_line": 156,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_normalize_cohort:d9ea090d750da58d",
+        "signature_hash": "07c7e5528b48e6fc"
+      }
+    ],
+    "ExactMicrounitRatio": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 160,
+        "end_line": 196,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:ExactMicrounitRatio:6df58b1010c41611",
+        "signature_hash": "5a346e13435c074a"
+      }
+    ],
+    "ExactMicrounitRatio.__post_init__": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 171,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ExactMicrounitRatio.__post_init__:e3fc94fe7858b7b1",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ExactMicrounitRatio.logical": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 173,
+        "end_line": 174,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ExactMicrounitRatio.logical:799aafa9f7d0e4a2",
+        "signature_hash": "c2240ab695f360e8"
+      }
+    ],
+    "ExactMicrounitRatio.compare_to_integer_ceiling": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 180,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ExactMicrounitRatio.compare_to_integer_ceiling:c03cc863a399d4ee",
+        "signature_hash": "1ff60b16469d84a1"
+      }
+    ],
+    "ExactMicrounitRatio.compare": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 187,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ExactMicrounitRatio.compare:11c0b01c998046f8",
+        "signature_hash": "18bd37598e82dbb5"
+      }
+    ],
+    "ExactMicrounitRatio.subtract": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 189,
+        "end_line": 196,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ExactMicrounitRatio.subtract:50c8e57b2ac9cf58",
+        "signature_hash": "1ec80fed2b5f40e1"
+      }
+    ],
+    "SignedExactRatio": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 200,
+        "end_line": 214,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:SignedExactRatio:03be092d84cf3649",
+        "signature_hash": "de26565944bbbd72"
+      }
+    ],
+    "SignedExactRatio.__post_init__": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 211,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:SignedExactRatio.__post_init__:e46b90e2a09405a8",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "SignedExactRatio.logical": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 214,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:SignedExactRatio.logical:3b4cede7c38754c9",
+        "signature_hash": "c2240ab695f360e8"
+      }
+    ],
+    "EvidenceBinding": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 218,
+        "end_line": 236,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:EvidenceBinding:f7ae9033af131396",
+        "signature_hash": "94aae0bda74bb53a"
+      }
+    ],
+    "EvidenceBinding.__post_init__": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 225,
+        "end_line": 233,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:EvidenceBinding.__post_init__:2cdb76e8ca13990f",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EvidenceBinding.logical": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 235,
+        "end_line": 236,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:EvidenceBinding.logical:4a3c7c45e0ad4565",
+        "signature_hash": "c2240ab695f360e8"
+      }
+    ],
+    "CostObservation": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 240,
+        "end_line": 296,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:CostObservation:db30a3c3fe4535d7",
+        "signature_hash": "7e964fdc624c022f"
+      }
+    ],
+    "CostObservation.__post_init__": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 254,
+        "end_line": 291,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:CostObservation.__post_init__:8c5b1eca110a8027",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CostObservation.logical": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 293,
+        "end_line": 296,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:CostObservation.logical:0f217c449cebdf59",
+        "signature_hash": "c2240ab695f360e8"
+      }
+    ],
+    "AcceptedValueEvidence": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 300,
+        "end_line": 331,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:AcceptedValueEvidence:a2952671fae6af41",
+        "signature_hash": "133751b94e0e79a5"
+      }
+    ],
+    "AcceptedValueEvidence.__post_init__": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 308,
+        "end_line": 322,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:AcceptedValueEvidence.__post_init__:8e2c9a413d20e819",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "AcceptedValueEvidence.is_user_evidence": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 325,
+        "end_line": 326,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:AcceptedValueEvidence.is_user_evidence:2671f3ec1a46badd",
+        "signature_hash": "224ef75562cf263b"
+      }
+    ],
+    "AcceptedValueEvidence.logical": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 328,
+        "end_line": 331,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:AcceptedValueEvidence.logical:31961dfa8353875b",
+        "signature_hash": "c2240ab695f360e8"
+      }
+    ],
+    "ReuseEvidence": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 335,
+        "end_line": 390,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:ReuseEvidence:0c013bdb5a746026",
+        "signature_hash": "35053b060a988771"
+      }
+    ],
+    "ReuseEvidence.__post_init__": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 354,
+        "end_line": 385,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ReuseEvidence.__post_init__:dcd723b3dc5df026",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ReuseEvidence.logical": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 387,
+        "end_line": 390,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ReuseEvidence.logical:757a469b59ddc01a",
+        "signature_hash": "c2240ab695f360e8"
+      }
+    ],
+    "AdoptionEconomicsReceipt": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 394,
+        "end_line": 456,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:AdoptionEconomicsReceipt:6e2f9080372f570e",
+        "signature_hash": "e5a9a798cd32f3e2"
+      }
+    ],
+    "AdoptionEconomicsReceipt.to_dict": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "method",
+        "line": 425,
+        "end_line": 456,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:AdoptionEconomicsReceipt.to_dict:68ca94079b7c6781",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "AdoptionEconomicsAdmission": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 460,
+        "end_line": 471,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:AdoptionEconomicsAdmission:46014ca7644a3a99",
+        "signature_hash": "0796d88a0cbcc6bd"
+      }
+    ],
+    "AdoptionEconomicsComparison": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "class",
+        "line": 475,
+        "end_line": 487,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:AdoptionEconomicsComparison:f9200278bcb4faa7",
+        "signature_hash": "785e27171b4bd7f1"
+      }
+    ],
+    "_normalize_evidence": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 490,
+        "end_line": 502,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_normalize_evidence:4abff4308fad5efd",
+        "signature_hash": "edb84a3e69c24441"
+      }
+    ],
+    "_normalize_costs": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 505,
+        "end_line": 516,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_normalize_costs:26dab576851ee8d4",
+        "signature_hash": "8006091d96657d43"
+      }
+    ],
+    "_normalize_reuse": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 519,
+        "end_line": 536,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_normalize_reuse:fb1e426bc481c5a6",
+        "signature_hash": "43fec2f3b151cc93"
+      }
+    ],
+    "_lifecycle_total": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 539,
+        "end_line": 563,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_lifecycle_total:883e5fcda15754c5",
+        "signature_hash": "795efa95c667bb45"
+      }
+    ],
+    "_validated_reuse_money": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 566,
+        "end_line": 591,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_validated_reuse_money:7b6f41dc81613827",
+        "signature_hash": "19f3fa6dff5e4396"
+      }
+    ],
+    "build_economics_receipt": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 600,
+        "end_line": 676,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:build_economics_receipt:f814038af0424fd5",
+        "signature_hash": "dc9b606a55d49bbb"
+      }
+    ],
+    "verify_economics_receipt": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 679,
+        "end_line": 694,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:verify_economics_receipt:a947d5afae3757ee",
+        "signature_hash": "72538001714e6288"
+      }
+    ],
+    "_provider_paid_evidence": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 697,
+        "end_line": 704,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_provider_paid_evidence:4d9be7956658b8e1",
+        "signature_hash": "6bbff5eb0107fdfe"
+      }
+    ],
+    "compile_economics_admission": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 707,
+        "end_line": 743,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:compile_economics_admission:258ebf91007da6db",
+        "signature_hash": "337871c5609a0854"
+      }
+    ],
+    "compare_economics": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 746,
+        "end_line": 787,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:compare_economics:1be0d61918db8377",
+        "signature_hash": "40457b1c04330789"
+      }
+    ],
+    "validate_economics_receipt_dict": [
+      {
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "kind": "function",
+        "line": 790,
+        "end_line": 817,
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:validate_economics_receipt_dict:ce3b73838fddc858",
+        "signature_hash": "6bbfbd7a1ed7703a"
+      }
+    ],
+    "ev": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#function:ev:a54ede827637eb65",
+        "signature_hash": "8e527c438ec30f9f"
+      }
+    ],
+    "cost": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 27,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#function:cost:61e7f5a94c68d740",
+        "signature_hash": "b9cd7efd1adc1598"
+      }
+    ],
+    "costs": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 37,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#function:costs:e282eb7f8be4b4ff",
+        "signature_hash": "c98dde82e32a8377"
+      }
+    ],
+    "accepted": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 42,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#function:accepted:77b42386677b51cc",
+        "signature_hash": "7b6db851328f8270"
+      }
+    ],
+    "reuse": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 51,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#function:reuse:af477fb0683d0bc2",
+        "signature_hash": "f6cec4bf6aa49779"
+      }
+    ],
+    "receipt": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 62,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#function:receipt:0826b7e09e33b037",
+        "signature_hash": "40a8c550871eecf4"
+      }
+    ],
+    "ZF10EconomicsTests": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "class",
+        "line": 65,
+        "end_line": 216,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#class:ZF10EconomicsTests:bf0b29d93bc31a02",
+        "signature_hash": "286e05be9b95379b"
+      }
+    ],
+    "ZF10EconomicsTests.setUpClass": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 71,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.setUpClass:802524207ca526aa",
+        "signature_hash": "18c2ab9bdbd35f57"
+      }
+    ],
+    "ZF10EconomicsTests.assertCode": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 76,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.assertCode:9fd0932ca040f902",
+        "signature_hash": "7e318aac7dd526ed"
+      }
+    ],
+    "ZF10EconomicsTests.test_01_exact_ratio_preserves_over_2pow53": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 80,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_01_exact_ratio_preserves_over_2pow53:3bf3556d7bc19122",
+        "signature_hash": "dfe58e4614adad68"
+      }
+    ],
+    "ZF10EconomicsTests.test_02_cost_kind_coverage_required": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 83,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_02_cost_kind_coverage_required:c15b7e3783ac95ca",
+        "signature_hash": "d11eb1e387b1d4f0"
+      }
+    ],
+    "ZF10EconomicsTests.test_03_duplicate_cost_kind_rejected": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 87,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_03_duplicate_cost_kind_rejected:7c27123eaad62102",
+        "signature_hash": "f14785a63cb10f12"
+      }
+    ],
+    "ZF10EconomicsTests.test_04_unknown_cost_keeps_total_unresolved": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 93,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_04_unknown_cost_keeps_total_unresolved:1f53f39b7c459ce1",
+        "signature_hash": "120d8b44327613dd"
+      }
+    ],
+    "ZF10EconomicsTests.test_05_scenario_cost_keeps_total_unresolved": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 97,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_05_scenario_cost_keeps_total_unresolved:79ebeff15d4c49e3",
+        "signature_hash": "46eab62f9f80cccc"
+      }
+    ],
+    "ZF10EconomicsTests.test_06_estimated_cost_is_typed_not_observed": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 101,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_06_estimated_cost_is_typed_not_observed:a6d5f5eb49399f2d",
+        "signature_hash": "9ad2adf638ac9c6d"
+      }
+    ],
+    "ZF10EconomicsTests.test_07_estimated_cost_cannot_admit_paid": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 106,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_07_estimated_cost_cannot_admit_paid:8f69b88a8b2d5fd0",
+        "signature_hash": "d0600a6f4eece4f2"
+      }
+    ],
+    "ZF10EconomicsTests.test_08_na_requires_specific_assertion_evidence": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 109,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_08_na_requires_specific_assertion_evidence:8aceed8fc7465f8a",
+        "signature_hash": "c99d45f3c0c43588"
+      }
+    ],
+    "ZF10EconomicsTests.test_09_na_requires_currentness": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 112,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_09_na_requires_currentness:6022101fc93cf6b5",
+        "signature_hash": "2e2c129f67b62176"
+      }
+    ],
+    "ZF10EconomicsTests.test_10_valid_na_is_zero_but_evidenced": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 116,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_10_valid_na_is_zero_but_evidenced:76742940611a6b2a",
+        "signature_hash": "cdb10aea3b3ba73b"
+      }
+    ],
+    "ZF10EconomicsTests.test_11_zero_accepted_value_has_no_cpav": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 119,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_11_zero_accepted_value_has_no_cpav:76a45227e60e5708",
+        "signature_hash": "7f7f25113795147e"
+      }
+    ],
+    "ZF10EconomicsTests.test_12_technical_acceptance_never_user_cpav": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 122,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_12_technical_acceptance_never_user_cpav:585fb29152ce6c31",
+        "signature_hash": "a1c914319a32210d"
+      }
+    ],
+    "ZF10EconomicsTests.test_13_accepted_cannot_exceed_attempts": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 125,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_13_accepted_cannot_exceed_attempts:e86138c06271ce33",
+        "signature_hash": "053b04d310df46f3"
+      }
+    ],
+    "ZF10EconomicsTests.test_14_duplicate_reuse_evidence_ref_rejected": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 129,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_14_duplicate_reuse_evidence_ref_rejected:8753c55efd26c1b5",
+        "signature_hash": "102d9843d9c2440d"
+      }
+    ],
+    "ZF10EconomicsTests.test_15_duplicate_logical_reuse_rejected": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 132,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_15_duplicate_logical_reuse_rejected:3b05fb030bc300dc",
+        "signature_hash": "fdef3fdd35e4c536"
+      }
+    ],
+    "ZF10EconomicsTests.test_16_valid_reuse_is_counterfactual_only": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 135,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_16_valid_reuse_is_counterfactual_only:d35680399de920ab",
+        "signature_hash": "a5cc0d505fdc0aca"
+      }
+    ],
+    "ZF10EconomicsTests.test_17_principal_mismatch_blocks_reuse_credit": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 138,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_17_principal_mismatch_blocks_reuse_credit:ca35e93724ce19f9",
+        "signature_hash": "71869ff6459fd33e"
+      }
+    ],
+    "ZF10EconomicsTests.test_18_currency_mismatch_blocks_reuse_credit": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 141,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_18_currency_mismatch_blocks_reuse_credit:c602d22e31a7c3a2",
+        "signature_hash": "40a70844e151fb23"
+      }
+    ],
+    "ZF10EconomicsTests.test_19_uncurrent_reuse_blocks_credit": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 144,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_19_uncurrent_reuse_blocks_credit:45c3a6bae178814e",
+        "signature_hash": "1cc7c26dfffceef1"
+      }
+    ],
+    "ZF10EconomicsTests.test_20_unisolated_reuse_blocks_credit": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 147,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_20_unisolated_reuse_blocks_credit:89bc77bd79b4146f",
+        "signature_hash": "acdea2492b4ba34c"
+      }
+    ],
+    "ZF10EconomicsTests.test_21_estimated_reuse_blocks_money_credit": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 150,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_21_estimated_reuse_blocks_money_credit:781a642f865435ff",
+        "signature_hash": "4803fdb415a77347"
+      }
+    ],
+    "ZF10EconomicsTests.test_22_cache_invalidation_cost_is_counted": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 153,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_22_cache_invalidation_cost_is_counted:d116f81513c67e25",
+        "signature_hash": "3d8bbb4bc676d953"
+      }
+    ],
+    "ZF10EconomicsTests.test_23_forged_derived_receipt_is_rejected": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 157,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_23_forged_derived_receipt_is_rejected:c5862346ac0c7a4b",
+        "signature_hash": "c9f640e9e414999d"
+      }
+    ],
+    "ZF10EconomicsTests.test_24_forged_logical_id_is_rejected": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 161,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_24_forged_logical_id_is_rejected:196646cb2ec18240",
+        "signature_hash": "fd0a1360339dffe6"
+      }
+    ],
+    "ZF10EconomicsTests.test_25_paid_route_requires_positive_observed_provider_cost": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 165,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_25_paid_route_requires_positive_observed_provider_cost:d7bd7dfd7b1420f8",
+        "signature_hash": "8ff5cdd6715613b2"
+      }
+    ],
+    "ZF10EconomicsTests.test_26_paid_route_candidate_still_has_no_authority": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 169,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_26_paid_route_candidate_still_has_no_authority:37d8e8df2a009a09",
+        "signature_hash": "8e43b30967ba947a"
+      }
+    ],
+    "ZF10EconomicsTests.test_27_mission_mismatch_blocks_comparison": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 171,
+        "end_line": 172,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_27_mission_mismatch_blocks_comparison:cc57cbb2d5459bde",
+        "signature_hash": "f70c2fe891ccd9ec"
+      }
+    ],
+    "ZF10EconomicsTests.test_28_value_definition_mismatch_blocks_comparison": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 175,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_28_value_definition_mismatch_blocks_comparison:4422bd4d8ae5b894",
+        "signature_hash": "db6005deb39298de"
+      }
+    ],
+    "ZF10EconomicsTests.test_29_window_mismatch_blocks_comparison": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 178,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_29_window_mismatch_blocks_comparison:b17b5242c358dd5b",
+        "signature_hash": "a9261513642770dc"
+      }
+    ],
+    "ZF10EconomicsTests.test_30_provenance_mismatch_blocks_comparison": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 180,
+        "end_line": 181,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_30_provenance_mismatch_blocks_comparison:e84743b210df2c56",
+        "signature_hash": "ba22345fbc6ef732"
+      }
+    ],
+    "ZF10EconomicsTests.test_31_total_sort_key_makes_route_evidence_order_invariant": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 185,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_31_total_sort_key_makes_route_evidence_order_invariant:3bced0fddc68e44a",
+        "signature_hash": "acf576e9d8bd262d"
+      }
+    ],
+    "ZF10EconomicsTests.test_32_duplicate_route_evidence_rejected": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 188,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_32_duplicate_route_evidence_rejected:c8d350c4b07ef38b",
+        "signature_hash": "ff79710ed5290a25"
+      }
+    ],
+    "ZF10EconomicsTests.test_33_private_or_freeform_cohort_value_rejected": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 190,
+        "end_line": 191,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_33_private_or_freeform_cohort_value_rejected:3a5b7ac75d71749d",
+        "signature_hash": "f86c287c4511dc27"
+      }
+    ],
+    "ZF10EconomicsTests.test_34_schema_validates_real_receipt": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 194,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_34_schema_validates_real_receipt:d97391cdf535f4c0",
+        "signature_hash": "48d16a92929b2e7e"
+      }
+    ],
+    "ZF10EconomicsTests.test_35_schema_rejects_technical_user_cpav": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 196,
+        "end_line": 198,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_35_schema_rejects_technical_user_cpav:f50c5060be633d52",
+        "signature_hash": "a271b666df1252ed"
+      }
+    ],
+    "ZF10EconomicsTests.test_36_schema_requires_each_cost_kind": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 200,
+        "end_line": 202,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_36_schema_requires_each_cost_kind:c747609c9c4a9b18",
+        "signature_hash": "230e3560165b3e9a"
+      }
+    ],
+    "ZF10EconomicsTests.test_37_semantic_validator_rejects_accepted_gt_attempts": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 206,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_37_semantic_validator_rejects_accepted_gt_attempts:324a01d3262b08e4",
+        "signature_hash": "71a4535d50f79edd"
+      }
+    ],
+    "ZF10EconomicsTests.test_38_schema_has_semantic_validator_extension": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 208,
+        "end_line": 209,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_38_schema_has_semantic_validator_extension:df3f09f84fb5e2e9",
+        "signature_hash": "157db6f9a34f7abb"
+      }
+    ],
+    "ZF10EconomicsTests.test_39_authority_flags_are_hard_false_in_schema": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 213,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_39_authority_flags_are_hard_false_in_schema:b1feab69a2f39ff3",
+        "signature_hash": "1a75838592cf0e36"
+      }
+    ],
+    "ZF10EconomicsTests.test_40_receipt_serialization_is_json_canonicalizable": [
+      {
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "kind": "method",
+        "line": 215,
+        "end_line": 216,
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_40_receipt_serialization_is_json_canonicalizable:51b963ce68a045e3",
+        "signature_hash": "a8c645623cda530e"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -167495,6 +168509,53 @@
         0.180531,
         0.255844,
         0.26249
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-adopt-zf10-economics.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1213,
+      "lines": 32,
+      "tokens_est": 304,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6b570bfca6cfca19",
+      "vector": [
+        -0.135861,
+        0.184111,
+        0.2349,
+        0.00127,
+        0.201887,
+        0.077454,
+        -0.041901,
+        -0.181572,
+        0.062217,
+        0.318702,
+        -0.04952,
+        -0.285689,
+        0.087611,
+        0.227282,
+        0.085072,
+        -0.006349,
+        0.204427,
+        -0.059677,
+        -0.138401,
+        0.278071,
+        -0.133322,
+        0.069835,
+        -0.115546,
+        -0.026664,
+        -0.229821,
+        -0.151098,
+        -0.146019,
+        -0.247598,
+        -0.18665,
+        0.252676,
+        -0.285689,
+        0.194269
       ]
     },
     {
@@ -239175,6 +240236,53 @@
       ]
     },
     {
+      "path": "schemas/adoption_economics_receipt_v1.schema.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 12196,
+      "lines": 2,
+      "tokens_est": 3049,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2f9b33c13530d5bc",
+      "vector": [
+        0.118743,
+        0.168739,
+        0.083745,
+        -0.311231,
+        -0.093744,
+        -0.16124,
+        0.243735,
+        0.033748,
+        0.306231,
+        0.138741,
+        -0.233735,
+        -0.15374,
+        -0.221236,
+        0.16374,
+        0.146241,
+        -0.128742,
+        -0.028748,
+        0.061246,
+        0.141241,
+        0.038748,
+        0.183739,
+        0.031248,
+        0.013749,
+        -0.248734,
+        0.181239,
+        -0.286232,
+        0.186238,
+        -0.286232,
+        -0.136241,
+        0.216236,
+        -0.096244,
+        -0.15624
+      ]
+    },
+    {
       "path": "schemas/aura_coding_relationship_compass.schema.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -262645,6 +263753,100 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/adoption_economics.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 39707,
+      "lines": 818,
+      "tokens_est": 9927,
+      "symbol_count": 53,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "281c6455420cbb36",
+      "vector": [
+        0.012404,
+        0.183301,
+        -0.249454,
+        -0.265993,
+        -0.117147,
+        -0.017917,
+        0.26048,
+        0.026186,
+        0.073045,
+        -0.213621,
+        -0.268749,
+        0.039968,
+        -0.164006,
+        0.097852,
+        0.180544,
+        0.158493,
+        0.023429,
+        -0.304582,
+        0.351441,
+        0.119903,
+        -0.067532,
+        -0.020673,
+        -0.323877,
+        -0.219134,
+        -0.004135,
+        -0.114391,
+        0.117147,
+        -0.103365,
+        0.249454,
+        -0.026186,
+        0.001378,
+        -0.205352
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_adoption_economics.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13198,
+      "lines": 221,
+      "tokens_est": 3300,
+      "symbol_count": 49,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e2284d20451a8463",
+      "vector": [
+        -0.192246,
+        -0.207129,
+        -0.003721,
+        0.04341,
+        0.199687,
+        -0.055813,
+        -0.055813,
+        -0.197207,
+        -0.097983,
+        0.068216,
+        -0.264183,
+        -0.244338,
+        -0.286508,
+        -0.105425,
+        0.246818,
+        -0.100464,
+        0.00124,
+        0.075658,
+        -0.097983,
+        -0.207129,
+        -0.316275,
+        -0.159998,
+        -0.063255,
+        0.097983,
+        -0.157517,
+        -0.026046,
+        0.244338,
+        -0.194726,
+        -0.234416,
+        -0.271624,
+        -0.16992,
+        -0.217051
       ]
     },
     {
@@ -286646,16 +287848,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1643,
+    "total_bytes": 26481362,
+    "text_tokens_est": 6610693,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286797,6 +287999,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf10-economics.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -287840,6 +289043,7 @@
       "requirements-amd-track3.txt",
       "requirements-spatial-s4b.txt",
       "requirements.txt",
+      "schemas/adoption_economics_receipt_v1.schema.json",
       "schemas/aura_coding_relationship_compass.schema.json",
       "schemas/aura_coding_waboose_contract.schema.json",
       "schemas/aura_compass_act_capsule.schema.json",
@@ -288296,6 +289500,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/adoption_economics.py",
+      "tools/aura_adopt/test_adoption_economics.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445634,6 +446840,1026 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:AcceptedValueEvidence:a2952671fae6af41",
+        "name": "AcceptedValueEvidence",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 300,
+        "end_line": 331,
+        "signature_hash": "133751b94e0e79a5",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:AcceptedValueEvidenceClass:519b0450795957fc",
+        "name": "AcceptedValueEvidenceClass",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 45,
+        "end_line": 49,
+        "signature_hash": "ec0c0d5f6a9b02ae",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:AdoptionEconomicsAdmission:46014ca7644a3a99",
+        "name": "AdoptionEconomicsAdmission",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 460,
+        "end_line": 471,
+        "signature_hash": "0796d88a0cbcc6bd",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:AdoptionEconomicsComparison:f9200278bcb4faa7",
+        "name": "AdoptionEconomicsComparison",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 475,
+        "end_line": 487,
+        "signature_hash": "785e27171b4bd7f1",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:AdoptionEconomicsReceipt:6e2f9080372f570e",
+        "name": "AdoptionEconomicsReceipt",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 394,
+        "end_line": 456,
+        "signature_hash": "e5a9a798cd32f3e2",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:CostKind:b7e627790b780b03",
+        "name": "CostKind",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 52,
+        "end_line": 59,
+        "signature_hash": "4f0dc91292404bcd",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:CostObservation:db30a3c3fe4535d7",
+        "name": "CostObservation",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 240,
+        "end_line": 296,
+        "signature_hash": "7e964fdc624c022f",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:EconomicsError:3e2b0a863802d45e",
+        "name": "EconomicsError",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 23,
+        "end_line": 27,
+        "signature_hash": "ab690f98709c6da1",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:EvidenceBinding:f7ae9033af131396",
+        "name": "EvidenceBinding",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 218,
+        "end_line": 236,
+        "signature_hash": "94aae0bda74bb53a",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:ExactMicrounitRatio:6df58b1010c41611",
+        "name": "ExactMicrounitRatio",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 160,
+        "end_line": 196,
+        "signature_hash": "5a346e13435c074a",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:MoneyEvidenceClass:e5a6e0e32697e86c",
+        "name": "MoneyEvidenceClass",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 36,
+        "end_line": 42,
+        "signature_hash": "3176c46ff2b7d72a",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:ObservationStatus:0865e2b1ffd3f87e",
+        "name": "ObservationStatus",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "a017e9d4715cd522",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:ReuseEvidence:0c013bdb5a746026",
+        "name": "ReuseEvidence",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 335,
+        "end_line": 390,
+        "signature_hash": "35053b060a988771",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:ReuseKind:7f6cc6b8869afa55",
+        "name": "ReuseKind",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 62,
+        "end_line": 67,
+        "signature_hash": "90670b49f86ba372",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#class:SignedExactRatio:03be092d84cf3649",
+        "name": "SignedExactRatio",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 200,
+        "end_line": 214,
+        "signature_hash": "de26565944bbbd72",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_bool_or_none:ba01dc8dd4cd9fdc",
+        "name": "_bool_or_none",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 119,
+        "end_line": 124,
+        "signature_hash": "ce21e7f9b1fc4e05",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_canonical:8c5df9661a144703",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 93,
+        "end_line": 98,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_currency:06a5dc6643eebf37",
+        "name": "_currency",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 127,
+        "end_line": 131,
+        "signature_hash": "29e630f32fc31b6d",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_digest:bc21a6e1f7e00121",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 101,
+        "end_line": 102,
+        "signature_hash": "9edcae7e502cc579",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_lifecycle_total:883e5fcda15754c5",
+        "name": "_lifecycle_total",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 539,
+        "end_line": 563,
+        "signature_hash": "795efa95c667bb45",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_nn_int:0d74121ea8224261",
+        "name": "_nn_int",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 111,
+        "end_line": 116,
+        "signature_hash": "75726b9c44e6a1c0",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_normalize_cohort:d9ea090d750da58d",
+        "name": "_normalize_cohort",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 144,
+        "end_line": 156,
+        "signature_hash": "07c7e5528b48e6fc",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_normalize_costs:26dab576851ee8d4",
+        "name": "_normalize_costs",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 505,
+        "end_line": 516,
+        "signature_hash": "8006091d96657d43",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_normalize_evidence:4abff4308fad5efd",
+        "name": "_normalize_evidence",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 490,
+        "end_line": 502,
+        "signature_hash": "edb84a3e69c24441",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_normalize_reuse:fb1e426bc481c5a6",
+        "name": "_normalize_reuse",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 519,
+        "end_line": 536,
+        "signature_hash": "43fec2f3b151cc93",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_principal:b57c097840fa5e9a",
+        "name": "_principal",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 134,
+        "end_line": 141,
+        "signature_hash": "fc08e89f3fbf62a6",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_provider_paid_evidence:4d9be7956658b8e1",
+        "name": "_provider_paid_evidence",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 697,
+        "end_line": 704,
+        "signature_hash": "6bbff5eb0107fdfe",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_ratio:34dc0ec7d45a849b",
+        "name": "_ratio",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 594,
+        "end_line": 597,
+        "signature_hash": "2f2328429813484d",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_text:4030e3e28ebb1578",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 105,
+        "end_line": 108,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:_validated_reuse_money:7b6f41dc81613827",
+        "name": "_validated_reuse_money",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 566,
+        "end_line": 591,
+        "signature_hash": "19f3fa6dff5e4396",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:build_economics_receipt:f814038af0424fd5",
+        "name": "build_economics_receipt",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 600,
+        "end_line": 676,
+        "signature_hash": "dc9b606a55d49bbb",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:compare_economics:1be0d61918db8377",
+        "name": "compare_economics",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 746,
+        "end_line": 787,
+        "signature_hash": "40457b1c04330789",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:compile_economics_admission:258ebf91007da6db",
+        "name": "compile_economics_admission",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 707,
+        "end_line": 743,
+        "signature_hash": "337871c5609a0854",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:validate_economics_receipt_dict:ce3b73838fddc858",
+        "name": "validate_economics_receipt_dict",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 790,
+        "end_line": 817,
+        "signature_hash": "6bbfbd7a1ed7703a",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#function:verify_economics_receipt:a947d5afae3757ee",
+        "name": "verify_economics_receipt",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 679,
+        "end_line": 694,
+        "signature_hash": "72538001714e6288",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:AcceptedValueEvidence.__post_init__:8e2c9a413d20e819",
+        "name": "AcceptedValueEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 308,
+        "end_line": 322,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:AcceptedValueEvidence.is_user_evidence:2671f3ec1a46badd",
+        "name": "AcceptedValueEvidence.is_user_evidence",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 325,
+        "end_line": 326,
+        "signature_hash": "224ef75562cf263b",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:AcceptedValueEvidence.logical:31961dfa8353875b",
+        "name": "AcceptedValueEvidence.logical",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 328,
+        "end_line": 331,
+        "signature_hash": "c2240ab695f360e8",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:AdoptionEconomicsReceipt.to_dict:68ca94079b7c6781",
+        "name": "AdoptionEconomicsReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 425,
+        "end_line": 456,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:CostObservation.__post_init__:8c5b1eca110a8027",
+        "name": "CostObservation.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 254,
+        "end_line": 291,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:CostObservation.logical:0f217c449cebdf59",
+        "name": "CostObservation.logical",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 293,
+        "end_line": 296,
+        "signature_hash": "c2240ab695f360e8",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:EconomicsError.__init__:cdbd51371137b67f",
+        "name": "EconomicsError.__init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 24,
+        "end_line": 27,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:EvidenceBinding.__post_init__:2cdb76e8ca13990f",
+        "name": "EvidenceBinding.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 225,
+        "end_line": 233,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:EvidenceBinding.logical:4a3c7c45e0ad4565",
+        "name": "EvidenceBinding.logical",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 235,
+        "end_line": 236,
+        "signature_hash": "c2240ab695f360e8",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ExactMicrounitRatio.__post_init__:e3fc94fe7858b7b1",
+        "name": "ExactMicrounitRatio.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 164,
+        "end_line": 171,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ExactMicrounitRatio.compare:11c0b01c998046f8",
+        "name": "ExactMicrounitRatio.compare",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 182,
+        "end_line": 187,
+        "signature_hash": "18bd37598e82dbb5",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ExactMicrounitRatio.compare_to_integer_ceiling:c03cc863a399d4ee",
+        "name": "ExactMicrounitRatio.compare_to_integer_ceiling",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 176,
+        "end_line": 180,
+        "signature_hash": "1ff60b16469d84a1",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ExactMicrounitRatio.logical:799aafa9f7d0e4a2",
+        "name": "ExactMicrounitRatio.logical",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 173,
+        "end_line": 174,
+        "signature_hash": "c2240ab695f360e8",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ExactMicrounitRatio.subtract:50c8e57b2ac9cf58",
+        "name": "ExactMicrounitRatio.subtract",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 189,
+        "end_line": 196,
+        "signature_hash": "1ec80fed2b5f40e1",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ReuseEvidence.__post_init__:dcd723b3dc5df026",
+        "name": "ReuseEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 354,
+        "end_line": 385,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:ReuseEvidence.logical:757a469b59ddc01a",
+        "name": "ReuseEvidence.logical",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 387,
+        "end_line": 390,
+        "signature_hash": "c2240ab695f360e8",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:SignedExactRatio.__post_init__:e46b90e2a09405a8",
+        "name": "SignedExactRatio.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 204,
+        "end_line": 211,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_economics.py#method:SignedExactRatio.logical:3b4cede7c38754c9",
+        "name": "SignedExactRatio.logical",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_economics.py",
+        "line": 213,
+        "end_line": 214,
+        "signature_hash": "c2240ab695f360e8",
+        "file_digest8": "281c6455420cbb36"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#class:ZF10EconomicsTests:bf0b29d93bc31a02",
+        "name": "ZF10EconomicsTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 65,
+        "end_line": 216,
+        "signature_hash": "286e05be9b95379b",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#function:accepted:77b42386677b51cc",
+        "name": "accepted",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 40,
+        "end_line": 42,
+        "signature_hash": "7b6db851328f8270",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#function:cost:61e7f5a94c68d740",
+        "name": "cost",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 22,
+        "end_line": 27,
+        "signature_hash": "b9cd7efd1adc1598",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#function:costs:e282eb7f8be4b4ff",
+        "name": "costs",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 30,
+        "end_line": 37,
+        "signature_hash": "c98dde82e32a8377",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#function:ev:a54ede827637eb65",
+        "name": "ev",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "8e527c438ec30f9f",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#function:receipt:0826b7e09e33b037",
+        "name": "receipt",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 54,
+        "end_line": 62,
+        "signature_hash": "40a8c550871eecf4",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#function:reuse:af477fb0683d0bc2",
+        "name": "reuse",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 45,
+        "end_line": 51,
+        "signature_hash": "f6cec4bf6aa49779",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.assertCode:9fd0932ca040f902",
+        "name": "ZF10EconomicsTests.assertCode",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 73,
+        "end_line": 76,
+        "signature_hash": "7e318aac7dd526ed",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.setUpClass:802524207ca526aa",
+        "name": "ZF10EconomicsTests.setUpClass",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 67,
+        "end_line": 71,
+        "signature_hash": "18c2ab9bdbd35f57",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_01_exact_ratio_preserves_over_2pow53:3bf3556d7bc19122",
+        "name": "ZF10EconomicsTests.test_01_exact_ratio_preserves_over_2pow53",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 78,
+        "end_line": 80,
+        "signature_hash": "dfe58e4614adad68",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_02_cost_kind_coverage_required:c15b7e3783ac95ca",
+        "name": "ZF10EconomicsTests.test_02_cost_kind_coverage_required",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 82,
+        "end_line": 83,
+        "signature_hash": "d11eb1e387b1d4f0",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_03_duplicate_cost_kind_rejected:7c27123eaad62102",
+        "name": "ZF10EconomicsTests.test_03_duplicate_cost_kind_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 85,
+        "end_line": 87,
+        "signature_hash": "f14785a63cb10f12",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_04_unknown_cost_keeps_total_unresolved:1f53f39b7c459ce1",
+        "name": "ZF10EconomicsTests.test_04_unknown_cost_keeps_total_unresolved",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 89,
+        "end_line": 93,
+        "signature_hash": "120d8b44327613dd",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_05_scenario_cost_keeps_total_unresolved:79ebeff15d4c49e3",
+        "name": "ZF10EconomicsTests.test_05_scenario_cost_keeps_total_unresolved",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 95,
+        "end_line": 97,
+        "signature_hash": "46eab62f9f80cccc",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_06_estimated_cost_is_typed_not_observed:a6d5f5eb49399f2d",
+        "name": "ZF10EconomicsTests.test_06_estimated_cost_is_typed_not_observed",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 99,
+        "end_line": 101,
+        "signature_hash": "9ad2adf638ac9c6d",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_07_estimated_cost_cannot_admit_paid:8f69b88a8b2d5fd0",
+        "name": "ZF10EconomicsTests.test_07_estimated_cost_cannot_admit_paid",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 103,
+        "end_line": 106,
+        "signature_hash": "d0600a6f4eece4f2",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_08_na_requires_specific_assertion_evidence:8aceed8fc7465f8a",
+        "name": "ZF10EconomicsTests.test_08_na_requires_specific_assertion_evidence",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 108,
+        "end_line": 109,
+        "signature_hash": "c99d45f3c0c43588",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_09_na_requires_currentness:6022101fc93cf6b5",
+        "name": "ZF10EconomicsTests.test_09_na_requires_currentness",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 111,
+        "end_line": 112,
+        "signature_hash": "2e2c129f67b62176",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_10_valid_na_is_zero_but_evidenced:76742940611a6b2a",
+        "name": "ZF10EconomicsTests.test_10_valid_na_is_zero_but_evidenced",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 114,
+        "end_line": 116,
+        "signature_hash": "cdb10aea3b3ba73b",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_11_zero_accepted_value_has_no_cpav:76a45227e60e5708",
+        "name": "ZF10EconomicsTests.test_11_zero_accepted_value_has_no_cpav",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 118,
+        "end_line": 119,
+        "signature_hash": "7f7f25113795147e",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_12_technical_acceptance_never_user_cpav:585fb29152ce6c31",
+        "name": "ZF10EconomicsTests.test_12_technical_acceptance_never_user_cpav",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 121,
+        "end_line": 122,
+        "signature_hash": "a1c914319a32210d",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_13_accepted_cannot_exceed_attempts:e86138c06271ce33",
+        "name": "ZF10EconomicsTests.test_13_accepted_cannot_exceed_attempts",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 124,
+        "end_line": 125,
+        "signature_hash": "053b04d310df46f3",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_14_duplicate_reuse_evidence_ref_rejected:8753c55efd26c1b5",
+        "name": "ZF10EconomicsTests.test_14_duplicate_reuse_evidence_ref_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 127,
+        "end_line": 129,
+        "signature_hash": "102d9843d9c2440d",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_15_duplicate_logical_reuse_rejected:3b05fb030bc300dc",
+        "name": "ZF10EconomicsTests.test_15_duplicate_logical_reuse_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 131,
+        "end_line": 132,
+        "signature_hash": "fdef3fdd35e4c536",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_16_valid_reuse_is_counterfactual_only:d35680399de920ab",
+        "name": "ZF10EconomicsTests.test_16_valid_reuse_is_counterfactual_only",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 134,
+        "end_line": 135,
+        "signature_hash": "a5cc0d505fdc0aca",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_17_principal_mismatch_blocks_reuse_credit:ca35e93724ce19f9",
+        "name": "ZF10EconomicsTests.test_17_principal_mismatch_blocks_reuse_credit",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 137,
+        "end_line": 138,
+        "signature_hash": "71869ff6459fd33e",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_18_currency_mismatch_blocks_reuse_credit:c602d22e31a7c3a2",
+        "name": "ZF10EconomicsTests.test_18_currency_mismatch_blocks_reuse_credit",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 140,
+        "end_line": 141,
+        "signature_hash": "40a70844e151fb23",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_19_uncurrent_reuse_blocks_credit:45c3a6bae178814e",
+        "name": "ZF10EconomicsTests.test_19_uncurrent_reuse_blocks_credit",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 143,
+        "end_line": 144,
+        "signature_hash": "1cc7c26dfffceef1",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_20_unisolated_reuse_blocks_credit:89bc77bd79b4146f",
+        "name": "ZF10EconomicsTests.test_20_unisolated_reuse_blocks_credit",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 146,
+        "end_line": 147,
+        "signature_hash": "acdea2492b4ba34c",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_21_estimated_reuse_blocks_money_credit:781a642f865435ff",
+        "name": "ZF10EconomicsTests.test_21_estimated_reuse_blocks_money_credit",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 149,
+        "end_line": 150,
+        "signature_hash": "4803fdb415a77347",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_22_cache_invalidation_cost_is_counted:d116f81513c67e25",
+        "name": "ZF10EconomicsTests.test_22_cache_invalidation_cost_is_counted",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 152,
+        "end_line": 153,
+        "signature_hash": "3d8bbb4bc676d953",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_23_forged_derived_receipt_is_rejected:c5862346ac0c7a4b",
+        "name": "ZF10EconomicsTests.test_23_forged_derived_receipt_is_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 155,
+        "end_line": 157,
+        "signature_hash": "c9f640e9e414999d",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_24_forged_logical_id_is_rejected:196646cb2ec18240",
+        "name": "ZF10EconomicsTests.test_24_forged_logical_id_is_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 159,
+        "end_line": 161,
+        "signature_hash": "fd0a1360339dffe6",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_25_paid_route_requires_positive_observed_provider_cost:d7bd7dfd7b1420f8",
+        "name": "ZF10EconomicsTests.test_25_paid_route_requires_positive_observed_provider_cost",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 163,
+        "end_line": 165,
+        "signature_hash": "8ff5cdd6715613b2",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_26_paid_route_candidate_still_has_no_authority:37d8e8df2a009a09",
+        "name": "ZF10EconomicsTests.test_26_paid_route_candidate_still_has_no_authority",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 167,
+        "end_line": 169,
+        "signature_hash": "8e43b30967ba947a",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_27_mission_mismatch_blocks_comparison:cc57cbb2d5459bde",
+        "name": "ZF10EconomicsTests.test_27_mission_mismatch_blocks_comparison",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 171,
+        "end_line": 172,
+        "signature_hash": "f70c2fe891ccd9ec",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_28_value_definition_mismatch_blocks_comparison:4422bd4d8ae5b894",
+        "name": "ZF10EconomicsTests.test_28_value_definition_mismatch_blocks_comparison",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 174,
+        "end_line": 175,
+        "signature_hash": "db6005deb39298de",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_29_window_mismatch_blocks_comparison:b17b5242c358dd5b",
+        "name": "ZF10EconomicsTests.test_29_window_mismatch_blocks_comparison",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 177,
+        "end_line": 178,
+        "signature_hash": "a9261513642770dc",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_30_provenance_mismatch_blocks_comparison:e84743b210df2c56",
+        "name": "ZF10EconomicsTests.test_30_provenance_mismatch_blocks_comparison",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 180,
+        "end_line": 181,
+        "signature_hash": "ba22345fbc6ef732",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_31_total_sort_key_makes_route_evidence_order_invariant:3bced0fddc68e44a",
+        "name": "ZF10EconomicsTests.test_31_total_sort_key_makes_route_evidence_order_invariant",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 183,
+        "end_line": 185,
+        "signature_hash": "acf576e9d8bd262d",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_32_duplicate_route_evidence_rejected:c8d350c4b07ef38b",
+        "name": "ZF10EconomicsTests.test_32_duplicate_route_evidence_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 187,
+        "end_line": 188,
+        "signature_hash": "ff79710ed5290a25",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_33_private_or_freeform_cohort_value_rejected:3a5b7ac75d71749d",
+        "name": "ZF10EconomicsTests.test_33_private_or_freeform_cohort_value_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 190,
+        "end_line": 191,
+        "signature_hash": "f86c287c4511dc27",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_34_schema_validates_real_receipt:d97391cdf535f4c0",
+        "name": "ZF10EconomicsTests.test_34_schema_validates_real_receipt",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 193,
+        "end_line": 194,
+        "signature_hash": "48d16a92929b2e7e",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_35_schema_rejects_technical_user_cpav:f50c5060be633d52",
+        "name": "ZF10EconomicsTests.test_35_schema_rejects_technical_user_cpav",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 196,
+        "end_line": 198,
+        "signature_hash": "a271b666df1252ed",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_36_schema_requires_each_cost_kind:c747609c9c4a9b18",
+        "name": "ZF10EconomicsTests.test_36_schema_requires_each_cost_kind",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 200,
+        "end_line": 202,
+        "signature_hash": "230e3560165b3e9a",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_37_semantic_validator_rejects_accepted_gt_attempts:324a01d3262b08e4",
+        "name": "ZF10EconomicsTests.test_37_semantic_validator_rejects_accepted_gt_attempts",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 204,
+        "end_line": 206,
+        "signature_hash": "71a4535d50f79edd",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_38_schema_has_semantic_validator_extension:df3f09f84fb5e2e9",
+        "name": "ZF10EconomicsTests.test_38_schema_has_semantic_validator_extension",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 208,
+        "end_line": 209,
+        "signature_hash": "157db6f9a34f7abb",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_39_authority_flags_are_hard_false_in_schema:b1feab69a2f39ff3",
+        "name": "ZF10EconomicsTests.test_39_authority_flags_are_hard_false_in_schema",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 211,
+        "end_line": 213,
+        "signature_hash": "1a75838592cf0e36",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_economics.py#method:ZF10EconomicsTests.test_40_receipt_serialization_is_json_canonicalizable:51b963ce68a045e3",
+        "name": "ZF10EconomicsTests.test_40_receipt_serialization_is_json_canonicalizable",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_economics.py",
+        "line": 215,
+        "end_line": 216,
+        "signature_hash": "a8c645623cda530e",
+        "file_digest8": "e2284d20451a8463"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +449110,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "4fea31c396b8a165f7247884b4d73cee",
+    "payload_hash": "2e8ca3a2aa7a7247ec388df8c65748f6"
   }
 }
