@@ -6,6 +6,12 @@ derives the single MTP_NON_DECODER role from same-generation source facts, and
 may discharge only GLM53_MTP_RESOLVER_PROVENANCE_REQUIRED on an already
 source-bound PR340 report. It never reads tensor payload, imports the model,
 executes inference, or admits G2.
+
+The PR340 report and the immutable-source observation are separate proof planes.
+A source-matching caller-shaped Mapping is not a PR340 producer receipt. The
+appraiser therefore verifies the incoming PR340 classification-stage logical ID
+against an independently supplied expected producer ID and the exact stacked
+PR340 semantic generation before it may change blocker state.
 """
 from __future__ import annotations
 
@@ -27,9 +33,28 @@ OFFICIAL_NUM_NEXTN_PREDICT_LAYERS = 1
 OFFICIAL_MTP_LAYER = 78
 OFFICIAL_ROLE = "MTP_NON_DECODER"
 PROVENANCE_BLOCKER = "GLM53_MTP_RESOLVER_PROVENANCE_REQUIRED"
+PR340_PRODUCER_SEMANTIC_GENERATION = "6c1d65fceb084ea3cbe8a59b7e28818155788504"
 MAX_CONFIG_BYTES = 2 * 1024 * 1024
 MAX_INDEX_BYTES = 16 * 1024 * 1024
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
+_COMMIT = re.compile(r"^[0-9a-f]{40}$")
+
+# source_bound_probe() appends these fields after PR340's classification stage
+# has already minted logical_id. They are independently checked against the
+# immutable official source below and must not be retroactively folded into a
+# new, invented PR340 producer identity.
+_PR340_SOURCE_BOUND_AUGMENT_FIELDS = frozenset(
+    {
+        "source_bundle_id",
+        "config_parsed_sha256",
+        "index_parsed_sha256",
+        "weight_map_digest",
+        "source_binding_proven",
+    }
+)
+_PR340_RECEIPT_METADATA_FIELDS = frozenset(
+    {"logical_id", "observation_time", "claim_ceiling"}
+)
 
 
 class OfficialSourceMTPRoleError(ValueError):
@@ -58,6 +83,24 @@ def _sha256_bytes(raw: bytes) -> str:
 
 def _sha256_json(value: Any) -> str:
     return _sha256_bytes(_canonical(value))
+
+
+def _sha256_token(value: object, code: str) -> str:
+    if not isinstance(value, str):
+        raise OfficialSourceMTPRoleError(code)
+    out = value.strip().lower()
+    if not _SHA256.fullmatch(out):
+        raise OfficialSourceMTPRoleError(code)
+    return out
+
+
+def _commit_token(value: object, code: str) -> str:
+    if not isinstance(value, str):
+        raise OfficialSourceMTPRoleError(code)
+    out = value.strip().lower()
+    if not _COMMIT.fullmatch(out):
+        raise OfficialSourceMTPRoleError(code)
+    return out
 
 
 def _immutable_url(path: str) -> str:
@@ -247,11 +290,65 @@ def _status_from_blockers(blockers: list[str]) -> str:
     return "READY_FOR_HEADER_AND_TINY_FIXTURE"
 
 
+def _pr340_classification_stage_logical_id(report: Mapping[str, Any]) -> str:
+    """Recompute the exact PR340 classification-stage producer identity.
+
+    PR340's source_bound_probe appends source/currentness fields after the
+    classification stage has already minted logical_id. Those appended fields
+    are verified independently by this appraiser and are intentionally excluded
+    here so the consumer does not invent a different producer grammar.
+    """
+    excluded = _PR340_RECEIPT_METADATA_FIELDS | _PR340_SOURCE_BOUND_AUGMENT_FIELDS
+    logical = {key: value for key, value in report.items() if key not in excluded}
+    return _sha256_json(logical)
+
+
+def _verify_pr340_producer_report(
+    report: Mapping[str, Any],
+    *,
+    expected_pr340_logical_id: object,
+    expected_pr340_semantic_generation: object,
+) -> str:
+    expected_id = _sha256_token(
+        expected_pr340_logical_id,
+        "PR340_EXPECTED_PRODUCER_LOGICAL_ID_REQUIRED",
+    )
+    generation = _commit_token(
+        expected_pr340_semantic_generation,
+        "PR340_EXPECTED_SEMANTIC_GENERATION_REQUIRED",
+    )
+    if generation != PR340_PRODUCER_SEMANTIC_GENERATION:
+        raise OfficialSourceMTPRoleError(
+            "PR340_PRODUCER_SEMANTIC_GENERATION_MISMATCH",
+            f"expected={PR340_PRODUCER_SEMANTIC_GENERATION},observed={generation}",
+        )
+
+    observed_id = _sha256_token(
+        report.get("logical_id"),
+        "PR340_PRODUCER_LOGICAL_ID_REQUIRED",
+    )
+    recomputed_id = _pr340_classification_stage_logical_id(report)
+    if recomputed_id != observed_id:
+        raise OfficialSourceMTPRoleError(
+            "PR340_PRODUCER_LOGICAL_ID_MISMATCH",
+            f"reported={observed_id},recomputed={recomputed_id}",
+        )
+    if observed_id != expected_id:
+        raise OfficialSourceMTPRoleError(
+            "PR340_PRODUCER_EXPECTATION_MISMATCH",
+            f"expected={expected_id},observed={observed_id}",
+        )
+    return observed_id
+
+
 def _apply_verified_source_role(
     report: Mapping[str, Any],
     evidence: OfficialSourceMTPRoleEvidence,
+    *,
+    expected_pr340_logical_id: object = None,
+    expected_pr340_semantic_generation: object = None,
 ) -> dict[str, Any]:
-    """Discharge only the resolver-provenance blocker on an exact source-bound report."""
+    """Discharge only resolver provenance on an independently bound PR340 report."""
     if report.get("schema") != "GLM53CheckpointLayoutProbeV1":
         raise OfficialSourceMTPRoleError("GLM53_LAYOUT_PROBE_REPORT_REQUIRED")
     if report.get("source_binding_proven") is not True:
@@ -322,6 +419,12 @@ def _apply_verified_source_role(
     if PROVENANCE_BLOCKER not in raw_blockers:
         raise OfficialSourceMTPRoleError("PROVENANCE_BLOCKER_REQUIRED")
 
+    verified_pr340_logical_id = _verify_pr340_producer_report(
+        report,
+        expected_pr340_logical_id=expected_pr340_logical_id,
+        expected_pr340_semantic_generation=expected_pr340_semantic_generation,
+    )
+
     blockers = sorted(set(b for b in raw_blockers if b != PROVENANCE_BLOCKER))
     logical = {
         key: value
@@ -336,6 +439,9 @@ def _apply_verified_source_role(
             "extra_layer_resolver_provenance_method": "OFFICIAL_IMMUTABLE_SOURCE_DERIVATION",
             "official_mtp_role_source_evidence": asdict(evidence),
             "official_mtp_role_source_evidence_id": evidence.evidence_id,
+            "pr340_producer_logical_id_verified": True,
+            "pr340_producer_logical_id": verified_pr340_logical_id,
+            "pr340_producer_semantic_generation": PR340_PRODUCER_SEMANTIC_GENERATION,
             "g2_admitted": False,
             "large_checkpoint_admitted": False,
             "runtime_execution_proven": False,
@@ -354,10 +460,14 @@ def _apply_verified_source_role(
 def verify_and_admit_official_mtp_role(
     report: Mapping[str, Any],
     *,
+    expected_pr340_logical_id: object = None,
+    expected_pr340_semantic_generation: object = None,
     read_full: Callable[[str, int], bytes] = urllib_read_full,
 ) -> dict[str, Any]:
-    """Observe official immutable source, then discharge only resolver provenance."""
+    """Observe official source, then discharge provenance on a bound PR340 producer."""
     return _apply_verified_source_role(
         report,
         observe_official_mtp_role(read_full=read_full),
+        expected_pr340_logical_id=expected_pr340_logical_id,
+        expected_pr340_semantic_generation=expected_pr340_semantic_generation,
     )
