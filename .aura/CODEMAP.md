@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1652
-- **total_bytes**: 26567540
-- **text_tokens_est**: 6632242
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1655
+- **total_bytes**: 26595485
+- **text_tokens_est**: 6639230
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1011, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1652,
+  "repo_file_count": 1655,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -164,6 +164,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
     ".github/workflows/construction-demo-asset-foundation.yml",
+    ".github/workflows/cs-arena-sync-as07-generation-fence.yml",
     ".github/workflows/cs-arena-sync-as07.yml",
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/huggingface-space-demo.yml",
@@ -1662,7 +1663,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project030/test_creator_studio_continuation_harness.py",
     "tools/project030/test_creator_studio_harness_integration.py",
     "tools/project030/test_creator_studio_wake_adapter.py",
+    "tools/project035/artifact_generation_fenced_wake_bridge.py",
     "tools/project035/artifact_workgraph_wake_bridge.py",
+    "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
     "tools/project035/test_artifact_workgraph_wake_bridge.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
@@ -1792,16 +1795,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1652,
-  "bytes": 26567540,
-  "tokens_est": 6632242,
+  "files": 1655,
+  "bytes": 26595485,
+  "tokens_est": 6639230,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1009,
-    "schema_or_lexicon": 272,
+    "python_module": 1011,
+    "schema_or_lexicon": 273,
     "support_file": 49
   }
 }

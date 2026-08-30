@@ -1,0 +1,36 @@
+name: CS Arena Sync AS-07 generation-fenced wake
+
+on:
+  pull_request:
+    paths:
+      - 'tools/project035/artifact_workgraph_wake_bridge.py'
+      - 'tools/project035/test_artifact_workgraph_wake_bridge.py'
+      - 'tools/project035/artifact_generation_fenced_wake_bridge.py'
+      - 'tools/project035/test_artifact_generation_fenced_wake_bridge.py'
+      - '.github/workflows/cs-arena-sync-as07-generation-fence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  generation-fence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile AS-07 bridge and generation fence
+        run: >-
+          python -m py_compile
+          tools/project035/artifact_workgraph_wake_bridge.py
+          tools/project035/test_artifact_workgraph_wake_bridge.py
+          tools/project035/artifact_generation_fenced_wake_bridge.py
+          tools/project035/test_artifact_generation_fenced_wake_bridge.py
+      - name: Re-run AS-07 persisted-transition regressions
+        working-directory: tools/project035
+        run: python -m unittest -v test_artifact_workgraph_wake_bridge.py
+      - name: Run AS-06-C1 to AS-07 generation-fence regressions
+        working-directory: tools/project035
+        run: python -m unittest -v test_artifact_generation_fenced_wake_bridge.py
