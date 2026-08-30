@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1641
-- **total_bytes**: 26434791
-- **text_tokens_est**: 6599049
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1657
+- **total_bytes**: 26545192
+- **text_tokens_est**: 6626654
+- **role_counts**: {'interface_surface': 67, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1641,
+  "repo_file_count": 1657,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -160,6 +160,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-spatial-s3-s4a.yml",
     ".github/workflows/aura-spatial-s4.yml",
     ".github/workflows/aura-spatial-s5-s6-construction.yml",
+    ".github/workflows/awj034-gemini-webchat-bridge.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1652,7 +1653,22 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/project030/creator_studio_continuation_harness.py",
+    "tools/project030/creator_studio_wake_adapter.py",
     "tools/project030/test_creator_studio_continuation_harness.py",
+    "tools/project030/test_creator_studio_wake_adapter.py",
+    "tools/project034/gemini_extension/README.md",
+    "tools/project034/gemini_extension/content.js",
+    "tools/project034/gemini_extension/manifest.json",
+    "tools/project034/gemini_extension/popup.html",
+    "tools/project034/gemini_extension/popup.js",
+    "tools/project034/gemini_tool_broker.py",
+    "tools/project034/gemini_webchat_endpoint.py",
+    "tools/project034/gemini_webchat_loopback.py",
+    "tools/project034/gemini_webchat_relay.py",
+    "tools/project034/test_gemini_tool_broker.py",
+    "tools/project034/test_gemini_webchat_endpoint.py",
+    "tools/project034/test_gemini_webchat_loopback.py",
+    "tools/project034/test_gemini_webchat_relay.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1781,16 +1797,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1641,
-  "bytes": 26434791,
-  "tokens_est": 6599049,
+  "files": 1657,
+  "bytes": 26545192,
+  "tokens_est": 6626654,
   "roles": {
-    "interface_surface": 64,
-    "knowledge_artifact": 237,
+    "interface_surface": 67,
+    "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 999,
-    "schema_or_lexicon": 271,
+    "python_module": 1009,
+    "schema_or_lexicon": 273,
     "support_file": 49
   }
 }
@@ -1865,7 +1881,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_spatial_web/webgl2_renderer.js",
     "aura_spatial_web/webgpu_renderer.js",
     "aura_spatial_web/webxr_session.js",
-    "index.html"
+    "index.html",
+    "tools/project034/gemini_extension/content.js",
+    "tools/project034/gemini_extension/popup.html",
+    "tools/project034/gemini_extension/popup.js"
   ]
 }
 ```

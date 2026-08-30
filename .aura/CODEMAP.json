@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788099548,
+  "generated_at_unix": 1788101490,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1641,
+    "repo_file_count": 1657,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -142,6 +142,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj034-gemini-webchat-bridge.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1634,7 +1635,22 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project030/creator_studio_continuation_harness.py",
+      "tools/project030/creator_studio_wake_adapter.py",
       "tools/project030/test_creator_studio_continuation_harness.py",
+      "tools/project030/test_creator_studio_wake_adapter.py",
+      "tools/project034/gemini_extension/README.md",
+      "tools/project034/gemini_extension/content.js",
+      "tools/project034/gemini_extension/manifest.json",
+      "tools/project034/gemini_extension/popup.html",
+      "tools/project034/gemini_extension/popup.js",
+      "tools/project034/gemini_tool_broker.py",
+      "tools/project034/gemini_webchat_endpoint.py",
+      "tools/project034/gemini_webchat_loopback.py",
+      "tools/project034/gemini_webchat_relay.py",
+      "tools/project034/test_gemini_tool_broker.py",
+      "tools/project034/test_gemini_webchat_endpoint.py",
+      "tools/project034/test_gemini_webchat_loopback.py",
+      "tools/project034/test_gemini_webchat_relay.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1757,16 +1773,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1641,
-      "bytes": 26434791,
-      "tokens_est": 6599049,
+      "files": 1657,
+      "bytes": 26545192,
+      "tokens_est": 6626654,
       "roles": {
-        "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "interface_surface": 67,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
-        "schema_or_lexicon": 271,
+        "python_module": 1009,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -1836,7 +1852,10 @@
         "aura_spatial_web/webgl2_renderer.js",
         "aura_spatial_web/webgpu_renderer.js",
         "aura_spatial_web/webxr_session.js",
-        "index.html"
+        "index.html",
+        "tools/project034/gemini_extension/content.js",
+        "tools/project034/gemini_extension/popup.html",
+        "tools/project034/gemini_extension/popup.js"
       ]
     },
     {
@@ -3463,6 +3482,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "function",
+        "line": 233,
+        "end_line": 240,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#function:main:4b24123876e727ab",
+        "signature_hash": "b786ec4eb1f4c6e3"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -3581,6 +3608,14 @@
         "end_line": 50,
         "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:route:eb0e206255813d1b",
         "signature_hash": "3dcdb4dda21086ef"
+      },
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 61,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#function:route:d668a1c51a90ba5c",
+        "signature_hash": "397b3f886f767dc5"
       }
     ],
     "run": [
@@ -10845,6 +10880,14 @@
         "end_line": 554,
         "semantic_id": "aura_showcase_server.py#function:serve:f58d2e2bab68e673",
         "signature_hash": "986007412e5bd08f"
+      },
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "function",
+        "line": 223,
+        "end_line": 230,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#function:serve:36521475d4de8d16",
+        "signature_hash": "54f151128d7bdac2"
       }
     ],
     "serve.Handler": [
@@ -31355,6 +31398,14 @@
         "end_line": 472,
         "semantic_id": "aura_human_agent_wfst_adapter.py#function:_bounded_result:3a35f665cb155c6f",
         "signature_hash": "a247335c50a71635"
+      },
+      {
+        "file": "tools/project034/gemini_tool_broker.py",
+        "kind": "function",
+        "line": 204,
+        "end_line": 221,
+        "semantic_id": "tools/project034/gemini_tool_broker.py#function:_bounded_result:1009150397a021ef",
+        "signature_hash": "0dff173144da48ed"
       }
     ],
     "_blocked_message": [
@@ -45429,6 +45480,14 @@
         "end_line": 63,
         "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:canonical_json:db24948aa4a8caf8",
         "signature_hash": "c9911db40069043d"
+      },
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:canonical_json:e084ed39e92d7949",
+        "signature_hash": "2af8a10abc3d606e"
       }
     ],
     "stable_digest": [
@@ -116681,6 +116740,14 @@
         "end_line": 35,
         "semantic_id": "tests/test_aura_architecture_harness_git_tree_routing.py#function:binding:7d52be074af4d521",
         "signature_hash": "97c87ea61d7fe441"
+      },
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 34,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#function:binding:a55ffa8a7cff4bb1",
+        "signature_hash": "693e6fced2c44e08"
       }
     ],
     "blob": [
@@ -136153,6 +136220,14 @@
         "end_line": 223,
         "semantic_id": "tests/test_aura_gate.py#function:request:7c151532eef8bfd3",
         "signature_hash": "9045b73142116e1c"
+      },
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 51,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#function:request:6356419329c06ed5",
+        "signature_hash": "73e55ab01ce963f2"
       }
     ],
     "test_prepare_compiles_exact_evidence_contract": [
@@ -157383,6 +157458,166 @@
         "signature_hash": "539a8ea0c99ffe91"
       }
     ],
+    "WakeRefusal": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 24,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:WakeRefusal:0aafb6df299438b5",
+        "signature_hash": "5ae430d772fb691b"
+      }
+    ],
+    "WakeRefusal.__init__": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 24,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:WakeRefusal.__init__:43386a86be893156",
+        "signature_hash": "42bd2d17d3dd6102"
+      }
+    ],
+    "WakeIntent": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 43,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:WakeIntent:aa7122378e174607",
+        "signature_hash": "15352cf900d59e83"
+      }
+    ],
+    "WakeIntent.canonical_bytes": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:WakeIntent.canonical_bytes:4e6a1e558324c699",
+        "signature_hash": "2f07c43e7574fbf0"
+      }
+    ],
+    "FileWakeLedger": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 109,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:FileWakeLedger:ddb86f11cc7262aa",
+        "signature_hash": "e9425ba8559885c9"
+      }
+    ],
+    "FileWakeLedger.__init__": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.__init__:ba2d63e2291b33a4",
+        "signature_hash": "977a4d9126c48d60"
+      }
+    ],
+    "FileWakeLedger.path_for": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.path_for:8dc28fa6f9109414",
+        "signature_hash": "078dc3c45475194f"
+      }
+    ],
+    "FileWakeLedger._read_landed": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 64,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger._read_landed:a66d94f2b7a4d641",
+        "signature_hash": "97498012ca8a0675"
+      }
+    ],
+    "FileWakeLedger.append": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 103,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.append:c6d9233c4d402782",
+        "signature_hash": "4b01af1f5a5efbee"
+      }
+    ],
+    "FileWakeLedger.events": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 109,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.events:5fc1a3850db2fd38",
+        "signature_hash": "f313fb85cbb4b333"
+      }
+    ],
+    "ArenaWakeScheduler": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 112,
+        "end_line": 250,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:ArenaWakeScheduler:cbdbe1176225fecb",
+        "signature_hash": "37e53c944b82381b"
+      }
+    ],
+    "ArenaWakeScheduler.__init__": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 116,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.__init__:bac6205636337383",
+        "signature_hash": "188e0eaf70d47cbe"
+      }
+    ],
+    "ArenaWakeScheduler._event_id": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 123,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler._event_id:434cac3e74149235",
+        "signature_hash": "2e70e5ac54cff2c7"
+      }
+    ],
+    "ArenaWakeScheduler._best_worker": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 136,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler._best_worker:4fc35b70752f2276",
+        "signature_hash": "7f5ef351913906f7"
+      }
+    ],
+    "ArenaWakeScheduler.emit_recommission_required": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 164,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.emit_recommission_required:6b009e02400163d3",
+        "signature_hash": "68857bd4a7cb6700"
+      }
+    ],
+    "ArenaWakeScheduler.scan_and_emit": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 250,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.scan_and_emit:d4fc18fd5188e4f3",
+        "signature_hash": "6f072d1f5b6814b5"
+      }
+    ],
     "state_with": [
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
@@ -157571,6 +157806,1500 @@
         "end_line": 159,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_snapshot_declares_scheduler_zero_inference:7de24f14c7a41221",
         "signature_hash": "cc079d5b3cc53c1b"
+      }
+    ],
+    "WakeAdapterTests": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 141,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#class:WakeAdapterTests:8e87e2dff9146293",
+        "signature_hash": "5fbd35eb792d60f3"
+      }
+    ],
+    "WakeAdapterTests.setUp": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 20,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.setUp:99d6e0d2dfe47273",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "WakeAdapterTests.tearDown": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.tearDown:6a873c33e2775262",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "WakeAdapterTests.state": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.state:ad667dc0821d6f25",
+        "signature_hash": "f690bd7d3b182ac1"
+      }
+    ],
+    "WakeAdapterTests.test_newly_eligible_work_emits_one_targeted_wake": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 37,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_newly_eligible_work_emits_one_targeted_wake:20b8df478d065651",
+        "signature_hash": "d15d86311fb18654"
+      }
+    ],
+    "WakeAdapterTests.test_repeated_scan_is_idempotent_on_disk": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 44,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_repeated_scan_is_idempotent_on_disk:3a2c99579ce342d4",
+        "signature_hash": "5d55b8d8870b2a59"
+      }
+    ],
+    "WakeAdapterTests.test_dependency_completion_wakes_newly_eligible_work_version": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 55,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_dependency_completion_wakes_newly_eligible_work_version:8408c99e97b41a73",
+        "signature_hash": "192301ecc2368d36"
+      }
+    ],
+    "WakeAdapterTests.test_claimed_work_does_not_emit_wake": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 61,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_claimed_work_does_not_emit_wake:013c225fd5878f2c",
+        "signature_hash": "88b2d5a2578b199d"
+      }
+    ],
+    "WakeAdapterTests.test_capability_mismatch_does_not_emit": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 66,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_capability_mismatch_does_not_emit:ebba5b74694de691",
+        "signature_hash": "da623af4133f94d1"
+      }
+    ],
+    "WakeAdapterTests.test_stale_currentness_emits_rebase_not_work": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 75,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_stale_currentness_emits_rebase_not_work:c980b12b8542104f",
+        "signature_hash": "fce4b39647755046"
+      }
+    ],
+    "WakeAdapterTests.test_reopen_version_allows_new_wake_without_rewriting_old_event": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 82,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_reopen_version_allows_new_wake_without_rewriting_old_event:9c4f4597a8fd0ee7",
+        "signature_hash": "45d8ab1d528b1894"
+      }
+    ],
+    "WakeAdapterTests.test_restart_reuses_durable_ledger_idempotently": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 90,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_restart_reuses_durable_ledger_idempotently:f76ad5f451be8ca6",
+        "signature_hash": "54c78eba6d1baed7"
+      }
+    ],
+    "WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 122,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file:bf84d874c0b27747",
+        "signature_hash": "b9a15cfe21d72cfa"
+      }
+    ],
+    "WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file.writer": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 112,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file.writer:7230e84b194bea1c",
+        "signature_hash": "227f60c8356d95b3"
+      }
+    ],
+    "WakeAdapterTests.test_one_worker_receives_at_most_one_work_wake_per_scan": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 130,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_one_worker_receives_at_most_one_work_wake_per_scan:2f9e55c4c47e8c75",
+        "signature_hash": "7836cfba5f618873"
+      }
+    ],
+    "WakeAdapterTests.test_recommission_intent_is_coordination_only": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 141,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_recommission_intent_is_coordination_only:d7f5a473caaa4ca6",
+        "signature_hash": "213662e123943d7e"
+      }
+    ],
+    "ToolRouteV1": [
+      {
+        "file": "tools/project034/gemini_tool_broker.py",
+        "kind": "class",
+        "line": 69,
+        "end_line": 82,
+        "semantic_id": "tools/project034/gemini_tool_broker.py#class:ToolRouteV1:d98efe96ba3b4094",
+        "signature_hash": "ce0ab85d4096ab45"
+      }
+    ],
+    "ToolRouteV1.validate": [
+      {
+        "file": "tools/project034/gemini_tool_broker.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 82,
+        "semantic_id": "tools/project034/gemini_tool_broker.py#method:ToolRouteV1.validate:538881c099cb7e7f",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ToolAdmissionV1": [
+      {
+        "file": "tools/project034/gemini_tool_broker.py",
+        "kind": "class",
+        "line": 86,
+        "end_line": 148,
+        "semantic_id": "tools/project034/gemini_tool_broker.py#class:ToolAdmissionV1:44fc3b6ca6b5babf",
+        "signature_hash": "04b7d0904905490d"
+      }
+    ],
+    "ToolAdmissionV1.validate": [
+      {
+        "file": "tools/project034/gemini_tool_broker.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 148,
+        "semantic_id": "tools/project034/gemini_tool_broker.py#method:ToolAdmissionV1.validate:b063af9b67398f55",
+        "signature_hash": "58b388e3e5d1af1d"
+      }
+    ],
+    "ToolBrokerReceiptV1": [
+      {
+        "file": "tools/project034/gemini_tool_broker.py",
+        "kind": "class",
+        "line": 152,
+        "end_line": 165,
+        "semantic_id": "tools/project034/gemini_tool_broker.py#class:ToolBrokerReceiptV1:d4a326897f4057d7",
+        "signature_hash": "7c16a60bb800698e"
+      }
+    ],
+    "ToolBrokerReceiptV1.receipt_id": [
+      {
+        "file": "tools/project034/gemini_tool_broker.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 165,
+        "semantic_id": "tools/project034/gemini_tool_broker.py#method:ToolBrokerReceiptV1.receipt_id:d5bfb7c25a900ff8",
+        "signature_hash": "27b319060788cc16"
+      }
+    ],
+    "_reject_caller_controls": [
+      {
+        "file": "tools/project034/gemini_tool_broker.py",
+        "kind": "function",
+        "line": 175,
+        "end_line": 184,
+        "semantic_id": "tools/project034/gemini_tool_broker.py#function:_reject_caller_controls:cd30202f554e3075",
+        "signature_hash": "e595343c1fcb9d05"
+      }
+    ],
+    "_redact_sensitive_result": [
+      {
+        "file": "tools/project034/gemini_tool_broker.py",
+        "kind": "function",
+        "line": 187,
+        "end_line": 201,
+        "semantic_id": "tools/project034/gemini_tool_broker.py#function:_redact_sensitive_result:7bcec4efee3ffd3d",
+        "signature_hash": "f4e9d4600081bf6a"
+      }
+    ],
+    "request_digest": [
+      {
+        "file": "tools/project034/gemini_tool_broker.py",
+        "kind": "function",
+        "line": 224,
+        "end_line": 225,
+        "semantic_id": "tools/project034/gemini_tool_broker.py#function:request_digest:21c0ae266966f080",
+        "signature_hash": "774b62d3c6793cd6"
+      }
+    ],
+    "execute_admitted_tool": [
+      {
+        "file": "tools/project034/gemini_tool_broker.py",
+        "kind": "function",
+        "line": 228,
+        "end_line": 315,
+        "semantic_id": "tools/project034/gemini_tool_broker.py#function:execute_admitted_tool:e4ce6531451777ab",
+        "signature_hash": "1216c817d361e4ee"
+      }
+    ],
+    "BridgeRefusal": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 34,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:BridgeRefusal:3d8b1d7caa91e100",
+        "signature_hash": "983814771dcfd5e5"
+      }
+    ],
+    "BridgeRefusal.__init__": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:BridgeRefusal.__init__:eb6112d608aa7bbc",
+        "signature_hash": "42bd2d17d3dd6102"
+      }
+    ],
+    "sha256_text": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:sha256_text:df73d1c73a6d8a44",
+        "signature_hash": "fd4f177eca9be0a5"
+      }
+    ],
+    "stable_idempotency_key": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 48,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:stable_idempotency_key:1eee1a155e6fd5e2",
+        "signature_hash": "530608322cd5fa48"
+      }
+    ],
+    "EndpointBindingV1": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "class",
+        "line": 52,
+        "end_line": 82,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:EndpointBindingV1:109bae93f57c899c",
+        "signature_hash": "d167e2611a0c4a60"
+      }
+    ],
+    "EndpointBindingV1.validate": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 82,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:EndpointBindingV1.validate:19a54c612e1bab1d",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ArenaTurnEnvelopeV1": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "class",
+        "line": 86,
+        "end_line": 133,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:ArenaTurnEnvelopeV1:ade91ea787909eb5",
+        "signature_hash": "f57e3230b06c10b4"
+      }
+    ],
+    "ArenaTurnEnvelopeV1.validate": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 133,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:ArenaTurnEnvelopeV1.validate:5bb7cefd10a7bb12",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ArenaTurnResultV1": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "class",
+        "line": 137,
+        "end_line": 160,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:ArenaTurnResultV1:b121fc74ee0c1eaa",
+        "signature_hash": "83a79e545f20e076"
+      }
+    ],
+    "ArenaTurnResultV1.validate": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 160,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:ArenaTurnResultV1.validate:831c9aa3c663a3b7",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "AuraToolRequestV1": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "class",
+        "line": 164,
+        "end_line": 179,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:AuraToolRequestV1:182080cc96d4edc3",
+        "signature_hash": "cc136d64f9924890"
+      }
+    ],
+    "AuraToolRequestV1.validate": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 173,
+        "end_line": 179,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:AuraToolRequestV1.validate:5a8f243bcb8017c0",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "AuraToolResultV1": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "class",
+        "line": 183,
+        "end_line": 199,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:AuraToolResultV1:27bfaa61ecbfeb5d",
+        "signature_hash": "7e45dba271dddcff"
+      }
+    ],
+    "AuraToolResultV1.validate": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 199,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:AuraToolResultV1.validate:4bb2cf5206390b10",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "BridgeLedgerV1": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "class",
+        "line": 203,
+        "end_line": 231,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:BridgeLedgerV1:0266694e5cca864a",
+        "signature_hash": "858e95d68a2736d0"
+      }
+    ],
+    "BridgeLedgerV1.mark_turn_sent": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 208,
+        "end_line": 211,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:BridgeLedgerV1.mark_turn_sent:2c887b681ffd8288",
+        "signature_hash": "dfe287ed71cdc800"
+      }
+    ],
+    "BridgeLedgerV1.accept_result": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 218,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:BridgeLedgerV1.accept_result:a30443b6eb1f7056",
+        "signature_hash": "aa0665fee8c0793a"
+      }
+    ],
+    "BridgeLedgerV1.accept_tool_request": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 220,
+        "end_line": 223,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:BridgeLedgerV1.accept_tool_request:0002c187a12b0b65",
+        "signature_hash": "3b272cdd12023b15"
+      }
+    ],
+    "BridgeLedgerV1.to_dict": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 225,
+        "end_line": 231,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:BridgeLedgerV1.to_dict:1794f9cccd04d964",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "admit_turn": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "function",
+        "line": 234,
+        "end_line": 250,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:admit_turn:3abf14edd62d556a",
+        "signature_hash": "55e83d77f5a6d505"
+      }
+    ],
+    "admit_result": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "function",
+        "line": 253,
+        "end_line": 275,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:admit_result:a83f596947aaff1f",
+        "signature_hash": "322323a9631cda70"
+      }
+    ],
+    "admit_tool_request": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "function",
+        "line": 278,
+        "end_line": 305,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:admit_tool_request:797d576960231435",
+        "signature_hash": "81e7facc09a41fdb"
+      }
+    ],
+    "compile_bootstrap_prompt": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "function",
+        "line": 308,
+        "end_line": 348,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:compile_bootstrap_prompt:36523003cbe53036",
+        "signature_hash": "3a49db890de1a5c0"
+      }
+    ],
+    "envelope_digest": [
+      {
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "kind": "function",
+        "line": 351,
+        "end_line": 352,
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:envelope_digest:ef9a251c00961c3c",
+        "signature_hash": "a0f75f1ee2048857"
+      }
+    ],
+    "LoopbackContextV1": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 61,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#class:LoopbackContextV1:0960228587f7e560",
+        "signature_hash": "cfaad45879b7ff48"
+      }
+    ],
+    "LoopbackContextV1.__init__": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 29,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:LoopbackContextV1.__init__:5080015415b0319c",
+        "signature_hash": "d65503f663f5ee26"
+      }
+    ],
+    "LoopbackContextV1._load_or_create_token": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 43,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:LoopbackContextV1._load_or_create_token:72172c2907755fbd",
+        "signature_hash": "7b3f0ec91138c349"
+      }
+    ],
+    "LoopbackContextV1.currentness": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 52,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:LoopbackContextV1.currentness:28605e49e5736148",
+        "signature_hash": "4b6999d238fe0b4e"
+      }
+    ],
+    "LoopbackContextV1.load_turn": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 61,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:LoopbackContextV1.load_turn:d83c55b8387dc143",
+        "signature_hash": "18fe0ab481d0abcf"
+      }
+    ],
+    "GeminiLoopbackHandler": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 212,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#class:GeminiLoopbackHandler:a9ac0c70c9ab53fe",
+        "signature_hash": "c9b4a075323ebcdb"
+      }
+    ],
+    "GeminiLoopbackHandler.ctx": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 69,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler.ctx:24d432b5cc7459a4",
+        "signature_hash": "dd89317f732ac6ae"
+      }
+    ],
+    "GeminiLoopbackHandler.log_message": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 72,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler.log_message:a58690977ea37231",
+        "signature_hash": "597d3a0b669497e3"
+      }
+    ],
+    "GeminiLoopbackHandler._json": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 81,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._json:5c379aac3891bbd7",
+        "signature_hash": "4857ecebd3cd3076"
+      }
+    ],
+    "GeminiLoopbackHandler._authorized": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 85,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._authorized:88171c5be0da15f3",
+        "signature_hash": "6f972adbd577ae8c"
+      }
+    ],
+    "GeminiLoopbackHandler._require_auth": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 91,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._require_auth:0d7252a0350c4eab",
+        "signature_hash": "2fb97206533e7adf"
+      }
+    ],
+    "GeminiLoopbackHandler._read_json": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 107,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._read_json:2b1030e1a88513ef",
+        "signature_hash": "9c6d2b11ecd8b3b6"
+      }
+    ],
+    "GeminiLoopbackHandler._handle_refusal": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 110,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._handle_refusal:d371aef664b0158b",
+        "signature_hash": "858962872f6ece9a"
+      }
+    ],
+    "GeminiLoopbackHandler.do_GET": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 127,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler.do_GET:abab051f04cce5e8",
+        "signature_hash": "0f22ff7b0395d880"
+      }
+    ],
+    "GeminiLoopbackHandler._get_next_turn": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 161,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._get_next_turn:afdb6b6cc46c62b6",
+        "signature_hash": "84e02eadbaac05d3"
+      }
+    ],
+    "GeminiLoopbackHandler.do_POST": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 181,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler.do_POST:849007084a712df1",
+        "signature_hash": "64513fb064b3a086"
+      }
+    ],
+    "GeminiLoopbackHandler._post_result": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 193,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._post_result:15d6097cf509d6c2",
+        "signature_hash": "3fc068fd8a2c464b"
+      }
+    ],
+    "GeminiLoopbackHandler._post_tool_request": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 195,
+        "end_line": 212,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._post_tool_request:52b11a5cd604d9ae",
+        "signature_hash": "a1d513a842ed1ba4"
+      }
+    ],
+    "GeminiLoopbackServer": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "class",
+        "line": 215,
+        "end_line": 220,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#class:GeminiLoopbackServer:27b5157211943ecf",
+        "signature_hash": "d4086e9aa5582e93"
+      }
+    ],
+    "GeminiLoopbackServer.__init__": [
+      {
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 220,
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackServer.__init__:a0a37b498e80b832",
+        "signature_hash": "d930db4d5cd710e9"
+      }
+    ],
+    "RelayStoreV1": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 282,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#class:RelayStoreV1:071f3af3fad8e1bf",
+        "signature_hash": "3598be07700871c0"
+      }
+    ],
+    "RelayStoreV1.__init__": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 52,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.__init__:1cba00eae77f5e5f",
+        "signature_hash": "d65503f663f5ee26"
+      }
+    ],
+    "RelayStoreV1._atomic_create_json": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 78,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1._atomic_create_json:04cad031df67224f",
+        "signature_hash": "15ccd2513d612ce6"
+      }
+    ],
+    "RelayStoreV1._replace_state_json": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 93,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1._replace_state_json:f0524353d1d0dae8",
+        "signature_hash": "cd9f83511737abe0"
+      }
+    ],
+    "RelayStoreV1._load_ledger": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 105,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1._load_ledger:edfaf8be1bfd3c00",
+        "signature_hash": "55bb01926d2ab7b8"
+      }
+    ],
+    "RelayStoreV1._persist_ledger": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 108,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1._persist_ledger:42099b0be8ba26b2",
+        "signature_hash": "bbb38476f2747846"
+      }
+    ],
+    "RelayStoreV1.bind_endpoint": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 120,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.bind_endpoint:5b8485bf87660056",
+        "signature_hash": "9f0dee60865124d0"
+      }
+    ],
+    "RelayStoreV1.load_binding": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 130,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.load_binding:52c857ddca449439",
+        "signature_hash": "7ce7e7ec7eed1bc4"
+      }
+    ],
+    "RelayStoreV1.release_endpoint": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 136,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.release_endpoint:069c2f33db7c0b6c",
+        "signature_hash": "6d4d5ba44a83759f"
+      }
+    ],
+    "RelayStoreV1.publish_turn": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 168,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.publish_turn:56efb6712ce2f217",
+        "signature_hash": "46f08d303a4a39b0"
+      }
+    ],
+    "RelayStoreV1.accept_turn_result": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 170,
+        "end_line": 202,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.accept_turn_result:23b70fd98e7418c4",
+        "signature_hash": "6e6dc69f1ddcaafb"
+      }
+    ],
+    "RelayStoreV1.accept_tool_request": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 236,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.accept_tool_request:de3399be1f295d6f",
+        "signature_hash": "7eae04f67e9ed24c"
+      }
+    ],
+    "RelayStoreV1.publish_tool_result": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 238,
+        "end_line": 253,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.publish_tool_result:4048eca3bace3318",
+        "signature_hash": "a2ba77349b3d7c0f"
+      }
+    ],
+    "RelayStoreV1.list_pending_turns": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 255,
+        "end_line": 259,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.list_pending_turns:7d925d83716b80b0",
+        "signature_hash": "df91537db50efafc"
+      }
+    ],
+    "RelayStoreV1._write_receipt": [
+      {
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 261,
+        "end_line": 282,
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1._write_receipt:a2be7804fbdafe4a",
+        "signature_hash": "eff7f92d3544a1f5"
+      }
+    ],
+    "envelope": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 39,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#function:envelope:064761c29360b2ce",
+        "signature_hash": "f9d55436b9064ce6"
+      },
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 53,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#function:envelope:c8580d2a3bd70370",
+        "signature_hash": "6b342b0611df6521"
+      }
+    ],
+    "admission_provider": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 81,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#function:admission_provider:2db6a9877c5ec2d5",
+        "signature_hash": "a6de60c70aa63ec1"
+      }
+    ],
+    "GeminiToolBrokerTests": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "class",
+        "line": 84,
+        "end_line": 228,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#class:GeminiToolBrokerTests:1a47edaac793a35e",
+        "signature_hash": "546cc0f8992c583f"
+      }
+    ],
+    "GeminiToolBrokerTests.test_valid_read_executes_after_ack": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 110,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_valid_read_executes_after_ack:e08ea3a69fa9d290",
+        "signature_hash": "4ab4ff19a65deb36"
+      }
+    ],
+    "GeminiToolBrokerTests.test_valid_read_executes_after_ack.ack": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 89,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_valid_read_executes_after_ack.ack:4a77fded137f517e",
+        "signature_hash": "0810bd9657756b8f"
+      }
+    ],
+    "GeminiToolBrokerTests.test_valid_read_executes_after_ack.executor": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 93,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_valid_read_executes_after_ack.executor:b90ceef41d3eeac1",
+        "signature_hash": "f5e2878c705f16f4"
+      }
+    ],
+    "GeminiToolBrokerTests.test_caller_cannot_supply_credentials_or_executor_controls": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 125,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_caller_cannot_supply_credentials_or_executor_controls:9cd619e7a5c6b26c",
+        "signature_hash": "8487aac768827be7"
+      }
+    ],
+    "GeminiToolBrokerTests.test_stale_context_fails_before_admission_or_executor": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 145,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_stale_context_fails_before_admission_or_executor:f01fe90fc9809268",
+        "signature_hash": "8b176b25a924a267"
+      }
+    ],
+    "GeminiToolBrokerTests.test_stale_context_fails_before_admission_or_executor.admission": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 132,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_stale_context_fails_before_admission_or_executor.admission:38608fbc8101eeb2",
+        "signature_hash": "1f601254f117d928"
+      }
+    ],
+    "GeminiToolBrokerTests.test_mismatched_host_admission_fails_before_effect": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 165,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_mismatched_host_admission_fails_before_effect:8c011f79dfeae66c",
+        "signature_hash": "e5716c508f4a4030"
+      }
+    ],
+    "GeminiToolBrokerTests.test_mismatched_host_admission_fails_before_effect.bad_admission": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 152,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_mismatched_host_admission_fails_before_effect.bad_admission:f34b294cf1eda17e",
+        "signature_hash": "878bf4efa254a4db"
+      }
+    ],
+    "GeminiToolBrokerTests.test_ack_failure_prevents_executor_effect": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 184,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_ack_failure_prevents_executor_effect:86b5fde66cf24394",
+        "signature_hash": "6ddf16882d22503f"
+      }
+    ],
+    "GeminiToolBrokerTests.test_ack_failure_prevents_executor_effect.bad_ack": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 170,
+        "end_line": 171,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_ack_failure_prevents_executor_effect.bad_ack:0830c57c66336174",
+        "signature_hash": "e532576d8f28d6de"
+      }
+    ],
+    "GeminiToolBrokerTests.test_sensitive_structured_result_fields_are_redacted": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 186,
+        "end_line": 202,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_sensitive_structured_result_fields_are_redacted:51bd04af876c6891",
+        "signature_hash": "dd05899aff8f606a"
+      }
+    ],
+    "GeminiToolBrokerTests.test_result_bound_is_enforced": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 215,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_result_bound_is_enforced:10dfe2e177416115",
+        "signature_hash": "9234da233e76a952"
+      }
+    ],
+    "GeminiToolBrokerTests.test_unknown_executor_fails_after_admission_but_before_effect": [
+      {
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "kind": "method",
+        "line": 217,
+        "end_line": 228,
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_unknown_executor_fails_after_admission_but_before_effect:b7c873d53f031fc4",
+        "signature_hash": "d6d3cdb324f464e4"
+      }
+    ],
+    "make_binding": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 36,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#function:make_binding:31099a8a9681bdda",
+        "signature_hash": "54267d95f770828e"
+      },
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 37,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#function:make_binding:bf8a26c49e241f76",
+        "signature_hash": "b97d056cf6e47eed"
+      }
+    ],
+    "make_envelope": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 60,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#function:make_envelope:0e22b2d9ff872d7b",
+        "signature_hash": "da0f54ed50949c9e"
+      },
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 56,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#function:make_envelope:f6a7f9606112b2f5",
+        "signature_hash": "e196644f0f8fccb6"
+      }
+    ],
+    "make_result": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 77,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#function:make_result:d4082503caceebfd",
+        "signature_hash": "c817de4d1d351019"
+      }
+    ],
+    "GeminiWebchatEndpointTests": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 249,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#class:GeminiWebchatEndpointTests:ccc2799cb698f90a",
+        "signature_hash": "72d07652bdac7b25"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_valid_assisted_turn_admits": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 82,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_valid_assisted_turn_admits:63d87e29c38d5636",
+        "signature_hash": "aa8a8684b987ae31"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_guarded_auto_requires_owner_enablement": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 87,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_guarded_auto_requires_owner_enablement:df696d5d8086b3d6",
+        "signature_hash": "4bebc7dfae7cda73"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_wrong_browser_origin_fails_closed": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 92,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_wrong_browser_origin_fails_closed:9e14fbcb95341462",
+        "signature_hash": "887747c3b4af92cc"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_stale_arena_head_refused_before_send": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 97,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_stale_arena_head_refused_before_send:a3281e4c77dc05ed",
+        "signature_hash": "b325ac764687dbdf"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_stale_currentness_refused_before_send": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 102,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_stale_currentness_refused_before_send:ec86f2fdb7dccc4b",
+        "signature_hash": "7dcd9f6f611de1d3"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_idempotency_key_is_bound_to_head_and_turn": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 108,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_idempotency_key_is_bound_to_head_and_turn:c98f73c93dbee441",
+        "signature_hash": "54efa885850b9828"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_duplicate_turn_send_is_refused": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 115,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_duplicate_turn_send_is_refused:543c936fed9f1d7c",
+        "signature_hash": "618347a21a4bcc73"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_result_must_match_endpoint_visit_and_turn": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 126,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_result_must_match_endpoint_visit_and_turn:6749886b34c8e32c",
+        "signature_hash": "6166e7f86b82cbb9"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_visible_result_hash_is_verified": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 131,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_visible_result_hash_is_verified:c0c6c06924b729b3",
+        "signature_hash": "45a88ac59aa5770f"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_result_for_unsent_turn_is_refused": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 137,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_result_for_unsent_turn_is_refused:cea6538614532b15",
+        "signature_hash": "59077355f4220788"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_duplicate_result_is_refused": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 145,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_duplicate_result_is_refused:2f9df25c2837429e",
+        "signature_hash": "3f34573c6eabc718"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_tool_request_must_be_allowlisted": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 165,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_tool_request_must_be_allowlisted:37a17bfe54f381f9",
+        "signature_hash": "9ecdba5f728ee2b7"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_tool_effect_must_match_admitted_route": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 202,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_tool_effect_must_match_admitted_route:b5f5c34e41fa7ce8",
+        "signature_hash": "0bc8a0412f70164c"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_tool_over_capsule_effect_is_refused": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 222,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_tool_over_capsule_effect_is_refused:5d3c7d352b268c0a",
+        "signature_hash": "a7087fc99d415294"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_duplicate_tool_request_is_refused": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 224,
+        "end_line": 238,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_duplicate_tool_request_is_refused:21cd13484a3ce09b",
+        "signature_hash": "ff20dfe68a6c040e"
+      }
+    ],
+    "GeminiWebchatEndpointTests.test_bootstrap_prompt_contains_safety_contract_but_no_credential_material": [
+      {
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "kind": "method",
+        "line": 240,
+        "end_line": 249,
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_bootstrap_prompt_contains_safety_contract_but_no_credential_material:495dd2151295806a",
+        "signature_hash": "a6bb680019da2a21"
+      }
+    ],
+    "LoopbackFacadeTests": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "class",
+        "line": 59,
+        "end_line": 198,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#class:LoopbackFacadeTests:caf4fbffb4d92804",
+        "signature_hash": "9a613560d8857547"
+      }
+    ],
+    "LoopbackFacadeTests.setUp": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 85,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.setUp:ad09853c31521f61",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "LoopbackFacadeTests.tearDown": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 91,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.tearDown:2f109dc8a665178d",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "LoopbackFacadeTests.request": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 106,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.request:c5af84a1f83a9194",
+        "signature_hash": "664384853ab53b59"
+      }
+    ],
+    "LoopbackFacadeTests.test_health_does_not_require_bridge_token": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 111,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_health_does_not_require_bridge_token:ee7829538f6d3d78",
+        "signature_hash": "f88ff4edfc688d7f"
+      }
+    ],
+    "LoopbackFacadeTests.test_turn_poll_requires_auth": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 117,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_turn_poll_requires_auth:2a01d0f6935a1aa3",
+        "signature_hash": "e0909563a2c75aeb"
+      }
+    ],
+    "LoopbackFacadeTests.test_next_turn_is_bound_and_returns_visible_bootstrap": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 126,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_next_turn_is_bound_and_returns_visible_bootstrap:03e866366d8fd00b",
+        "signature_hash": "d547726585b568cc"
+      }
+    ],
+    "LoopbackFacadeTests.test_wrong_endpoint_or_visit_fails_closed": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 132,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_wrong_endpoint_or_visit_fails_closed:c6d0bac6de91772a",
+        "signature_hash": "12310578ddb3485c"
+      }
+    ],
+    "LoopbackFacadeTests.test_stale_currentness_fails_before_turn_delivery": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 148,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_stale_currentness_fails_before_turn_delivery:db6020fefc925ffe",
+        "signature_hash": "c8d33fafb60a083f"
+      }
+    ],
+    "LoopbackFacadeTests.test_visible_result_roundtrip_is_accepted_once": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 172,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_visible_result_roundtrip_is_accepted_once:e0506f962e54e2ab",
+        "signature_hash": "8c6352550a1b6792"
+      }
+    ],
+    "LoopbackFacadeTests.test_tool_request_roundtrip_hits_effect_policy": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 186,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_tool_request_roundtrip_hits_effect_policy:2642c16612502204",
+        "signature_hash": "ae49e9e3274b36bd"
+      }
+    ],
+    "LoopbackFacadeTests.test_loopback_token_is_not_provider_credential_material": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 193,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_loopback_token_is_not_provider_credential_material:45e35d88e4850837",
+        "signature_hash": "40015a984688da35"
+      }
+    ],
+    "LoopbackFacadeTests.test_non_loopback_bind_is_refused_before_server_start": [
+      {
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "kind": "method",
+        "line": 195,
+        "end_line": 198,
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_non_loopback_bind_is_refused_before_server_start:d33aabe46685592d",
+        "signature_hash": "d2a1564ff774a312"
+      }
+    ],
+    "result": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 67,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#function:result:b42e7eb2ff14b115",
+        "signature_hash": "7ec6b3fd6be46407"
+      }
+    ],
+    "RelayStoreTests": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "class",
+        "line": 70,
+        "end_line": 172,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#class:RelayStoreTests:c2feb5300ac6825b",
+        "signature_hash": "a0cbe088c4c8403a"
+      }
+    ],
+    "RelayStoreTests.setUp": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 75,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.setUp:817e839cf6ca7840",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "RelayStoreTests.tearDown": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 78,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.tearDown:8047c5786591ff35",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "RelayStoreTests.test_turn_publish_is_durable_and_pending": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 87,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_turn_publish_is_durable_and_pending:d9bca1073a31b224",
+        "signature_hash": "f8a00a021d4fd326"
+      }
+    ],
+    "RelayStoreTests.test_duplicate_turn_publish_fails_closed": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 93,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_duplicate_turn_publish_fails_closed:24d52e7b8e97a9f3",
+        "signature_hash": "b3ac0fcc6f634ab0"
+      }
+    ],
+    "RelayStoreTests.test_stale_turn_is_not_written": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 99,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_stale_turn_is_not_written:067bd63d02e1977d",
+        "signature_hash": "80e70eb0c263887d"
+      }
+    ],
+    "RelayStoreTests.test_result_requires_prior_send_and_removes_pending": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 107,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_result_requires_prior_send_and_removes_pending:9598e822fbc3a6bf",
+        "signature_hash": "ab95688bcb47f087"
+      }
+    ],
+    "RelayStoreTests.test_relay_restart_preserves_replay_state": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 114,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_relay_restart_preserves_replay_state:053309f84142310b",
+        "signature_hash": "a97620d770d0886a"
+      }
+    ],
+    "RelayStoreTests.test_endpoint_rebind_requires_release": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 122,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_endpoint_rebind_requires_release:9493be5ebe6cf2cd",
+        "signature_hash": "26e5e8cc81823558"
+      }
+    ],
+    "RelayStoreTests.test_tool_request_and_result_are_bound": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 152,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_tool_request_and_result_are_bound:82b21f14c55c5efc",
+        "signature_hash": "3bbb27a3de009f45"
+      }
+    ],
+    "RelayStoreTests.test_tool_result_without_request_fails": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 164,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_tool_result_without_request_fails:bfd63e61fddd2f87",
+        "signature_hash": "dfc8716ea4f956b6"
+      }
+    ],
+    "RelayStoreTests.test_atomic_create_rejects_existing_object": [
+      {
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 172,
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_atomic_create_rejects_existing_object:6937f3e6a811b8b3",
+        "signature_hash": "16dc40be67833463"
       }
     ],
     "_coordinates": [
@@ -158998,6 +160727,10 @@
     "python scripts/aura_spatial_s5_s6_construction_architect_harness.py --repo-root . --base-ref \"origin/$BASE_REF\" --head-ref HEAD --observed-head \"$(git rev-parse HEAD)\" --receipt /tmp/aura-spatial-s5-s6-receipts/full.json": [
       ".github/workflows/aura-spatial-s5-s6-construction.yml"
     ],
+    "python -m unittest": [
+      ".github/workflows/awj034-gemini-webchat-bridge.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
@@ -159686,9 +161419,6 @@
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
     ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
-    ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
     ],
@@ -159715,6 +161445,9 @@
     ],
     "python test_pvm_logic.py": [
       "test_pvm_logic.py"
+    ],
+    "python tools/project034/gemini_webchat_loopback.py --root ~/.aura/gemini_webchat_bridge": [
+      "tools/project034/gemini_extension/README.md"
     ],
     "python verify_os.py": [
       "verify_os.py"
@@ -168521,6 +170254,59 @@
         0.183493,
         0.241705,
         0.036699
+      ]
+    },
+    {
+      "path": ".github/workflows/awj034-gemini-webchat-bridge.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1232,
+      "lines": 42,
+      "tokens_est": 308,
+      "symbol_count": 0,
+      "commands": [
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m unittest": [
+          31
+        ]
+      },
+      "topology": {},
+      "digest8": "e78262954dd2ffe1",
+      "vector": [
+        -0.092558,
+        0.055942,
+        -0.259366,
+        0.230887,
+        -0.230887,
+        -0.112901,
+        0.094592,
+        0.188168,
+        0.196305,
+        0.037634,
+        0.243092,
+        -0.218681,
+        -0.15562,
+        0.218681,
+        0.186133,
+        -0.110866,
+        -0.076284,
+        -0.232921,
+        -0.184099,
+        0.180031,
+        0.180031,
+        0.003051,
+        0.14138,
+        -0.202407,
+        -0.259366,
+        0.224784,
+        0.143414,
+        0.145448,
+        -0.230887,
+        -0.009154,
+        -0.214613,
+        0.112901
       ]
     },
     {
@@ -263181,6 +264967,53 @@
       ]
     },
     {
+      "path": "tools/project030/creator_studio_wake_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8831,
+      "lines": 251,
+      "tokens_est": 2208,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "57bc91c22b74ec3a",
+      "vector": [
+        -0.196803,
+        0.086593,
+        -0.271025,
+        0.0686,
+        0.212547,
+        -0.163065,
+        0.165314,
+        -0.205799,
+        -0.221544,
+        -0.244035,
+        0.25978,
+        -0.010121,
+        0.061852,
+        0.028115,
+        0.010121,
+        0.244035,
+        -0.201301,
+        -0.156318,
+        -0.183308,
+        0.142823,
+        0.084344,
+        0.28677,
+        -0.14957,
+        0.210298,
+        -0.046108,
+        0.077596,
+        -0.28452,
+        -0.158567,
+        0.082095,
+        -0.129327,
+        -0.273275,
+        -0.079846
+      ]
+    },
+    {
       "path": "tools/project030/test_creator_studio_continuation_harness.py",
       "role": "python_module",
       "binary": false,
@@ -263225,6 +265058,670 @@
         0.110282,
         0.232817,
         -0.025869
+      ]
+    },
+    {
+      "path": "tools/project030/test_creator_studio_wake_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6159,
+      "lines": 146,
+      "tokens_est": 1540,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ab7e3159946157b3",
+      "vector": [
+        0.014196,
+        -0.234781,
+        0.260989,
+        -0.265357,
+        -0.095004,
+        0.232597,
+        0.025116,
+        0.003276,
+        0.009828,
+        0.0273,
+        0.177997,
+        0.208573,
+        -0.145237,
+        0.186733,
+        -0.206389,
+        0.182365,
+        0.171445,
+        0.186733,
+        -0.036036,
+        -0.053508,
+        0.040404,
+        0.169261,
+        -0.153973,
+        0.206389,
+        0.267541,
+        0.188917,
+        -0.267541,
+        -0.160525,
+        0.250069,
+        -0.221677,
+        0.217309,
+        -0.077532
+      ]
+    },
+    {
+      "path": "tools/project034/gemini_extension/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 3616,
+      "lines": 56,
+      "tokens_est": 904,
+      "symbol_count": 0,
+      "commands": [
+        "python tools/project034/gemini_webchat_loopback.py --root ~/.aura/gemini_webchat_bridge"
+      ],
+      "command_lines": {
+        "python tools/project034/gemini_webchat_loopback.py --root ~/.aura/gemini_webchat_bridge": [
+          25
+        ]
+      },
+      "topology": {},
+      "digest8": "3d922d7856e20d20",
+      "vector": [
+        -0.29092,
+        -0.239365,
+        -0.187809,
+        -0.018413,
+        -0.305651,
+        0.170624,
+        0.133799,
+        -0.27619,
+        -0.045418,
+        0.192719,
+        0.173079,
+        0.119069,
+        -0.195174,
+        0.224635,
+        0.030688,
+        -0.074878,
+        -0.293375,
+        -0.141164,
+        0.148529,
+        0.195174,
+        -0.042963,
+        -0.21727,
+        -0.293375,
+        0.119069,
+        0.153439,
+        0.018413,
+        0.006138,
+        -0.106794,
+        -0.082243,
+        -0.082243,
+        -0.089608,
+        -0.234455
+      ]
+    },
+    {
+      "path": "tools/project034/gemini_extension/content.js",
+      "role": "interface_surface",
+      "binary": false,
+      "bytes": 6745,
+      "lines": 202,
+      "tokens_est": 1687,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4eec691e259cc8ec",
+      "vector": [
+        0.199389,
+        -0.239518,
+        0.131672,
+        -0.03135,
+        0.084019,
+        -0.1091,
+        -0.111608,
+        0.124148,
+        0.221961,
+        0.033859,
+        0.023826,
+        0.028842,
+        0.144212,
+        0.214437,
+        0.028842,
+        -0.209421,
+        -0.081511,
+        0.161768,
+        -0.259582,
+        -0.079003,
+        -0.139196,
+        -0.23701,
+        -0.104084,
+        -0.282154,
+        -0.008778,
+        0.312251,
+        -0.149228,
+        0.307235,
+        -0.021318,
+        0.23701,
+        -0.267106,
+        -0.244534
+      ]
+    },
+    {
+      "path": "tools/project034/gemini_extension/manifest.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 695,
+      "lines": 27,
+      "tokens_est": 174,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5cf7297416b284d9",
+      "vector": [
+        -0.091469,
+        0.200811,
+        0.125113,
+        0.141935,
+        -0.209222,
+        0.232352,
+        0.093572,
+        0.236558,
+        -0.171373,
+        -0.26179,
+        0.070442,
+        0.223941,
+        -0.032592,
+        -0.095674,
+        0.144037,
+        -0.247071,
+        0.236558,
+        0.223941,
+        -0.013668,
+        0.045209,
+        -0.196606,
+        0.179784,
+        -0.043106,
+        0.181887,
+        0.240763,
+        -0.009462,
+        -0.202914,
+        0.202914,
+        -0.240763,
+        0.087263,
+        -0.219736,
+        -0.198708
+      ]
+    },
+    {
+      "path": "tools/project034/gemini_extension/popup.html",
+      "role": "interface_surface",
+      "binary": false,
+      "bytes": 1656,
+      "lines": 39,
+      "tokens_est": 413,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5e582a0f3302e0d7",
+      "vector": [
+        -0.278739,
+        -0.306769,
+        -0.325455,
+        0.032701,
+        0.017129,
+        0.045159,
+        0.020244,
+        0.188421,
+        -0.147934,
+        -0.054502,
+        0.191536,
+        0.057616,
+        0.188421,
+        -0.151049,
+        0.057616,
+        0.294311,
+        -0.051388,
+        0.281854,
+        0.004672,
+        0.393972,
+        -0.138591,
+        0.113676,
+        -0.017129,
+        0.123019,
+        -0.188421,
+        0.126133,
+        0.001557,
+        0.110561,
+        -0.275625,
+        -0.179078,
+        -0.110561,
+        0.032701
+      ]
+    },
+    {
+      "path": "tools/project034/gemini_extension/popup.js",
+      "role": "interface_surface",
+      "binary": false,
+      "bytes": 6109,
+      "lines": 151,
+      "tokens_est": 1528,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "93018002a79cb8c9",
+      "vector": [
+        -0.21152,
+        0.115076,
+        0.187409,
+        0.213712,
+        -0.272894,
+        0.158914,
+        0.196177,
+        -0.115076,
+        -0.191793,
+        -0.115076,
+        0.069045,
+        -0.255358,
+        -0.156722,
+        -0.215904,
+        -0.233439,
+        -0.167682,
+        0.115076,
+        0.200561,
+        0.036167,
+        0.235631,
+        -0.25755,
+        -0.187409,
+        -0.058086,
+        0.1085,
+        -0.191793,
+        -0.014247,
+        0.016439,
+        0.158914,
+        -0.26851,
+        -0.060278,
+        -0.259742,
+        0.058086
+      ]
+    },
+    {
+      "path": "tools/project034/gemini_tool_broker.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10274,
+      "lines": 316,
+      "tokens_est": 2569,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8938528749f25fcf",
+      "vector": [
+        0.067701,
+        0.190209,
+        -0.095642,
+        -0.093492,
+        -0.138627,
+        0.235343,
+        0.261134,
+        0.140776,
+        -0.031164,
+        -0.145074,
+        0.149373,
+        -0.222447,
+        0.063403,
+        -0.258985,
+        -0.196656,
+        0.117134,
+        -0.198806,
+        0.04406,
+        -0.15797,
+        0.24394,
+        -0.082746,
+        0.194507,
+        -0.207403,
+        0.016119,
+        0.239641,
+        0.188059,
+        -0.12788,
+        -0.233194,
+        -0.065552,
+        -0.274029,
+        0.196656,
+        0.256835
+      ]
+    },
+    {
+      "path": "tools/project034/gemini_webchat_endpoint.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13466,
+      "lines": 353,
+      "tokens_est": 3367,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e2ab573ec8f34369",
+      "vector": [
+        -0.254977,
+        -0.055612,
+        0.076598,
+        -0.124865,
+        0.200414,
+        0.152146,
+        -0.179428,
+        -0.015739,
+        -0.206709,
+        0.095485,
+        -0.223498,
+        0.240287,
+        0.051415,
+        -0.229794,
+        0.267568,
+        0.254977,
+        0.028331,
+        0.137456,
+        0.162639,
+        -0.009444,
+        -0.061908,
+        -0.118569,
+        0.248681,
+        -0.227695,
+        -0.204611,
+        -0.242385,
+        -0.124865,
+        0.139555,
+        -0.160541,
+        -0.160541,
+        -0.219301,
+        -0.223498
+      ]
+    },
+    {
+      "path": "tools/project034/gemini_webchat_loopback.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9914,
+      "lines": 245,
+      "tokens_est": 2479,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5665722a8fb8a0d0",
+      "vector": [
+        -0.08585,
+        0.203452,
+        0.09761,
+        0.170524,
+        -0.022344,
+        0.123483,
+        0.137595,
+        0.154059,
+        0.297534,
+        -0.142299,
+        -0.245789,
+        0.132891,
+        -0.064681,
+        0.090554,
+        0.144651,
+        -0.048217,
+        -0.29283,
+        0.179932,
+        0.299886,
+        -0.2011,
+        0.01764,
+        0.276366,
+        0.219917,
+        0.147003,
+        0.043513,
+        -0.111722,
+        -0.215213,
+        0.271662,
+        0.154059,
+        0.2011,
+        0.034105,
+        0.191692
+      ]
+    },
+    {
+      "path": "tools/project034/gemini_webchat_relay.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10686,
+      "lines": 283,
+      "tokens_est": 2672,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fe92a796bf77f2d1",
+      "vector": [
+        -0.226461,
+        0.155064,
+        -0.20415,
+        -0.117135,
+        0.045738,
+        -0.152833,
+        0.259928,
+        0.016734,
+        0.268853,
+        0.036814,
+        0.139446,
+        -0.112673,
+        0.248772,
+        0.155064,
+        0.016734,
+        0.190763,
+        0.201918,
+        0.016734,
+        -0.221999,
+        -0.1863,
+        -0.195225,
+        -0.101517,
+        0.112673,
+        -0.215305,
+        -0.04797,
+        -0.257697,
+        -0.230923,
+        0.246541,
+        -0.277777,
+        0.121597,
+        0.199687,
+        -0.021196
+      ]
+    },
+    {
+      "path": "tools/project034/test_gemini_tool_broker.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7911,
+      "lines": 233,
+      "tokens_est": 1978,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "faaae04f5c32cafd",
+      "vector": [
+        -0.122274,
+        0.127023,
+        -0.295595,
+        0.205373,
+        -0.219619,
+        -0.267104,
+        0.155514,
+        0.302718,
+        -0.051047,
+        -0.290847,
+        0.129397,
+        0.115152,
+        0.207748,
+        -0.290847,
+        0.255233,
+        -0.058169,
+        -0.017807,
+        -0.112777,
+        0.240987,
+        -0.162637,
+        0.060544,
+        0.131771,
+        0.115152,
+        0.093783,
+        -0.015433,
+        0.205373,
+        0.1199,
+        0.055795,
+        -0.034427,
+        -0.238613,
+        0.165011,
+        0.067666
+      ]
+    },
+    {
+      "path": "tools/project034/test_gemini_webchat_endpoint.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8992,
+      "lines": 254,
+      "tokens_est": 2248,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "684d921bdefdea29",
+      "vector": [
+        0.217702,
+        0.127085,
+        -0.230963,
+        0.268536,
+        -0.270746,
+        0.071831,
+        0.100563,
+        0.131505,
+        -0.014366,
+        0.230963,
+        -0.1956,
+        0.1956,
+        0.036468,
+        -0.120454,
+        0.242014,
+        0.040888,
+        0.036468,
+        -0.215492,
+        0.149187,
+        0.140346,
+        -0.202231,
+        0.149187,
+        -0.268536,
+        -0.155817,
+        -0.279587,
+        0.074041,
+        -0.056359,
+        0.096143,
+        -0.160238,
+        0.279587,
+        -0.173499,
+        0.140346
+      ]
+    },
+    {
+      "path": "tools/project034/test_gemini_webchat_loopback.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7497,
+      "lines": 203,
+      "tokens_est": 1875,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d3d4596fe389be44",
+      "vector": [
+        -0.08212,
+        0.158112,
+        0.155661,
+        0.160563,
+        0.113988,
+        0.310096,
+        0.011031,
+        0.280679,
+        0.231652,
+        -0.295388,
+        0.001226,
+        0.123793,
+        0.241458,
+        0.060058,
+        0.148307,
+        0.310096,
+        -0.241458,
+        -0.256166,
+        0.091926,
+        0.170369,
+        0.013482,
+        -0.020836,
+        0.094377,
+        -0.035545,
+        -0.055155,
+        -0.08212,
+        0.087023,
+        0.234104,
+        -0.150758,
+        -0.165466,
+        -0.165466,
+        0.268423
+      ]
+    },
+    {
+      "path": "tools/project034/test_gemini_webchat_relay.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6618,
+      "lines": 177,
+      "tokens_est": 1655,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7c28dcf5f958ff92",
+      "vector": [
+        -0.287172,
+        -0.08627,
+        0.15954,
+        -0.017727,
+        0.272991,
+        -0.206811,
+        0.074452,
+        -0.11936,
+        0.147722,
+        -0.275354,
+        -0.178449,
+        -0.204448,
+        -0.098088,
+        0.069725,
+        -0.176085,
+        0.197357,
+        0.027181,
+        0.270627,
+        -0.100451,
+        0.270627,
+        0.083906,
+        0.022454,
+        0.124087,
+        -0.185539,
+        -0.183176,
+        -0.124087,
+        -0.046089,
+        0.147722,
+        -0.211538,
+        -0.287172,
+        0.157177,
+        -0.228083
       ]
     },
     {
@@ -287132,16 +289629,16 @@
     }
   },
   "summary": {
-    "file_count": 1641,
-    "total_bytes": 26434791,
-    "text_tokens_est": 6599049,
+    "file_count": 1657,
+    "total_bytes": 26545192,
+    "text_tokens_est": 6626654,
     "role_counts": {
-      "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "interface_surface": 67,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
-      "schema_or_lexicon": 271,
+      "python_module": 1009,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287293,6 +289790,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj034-gemini-webchat-bridge.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -288785,7 +291283,22 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project030/creator_studio_continuation_harness.py",
+      "tools/project030/creator_studio_wake_adapter.py",
       "tools/project030/test_creator_studio_continuation_harness.py",
+      "tools/project030/test_creator_studio_wake_adapter.py",
+      "tools/project034/gemini_extension/README.md",
+      "tools/project034/gemini_extension/content.js",
+      "tools/project034/gemini_extension/manifest.json",
+      "tools/project034/gemini_extension/popup.html",
+      "tools/project034/gemini_extension/popup.js",
+      "tools/project034/gemini_tool_broker.py",
+      "tools/project034/gemini_webchat_endpoint.py",
+      "tools/project034/gemini_webchat_loopback.py",
+      "tools/project034/gemini_webchat_relay.py",
+      "tools/project034/test_gemini_tool_broker.py",
+      "tools/project034/test_gemini_webchat_endpoint.py",
+      "tools/project034/test_gemini_webchat_loopback.py",
+      "tools/project034/test_gemini_webchat_relay.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -446322,6 +448835,166 @@
         "file_digest8": "03e6ae09275639cb"
       },
       {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:ArenaWakeScheduler:cbdbe1176225fecb",
+        "name": "ArenaWakeScheduler",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 112,
+        "end_line": 250,
+        "signature_hash": "37e53c944b82381b",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:FileWakeLedger:ddb86f11cc7262aa",
+        "name": "FileWakeLedger",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 46,
+        "end_line": 109,
+        "signature_hash": "e9425ba8559885c9",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:WakeIntent:aa7122378e174607",
+        "name": "WakeIntent",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 28,
+        "end_line": 43,
+        "signature_hash": "15352cf900d59e83",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:WakeRefusal:0aafb6df299438b5",
+        "name": "WakeRefusal",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 20,
+        "end_line": 24,
+        "signature_hash": "5ae430d772fb691b",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.__init__:bac6205636337383",
+        "name": "ArenaWakeScheduler.__init__",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 115,
+        "end_line": 116,
+        "signature_hash": "188e0eaf70d47cbe",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler._best_worker:4fc35b70752f2276",
+        "name": "ArenaWakeScheduler._best_worker",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 126,
+        "end_line": 136,
+        "signature_hash": "7f5ef351913906f7",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler._event_id:434cac3e74149235",
+        "name": "ArenaWakeScheduler._event_id",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 119,
+        "end_line": 123,
+        "signature_hash": "2e70e5ac54cff2c7",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.emit_recommission_required:6b009e02400163d3",
+        "name": "ArenaWakeScheduler.emit_recommission_required",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 138,
+        "end_line": 164,
+        "signature_hash": "68857bd4a7cb6700",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.scan_and_emit:d4fc18fd5188e4f3",
+        "name": "ArenaWakeScheduler.scan_and_emit",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 166,
+        "end_line": 250,
+        "signature_hash": "6f072d1f5b6814b5",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.__init__:ba2d63e2291b33a4",
+        "name": "FileWakeLedger.__init__",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "977a4d9126c48d60",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger._read_landed:a66d94f2b7a4d641",
+        "name": "FileWakeLedger._read_landed",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 56,
+        "end_line": 64,
+        "signature_hash": "97498012ca8a0675",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.append:c6d9233c4d402782",
+        "name": "FileWakeLedger.append",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 66,
+        "end_line": 103,
+        "signature_hash": "4b01af1f5a5efbee",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.events:5fc1a3850db2fd38",
+        "name": "FileWakeLedger.events",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 105,
+        "end_line": 109,
+        "signature_hash": "f313fb85cbb4b333",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.path_for:8dc28fa6f9109414",
+        "name": "FileWakeLedger.path_for",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "078dc3c45475194f",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:WakeIntent.canonical_bytes:4e6a1e558324c699",
+        "name": "WakeIntent.canonical_bytes",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "2f07c43e7574fbf0",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:WakeRefusal.__init__:43386a86be893156",
+        "name": "WakeRefusal.__init__",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 21,
+        "end_line": 24,
+        "signature_hash": "42bd2d17d3dd6102",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#class:ContinuationHarnessTests:e40a4e8190d90aa7",
         "name": "ContinuationHarnessTests",
         "kind": "class",
@@ -446510,6 +449183,1576 @@
         "end_line": 111,
         "signature_hash": "5550dcb940993f45",
         "file_digest8": "b6e4fdc882d5b24c"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#class:WakeAdapterTests:8e87e2dff9146293",
+        "name": "WakeAdapterTests",
+        "kind": "class",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 14,
+        "end_line": 141,
+        "signature_hash": "5fbd35eb792d60f3",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.setUp:99d6e0d2dfe47273",
+        "name": "WakeAdapterTests.setUp",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 15,
+        "end_line": 20,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.state:ad667dc0821d6f25",
+        "name": "WakeAdapterTests.state",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "f690bd7d3b182ac1",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.tearDown:6a873c33e2775262",
+        "name": "WakeAdapterTests.tearDown",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file.writer:7230e84b194bea1c",
+        "name": "WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file.writer",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 107,
+        "end_line": 112,
+        "signature_hash": "227f60c8356d95b3",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file:bf84d874c0b27747",
+        "name": "WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 92,
+        "end_line": 122,
+        "signature_hash": "b9a15cfe21d72cfa",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_capability_mismatch_does_not_emit:ebba5b74694de691",
+        "name": "WakeAdapterTests.test_capability_mismatch_does_not_emit",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 63,
+        "end_line": 66,
+        "signature_hash": "da623af4133f94d1",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_claimed_work_does_not_emit_wake:013c225fd5878f2c",
+        "name": "WakeAdapterTests.test_claimed_work_does_not_emit_wake",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 57,
+        "end_line": 61,
+        "signature_hash": "88b2d5a2578b199d",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_dependency_completion_wakes_newly_eligible_work_version:8408c99e97b41a73",
+        "name": "WakeAdapterTests.test_dependency_completion_wakes_newly_eligible_work_version",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 46,
+        "end_line": 55,
+        "signature_hash": "192301ecc2368d36",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_newly_eligible_work_emits_one_targeted_wake:20b8df478d065651",
+        "name": "WakeAdapterTests.test_newly_eligible_work_emits_one_targeted_wake",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 28,
+        "end_line": 37,
+        "signature_hash": "d15d86311fb18654",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_one_worker_receives_at_most_one_work_wake_per_scan:2f9e55c4c47e8c75",
+        "name": "WakeAdapterTests.test_one_worker_receives_at_most_one_work_wake_per_scan",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 124,
+        "end_line": 130,
+        "signature_hash": "7836cfba5f618873",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_recommission_intent_is_coordination_only:d7f5a473caaa4ca6",
+        "name": "WakeAdapterTests.test_recommission_intent_is_coordination_only",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 132,
+        "end_line": 141,
+        "signature_hash": "213662e123943d7e",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_reopen_version_allows_new_wake_without_rewriting_old_event:9c4f4597a8fd0ee7",
+        "name": "WakeAdapterTests.test_reopen_version_allows_new_wake_without_rewriting_old_event",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 77,
+        "end_line": 82,
+        "signature_hash": "45d8ab1d528b1894",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_repeated_scan_is_idempotent_on_disk:3a2c99579ce342d4",
+        "name": "WakeAdapterTests.test_repeated_scan_is_idempotent_on_disk",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 39,
+        "end_line": 44,
+        "signature_hash": "5d55b8d8870b2a59",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_restart_reuses_durable_ledger_idempotently:f76ad5f451be8ca6",
+        "name": "WakeAdapterTests.test_restart_reuses_durable_ledger_idempotently",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 84,
+        "end_line": 90,
+        "signature_hash": "54c78eba6d1baed7",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_stale_currentness_emits_rebase_not_work:c980b12b8542104f",
+        "name": "WakeAdapterTests.test_stale_currentness_emits_rebase_not_work",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 68,
+        "end_line": 75,
+        "signature_hash": "fce4b39647755046",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_tool_broker.py#class:ToolAdmissionV1:44fc3b6ca6b5babf",
+        "name": "ToolAdmissionV1",
+        "kind": "class",
+        "file": "tools/project034/gemini_tool_broker.py",
+        "line": 86,
+        "end_line": 148,
+        "signature_hash": "04b7d0904905490d",
+        "file_digest8": "8938528749f25fcf"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_tool_broker.py#class:ToolBrokerReceiptV1:d4a326897f4057d7",
+        "name": "ToolBrokerReceiptV1",
+        "kind": "class",
+        "file": "tools/project034/gemini_tool_broker.py",
+        "line": 152,
+        "end_line": 165,
+        "signature_hash": "7c16a60bb800698e",
+        "file_digest8": "8938528749f25fcf"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_tool_broker.py#class:ToolRouteV1:d98efe96ba3b4094",
+        "name": "ToolRouteV1",
+        "kind": "class",
+        "file": "tools/project034/gemini_tool_broker.py",
+        "line": 69,
+        "end_line": 82,
+        "signature_hash": "ce0ab85d4096ab45",
+        "file_digest8": "8938528749f25fcf"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_tool_broker.py#function:_bounded_result:1009150397a021ef",
+        "name": "_bounded_result",
+        "kind": "function",
+        "file": "tools/project034/gemini_tool_broker.py",
+        "line": 204,
+        "end_line": 221,
+        "signature_hash": "0dff173144da48ed",
+        "file_digest8": "8938528749f25fcf"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_tool_broker.py#function:_redact_sensitive_result:7bcec4efee3ffd3d",
+        "name": "_redact_sensitive_result",
+        "kind": "function",
+        "file": "tools/project034/gemini_tool_broker.py",
+        "line": 187,
+        "end_line": 201,
+        "signature_hash": "f4e9d4600081bf6a",
+        "file_digest8": "8938528749f25fcf"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_tool_broker.py#function:_reject_caller_controls:cd30202f554e3075",
+        "name": "_reject_caller_controls",
+        "kind": "function",
+        "file": "tools/project034/gemini_tool_broker.py",
+        "line": 175,
+        "end_line": 184,
+        "signature_hash": "e595343c1fcb9d05",
+        "file_digest8": "8938528749f25fcf"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_tool_broker.py#function:execute_admitted_tool:e4ce6531451777ab",
+        "name": "execute_admitted_tool",
+        "kind": "function",
+        "file": "tools/project034/gemini_tool_broker.py",
+        "line": 228,
+        "end_line": 315,
+        "signature_hash": "1216c817d361e4ee",
+        "file_digest8": "8938528749f25fcf"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_tool_broker.py#function:request_digest:21c0ae266966f080",
+        "name": "request_digest",
+        "kind": "function",
+        "file": "tools/project034/gemini_tool_broker.py",
+        "line": 224,
+        "end_line": 225,
+        "signature_hash": "774b62d3c6793cd6",
+        "file_digest8": "8938528749f25fcf"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_tool_broker.py#method:ToolAdmissionV1.validate:b063af9b67398f55",
+        "name": "ToolAdmissionV1.validate",
+        "kind": "method",
+        "file": "tools/project034/gemini_tool_broker.py",
+        "line": 107,
+        "end_line": 148,
+        "signature_hash": "58b388e3e5d1af1d",
+        "file_digest8": "8938528749f25fcf"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_tool_broker.py#method:ToolBrokerReceiptV1.receipt_id:d5bfb7c25a900ff8",
+        "name": "ToolBrokerReceiptV1.receipt_id",
+        "kind": "method",
+        "file": "tools/project034/gemini_tool_broker.py",
+        "line": 164,
+        "end_line": 165,
+        "signature_hash": "27b319060788cc16",
+        "file_digest8": "8938528749f25fcf"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_tool_broker.py#method:ToolRouteV1.validate:538881c099cb7e7f",
+        "name": "ToolRouteV1.validate",
+        "kind": "method",
+        "file": "tools/project034/gemini_tool_broker.py",
+        "line": 76,
+        "end_line": 82,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "8938528749f25fcf"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:ArenaTurnEnvelopeV1:ade91ea787909eb5",
+        "name": "ArenaTurnEnvelopeV1",
+        "kind": "class",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 86,
+        "end_line": 133,
+        "signature_hash": "f57e3230b06c10b4",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:ArenaTurnResultV1:b121fc74ee0c1eaa",
+        "name": "ArenaTurnResultV1",
+        "kind": "class",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 137,
+        "end_line": 160,
+        "signature_hash": "83a79e545f20e076",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:AuraToolRequestV1:182080cc96d4edc3",
+        "name": "AuraToolRequestV1",
+        "kind": "class",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 164,
+        "end_line": 179,
+        "signature_hash": "cc136d64f9924890",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:AuraToolResultV1:27bfaa61ecbfeb5d",
+        "name": "AuraToolResultV1",
+        "kind": "class",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 183,
+        "end_line": 199,
+        "signature_hash": "7e45dba271dddcff",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:BridgeLedgerV1:0266694e5cca864a",
+        "name": "BridgeLedgerV1",
+        "kind": "class",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 203,
+        "end_line": 231,
+        "signature_hash": "858e95d68a2736d0",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:BridgeRefusal:3d8b1d7caa91e100",
+        "name": "BridgeRefusal",
+        "kind": "class",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 28,
+        "end_line": 34,
+        "signature_hash": "983814771dcfd5e5",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#class:EndpointBindingV1:109bae93f57c899c",
+        "name": "EndpointBindingV1",
+        "kind": "class",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 52,
+        "end_line": 82,
+        "signature_hash": "d167e2611a0c4a60",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:admit_result:a83f596947aaff1f",
+        "name": "admit_result",
+        "kind": "function",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 253,
+        "end_line": 275,
+        "signature_hash": "322323a9631cda70",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:admit_tool_request:797d576960231435",
+        "name": "admit_tool_request",
+        "kind": "function",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 278,
+        "end_line": 305,
+        "signature_hash": "81e7facc09a41fdb",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:admit_turn:3abf14edd62d556a",
+        "name": "admit_turn",
+        "kind": "function",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 234,
+        "end_line": 250,
+        "signature_hash": "55e83d77f5a6d505",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:canonical_json:e084ed39e92d7949",
+        "name": "canonical_json",
+        "kind": "function",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "2af8a10abc3d606e",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:compile_bootstrap_prompt:36523003cbe53036",
+        "name": "compile_bootstrap_prompt",
+        "kind": "function",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 308,
+        "end_line": 348,
+        "signature_hash": "3a49db890de1a5c0",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:envelope_digest:ef9a251c00961c3c",
+        "name": "envelope_digest",
+        "kind": "function",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 351,
+        "end_line": 352,
+        "signature_hash": "a0f75f1ee2048857",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:sha256_text:df73d1c73a6d8a44",
+        "name": "sha256_text",
+        "kind": "function",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "fd4f177eca9be0a5",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#function:stable_idempotency_key:1eee1a155e6fd5e2",
+        "name": "stable_idempotency_key",
+        "kind": "function",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 45,
+        "end_line": 48,
+        "signature_hash": "530608322cd5fa48",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:ArenaTurnEnvelopeV1.validate:5bb7cefd10a7bb12",
+        "name": "ArenaTurnEnvelopeV1.validate",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 105,
+        "end_line": 133,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:ArenaTurnResultV1.validate:831c9aa3c663a3b7",
+        "name": "ArenaTurnResultV1.validate",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 152,
+        "end_line": 160,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:AuraToolRequestV1.validate:5a8f243bcb8017c0",
+        "name": "AuraToolRequestV1.validate",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 173,
+        "end_line": 179,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:AuraToolResultV1.validate:4bb2cf5206390b10",
+        "name": "AuraToolResultV1.validate",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 193,
+        "end_line": 199,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:BridgeLedgerV1.accept_result:a30443b6eb1f7056",
+        "name": "BridgeLedgerV1.accept_result",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 213,
+        "end_line": 218,
+        "signature_hash": "aa0665fee8c0793a",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:BridgeLedgerV1.accept_tool_request:0002c187a12b0b65",
+        "name": "BridgeLedgerV1.accept_tool_request",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 220,
+        "end_line": 223,
+        "signature_hash": "3b272cdd12023b15",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:BridgeLedgerV1.mark_turn_sent:2c887b681ffd8288",
+        "name": "BridgeLedgerV1.mark_turn_sent",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 208,
+        "end_line": 211,
+        "signature_hash": "dfe287ed71cdc800",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:BridgeLedgerV1.to_dict:1794f9cccd04d964",
+        "name": "BridgeLedgerV1.to_dict",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 225,
+        "end_line": 231,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:BridgeRefusal.__init__:eb6112d608aa7bbc",
+        "name": "BridgeRefusal.__init__",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "42bd2d17d3dd6102",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_endpoint.py#method:EndpointBindingV1.validate:19a54c612e1bab1d",
+        "name": "EndpointBindingV1.validate",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_endpoint.py",
+        "line": 63,
+        "end_line": 82,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "e2ab573ec8f34369"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#class:GeminiLoopbackHandler:a9ac0c70c9ab53fe",
+        "name": "GeminiLoopbackHandler",
+        "kind": "class",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 64,
+        "end_line": 212,
+        "signature_hash": "c9b4a075323ebcdb",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#class:GeminiLoopbackServer:27b5157211943ecf",
+        "name": "GeminiLoopbackServer",
+        "kind": "class",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 215,
+        "end_line": 220,
+        "signature_hash": "d4086e9aa5582e93",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#class:LoopbackContextV1:0960228587f7e560",
+        "name": "LoopbackContextV1",
+        "kind": "class",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 23,
+        "end_line": 61,
+        "signature_hash": "cfaad45879b7ff48",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#function:main:4b24123876e727ab",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 233,
+        "end_line": 240,
+        "signature_hash": "b786ec4eb1f4c6e3",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#function:serve:36521475d4de8d16",
+        "name": "serve",
+        "kind": "function",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 223,
+        "end_line": 230,
+        "signature_hash": "54f151128d7bdac2",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._authorized:88171c5be0da15f3",
+        "name": "GeminiLoopbackHandler._authorized",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 83,
+        "end_line": 85,
+        "signature_hash": "6f972adbd577ae8c",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._get_next_turn:afdb6b6cc46c62b6",
+        "name": "GeminiLoopbackHandler._get_next_turn",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 129,
+        "end_line": 161,
+        "signature_hash": "84e02eadbaac05d3",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._handle_refusal:d371aef664b0158b",
+        "name": "GeminiLoopbackHandler._handle_refusal",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 109,
+        "end_line": 110,
+        "signature_hash": "858962872f6ece9a",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._json:5c379aac3891bbd7",
+        "name": "GeminiLoopbackHandler._json",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 74,
+        "end_line": 81,
+        "signature_hash": "4857ecebd3cd3076",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._post_result:15d6097cf509d6c2",
+        "name": "GeminiLoopbackHandler._post_result",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 183,
+        "end_line": 193,
+        "signature_hash": "3fc068fd8a2c464b",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._post_tool_request:52b11a5cd604d9ae",
+        "name": "GeminiLoopbackHandler._post_tool_request",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 195,
+        "end_line": 212,
+        "signature_hash": "a1d513a842ed1ba4",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._read_json:2b1030e1a88513ef",
+        "name": "GeminiLoopbackHandler._read_json",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 93,
+        "end_line": 107,
+        "signature_hash": "9c6d2b11ecd8b3b6",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler._require_auth:0d7252a0350c4eab",
+        "name": "GeminiLoopbackHandler._require_auth",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 87,
+        "end_line": 91,
+        "signature_hash": "2fb97206533e7adf",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler.ctx:24d432b5cc7459a4",
+        "name": "GeminiLoopbackHandler.ctx",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 68,
+        "end_line": 69,
+        "signature_hash": "dd89317f732ac6ae",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler.do_GET:abab051f04cce5e8",
+        "name": "GeminiLoopbackHandler.do_GET",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 112,
+        "end_line": 127,
+        "signature_hash": "0f22ff7b0395d880",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler.do_POST:849007084a712df1",
+        "name": "GeminiLoopbackHandler.do_POST",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 163,
+        "end_line": 181,
+        "signature_hash": "64513fb064b3a086",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackHandler.log_message:a58690977ea37231",
+        "name": "GeminiLoopbackHandler.log_message",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 71,
+        "end_line": 72,
+        "signature_hash": "597d3a0b669497e3",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:GeminiLoopbackServer.__init__:a0a37b498e80b832",
+        "name": "GeminiLoopbackServer.__init__",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 218,
+        "end_line": 220,
+        "signature_hash": "d930db4d5cd710e9",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:LoopbackContextV1.__init__:5080015415b0319c",
+        "name": "LoopbackContextV1.__init__",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 24,
+        "end_line": 29,
+        "signature_hash": "d65503f663f5ee26",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:LoopbackContextV1._load_or_create_token:72172c2907755fbd",
+        "name": "LoopbackContextV1._load_or_create_token",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 31,
+        "end_line": 43,
+        "signature_hash": "7b3f0ec91138c349",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:LoopbackContextV1.currentness:28605e49e5736148",
+        "name": "LoopbackContextV1.currentness",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 45,
+        "end_line": 52,
+        "signature_hash": "4b6999d238fe0b4e",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_loopback.py#method:LoopbackContextV1.load_turn:d83c55b8387dc143",
+        "name": "LoopbackContextV1.load_turn",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_loopback.py",
+        "line": 54,
+        "end_line": 61,
+        "signature_hash": "18fe0ab481d0abcf",
+        "file_digest8": "5665722a8fb8a0d0"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#class:RelayStoreV1:071f3af3fad8e1bf",
+        "name": "RelayStoreV1",
+        "kind": "class",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 26,
+        "end_line": 282,
+        "signature_hash": "3598be07700871c0",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.__init__:1cba00eae77f5e5f",
+        "name": "RelayStoreV1.__init__",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 33,
+        "end_line": 52,
+        "signature_hash": "d65503f663f5ee26",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1._atomic_create_json:04cad031df67224f",
+        "name": "RelayStoreV1._atomic_create_json",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 54,
+        "end_line": 78,
+        "signature_hash": "15ccd2513d612ce6",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1._load_ledger:edfaf8be1bfd3c00",
+        "name": "RelayStoreV1._load_ledger",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 95,
+        "end_line": 105,
+        "signature_hash": "55bb01926d2ab7b8",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1._persist_ledger:42099b0be8ba26b2",
+        "name": "RelayStoreV1._persist_ledger",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 107,
+        "end_line": 108,
+        "signature_hash": "bbb38476f2747846",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1._replace_state_json:f0524353d1d0dae8",
+        "name": "RelayStoreV1._replace_state_json",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 80,
+        "end_line": 93,
+        "signature_hash": "cd9f83511737abe0",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1._write_receipt:a2be7804fbdafe4a",
+        "name": "RelayStoreV1._write_receipt",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 261,
+        "end_line": 282,
+        "signature_hash": "eff7f92d3544a1f5",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.accept_tool_request:de3399be1f295d6f",
+        "name": "RelayStoreV1.accept_tool_request",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 204,
+        "end_line": 236,
+        "signature_hash": "7eae04f67e9ed24c",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.accept_turn_result:23b70fd98e7418c4",
+        "name": "RelayStoreV1.accept_turn_result",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 170,
+        "end_line": 202,
+        "signature_hash": "6e6dc69f1ddcaafb",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.bind_endpoint:5b8485bf87660056",
+        "name": "RelayStoreV1.bind_endpoint",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 110,
+        "end_line": 120,
+        "signature_hash": "9f0dee60865124d0",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.list_pending_turns:7d925d83716b80b0",
+        "name": "RelayStoreV1.list_pending_turns",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 255,
+        "end_line": 259,
+        "signature_hash": "df91537db50efafc",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.load_binding:52c857ddca449439",
+        "name": "RelayStoreV1.load_binding",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 122,
+        "end_line": 130,
+        "signature_hash": "7ce7e7ec7eed1bc4",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.publish_tool_result:4048eca3bace3318",
+        "name": "RelayStoreV1.publish_tool_result",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 238,
+        "end_line": 253,
+        "signature_hash": "a2ba77349b3d7c0f",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.publish_turn:56efb6712ce2f217",
+        "name": "RelayStoreV1.publish_turn",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 138,
+        "end_line": 168,
+        "signature_hash": "46f08d303a4a39b0",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/gemini_webchat_relay.py#method:RelayStoreV1.release_endpoint:069c2f33db7c0b6c",
+        "name": "RelayStoreV1.release_endpoint",
+        "kind": "method",
+        "file": "tools/project034/gemini_webchat_relay.py",
+        "line": 132,
+        "end_line": 136,
+        "signature_hash": "6d4d5ba44a83759f",
+        "file_digest8": "fe92a796bf77f2d1"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#class:GeminiToolBrokerTests:1a47edaac793a35e",
+        "name": "GeminiToolBrokerTests",
+        "kind": "class",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 84,
+        "end_line": 228,
+        "signature_hash": "546cc0f8992c583f",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#function:admission_provider:2db6a9877c5ec2d5",
+        "name": "admission_provider",
+        "kind": "function",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 64,
+        "end_line": 81,
+        "signature_hash": "a6de60c70aa63ec1",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#function:envelope:064761c29360b2ce",
+        "name": "envelope",
+        "kind": "function",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 23,
+        "end_line": 39,
+        "signature_hash": "f9d55436b9064ce6",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#function:request:6356419329c06ed5",
+        "name": "request",
+        "kind": "function",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 42,
+        "end_line": 51,
+        "signature_hash": "73e55ab01ce963f2",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#function:route:d668a1c51a90ba5c",
+        "name": "route",
+        "kind": "function",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 54,
+        "end_line": 61,
+        "signature_hash": "397b3f886f767dc5",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_ack_failure_prevents_executor_effect.bad_ack:0830c57c66336174",
+        "name": "GeminiToolBrokerTests.test_ack_failure_prevents_executor_effect.bad_ack",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 170,
+        "end_line": 171,
+        "signature_hash": "e532576d8f28d6de",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_ack_failure_prevents_executor_effect:86b5fde66cf24394",
+        "name": "GeminiToolBrokerTests.test_ack_failure_prevents_executor_effect",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 167,
+        "end_line": 184,
+        "signature_hash": "6ddf16882d22503f",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_caller_cannot_supply_credentials_or_executor_controls:9cd619e7a5c6b26c",
+        "name": "GeminiToolBrokerTests.test_caller_cannot_supply_credentials_or_executor_controls",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 112,
+        "end_line": 125,
+        "signature_hash": "8487aac768827be7",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_mismatched_host_admission_fails_before_effect.bad_admission:f34b294cf1eda17e",
+        "name": "GeminiToolBrokerTests.test_mismatched_host_admission_fails_before_effect.bad_admission",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 150,
+        "end_line": 152,
+        "signature_hash": "878bf4efa254a4db",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_mismatched_host_admission_fails_before_effect:8c011f79dfeae66c",
+        "name": "GeminiToolBrokerTests.test_mismatched_host_admission_fails_before_effect",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 147,
+        "end_line": 165,
+        "signature_hash": "e5716c508f4a4030",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_result_bound_is_enforced:10dfe2e177416115",
+        "name": "GeminiToolBrokerTests.test_result_bound_is_enforced",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 204,
+        "end_line": 215,
+        "signature_hash": "9234da233e76a952",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_sensitive_structured_result_fields_are_redacted:51bd04af876c6891",
+        "name": "GeminiToolBrokerTests.test_sensitive_structured_result_fields_are_redacted",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 186,
+        "end_line": 202,
+        "signature_hash": "dd05899aff8f606a",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_stale_context_fails_before_admission_or_executor.admission:38608fbc8101eeb2",
+        "name": "GeminiToolBrokerTests.test_stale_context_fails_before_admission_or_executor.admission",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 130,
+        "end_line": 132,
+        "signature_hash": "1f601254f117d928",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_stale_context_fails_before_admission_or_executor:f01fe90fc9809268",
+        "name": "GeminiToolBrokerTests.test_stale_context_fails_before_admission_or_executor",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 127,
+        "end_line": 145,
+        "signature_hash": "8b176b25a924a267",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_unknown_executor_fails_after_admission_but_before_effect:b7c873d53f031fc4",
+        "name": "GeminiToolBrokerTests.test_unknown_executor_fails_after_admission_but_before_effect",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 217,
+        "end_line": 228,
+        "signature_hash": "d6d3cdb324f464e4",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_valid_read_executes_after_ack.ack:4a77fded137f517e",
+        "name": "GeminiToolBrokerTests.test_valid_read_executes_after_ack.ack",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 88,
+        "end_line": 89,
+        "signature_hash": "0810bd9657756b8f",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_valid_read_executes_after_ack.executor:b90ceef41d3eeac1",
+        "name": "GeminiToolBrokerTests.test_valid_read_executes_after_ack.executor",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 91,
+        "end_line": 93,
+        "signature_hash": "f5e2878c705f16f4",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_tool_broker.py#method:GeminiToolBrokerTests.test_valid_read_executes_after_ack:e08ea3a69fa9d290",
+        "name": "GeminiToolBrokerTests.test_valid_read_executes_after_ack",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_tool_broker.py",
+        "line": 85,
+        "end_line": 110,
+        "signature_hash": "4ab4ff19a65deb36",
+        "file_digest8": "faaae04f5c32cafd"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#class:GeminiWebchatEndpointTests:ccc2799cb698f90a",
+        "name": "GeminiWebchatEndpointTests",
+        "kind": "class",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 80,
+        "end_line": 249,
+        "signature_hash": "72d07652bdac7b25",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#function:make_binding:31099a8a9681bdda",
+        "name": "make_binding",
+        "kind": "function",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 26,
+        "end_line": 36,
+        "signature_hash": "54267d95f770828e",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#function:make_envelope:0e22b2d9ff872d7b",
+        "name": "make_envelope",
+        "kind": "function",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 39,
+        "end_line": 60,
+        "signature_hash": "da0f54ed50949c9e",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#function:make_result:d4082503caceebfd",
+        "name": "make_result",
+        "kind": "function",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 63,
+        "end_line": 77,
+        "signature_hash": "c817de4d1d351019",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_bootstrap_prompt_contains_safety_contract_but_no_credential_material:495dd2151295806a",
+        "name": "GeminiWebchatEndpointTests.test_bootstrap_prompt_contains_safety_contract_but_no_credential_material",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 240,
+        "end_line": 249,
+        "signature_hash": "a6bb680019da2a21",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_duplicate_result_is_refused:2f9df25c2837429e",
+        "name": "GeminiWebchatEndpointTests.test_duplicate_result_is_refused",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 139,
+        "end_line": 145,
+        "signature_hash": "3f34573c6eabc718",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_duplicate_tool_request_is_refused:21cd13484a3ce09b",
+        "name": "GeminiWebchatEndpointTests.test_duplicate_tool_request_is_refused",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 224,
+        "end_line": 238,
+        "signature_hash": "ff20dfe68a6c040e",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_duplicate_turn_send_is_refused:543c936fed9f1d7c",
+        "name": "GeminiWebchatEndpointTests.test_duplicate_turn_send_is_refused",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 110,
+        "end_line": 115,
+        "signature_hash": "618347a21a4bcc73",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_guarded_auto_requires_owner_enablement:df696d5d8086b3d6",
+        "name": "GeminiWebchatEndpointTests.test_guarded_auto_requires_owner_enablement",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 84,
+        "end_line": 87,
+        "signature_hash": "4bebc7dfae7cda73",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_idempotency_key_is_bound_to_head_and_turn:c98f73c93dbee441",
+        "name": "GeminiWebchatEndpointTests.test_idempotency_key_is_bound_to_head_and_turn",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 104,
+        "end_line": 108,
+        "signature_hash": "54efa885850b9828",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_result_for_unsent_turn_is_refused:cea6538614532b15",
+        "name": "GeminiWebchatEndpointTests.test_result_for_unsent_turn_is_refused",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 133,
+        "end_line": 137,
+        "signature_hash": "59077355f4220788",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_result_must_match_endpoint_visit_and_turn:6749886b34c8e32c",
+        "name": "GeminiWebchatEndpointTests.test_result_must_match_endpoint_visit_and_turn",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 117,
+        "end_line": 126,
+        "signature_hash": "6166e7f86b82cbb9",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_stale_arena_head_refused_before_send:a3281e4c77dc05ed",
+        "name": "GeminiWebchatEndpointTests.test_stale_arena_head_refused_before_send",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 94,
+        "end_line": 97,
+        "signature_hash": "b325ac764687dbdf",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_stale_currentness_refused_before_send:ec86f2fdb7dccc4b",
+        "name": "GeminiWebchatEndpointTests.test_stale_currentness_refused_before_send",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 99,
+        "end_line": 102,
+        "signature_hash": "7dcd9f6f611de1d3",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_tool_effect_must_match_admitted_route:b5f5c34e41fa7ce8",
+        "name": "GeminiWebchatEndpointTests.test_tool_effect_must_match_admitted_route",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 167,
+        "end_line": 202,
+        "signature_hash": "0bc8a0412f70164c",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_tool_over_capsule_effect_is_refused:5d3c7d352b268c0a",
+        "name": "GeminiWebchatEndpointTests.test_tool_over_capsule_effect_is_refused",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 204,
+        "end_line": 222,
+        "signature_hash": "a7087fc99d415294",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_tool_request_must_be_allowlisted:37a17bfe54f381f9",
+        "name": "GeminiWebchatEndpointTests.test_tool_request_must_be_allowlisted",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 147,
+        "end_line": 165,
+        "signature_hash": "9ecdba5f728ee2b7",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_valid_assisted_turn_admits:63d87e29c38d5636",
+        "name": "GeminiWebchatEndpointTests.test_valid_assisted_turn_admits",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 81,
+        "end_line": 82,
+        "signature_hash": "aa8a8684b987ae31",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_visible_result_hash_is_verified:c0c6c06924b729b3",
+        "name": "GeminiWebchatEndpointTests.test_visible_result_hash_is_verified",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 128,
+        "end_line": 131,
+        "signature_hash": "45a88ac59aa5770f",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_endpoint.py#method:GeminiWebchatEndpointTests.test_wrong_browser_origin_fails_closed:9e14fbcb95341462",
+        "name": "GeminiWebchatEndpointTests.test_wrong_browser_origin_fails_closed",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_endpoint.py",
+        "line": 89,
+        "end_line": 92,
+        "signature_hash": "887747c3b4af92cc",
+        "file_digest8": "684d921bdefdea29"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#class:LoopbackFacadeTests:caf4fbffb4d92804",
+        "name": "LoopbackFacadeTests",
+        "kind": "class",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 59,
+        "end_line": 198,
+        "signature_hash": "9a613560d8857547",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#function:make_binding:bf8a26c49e241f76",
+        "name": "make_binding",
+        "kind": "function",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 29,
+        "end_line": 37,
+        "signature_hash": "b97d056cf6e47eed",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#function:make_envelope:f6a7f9606112b2f5",
+        "name": "make_envelope",
+        "kind": "function",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 40,
+        "end_line": 56,
+        "signature_hash": "e196644f0f8fccb6",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.request:c5af84a1f83a9194",
+        "name": "LoopbackFacadeTests.request",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 93,
+        "end_line": 106,
+        "signature_hash": "664384853ab53b59",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.setUp:ad09853c31521f61",
+        "name": "LoopbackFacadeTests.setUp",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 60,
+        "end_line": 85,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.tearDown:2f109dc8a665178d",
+        "name": "LoopbackFacadeTests.tearDown",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 87,
+        "end_line": 91,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_health_does_not_require_bridge_token:ee7829538f6d3d78",
+        "name": "LoopbackFacadeTests.test_health_does_not_require_bridge_token",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 108,
+        "end_line": 111,
+        "signature_hash": "f88ff4edfc688d7f",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_loopback_token_is_not_provider_credential_material:45e35d88e4850837",
+        "name": "LoopbackFacadeTests.test_loopback_token_is_not_provider_credential_material",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 188,
+        "end_line": 193,
+        "signature_hash": "40015a984688da35",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_next_turn_is_bound_and_returns_visible_bootstrap:03e866366d8fd00b",
+        "name": "LoopbackFacadeTests.test_next_turn_is_bound_and_returns_visible_bootstrap",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 119,
+        "end_line": 126,
+        "signature_hash": "d547726585b568cc",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_non_loopback_bind_is_refused_before_server_start:d33aabe46685592d",
+        "name": "LoopbackFacadeTests.test_non_loopback_bind_is_refused_before_server_start",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 195,
+        "end_line": 198,
+        "signature_hash": "d2a1564ff774a312",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_stale_currentness_fails_before_turn_delivery:db6020fefc925ffe",
+        "name": "LoopbackFacadeTests.test_stale_currentness_fails_before_turn_delivery",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 134,
+        "end_line": 148,
+        "signature_hash": "c8d33fafb60a083f",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_tool_request_roundtrip_hits_effect_policy:2642c16612502204",
+        "name": "LoopbackFacadeTests.test_tool_request_roundtrip_hits_effect_policy",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 174,
+        "end_line": 186,
+        "signature_hash": "ae49e9e3274b36bd",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_turn_poll_requires_auth:2a01d0f6935a1aa3",
+        "name": "LoopbackFacadeTests.test_turn_poll_requires_auth",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 113,
+        "end_line": 117,
+        "signature_hash": "e0909563a2c75aeb",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_visible_result_roundtrip_is_accepted_once:e0506f962e54e2ab",
+        "name": "LoopbackFacadeTests.test_visible_result_roundtrip_is_accepted_once",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 150,
+        "end_line": 172,
+        "signature_hash": "8c6352550a1b6792",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_loopback.py#method:LoopbackFacadeTests.test_wrong_endpoint_or_visit_fails_closed:c6d0bac6de91772a",
+        "name": "LoopbackFacadeTests.test_wrong_endpoint_or_visit_fails_closed",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_loopback.py",
+        "line": 128,
+        "end_line": 132,
+        "signature_hash": "12310578ddb3485c",
+        "file_digest8": "d3d4596fe389be44"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#class:RelayStoreTests:c2feb5300ac6825b",
+        "name": "RelayStoreTests",
+        "kind": "class",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 70,
+        "end_line": 172,
+        "signature_hash": "a0cbe088c4c8403a",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#function:binding:a55ffa8a7cff4bb1",
+        "name": "binding",
+        "kind": "function",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 26,
+        "end_line": 34,
+        "signature_hash": "693e6fced2c44e08",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#function:envelope:c8580d2a3bd70370",
+        "name": "envelope",
+        "kind": "function",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 37,
+        "end_line": 53,
+        "signature_hash": "6b342b0611df6521",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#function:result:b42e7eb2ff14b115",
+        "name": "result",
+        "kind": "function",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 56,
+        "end_line": 67,
+        "signature_hash": "7ec6b3fd6be46407",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.setUp:817e839cf6ca7840",
+        "name": "RelayStoreTests.setUp",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 71,
+        "end_line": 75,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.tearDown:8047c5786591ff35",
+        "name": "RelayStoreTests.tearDown",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 77,
+        "end_line": 78,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_atomic_create_rejects_existing_object:6937f3e6a811b8b3",
+        "name": "RelayStoreTests.test_atomic_create_rejects_existing_object",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 166,
+        "end_line": 172,
+        "signature_hash": "16dc40be67833463",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_duplicate_turn_publish_fails_closed:24d52e7b8e97a9f3",
+        "name": "RelayStoreTests.test_duplicate_turn_publish_fails_closed",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 89,
+        "end_line": 93,
+        "signature_hash": "b3ac0fcc6f634ab0",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_endpoint_rebind_requires_release:9493be5ebe6cf2cd",
+        "name": "RelayStoreTests.test_endpoint_rebind_requires_release",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 116,
+        "end_line": 122,
+        "signature_hash": "26e5e8cc81823558",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_relay_restart_preserves_replay_state:053309f84142310b",
+        "name": "RelayStoreTests.test_relay_restart_preserves_replay_state",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 109,
+        "end_line": 114,
+        "signature_hash": "a97620d770d0886a",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_result_requires_prior_send_and_removes_pending:9598e822fbc3a6bf",
+        "name": "RelayStoreTests.test_result_requires_prior_send_and_removes_pending",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 101,
+        "end_line": 107,
+        "signature_hash": "ab95688bcb47f087",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_stale_turn_is_not_written:067bd63d02e1977d",
+        "name": "RelayStoreTests.test_stale_turn_is_not_written",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 95,
+        "end_line": 99,
+        "signature_hash": "80e70eb0c263887d",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_tool_request_and_result_are_bound:82b21f14c55c5efc",
+        "name": "RelayStoreTests.test_tool_request_and_result_are_bound",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 124,
+        "end_line": 152,
+        "signature_hash": "3bbb27a3de009f45",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_tool_result_without_request_fails:bfd63e61fddd2f87",
+        "name": "RelayStoreTests.test_tool_result_without_request_fails",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 154,
+        "end_line": 164,
+        "signature_hash": "dfc8716ea4f956b6",
+        "file_digest8": "7c28dcf5f958ff92"
+      },
+      {
+        "semantic_id": "tools/project034/test_gemini_webchat_relay.py#method:RelayStoreTests.test_turn_publish_is_durable_and_pending:d9bca1073a31b224",
+        "name": "RelayStoreTests.test_turn_publish_is_durable_and_pending",
+        "kind": "method",
+        "file": "tools/project034/test_gemini_webchat_relay.py",
+        "line": 80,
+        "end_line": 87,
+        "signature_hash": "f8a00a021d4fd326",
+        "file_digest8": "7c28dcf5f958ff92"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -447762,7 +452005,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "9989f21130fd1664413955b78f6f6a3f",
-    "payload_hash": "65607f13160f25ac6dde6a57f9272da9"
+    "record_fingerprint": "f811b825822a678bb0da8e9e12b6d2d4",
+    "payload_hash": "0607dcb6a64d7c40d42a3b6ebdc7bc76"
   }
 }
