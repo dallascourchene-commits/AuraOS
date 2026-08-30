@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788105956,
+  "generated_at_unix": 1788106129,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1668,
+    "repo_file_count": 1670,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -147,6 +147,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
+      ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1659,6 +1660,7 @@
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_layout_binding_bridge.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -1784,16 +1786,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1668,
-      "bytes": 26487218,
-      "tokens_est": 6612198,
+      "files": 1670,
+      "bytes": 26492838,
+      "tokens_est": 6613604,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1015,
-        "schema_or_lexicon": 276,
+        "python_module": 1016,
+        "schema_or_lexicon": 277,
         "support_file": 49
       }
     },
@@ -113792,6 +113794,14 @@
         "end_line": 24,
         "semantic_id": "tests/test_aura_construction_adapter.py#function:fixture:5dd48d21b2036ac3",
         "signature_hash": "c73d3075455b50af"
+      },
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 39,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:fixture:273bec301318ba6b",
+        "signature_hash": "c73d3075455b50af"
       }
     ],
     "session": [
@@ -158884,6 +158894,116 @@
         "signature_hash": "a6a2281c320c3c5b"
       }
     ],
+    "compile_fixture": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 50,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:compile_fixture:789a235c715d6437",
+        "signature_hash": "d067a1134eb33414"
+      }
+    ],
+    "BridgeTests": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "class",
+        "line": 53,
+        "end_line": 106,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#class:BridgeTests:16295dc0a8a088a5",
+        "signature_hash": "f9a151d2cbcaaa4a"
+      }
+    ],
+    "BridgeTests.code": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 57,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.code:d3d7c2ee02383a3d",
+        "signature_hash": "da9870e5e2d1b723"
+      }
+    ],
+    "BridgeTests.test_packed_binding_ready_and_nonpromoting": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_packed_binding_ready_and_nonpromoting:bd104a39e72679bb",
+        "signature_hash": "a3b8b17075371069"
+      }
+    ],
+    "BridgeTests.test_stale_currentness_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 68,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_stale_currentness_fails_closed:a66d6168aa660d54",
+        "signature_hash": "1a5423672530f82b"
+      }
+    ],
+    "BridgeTests.test_probe_blocker_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 73,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_probe_blocker_fails_closed:2f65bb649c08666b",
+        "signature_hash": "45af947ed91f83aa"
+      }
+    ],
+    "BridgeTests.test_nonpacked_layouts_become_typed_residuals": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_nonpacked_layouts_become_typed_residuals:d85fc6b897038785",
+        "signature_hash": "5fa7aaab84f56912"
+      }
+    ],
+    "BridgeTests.test_header_axis_and_shard_are_exact": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 88,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_header_axis_and_shard_are_exact:fd04bd206af2a7cc",
+        "signature_hash": "95d98673ce259270"
+      }
+    ],
+    "BridgeTests.test_scale_role_ambiguity_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 93,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_scale_role_ambiguity_fails_closed:0c034219a60fd3fe",
+        "signature_hash": "3a2071889a98e560"
+      }
+    ],
+    "BridgeTests.test_clock_metadata_does_not_churn_identity": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 99,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_clock_metadata_does_not_churn_identity:648f6e324e371c80",
+        "signature_hash": "bd4b09ab36df6c20"
+      }
+    ],
+    "BridgeTests.test_header_digest_change_changes_binding": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 106,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_header_digest_change_changes_binding:f8f66c5c402ac182",
+        "signature_hash": "0f4edc3db17ef424"
+      }
+    ],
     "FakeSliceBackend": [
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
@@ -170273,6 +170393,53 @@
         0.075468,
         0.236997,
         0.088708
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 983,
+      "lines": 29,
+      "tokens_est": 246,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c9e9a2e0f9b08480",
+      "vector": [
+        -0.183669,
+        0.045625,
+        0.256201,
+        -0.043285,
+        -0.054984,
+        -0.258541,
+        0.127515,
+        -0.214086,
+        0.183669,
+        -0.202387,
+        -0.284278,
+        -0.237483,
+        -0.078381,
+        0.155592,
+        0.214086,
+        -0.256201,
+        0.008189,
+        0.153253,
+        -0.132195,
+        0.031586,
+        -0.160272,
+        0.066682,
+        0.272579,
+        -0.232803,
+        0.057323,
+        -0.076041,
+        -0.26556,
+        -0.200047,
+        -0.186009,
+        -0.197707,
+        0.012869,
+        -0.129855
       ]
     },
     {
@@ -265905,6 +266072,53 @@
       ]
     },
     {
+      "path": "tools/awj032/test_glm53_layout_binding_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4637,
+      "lines": 111,
+      "tokens_est": 1160,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4013ae6a2368c5ba",
+      "vector": [
+        0.239082,
+        -0.18162,
+        -0.128263,
+        -0.21856,
+        -0.132367,
+        0.118002,
+        0.239082,
+        -0.142628,
+        -0.191881,
+        -0.253448,
+        -0.109793,
+        0.11595,
+        0.234978,
+        -0.083114,
+        -0.195986,
+        -0.103636,
+        0.234978,
+        0.136472,
+        -0.159046,
+        -0.230873,
+        -0.111845,
+        -0.054383,
+        0.261656,
+        -0.204195,
+        0.076958,
+        -0.128263,
+        0.154942,
+        0.247291,
+        -0.085167,
+        0.243187,
+        -0.107741,
+        0.187777
+      ]
+    },
+    {
       "path": "tools/awj032/test_glm53_packed_expert_pager.py",
       "role": "python_module",
       "binary": false,
@@ -289950,16 +290164,16 @@
     }
   },
   "summary": {
-    "file_count": 1668,
-    "total_bytes": 26487218,
-    "text_tokens_est": 6612198,
+    "file_count": 1670,
+    "total_bytes": 26492838,
+    "text_tokens_est": 6613604,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1015,
-      "schema_or_lexicon": 276,
+      "python_module": 1016,
+      "schema_or_lexicon": 277,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -290116,6 +290330,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
+      ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -291628,6 +291843,7 @@
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_layout_binding_bridge.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -450667,6 +450883,126 @@
         "file_digest8": "8ea5e0d2c27b515d"
       },
       {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#class:BridgeTests:16295dc0a8a088a5",
+        "name": "BridgeTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 53,
+        "end_line": 106,
+        "signature_hash": "f9a151d2cbcaaa4a",
+        "file_digest8": "4013ae6a2368c5ba"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:compile_fixture:789a235c715d6437",
+        "name": "compile_fixture",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 42,
+        "end_line": 50,
+        "signature_hash": "d067a1134eb33414",
+        "file_digest8": "4013ae6a2368c5ba"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:fixture:273bec301318ba6b",
+        "name": "fixture",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 14,
+        "end_line": 39,
+        "signature_hash": "c73d3075455b50af",
+        "file_digest8": "4013ae6a2368c5ba"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.code:d3d7c2ee02383a3d",
+        "name": "BridgeTests.code",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 54,
+        "end_line": 57,
+        "signature_hash": "da9870e5e2d1b723",
+        "file_digest8": "4013ae6a2368c5ba"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_clock_metadata_does_not_churn_identity:648f6e324e371c80",
+        "name": "BridgeTests.test_clock_metadata_does_not_churn_identity",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 95,
+        "end_line": 99,
+        "signature_hash": "bd4b09ab36df6c20",
+        "file_digest8": "4013ae6a2368c5ba"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_header_axis_and_shard_are_exact:fd04bd206af2a7cc",
+        "name": "BridgeTests.test_header_axis_and_shard_are_exact",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 82,
+        "end_line": 88,
+        "signature_hash": "95d98673ce259270",
+        "file_digest8": "4013ae6a2368c5ba"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_header_digest_change_changes_binding:f8f66c5c402ac182",
+        "name": "BridgeTests.test_header_digest_change_changes_binding",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 101,
+        "end_line": 106,
+        "signature_hash": "0f4edc3db17ef424",
+        "file_digest8": "4013ae6a2368c5ba"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_nonpacked_layouts_become_typed_residuals:d85fc6b897038785",
+        "name": "BridgeTests.test_nonpacked_layouts_become_typed_residuals",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 75,
+        "end_line": 80,
+        "signature_hash": "5fa7aaab84f56912",
+        "file_digest8": "4013ae6a2368c5ba"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_packed_binding_ready_and_nonpromoting:bd104a39e72679bb",
+        "name": "BridgeTests.test_packed_binding_ready_and_nonpromoting",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 59,
+        "end_line": 63,
+        "signature_hash": "a3b8b17075371069",
+        "file_digest8": "4013ae6a2368c5ba"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_probe_blocker_fails_closed:2f65bb649c08666b",
+        "name": "BridgeTests.test_probe_blocker_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 70,
+        "end_line": 73,
+        "signature_hash": "45af947ed91f83aa",
+        "file_digest8": "4013ae6a2368c5ba"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_scale_role_ambiguity_fails_closed:0c034219a60fd3fe",
+        "name": "BridgeTests.test_scale_role_ambiguity_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 90,
+        "end_line": 93,
+        "signature_hash": "3a2071889a98e560",
+        "file_digest8": "4013ae6a2368c5ba"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_stale_currentness_fails_closed:a66d6168aa660d54",
+        "name": "BridgeTests.test_stale_currentness_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 65,
+        "end_line": 68,
+        "signature_hash": "1a5423672530f82b",
+        "file_digest8": "4013ae6a2368c5ba"
+      },
+      {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:FakeSliceBackend:bf8532e42602b3b5",
         "name": "FakeSliceBackend",
         "kind": "class",
@@ -452107,7 +452443,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1e8741ea9d30b1bd841729b7b6d0211a",
-    "payload_hash": "44828f23ecf01fa6b3442f40cd1e2666"
+    "record_fingerprint": "3df0001fd5e9c8510ace1d0f8a15c96f",
+    "payload_hash": "437adebc0028855bbff690a9a0c10773"
   }
 }
