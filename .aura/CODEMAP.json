@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788126956,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -142,6 +142,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj-bughound-002-r1-benchmark-contract.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1631,6 +1632,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/bughound/benchmark_contract.py",
+      "tools/bughound/test_benchmark_contract.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26434729,
+      "tokens_est": 6599034,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3461,6 +3464,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "function",
+        "line": 301,
+        "end_line": 304,
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:main:2a4c6ab9ca9b0f9d",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -3895,6 +3906,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 39,
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:_canonical:b8c21b1abb549d5c",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -8067,6 +8086,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:_sha:6e72f06b71922c43",
+        "signature_hash": "3c3bc3c037860fe9"
       }
     ],
     "_repo": [
@@ -157181,6 +157208,316 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "BugBenchmarkError": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 29,
+        "semantic_id": "tools/bughound/benchmark_contract.py#class:BugBenchmarkError:814c5a4b647d04b3",
+        "signature_hash": "a2a7e69a6cc2d026"
+      }
+    ],
+    "BugBenchmarkError.__init__": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 29,
+        "semantic_id": "tools/bughound/benchmark_contract.py#method:BugBenchmarkError.__init__:8891f4c6633083aa",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_nonempty": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 49,
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:_nonempty:14fcd9d496183472",
+        "signature_hash": "4d225aacce236fee"
+      }
+    ],
+    "BugCase": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "class",
+        "line": 53,
+        "end_line": 111,
+        "semantic_id": "tools/bughound/benchmark_contract.py#class:BugCase:e52864d6477e9e1b",
+        "signature_hash": "2ed724ca04e6e11e"
+      }
+    ],
+    "BugCase.normalized": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 107,
+        "semantic_id": "tools/bughound/benchmark_contract.py#method:BugCase.normalized:a44aaca6e78787f2",
+        "signature_hash": "3e30758942a7bf1b"
+      }
+    ],
+    "BugCase.case_digest": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 111,
+        "semantic_id": "tools/bughound/benchmark_contract.py#method:BugCase.case_digest:73b0006e9f365473",
+        "signature_hash": "ad2e340dedb0a4a4"
+      }
+    ],
+    "BugBenchmarkRun": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "class",
+        "line": 115,
+        "end_line": 156,
+        "semantic_id": "tools/bughound/benchmark_contract.py#class:BugBenchmarkRun:ec22814bfd36b5f0",
+        "signature_hash": "5409a8372d0e3dc7"
+      }
+    ],
+    "BugBenchmarkRun.normalized": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 156,
+        "semantic_id": "tools/bughound/benchmark_contract.py#method:BugBenchmarkRun.normalized:ee8fb36277fa9d69",
+        "signature_hash": "3e30758942a7bf1b"
+      }
+    ],
+    "MatchedBenchmarkReceipt": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "class",
+        "line": 160,
+        "end_line": 202,
+        "semantic_id": "tools/bughound/benchmark_contract.py#class:MatchedBenchmarkReceipt:9bbff9c9f4a7c514",
+        "signature_hash": "0b45de63e8e49b41"
+      }
+    ],
+    "MatchedBenchmarkReceipt.normalized": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 198,
+        "semantic_id": "tools/bughound/benchmark_contract.py#method:MatchedBenchmarkReceipt.normalized:c54710aef8822e3e",
+        "signature_hash": "3e30758942a7bf1b"
+      }
+    ],
+    "MatchedBenchmarkReceipt.receipt_digest": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "method",
+        "line": 201,
+        "end_line": 202,
+        "semantic_id": "tools/bughound/benchmark_contract.py#method:MatchedBenchmarkReceipt.receipt_digest:9c6d99d78b94847d",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "generation_accept_buggy": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "function",
+        "line": 205,
+        "end_line": 207,
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:generation_accept_buggy:78eb3100f5c0895b",
+        "signature_hash": "8a9ba8d4e3ad883b"
+      }
+    ],
+    "generation_accept_fixed": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "function",
+        "line": 210,
+        "end_line": 212,
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:generation_accept_fixed:f382d0c8cbe54161",
+        "signature_hash": "51b4a68c9e9ab577"
+      }
+    ],
+    "seeded_generation_case": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "function",
+        "line": 219,
+        "end_line": 233,
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:seeded_generation_case:3d330d25ed0eb64d",
+        "signature_hash": "5c08eef45ca617cc"
+      }
+    ],
+    "_run_route": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "function",
+        "line": 236,
+        "end_line": 256,
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:_run_route:580d522592ae3dc1",
+        "signature_hash": "cbedb499395dbf43"
+      }
+    ],
+    "happy_path_control": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "function",
+        "line": 259,
+        "end_line": 267,
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:happy_path_control:9a7434bd9c33d968",
+        "signature_hash": "98d1726bcbc09975"
+      }
+    ],
+    "generation_invariant_route": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "function",
+        "line": 270,
+        "end_line": 285,
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:generation_invariant_route:2ef008945e11e35a",
+        "signature_hash": "e44cf6d475ecf090"
+      }
+    ],
+    "run_seeded_generation_benchmark": [
+      {
+        "file": "tools/bughound/benchmark_contract.py",
+        "kind": "function",
+        "line": 288,
+        "end_line": 298,
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:run_seeded_generation_benchmark:7d5ea479754fa08b",
+        "signature_hash": "586161fe1a2194fb"
+      }
+    ],
+    "BugHoundBenchmarkContractTests": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 150,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#class:BugHoundBenchmarkContractTests:3b6f066f5bdf8aef",
+        "signature_hash": "c66dca34b85186fd"
+      }
+    ],
+    "BugHoundBenchmarkContractTests.test_case_digest_is_deterministic": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_case_digest_is_deterministic:a5776dcb85cc1a24",
+        "signature_hash": "bd53f8e41a309268"
+      }
+    ],
+    "BugHoundBenchmarkContractTests.test_holdout_patch_visibility_fails_closed": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 37,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_holdout_patch_visibility_fails_closed:b90e3caeef9c0915",
+        "signature_hash": "0eeb6e6d39323f77"
+      }
+    ],
+    "BugHoundBenchmarkContractTests.test_disputed_case_cannot_mint_accepted_receipt": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 65,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_disputed_case_cannot_mint_accepted_receipt:5209ffbaf180a112",
+        "signature_hash": "c5fb2bab21ad55aa"
+      }
+    ],
+    "BugHoundBenchmarkContractTests.test_happy_path_control_misses_seeded_bug": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 71,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_happy_path_control_misses_seeded_bug:17bcaff245d100e3",
+        "signature_hash": "f8536ecc45bc6883"
+      }
+    ],
+    "BugHoundBenchmarkContractTests.test_invariant_route_detects_buggy_revision": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 77,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_invariant_route_detects_buggy_revision:b83dc6e6f93286c3",
+        "signature_hash": "37d64c54d6af9aa4"
+      }
+    ],
+    "BugHoundBenchmarkContractTests.test_invariant_route_does_not_flag_fixed_revision": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 82,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_invariant_route_does_not_flag_fixed_revision:473e4ca164fe63bd",
+        "signature_hash": "c2ea772cfb400d0b"
+      }
+    ],
+    "BugHoundBenchmarkContractTests.test_fixed_revision_does_not_break_control": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 86,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_fixed_revision_does_not_break_control:626943fdf617249d",
+        "signature_hash": "69fbb1580eda5be7"
+      }
+    ],
+    "BugHoundBenchmarkContractTests.test_seeded_issue_guided_case_gets_zero_proactive_credit": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 95,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_seeded_issue_guided_case_gets_zero_proactive_credit:7b586359bb5c90a1",
+        "signature_hash": "eb0ec1862fa374bc"
+      }
+    ],
+    "BugHoundBenchmarkContractTests.test_attempted_proactive_credit_fails_closed": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 112,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_attempted_proactive_credit_fails_closed:f0188b6dcb724df2",
+        "signature_hash": "4eaeab65dc4e2c8b"
+      }
+    ],
+    "BugHoundBenchmarkContractTests.test_unknown_cost_latency_metrics_are_preserved": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 123,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_unknown_cost_latency_metrics_are_preserved:50a362744b2f150d",
+        "signature_hash": "626c746738ef80c0"
+      }
+    ],
+    "BugHoundBenchmarkContractTests.test_run_candidate_digest_mismatch_fails_closed": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 144,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_run_candidate_digest_mismatch_fails_closed:40bfbaa82d5de80a",
+        "signature_hash": "9335ee4cd738056a"
+      }
+    ],
+    "BugHoundBenchmarkContractTests.test_receipt_digest_is_deterministic": [
+      {
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 150,
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_receipt_digest_is_deterministic:b0e9911136aef3b9",
+        "signature_hash": "49954c66936facb3"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158298,6 +158635,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj-bughound-002-r1-benchmark-contract.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -158605,6 +158943,10 @@
     ],
     "python scripts/aura_spatial_s5_s6_construction_architect_harness.py --repo-root . --base-ref \"origin/$BASE_REF\" --head-ref HEAD --observed-head \"$(git rev-parse HEAD)\" --receipt /tmp/aura-spatial-s5-s6-receipts/full.json": [
       ".github/workflows/aura-spatial-s5-s6-construction.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/awj-bughound-002-r1-benchmark-contract.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
@@ -159293,9 +159635,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -168129,6 +168468,63 @@
         0.183493,
         0.241705,
         0.036699
+      ]
+    },
+    {
+      "path": ".github/workflows/awj-bughound-002-r1-benchmark-contract.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1612,
+      "lines": 46,
+      "tokens_est": 403,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          44
+        ],
+        "python -m unittest": [
+          45
+        ]
+      },
+      "topology": {},
+      "digest8": "ff5c07403de569df",
+      "vector": [
+        -0.066702,
+        0.197143,
+        0.048915,
+        0.167497,
+        0.05188,
+        0.303867,
+        0.134887,
+        0.203072,
+        -0.324619,
+        0.354264,
+        -0.060773,
+        -0.292009,
+        0.128958,
+        -0.01927,
+        -0.18232,
+        0.229753,
+        -0.188249,
+        -0.111171,
+        0.048915,
+        0.087454,
+        0.040021,
+        0.057809,
+        0.143781,
+        0.164533,
+        -0.123029,
+        -0.211966,
+        0.194178,
+        0.087454,
+        0.256434,
+        -0.185285,
+        -0.14971,
+        -0.102277
       ]
     },
     {
@@ -262648,6 +263044,100 @@
       ]
     },
     {
+      "path": "tools/bughound/benchmark_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11713,
+      "lines": 309,
+      "tokens_est": 2929,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "86e29f2bed6f5052",
+      "vector": [
+        -0.212583,
+        -0.152153,
+        -0.007554,
+        -0.014028,
+        -0.018345,
+        0.080933,
+        0.214741,
+        -0.229849,
+        0.221216,
+        -0.042085,
+        -0.100356,
+        -0.052876,
+        0.251431,
+        -0.106831,
+        0.154311,
+        -0.083091,
+        0.255747,
+        0.260063,
+        0.085249,
+        -0.266538,
+        -0.206108,
+        -0.167261,
+        0.275171,
+        -0.216899,
+        -0.154311,
+        0.262222,
+        -0.162944,
+        -0.197475,
+        0.108989,
+        0.247114,
+        -0.14352,
+        0.020503
+      ]
+    },
+    {
+      "path": "tools/bughound/test_benchmark_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6356,
+      "lines": 155,
+      "tokens_est": 1589,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a074946cc1fd4d28",
+      "vector": [
+        -0.057498,
+        -0.215888,
+        0.152966,
+        -0.241925,
+        -0.126929,
+        -0.024952,
+        -0.228907,
+        -0.179003,
+        0.142118,
+        0.142118,
+        -0.209379,
+        0.107402,
+        0.213719,
+        0.172494,
+        -0.270132,
+        -0.246265,
+        -0.187682,
+        0.137778,
+        -0.185512,
+        0.224567,
+        -0.20504,
+        -0.157306,
+        0.066177,
+        -0.163815,
+        0.172494,
+        0.159475,
+        0.220228,
+        -0.070516,
+        0.159475,
+        0.094383,
+        0.183342,
+        -0.220228
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -286646,16 +287136,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26434729,
+    "text_tokens_est": 6599034,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286807,6 +287297,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj-bughound-002-r1-benchmark-contract.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -288296,6 +288787,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/bughound/benchmark_contract.py",
+      "tools/bughound/test_benchmark_contract.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445634,6 +446127,346 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/bughound/benchmark_contract.py#class:BugBenchmarkError:814c5a4b647d04b3",
+        "name": "BugBenchmarkError",
+        "kind": "class",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 25,
+        "end_line": 29,
+        "signature_hash": "a2a7e69a6cc2d026",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#class:BugBenchmarkRun:ec22814bfd36b5f0",
+        "name": "BugBenchmarkRun",
+        "kind": "class",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 115,
+        "end_line": 156,
+        "signature_hash": "5409a8372d0e3dc7",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#class:BugCase:e52864d6477e9e1b",
+        "name": "BugCase",
+        "kind": "class",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 53,
+        "end_line": 111,
+        "signature_hash": "2ed724ca04e6e11e",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#class:MatchedBenchmarkReceipt:9bbff9c9f4a7c514",
+        "name": "MatchedBenchmarkReceipt",
+        "kind": "class",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 160,
+        "end_line": 202,
+        "signature_hash": "0b45de63e8e49b41",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:_canonical:b8c21b1abb549d5c",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 32,
+        "end_line": 39,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:_nonempty:14fcd9d496183472",
+        "name": "_nonempty",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 46,
+        "end_line": 49,
+        "signature_hash": "4d225aacce236fee",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:_run_route:580d522592ae3dc1",
+        "name": "_run_route",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 236,
+        "end_line": 256,
+        "signature_hash": "cbedb499395dbf43",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:_sha:6e72f06b71922c43",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "3c3bc3c037860fe9",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:generation_accept_buggy:78eb3100f5c0895b",
+        "name": "generation_accept_buggy",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 205,
+        "end_line": 207,
+        "signature_hash": "8a9ba8d4e3ad883b",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:generation_accept_fixed:f382d0c8cbe54161",
+        "name": "generation_accept_fixed",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 210,
+        "end_line": 212,
+        "signature_hash": "51b4a68c9e9ab577",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:generation_invariant_route:2ef008945e11e35a",
+        "name": "generation_invariant_route",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 270,
+        "end_line": 285,
+        "signature_hash": "e44cf6d475ecf090",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:happy_path_control:9a7434bd9c33d968",
+        "name": "happy_path_control",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 259,
+        "end_line": 267,
+        "signature_hash": "98d1726bcbc09975",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:main:2a4c6ab9ca9b0f9d",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 301,
+        "end_line": 304,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:run_seeded_generation_benchmark:7d5ea479754fa08b",
+        "name": "run_seeded_generation_benchmark",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 288,
+        "end_line": 298,
+        "signature_hash": "586161fe1a2194fb",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#function:seeded_generation_case:3d330d25ed0eb64d",
+        "name": "seeded_generation_case",
+        "kind": "function",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 219,
+        "end_line": 233,
+        "signature_hash": "5c08eef45ca617cc",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#method:BugBenchmarkError.__init__:8891f4c6633083aa",
+        "name": "BugBenchmarkError.__init__",
+        "kind": "method",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 26,
+        "end_line": 29,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#method:BugBenchmarkRun.normalized:ee8fb36277fa9d69",
+        "name": "BugBenchmarkRun.normalized",
+        "kind": "method",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 127,
+        "end_line": 156,
+        "signature_hash": "3e30758942a7bf1b",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#method:BugCase.case_digest:73b0006e9f365473",
+        "name": "BugCase.case_digest",
+        "kind": "method",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 110,
+        "end_line": 111,
+        "signature_hash": "ad2e340dedb0a4a4",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#method:BugCase.normalized:a44aaca6e78787f2",
+        "name": "BugCase.normalized",
+        "kind": "method",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 68,
+        "end_line": 107,
+        "signature_hash": "3e30758942a7bf1b",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#method:MatchedBenchmarkReceipt.normalized:c54710aef8822e3e",
+        "name": "MatchedBenchmarkReceipt.normalized",
+        "kind": "method",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 169,
+        "end_line": 198,
+        "signature_hash": "3e30758942a7bf1b",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/benchmark_contract.py#method:MatchedBenchmarkReceipt.receipt_digest:9c6d99d78b94847d",
+        "name": "MatchedBenchmarkReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/bughound/benchmark_contract.py",
+        "line": 201,
+        "end_line": 202,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "86e29f2bed6f5052"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#class:BugHoundBenchmarkContractTests:3b6f066f5bdf8aef",
+        "name": "BugHoundBenchmarkContractTests",
+        "kind": "class",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 15,
+        "end_line": 150,
+        "signature_hash": "c66dca34b85186fd",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_attempted_proactive_credit_fails_closed:f0188b6dcb724df2",
+        "name": "BugHoundBenchmarkContractTests.test_attempted_proactive_credit_fails_closed",
+        "kind": "method",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 97,
+        "end_line": 112,
+        "signature_hash": "4eaeab65dc4e2c8b",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_case_digest_is_deterministic:a5776dcb85cc1a24",
+        "name": "BugHoundBenchmarkContractTests.test_case_digest_is_deterministic",
+        "kind": "method",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "bd53f8e41a309268",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_disputed_case_cannot_mint_accepted_receipt:5209ffbaf180a112",
+        "name": "BugHoundBenchmarkContractTests.test_disputed_case_cannot_mint_accepted_receipt",
+        "kind": "method",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 39,
+        "end_line": 65,
+        "signature_hash": "c5fb2bab21ad55aa",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_fixed_revision_does_not_break_control:626943fdf617249d",
+        "name": "BugHoundBenchmarkContractTests.test_fixed_revision_does_not_break_control",
+        "kind": "method",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 84,
+        "end_line": 86,
+        "signature_hash": "69fbb1580eda5be7",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_happy_path_control_misses_seeded_bug:17bcaff245d100e3",
+        "name": "BugHoundBenchmarkContractTests.test_happy_path_control_misses_seeded_bug",
+        "kind": "method",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 67,
+        "end_line": 71,
+        "signature_hash": "f8536ecc45bc6883",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_holdout_patch_visibility_fails_closed:b90e3caeef9c0915",
+        "name": "BugHoundBenchmarkContractTests.test_holdout_patch_visibility_fails_closed",
+        "kind": "method",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 19,
+        "end_line": 37,
+        "signature_hash": "0eeb6e6d39323f77",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_invariant_route_detects_buggy_revision:b83dc6e6f93286c3",
+        "name": "BugHoundBenchmarkContractTests.test_invariant_route_detects_buggy_revision",
+        "kind": "method",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 73,
+        "end_line": 77,
+        "signature_hash": "37d64c54d6af9aa4",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_invariant_route_does_not_flag_fixed_revision:473e4ca164fe63bd",
+        "name": "BugHoundBenchmarkContractTests.test_invariant_route_does_not_flag_fixed_revision",
+        "kind": "method",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 79,
+        "end_line": 82,
+        "signature_hash": "c2ea772cfb400d0b",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_receipt_digest_is_deterministic:b0e9911136aef3b9",
+        "name": "BugHoundBenchmarkContractTests.test_receipt_digest_is_deterministic",
+        "kind": "method",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 146,
+        "end_line": 150,
+        "signature_hash": "49954c66936facb3",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_run_candidate_digest_mismatch_fails_closed:40bfbaa82d5de80a",
+        "name": "BugHoundBenchmarkContractTests.test_run_candidate_digest_mismatch_fails_closed",
+        "kind": "method",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 125,
+        "end_line": 144,
+        "signature_hash": "9335ee4cd738056a",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_seeded_issue_guided_case_gets_zero_proactive_credit:7b586359bb5c90a1",
+        "name": "BugHoundBenchmarkContractTests.test_seeded_issue_guided_case_gets_zero_proactive_credit",
+        "kind": "method",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 88,
+        "end_line": 95,
+        "signature_hash": "eb0ec1862fa374bc",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
+        "semantic_id": "tools/bughound/test_benchmark_contract.py#method:BugHoundBenchmarkContractTests.test_unknown_cost_latency_metrics_are_preserved:50a362744b2f150d",
+        "name": "BugHoundBenchmarkContractTests.test_unknown_cost_latency_metrics_are_preserved",
+        "kind": "method",
+        "file": "tools/bughound/test_benchmark_contract.py",
+        "line": 114,
+        "end_line": 123,
+        "signature_hash": "626c746738ef80c0",
+        "file_digest8": "a074946cc1fd4d28"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447717,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "60b1753eb7ad7dbc80c98275019b5983",
+    "payload_hash": "c04e5c88792efbfec7996cd3b90eb4a9"
   }
 }
