@@ -22,6 +22,7 @@ _VERSION_RE = re.compile(r"\bversion\s*=\s*['\"]([^'\"]+)['\"]")
 _PIP_MUTATION_RE = re.compile(
     r"(?:python(?:3)?\s+-m\s+pip|\bpip(?:3)?\s+install)\b", re.IGNORECASE
 )
+_LOADER_BOUNDARIES = frozenset({"from_pretrained", "from_config", "get_module_class"})
 
 
 @dataclass(frozen=True)
@@ -66,7 +67,7 @@ def _file_digest(paths: Iterable[Path], root: Path) -> str:
     return h.hexdigest()
 
 
-def _trust_value(node: ast.AST) -> str:
+def _trust_value(node: ast.AST | None) -> str:
     if isinstance(node, ast.Constant) and node.value is False:
         return "FALSE"
     if isinstance(node, ast.Constant) and node.value is True:
@@ -82,37 +83,200 @@ def _trust_finding(state: str, rel: str, line: int, detail: str) -> Finding | No
     return None
 
 
-def _string_key(node: ast.AST) -> str | None:
+def _static_bindings(tree: ast.AST) -> dict[str, ast.AST]:
+    """Collect simple name bindings used only for conservative static folding."""
+    bindings: dict[str, ast.AST] = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and len(node.targets) == 1:
+            target = node.targets[0]
+            if isinstance(target, ast.Name):
+                bindings[target.id] = node.value
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            if node.value is not None:
+                bindings[node.target.id] = node.value
+    return bindings
+
+
+def _const_string(
+    node: ast.AST | None,
+    bindings: dict[str, ast.AST],
+    seen: frozenset[str] = frozenset(),
+) -> str | None:
     if isinstance(node, ast.Constant) and isinstance(node.value, str):
         return node.value
+    if isinstance(node, ast.Name):
+        if node.id in seen:
+            return None
+        value = bindings.get(node.id)
+        if value is None:
+            return None
+        return _const_string(value, bindings, seen | {node.id})
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
+        left = _const_string(node.left, bindings, seen)
+        right = _const_string(node.right, bindings, seen)
+        if left is not None and right is not None:
+            return left + right
+        return None
+    if isinstance(node, ast.JoinedStr):
+        parts: list[str] = []
+        for value in node.values:
+            if isinstance(value, ast.Constant) and isinstance(value.value, str):
+                parts.append(value.value)
+            elif isinstance(value, ast.FormattedValue):
+                part = _const_string(value.value, bindings, seen)
+                if part is None:
+                    return None
+                parts.append(part)
+            else:
+                return None
+        return "".join(parts)
+    return None
+
+
+def _mapping_trust_state(
+    node: ast.AST | None,
+    bindings: dict[str, ast.AST],
+    seen: frozenset[str] = frozenset(),
+) -> tuple[str, bool]:
+    """Return (trust state, mapping_known) for one expanded mapping."""
+    if isinstance(node, ast.Name):
+        if node.id in seen:
+            return "UNKNOWN", False
+        value = bindings.get(node.id)
+        if value is None:
+            return "UNKNOWN", False
+        return _mapping_trust_state(value, bindings, seen | {node.id})
+
+    if isinstance(node, ast.Dict):
+        state = "ABSENT"
+        for key, value in zip(node.keys, node.values):
+            if key is None:
+                nested_state, known = _mapping_trust_state(value, bindings, seen)
+                if not known:
+                    return "UNKNOWN", False
+                if nested_state != "ABSENT":
+                    state = nested_state
+                continue
+            if _const_string(key, bindings) == "trust_remote_code":
+                state = _trust_value(value)
+        return state, True
+
+    if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "dict":
+        state = "ABSENT"
+        for kw in node.keywords:
+            if kw.arg == "trust_remote_code":
+                state = _trust_value(kw.value)
+            elif kw.arg is None:
+                nested_state, known = _mapping_trust_state(kw.value, bindings, seen)
+                if not known:
+                    return "UNKNOWN", False
+                if nested_state != "ABSENT":
+                    state = nested_state
+        if len(node.args) > 1:
+            return "UNKNOWN", False
+        if node.args:
+            arg = node.args[0]
+            if not isinstance(arg, (ast.List, ast.Tuple)):
+                return "UNKNOWN", False
+            for pair in arg.elts:
+                if not isinstance(pair, (ast.List, ast.Tuple)) or len(pair.elts) != 2:
+                    return "UNKNOWN", False
+                key, value = pair.elts
+                if _const_string(key, bindings) == "trust_remote_code":
+                    state = _trust_value(value)
+        return state, True
+
+    return "UNKNOWN", False
+
+
+def _call_name(node: ast.Call) -> str | None:
+    if isinstance(node.func, ast.Name):
+        return node.func.id
+    if isinstance(node.func, ast.Attribute):
+        return node.func.attr
     return None
 
 
 def _scan_trust_remote_code(tree: ast.AST, rel: str) -> list[Finding]:
-    """Reject direct and mapping-mediated remote-code widening.
-
-    Direct keyword checks alone miss forms such as
-    ``loader(**{"trust_remote_code": True})`` or a dict later expanded with
-    ``**opts``. Scan literal mappings and subscript assignments too.
-    """
+    """Reject direct, mapping-mediated, and loader-boundary remote-code widening."""
     findings: list[Finding] = []
+    bindings = _static_bindings(tree)
+
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
+            call_name = _call_name(node)
+            explicit_state: str | None = None
+            opaque_expansions: list[ast.AST] = []
+
             for kw in node.keywords:
-                if kw.arg != "trust_remote_code":
-                    continue
+                if kw.arg == "trust_remote_code":
+                    explicit_state = _trust_value(kw.value)
+                    finding = _trust_finding(
+                        explicit_state,
+                        rel,
+                        int(getattr(node, "lineno", 0)),
+                        "trust_remote_code keyword is not literal False",
+                    )
+                    if finding is not None:
+                        findings.append(finding)
+                elif kw.arg is None:
+                    state, known = _mapping_trust_state(kw.value, bindings)
+                    if state in {"TRUE", "DYNAMIC"}:
+                        finding = _trust_finding(
+                            state,
+                            rel,
+                            int(getattr(node, "lineno", 0)),
+                            "expanded trust_remote_code mapping is not literal False",
+                        )
+                        if finding is not None:
+                            findings.append(finding)
+                    elif not known:
+                        opaque_expansions.append(kw.value)
+
+            if (
+                call_name in _LOADER_BOUNDARIES
+                and opaque_expansions
+                and explicit_state != "FALSE"
+            ):
+                findings.append(
+                    Finding(
+                        "REMOTE_CODE_OPAQUE_LOADER_KWARGS",
+                        rel,
+                        int(getattr(node, "lineno", 0)),
+                        f"{call_name} receives opaque **kwargs without explicit trust_remote_code=False",
+                    )
+                )
+
+            if isinstance(node.func, ast.Attribute) and node.func.attr == "setdefault":
+                if node.args and _const_string(node.args[0], bindings) == "trust_remote_code":
+                    value = node.args[1] if len(node.args) >= 2 else None
+                    finding = _trust_finding(
+                        _trust_value(value),
+                        rel,
+                        int(getattr(node, "lineno", 0)),
+                        "trust_remote_code setdefault value is not literal False",
+                    )
+                    if finding is not None:
+                        findings.append(finding)
+
+            if (
+                isinstance(node.func, ast.Name)
+                and node.func.id == "setattr"
+                and len(node.args) >= 3
+                and _const_string(node.args[1], bindings) == "trust_remote_code"
+            ):
                 finding = _trust_finding(
-                    _trust_value(kw.value),
+                    _trust_value(node.args[2]),
                     rel,
                     int(getattr(node, "lineno", 0)),
-                    "trust_remote_code keyword is not literal False",
+                    "trust_remote_code setattr value is not literal False",
                 )
                 if finding is not None:
                     findings.append(finding)
 
         if isinstance(node, ast.Dict):
             for key, value in zip(node.keys, node.values):
-                if key is None or _string_key(key) != "trust_remote_code":
+                if key is None or _const_string(key, bindings) != "trust_remote_code":
                     continue
                 finding = _trust_finding(
                     _trust_value(value),
@@ -131,19 +295,32 @@ def _scan_trust_remote_code(tree: ast.AST, rel: str) -> list[Finding]:
         elif isinstance(node, ast.AnnAssign):
             target = node.target
             value_node = node.value
+
+        if value_node is not None and isinstance(target, ast.Subscript):
+            if _const_string(target.slice, bindings) == "trust_remote_code":
+                finding = _trust_finding(
+                    _trust_value(value_node),
+                    rel,
+                    int(getattr(node, "lineno", 0)),
+                    "trust_remote_code subscript assignment is not literal False",
+                )
+                if finding is not None:
+                    findings.append(finding)
+
         if (
             value_node is not None
-            and isinstance(target, ast.Subscript)
-            and _string_key(target.slice) == "trust_remote_code"
+            and isinstance(target, ast.Attribute)
+            and target.attr == "trust_remote_code"
         ):
             finding = _trust_finding(
                 _trust_value(value_node),
                 rel,
                 int(getattr(node, "lineno", 0)),
-                "trust_remote_code subscript assignment is not literal False",
+                "trust_remote_code attribute assignment is not literal False",
             )
             if finding is not None:
                 findings.append(finding)
+
     return findings
 
 
