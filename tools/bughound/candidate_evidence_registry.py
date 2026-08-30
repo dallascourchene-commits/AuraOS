@@ -61,9 +61,6 @@ class CandidateEvidenceProducerRecordV1:
     producer_ref: str
     producer_generation: str
     producer_currentness_ref: str
-    observer_ref: str
-    observer_generation: str
-    observer_currentness_ref: str
     evidence_bundle_digest: str
     target_ref: str
     target_generation: str
@@ -73,6 +70,12 @@ class CandidateEvidenceProducerRecordV1:
     duplicate_check_currentness_ref: str
     report_digest: str
     program_admissibility_ref: str
+    # Compatibility fields are optional at construction, but canonical trust
+    # validation requires all three. Old/private fixtures therefore remain
+    # constructible without becoming trusted records.
+    observer_ref: str = ""
+    observer_generation: str = ""
+    observer_currentness_ref: str = ""
     independently_observed: bool = True
     current: bool = True
     revoked: bool = False
@@ -129,8 +132,6 @@ def validate_candidate_evidence_producer_record(record: CandidateEvidenceProduce
     return record
 
 
-# Repository-owned production trust root. Deliberately empty until a real,
-# independently observed cash-candidate producer generation is pinned here.
 _CANONICAL_RECORDS: tuple[CandidateEvidenceProducerRecordV1, ...] = ()
 
 
