@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788107771,
+  "generated_at_unix": 1788123770,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1671,
+    "repo_file_count": 1673,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1655,11 +1655,13 @@
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_io_feasibility.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_io_feasibility.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
@@ -1787,15 +1789,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1671,
-      "bytes": 26538030,
-      "tokens_est": 6624903,
+      "files": 1673,
+      "bytes": 26549235,
+      "tokens_est": 6627705,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1018,
+        "python_module": 1020,
         "schema_or_lexicon": 276,
         "support_file": 49
       }
@@ -158227,6 +158229,86 @@
         "signature_hash": "3313625eaf98b5c7"
       }
     ],
+    "TargetClass": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 21,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:TargetClass:24f309ad2aee8c56",
+        "signature_hash": "a7ac8aec9ac587d8"
+      }
+    ],
+    "TargetResult": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 30,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:TargetResult:596f1cb7c931161a",
+        "signature_hash": "e30083dda0592a4b"
+      }
+    ],
+    "IOFeasibilityReceipt": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 48,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:IOFeasibilityReceipt:6d9e8e12da87a4af",
+        "signature_hash": "3ed1a2f22c823f6c"
+      }
+    ],
+    "IOFeasibilityReceipt.to_dict": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 48,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#method:IOFeasibilityReceipt.to_dict:4424409aeabea8d3",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "_positive_finite": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:_positive_finite:535270431a26d93c",
+        "signature_hash": "76c04857f9f65b36"
+      }
+    ],
+    "required_reuse": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 73,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:required_reuse:eb7c8552954c3a0c",
+        "signature_hash": "1adf0f6a536ddefe"
+      }
+    ],
+    "observed_reuse": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 87,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:observed_reuse:8e00faa3c756f325",
+        "signature_hash": "0de9435df042493e"
+      }
+    ],
+    "evaluate_io_feasibility": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 168,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:evaluate_io_feasibility:7c047d0b26744c46",
+        "signature_hash": "626c83e1d0757dfe"
+      }
+    ],
     "PagerError": [
       {
         "file": "tools/awj032/glm53_packed_expert_pager.py",
@@ -159311,6 +159393,106 @@
         "end_line": 159,
         "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_probe_never_admits_g2:f5368fa39d715758",
         "signature_hash": "a6a2281c320c3c5b"
+      }
+    ],
+    "IOFeasibilityTests": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "class",
+        "line": 7,
+        "end_line": 116,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#class:IOFeasibilityTests:592a54c05aff6953",
+        "signature_hash": "261098e087c6b776"
+      }
+    ],
+    "IOFeasibilityTests.test_cold_one_gbps_one_second_requires_about_96_percent_reuse": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 14,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_cold_one_gbps_one_second_requires_about_96_percent_reuse:b3759c379ac7eb1b",
+        "signature_hash": "e92ea83b48c72168"
+      }
+    ],
+    "IOFeasibilityTests.test_large_time_budget_needs_no_reuse": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 22,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_large_time_budget_needs_no_reuse:26a28adafa6916f9",
+        "signature_hash": "f449e60ca68579b1"
+      }
+    ],
+    "IOFeasibilityTests.test_unknown_physical_bytes_remain_unknown": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_unknown_physical_bytes_remain_unknown:6d823c1a7e985822",
+        "signature_hash": "af070d480c77e2d2"
+      }
+    ],
+    "IOFeasibilityTests.test_cache_only_zero_backend_bytes_is_full_observed_reuse": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 43,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_cache_only_zero_backend_bytes_is_full_observed_reuse:6fa99707a9e31354",
+        "signature_hash": "a454045371ed1f2f"
+      }
+    ],
+    "IOFeasibilityTests.test_measured_bytes_classify_each_caller_supplied_budget": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 62,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_measured_bytes_classify_each_caller_supplied_budget:a6d0ffed447e87a8",
+        "signature_hash": "bcf06e0e508325fc"
+      }
+    ],
+    "IOFeasibilityTests.test_physical_io_amplification_clamps_reuse_to_zero_but_stays_visible": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 73,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_physical_io_amplification_clamps_reuse_to_zero_but_stays_visible:f0148c762201de4c",
+        "signature_hash": "9e292b38d5dcdde4"
+      }
+    ],
+    "IOFeasibilityTests.test_receipt_claim_ceiling_never_promotes_g2": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 86,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_receipt_claim_ceiling_never_promotes_g2:95bb37a664d0013b",
+        "signature_hash": "edcfaf214c0d6f24"
+      }
+    ],
+    "IOFeasibilityTests.test_bad_units_fail_closed": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_bad_units_fail_closed:8769ff87182ed057",
+        "signature_hash": "91d9ffa502c5add2"
+      }
+    ],
+    "IOFeasibilityTests.test_empty_or_duplicate_targets_fail_closed": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 116,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_empty_or_duplicate_targets_fail_closed:fbabd92200c9efe4",
+        "signature_hash": "4bdd14bb2b886b2e"
       }
     ],
     "FakeSliceBackend": [
@@ -171106,9 +171288,9 @@
       "path": ".github/workflows/awj032-glm53-01a-pager.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 1746,
-      "lines": 49,
-      "tokens_est": 437,
+      "bytes": 2002,
+      "lines": 54,
+      "tokens_est": 501,
       "symbol_count": 0,
       "commands": [
         "python -m py_compile",
@@ -171116,47 +171298,47 @@
       ],
       "command_lines": {
         "python -m py_compile": [
-          30
+          32
         ],
         "python -m unittest": [
-          45
+          49
         ]
       },
       "topology": {},
-      "digest8": "a3ff1d67f4e3a02a",
+      "digest8": "7552cbcf88b7b796",
       "vector": [
-        0.05223,
-        0.05223,
-        -0.210083,
-        -0.045266,
-        -0.008125,
-        -0.075444,
-        -0.254188,
-        -0.082408,
-        0.126514,
-        0.177584,
-        -0.295973,
-        0.024374,
-        0.254188,
-        -0.282045,
-        0.207761,
-        -0.228653,
-        -0.196154,
-        -0.008125,
-        0.289009,
-        -0.114907,
-        -0.163655,
-        0.279723,
-        0.098658,
-        -0.203119,
-        -0.070801,
-        0.001161,
-        0.251867,
-        0.056873,
-        -0.082408,
-        0.261152,
-        0.184548,
-        -0.15437
+        0.022146,
+        0.076859,
+        -0.029962,
+        0.230578,
+        0.016935,
+        -0.235789,
+        -0.227973,
+        -0.227973,
+        0.011724,
+        -0.241,
+        0.045595,
+        0.035173,
+        -0.058622,
+        0.17847,
+        -0.045595,
+        -0.30353,
+        0.100308,
+        -0.225367,
+        -0.20713,
+        -0.001303,
+        -0.092492,
+        0.173259,
+        -0.131573,
+        -0.08207,
+        0.037778,
+        0.199313,
+        0.285292,
+        0.087281,
+        0.316557,
+        -0.298319,
+        -0.199313,
+        0.251421
       ]
     },
     {
@@ -266648,6 +266830,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_io_feasibility.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6016,
+      "lines": 169,
+      "tokens_est": 1504,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "465b894a0625f913",
+      "vector": [
+        -0.246543,
+        -0.320633,
+        -0.144349,
+        -0.008942,
+        0.228659,
+        -0.031936,
+        0.021716,
+        -0.072813,
+        -0.088142,
+        -0.192891,
+        0.047265,
+        0.200556,
+        0.310414,
+        0.167342,
+        0.272091,
+        0.318078,
+        -0.037045,
+        0.175007,
+        0.093252,
+        -0.220994,
+        0.047265,
+        0.146904,
+        -0.139239,
+        0.042155,
+        0.12391,
+        -0.305304,
+        0.139239,
+        -0.223549,
+        -0.195446,
+        -0.095807,
+        -0.037045,
+        0.090697
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_packed_expert_pager.py",
       "role": "python_module",
       "binary": false,
@@ -266880,6 +267109,53 @@
         0.046165,
         -0.170935,
         -0.185908
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_io_feasibility.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4933,
+      "lines": 121,
+      "tokens_est": 1234,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "642aa07201d42582",
+      "vector": [
+        -0.12924,
+        0.171964,
+        -0.011749,
+        0.018158,
+        -0.231777,
+        -0.163419,
+        0.195462,
+        -0.069426,
+        -0.184781,
+        0.08438,
+        0.259548,
+        -0.105742,
+        0.080107,
+        -0.259548,
+        0.259548,
+        -0.024566,
+        -0.259548,
+        0.268093,
+        -0.229641,
+        -0.171964,
+        -0.092925,
+        -0.216824,
+        -0.050201,
+        -0.026702,
+        0.270229,
+        0.268093,
+        0.026702,
+        0.086516,
+        0.1741,
+        0.137785,
+        -0.268093,
+        -0.116423
       ]
     },
     {
@@ -291022,15 +291298,15 @@
     }
   },
   "summary": {
-    "file_count": 1671,
-    "total_bytes": 26538030,
-    "text_tokens_est": 6624903,
+    "file_count": 1673,
+    "total_bytes": 26549235,
+    "text_tokens_est": 6627705,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1018,
+      "python_module": 1020,
       "schema_or_lexicon": 276,
       "support_file": 49
     },
@@ -292696,11 +292972,13 @@
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_io_feasibility.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_io_feasibility.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
@@ -451052,6 +451330,86 @@
         "file_digest8": "e47f5028c4e7cc25"
       },
       {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:IOFeasibilityReceipt:6d9e8e12da87a4af",
+        "name": "IOFeasibilityReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 34,
+        "end_line": 48,
+        "signature_hash": "3ed1a2f22c823f6c",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:TargetClass:24f309ad2aee8c56",
+        "name": "TargetClass",
+        "kind": "class",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 19,
+        "end_line": 21,
+        "signature_hash": "a7ac8aec9ac587d8",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:TargetResult:596f1cb7c931161a",
+        "name": "TargetResult",
+        "kind": "class",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 25,
+        "end_line": 30,
+        "signature_hash": "e30083dda0592a4b",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:_positive_finite:535270431a26d93c",
+        "name": "_positive_finite",
+        "kind": "function",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 51,
+        "end_line": 55,
+        "signature_hash": "76c04857f9f65b36",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:evaluate_io_feasibility:7c047d0b26744c46",
+        "name": "evaluate_io_feasibility",
+        "kind": "function",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 90,
+        "end_line": 168,
+        "signature_hash": "626c83e1d0757dfe",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:observed_reuse:8e00faa3c756f325",
+        "name": "observed_reuse",
+        "kind": "function",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 76,
+        "end_line": 87,
+        "signature_hash": "0de9435df042493e",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:required_reuse:eb7c8552954c3a0c",
+        "name": "required_reuse",
+        "kind": "function",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 58,
+        "end_line": 73,
+        "signature_hash": "1adf0f6a536ddefe",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#method:IOFeasibilityReceipt.to_dict:4424409aeabea8d3",
+        "name": "IOFeasibilityReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 45,
+        "end_line": 48,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_packed_expert_pager.py#class:ExpertRangeError:a8c6d962660c0c2f",
         "name": "ExpertRangeError",
         "kind": "class",
@@ -452170,6 +452528,106 @@
         "end_line": 97,
         "signature_hash": "b67b9af0cf1f2b78",
         "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#class:IOFeasibilityTests:592a54c05aff6953",
+        "name": "IOFeasibilityTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 7,
+        "end_line": 116,
+        "signature_hash": "261098e087c6b776",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_bad_units_fail_closed:8769ff87182ed057",
+        "name": "IOFeasibilityTests.test_bad_units_fail_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 88,
+        "end_line": 102,
+        "signature_hash": "91d9ffa502c5add2",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_cache_only_zero_backend_bytes_is_full_observed_reuse:6fa99707a9e31354",
+        "name": "IOFeasibilityTests.test_cache_only_zero_backend_bytes_is_full_observed_reuse",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 35,
+        "end_line": 43,
+        "signature_hash": "a454045371ed1f2f",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_cold_one_gbps_one_second_requires_about_96_percent_reuse:b3759c379ac7eb1b",
+        "name": "IOFeasibilityTests.test_cold_one_gbps_one_second_requires_about_96_percent_reuse",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 8,
+        "end_line": 14,
+        "signature_hash": "e92ea83b48c72168",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_empty_or_duplicate_targets_fail_closed:fbabd92200c9efe4",
+        "name": "IOFeasibilityTests.test_empty_or_duplicate_targets_fail_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 104,
+        "end_line": 116,
+        "signature_hash": "4bdd14bb2b886b2e",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_large_time_budget_needs_no_reuse:26a28adafa6916f9",
+        "name": "IOFeasibilityTests.test_large_time_budget_needs_no_reuse",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 16,
+        "end_line": 22,
+        "signature_hash": "f449e60ca68579b1",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_measured_bytes_classify_each_caller_supplied_budget:a6d0ffed447e87a8",
+        "name": "IOFeasibilityTests.test_measured_bytes_classify_each_caller_supplied_budget",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 45,
+        "end_line": 62,
+        "signature_hash": "bcf06e0e508325fc",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_physical_io_amplification_clamps_reuse_to_zero_but_stays_visible:f0148c762201de4c",
+        "name": "IOFeasibilityTests.test_physical_io_amplification_clamps_reuse_to_zero_but_stays_visible",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 64,
+        "end_line": 73,
+        "signature_hash": "9e292b38d5dcdde4",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_receipt_claim_ceiling_never_promotes_g2:95bb37a664d0013b",
+        "name": "IOFeasibilityTests.test_receipt_claim_ceiling_never_promotes_g2",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 75,
+        "end_line": 86,
+        "signature_hash": "edcfaf214c0d6f24",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_unknown_physical_bytes_remain_unknown:6d823c1a7e985822",
+        "name": "IOFeasibilityTests.test_unknown_physical_bytes_remain_unknown",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 24,
+        "end_line": 33,
+        "signature_hash": "af070d480c77e2d2",
+        "file_digest8": "642aa07201d42582"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:FakeSliceBackend:bf8532e42602b3b5",
@@ -454102,7 +454560,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "8d27c07d8e96856178971532f0748488",
-    "payload_hash": "0f4f24be3f3881e0df8c47971c0a618d"
+    "record_fingerprint": "bffc44b2defd4d6da154d3570509531b",
+    "payload_hash": "3a7d14f91d4d82a1499028459757840a"
   }
 }
