@@ -1,0 +1,25 @@
+name: AURA ADOPT ZF-05A Share Capsule
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_adopt/share_capsule.py"
+      - "tools/aura_adopt/test_share_capsule.py"
+      - ".github/workflows/aura-adopt-zf05a-share-capsule.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-regression:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile
+        run: python -m py_compile tools/aura_adopt/share_capsule.py tools/aura_adopt/test_share_capsule.py
+      - name: Focused regressions
+        run: python -m unittest -v tools.aura_adopt.test_share_capsule
