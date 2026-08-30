@@ -165,6 +165,80 @@ class TrustedDistributionTests(unittest.TestCase):
         )
         self.assertIn("TRUST_EVIDENCE_REQUIRED", receipt.reasons)
 
+    def test_recipe_without_signature_evidence_is_admissible_but_non_authoritative(self):
+        manifest = make_manifest(
+            artifact_id="recipe.neon-amber",
+            kind=ArtifactKind.ARENA_RECIPE,
+            channel=DistributionChannel.RECIPE,
+        )
+        receipt = verify_distribution_manifest(
+            manifest,
+            observed_artifact_sha256_hex=manifest.artifact.sha256_hex,
+            observed_artifact_size_bytes=manifest.artifact.size_bytes,
+            evidence=None,
+            policy=policy(allowed_channels=(DistributionChannel.RECIPE,)),
+        )
+        self.assertEqual(receipt.status, AdmissionStatus.ADMISSIBLE)
+        self.assertFalse(receipt.effect_authorized)
+        self.assertFalse(receipt.install_authorized)
+        self.assertFalse(receipt.update_authorized)
+        self.assertFalse(receipt.execution_proven)
+
+    def test_recipe_integrity_still_fails_without_signature_evidence(self):
+        manifest = make_manifest(
+            artifact_id="recipe.neon-amber",
+            kind=ArtifactKind.ARENA_RECIPE,
+            channel=DistributionChannel.RECIPE,
+        )
+        receipt = verify_distribution_manifest(
+            manifest,
+            observed_artifact_sha256_hex="c" * 64,
+            observed_artifact_size_bytes=manifest.artifact.size_bytes,
+            evidence=None,
+            policy=policy(allowed_channels=(DistributionChannel.RECIPE,)),
+        )
+        self.assertEqual(receipt.status, AdmissionStatus.REFUSED)
+        self.assertIn("ARTIFACT_DIGEST_MISMATCH", receipt.reasons)
+
+    def test_recipe_optional_evidence_must_not_launder_untrusted_verifier(self):
+        manifest = make_manifest(
+            artifact_id="recipe.neon-amber",
+            kind=ArtifactKind.ARENA_RECIPE,
+            channel=DistributionChannel.RECIPE,
+        )
+        evidence = replace(
+            evidence_for(manifest),
+            verification_source_ref="caller://self-asserted",
+            signature_verified=False,
+        )
+        receipt = verify_distribution_manifest(
+            manifest,
+            observed_artifact_sha256_hex=manifest.artifact.sha256_hex,
+            observed_artifact_size_bytes=manifest.artifact.size_bytes,
+            evidence=evidence,
+            policy=policy(allowed_channels=(DistributionChannel.RECIPE,)),
+        )
+        self.assertEqual(receipt.status, AdmissionStatus.REFUSED)
+        self.assertIn("UNTRUSTED_VERIFICATION_SOURCE", receipt.reasons)
+        self.assertNotIn("SIGNATURE_NOT_VERIFIED", receipt.reasons)
+
+    def test_recipe_signature_bit_is_not_a_binary_gate(self):
+        manifest = make_manifest(
+            artifact_id="recipe.neon-amber",
+            kind=ArtifactKind.ARENA_RECIPE,
+            channel=DistributionChannel.RECIPE,
+        )
+        evidence = replace(evidence_for(manifest), signature_verified=False)
+        receipt = verify_distribution_manifest(
+            manifest,
+            observed_artifact_sha256_hex=manifest.artifact.sha256_hex,
+            observed_artifact_size_bytes=manifest.artifact.size_bytes,
+            evidence=evidence,
+            policy=policy(allowed_channels=(DistributionChannel.RECIPE,)),
+        )
+        self.assertEqual(receipt.status, AdmissionStatus.ADMISSIBLE)
+        self.assertFalse(receipt.execution_proven)
+
     def test_revoked_key_refused(self):
         manifest = make_manifest()
         evidence = replace(evidence_for(manifest), key_revoked=True)
