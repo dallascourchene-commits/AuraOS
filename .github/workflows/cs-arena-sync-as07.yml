@@ -1,0 +1,29 @@
+name: CS Arena Sync AS-07
+
+on:
+  pull_request:
+    paths:
+      - 'tools/project035/artifact_workgraph_wake_bridge.py'
+      - 'tools/project035/test_artifact_workgraph_wake_bridge.py'
+      - '.github/workflows/cs-arena-sync-as07.yml'
+  push:
+    branches:
+      - 'cs-arena-sync-001/as07-artifact-workgraph-wake-bridge-20260830'
+    paths:
+      - 'tools/project035/artifact_workgraph_wake_bridge.py'
+      - 'tools/project035/test_artifact_workgraph_wake_bridge.py'
+      - '.github/workflows/cs-arena-sync-as07.yml'
+
+jobs:
+  focused-as07:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile AS-07 bridge
+        run: python -m py_compile tools/project035/artifact_workgraph_wake_bridge.py tools/project035/test_artifact_workgraph_wake_bridge.py
+      - name: Run AS-07 focused tests
+        working-directory: tools/project035
+        run: python -m unittest -v test_artifact_workgraph_wake_bridge.py
