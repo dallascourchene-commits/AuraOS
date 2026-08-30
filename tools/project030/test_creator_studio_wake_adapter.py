@@ -121,6 +121,25 @@ class WakeAdapterTests(unittest.TestCase):
         self.assertEqual(outcomes.count("APPENDED"), 1)
         self.assertEqual(outcomes.count("IDEMPOTENT_REPLAY"), 7)
 
+    def test_one_worker_receives_at_most_one_work_wake_per_scan(self):
+        state = self.state()
+        state.add_work(WorkItem("P0", MISSION, "priority", priority=0))
+        state.add_work(WorkItem("P1", MISSION, "second", priority=1))
+        events = self.scheduler.scan_and_emit(state, [self.a])
+        self.assertEqual(len(events), 1)
+        self.assertEqual(events[0].work_id, "P0")
+
+    def test_recommission_intent_is_coordination_only(self):
+        state = self.state()
+        intent = self.scheduler.emit_recommission_required(
+            state, work_id="W1", work_version="v7"
+        )
+        self.assertEqual(intent.event_type, "RECOMMISSION_REQUIRED")
+        self.assertFalse(intent.execution_authorized)
+        self.assertFalse(intent.provider_calls_authorized)
+        self.assertFalse(intent.background_execution_claimed)
+        self.assertEqual(len(self.ledger.events()), 1)
+
 
 if __name__ == "__main__":
     unittest.main()
