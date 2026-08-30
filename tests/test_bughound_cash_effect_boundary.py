@@ -26,6 +26,11 @@ REMOVED = (
     "pii_or_third_party_data",
     "private_report_identifier",
 )
+LIVE_PRODUCER_REF = "live-effect-owner-v1"
+LIVE_PRODUCER_GENERATION = "live-effect-owner-gen-1"
+SANITIZER_PRODUCER_REF = "sanitizer-service-v2"
+SANITIZER_PRODUCER_GENERATION = "sanitizer-service-gen-2"
+SANITIZER_REVIEWER_REF = "independent-reviewer-v2"
 
 
 class CashEffectBoundaryTests(unittest.TestCase):
@@ -70,9 +75,33 @@ class CashEffectBoundaryTests(unittest.TestCase):
             human_authorization_ref="human-gate-9",
             revocation_currentness_ref="revocation-current-9",
             disclosure_policy_ref="program-disclosure-4",
+            producer_ref=LIVE_PRODUCER_REF,
+            producer_generation=LIVE_PRODUCER_GENERATION,
+            producer_currentness_ref="live-effect-owner-current-1",
         )
         values.update(changes)
         return BountyLiveEffectGrantV1(**values)
+
+    def admit_live(
+        self,
+        mission,
+        grant=None,
+        *,
+        expected_digest=None,
+        expected_ref=LIVE_PRODUCER_REF,
+        expected_generation=LIVE_PRODUCER_GENERATION,
+    ):
+        if grant is None:
+            grant = self.live_grant(mission)
+        if expected_digest is None:
+            expected_digest = grant.grant_digest
+        return admit_live_effect(
+            mission,
+            grant,
+            expected_grant_digest=expected_digest,
+            expected_producer_ref=expected_ref,
+            expected_producer_generation=expected_generation,
+        )
 
     def sanitized(self, mission, **changes):
         values = dict(
@@ -80,7 +109,10 @@ class CashEffectBoundaryTests(unittest.TestCase):
             disclosure_state_ref="private-undisclosed-candidate",
             reusable_memory_policy_ref="bughound-sanitized-pattern-v1",
             sanitizer_generation="sanitizer-v2",
-            reviewer_ref="independent-reviewer-v2",
+            reviewer_ref=SANITIZER_REVIEWER_REF,
+            producer_ref=SANITIZER_PRODUCER_REF,
+            producer_generation=SANITIZER_PRODUCER_GENERATION,
+            producer_currentness_ref="sanitizer-service-current-2",
             removed_classes=REMOVED,
             retained_abstract_pattern_ref="pattern:generation-validated-used-drift",
             target_specific_material_present=False,
@@ -92,6 +124,31 @@ class CashEffectBoundaryTests(unittest.TestCase):
         )
         values.update(changes)
         return SanitizedPatternReceiptV1(**values)
+
+    def export_pattern(
+        self,
+        mission,
+        sanitized=None,
+        *,
+        destination_context="GENERIC_SECURITY_TOOL_FOUNDRY",
+        expected_digest=None,
+        expected_ref=SANITIZER_PRODUCER_REF,
+        expected_generation=SANITIZER_PRODUCER_GENERATION,
+        expected_reviewer=SANITIZER_REVIEWER_REF,
+    ):
+        if sanitized is None:
+            sanitized = self.sanitized(mission)
+        if expected_digest is None:
+            expected_digest = sanitized.receipt_digest
+        return export_sanitized_pattern(
+            mission,
+            sanitized,
+            destination_context=destination_context,
+            expected_sanitized_receipt_digest=expected_digest,
+            expected_producer_ref=expected_ref,
+            expected_producer_generation=expected_generation,
+            expected_reviewer_ref=expected_reviewer,
+        )
 
     def test_cash_mission_receipt_itself_grants_no_live_effect(self):
         mission = self.mission()
@@ -141,44 +198,82 @@ class CashEffectBoundaryTests(unittest.TestCase):
 
     def test_exact_current_live_grant_admits_only_named_test_authority(self):
         mission = self.mission()
-        admission = admit_live_effect(mission, self.live_grant(mission))
+        admission = self.admit_live(mission)
         self.assertTrue(admission.live_effect_authorized)
         self.assertEqual("EXACT_NAMED_LIVE_TEST_ONLY", admission.authority_scope)
+        self.assertEqual(LIVE_PRODUCER_REF, admission.producer_ref)
+        self.assertEqual(LIVE_PRODUCER_GENERATION, admission.producer_generation)
         self.assertFalse(admission.submission_authorized)
         self.assertFalse(admission.claim_or_payment_authorized)
         self.assertFalse(admission.external_effect_executed)
 
     def test_live_grant_must_bind_exact_mission_program_target_and_origin(self):
         mission = self.mission()
+        legitimate = self.live_grant(mission)
         cases = (
             ("mission_receipt_digest", "0" * 64, "LIVE_GRANT_MISSION_RECEIPT_MISMATCH"),
             ("program_ref", "program:other", "LIVE_GRANT_PROGRAM_MISMATCH"),
             ("target_generation", "deploy-41", "LIVE_GRANT_TARGET_MISMATCH"),
-            ("network_origin", "https://third-party.example", "LIVE_GRANT_ORIGIN_NOT_ALLOWLISTED"),
         )
         for field, value, code in cases:
             with self.subTest(field=field):
+                forged = self.live_grant(mission, **{field: value})
                 with self.assertRaises(CashEffectBoundaryError) as ctx:
-                    admit_live_effect(mission, self.live_grant(mission, **{field: value}))
+                    self.admit_live(mission, forged, expected_digest=legitimate.grant_digest)
                 self.assertEqual(code, ctx.exception.code)
+
+        wrong_origin = self.live_grant(
+            mission,
+            network_origin="https://third-party.example",
+            network_allowlist=("https://third-party.example",),
+        )
+        with self.assertRaises(CashEffectBoundaryError) as ctx:
+            self.admit_live(mission, wrong_origin, expected_digest=wrong_origin.grant_digest)
+        self.assertEqual("LIVE_GRANT_ORIGIN_NOT_ALLOWLISTED", ctx.exception.code)
+
+    def test_self_consistent_forged_live_grant_fails_independent_expectation(self):
+        mission = self.mission()
+        legitimate = self.live_grant(mission)
+        forged = self.live_grant(
+            mission,
+            scope_rules_digest="forged-scope-digest",
+            network_allowlist=("https://asset.example", "https://extra.example"),
+        )
+        self.assertNotEqual(legitimate.grant_digest, forged.grant_digest)
+        with self.assertRaises(CashEffectBoundaryError) as ctx:
+            self.admit_live(mission, forged, expected_digest=legitimate.grant_digest)
+        self.assertEqual("LIVE_GRANT_EXPECTATION_MISMATCH", ctx.exception.code)
+
+    def test_wrong_live_grant_producer_identity_fails_closed(self):
+        mission = self.mission()
+        grant = self.live_grant(mission)
+        with self.assertRaises(CashEffectBoundaryError) as ctx:
+            self.admit_live(mission, grant, expected_ref="different-owner")
+        self.assertEqual("LIVE_GRANT_PRODUCER_MISMATCH", ctx.exception.code)
+        with self.assertRaises(CashEffectBoundaryError) as ctx:
+            self.admit_live(mission, grant, expected_generation="different-generation")
+        self.assertEqual("LIVE_GRANT_PRODUCER_MISMATCH", ctx.exception.code)
 
     def test_stale_program_policy_and_noncanonical_profile_fail_closed(self):
         mission = self.mission()
+        stale = self.live_grant(mission, program_policy_current=False)
         with self.assertRaises(CashEffectBoundaryError) as ctx:
-            admit_live_effect(mission, self.live_grant(mission, program_policy_current=False))
+            self.admit_live(mission, stale, expected_digest=stale.grant_digest)
         self.assertEqual("LIVE_GRANT_PROGRAM_POLICY_STALE", ctx.exception.code)
+        noncanonical = self.live_grant(mission, profile_id="AURAOS_INTERNAL")
         with self.assertRaises(CashEffectBoundaryError) as ctx:
-            admit_live_effect(mission, self.live_grant(mission, profile_id="AURAOS_INTERNAL"))
+            self.admit_live(mission, noncanonical, expected_digest=noncanonical.grant_digest)
         self.assertEqual("LIVE_GRANT_NONCANONICAL_PROFILE", ctx.exception.code)
 
     def test_sanitized_pattern_can_leave_bughound_only_as_authority_free_abstraction(self):
         mission = self.mission()
-        export = export_sanitized_pattern(
+        export = self.export_pattern(
             mission,
-            self.sanitized(mission),
             destination_context="AURAOS_SECURITY_HARDENING_REUSE",
         )
         self.assertIn(export.destination_context, GENERIC_REUSE_CONTEXTS)
+        self.assertEqual(SANITIZER_PRODUCER_REF, export.producer_ref)
+        self.assertEqual(SANITIZER_PRODUCER_GENERATION, export.producer_generation)
         self.assertFalse(export.bughound_mission_state_exported)
         self.assertFalse(export.payout_state_exported)
         self.assertFalse(export.scope_authority_exported)
@@ -187,6 +282,28 @@ class CashEffectBoundaryTests(unittest.TestCase):
         self.assertFalse(export.credential_state_exported)
         self.assertFalse(export.authority)
         self.assertFalse(export.external_effect)
+
+    def test_self_consistent_forged_sanitizer_receipt_fails_independent_expectation(self):
+        mission = self.mission()
+        legitimate = self.sanitized(mission)
+        forged = self.sanitized(
+            mission,
+            retained_abstract_pattern_ref="pattern:forged-broader-abstraction",
+        )
+        self.assertNotEqual(legitimate.receipt_digest, forged.receipt_digest)
+        with self.assertRaises(CashEffectBoundaryError) as ctx:
+            self.export_pattern(mission, forged, expected_digest=legitimate.receipt_digest)
+        self.assertEqual("SANITIZED_PATTERN_EXPECTATION_MISMATCH", ctx.exception.code)
+
+    def test_wrong_sanitizer_producer_or_reviewer_fails_closed(self):
+        mission = self.mission()
+        sanitized = self.sanitized(mission)
+        with self.assertRaises(CashEffectBoundaryError) as ctx:
+            self.export_pattern(mission, sanitized, expected_ref="different-sanitizer")
+        self.assertEqual("SANITIZED_PATTERN_PRODUCER_MISMATCH", ctx.exception.code)
+        with self.assertRaises(CashEffectBoundaryError) as ctx:
+            self.export_pattern(mission, sanitized, expected_reviewer="different-reviewer")
+        self.assertEqual("SANITIZED_PATTERN_REVIEWER_MISMATCH", ctx.exception.code)
 
     def test_private_or_undisclosed_material_blocks_reusable_export(self):
         mission = self.mission()
@@ -199,39 +316,26 @@ class CashEffectBoundaryTests(unittest.TestCase):
             "private_report_identifier_present",
         ):
             with self.subTest(field=field):
+                sanitized = self.sanitized(mission, **{field: True})
                 with self.assertRaises(CashEffectBoundaryError) as ctx:
-                    export_sanitized_pattern(
-                        mission,
-                        self.sanitized(mission, **{field: True}),
-                        destination_context="GENERIC_SECURITY_TOOL_FOUNDRY",
-                    )
+                    self.export_pattern(mission, sanitized, expected_digest=sanitized.receipt_digest)
                 self.assertEqual("SANITIZED_PATTERN_PRIVATE_STATE_REMAINS", ctx.exception.code)
 
     def test_incomplete_sanitizer_coverage_and_unknown_destination_fail_closed(self):
         mission = self.mission()
+        incomplete = self.sanitized(mission, removed_classes=REMOVED[:-1])
         with self.assertRaises(CashEffectBoundaryError) as ctx:
-            export_sanitized_pattern(
-                mission,
-                self.sanitized(mission, removed_classes=REMOVED[:-1]),
-                destination_context="GENERIC_SECURITY_TOOL_FOUNDRY",
-            )
+            self.export_pattern(mission, incomplete, expected_digest=incomplete.receipt_digest)
         self.assertEqual("SANITIZED_REMOVAL_COVERAGE_INCOMPLETE", ctx.exception.code)
         with self.assertRaises(CashEffectBoundaryError) as ctx:
-            export_sanitized_pattern(
-                mission,
-                self.sanitized(mission),
-                destination_context="BUGHOUND_AURAOS_PROFILE",
-            )
+            self.export_pattern(mission, destination_context="BUGHOUND_AURAOS_PROFILE")
         self.assertEqual("REUSE_DESTINATION_CONTEXT_NOT_ADMITTED", ctx.exception.code)
 
     def test_sanitized_pattern_must_bind_exact_cash_mission(self):
         mission = self.mission()
+        mismatched = self.sanitized(mission, mission_receipt_digest="0" * 64)
         with self.assertRaises(CashEffectBoundaryError) as ctx:
-            export_sanitized_pattern(
-                mission,
-                self.sanitized(mission, mission_receipt_digest="0" * 64),
-                destination_context="GENERIC_SECURITY_TOOL_FOUNDRY",
-            )
+            self.export_pattern(mission, mismatched, expected_digest=mismatched.receipt_digest)
         self.assertEqual("SANITIZED_PATTERN_MISSION_MISMATCH", ctx.exception.code)
 
 
