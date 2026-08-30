@@ -1,0 +1,45 @@
+name: Aura Materialization Admission Currentness V1
+
+on:
+  pull_request:
+    paths:
+      - "aura_materialization_admission_currentness.py"
+      - "tests/test_aura_materialization_admission_currentness.py"
+      - ".github/workflows/aura-materialization-admission-currentness.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-materialization-admission-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  focused-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.12"
+      - name: Install focused test dependency
+        run: python -m pip install "pytest>=8.2,<9.0"
+      - name: Run focused bridge contract
+        run: |
+          python -m py_compile aura_materialization_admission_currentness.py
+          python -m pytest -q tests/test_aura_materialization_admission_currentness.py
