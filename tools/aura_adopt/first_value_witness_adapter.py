@@ -44,7 +44,10 @@ _COHORT_VALUE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:+/-]{0,63}$")
 _SENSITIVE_RE = re.compile(
     r"(?i)(?:^|[:/#._-])(?:api[_-]?key|access[_-]?token|refresh[_-]?token|secret|password|bearer)(?:$|[:/#._-])"
 )
-_ALLOWED_PRIVACY_TELEMETRY_MODES = frozenset({"LOCAL_NO_TELEMETRY"})
+_ALLOWED_PRIVACY_TELEMETRY_MODES = frozenset({
+    "LOCAL_NO_TELEMETRY",
+    "CONSENTED_STUDY_LOCAL_NO_CONTENT_UPLOAD",
+})
 _ALLOWED_EVIDENCE_CLASSES = frozenset({"LOCAL_TEST", "CONSENTED_STUDY", "SYNTHETIC"})
 
 
