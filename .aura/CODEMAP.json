@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788127086,
+  "generated_at_unix": 1788127701,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1644,
+    "repo_file_count": 1646,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1625,6 +1625,7 @@
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_bughound_envelope_lint.py",
       "tests/test_bughound_seedlab_benchmark.py",
+      "tests/test_bughound_trust_boundary_seed.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -1636,6 +1637,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/bughound/envelope_lint.py",
       "tools/bughound/seedlab_benchmark.py",
+      "tools/bughound/trust_boundary_seed.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1760,15 +1762,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1644,
-      "bytes": 26449100,
-      "tokens_est": 6602624,
+      "files": 1646,
+      "bytes": 26456795,
+      "tokens_est": 6604549,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1001,
+        "python_module": 1003,
         "schema_or_lexicon": 272,
         "support_file": 49
       }
@@ -157202,6 +157204,76 @@
         "signature_hash": "ed317ac978b9091e"
       }
     ],
+    "BugHoundTrustBoundarySeedTests": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 87,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#class:BugHoundTrustBoundarySeedTests:43210f0cf64515ed",
+        "signature_hash": "12ca7b914af3d576"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests.test_exact_scope_matches": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 28,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_exact_scope_matches:24e6eba81fb92bcc",
+        "signature_hash": "982582f0c59973de"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests.test_signed_persisted_agent_mismatch_is_distinct": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 39,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_signed_persisted_agent_mismatch_is_distinct:26e50a862183b8ab",
+        "signature_hash": "a44a62f975cc6622"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests.test_persisted_namespace_drift_is_detected": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 45,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_persisted_namespace_drift_is_detected:4e403c70f0114ada",
+        "signature_hash": "f098880f9f7214e5"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests.test_modeled_current_identity_predicate_does_not_include_namespace": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 60,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_modeled_current_identity_predicate_does_not_include_namespace:3a0684a4a328a903",
+        "signature_hash": "727cbd004acb07a7"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests.test_source_generation_and_effect_ceiling_fail_closed": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 81,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_source_generation_and_effect_ceiling_fail_closed:2220495acea162d9",
+        "signature_hash": "1c7751fb87d6ecf0"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests.test_receipt_digest_is_deterministic": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 87,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_receipt_digest_is_deterministic:fa68a311169e290f",
+        "signature_hash": "49954c66936facb3"
+      }
+    ],
     "test_space_app_card_declares_public_docker_runtime": [
       {
         "file": "tests/test_huggingface_space_deployment.py",
@@ -157800,6 +157872,96 @@
         "end_line": 395,
         "semantic_id": "tools/bughound/seedlab_benchmark.py#function:oracle_self_test_findings:1e1529aa974befd0",
         "signature_hash": "68f7c5a7dfd33eda"
+      }
+    ],
+    "ScopeDisposition": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 22,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#class:ScopeDisposition:319288476f249d8e",
+        "signature_hash": "47073886f27c3970"
+      }
+    ],
+    "expected_agent_namespace": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 28,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#function:expected_agent_namespace:43ef0d495131a7e9",
+        "signature_hash": "8a2a329fcef6d104"
+      }
+    ],
+    "IdentityScopeObservationV1": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 76,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#class:IdentityScopeObservationV1:e333f4346de4dbb1",
+        "signature_hash": "922a88864e6d10fa"
+      }
+    ],
+    "IdentityScopeObservationV1.__post_init__": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 56,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.__post_init__:2926dc54719da8b3",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "IdentityScopeObservationV1.expected_namespace": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.expected_namespace:f9aeb1eda9fde409",
+        "signature_hash": "0dbe3a79eb720f67"
+      }
+    ],
+    "IdentityScopeObservationV1.disposition": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 68,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.disposition:2275e5de5a2796d4",
+        "signature_hash": "4639be056d4886da"
+      }
+    ],
+    "IdentityScopeObservationV1.receipt_digest": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 76,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.receipt_digest:d1557229b41a4237",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "modeled_current_validation_accepts": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 98,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#function:modeled_current_validation_accepts:23222a608db74d28",
+        "signature_hash": "82b1545c13085b9d"
+      }
+    ],
+    "memanto_namespace_drift_seed": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 116,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#function:memanto_namespace_drift_seed:feb9c3fc1ae23766",
+        "signature_hash": "75213893d5952b73"
       }
     ],
     "_coordinates": [
@@ -262999,6 +263161,53 @@
       ]
     },
     {
+      "path": "tests/test_bughound_trust_boundary_seed.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3426,
+      "lines": 92,
+      "tokens_est": 857,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1f1abd84c3f89c24",
+      "vector": [
+        0.034499,
+        0.154689,
+        -0.125754,
+        0.136883,
+        -0.107948,
+        -0.257073,
+        -0.196978,
+        0.252622,
+        -0.277105,
+        -0.09682,
+        -0.210333,
+        0.281556,
+        -0.185849,
+        -0.283782,
+        0.052305,
+        0.085691,
+        0.043402,
+        -0.281556,
+        0.003339,
+        -0.116851,
+        -0.281556,
+        -0.250396,
+        -0.021145,
+        0.012242,
+        -0.032273,
+        -0.196978,
+        0.014467,
+        -0.210333,
+        0.034499,
+        0.24817,
+        -0.043402,
+        -0.196978
+      ]
+    },
+    {
       "path": "tests/test_huggingface_space_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -263513,6 +263722,53 @@
         -0.006137,
         -0.020867,
         -0.249179
+      ]
+    },
+    {
+      "path": "tools/bughound/trust_boundary_seed.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4269,
+      "lines": 117,
+      "tokens_est": 1068,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "00509fa9e3dce30e",
+      "vector": [
+        -0.158848,
+        -0.178861,
+        0.188867,
+        0.16135,
+        0.261412,
+        -0.061288,
+        -0.16135,
+        0.276421,
+        0.213882,
+        0.236396,
+        0.218885,
+        0.116322,
+        0.008755,
+        0.106316,
+        -0.223889,
+        -0.318947,
+        -0.026266,
+        0.256409,
+        -0.106316,
+        -0.213882,
+        -0.251406,
+        0.013759,
+        -0.118824,
+        -0.031269,
+        -0.11382,
+        0.156347,
+        0.22639,
+        0.158848,
+        -0.136334,
+        -0.021263,
+        0.208879,
+        -0.041276
       ]
     },
     {
@@ -287514,15 +287770,15 @@
     }
   },
   "summary": {
-    "file_count": 1644,
-    "total_bytes": 26449100,
-    "text_tokens_est": 6602624,
+    "file_count": 1646,
+    "total_bytes": 26456795,
+    "text_tokens_est": 6604549,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1001,
+      "python_module": 1003,
       "schema_or_lexicon": 272,
       "support_file": 49
     },
@@ -289158,6 +289414,7 @@
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_bughound_envelope_lint.py",
       "tests/test_bughound_seedlab_benchmark.py",
+      "tests/test_bughound_trust_boundary_seed.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -289169,6 +289426,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/bughound/envelope_lint.py",
       "tools/bughound/seedlab_benchmark.py",
+      "tools/bughound/trust_boundary_seed.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -446487,6 +446745,76 @@
         "file_digest8": "774559d22d411cd8"
       },
       {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#class:BugHoundTrustBoundarySeedTests:43210f0cf64515ed",
+        "name": "BugHoundTrustBoundarySeedTests",
+        "kind": "class",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 15,
+        "end_line": 87,
+        "signature_hash": "12ca7b914af3d576",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_exact_scope_matches:24e6eba81fb92bcc",
+        "name": "BugHoundTrustBoundarySeedTests.test_exact_scope_matches",
+        "kind": "method",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 16,
+        "end_line": 28,
+        "signature_hash": "982582f0c59973de",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_modeled_current_identity_predicate_does_not_include_namespace:3a0684a4a328a903",
+        "name": "BugHoundTrustBoundarySeedTests.test_modeled_current_identity_predicate_does_not_include_namespace",
+        "kind": "method",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 47,
+        "end_line": 60,
+        "signature_hash": "727cbd004acb07a7",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_persisted_namespace_drift_is_detected:4e403c70f0114ada",
+        "name": "BugHoundTrustBoundarySeedTests.test_persisted_namespace_drift_is_detected",
+        "kind": "method",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 41,
+        "end_line": 45,
+        "signature_hash": "f098880f9f7214e5",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_receipt_digest_is_deterministic:fa68a311169e290f",
+        "name": "BugHoundTrustBoundarySeedTests.test_receipt_digest_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 83,
+        "end_line": 87,
+        "signature_hash": "49954c66936facb3",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_signed_persisted_agent_mismatch_is_distinct:26e50a862183b8ab",
+        "name": "BugHoundTrustBoundarySeedTests.test_signed_persisted_agent_mismatch_is_distinct",
+        "kind": "method",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 30,
+        "end_line": 39,
+        "signature_hash": "a44a62f975cc6622",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_source_generation_and_effect_ceiling_fail_closed:2220495acea162d9",
+        "name": "BugHoundTrustBoundarySeedTests.test_source_generation_and_effect_ceiling_fail_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 62,
+        "end_line": 81,
+        "signature_hash": "1c7751fb87d6ecf0",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "name": "test_deployment_docs_have_submission_field_and_no_localhost_url_claim",
         "kind": "function",
@@ -447125,6 +447453,96 @@
         "end_line": 93,
         "signature_hash": "ad2e340dedb0a4a4",
         "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#class:IdentityScopeObservationV1:e333f4346de4dbb1",
+        "name": "IdentityScopeObservationV1",
+        "kind": "class",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 32,
+        "end_line": 76,
+        "signature_hash": "922a88864e6d10fa",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#class:ScopeDisposition:319288476f249d8e",
+        "name": "ScopeDisposition",
+        "kind": "class",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 19,
+        "end_line": 22,
+        "signature_hash": "47073886f27c3970",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#function:expected_agent_namespace:43ef0d495131a7e9",
+        "name": "expected_agent_namespace",
+        "kind": "function",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 25,
+        "end_line": 28,
+        "signature_hash": "8a2a329fcef6d104",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#function:memanto_namespace_drift_seed:feb9c3fc1ae23766",
+        "name": "memanto_namespace_drift_seed",
+        "kind": "function",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 101,
+        "end_line": 116,
+        "signature_hash": "75213893d5952b73",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#function:modeled_current_validation_accepts:23222a608db74d28",
+        "name": "modeled_current_validation_accepts",
+        "kind": "function",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 79,
+        "end_line": 98,
+        "signature_hash": "82b1545c13085b9d",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.__post_init__:2926dc54719da8b3",
+        "name": "IdentityScopeObservationV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 44,
+        "end_line": 56,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.disposition:2275e5de5a2796d4",
+        "name": "IdentityScopeObservationV1.disposition",
+        "kind": "method",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 63,
+        "end_line": 68,
+        "signature_hash": "4639be056d4886da",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.expected_namespace:f9aeb1eda9fde409",
+        "name": "IdentityScopeObservationV1.expected_namespace",
+        "kind": "method",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "0dbe3a79eb720f67",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.receipt_digest:d1557229b41a4237",
+        "name": "IdentityScopeObservationV1.receipt_digest",
+        "kind": "method",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 71,
+        "end_line": 76,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "00509fa9e3dce30e"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -448377,7 +448795,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "9c0382d13637ea7a4bb3e492877454c7",
-    "payload_hash": "894105f247df1d86cf14f23d1f8bafa4"
+    "record_fingerprint": "2693a4c01959e47fad96983c4ea35cfb",
+    "payload_hash": "61348ec68ed9f362e14add5851d59f8f"
   }
 }
