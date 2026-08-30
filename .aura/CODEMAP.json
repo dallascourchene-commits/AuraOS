@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788108910,
+  "generated_at_unix": 1788110482,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1652,
+    "repo_file_count": 1655,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -146,6 +146,7 @@
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
+      ".github/workflows/cs-arena-sync-as07-generation-fence.yml",
       ".github/workflows/cs-arena-sync-as07.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -1644,7 +1645,9 @@
       "tools/project030/test_creator_studio_continuation_harness.py",
       "tools/project030/test_creator_studio_harness_integration.py",
       "tools/project030/test_creator_studio_wake_adapter.py",
+      "tools/project035/artifact_generation_fenced_wake_bridge.py",
       "tools/project035/artifact_workgraph_wake_bridge.py",
+      "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
       "tools/project035/test_artifact_workgraph_wake_bridge.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -1768,16 +1771,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1652,
-      "bytes": 26567540,
-      "tokens_est": 6632242,
+      "files": 1655,
+      "bytes": 26595485,
+      "tokens_est": 6639230,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1009,
-        "schema_or_lexicon": 272,
+        "python_module": 1011,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -3918,6 +3921,14 @@
         "signature_hash": "8d5bf5695239b859"
       },
       {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 47,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_canonical:4058b76255113ae3",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
         "file": "tools/project035/artifact_workgraph_wake_bridge.py",
         "kind": "function",
         "line": 42,
@@ -4382,6 +4393,14 @@
         "end_line": 29,
         "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:_digest:42260d8bd63efc03",
         "signature_hash": "b642531ca9d9232d"
+      },
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_digest:b06a0a1418cc0f99",
+        "signature_hash": "9edcae7e502cc579"
       },
       {
         "file": "tools/project035/artifact_workgraph_wake_bridge.py",
@@ -14730,6 +14749,14 @@
         "end_line": 58,
         "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_text:15c32f3c712649ea",
         "signature_hash": "0cd3c0d3d227cce3"
+      },
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 57,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_text:b2447a12e089ecae",
+        "signature_hash": "a4ea29b9a7789fe0"
       },
       {
         "file": "tools/project035/artifact_workgraph_wake_bridge.py",
@@ -50968,6 +50995,14 @@
         "end_line": 35,
         "semantic_id": "scripts/aura_arch_v2_3_capsule_validator.py#function:_mapping:9ef1cc0ac2a87086",
         "signature_hash": "4bd45af63723081c"
+      },
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 69,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_mapping:7df6d4dedd66aeb4",
+        "signature_hash": "a1152ed109535e6e"
       },
       {
         "file": "tools/project035/artifact_workgraph_wake_bridge.py",
@@ -116808,6 +116843,14 @@
         "signature_hash": "97c87ea61d7fe441"
       },
       {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 50,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:binding:5c7ab15f990e1d88",
+        "signature_hash": "737e85595b678c5d"
+      },
+      {
         "file": "tools/project035/test_artifact_workgraph_wake_bridge.py",
         "kind": "function",
         "line": 61,
@@ -158666,6 +158709,126 @@
         "signature_hash": "213662e123943d7e"
       }
     ],
+    "GenerationFenceError": [
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#class:GenerationFenceError:74d55e4b01986439",
+        "signature_hash": "4fe61f5db509673a"
+      }
+    ],
+    "GenerationFenceError.__init__": [
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#method:GenerationFenceError.__init__:bfab6428eab05ee2",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_generation": [
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 63,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_generation:efc26ab5a44d712a",
+        "signature_hash": "fb09e4f89ca48af2"
+      }
+    ],
+    "_zero_authority": [
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 81,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_zero_authority:0decd5070e5bb8bf",
+        "signature_hash": "c99a7b7354899591"
+      }
+    ],
+    "generation_evidence_digest": [
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 109,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:generation_evidence_digest:0136f67ff2551a92",
+        "signature_hash": "706777079694ff0e"
+      }
+    ],
+    "_resolve_generation_evidence": [
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 156,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_resolve_generation_evidence:6d57090abfa58238",
+        "signature_hash": "1170b7d3cc08c437"
+      }
+    ],
+    "GenerationFencedReadyProposal": [
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "class",
+        "line": 160,
+        "end_line": 220,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#class:GenerationFencedReadyProposal:90797a2083ac9d44",
+        "signature_hash": "cd6a03464ff08b46"
+      }
+    ],
+    "GenerationFencedReadyProposal.__post_init__": [
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 194,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#method:GenerationFencedReadyProposal.__post_init__:d0522641fbfc7e91",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "GenerationFencedReadyProposal.logical_payload": [
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 196,
+        "end_line": 217,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#method:GenerationFencedReadyProposal.logical_payload:f63d20ff13719fb9",
+        "signature_hash": "c612902d452d55c3"
+      }
+    ],
+    "GenerationFencedReadyProposal.compute_proposal_id": [
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 219,
+        "end_line": 220,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#method:GenerationFencedReadyProposal.compute_proposal_id:8f24aa9681867ead",
+        "signature_hash": "b2e33f61c7974c23"
+      }
+    ],
+    "compile_generation_fenced_proposal": [
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 223,
+        "end_line": 250,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:compile_generation_fenced_proposal:0a46a3e8446503b3",
+        "signature_hash": "8e7bc2453a320148"
+      }
+    ],
+    "verify_generation_fenced_reopen": [
+      {
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 253,
+        "end_line": 315,
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:verify_generation_fenced_reopen:91a41fe5221f6e20",
+        "signature_hash": "2df2f6f3807c188c"
+      }
+    ],
     "ArtifactWakeBridgeError": [
       {
         "file": "tools/project035/artifact_workgraph_wake_bridge.py",
@@ -158828,12 +158991,226 @@
     ],
     "artifact_event": [
       {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 35,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:artifact_event:5b8d1c4fef8cf53e",
+        "signature_hash": "a846ac9a08960eb4"
+      },
+      {
         "file": "tools/project035/test_artifact_workgraph_wake_bridge.py",
         "kind": "function",
         "line": 14,
         "end_line": 38,
         "semantic_id": "tools/project035/test_artifact_workgraph_wake_bridge.py#function:artifact_event:4d026abf429b7692",
         "signature_hash": "a846ac9a08960eb4"
+      }
+    ],
+    "before_projection": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 66,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:before_projection:e20b888c71c7a68d",
+        "signature_hash": "3d642475c7553ede"
+      }
+    ],
+    "after_projection": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 82,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:after_projection:66ab0d9a07f1882a",
+        "signature_hash": "394410f2025fcfaf"
+      },
+      {
+        "file": "tools/project035/test_artifact_workgraph_wake_bridge.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 114,
+        "semantic_id": "tools/project035/test_artifact_workgraph_wake_bridge.py#function:after_projection:34170a5cd42725ad",
+        "signature_hash": "2aade40980a66938"
+      }
+    ],
+    "generation_evidence": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 109,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:generation_evidence:5d4da0e0991f8647",
+        "signature_hash": "3e3db62a6f4398e2"
+      }
+    ],
+    "generation_resolver": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 118,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:generation_resolver:96c4c75d09deb2e5",
+        "signature_hash": "2c0da6640a2725fb"
+      }
+    ],
+    "generation_resolver.resolve": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 117,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:generation_resolver.resolve:5213db228caecb63",
+        "signature_hash": "2ac9c8fef3e571b4"
+      }
+    ],
+    "transition_receipt": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 138,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:transition_receipt:1fa94798b896dc0e",
+        "signature_hash": "9e3e9a17a0b46b3f"
+      },
+      {
+        "file": "tools/project035/test_artifact_workgraph_wake_bridge.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 94,
+        "semantic_id": "tools/project035/test_artifact_workgraph_wake_bridge.py#function:transition_receipt:5d6b4280f704bf04",
+        "signature_hash": "9e3e9a17a0b46b3f"
+      }
+    ],
+    "transition_evidence": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 164,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:transition_evidence:0bfa2f1502e78dec",
+        "signature_hash": "6d3d0a9e28353f0b"
+      }
+    ],
+    "transition_resolver": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "function",
+        "line": 167,
+        "end_line": 169,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:transition_resolver:1616af5a9a4617ee",
+        "signature_hash": "0acc8ec4dd91d690"
+      }
+    ],
+    "ArtifactGenerationFencedWakeBridgeTests": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "class",
+        "line": 172,
+        "end_line": 270,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#class:ArtifactGenerationFencedWakeBridgeTests:db930ef3a6070091",
+        "signature_hash": "6c60ff6f509d6bf5"
+      }
+    ],
+    "ArtifactGenerationFencedWakeBridgeTests.proposal": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 173,
+        "end_line": 181,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.proposal:17d2869853019cac",
+        "signature_hash": "a834aa9eec425a51"
+      }
+    ],
+    "ArtifactGenerationFencedWakeBridgeTests.test_current_generation_compiles_non_authorizing_reopen_proposal": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 189,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_current_generation_compiles_non_authorizing_reopen_proposal:d8bea96ab42531ec",
+        "signature_hash": "dd1f5a0366c3293b"
+      }
+    ],
+    "ArtifactGenerationFencedWakeBridgeTests.test_stale_artifact_generation_cannot_compile_reopen": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 191,
+        "end_line": 195,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_stale_artifact_generation_cannot_compile_reopen:77ff0d03926ee917",
+        "signature_hash": "d4f0dd003e8a51d2"
+      }
+    ],
+    "ArtifactGenerationFencedWakeBridgeTests.test_same_artifact_identity_with_wrong_generation_still_fails": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 201,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_same_artifact_identity_with_wrong_generation_still_fails:d4ae61d6658f5f46",
+        "signature_hash": "0a500a08e46b171c"
+      }
+    ],
+    "ArtifactGenerationFencedWakeBridgeTests.test_resource_head_artifact_must_match": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 203,
+        "end_line": 207,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_resource_head_artifact_must_match:46e9e79ffef9c646",
+        "signature_hash": "d8ef1ca7cc8666b3"
+      }
+    ],
+    "ArtifactGenerationFencedWakeBridgeTests.test_generation_evidence_digest_is_verified": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 209,
+        "end_line": 214,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_generation_evidence_digest_is_verified:8276733ba223d69c",
+        "signature_hash": "9635c4fcd5be0701"
+      }
+    ],
+    "ArtifactGenerationFencedWakeBridgeTests.test_global_live_index_can_advance_if_resource_generation_is_still_current": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 216,
+        "end_line": 220,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_global_live_index_can_advance_if_resource_generation_is_still_current:4ea4a199bb7864e2",
+        "signature_hash": "539b05d81373f8f6"
+      }
+    ],
+    "ArtifactGenerationFencedWakeBridgeTests.test_generation_advance_during_workgraph_transition_blocks_wake_scan": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 222,
+        "end_line": 249,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_generation_advance_during_workgraph_transition_blocks_wake_scan:bd68c0889ca7ade4",
+        "signature_hash": "4966c83d7af6348c"
+      }
+    ],
+    "ArtifactGenerationFencedWakeBridgeTests.test_generation_advance_during_workgraph_transition_blocks_wake_scan.resolver": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 232,
+        "end_line": 233,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_generation_advance_during_workgraph_transition_blocks_wake_scan.resolver:35dc2dbeb244207e",
+        "signature_hash": "b7950c19993c4590"
+      }
+    ],
+    "ArtifactGenerationFencedWakeBridgeTests.test_persisted_reopen_plus_current_generation_allows_existing_scanner_only": [
+      {
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "kind": "method",
+        "line": 251,
+        "end_line": 270,
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_persisted_reopen_plus_current_generation_allows_existing_scanner_only:7d6dabf8d682d810",
+        "signature_hash": "03c40945a72b1ea1"
       }
     ],
     "projection": [
@@ -158844,26 +159221,6 @@
         "end_line": 58,
         "semantic_id": "tools/project035/test_artifact_workgraph_wake_bridge.py#function:projection:7cb1436ca04564f3",
         "signature_hash": "48ba81f4eadc6096"
-      }
-    ],
-    "transition_receipt": [
-      {
-        "file": "tools/project035/test_artifact_workgraph_wake_bridge.py",
-        "kind": "function",
-        "line": 76,
-        "end_line": 94,
-        "semantic_id": "tools/project035/test_artifact_workgraph_wake_bridge.py#function:transition_receipt:5d6b4280f704bf04",
-        "signature_hash": "9e3e9a17a0b46b3f"
-      }
-    ],
-    "after_projection": [
-      {
-        "file": "tools/project035/test_artifact_workgraph_wake_bridge.py",
-        "kind": "function",
-        "line": 97,
-        "end_line": 114,
-        "semantic_id": "tools/project035/test_artifact_workgraph_wake_bridge.py#function:after_projection:34170a5cd42725ad",
-        "signature_hash": "2aade40980a66938"
       }
     ],
     "canonical_evidence": [
@@ -160264,6 +160621,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/ci.yml",
+      ".github/workflows/cs-arena-sync-as07-generation-fence.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -170318,6 +170676,59 @@
         -0.075867,
         0.125616,
         0.088305
+      ]
+    },
+    {
+      "path": ".github/workflows/cs-arena-sync-as07-generation-fence.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1397,
+      "lines": 37,
+      "tokens_est": 350,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          26
+        ]
+      },
+      "topology": {},
+      "digest8": "64f48e38285b9bfd",
+      "vector": [
+        -0.036763,
+        -0.090005,
+        0.280156,
+        0.051975,
+        0.247196,
+        0.150853,
+        0.221843,
+        -0.282691,
+        0.252267,
+        -0.036763,
+        0.292832,
+        0.01648,
+        0.196489,
+        0.231984,
+        0.024086,
+        0.051975,
+        0.249731,
+        0.077328,
+        -0.259873,
+        -0.196489,
+        -0.160994,
+        -0.153388,
+        -0.280156,
+        0.133106,
+        -0.031692,
+        0.254802,
+        -0.069722,
+        0.074793,
+        0.059581,
+        0.011409,
+        0.036763,
+        0.219307
       ]
     },
     {
@@ -265224,6 +265635,53 @@
       ]
     },
     {
+      "path": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15571,
+      "lines": 316,
+      "tokens_est": 3893,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "51f4de1ced10b16d",
+      "vector": [
+        0.244675,
+        -0.165486,
+        -0.254828,
+        -0.009137,
+        0.238584,
+        0.226401,
+        -0.18173,
+        0.06193,
+        -0.177669,
+        -0.098479,
+        -0.212187,
+        0.228431,
+        -0.214218,
+        0.070052,
+        -0.228431,
+        -0.108632,
+        -0.193913,
+        0.214218,
+        -0.195943,
+        0.147211,
+        -0.18376,
+        0.10051,
+        0.161425,
+        -0.009137,
+        -0.126906,
+        0.208126,
+        -0.155333,
+        0.147211,
+        -0.228431,
+        0.135028,
+        -0.244675,
+        -0.01929
+      ]
+    },
+    {
       "path": "tools/project035/artifact_workgraph_wake_bridge.py",
       "role": "python_module",
       "binary": false,
@@ -265268,6 +265726,53 @@
         -0.261597,
         -0.274358,
         -0.014037
+      ]
+    },
+    {
+      "path": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10977,
+      "lines": 275,
+      "tokens_est": 2745,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2b092377288ff274",
+      "vector": [
+        -0.244719,
+        -0.18448,
+        -0.317507,
+        -0.051454,
+        0.287387,
+        -0.232169,
+        0.053964,
+        0.086593,
+        0.091613,
+        0.139301,
+        0.056474,
+        0.19954,
+        0.069023,
+        -0.013805,
+        -0.252248,
+        0.294917,
+        0.028864,
+        -0.006275,
+        -0.109182,
+        -0.139301,
+        -0.064003,
+        0.033884,
+        -0.141811,
+        -0.254758,
+        0.099142,
+        0.071533,
+        -0.114202,
+        0.320017,
+        0.222129,
+        -0.20456,
+        0.277348,
+        -0.091613
       ]
     },
     {
@@ -289222,16 +289727,16 @@
     }
   },
   "summary": {
-    "file_count": 1652,
-    "total_bytes": 26567540,
-    "text_tokens_est": 6632242,
+    "file_count": 1655,
+    "total_bytes": 26595485,
+    "text_tokens_est": 6639230,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1009,
-      "schema_or_lexicon": 272,
+      "python_module": 1011,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -289387,6 +289892,7 @@
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
+      ".github/workflows/cs-arena-sync-as07-generation-fence.yml",
       ".github/workflows/cs-arena-sync-as07.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -290885,7 +291391,9 @@
       "tools/project030/test_creator_studio_continuation_harness.py",
       "tools/project030/test_creator_studio_harness_integration.py",
       "tools/project030/test_creator_studio_wake_adapter.py",
+      "tools/project035/artifact_generation_fenced_wake_bridge.py",
       "tools/project035/artifact_workgraph_wake_bridge.py",
+      "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
       "tools/project035/test_artifact_workgraph_wake_bridge.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -449663,6 +450171,166 @@
         "file_digest8": "ab7e3159946157b3"
       },
       {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#class:GenerationFenceError:74d55e4b01986439",
+        "name": "GenerationFenceError",
+        "kind": "class",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "4fe61f5db509673a",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#class:GenerationFencedReadyProposal:90797a2083ac9d44",
+        "name": "GenerationFencedReadyProposal",
+        "kind": "class",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 160,
+        "end_line": 220,
+        "signature_hash": "cd6a03464ff08b46",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_canonical:4058b76255113ae3",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 37,
+        "end_line": 47,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_digest:b06a0a1418cc0f99",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "9edcae7e502cc579",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_generation:efc26ab5a44d712a",
+        "name": "_generation",
+        "kind": "function",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 60,
+        "end_line": 63,
+        "signature_hash": "fb09e4f89ca48af2",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_mapping:7df6d4dedd66aeb4",
+        "name": "_mapping",
+        "kind": "function",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 66,
+        "end_line": 69,
+        "signature_hash": "a1152ed109535e6e",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_resolve_generation_evidence:6d57090abfa58238",
+        "name": "_resolve_generation_evidence",
+        "kind": "function",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 112,
+        "end_line": 156,
+        "signature_hash": "1170b7d3cc08c437",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_text:b2447a12e089ecae",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 54,
+        "end_line": 57,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:_zero_authority:0decd5070e5bb8bf",
+        "name": "_zero_authority",
+        "kind": "function",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 72,
+        "end_line": 81,
+        "signature_hash": "c99a7b7354899591",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:compile_generation_fenced_proposal:0a46a3e8446503b3",
+        "name": "compile_generation_fenced_proposal",
+        "kind": "function",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 223,
+        "end_line": 250,
+        "signature_hash": "8e7bc2453a320148",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:generation_evidence_digest:0136f67ff2551a92",
+        "name": "generation_evidence_digest",
+        "kind": "function",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 84,
+        "end_line": 109,
+        "signature_hash": "706777079694ff0e",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#function:verify_generation_fenced_reopen:91a41fe5221f6e20",
+        "name": "verify_generation_fenced_reopen",
+        "kind": "function",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 253,
+        "end_line": 315,
+        "signature_hash": "2df2f6f3807c188c",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#method:GenerationFenceError.__init__:bfab6428eab05ee2",
+        "name": "GenerationFenceError.__init__",
+        "kind": "method",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#method:GenerationFencedReadyProposal.__post_init__:d0522641fbfc7e91",
+        "name": "GenerationFencedReadyProposal.__post_init__",
+        "kind": "method",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 176,
+        "end_line": 194,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#method:GenerationFencedReadyProposal.compute_proposal_id:8f24aa9681867ead",
+        "name": "GenerationFencedReadyProposal.compute_proposal_id",
+        "kind": "method",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 219,
+        "end_line": 220,
+        "signature_hash": "b2e33f61c7974c23",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_generation_fenced_wake_bridge.py#method:GenerationFencedReadyProposal.logical_payload:f63d20ff13719fb9",
+        "name": "GenerationFencedReadyProposal.logical_payload",
+        "kind": "method",
+        "file": "tools/project035/artifact_generation_fenced_wake_bridge.py",
+        "line": 196,
+        "end_line": 217,
+        "signature_hash": "c612902d452d55c3",
+        "file_digest8": "51f4de1ced10b16d"
+      },
+      {
         "semantic_id": "tools/project035/artifact_workgraph_wake_bridge.py#class:ArtifactDependencyReadyProposal:0f774eda84294c6e",
         "name": "ArtifactDependencyReadyProposal",
         "kind": "class",
@@ -449871,6 +450539,216 @@
         "end_line": 129,
         "signature_hash": "c612902d452d55c3",
         "file_digest8": "0cb4f4870948695a"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#class:ArtifactGenerationFencedWakeBridgeTests:db930ef3a6070091",
+        "name": "ArtifactGenerationFencedWakeBridgeTests",
+        "kind": "class",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 172,
+        "end_line": 270,
+        "signature_hash": "6c60ff6f509d6bf5",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:after_projection:66ab0d9a07f1882a",
+        "name": "after_projection",
+        "kind": "function",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 69,
+        "end_line": 82,
+        "signature_hash": "394410f2025fcfaf",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:artifact_event:5b8d1c4fef8cf53e",
+        "name": "artifact_event",
+        "kind": "function",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 9,
+        "end_line": 35,
+        "signature_hash": "a846ac9a08960eb4",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:before_projection:e20b888c71c7a68d",
+        "name": "before_projection",
+        "kind": "function",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 53,
+        "end_line": 66,
+        "signature_hash": "3d642475c7553ede",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:binding:5c7ab15f990e1d88",
+        "name": "binding",
+        "kind": "function",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 38,
+        "end_line": 50,
+        "signature_hash": "737e85595b678c5d",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:generation_evidence:5d4da0e0991f8647",
+        "name": "generation_evidence",
+        "kind": "function",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 85,
+        "end_line": 109,
+        "signature_hash": "3e3db62a6f4398e2",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:generation_resolver:96c4c75d09deb2e5",
+        "name": "generation_resolver",
+        "kind": "function",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 112,
+        "end_line": 118,
+        "signature_hash": "2c0da6640a2725fb",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:transition_evidence:0bfa2f1502e78dec",
+        "name": "transition_evidence",
+        "kind": "function",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 141,
+        "end_line": 164,
+        "signature_hash": "6d3d0a9e28353f0b",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:transition_receipt:1fa94798b896dc0e",
+        "name": "transition_receipt",
+        "kind": "function",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 121,
+        "end_line": 138,
+        "signature_hash": "9e3e9a17a0b46b3f",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#function:transition_resolver:1616af5a9a4617ee",
+        "name": "transition_resolver",
+        "kind": "function",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 167,
+        "end_line": 169,
+        "signature_hash": "0acc8ec4dd91d690",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.proposal:17d2869853019cac",
+        "name": "ArtifactGenerationFencedWakeBridgeTests.proposal",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 173,
+        "end_line": 181,
+        "signature_hash": "a834aa9eec425a51",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_current_generation_compiles_non_authorizing_reopen_proposal:d8bea96ab42531ec",
+        "name": "ArtifactGenerationFencedWakeBridgeTests.test_current_generation_compiles_non_authorizing_reopen_proposal",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 183,
+        "end_line": 189,
+        "signature_hash": "dd1f5a0366c3293b",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_generation_advance_during_workgraph_transition_blocks_wake_scan.resolver:35dc2dbeb244207e",
+        "name": "ArtifactGenerationFencedWakeBridgeTests.test_generation_advance_during_workgraph_transition_blocks_wake_scan.resolver",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 232,
+        "end_line": 233,
+        "signature_hash": "b7950c19993c4590",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_generation_advance_during_workgraph_transition_blocks_wake_scan:bd68c0889ca7ade4",
+        "name": "ArtifactGenerationFencedWakeBridgeTests.test_generation_advance_during_workgraph_transition_blocks_wake_scan",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 222,
+        "end_line": 249,
+        "signature_hash": "4966c83d7af6348c",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_generation_evidence_digest_is_verified:8276733ba223d69c",
+        "name": "ArtifactGenerationFencedWakeBridgeTests.test_generation_evidence_digest_is_verified",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 209,
+        "end_line": 214,
+        "signature_hash": "9635c4fcd5be0701",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_global_live_index_can_advance_if_resource_generation_is_still_current:4ea4a199bb7864e2",
+        "name": "ArtifactGenerationFencedWakeBridgeTests.test_global_live_index_can_advance_if_resource_generation_is_still_current",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 216,
+        "end_line": 220,
+        "signature_hash": "539b05d81373f8f6",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_persisted_reopen_plus_current_generation_allows_existing_scanner_only:7d6dabf8d682d810",
+        "name": "ArtifactGenerationFencedWakeBridgeTests.test_persisted_reopen_plus_current_generation_allows_existing_scanner_only",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 251,
+        "end_line": 270,
+        "signature_hash": "03c40945a72b1ea1",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_resource_head_artifact_must_match:46e9e79ffef9c646",
+        "name": "ArtifactGenerationFencedWakeBridgeTests.test_resource_head_artifact_must_match",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 203,
+        "end_line": 207,
+        "signature_hash": "d8ef1ca7cc8666b3",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_same_artifact_identity_with_wrong_generation_still_fails:d4ae61d6658f5f46",
+        "name": "ArtifactGenerationFencedWakeBridgeTests.test_same_artifact_identity_with_wrong_generation_still_fails",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 197,
+        "end_line": 201,
+        "signature_hash": "0a500a08e46b171c",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:ArtifactGenerationFencedWakeBridgeTests.test_stale_artifact_generation_cannot_compile_reopen:77ff0d03926ee917",
+        "name": "ArtifactGenerationFencedWakeBridgeTests.test_stale_artifact_generation_cannot_compile_reopen",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 191,
+        "end_line": 195,
+        "signature_hash": "d4f0dd003e8a51d2",
+        "file_digest8": "2b092377288ff274"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_generation_fenced_wake_bridge.py#method:generation_resolver.resolve:5213db228caecb63",
+        "name": "generation_resolver.resolve",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_generation_fenced_wake_bridge.py",
+        "line": 113,
+        "end_line": 117,
+        "signature_hash": "2ac9c8fef3e571b4",
+        "file_digest8": "2b092377288ff274"
       },
       {
         "semantic_id": "tools/project035/test_artifact_workgraph_wake_bridge.py#class:ArtifactWorkGraphWakeBridgeTests:496f3499b545ce53",
@@ -451453,7 +452331,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "8cc948b558f25be0eee23a29c774b8b4",
-    "payload_hash": "8cda36ce9bd59fb81977b10137df82c0"
+    "record_fingerprint": "0ae2266a23caee7d7dc9d8694b2fce8e",
+    "payload_hash": "5ba2ce2fa78ba39e53f11f5430bce987"
   }
 }
