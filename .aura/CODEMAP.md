@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1651
-- **total_bytes**: 26385404
-- **text_tokens_est**: 6586747
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1654
+- **total_bytes**: 26402120
+- **text_tokens_est**: 6590918
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1006, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1651,
+  "repo_file_count": 1654,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1109,6 +1109,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
     "docs/BENCHMARKS.md",
     "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
+    "docs/CREATOR-STUDIO-GEMINI-DELTA-GATE10.md",
     "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
     "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
     "docs/PR_KIT.md",
@@ -1169,6 +1170,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "examples/arena_navigation_domain_lens/README.md",
     "examples/arena_navigation_domain_lens/domain_lens_reference.py",
     "examples/aura_gate_policy.json",
+    "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+    "examples/creator_studio_gemini_delta/test_creator_studio_gemini_delta_reference.py",
     "examples/mini_aura_reference_arena/README.md",
     "examples/mini_aura_reference_arena/mini_aura_reference.py",
     "extract_new_papers.py",
@@ -1705,6 +1708,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "examples/arena_expert_fabric/expert_fabric.py",
     "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
     "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+    "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+    "examples/creator_studio_gemini_delta/test_creator_studio_gemini_delta_reference.py",
     "examples/mini_aura_reference_arena/mini_aura_reference.py",
     "scripts/aura_advanced_benchmark_runner.py",
     "scripts/aura_arch_v2_3_capsule_validator.py",
@@ -1775,9 +1780,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_wfst_phase_a.py",
     "tests/test_aura_benchmark_four.py",
     "tests/test_aura_benchmark_four_hardening.py",
-    "tests/test_aura_bilateral_gate_dialogue.py",
-    "tests/test_aura_bilateral_live_repair_foundry.py",
-    "tests/test_aura_bilateral_live_repair_foundry_hardening.py"
+    "tests/test_aura_bilateral_gate_dialogue.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1791,15 +1794,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1651,
-  "bytes": 26385404,
-  "tokens_est": 6586747,
+  "files": 1654,
+  "bytes": 26402120,
+  "tokens_est": 6590918,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 240,
+    "knowledge_artifact": 241,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1004,
+    "python_module": 1006,
     "schema_or_lexicon": 273,
     "support_file": 49
   }
