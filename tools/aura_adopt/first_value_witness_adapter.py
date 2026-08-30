@@ -1,23 +1,18 @@
 """AURA-ADOPT-001: zero-install first-value witness -> ZF-00B adapter.
 
-Pure observation adapter only. It does not own browser execution, route selection,
+Pure D0 observation adapter. It does not own browser execution, route selection,
 telemetry collection, user consent, trust verification, storage, sharing, or effects.
-It converts already-observed witness facts into canonical AdoptionFrictionReceiptV1.
+It converts bounded structural observations into canonical AdoptionFrictionReceiptV1.
 
 Evidence law:
-- SYNTHETIC_TECHNICAL never satisfies USER_EXPLICIT acceptance.
-- SAVE_REOPEN observations require a source/currentness-bound output artifact,
-  a distinct save predecessor reference, and a distinct reopen reference whose
-  observed artifact digests all match the rendered output.
-- Caller-authored D0 observations are structural assertions, not authenticated
-  physical consequences. This adapter therefore never emits SAVE_REOPEN=COMPLETED;
-  a trusted browser/storage witness resolver must earn that state downstream.
-- Consequence evidence is committed into stage/verifier digests; it is never
-  mislabeled as a capability reference. Public capability refs use `capability:`;
-  recipe refs use `arena-recipe:`; serialized references/cohorts are privacy-minimal.
-- This adapter cannot complete TRUST; a trust-owner bridge must do that.
-- Causally impossible witness combinations fail closed.
-- UNKNOWN remains UNKNOWN.
+- deterministic browser render/execution may complete from the technical witness;
+- caller-authored human/physical consequence assertions (user acceptance,
+  save/reopen, share/reuse, trust) NEVER become authenticated completion here;
+- structural assertions are artifact/source/currentness-bound and committed, then
+  remain UNKNOWN until the appropriate trusted resolver owner earns completion;
+- consequence evidence is never mislabeled as capability evidence;
+- serialized refs/cohorts are privacy-minimal opaque identifiers;
+- causally impossible combinations fail closed; UNKNOWN remains UNKNOWN.
 """
 from __future__ import annotations
 
@@ -45,9 +40,8 @@ _REF_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/@#+-]{1,255}$")
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _EMAIL_RE = re.compile(r"(?i)[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}")
 _COHORT_VALUE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:+/-]{0,63}$")
-_SENSITIVE_REF_MARKERS = (
-    "api_key", "apikey", "token", "secret", "password", "bearer", "sk-",
-    "mailto:", "user=", "email=", "phone=", "prompt=", "content=",
+_SENSITIVE_RE = re.compile(
+    r"(?i)(?:^|[:/#._-])(?:api[_-]?key|access[_-]?token|refresh[_-]?token|secret|password|bearer)(?:$|[:/#._-])"
 )
 
 
@@ -70,7 +64,8 @@ def _private_like(value: str) -> bool:
     return (
         _EMAIL_RE.search(value) is not None
         or "://" in lowered
-        or any(marker in lowered for marker in _SENSITIVE_REF_MARKERS)
+        or lowered.startswith(("mailto:", "sk-"))
+        or _SENSITIVE_RE.search(value) is not None
     )
 
 
@@ -119,10 +114,8 @@ def _sha(value: str | None, code: str) -> str:
 
 def _evidence_commitment(kind: str, payload: Mapping[str, str]) -> str:
     encoded = json.dumps(
-        {"kind": kind, **dict(payload)},
-        sort_keys=True,
-        separators=(",", ":"),
-        ensure_ascii=True,
+        {"kind": kind, **dict(payload)}, sort_keys=True,
+        separators=(",", ":"), ensure_ascii=True,
     ).encode("utf-8")
     return hashlib.sha256(b"AURA_FIRST_VALUE_EVIDENCE_V1\0" + encoded).hexdigest()
 
@@ -276,17 +269,25 @@ def _acceptance(obs: FirstValueWitnessObservationV1) -> tuple[StageEvent, Accept
     }:
         ref = _ref(obs.acceptance_evidence_ref, "USER_ACCEPTANCE_EVIDENCE_REF_REQUIRED")
         commitment = _evidence_commitment(
-            "USER_EXPLICIT_ACCEPTANCE",
+            "USER_ACCEPTANCE_STRUCTURAL_ASSERTION",
             {
                 **obs.common_evidence_binding(),
                 "evidence_ref": ref,
-                "result": "ACCEPT" if obs.acceptance_mode is AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT else "REJECT",
+                "asserted_result": (
+                    "ACCEPT" if obs.acceptance_mode is AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT else "REJECT"
+                ),
             },
         )
-        result = obs.acceptance_mode is AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT
         return (
-            _event("VERIFY_ACCEPT", StageStatus.COMPLETED, reason=f"EVIDENCE_COMMITMENT:{commitment}", steps=1),
-            AcceptedValue("USER_EXPLICIT_FIRST_VALUE", result, f"EVIDENCE_COMMITMENT:{commitment}"),
+            _event(
+                "VERIFY_ACCEPT", StageStatus.UNKNOWN,
+                reason=(
+                    "STRUCTURALLY_BOUND_USER_ACCEPTANCE_REQUIRES_TRUSTED_USER_EVENT_RESOLVER"
+                    f"@EVIDENCE_COMMITMENT:{commitment}"
+                ),
+                steps=1,
+            ),
+            AcceptedValue("USER_EXPLICIT_FIRST_VALUE", None, f"EVIDENCE_COMMITMENT:{commitment}"),
         )
     if obs.acceptance_mode is AcceptanceEvidenceMode.SYNTHETIC_TECHNICAL:
         return (
@@ -313,13 +314,11 @@ def _save_reopen(obs: FirstValueWitnessObservationV1) -> StageEvent:
             },
         )
         return _event(
-            "SAVE_REOPEN",
-            StageStatus.UNKNOWN,
+            "SAVE_REOPEN", StageStatus.UNKNOWN,
             reason=(
                 "STRUCTURALLY_BOUND_REOPEN_REQUIRES_TRUSTED_WITNESS_RESOLVER"
                 f"@EVIDENCE_COMMITMENT:{commitment}"
-            ),
-            steps=2,
+            ), steps=2,
         )
     if obs.save_mode is SaveEvidenceMode.SAVE_OBSERVED:
         commitment = _evidence_commitment(
@@ -332,8 +331,7 @@ def _save_reopen(obs: FirstValueWitnessObservationV1) -> StageEvent:
         )
         return _event(
             "SAVE_REOPEN", StageStatus.UNKNOWN,
-            reason=f"SAVE_OBSERVED_BUT_REOPEN_NOT_OBSERVED@EVIDENCE_COMMITMENT:{commitment}",
-            steps=1,
+            reason=f"SAVE_OBSERVED_BUT_REOPEN_NOT_OBSERVED@EVIDENCE_COMMITMENT:{commitment}", steps=1,
         )
     if obs.save_mode is SaveEvidenceMode.DOWNLOAD_INITIATED:
         return _event("SAVE_REOPEN", StageStatus.UNKNOWN,
@@ -346,14 +344,19 @@ def _share_or_reuse(obs: FirstValueWitnessObservationV1) -> StageEvent:
         return _event("SHARE_OR_REUSE", StageStatus.NOT_APPLICABLE,
                       reason="NO_SHARE_OR_REUSE_CLAIM_FOR_FIRST_VALUE_WITNESS", steps=0)
     commitment = _evidence_commitment(
-        "SHARE_OR_REUSE",
+        "SHARE_OR_REUSE_STRUCTURAL_ASSERTION",
         {
             **obs.common_evidence_binding(),
             "evidence_ref": _ref(obs.share_or_reuse_evidence_ref, "SHARE_REUSE_EVIDENCE_REF_REQUIRED"),
         },
     )
-    return _event("SHARE_OR_REUSE", StageStatus.COMPLETED,
-                  reason=f"EVIDENCE_COMMITMENT:{commitment}", steps=1)
+    return _event(
+        "SHARE_OR_REUSE", StageStatus.UNKNOWN,
+        reason=(
+            "STRUCTURALLY_BOUND_SHARE_REUSE_REQUIRES_TRUSTED_SHARE_RESOLVER"
+            f"@EVIDENCE_COMMITMENT:{commitment}"
+        ), steps=1,
+    )
 
 
 def compile_first_value_receipt(
@@ -447,9 +450,11 @@ def compile_first_value_receipt(
         invalidators=(
             "SOURCE_CURRENTNESS_MISMATCH",
             "SYNTHETIC_ACCEPTANCE_LAUNDERED_AS_USER_ACCEPTANCE",
+            "STRUCTURAL_ACCEPTANCE_ASSERTION_LAUNDERED_AS_AUTHENTICATED_USER_CONSEQUENCE",
             "SIMULATED_SAVE_LAUNDERED_AS_REOPEN",
             "SAVE_REOPEN_ARTIFACT_CHAIN_MISMATCH",
             "STRUCTURAL_EVENT_ASSERTION_LAUNDERED_AS_AUTHENTICATED_CONSEQUENCE",
+            "STRUCTURAL_SHARE_REUSE_ASSERTION_LAUNDERED_AS_AUTHENTICATED_CONSEQUENCE",
             "CONSEQUENCE_EVIDENCE_MISLABELED_AS_CAPABILITY",
             "PRIVATE_CONTENT_LAUNDERED_AS_REFERENCE_OR_COHORT",
             "TRUST_POINTER_PRESENCE_LAUNDERED_AS_TRUST_COMPLETION",
