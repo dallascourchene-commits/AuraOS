@@ -1,0 +1,40 @@
+{
+  "schema": "AuraCommandEnvelopeV1-candidate",
+  "command_id": "AWJ032-GLM53-06-STRICT-D0-PAGER-CACHE-TRACE-BENCHMARK-20260830-R2",
+  "idempotency_key": "AWJ032-GLM53-06-STRICT-D0-PAGER-CACHE-TRACE-BENCHMARK-20260830-R2",
+  "authority_ref": "OWNER-DIRECT-CURRENT-TURN + Drive 1SnLzRLRDGib2DltXNDKBkgfgI3PWayj6O6b5I8AkyP8 + GLM53 PARENT 17Kar9873--ZnIEdoqqXQ8Pdb6cEX9FpLZygfQZlXlEg",
+  "execution_authorized": true,
+  "currentness": {
+    "resolve_awj001_current_at_admission": true,
+    "stale_behavior": "REBASE_RECOMPILE_REISSUE"
+  },
+  "effect_ceiling": "D0",
+  "work_order_ref": "Drive 1PkEPzyF0_25yGA776_TIcHAWv9ho_N4mkqJ2WfM5mP4",
+  "objective": {
+    "requested_effect": "D0",
+    "text": "Re-resolve the current AWJ032-GLM53 parent and exact pager/support heads. Validate the current pager cache identity and W4 backend-I/O evidence contracts. Using only deterministic source inspection and tiny or synthetic local tests, bind workload or route-trace digest plus cache-policy digest to placement-plan currentness where still missing, and compare exact page-directory or ordinary LRU baseline against any hot/LFU/predictive/K27/K27P cache arm without changing native GLM router semantics. Preserve UNKNOWN when physical I/O is unattested. Return source-bound tests, measurements or an exact typed blocker; do not perform a large checkpoint download."
+  },
+  "return_contract": [
+    "ACK_BEFORE_EFFECT",
+    "RESULT_OR_TYPED_ERROR",
+    "CURRENT_SOURCE_REFS",
+    "EXACT_HEADS",
+    "TEST_RECEIPTS",
+    "CLAIM_CLASSIFICATION",
+    "SUCCESSOR_DELTA",
+    "REOPEN_HANDLE"
+  ],
+  "negative_intent": [
+    "NO_PROVIDER_SPEND",
+    "NO_REMOTE_MODEL_CALL",
+    "NO_LARGE_CHECKPOINT_DOWNLOAD",
+    "NO_PUBLIC_EFFECT",
+    "NO_MAIN_MERGE",
+    "NO_CREDENTIAL_ACTION",
+    "NO_DESTRUCTIVE_ACTION",
+    "NO_ALLOWLIST_WIDENING",
+    "NO_CONSUMER_GRAMMAR_WIDENING",
+    "NO_INVENTED_METRICS",
+    "NO_PHYSICAL_SWARM_CLAIM"
+  ]
+}

@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788123113,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1326,6 +1326,7 @@
       "tests/fixtures/amd_track3/demo_one.py",
       "tests/fixtures/amd_track3/demo_three.py",
       "tests/fixtures/amd_track3/demo_two.py",
+      "tests/fixtures/awj032_glm53_06_r2_envelope.json",
       "tests/fixtures/relationship_atlas/relational_index_fixture.json",
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
@@ -1412,6 +1413,7 @@
       "tests/test_aura_coding_workbench_actions.py",
       "tests/test_aura_coding_workbench_sequence.py",
       "tests/test_aura_coding_workbench_wfst_equivalence.py",
+      "tests/test_aura_command_envelope_lint.py",
       "tests/test_aura_command_risk_gate.py",
       "tests/test_aura_construction_adapter.py",
       "tests/test_aura_construction_adapter_hardening.py",
@@ -1631,6 +1633,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_command_envelope_lint.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26427692,
+      "tokens_est": 6597275,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3459,6 +3462,14 @@
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
         "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 138,
+        "end_line": 154,
+        "semantic_id": "tools/aura_command_envelope_lint.py#function:main:94e2b1fa758df240",
+        "signature_hash": "c3265d7d89056dc5"
       },
       {
         "file": "unreal_bridge.py",
@@ -46653,6 +46664,14 @@
         "end_line": 301,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_receipt:d3ae73715f72c220",
         "signature_hash": "e3dc9e7f8b7c4d5c"
+      },
+      {
+        "file": "tools/aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 47,
+        "semantic_id": "tools/aura_command_envelope_lint.py#function:_receipt:2e2c253be67b485c",
+        "signature_hash": "7804d71a3c28c12a"
       }
     ],
     "prepare_spatial_action_certificate_v2": [
@@ -124351,6 +124370,156 @@
         "signature_hash": "3b6bb36cf7de7836"
       }
     ],
+    "_good_envelope": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 31,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:_good_envelope:b5460d1aec3e8cf8",
+        "signature_hash": "5faa29bb18ffac6a"
+      }
+    ],
+    "test_valid_json_first_d0_envelope_passes": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 39,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_valid_json_first_d0_envelope_passes:712f233bc2892d05",
+        "signature_hash": "8f970413302a871b"
+      }
+    ],
+    "test_google_docs_bom_is_tolerated": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 44,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_google_docs_bom_is_tolerated:51527259a9a6b709",
+        "signature_hash": "1a5178d471028b70"
+      }
+    ],
+    "test_trailing_prose_after_json_fails_parse": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 50,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_trailing_prose_after_json_fails_parse:d535a6cef7765a4b",
+        "signature_hash": "c1dd667cde877fe4"
+      }
+    ],
+    "test_effect_ceiling_is_byte_exact_d0": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 56,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_effect_ceiling_is_byte_exact_d0:84ddd8f08b643376",
+        "signature_hash": "d16127349951f92f"
+      }
+    ],
+    "test_requested_effect_is_byte_exact_d0": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 62,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_requested_effect_is_byte_exact_d0:04381ab5efb217de",
+        "signature_hash": "965fa5a6fa6b51c5"
+      }
+    ],
+    "test_constraints_fail_closed_unless_exact_d0_string": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 71,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_constraints_fail_closed_unless_exact_d0_string:b445b95452682503",
+        "signature_hash": "f50c8ce7e5fb7060"
+      }
+    ],
+    "test_authority_requires_real_drive_id_candidate": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 77,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_authority_requires_real_drive_id_candidate:5d5d20b9e4137fb0",
+        "signature_hash": "aadb677d85c15558"
+      }
+    ],
+    "test_drive_id_extraction_does_not_consume_work_order_prefix": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 83,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_drive_id_extraction_does_not_consume_work_order_prefix:bb3d1bf02b73f134",
+        "signature_hash": "e6cdf055cc0a72ce"
+      }
+    ],
+    "test_known_raw_executor_key_is_blocked_at_any_depth": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 90,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_known_raw_executor_key_is_blocked_at_any_depth:c4e6197056cc26f7",
+        "signature_hash": "592b289630cbd1f0"
+      }
+    ],
+    "test_missing_currentness_is_warning_not_fabricated_failure": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 98,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_missing_currentness_is_warning_not_fabricated_failure:e145a484f248977f",
+        "signature_hash": "c1b8ca269e927250"
+      }
+    ],
+    "test_objective_must_be_structured_for_current_d0_profile": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 104,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_objective_must_be_structured_for_current_d0_profile:b94bbad131153ede",
+        "signature_hash": "f380a258e805aa02"
+      }
+    ],
+    "test_dispatcher_compatible_objective_text_is_required": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 112,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_dispatcher_compatible_objective_text_is_required:e22ef0f4d4e2330a",
+        "signature_hash": "369eb19df119e073"
+      }
+    ],
+    "test_objective_task_is_not_a_substitute_for_dispatcher_text": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 120,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_objective_task_is_not_a_substitute_for_dispatcher_text:ef6cb453697cfd36",
+        "signature_hash": "c97840e2ba7c16d8"
+      }
+    ],
+    "test_actual_glm53_r2_successor_fixture_matches_current_profile": [
+      {
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 135,
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_actual_glm53_r2_successor_fixture_matches_current_profile:9fed66e6a9ecf552",
+        "signature_hash": "71f16a01b07a67a4"
+      }
+    ],
     "TestRiskGate": [
       {
         "file": "tests/test_aura_command_risk_gate.py",
@@ -157179,6 +157348,46 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "extract_drive_ids": [
+      {
+        "file": "tools/aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 19,
+        "semantic_id": "tools/aura_command_envelope_lint.py#function:extract_drive_ids:d1e42e0ed681c581",
+        "signature_hash": "d6ca84aab5dac8d0"
+      }
+    ],
+    "_find_forbidden_keys": [
+      {
+        "file": "tools/aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 34,
+        "semantic_id": "tools/aura_command_envelope_lint.py#function:_find_forbidden_keys:08d3aba9902f17c6",
+        "signature_hash": "83ce995d61bac31a"
+      }
+    ],
+    "validate_d0_envelope": [
+      {
+        "file": "tools/aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 120,
+        "semantic_id": "tools/aura_command_envelope_lint.py#function:validate_d0_envelope:d480f5831caf34d2",
+        "signature_hash": "16ff1d7513c6639c"
+      }
+    ],
+    "lint_text": [
+      {
+        "file": "tools/aura_command_envelope_lint.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 135,
+        "semantic_id": "tools/aura_command_envelope_lint.py#function:lint_text:1e6228c44b11a12b",
+        "signature_hash": "c16e3314b247aa4f"
       }
     ],
     "_coordinates": [
@@ -248313,6 +248522,53 @@
       ]
     },
     {
+      "path": "tests/fixtures/awj032_glm53_06_r2_envelope.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1927,
+      "lines": 41,
+      "tokens_est": 482,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5858cbda3dbf17a8",
+      "vector": [
+        0.161441,
+        -0.250425,
+        -0.080085,
+        0.034322,
+        0.184323,
+        -0.283476,
+        -0.24534,
+        0.087712,
+        0.207204,
+        -0.062288,
+        0.019068,
+        0.291103,
+        -0.013983,
+        -0.308899,
+        0.039407,
+        -0.242797,
+        -0.176696,
+        -0.044492,
+        -0.174153,
+        0.29873,
+        0.123306,
+        -0.019068,
+        0.24534,
+        0.110594,
+        -0.097882,
+        0.062288,
+        -0.049576,
+        -0.28856,
+        -0.102966,
+        -0.247882,
+        0.133475,
+        0.059746
+      ]
+    },
+    {
       "path": "tests/fixtures/relationship_atlas/relational_index_fixture.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -252352,6 +252608,53 @@
         -0.03569,
         0.046506,
         -0.264974
+      ]
+    },
+    {
+      "path": "tests/test_aura_command_envelope_lint.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4898,
+      "lines": 136,
+      "tokens_est": 1225,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "88385c077c53f2fb",
+      "vector": [
+        -0.228106,
+        0.118322,
+        -0.169555,
+        -0.152477,
+        -0.015858,
+        -0.006099,
+        0.291536,
+        0.010978,
+        0.147598,
+        0.123202,
+        0.254942,
+        -0.164675,
+        -0.272019,
+        0.120762,
+        -0.020737,
+        0.128081,
+        -0.211028,
+        -0.291536,
+        -0.028056,
+        -0.245183,
+        0.220787,
+        0.025616,
+        -0.289097,
+        0.259821,
+        0.023177,
+        -0.098805,
+        -0.108564,
+        0.179313,
+        0.054892,
+        0.047573,
+        0.128081,
+        -0.308614
       ]
     },
     {
@@ -262645,6 +262948,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_command_envelope_lint.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5819,
+      "lines": 159,
+      "tokens_est": 1455,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fe6a9fc6b58b9ad4",
+      "vector": [
+        -0.177251,
+        0.266433,
+        0.152725,
+        -0.275352,
+        0.007803,
+        0.248597,
+        0.054624,
+        0.248597,
+        -0.264204,
+        0.121511,
+        0.096986,
+        0.163873,
+        -0.217383,
+        0.032329,
+        -0.154955,
+        0.012263,
+        0.119282,
+        -0.17948,
+        -0.204005,
+        -0.237449,
+        -0.188398,
+        0.183939,
+        -0.02341,
+        -0.246367,
+        -0.101445,
+        0.134889,
+        -0.050165,
+        0.215153,
+        0.045706,
+        0.192858,
+        -0.206235,
+        0.210694
       ]
     },
     {
@@ -286646,16 +286996,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26427692,
+    "text_tokens_est": 6597275,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287991,6 +288341,7 @@
       "tests/fixtures/amd_track3/demo_one.py",
       "tests/fixtures/amd_track3/demo_three.py",
       "tests/fixtures/amd_track3/demo_two.py",
+      "tests/fixtures/awj032_glm53_06_r2_envelope.json",
       "tests/fixtures/relationship_atlas/relational_index_fixture.json",
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
@@ -288077,6 +288428,7 @@
       "tests/test_aura_coding_workbench_actions.py",
       "tests/test_aura_coding_workbench_sequence.py",
       "tests/test_aura_coding_workbench_wfst_equivalence.py",
+      "tests/test_aura_command_envelope_lint.py",
       "tests/test_aura_command_risk_gate.py",
       "tests/test_aura_construction_adapter.py",
       "tests/test_aura_construction_adapter_hardening.py",
@@ -288296,6 +288648,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_command_envelope_lint.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -411384,6 +411737,156 @@
         "file_digest8": "a3a6f0f3475cf422"
       },
       {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:_good_envelope:b5460d1aec3e8cf8",
+        "name": "_good_envelope",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 13,
+        "end_line": 31,
+        "signature_hash": "5faa29bb18ffac6a",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_actual_glm53_r2_successor_fixture_matches_current_profile:9fed66e6a9ecf552",
+        "name": "test_actual_glm53_r2_successor_fixture_matches_current_profile",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 123,
+        "end_line": 135,
+        "signature_hash": "71f16a01b07a67a4",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_authority_requires_real_drive_id_candidate:5d5d20b9e4137fb0",
+        "name": "test_authority_requires_real_drive_id_candidate",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 74,
+        "end_line": 77,
+        "signature_hash": "aadb677d85c15558",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_constraints_fail_closed_unless_exact_d0_string:b445b95452682503",
+        "name": "test_constraints_fail_closed_unless_exact_d0_string",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 65,
+        "end_line": 71,
+        "signature_hash": "f50c8ce7e5fb7060",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_dispatcher_compatible_objective_text_is_required:e22ef0f4d4e2330a",
+        "name": "test_dispatcher_compatible_objective_text_is_required",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 107,
+        "end_line": 112,
+        "signature_hash": "369eb19df119e073",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_drive_id_extraction_does_not_consume_work_order_prefix:bb3d1bf02b73f134",
+        "name": "test_drive_id_extraction_does_not_consume_work_order_prefix",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 80,
+        "end_line": 83,
+        "signature_hash": "e6cdf055cc0a72ce",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_effect_ceiling_is_byte_exact_d0:84ddd8f08b643376",
+        "name": "test_effect_ceiling_is_byte_exact_d0",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 53,
+        "end_line": 56,
+        "signature_hash": "d16127349951f92f",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_google_docs_bom_is_tolerated:51527259a9a6b709",
+        "name": "test_google_docs_bom_is_tolerated",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 42,
+        "end_line": 44,
+        "signature_hash": "1a5178d471028b70",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_known_raw_executor_key_is_blocked_at_any_depth:c4e6197056cc26f7",
+        "name": "test_known_raw_executor_key_is_blocked_at_any_depth",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 86,
+        "end_line": 90,
+        "signature_hash": "592b289630cbd1f0",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_missing_currentness_is_warning_not_fabricated_failure:e145a484f248977f",
+        "name": "test_missing_currentness_is_warning_not_fabricated_failure",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 93,
+        "end_line": 98,
+        "signature_hash": "c1b8ca269e927250",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_objective_must_be_structured_for_current_d0_profile:b94bbad131153ede",
+        "name": "test_objective_must_be_structured_for_current_d0_profile",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 101,
+        "end_line": 104,
+        "signature_hash": "f380a258e805aa02",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_objective_task_is_not_a_substitute_for_dispatcher_text:ef6cb453697cfd36",
+        "name": "test_objective_task_is_not_a_substitute_for_dispatcher_text",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 115,
+        "end_line": 120,
+        "signature_hash": "c97840e2ba7c16d8",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_requested_effect_is_byte_exact_d0:04381ab5efb217de",
+        "name": "test_requested_effect_is_byte_exact_d0",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 59,
+        "end_line": 62,
+        "signature_hash": "965fa5a6fa6b51c5",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_trailing_prose_after_json_fails_parse:d535a6cef7765a4b",
+        "name": "test_trailing_prose_after_json_fails_parse",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 47,
+        "end_line": 50,
+        "signature_hash": "c1dd667cde877fe4",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
+        "semantic_id": "tests/test_aura_command_envelope_lint.py#function:test_valid_json_first_d0_envelope_passes:712f233bc2892d05",
+        "name": "test_valid_json_first_d0_envelope_passes",
+        "kind": "function",
+        "file": "tests/test_aura_command_envelope_lint.py",
+        "line": 34,
+        "end_line": 39,
+        "signature_hash": "8f970413302a871b",
+        "file_digest8": "88385c077c53f2fb"
+      },
+      {
         "semantic_id": "tests/test_aura_command_risk_gate.py#class:TestRiskGate:05488bc4d49c8dbe",
         "name": "TestRiskGate",
         "kind": "class",
@@ -445634,6 +446137,66 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_command_envelope_lint.py#function:_find_forbidden_keys:08d3aba9902f17c6",
+        "name": "_find_forbidden_keys",
+        "kind": "function",
+        "file": "tools/aura_command_envelope_lint.py",
+        "line": 22,
+        "end_line": 34,
+        "signature_hash": "83ce995d61bac31a",
+        "file_digest8": "fe6a9fc6b58b9ad4"
+      },
+      {
+        "semantic_id": "tools/aura_command_envelope_lint.py#function:_receipt:2e2c253be67b485c",
+        "name": "_receipt",
+        "kind": "function",
+        "file": "tools/aura_command_envelope_lint.py",
+        "line": 37,
+        "end_line": 47,
+        "signature_hash": "7804d71a3c28c12a",
+        "file_digest8": "fe6a9fc6b58b9ad4"
+      },
+      {
+        "semantic_id": "tools/aura_command_envelope_lint.py#function:extract_drive_ids:d1e42e0ed681c581",
+        "name": "extract_drive_ids",
+        "kind": "function",
+        "file": "tools/aura_command_envelope_lint.py",
+        "line": 15,
+        "end_line": 19,
+        "signature_hash": "d6ca84aab5dac8d0",
+        "file_digest8": "fe6a9fc6b58b9ad4"
+      },
+      {
+        "semantic_id": "tools/aura_command_envelope_lint.py#function:lint_text:1e6228c44b11a12b",
+        "name": "lint_text",
+        "kind": "function",
+        "file": "tools/aura_command_envelope_lint.py",
+        "line": 123,
+        "end_line": 135,
+        "signature_hash": "c16e3314b247aa4f",
+        "file_digest8": "fe6a9fc6b58b9ad4"
+      },
+      {
+        "semantic_id": "tools/aura_command_envelope_lint.py#function:main:94e2b1fa758df240",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/aura_command_envelope_lint.py",
+        "line": 138,
+        "end_line": 154,
+        "signature_hash": "c3265d7d89056dc5",
+        "file_digest8": "fe6a9fc6b58b9ad4"
+      },
+      {
+        "semantic_id": "tools/aura_command_envelope_lint.py#function:validate_d0_envelope:d480f5831caf34d2",
+        "name": "validate_d0_envelope",
+        "kind": "function",
+        "file": "tools/aura_command_envelope_lint.py",
+        "line": 50,
+        "end_line": 120,
+        "signature_hash": "16ff1d7513c6639c",
+        "file_digest8": "fe6a9fc6b58b9ad4"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447447,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "bc50b60a55d95b758509cd3e96f71859",
+    "payload_hash": "d27a12229428f8fa06546ee78f6e319b"
   }
 }
