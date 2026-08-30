@@ -13,10 +13,12 @@ on:
       - 'tools/awj032/glm53_packed_expert_pager.py'
       - 'tools/awj032/glm53_per_expert_index_pager.py'
       - 'tools/awj032/glm53_pager_cache_telemetry.py'
+      - 'tools/awj032/test_glm53_w3_native_per_expert_fixture.py'
       - '.github/workflows/awj032-glm53-layout-bind-bridge.yml'
   push:
     branches:
       - 'awj032/glm53-layout-bind-stable-20260830'
+      - 'awj032/glm53-w3-native-fixture-dj-20260830'
     paths:
       - 'tools/awj032/glm53_layout_binding_bridge.py'
       - 'tools/awj032/test_glm53_layout_binding_bridge.py'
@@ -25,6 +27,7 @@ on:
       - 'tools/awj032/glm53_official_w2_observation.py'
       - 'tools/awj032/glm53_official_w2_plan_binding.py'
       - 'tools/awj032/test_glm53_official_w2_plan_binding.py'
+      - 'tools/awj032/test_glm53_w3_native_per_expert_fixture.py'
       - '.github/workflows/awj032-glm53-layout-bind-bridge.yml'
   workflow_dispatch:
 
@@ -66,12 +69,14 @@ jobs:
           tools/awj032/test_glm53_layout_binding_bridge.py
           tools/awj032/test_glm53_source_bound_layout_bridge.py
           tools/awj032/test_glm53_official_w2_plan_binding.py
-      - name: Run bridge and official-producer regressions
+          tools/awj032/test_glm53_w3_native_per_expert_fixture.py
+      - name: Run bridge, official-producer, and lower-plane fixture regressions
         run: >-
           python -m unittest
           tools.awj032.test_glm53_layout_binding_bridge
           tools.awj032.test_glm53_source_bound_layout_bridge
           tools.awj032.test_glm53_official_w2_plan_binding
+          tools.awj032.test_glm53_w3_native_per_expert_fixture
       - name: Re-run current pager owner regressions
         working-directory: tools/awj032
         run: >-
