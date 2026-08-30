@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788101931,
+  "generated_at_unix": 1788102525,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1649,
+    "repo_file_count": 1651,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1632,6 +1632,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/test_triadic_artifact_rebase.py",
+      "tools/arena/triadic_artifact_rebase.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project030/aura_arena_admission.py",
@@ -1765,15 +1767,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1649,
-      "bytes": 26529170,
-      "tokens_est": 6622648,
+      "files": 1651,
+      "bytes": 26548060,
+      "tokens_est": 6627371,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1007,
+        "python_module": 1009,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -3905,6 +3907,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 59,
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#function:_canonical:ec67d6163953b744",
+        "signature_hash": "707d518dafca1a42"
       },
       {
         "file": "tools/project030/aura_arena_workgraph.py",
@@ -14687,6 +14697,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 40,
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#function:_text:0333c4892ac461e3",
+        "signature_hash": "7f0d6d0d6d74e1f0"
       },
       {
         "file": "tools/project030/aura_arena_workgraph.py",
@@ -157265,6 +157283,256 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "anchor": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 31,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#function:anchor:49c8244c7d2003d8",
+        "signature_hash": "34cdec04df854947"
+      }
+    ],
+    "compile_ok": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 59,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#function:compile_ok:94d7ec94ce98bf37",
+        "signature_hash": "111062da5b8b5582"
+      }
+    ],
+    "TriadicArtifactRebaseTests": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "class",
+        "line": 62,
+        "end_line": 194,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#class:TriadicArtifactRebaseTests:edac8ed7e5591e42",
+        "signature_hash": "6dff37da2f6da5a2"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_self_authored_anchor_rejected": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 71,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_self_authored_anchor_rejected:afa77aad150d2400",
+        "signature_hash": "01c852240c79f764"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_superseded_anchor_requires_explicit_provisional": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 82,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_superseded_anchor_requires_explicit_provisional:7378fbd763ab9b42",
+        "signature_hash": "e8fae7e66de6f4e5"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_distinct_agents_preferred_and_same_agent_requires_exception": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 100,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_distinct_agents_preferred_and_same_agent_requires_exception:2ce64d4e9ec9e96b",
+        "signature_hash": "499e17b53da1c189"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_dissent_tension_is_required_and_preserved": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 107,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_dissent_tension_is_required_and_preserved:0beec66b003744bd",
+        "signature_hash": "e826efc608d07add"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_same_basis_has_stable_triad_identity": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 111,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_same_basis_has_stable_triad_identity:f8722020da48f36c",
+        "signature_hash": "b003dd8b254a35b5"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_observation_timestamp_does_not_churn_identity_or_packet_digest": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 118,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_observation_timestamp_does_not_churn_identity_or_packet_digest:aa1d463e78fbb964",
+        "signature_hash": "beb9d940b1b7bc84"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_anchor_content_change_creates_new_lineage": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 136,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_anchor_content_change_creates_new_lineage:17a21264d1985d1e",
+        "signature_hash": "4e901720ae4b2a2f"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_effect_authority_cannot_be_widened": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 144,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_effect_authority_cannot_be_widened:866c333dd45c5f31",
+        "signature_hash": "f0e16cc994e02754"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_packet_never_claims_synthesis_runtime_or_effect_execution": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 151,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_packet_never_claims_synthesis_runtime_or_effect_execution:5c5ada149dc82300",
+        "signature_hash": "c91977acee068085"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_exactly_two_sibling_anchors_plus_synthesizer": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 162,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_exactly_two_sibling_anchors_plus_synthesizer:587f321499be64b8",
+        "signature_hash": "08c15a32c48c4b10"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_nomination_fails_when_two_current_siblings_do_not_exist": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 172,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_nomination_fails_when_two_current_siblings_do_not_exist:8429e84f92eaa105",
+        "signature_hash": "fd7d479d273b76a0"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_nomination_prefers_distinct_agent_and_complementary_role": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 190,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_nomination_prefers_distinct_agent_and_complementary_role:41fdbe9aa4431e7c",
+        "signature_hash": "ff251c0d63cad03b"
+      }
+    ],
+    "TriadicArtifactRebaseTests.test_invalid_nonfinite_cost_fails_closed": [
+      {
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 192,
+        "end_line": 194,
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_invalid_nonfinite_cost_fails_closed:33fb9d157c7ffac4",
+        "signature_hash": "a81e8a007496f392"
+      }
+    ],
+    "TriadicRebaseError": [
+      {
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#class:TriadicRebaseError:f681551dcc011fdd",
+        "signature_hash": "2f2928384a755915"
+      }
+    ],
+    "TriadicRebaseError.__init__": [
+      {
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#method:TriadicRebaseError.__init__:29264e0b2940e88d",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_texts": [
+      {
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 49,
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#function:_texts:f86dde29ea5df179",
+        "signature_hash": "8db6d9dfa3467dfc"
+      }
+    ],
+    "ArtifactAnchor": [
+      {
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 102,
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#class:ArtifactAnchor:2c2cdd2d176da0a6",
+        "signature_hash": "4c705bf3aebcf072"
+      }
+    ],
+    "ArtifactAnchor.__post_init__": [
+      {
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 102,
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#method:ArtifactAnchor.__post_init__:affdfbcace615408",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "TriadicRebasePacket": [
+      {
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "kind": "class",
+        "line": 106,
+        "end_line": 137,
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#class:TriadicRebasePacket:0fc95b3703a8370f",
+        "signature_hash": "8cb3ea6392334b4a"
+      }
+    ],
+    "TriadicRebasePacket.to_dict": [
+      {
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 137,
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#method:TriadicRebasePacket.to_dict:4c5288e99a23e4ee",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "select_two_sibling_anchors": [
+      {
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "kind": "function",
+        "line": 140,
+        "end_line": 180,
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#function:select_two_sibling_anchors:d24f88977a17470a",
+        "signature_hash": "3e949d1b7da19fa7"
+      }
+    ],
+    "compile_triadic_rebase": [
+      {
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "kind": "function",
+        "line": 183,
+        "end_line": 347,
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#function:compile_triadic_rebase:72dd11104d82ecd4",
+        "signature_hash": "79b41e21cbacc1a9"
+      }
+    ],
     "ActionClass": [
       {
         "file": "tools/project030/aura_arena_admission.py",
@@ -264129,6 +264397,100 @@
       ]
     },
     {
+      "path": "tools/arena/test_triadic_artifact_rebase.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7071,
+      "lines": 199,
+      "tokens_est": 1768,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "321443f603571210",
+      "vector": [
+        0.017819,
+        0.269656,
+        0.157992,
+        -0.264905,
+        0.293415,
+        0.25065,
+        0.060584,
+        -0.207885,
+        -0.253026,
+        -0.288663,
+        -0.048704,
+        -0.124731,
+        -0.098597,
+        -0.264905,
+        -0.110476,
+        0.119979,
+        -0.013067,
+        -0.196006,
+        -0.196006,
+        0.084342,
+        0.103348,
+        -0.089093,
+        -0.29579,
+        -0.245898,
+        -0.013067,
+        0.039201,
+        -0.212636,
+        -0.096221,
+        -0.117603,
+        -0.017819,
+        0.207885,
+        -0.003564
+      ]
+    },
+    {
+      "path": "tools/arena/triadic_artifact_rebase.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11819,
+      "lines": 348,
+      "tokens_est": 2955,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "04797d4fe58b7003",
+      "vector": [
+        0.219397,
+        0.029767,
+        0.056227,
+        -0.276727,
+        0.278932,
+        -0.261292,
+        -0.212782,
+        -0.146632,
+        0.012127,
+        -0.248062,
+        0.093712,
+        -0.036382,
+        0.067252,
+        0.175297,
+        -0.040792,
+        0.078277,
+        -0.259087,
+        0.146632,
+        -0.005512,
+        0.038587,
+        0.047407,
+        0.166477,
+        0.250267,
+        -0.155452,
+        -0.278932,
+        0.221602,
+        0.076072,
+        0.111352,
+        0.162067,
+        0.272317,
+        0.162067,
+        0.254677
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -288550,15 +288912,15 @@
     }
   },
   "summary": {
-    "file_count": 1649,
-    "total_bytes": 26529170,
-    "text_tokens_est": 6622648,
+    "file_count": 1651,
+    "total_bytes": 26548060,
+    "text_tokens_est": 6627371,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1007,
+      "python_module": 1009,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -290201,6 +290563,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena/test_triadic_artifact_rebase.py",
+      "tools/arena/triadic_artifact_rebase.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project030/aura_arena_admission.py",
@@ -447558,6 +447922,276 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#class:TriadicArtifactRebaseTests:edac8ed7e5591e42",
+        "name": "TriadicArtifactRebaseTests",
+        "kind": "class",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 62,
+        "end_line": 194,
+        "signature_hash": "6dff37da2f6da5a2",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#function:anchor:49c8244c7d2003d8",
+        "name": "anchor",
+        "kind": "function",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 11,
+        "end_line": 31,
+        "signature_hash": "34cdec04df854947",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#function:compile_ok:94d7ec94ce98bf37",
+        "name": "compile_ok",
+        "kind": "function",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 34,
+        "end_line": 59,
+        "signature_hash": "111062da5b8b5582",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_anchor_content_change_creates_new_lineage:17a21264d1985d1e",
+        "name": "TriadicArtifactRebaseTests.test_anchor_content_change_creates_new_lineage",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 121,
+        "end_line": 136,
+        "signature_hash": "4e901720ae4b2a2f",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_dissent_tension_is_required_and_preserved:0beec66b003744bd",
+        "name": "TriadicArtifactRebaseTests.test_dissent_tension_is_required_and_preserved",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 103,
+        "end_line": 107,
+        "signature_hash": "e826efc608d07add",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_distinct_agents_preferred_and_same_agent_requires_exception:2ce64d4e9ec9e96b",
+        "name": "TriadicArtifactRebaseTests.test_distinct_agents_preferred_and_same_agent_requires_exception",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 85,
+        "end_line": 100,
+        "signature_hash": "499e17b53da1c189",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_effect_authority_cannot_be_widened:866c333dd45c5f31",
+        "name": "TriadicArtifactRebaseTests.test_effect_authority_cannot_be_widened",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 139,
+        "end_line": 144,
+        "signature_hash": "f0e16cc994e02754",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_exactly_two_sibling_anchors_plus_synthesizer:587f321499be64b8",
+        "name": "TriadicArtifactRebaseTests.test_exactly_two_sibling_anchors_plus_synthesizer",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 154,
+        "end_line": 162,
+        "signature_hash": "08c15a32c48c4b10",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_invalid_nonfinite_cost_fails_closed:33fb9d157c7ffac4",
+        "name": "TriadicArtifactRebaseTests.test_invalid_nonfinite_cost_fails_closed",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 192,
+        "end_line": 194,
+        "signature_hash": "a81e8a007496f392",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_nomination_fails_when_two_current_siblings_do_not_exist:8429e84f92eaa105",
+        "name": "TriadicArtifactRebaseTests.test_nomination_fails_when_two_current_siblings_do_not_exist",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 164,
+        "end_line": 172,
+        "signature_hash": "fd7d479d273b76a0",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_nomination_prefers_distinct_agent_and_complementary_role:41fdbe9aa4431e7c",
+        "name": "TriadicArtifactRebaseTests.test_nomination_prefers_distinct_agent_and_complementary_role",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 174,
+        "end_line": 190,
+        "signature_hash": "ff251c0d63cad03b",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_observation_timestamp_does_not_churn_identity_or_packet_digest:aa1d463e78fbb964",
+        "name": "TriadicArtifactRebaseTests.test_observation_timestamp_does_not_churn_identity_or_packet_digest",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 114,
+        "end_line": 118,
+        "signature_hash": "beb9d940b1b7bc84",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_packet_never_claims_synthesis_runtime_or_effect_execution:5c5ada149dc82300",
+        "name": "TriadicArtifactRebaseTests.test_packet_never_claims_synthesis_runtime_or_effect_execution",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 147,
+        "end_line": 151,
+        "signature_hash": "c91977acee068085",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_same_basis_has_stable_triad_identity:f8722020da48f36c",
+        "name": "TriadicArtifactRebaseTests.test_same_basis_has_stable_triad_identity",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 110,
+        "end_line": 111,
+        "signature_hash": "b003dd8b254a35b5",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_self_authored_anchor_rejected:afa77aad150d2400",
+        "name": "TriadicArtifactRebaseTests.test_self_authored_anchor_rejected",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 64,
+        "end_line": 71,
+        "signature_hash": "01c852240c79f764",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/test_triadic_artifact_rebase.py#method:TriadicArtifactRebaseTests.test_superseded_anchor_requires_explicit_provisional:7378fbd763ab9b42",
+        "name": "TriadicArtifactRebaseTests.test_superseded_anchor_requires_explicit_provisional",
+        "kind": "method",
+        "file": "tools/arena/test_triadic_artifact_rebase.py",
+        "line": 74,
+        "end_line": 82,
+        "signature_hash": "e8fae7e66de6f4e5",
+        "file_digest8": "321443f603571210"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#class:ArtifactAnchor:2c2cdd2d176da0a6",
+        "name": "ArtifactAnchor",
+        "kind": "class",
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "line": 63,
+        "end_line": 102,
+        "signature_hash": "4c705bf3aebcf072",
+        "file_digest8": "04797d4fe58b7003"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#class:TriadicRebaseError:f681551dcc011fdd",
+        "name": "TriadicRebaseError",
+        "kind": "class",
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "2f2928384a755915",
+        "file_digest8": "04797d4fe58b7003"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#class:TriadicRebasePacket:0fc95b3703a8370f",
+        "name": "TriadicRebasePacket",
+        "kind": "class",
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "line": 106,
+        "end_line": 137,
+        "signature_hash": "8cb3ea6392334b4a",
+        "file_digest8": "04797d4fe58b7003"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#function:_canonical:ec67d6163953b744",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "line": 52,
+        "end_line": 59,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "04797d4fe58b7003"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#function:_text:0333c4892ac461e3",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "line": 37,
+        "end_line": 40,
+        "signature_hash": "7f0d6d0d6d74e1f0",
+        "file_digest8": "04797d4fe58b7003"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#function:_texts:f86dde29ea5df179",
+        "name": "_texts",
+        "kind": "function",
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "line": 43,
+        "end_line": 49,
+        "signature_hash": "8db6d9dfa3467dfc",
+        "file_digest8": "04797d4fe58b7003"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#function:compile_triadic_rebase:72dd11104d82ecd4",
+        "name": "compile_triadic_rebase",
+        "kind": "function",
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "line": 183,
+        "end_line": 347,
+        "signature_hash": "79b41e21cbacc1a9",
+        "file_digest8": "04797d4fe58b7003"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#function:select_two_sibling_anchors:d24f88977a17470a",
+        "name": "select_two_sibling_anchors",
+        "kind": "function",
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "line": 140,
+        "end_line": 180,
+        "signature_hash": "3e949d1b7da19fa7",
+        "file_digest8": "04797d4fe58b7003"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#method:ArtifactAnchor.__post_init__:affdfbcace615408",
+        "name": "ArtifactAnchor.__post_init__",
+        "kind": "method",
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "line": 74,
+        "end_line": 102,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "04797d4fe58b7003"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#method:TriadicRebaseError.__init__:29264e0b2940e88d",
+        "name": "TriadicRebaseError.__init__",
+        "kind": "method",
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "04797d4fe58b7003"
+      },
+      {
+        "semantic_id": "tools/arena/triadic_artifact_rebase.py#method:TriadicRebasePacket.to_dict:4c5288e99a23e4ee",
+        "name": "TriadicRebasePacket.to_dict",
+        "kind": "method",
+        "file": "tools/arena/triadic_artifact_rebase.py",
+        "line": 136,
+        "end_line": 137,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "04797d4fe58b7003"
+      },
+      {
         "semantic_id": "tools/project030/aura_arena_admission.py#class:ActionClass:aec04f55fce6d786",
         "name": "ActionClass",
         "kind": "class",
@@ -450238,7 +450872,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "c96da617f555ba9d127ca30b759409e2",
-    "payload_hash": "b2458290cd5351084e3d4d0cbaf29511"
+    "record_fingerprint": "fe1a4064cae42ed372f93a3cf3c45516",
+    "payload_hash": "b5de68f3f6be10e8805e57cc5603b00f"
   }
 }
