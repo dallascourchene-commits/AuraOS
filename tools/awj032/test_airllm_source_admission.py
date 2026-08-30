@@ -235,6 +235,79 @@ class GateTests(unittest.TestCase):
             )
             self.assertEqual("PASS", a.audit_airllm_source(d).status)
 
+    def test_loader_dynamic_subscript_mutation_blocks(self):
+        self.assertIn(
+            "REMOTE_CODE_OPAQUE_LOADER_KWARGS",
+            self._codes(
+                "def load(model, key):\n"
+                "    opts = {}\n"
+                "    opts[key] = True\n"
+                "    return model.from_pretrained('x', **opts)\n"
+            ),
+        )
+
+    def test_loader_dynamic_update_mutation_blocks(self):
+        self.assertIn(
+            "REMOTE_CODE_OPAQUE_LOADER_KWARGS",
+            self._codes(
+                "def load(model, key):\n"
+                "    opts = {}\n"
+                "    opts.update({key: True})\n"
+                "    return model.from_config(object(), **opts)\n"
+            ),
+        )
+
+    def test_loader_alias_dynamic_mutation_blocks(self):
+        self.assertIn(
+            "REMOTE_CODE_OPAQUE_LOADER_KWARGS",
+            self._codes(
+                "def load(model, key):\n"
+                "    opts = {}\n"
+                "    alias = opts\n"
+                "    alias[key] = True\n"
+                "    return model.from_pretrained('x', **opts)\n"
+            ),
+        )
+
+    def test_loader_dynamic_merge_mutation_blocks(self):
+        self.assertIn(
+            "REMOTE_CODE_OPAQUE_LOADER_KWARGS",
+            self._codes(
+                "def load(model, key):\n"
+                "    opts = {}\n"
+                "    opts |= {key: True}\n"
+                "    return model.from_pretrained('x', **opts)\n"
+            ),
+        )
+
+    def test_loader_explicit_false_dominates_dynamic_mutation(self):
+        with tempfile.TemporaryDirectory() as d:
+            make_tree(
+                Path(d),
+                auto=(
+                    "def load(model, key):\n"
+                    "    opts = {}\n"
+                    "    opts[key] = True\n"
+                    "    return model.from_pretrained(\n"
+                    "        'x', trust_remote_code=False, **opts\n"
+                    "    )\n"
+                ),
+            )
+            self.assertEqual("PASS", a.audit_airllm_source(d).status)
+
+    def test_generic_dynamic_mutation_not_globally_blocked(self):
+        with tempfile.TemporaryDirectory() as d:
+            make_tree(
+                Path(d),
+                auto=(
+                    "def load(f, key):\n"
+                    "    opts = {}\n"
+                    "    opts[key] = True\n"
+                    "    return f(**opts)\n"
+                ),
+            )
+            self.assertEqual("PASS", a.audit_airllm_source(d).status)
+
 
 if __name__ == "__main__":
     unittest.main()
