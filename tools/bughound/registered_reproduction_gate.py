@@ -120,9 +120,85 @@ class BugHoundRegisteredIndependentReproductionAdmissionV1:
         )
 
 
+def _require_text(record: object, field: str, code: str) -> str:
+    value = getattr(record, field, None)
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(code)
+    return value.strip()
+
+
+def _require_exact_bool(record: object, field: str, code: str) -> bool:
+    value = getattr(record, field, None)
+    if type(value) is not bool:
+        raise ValueError(code)
+    return value
+
+
+def _require_false(record: object, field: str, code: str) -> None:
+    if getattr(record, field, None) is not False:
+        raise ValueError(code)
+
+
+def _validate_registry_record_shape(
+    record: BugHoundIndependentReproductionRegistryRecordV1,
+) -> None:
+    """Validate source-owned record shape before it can participate in trust."""
+    if not isinstance(record, BugHoundIndependentReproductionRegistryRecordV1):
+        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_RECORD_REQUIRED")
+    if record.schema != REGISTRY_SCHEMA:
+        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_SCHEMA_MISMATCH")
+
+    for field, code in (
+        ("candidate_id", "INDEPENDENT_REPRODUCTION_REGISTRY_CANDIDATE_REQUIRED"),
+        ("target_ref", "INDEPENDENT_REPRODUCTION_REGISTRY_TARGET_REQUIRED"),
+        ("target_generation", "INDEPENDENT_REPRODUCTION_REGISTRY_TARGET_GENERATION_REQUIRED"),
+        ("reproduction_receipt_digest", "INDEPENDENT_REPRODUCTION_REGISTRY_REPRODUCTION_DIGEST_REQUIRED"),
+        ("reproducer_ref", "INDEPENDENT_REPRODUCTION_REGISTRY_REPRODUCER_REQUIRED"),
+        ("reproducer_generation", "INDEPENDENT_REPRODUCTION_REGISTRY_REPRODUCER_GENERATION_REQUIRED"),
+        ("witness_digest", "INDEPENDENT_REPRODUCTION_REGISTRY_WITNESS_REQUIRED"),
+        ("environment_digest", "INDEPENDENT_REPRODUCTION_REGISTRY_ENVIRONMENT_REQUIRED"),
+        ("scope_rules_digest", "INDEPENDENT_REPRODUCTION_REGISTRY_SCOPE_REQUIRED"),
+        ("source_currentness_ref", "INDEPENDENT_REPRODUCTION_REGISTRY_SOURCE_CURRENTNESS_REQUIRED"),
+        ("registry_receipt_ref", "INDEPENDENT_REPRODUCTION_REGISTRY_RECEIPT_REQUIRED"),
+        ("registry_observer_ref", "INDEPENDENT_REPRODUCTION_REGISTRY_OBSERVER_REQUIRED"),
+        ("registry_observer_generation", "INDEPENDENT_REPRODUCTION_REGISTRY_OBSERVER_REQUIRED"),
+    ):
+        _require_text(record, field, code)
+
+    _require_exact_bool(
+        record,
+        "registry_current",
+        "INDEPENDENT_REPRODUCTION_REGISTRY_CURRENT_BOOL_REQUIRED",
+    )
+    _require_exact_bool(
+        record,
+        "independently_observed",
+        "INDEPENDENT_REPRODUCTION_INDEPENDENTLY_OBSERVED_BOOL_REQUIRED",
+    )
+    _require_exact_bool(
+        record,
+        "revoked",
+        "INDEPENDENT_REPRODUCTION_REVOKED_BOOL_REQUIRED",
+    )
+
+    for field, code in (
+        ("live_target_testing_authorized", "REPRO_REGISTRY_LIVE_TEST_AUTHORITY_FORBIDDEN"),
+        ("credential_use_authorized", "REPRO_REGISTRY_CREDENTIAL_AUTHORITY_FORBIDDEN"),
+        ("submission_authorized", "REPRO_REGISTRY_SUBMISSION_AUTHORITY_FORBIDDEN"),
+        ("claim_or_payment_authorized", "REPRO_REGISTRY_PAYMENT_AUTHORITY_FORBIDDEN"),
+        ("external_effect", "REPRO_REGISTRY_EXTERNAL_EFFECT_FORBIDDEN"),
+    ):
+        _require_false(record, field, code)
+
+    if record.registry_observer_ref.strip() == record.reproducer_ref.strip():
+        raise ValueError("INDEPENDENT_REPRODUCTION_OBSERVER_PRODUCER_SEPARATION_REQUIRED")
+
+
 def _registry_receipt_from_records(
     records: tuple[BugHoundIndependentReproductionRegistryRecordV1, ...],
 ) -> BugHoundIndependentReproductionRegistryReceiptV3:
+    for record in records:
+        _validate_registry_record_shape(record)
     ordered = tuple(sorted(records, key=lambda record: record.record_digest))
     return BugHoundIndependentReproductionRegistryReceiptV3(
         registry_generation=REGISTRY_GENERATION,
@@ -133,18 +209,12 @@ def _registry_receipt_from_records(
             if record.registry_current is True
             and record.independently_observed is True
             and record.revoked is False
-            and record.external_effect is False
         ),
     )
 
 
 def independent_reproduction_registry_receipt() -> BugHoundIndependentReproductionRegistryReceiptV3:
     return _registry_receipt_from_records(_CANONICAL_REPRODUCTION_RECORDS)
-
-
-def _require_false(record: object, field: str, code: str) -> None:
-    if getattr(record, field, None) is not False:
-        raise ValueError(code)
 
 
 def _verify_registry_record(
@@ -154,34 +224,13 @@ def _verify_registry_record(
     mission_input: BugHoundCashMissionInputV1,
     record: BugHoundIndependentReproductionRegistryRecordV1,
 ) -> None:
-    if not isinstance(record, BugHoundIndependentReproductionRegistryRecordV1):
-        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_RECORD_REQUIRED")
-    if record.schema != REGISTRY_SCHEMA:
-        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_SCHEMA_MISMATCH")
-    if not isinstance(record.registry_receipt_ref, str) or not record.registry_receipt_ref.strip():
-        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_RECEIPT_REQUIRED")
-    if (
-        not isinstance(record.registry_observer_ref, str)
-        or not record.registry_observer_ref.strip()
-        or not isinstance(record.registry_observer_generation, str)
-        or not record.registry_observer_generation.strip()
-    ):
-        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_OBSERVER_REQUIRED")
+    _validate_registry_record_shape(record)
     if record.registry_current is not True:
         raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_STALE")
     if record.independently_observed is not True:
         raise ValueError("INDEPENDENT_REPRODUCTION_INDEPENDENT_OBSERVER_REQUIRED")
     if record.revoked is not False:
         raise ValueError("INDEPENDENT_REPRODUCTION_REVOKED")
-
-    for field, code in (
-        ("live_target_testing_authorized", "REPRO_REGISTRY_LIVE_TEST_AUTHORITY_FORBIDDEN"),
-        ("credential_use_authorized", "REPRO_REGISTRY_CREDENTIAL_AUTHORITY_FORBIDDEN"),
-        ("submission_authorized", "REPRO_REGISTRY_SUBMISSION_AUTHORITY_FORBIDDEN"),
-        ("claim_or_payment_authorized", "REPRO_REGISTRY_PAYMENT_AUTHORITY_FORBIDDEN"),
-        ("external_effect", "REPRO_REGISTRY_EXTERNAL_EFFECT_FORBIDDEN"),
-    ):
-        _require_false(record, field, code)
 
     exact = {
         "candidate_id": (record.candidate_id, candidate.candidate_id),
