@@ -59,11 +59,39 @@ COMPILER_EFFECT_FLAGS = (
     "installation_performed", "permission_granted", "provider_call_made",
     "credential_stored", "public_deployment_performed", "binary_distributed",
 )
+COMPILER_RECEIPT_KEYS = frozenset({
+    "schema", "projection_digest", "source_binding_digest", "disposition",
+    "surface", "compute_profile", "first_use_capability", "required_actions",
+    "avoided_actions", "blockers", "friction", "source_binding_authenticated",
+    "installation_performed", "permission_granted", "provider_call_made",
+    "credential_stored", "public_deployment_performed", "binary_distributed",
+    "claim_ceiling",
+})
+COMPILER_FRICTION_KEYS = frozenset({
+    "required_action_count", "install_actions_required",
+    "permission_actions_required", "credential_actions_required",
+    "model_download_actions_required", "unsupported_unknown_count",
+})
+ALLOWED_DISPOSITIONS = frozenset({"READY_BOUNDED", "PARTIAL", "BLOCKED"})
+ALLOWED_ENTRY_SURFACES = frozenset({
+    "ZERO_INSTALL_WEB_PWA", "NATIVE_ANDROID_APK", "DEV_CLI_GITHUB",
+    "NO_SUPPORTED_SURFACE",
+})
+ALLOWED_COMPUTE_PROFILES = frozenset({
+    "FULL_LOCAL", "CONSTRAINED_LOCAL", "HYBRID_LOCAL_REMOTE",
+    "REMOTE_FREE_FIRST", "OFFLINE_DEGRADED",
+})
 
 
 def _canonical(value: Any) -> bytes:
     try:
-        return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode()
+        return json.dumps(
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+            allow_nan=False,
+        ).encode()
     except (TypeError, ValueError) as exc:
         raise FrictionReceiptError("NONCANONICAL_RECEIPT_STATE") from exc
 
@@ -103,6 +131,15 @@ def _nn(value: Any, code: str) -> int | float | None:
     return value
 
 
+def _exact_keys(mapping: Mapping[str, Any], expected: frozenset[str], code: str) -> None:
+    observed = frozenset(str(key) for key in mapping)
+    if observed != expected:
+        raise FrictionReceiptError(
+            code,
+            f"missing={sorted(expected - observed)},extra={sorted(observed - expected)}",
+        )
+
+
 @dataclass(frozen=True)
 class RouteDecisionBinding:
     compiler_schema: str
@@ -133,13 +170,25 @@ class RouteDecisionBinding:
             _text(value, code)
         if self.source_binding_authenticated is not False:
             raise FrictionReceiptError("SOURCE_BINDING_AUTHORITY_WIDENING")
+        if self.disposition not in ALLOWED_DISPOSITIONS:
+            raise FrictionReceiptError("ROUTE_DISPOSITION_UNSUPPORTED", self.disposition)
+        if self.entry_surface not in ALLOWED_ENTRY_SURFACES:
+            raise FrictionReceiptError("ENTRY_SURFACE_UNSUPPORTED", self.entry_surface)
+        if self.compute_profile not in ALLOWED_COMPUTE_PROFILES:
+            raise FrictionReceiptError("COMPUTE_PROFILE_UNSUPPORTED", self.compute_profile)
+        if self.disposition == "READY_BOUNDED" and self.blockers:
+            raise FrictionReceiptError("READY_ROUTE_CANNOT_HAVE_BLOCKERS")
+        if self.disposition == "BLOCKED" and not self.blockers:
+            raise FrictionReceiptError("BLOCKED_ROUTE_REQUIRES_BLOCKER")
 
 
 def bind_route_decision(compiler_receipt: Mapping[str, Any]) -> RouteDecisionBinding:
-    """Normalize the current compiler receipt without importing its implementation."""
+    """Normalize one exact current compiler receipt without importing its implementation."""
     if not isinstance(compiler_receipt, Mapping):
         raise FrictionReceiptError("COMPILER_RECEIPT_MAPPING_REQUIRED")
     raw = dict(compiler_receipt)
+    _exact_keys(raw, COMPILER_RECEIPT_KEYS, "COMPILER_RECEIPT_SHAPE_MISMATCH")
+    _reject_private(raw, "compiler_receipt")
     if raw.get("schema") != SUPPORTED_COMPILER_SCHEMA:
         raise FrictionReceiptError("COMPILER_RECEIPT_SCHEMA_MISMATCH")
     for flag in COMPILER_EFFECT_FLAGS:
@@ -147,15 +196,27 @@ def bind_route_decision(compiler_receipt: Mapping[str, Any]) -> RouteDecisionBin
             raise FrictionReceiptError("COMPILER_EFFECT_AUTHORITY_WIDENING", flag)
     if raw.get("source_binding_authenticated") is not False:
         raise FrictionReceiptError("SOURCE_BINDING_AUTHORITY_WIDENING")
+
     friction = raw.get("friction")
-    required = _tuple_text(raw.get("required_actions"), "REQUIRED_ACTIONS_INVALID")
     if not isinstance(friction, Mapping):
         raise FrictionReceiptError("COMPILER_FRICTION_MAPPING_REQUIRED")
-    declared = friction.get("required_action_count")
-    if isinstance(declared, bool) or not isinstance(declared, int) or declared < 0:
-        raise FrictionReceiptError("COMPILER_REQUIRED_ACTION_COUNT_INVALID")
-    if declared != len(required):
+    _exact_keys(friction, COMPILER_FRICTION_KEYS, "COMPILER_FRICTION_SHAPE_MISMATCH")
+    for name, value in friction.items():
+        if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+            raise FrictionReceiptError("COMPILER_FRICTION_COUNT_INVALID", str(name))
+
+    required = _tuple_text(raw.get("required_actions"), "REQUIRED_ACTIONS_INVALID")
+    _tuple_text(raw.get("avoided_actions"), "AVOIDED_ACTIONS_INVALID")
+    blockers = _tuple_text(raw.get("blockers"), "BLOCKERS_INVALID")
+    if friction["required_action_count"] != len(required):
         raise FrictionReceiptError("COMPILER_REQUIRED_ACTION_COUNT_MISMATCH")
+
+    disposition = _text(raw.get("disposition"), "ROUTE_DISPOSITION_REQUIRED")
+    if disposition == "READY_BOUNDED" and blockers:
+        raise FrictionReceiptError("READY_ROUTE_CANNOT_HAVE_BLOCKERS")
+    if disposition == "BLOCKED" and not blockers:
+        raise FrictionReceiptError("BLOCKED_ROUTE_REQUIRES_BLOCKER")
+
     digest = _digest("AURA_ADOPTION_BOOTSTRAP_RECEIPT_V1", raw)
     return RouteDecisionBinding(
         compiler_schema=SUPPORTED_COMPILER_SCHEMA,
@@ -163,12 +224,12 @@ def bind_route_decision(compiler_receipt: Mapping[str, Any]) -> RouteDecisionBin
         projection_digest=_text(raw.get("projection_digest"), "PROJECTION_DIGEST_REQUIRED"),
         source_binding_digest=_text(raw.get("source_binding_digest"), "SOURCE_BINDING_DIGEST_REQUIRED"),
         source_binding_authenticated=False,
-        disposition=_text(raw.get("disposition"), "ROUTE_DISPOSITION_REQUIRED"),
+        disposition=disposition,
         entry_surface=_text(raw.get("surface"), "ENTRY_SURFACE_REQUIRED"),
         compute_profile=_text(raw.get("compute_profile"), "COMPUTE_PROFILE_REQUIRED"),
         first_use_capability=_text(raw.get("first_use_capability"), "FIRST_USE_CAPABILITY_REQUIRED"),
         required_actions=required,
-        blockers=_tuple_text(raw.get("blockers"), "BLOCKERS_INVALID"),
+        blockers=blockers,
         claim_ceiling=_text(raw.get("claim_ceiling"), "CLAIM_CEILING_REQUIRED"),
     )
 
@@ -192,14 +253,34 @@ class StageEvent:
             raise FrictionReceiptError("UNKNOWN_STAGE", self.stage)
         if not isinstance(self.status, StageStatus):
             raise FrictionReceiptError("INVALID_STAGE_STATUS", self.stage)
-        for name in ("steps", "wall_time_ms", "downloaded_bytes", "retained_bytes", "monetary_cost_microunits", "retries", "observation_clock_ms"):
+        for name in (
+            "steps", "wall_time_ms", "downloaded_bytes", "retained_bytes",
+            "monetary_cost_microunits", "retries", "observation_clock_ms",
+        ):
             value = getattr(self, name)
-            if value is not None and (isinstance(value, bool) or not isinstance(value, int) or value < 0):
-                raise FrictionReceiptError("INVALID_NONNEGATIVE_FIELD", f"{self.stage}.{name}")
-        if self.status in {StageStatus.UNKNOWN, StageStatus.NOT_APPLICABLE, StageStatus.BLOCKED} and not (isinstance(self.reason, str) and self.reason.strip()):
+            if value is not None and (
+                isinstance(value, bool) or not isinstance(value, int) or value < 0
+            ):
+                raise FrictionReceiptError(
+                    "INVALID_NONNEGATIVE_FIELD", f"{self.stage}.{name}"
+                )
+        if self.status in {
+            StageStatus.UNKNOWN, StageStatus.NOT_APPLICABLE, StageStatus.BLOCKED
+        } and not (isinstance(self.reason, str) and self.reason.strip()):
             raise FrictionReceiptError("STAGE_REASON_REQUIRED", self.stage)
-        if self.status == StageStatus.BLOCKED and not (isinstance(self.failure_code, str) and self.failure_code.strip()):
+        if self.status == StageStatus.BLOCKED and not (
+            isinstance(self.failure_code, str) and self.failure_code.strip()
+        ):
             raise FrictionReceiptError("BLOCKED_FAILURE_CODE_REQUIRED", self.stage)
+        if self.status == StageStatus.NOT_APPLICABLE:
+            for name in (
+                "steps", "wall_time_ms", "downloaded_bytes", "retained_bytes",
+                "monetary_cost_microunits", "retries",
+            ):
+                if getattr(self, name) not in (None, 0):
+                    raise FrictionReceiptError(
+                        "NOT_APPLICABLE_CONSEQUENCE_NONZERO", f"{self.stage}.{name}"
+                    )
 
     def logical_dict(self) -> dict[str, Any]:
         out = asdict(self)
@@ -260,6 +341,14 @@ class FrictionReceipt:
     effect_authorized: bool = False
     execution_proven: bool = False
 
+    def to_dict(self) -> dict[str, Any]:
+        """Return the canonical external representation described by the JSON Schema."""
+        out = asdict(self)
+        out["decision"] = asdict(self.decision)
+        out["stage_events"] = [event.logical_dict() for event in self.stage_events]
+        out["accepted_value"] = asdict(self.accepted_value)
+        return out
+
 
 @dataclass(frozen=True)
 class RouteComparison:
@@ -275,12 +364,15 @@ class RouteComparison:
     scalar_delta: float | None
     comparable_without_scalar_collapse: bool
 
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
 
 def _validate_events(events: Sequence[StageEvent]) -> tuple[StageEvent, ...]:
     if isinstance(events, (str, bytes)) or not isinstance(events, Sequence):
         raise FrictionReceiptError("STAGE_EVENTS_REQUIRED")
     out = tuple(events)
-    if tuple(e.stage for e in out) != STAGES:
+    if tuple(event.stage for event in out) != STAGES:
         raise FrictionReceiptError("CONSEQUENCE_STAGE_COVERAGE_INVALID")
     return out
 
@@ -288,22 +380,32 @@ def _validate_events(events: Sequence[StageEvent]) -> tuple[StageEvent, ...]:
 def _validate_cohort(cohort: Mapping[str, str]) -> dict[str, str]:
     if not isinstance(cohort, Mapping) or not cohort:
         raise FrictionReceiptError("COHORT_DESCRIPTOR_REQUIRED")
-    extra = sorted(set(str(k) for k in cohort) - ALLOWED_COHORT_KEYS)
+    extra = sorted(set(str(key) for key in cohort) - ALLOWED_COHORT_KEYS)
     if extra:
-        raise FrictionReceiptError("COHORT_FIELD_NOT_PRIVACY_MINIMAL", ",".join(extra))
-    return {str(k): _text(v, "COHORT_VALUE_REQUIRED") for k, v in cohort.items()}
+        raise FrictionReceiptError(
+            "COHORT_FIELD_NOT_PRIVACY_MINIMAL", ",".join(extra)
+        )
+    return {
+        str(key): _text(value, "COHORT_VALUE_REQUIRED")
+        for key, value in cohort.items()
+    }
 
 
-def _validate_vector(vector: Mapping[str, int | float | None]) -> dict[str, int | float | None]:
+def _validate_vector(
+    vector: Mapping[str, int | float | None]
+) -> dict[str, int | float | None]:
     if not isinstance(vector, Mapping) or set(vector) != set(FRICTION_COMPONENTS):
         raise FrictionReceiptError("FRICTION_VECTOR_COMPONENTS_MISMATCH")
-    return {k: _nn(vector[k], f"FRICTION_COMPONENT_INVALID:{k}") for k in FRICTION_COMPONENTS}
+    return {
+        key: _nn(vector[key], f"FRICTION_COMPONENT_INVALID:{key}")
+        for key in FRICTION_COMPONENTS
+    }
 
 
 def _validate_weights(weights: Mapping[str, int | float]) -> dict[str, float]:
     if not isinstance(weights, Mapping) or set(weights) != set(FRICTION_COMPONENTS):
         raise FrictionReceiptError("FRICTION_WEIGHTS_COMPONENTS_MISMATCH")
-    out = {}
+    out: dict[str, float] = {}
     for key in FRICTION_COMPONENTS:
         value = weights[key]
         if isinstance(value, bool) or not isinstance(value, (int, float)) or value < 0:
@@ -338,7 +440,7 @@ def _peak(events: Sequence[StageEvent]) -> int | None:
 
 
 def _failure_signature(events: Sequence[StageEvent]) -> tuple[str, ...]:
-    out = set()
+    out: set[str] = set()
     for event in events:
         if event.status == StageStatus.BLOCKED:
             out.add(f"{event.stage}:{event.failure_code}")
@@ -348,7 +450,7 @@ def _failure_signature(events: Sequence[StageEvent]) -> tuple[str, ...]:
 
 
 def _required_action_burdens(actions: Sequence[str]) -> set[str]:
-    burdens = set()
+    burdens: set[str] = set()
     for action in actions:
         upper = action.upper()
         if "INSTALL" in upper:
@@ -370,7 +472,9 @@ def _receipt_burdens(receipt: FrictionReceipt) -> set[str]:
         out.add("MANDATORY_KEY")
     if receipt.permissions:
         out.add("PERMISSION")
-    install = next(e for e in receipt.stage_events if e.stage == "OPEN_INSTALL")
+    install = next(
+        event for event in receipt.stage_events if event.stage == "OPEN_INSTALL"
+    )
     if install.steps not in (None, 0) or install.downloaded_bytes not in (None, 0):
         out.add("INSTALL")
     return out
@@ -410,9 +514,15 @@ def build_friction_receipt(
     reopen_trigger = _text(reopen_trigger, "REOPEN_TRIGGER_REQUIRED")
     if evidence_class not in ALLOWED_EVIDENCE_CLASSES:
         raise FrictionReceiptError("EVIDENCE_CLASS_INVALID", evidence_class)
-    if evidence_class == "CONSENTED_STUDY" and "CONSENT" not in privacy_telemetry_mode.upper():
+    if (
+        evidence_class == "CONSENTED_STUDY"
+        and "CONSENT" not in privacy_telemetry_mode.upper()
+    ):
         raise FrictionReceiptError("CONSENT_SCOPE_REQUIRED")
-    for count, code in ((clarification_events, "CLARIFICATION_COUNT_INVALID"), (support_events, "SUPPORT_COUNT_INVALID")):
+    for count, code in (
+        (clarification_events, "CLARIFICATION_COUNT_INVALID"),
+        (support_events, "SUPPORT_COUNT_INVALID"),
+    ):
         if isinstance(count, bool) or not isinstance(count, int) or count < 0:
             raise FrictionReceiptError(code)
 
@@ -421,7 +531,9 @@ def build_friction_receipt(
     vector = _validate_vector(friction_vector)
     weight_map = _validate_weights(weights)
     _reject_private(starting_state, "starting_state")
-    permission_tuple = tuple(sorted(_text(x, "PERMISSION_NAME_REQUIRED") for x in permissions))
+    permission_tuple = tuple(
+        sorted(_text(value, "PERMISSION_NAME_REQUIRED") for value in permissions)
+    )
     required_burdens = _required_action_burdens(decision.required_actions)
     if mandatory_account:
         required_burdens.add("MANDATORY_ACCOUNT")
@@ -431,75 +543,151 @@ def build_friction_receipt(
         required_burdens.add("PERMISSION")
 
     stage_by_name = {event.stage: event for event in events}
-    mapping = {
+    burden_stage = {
         "INSTALL": "OPEN_INSTALL",
         "PERMISSION": "PERMISSION",
         "MANDATORY_ACCOUNT": "OPTIONAL_ACCOUNT",
         "MANDATORY_KEY": "OPTIONAL_KEY",
     }
-    for burden, stage in mapping.items():
-        if burden in required_burdens and stage_by_name[stage].status == StageStatus.NOT_APPLICABLE:
+    for burden, stage in burden_stage.items():
+        if (
+            burden in required_burdens
+            and stage_by_name[stage].status == StageStatus.NOT_APPLICABLE
+        ):
             raise FrictionReceiptError(f"{burden}_BURDEN_OMITTED")
 
-    build_tuple = tuple(_text(x, "BUILD_REF_REQUIRED") for x in build_refs)
+    if accepted_value.result is True:
+        if stage_by_name["EXECUTE"].status != StageStatus.COMPLETED:
+            raise FrictionReceiptError("ACCEPTED_VALUE_EXECUTION_NOT_COMPLETED")
+        if stage_by_name["VERIFY_ACCEPT"].status != StageStatus.COMPLETED:
+            raise FrictionReceiptError("ACCEPTED_VALUE_VERIFICATION_NOT_COMPLETED")
+
+    build_tuple = tuple(_text(value, "BUILD_REF_REQUIRED") for value in build_refs)
     if not build_tuple:
         raise FrictionReceiptError("BUILD_REFS_REQUIRED")
     failure_signature = _failure_signature(events)
-    score = None if any(vector[k] is None for k in FRICTION_COMPONENTS) else float(sum(float(vector[k]) * weight_map[k] for k in FRICTION_COMPONENTS))
+    score = None
+    if all(vector[key] is not None for key in FRICTION_COMPONENTS):
+        score = float(
+            sum(float(vector[key]) * weight_map[key] for key in FRICTION_COMPONENTS)
+        )
+
     logical = {
-        "schema": RECEIPT_SCHEMA, "harness_schema": HARNESS_SCHEMA,
-        "route_id": route_id, "mission_head": mission_head, "build_refs": build_tuple,
-        "decision": asdict(decision), "cohort": cohort_clean, "starting_state": starting_state,
-        "stage_events": [e.logical_dict() for e in events], "permissions": permission_tuple,
-        "mandatory_account": bool(mandatory_account), "mandatory_key": bool(mandatory_key),
-        "clarification_events": clarification_events, "support_events": support_events,
-        "route_changes": tuple(str(x) for x in route_changes), "accepted_value": asdict(accepted_value),
-        "capability_refs": tuple(str(x) for x in capability_refs), "recipe_refs": tuple(str(x) for x in recipe_refs),
-        "privacy_telemetry_mode": privacy_telemetry_mode, "friction_vector": vector,
-        "weights": weight_map, "weighting_method": weighting_method,
-        "invalidators": tuple(str(x) for x in invalidators), "reopen_trigger": reopen_trigger,
-        "evidence_class": evidence_class, "failure_signature": failure_signature,
-        "effect_authorized": False, "execution_proven": False,
+        "schema": RECEIPT_SCHEMA,
+        "harness_schema": HARNESS_SCHEMA,
+        "route_id": route_id,
+        "mission_head": mission_head,
+        "build_refs": build_tuple,
+        "decision": asdict(decision),
+        "cohort": cohort_clean,
+        "starting_state": starting_state,
+        "stage_events": [event.logical_dict() for event in events],
+        "permissions": permission_tuple,
+        "mandatory_account": bool(mandatory_account),
+        "mandatory_key": bool(mandatory_key),
+        "clarification_events": clarification_events,
+        "support_events": support_events,
+        "route_changes": tuple(str(value) for value in route_changes),
+        "accepted_value": asdict(accepted_value),
+        "capability_refs": tuple(str(value) for value in capability_refs),
+        "recipe_refs": tuple(str(value) for value in recipe_refs),
+        "privacy_telemetry_mode": privacy_telemetry_mode,
+        "friction_vector": vector,
+        "weights": weight_map,
+        "weighting_method": weighting_method,
+        "invalidators": tuple(str(value) for value in invalidators),
+        "reopen_trigger": reopen_trigger,
+        "evidence_class": evidence_class,
+        "failure_signature": failure_signature,
+        "effect_authorized": False,
+        "execution_proven": False,
     }
     _reject_private(logical)
-    logical_id = "afr-" + _digest("AURA_ADOPTION_FRICTION_RECEIPT_V1", logical)[:32]
+    logical_id = "afr-" + _digest(
+        "AURA_ADOPTION_FRICTION_RECEIPT_V1", logical
+    )[:32]
+
     return FrictionReceipt(
-        schema=RECEIPT_SCHEMA, harness_schema=HARNESS_SCHEMA, route_id=route_id,
-        mission_head=mission_head, build_refs=build_tuple, decision=decision,
-        cohort=cohort_clean, starting_state=dict(starting_state), stage_events=events,
-        total_steps=_sum(events, "steps"), total_wall_time_ms=_sum(events, "wall_time_ms"),
-        total_downloaded_bytes=_sum(events, "downloaded_bytes"), peak_retained_bytes=_peak(events),
-        total_retries=sum(e.retries for e in events), total_monetary_cost_microunits=_sum(events, "monetary_cost_microunits"),
-        permissions=permission_tuple, mandatory_account=bool(mandatory_account), mandatory_key=bool(mandatory_key),
-        clarification_events=clarification_events, support_events=support_events,
-        route_changes=tuple(str(x) for x in route_changes), accepted_value=accepted_value,
-        capability_refs=tuple(str(x) for x in capability_refs), recipe_refs=tuple(str(x) for x in recipe_refs),
-        privacy_telemetry_mode=privacy_telemetry_mode, friction_vector=vector, weights=weight_map,
-        weighting_method=weighting_method, total_score=score,
-        invalidators=tuple(str(x) for x in invalidators), reopen_trigger=reopen_trigger,
-        evidence_class=evidence_class, failure_signature=failure_signature,
-        logical_id=logical_id, effect_authorized=False, execution_proven=False,
+        schema=RECEIPT_SCHEMA,
+        harness_schema=HARNESS_SCHEMA,
+        route_id=route_id,
+        mission_head=mission_head,
+        build_refs=build_tuple,
+        decision=decision,
+        cohort=cohort_clean,
+        starting_state=dict(starting_state),
+        stage_events=events,
+        total_steps=_sum(events, "steps"),
+        total_wall_time_ms=_sum(events, "wall_time_ms"),
+        total_downloaded_bytes=_sum(events, "downloaded_bytes"),
+        peak_retained_bytes=_peak(events),
+        total_retries=sum(event.retries for event in events),
+        total_monetary_cost_microunits=_sum(
+            events, "monetary_cost_microunits"
+        ),
+        permissions=permission_tuple,
+        mandatory_account=bool(mandatory_account),
+        mandatory_key=bool(mandatory_key),
+        clarification_events=clarification_events,
+        support_events=support_events,
+        route_changes=tuple(str(value) for value in route_changes),
+        accepted_value=accepted_value,
+        capability_refs=tuple(str(value) for value in capability_refs),
+        recipe_refs=tuple(str(value) for value in recipe_refs),
+        privacy_telemetry_mode=privacy_telemetry_mode,
+        friction_vector=vector,
+        weights=weight_map,
+        weighting_method=weighting_method,
+        total_score=score,
+        invalidators=tuple(str(value) for value in invalidators),
+        reopen_trigger=reopen_trigger,
+        evidence_class=evidence_class,
+        failure_signature=failure_signature,
+        logical_id=logical_id,
+        effect_authorized=False,
+        execution_proven=False,
     )
 
 
-def compare_receipts(baseline: FrictionReceipt, candidate: FrictionReceipt) -> RouteComparison:
-    delta, unresolved = {}, []
+def compare_receipts(
+    baseline: FrictionReceipt, candidate: FrictionReceipt
+) -> RouteComparison:
+    delta: dict[str, float | None] = {}
+    unresolved: list[str] = []
     for key in FRICTION_COMPONENTS:
-        a, b = baseline.friction_vector[key], candidate.friction_vector[key]
-        if a is None or b is None:
+        before = baseline.friction_vector[key]
+        after = candidate.friction_vector[key]
+        if before is None or after is None:
             delta[key] = None
             unresolved.append(key)
         else:
-            delta[key] = float(b) - float(a)
+            delta[key] = float(after) - float(before)
+
     scalar = None
-    if baseline.total_score is not None and candidate.total_score is not None:
+    same_scalar_basis = (
+        baseline.cohort == candidate.cohort
+        and baseline.weights == candidate.weights
+        and baseline.weighting_method == candidate.weighting_method
+    )
+    if (
+        same_scalar_basis
+        and baseline.total_score is not None
+        and candidate.total_score is not None
+    ):
         scalar = candidate.total_score - baseline.total_score
-    before, after = _receipt_burdens(baseline), _receipt_burdens(candidate)
+
+    before_burdens = _receipt_burdens(baseline)
+    after_burdens = _receipt_burdens(candidate)
     return RouteComparison(
-        schema=COMPARISON_SCHEMA, baseline_logical_id=baseline.logical_id,
-        candidate_logical_id=candidate.logical_id, component_delta=delta,
-        unresolved_components=tuple(unresolved), baseline_failure_signature=baseline.failure_signature,
+        schema=COMPARISON_SCHEMA,
+        baseline_logical_id=baseline.logical_id,
+        candidate_logical_id=candidate.logical_id,
+        component_delta=delta,
+        unresolved_components=tuple(unresolved),
+        baseline_failure_signature=baseline.failure_signature,
         candidate_failure_signature=candidate.failure_signature,
-        added_burdens=tuple(sorted(after - before)), removed_burdens=tuple(sorted(before - after)),
-        scalar_delta=scalar, comparable_without_scalar_collapse=True,
+        added_burdens=tuple(sorted(after_burdens - before_burdens)),
+        removed_burdens=tuple(sorted(before_burdens - after_burdens)),
+        scalar_delta=scalar,
+        comparable_without_scalar_collapse=True,
     )
