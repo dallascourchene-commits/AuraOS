@@ -124,7 +124,7 @@ class RegisteredIndependentReproductionGateTests(unittest.TestCase):
 
     def test_production_registry_is_source_owned_empty_hold(self):
         receipt = independent_reproduction_registry_receipt()
-        self.assertEqual("BUGHOUND_INDEPENDENT_REPRODUCTION_REGISTRY_HOLD_V2", receipt.registry_generation)
+        self.assertEqual("BUGHOUND_INDEPENDENT_REPRODUCTION_REGISTRY_HOLD_V3", receipt.registry_generation)
         self.assertEqual((), receipt.record_digests)
         self.assertEqual(0, receipt.active_record_count)
         self.assertFalse(receipt.authority)
