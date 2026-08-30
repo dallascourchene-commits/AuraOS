@@ -1,0 +1,25 @@
+name: AURA-ADOPT ZF-04 Trusted Distribution
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/trusted_distribution.py'
+      - 'tools/aura_adopt/test_trusted_distribution.py'
+      - '.github/workflows/aura-adopt-zf04.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  trusted-distribution:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile focused source
+        run: python -m py_compile tools/aura_adopt/trusted_distribution.py tools/aura_adopt/test_trusted_distribution.py
+      - name: Run focused regressions
+        run: python -m unittest tools.aura_adopt.test_trusted_distribution
