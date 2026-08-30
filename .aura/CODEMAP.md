@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1645
-- **total_bytes**: 26483956
-- **text_tokens_est**: 6611343
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1001, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1647
+- **total_bytes**: 26496699
+- **text_tokens_est**: 6614530
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1002, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1645,
+  "repo_file_count": 1647,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -166,6 +166,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/construction-demo-asset-foundation.yml",
     ".github/workflows/cs-arena-sync-as02-c0.yml",
     ".github/workflows/cs-arena-sync-as06-c0.yml",
+    ".github/workflows/cs-arena-sync-as06-c1.yml",
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
@@ -1383,6 +1384,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_st3gg_shadow_hardening.py",
     "tests/test_aura_arena_wfst_phase_a.py",
     "tests/test_aura_artifact_persistence_index_c0.py",
+    "tests/test_aura_artifact_persistence_index_c1.py",
     "tests/test_aura_benchmark_four.py",
     "tests/test_aura_benchmark_four_hardening.py",
     "tests/test_aura_bilateral_gate_dialogue.py",
@@ -1765,13 +1767,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_st3gg_shadow_hardening.py",
     "tests/test_aura_arena_wfst_phase_a.py",
     "tests/test_aura_artifact_persistence_index_c0.py",
+    "tests/test_aura_artifact_persistence_index_c1.py",
     "tests/test_aura_benchmark_four.py",
     "tests/test_aura_benchmark_four_hardening.py",
     "tests/test_aura_bilateral_gate_dialogue.py",
     "tests/test_aura_bilateral_live_repair_foundry.py",
     "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    "tests/test_aura_bilateral_planning_enforcement.py",
-    "tests/test_aura_blind_gate10_benchmark.py"
+    "tests/test_aura_bilateral_planning_enforcement.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1785,16 +1787,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1645,
-  "bytes": 26483956,
-  "tokens_est": 6611343,
+  "files": 1647,
+  "bytes": 26496699,
+  "tokens_est": 6614530,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1001,
-    "schema_or_lexicon": 273,
+    "python_module": 1002,
+    "schema_or_lexicon": 274,
     "support_file": 49
   }
 }

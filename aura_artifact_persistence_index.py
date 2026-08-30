@@ -1,9 +1,9 @@
 """AS-06 durable artifact persistence/index rebased to repaired AS-02 C0.
 
-This module remains a pure coordination/evidence plane.  It consumes canonical
+This module remains a pure coordination/evidence plane. It consumes canonical
 ArtifactMutationEventV1/ArtifactIdentityV1 plus independently verified landed
 artifact evidence, emits replay-stable persistence receipts, and projects a
-CAS-bound live artifact index.  It never grants semantic, coordinate, effect,
+CAS-bound live artifact index. It never grants semantic, coordinate, effect,
 provider, wake, or execution authority.
 """
 from __future__ import annotations
@@ -194,7 +194,9 @@ class ArtifactPersistenceReceipt:
             object.__setattr__(self, field_name, _text(getattr(self, field_name), code))
         object.__setattr__(self, "currentness_ref", _known_currentness(self.currentness_ref))
         object.__setattr__(
-            self, "event_generation", _nonnegative_int(self.event_generation, "EVENT_GENERATION_INVALID")
+            self,
+            "event_generation",
+            _nonnegative_int(self.event_generation, "EVENT_GENERATION_INVALID"),
         )
 
         operation = _text(self.operation, "OPERATION_REQUIRED").upper()
@@ -217,7 +219,9 @@ class ArtifactPersistenceReceipt:
 
         object.__setattr__(self, "owner_ref", _optional_text(self.owner_ref, "OWNER_REF_INVALID"))
         object.__setattr__(
-            self, "coordinate_ref", _optional_text(self.coordinate_ref, "COORDINATE_REF_INVALID")
+            self,
+            "coordinate_ref",
+            _optional_text(self.coordinate_ref, "COORDINATE_REF_INVALID"),
         )
         object.__setattr__(
             self,
@@ -235,7 +239,9 @@ class ArtifactPersistenceReceipt:
             _optional_text(self.prior_artifact_sid, "PRIOR_ARTIFACT_SID_INVALID"),
         )
         object.__setattr__(
-            self, "provider_version", _optional_text(self.provider_version, "PROVIDER_VERSION_INVALID")
+            self,
+            "provider_version",
+            _optional_text(self.provider_version, "PROVIDER_VERSION_INVALID"),
         )
 
         if owner_status == "BOUND" and self.owner_ref is None:
@@ -501,11 +507,36 @@ def new_live_artifact_index(*, project_id: str, currentness_ref: str) -> dict[st
         "receipts": {},
         "artifacts": {},
         "resource_heads": {},
+        "resource_generations": {},
         "semantic_authority": False,
         "coordinate_authority": False,
         "effect_authorized": False,
         "runtime_execution_proven": False,
     }
+
+
+def _derive_resource_generations_from_receipts(receipts: Mapping[str, Any]) -> dict[str, int]:
+    derived: dict[str, int] = {}
+    for receipt_id, row in receipts.items():
+        if not isinstance(row, Mapping):
+            raise ArtifactPersistenceError(
+                "LIVE_INDEX_RESOURCE_GENERATION_MIGRATION_REQUIRED", str(receipt_id)
+            )
+        try:
+            surface = _text(row.get("persisted_surface"), "PERSISTED_SURFACE_REQUIRED")
+            resource_ref = _text(row.get("resource_ref"), "RESOURCE_REF_REQUIRED")
+            generation = _nonnegative_int(
+                row.get("event_generation"), "EVENT_GENERATION_INVALID"
+            )
+        except ArtifactPersistenceError as exc:
+            raise ArtifactPersistenceError(
+                "LIVE_INDEX_RESOURCE_GENERATION_MIGRATION_REQUIRED", str(receipt_id)
+            ) from exc
+        key = f"{surface}::{resource_ref}"
+        previous = derived.get(key)
+        if previous is None or generation > previous:
+            derived[key] = generation
+    return derived
 
 
 def _normalize_index(state: Mapping[str, Any]) -> dict[str, Any]:
@@ -520,6 +551,27 @@ def _normalize_index(state: Mapping[str, Any]) -> dict[str, Any]:
         if not isinstance(out.get(key), Mapping):
             raise ArtifactPersistenceError("LIVE_INDEX_STRUCTURE_INVALID", key)
         out[key] = deepcopy(dict(out[key]))
+
+    resource_generations = out.get("resource_generations")
+    if resource_generations is None:
+        resource_generations = _derive_resource_generations_from_receipts(out["receipts"])
+    elif not isinstance(resource_generations, Mapping):
+        raise ArtifactPersistenceError("LIVE_INDEX_STRUCTURE_INVALID", "resource_generations")
+    else:
+        resource_generations = deepcopy(dict(resource_generations))
+        for key, generation in resource_generations.items():
+            _text(key, "RESOURCE_LOCATION_KEY_INVALID")
+            _nonnegative_int(generation, "EVENT_GENERATION_INVALID")
+
+        derived = _derive_resource_generations_from_receipts(out["receipts"])
+        for key, observed_generation in derived.items():
+            recorded_generation = resource_generations.get(key)
+            if recorded_generation is None or recorded_generation < observed_generation:
+                raise ArtifactPersistenceError(
+                    "LIVE_INDEX_RESOURCE_GENERATION_FENCE_INCONSISTENT", key
+                )
+    out["resource_generations"] = resource_generations
+
     for field_name in (
         "semantic_authority",
         "coordinate_authority",
@@ -541,6 +593,7 @@ def index_revision(state: Mapping[str, Any]) -> str:
         "receipt_ids": sorted(normalized["receipts"]),
         "artifacts": normalized["artifacts"],
         "resource_heads": normalized["resource_heads"],
+        "resource_generations": normalized["resource_generations"],
         "semantic_authority": False,
         "coordinate_authority": False,
         "effect_authorized": False,
@@ -564,6 +617,26 @@ def _refresh_artifact_state(entry: dict[str, Any]) -> None:
         if any(loc.get("state") == "LIVE" for loc in locations.values())
         else "TOMBSTONED"
     )
+
+
+def _admit_resource_generation(
+    current: Mapping[str, Any],
+    receipt: ArtifactPersistenceReceipt,
+    location_key: str,
+) -> None:
+    highest = current["resource_generations"].get(location_key)
+    if highest is None:
+        return
+    if receipt.event_generation < highest:
+        raise ArtifactPersistenceError(
+            "RESOURCE_GENERATION_STALE",
+            f"{location_key}: {receipt.event_generation} < {highest}",
+        )
+    if receipt.event_generation == highest:
+        raise ArtifactPersistenceError(
+            "RESOURCE_GENERATION_CONFLICT",
+            f"{location_key}: generation {highest} already accepted",
+        )
 
 
 def apply_persistence_receipt(
@@ -597,9 +670,11 @@ def apply_persistence_receipt(
             }
         raise ArtifactPersistenceError("PERSISTENCE_RECEIPT_ID_COLLISION")
 
+    location_key = f"{receipt.persisted_surface}::{receipt.resource_ref}"
+    _admit_resource_generation(current, receipt, location_key)
+
     next_state = deepcopy(current)
     next_state["receipts"][receipt.receipt_id] = receipt.to_dict()
-    location_key = f"{receipt.persisted_surface}::{receipt.resource_ref}"
 
     if receipt.operation == "UPSERT":
         previous_sid = next_state["resource_heads"].get(location_key)
@@ -665,6 +740,9 @@ def apply_persistence_receipt(
                 "event_generation": receipt.event_generation,
             },
         )
+        location["provider_version"] = receipt.provider_version
+        location["mirror_fence"] = receipt.mirror_fence
+        location["event_generation"] = receipt.event_generation
         location["state"] = "TOMBSTONED"
         location["last_receipt_id"] = receipt.receipt_id
         entry["history_receipt_ids"].append(receipt.receipt_id)
@@ -672,6 +750,7 @@ def apply_persistence_receipt(
             next_state["resource_heads"].pop(location_key, None)
         _refresh_artifact_state(entry)
 
+    next_state["resource_generations"][location_key] = receipt.event_generation
     next_state["generation"] += 1
     after_revision = index_revision(next_state)
     return next_state, {
@@ -680,6 +759,7 @@ def apply_persistence_receipt(
         "before_revision": observed_revision,
         "after_revision": after_revision,
         "state_changed": True,
+        "resource_generation": receipt.event_generation,
         "effect_authorized": False,
         "runtime_execution_proven": False,
     }
