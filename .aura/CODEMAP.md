@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1664
-- **total_bytes**: 26458117
-- **text_tokens_est**: 6604922
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1012, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1665
+- **total_bytes**: 26477594
+- **text_tokens_est**: 6609792
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1013, 'schema_or_lexicon': 275, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1664,
+  "repo_file_count": 1665,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1672,6 +1672,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/README.md",
     "tools/awj032/airllm_source_admission.py",
     "tools/awj032/glm53_compatibility_probe.py",
+    "tools/awj032/packed_expert_pager.py",
     "tools/awj032/test_airllm_source_admission.py",
     "tools/awj032/test_glm53_compatibility_probe.py",
     "tools/construction_demo_assets/README.md",
@@ -1804,15 +1805,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1664,
-  "bytes": 26458117,
-  "tokens_est": 6604922,
+  "files": 1665,
+  "bytes": 26477594,
+  "tokens_est": 6609792,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1012,
+    "python_module": 1013,
     "schema_or_lexicon": 275,
     "support_file": 49
   }

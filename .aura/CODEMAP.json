@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788104441,
+  "generated_at_unix": 1788104811,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1664,
+    "repo_file_count": 1665,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1654,6 +1654,7 @@
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/packed_expert_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/construction_demo_assets/README.md",
@@ -1780,15 +1781,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1664,
-      "bytes": 26458117,
-      "tokens_est": 6604922,
+      "files": 1665,
+      "bytes": 26477594,
+      "tokens_est": 6609792,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1012,
+        "python_module": 1013,
         "schema_or_lexicon": 275,
         "support_file": 49
       }
@@ -3952,6 +3953,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 53,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#function:_canonical:b0669f4760cb083c",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4394,6 +4403,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 57,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#function:_digest:c438c674b3bbce5d",
+        "signature_hash": "9edcae7e502cc579"
       }
     ],
     "_token_proxy": [
@@ -14718,6 +14735,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 40,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#function:_text:92380d25e242555a",
+        "signature_hash": "0c308f086a889b49"
       }
     ],
     "_bounded": [
@@ -158196,6 +158221,406 @@
         "signature_hash": "3313625eaf98b5c7"
       }
     ],
+    "PackedExpertPagerError": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:PackedExpertPagerError:8e2b9395c3bf9fef",
+        "signature_hash": "cc6873068017fae4"
+      }
+    ],
+    "PackedExpertPagerError.__init__": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPagerError.__init__:3a53e359fd2dd28b",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "selected_expert_ids": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 76,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#function:selected_expert_ids:e5d99f09db12f0aa",
+        "signature_hash": "3ff365c62c8b40ff"
+      }
+    ],
+    "ExpertSlice": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:ExpertSlice:2ecd4c02e1bf567e",
+        "signature_hash": "cfa5f1f023c28aac"
+      }
+    ],
+    "ExpertSlice.__post_init__": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:ExpertSlice.__post_init__:31a871cd23b4c200",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "PackedTensorReader": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "class",
+        "line": 105,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:PackedTensorReader:dd02bfc0750ed5a9",
+        "signature_hash": "60a8cef920c49585"
+      }
+    ],
+    "PackedTensorReader.source_revision": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 107,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedTensorReader.source_revision:20fa2b443e02f6db",
+        "signature_hash": "40da72aa8de1bae9"
+      }
+    ],
+    "PackedTensorReader.source_digest": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 110,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedTensorReader.source_digest:9859e1f40d5bd8a4",
+        "signature_hash": "20bcfd623bf653bc"
+      }
+    ],
+    "PackedTensorReader.first_axis_size": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 112,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedTensorReader.first_axis_size:54a7b85fee4f2431",
+        "signature_hash": "4e853fbd95dacbff"
+      }
+    ],
+    "PackedTensorReader.read_expert": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedTensorReader.read_expert:29d6f690b3e1cd3a",
+        "signature_hash": "7f2f2acfd8f2bff8"
+      }
+    ],
+    "PagerBinding": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "class",
+        "line": 118,
+        "end_line": 148,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:PagerBinding:8047c1b4dd5eefe9",
+        "signature_hash": "2d02c73bddaf97a9"
+      }
+    ],
+    "PagerBinding.__post_init__": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 148,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PagerBinding.__post_init__:9695ea0d8f84bf4d",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "PagerReceipt": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "class",
+        "line": 152,
+        "end_line": 175,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:PagerReceipt:75c9e395d9df6ef8",
+        "signature_hash": "f3074a2e569d98d6"
+      }
+    ],
+    "PagerReceipt.to_dict": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 175,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PagerReceipt.to_dict:5edeb37776a4eed9",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "PagerLoad": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "class",
+        "line": 179,
+        "end_line": 181,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:PagerLoad:1fdb53e6d80480ab",
+        "signature_hash": "7109d61a3c5025cc"
+      }
+    ],
+    "PackedExpertPager": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "class",
+        "line": 184,
+        "end_line": 347,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:PackedExpertPager:e5d4a4ea3717bc68",
+        "signature_hash": "5e495a390047225b"
+      }
+    ],
+    "PackedExpertPager.__init__": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 192,
+        "end_line": 220,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager.__init__:33aa29113e6dfbc3",
+        "signature_hash": "4f77692380662d8a"
+      }
+    ],
+    "PackedExpertPager._validate_source_binding": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 222,
+        "end_line": 229,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager._validate_source_binding:0529883fd384486f",
+        "signature_hash": "611a832fc822b07b"
+      }
+    ],
+    "PackedExpertPager._validate_tensor_families": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 231,
+        "end_line": 241,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager._validate_tensor_families:ccbd6f9283c299e6",
+        "signature_hash": "cb22870fda840eb3"
+      }
+    ],
+    "PackedExpertPager._cache_key": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 243,
+        "end_line": 244,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager._cache_key:61081592b029981f",
+        "signature_hash": "1fae22611a1f896a"
+      }
+    ],
+    "PackedExpertPager._cached": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 246,
+        "end_line": 251,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager._cached:de3943746bdb7885",
+        "signature_hash": "7bb731582e9a738e"
+      }
+    ],
+    "PackedExpertPager._commit_cache": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 253,
+        "end_line": 264,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager._commit_cache:9a600ddc92b34456",
+        "signature_hash": "7f4413c3297f2c47"
+      }
+    ],
+    "PackedExpertPager.evict": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 266,
+        "end_line": 280,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager.evict:72e644a84d47df3d",
+        "signature_hash": "5981f88a25eeb03d"
+      }
+    ],
+    "PackedExpertPager.load_selected": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 282,
+        "end_line": 336,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager.load_selected:8b7e68768be8dede",
+        "signature_hash": "f6b1828a1d3985d0"
+      }
+    ],
+    "PackedExpertPager._validate_slice": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 338,
+        "end_line": 347,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager._validate_slice:395e704cdd39d2e5",
+        "signature_hash": "fbb004131af51217"
+      }
+    ],
+    "InMemoryPackedTensorReader": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "class",
+        "line": 350,
+        "end_line": 385,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:InMemoryPackedTensorReader:f3f1d61a815a7fc2",
+        "signature_hash": "db5cc0eb7823d5e4"
+      }
+    ],
+    "InMemoryPackedTensorReader.__init__": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 353,
+        "end_line": 358,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:InMemoryPackedTensorReader.__init__:28fc5d781fca43d0",
+        "signature_hash": "68832b0d6873e5d0"
+      }
+    ],
+    "InMemoryPackedTensorReader.source_revision": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 361,
+        "end_line": 362,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:InMemoryPackedTensorReader.source_revision:f1350974d0ea26f0",
+        "signature_hash": "40da72aa8de1bae9"
+      }
+    ],
+    "InMemoryPackedTensorReader.source_digest": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 365,
+        "end_line": 366,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:InMemoryPackedTensorReader.source_digest:070c05031d9ef3ce",
+        "signature_hash": "20bcfd623bf653bc"
+      }
+    ],
+    "InMemoryPackedTensorReader.first_axis_size": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 368,
+        "end_line": 369,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:InMemoryPackedTensorReader.first_axis_size:d3da7814aec3308b",
+        "signature_hash": "4e853fbd95dacbff"
+      }
+    ],
+    "InMemoryPackedTensorReader.read_expert": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 371,
+        "end_line": 385,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:InMemoryPackedTensorReader.read_expert:97c17cdd75fd3ae9",
+        "signature_hash": "7f2f2acfd8f2bff8"
+      }
+    ],
+    "SafetensorsFirstAxisReader": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "class",
+        "line": 388,
+        "end_line": 448,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:SafetensorsFirstAxisReader:46ba7224fa17aa2c",
+        "signature_hash": "ba007d171d0738c5"
+      }
+    ],
+    "SafetensorsFirstAxisReader.__init__": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 397,
+        "end_line": 405,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:SafetensorsFirstAxisReader.__init__:5b787f8a6cf31cad",
+        "signature_hash": "5daf60cdad47ee1a"
+      }
+    ],
+    "SafetensorsFirstAxisReader.source_revision": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 408,
+        "end_line": 409,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:SafetensorsFirstAxisReader.source_revision:87fc51048cdda9b9",
+        "signature_hash": "40da72aa8de1bae9"
+      }
+    ],
+    "SafetensorsFirstAxisReader.source_digest": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 412,
+        "end_line": 413,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:SafetensorsFirstAxisReader.source_digest:3f475d32ecb59d79",
+        "signature_hash": "20bcfd623bf653bc"
+      }
+    ],
+    "SafetensorsFirstAxisReader._safe_open": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 416,
+        "end_line": 421,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:SafetensorsFirstAxisReader._safe_open:5cda7adbcf40c0c5",
+        "signature_hash": "bc16ebe23d1555b7"
+      }
+    ],
+    "SafetensorsFirstAxisReader.first_axis_size": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 423,
+        "end_line": 429,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:SafetensorsFirstAxisReader.first_axis_size:4fd09bea97e11d78",
+        "signature_hash": "4e853fbd95dacbff"
+      }
+    ],
+    "SafetensorsFirstAxisReader.read_expert": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "method",
+        "line": 431,
+        "end_line": 448,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:SafetensorsFirstAxisReader.read_expert:a2e61dc2954f73de",
+        "signature_hash": "7f2f2acfd8f2bff8"
+      }
+    ],
+    "_payload_shape": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "function",
+        "line": 451,
+        "end_line": 462,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#function:_payload_shape:3ef1973639a82e37",
+        "signature_hash": "140ae86723b63b1b"
+      }
+    ],
+    "_logical_nbytes": [
+      {
+        "file": "tools/awj032/packed_expert_pager.py",
+        "kind": "function",
+        "line": 465,
+        "end_line": 471,
+        "semantic_id": "tools/awj032/packed_expert_pager.py#function:_logical_nbytes:0cff61d901b611d0",
+        "signature_hash": "49e656c8edd0ce29"
+      }
+    ],
     "make_tree": [
       {
         "file": "tools/awj032/test_airllm_source_admission.py",
@@ -265072,6 +265497,53 @@
       ]
     },
     {
+      "path": "tools/awj032/packed_expert_pager.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 19477,
+      "lines": 472,
+      "tokens_est": 4870,
+      "symbol_count": 43,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e6b9414c296ff858",
+      "vector": [
+        -0.242698,
+        -0.04479,
+        -0.157285,
+        -0.228115,
+        -0.161451,
+        0.251031,
+        0.246864,
+        0.073955,
+        0.067705,
+        -0.261447,
+        0.013541,
+        0.246864,
+        -0.153118,
+        0.128119,
+        -0.042706,
+        0.021874,
+        0.117703,
+        -0.257281,
+        -0.257281,
+        -0.242698,
+        -0.203116,
+        0.071872,
+        0.232282,
+        0.230198,
+        -0.078122,
+        0.003125,
+        -0.213532,
+        -0.111453,
+        0.126036,
+        0.253114,
+        0.080205,
+        0.146869
+      ]
+    },
+    {
       "path": "tools/awj032/test_airllm_source_admission.py",
       "role": "python_module",
       "binary": false,
@@ -289164,15 +289636,15 @@
     }
   },
   "summary": {
-    "file_count": 1664,
-    "total_bytes": 26458117,
-    "text_tokens_est": 6604922,
+    "file_count": 1665,
+    "total_bytes": 26477594,
+    "text_tokens_est": 6609792,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1012,
+      "python_module": 1013,
       "schema_or_lexicon": 275,
       "support_file": 49
     },
@@ -290837,6 +291309,7 @@
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/packed_expert_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/construction_demo_assets/README.md",
@@ -449187,6 +449660,436 @@
         "file_digest8": "e47f5028c4e7cc25"
       },
       {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:ExpertSlice:2ecd4c02e1bf567e",
+        "name": "ExpertSlice",
+        "kind": "class",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 80,
+        "end_line": 102,
+        "signature_hash": "cfa5f1f023c28aac",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:InMemoryPackedTensorReader:f3f1d61a815a7fc2",
+        "name": "InMemoryPackedTensorReader",
+        "kind": "class",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 350,
+        "end_line": 385,
+        "signature_hash": "db5cc0eb7823d5e4",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:PackedExpertPager:e5d4a4ea3717bc68",
+        "name": "PackedExpertPager",
+        "kind": "class",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 184,
+        "end_line": 347,
+        "signature_hash": "5e495a390047225b",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:PackedExpertPagerError:8e2b9395c3bf9fef",
+        "name": "PackedExpertPagerError",
+        "kind": "class",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 29,
+        "end_line": 33,
+        "signature_hash": "cc6873068017fae4",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:PackedTensorReader:dd02bfc0750ed5a9",
+        "name": "PackedTensorReader",
+        "kind": "class",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 105,
+        "end_line": 114,
+        "signature_hash": "60a8cef920c49585",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:PagerBinding:8047c1b4dd5eefe9",
+        "name": "PagerBinding",
+        "kind": "class",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 118,
+        "end_line": 148,
+        "signature_hash": "2d02c73bddaf97a9",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:PagerLoad:1fdb53e6d80480ab",
+        "name": "PagerLoad",
+        "kind": "class",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 179,
+        "end_line": 181,
+        "signature_hash": "7109d61a3c5025cc",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:PagerReceipt:75c9e395d9df6ef8",
+        "name": "PagerReceipt",
+        "kind": "class",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 152,
+        "end_line": 175,
+        "signature_hash": "f3074a2e569d98d6",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#class:SafetensorsFirstAxisReader:46ba7224fa17aa2c",
+        "name": "SafetensorsFirstAxisReader",
+        "kind": "class",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 388,
+        "end_line": 448,
+        "signature_hash": "ba007d171d0738c5",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#function:_canonical:b0669f4760cb083c",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 43,
+        "end_line": 53,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#function:_digest:c438c674b3bbce5d",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 56,
+        "end_line": 57,
+        "signature_hash": "9edcae7e502cc579",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#function:_logical_nbytes:0cff61d901b611d0",
+        "name": "_logical_nbytes",
+        "kind": "function",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 465,
+        "end_line": 471,
+        "signature_hash": "49e656c8edd0ce29",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#function:_payload_shape:3ef1973639a82e37",
+        "name": "_payload_shape",
+        "kind": "function",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 451,
+        "end_line": 462,
+        "signature_hash": "140ae86723b63b1b",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#function:_text:92380d25e242555a",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 36,
+        "end_line": 40,
+        "signature_hash": "0c308f086a889b49",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#function:selected_expert_ids:e5d99f09db12f0aa",
+        "name": "selected_expert_ids",
+        "kind": "function",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 60,
+        "end_line": 76,
+        "signature_hash": "3ff365c62c8b40ff",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:ExpertSlice.__post_init__:31a871cd23b4c200",
+        "name": "ExpertSlice.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 89,
+        "end_line": 102,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:InMemoryPackedTensorReader.__init__:28fc5d781fca43d0",
+        "name": "InMemoryPackedTensorReader.__init__",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 353,
+        "end_line": 358,
+        "signature_hash": "68832b0d6873e5d0",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:InMemoryPackedTensorReader.first_axis_size:d3da7814aec3308b",
+        "name": "InMemoryPackedTensorReader.first_axis_size",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 368,
+        "end_line": 369,
+        "signature_hash": "4e853fbd95dacbff",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:InMemoryPackedTensorReader.read_expert:97c17cdd75fd3ae9",
+        "name": "InMemoryPackedTensorReader.read_expert",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 371,
+        "end_line": 385,
+        "signature_hash": "7f2f2acfd8f2bff8",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:InMemoryPackedTensorReader.source_digest:070c05031d9ef3ce",
+        "name": "InMemoryPackedTensorReader.source_digest",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 365,
+        "end_line": 366,
+        "signature_hash": "20bcfd623bf653bc",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:InMemoryPackedTensorReader.source_revision:f1350974d0ea26f0",
+        "name": "InMemoryPackedTensorReader.source_revision",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 361,
+        "end_line": 362,
+        "signature_hash": "40da72aa8de1bae9",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager.__init__:33aa29113e6dfbc3",
+        "name": "PackedExpertPager.__init__",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 192,
+        "end_line": 220,
+        "signature_hash": "4f77692380662d8a",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager._cache_key:61081592b029981f",
+        "name": "PackedExpertPager._cache_key",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 243,
+        "end_line": 244,
+        "signature_hash": "1fae22611a1f896a",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager._cached:de3943746bdb7885",
+        "name": "PackedExpertPager._cached",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 246,
+        "end_line": 251,
+        "signature_hash": "7bb731582e9a738e",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager._commit_cache:9a600ddc92b34456",
+        "name": "PackedExpertPager._commit_cache",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 253,
+        "end_line": 264,
+        "signature_hash": "7f4413c3297f2c47",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager._validate_slice:395e704cdd39d2e5",
+        "name": "PackedExpertPager._validate_slice",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 338,
+        "end_line": 347,
+        "signature_hash": "fbb004131af51217",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager._validate_source_binding:0529883fd384486f",
+        "name": "PackedExpertPager._validate_source_binding",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 222,
+        "end_line": 229,
+        "signature_hash": "611a832fc822b07b",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager._validate_tensor_families:ccbd6f9283c299e6",
+        "name": "PackedExpertPager._validate_tensor_families",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 231,
+        "end_line": 241,
+        "signature_hash": "cb22870fda840eb3",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager.evict:72e644a84d47df3d",
+        "name": "PackedExpertPager.evict",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 266,
+        "end_line": 280,
+        "signature_hash": "5981f88a25eeb03d",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPager.load_selected:8b7e68768be8dede",
+        "name": "PackedExpertPager.load_selected",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 282,
+        "end_line": 336,
+        "signature_hash": "f6b1828a1d3985d0",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedExpertPagerError.__init__:3a53e359fd2dd28b",
+        "name": "PackedExpertPagerError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedTensorReader.first_axis_size:54a7b85fee4f2431",
+        "name": "PackedTensorReader.first_axis_size",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 112,
+        "end_line": 112,
+        "signature_hash": "4e853fbd95dacbff",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedTensorReader.read_expert:29d6f690b3e1cd3a",
+        "name": "PackedTensorReader.read_expert",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 114,
+        "end_line": 114,
+        "signature_hash": "7f2f2acfd8f2bff8",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedTensorReader.source_digest:9859e1f40d5bd8a4",
+        "name": "PackedTensorReader.source_digest",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 110,
+        "end_line": 110,
+        "signature_hash": "20bcfd623bf653bc",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PackedTensorReader.source_revision:20fa2b443e02f6db",
+        "name": "PackedTensorReader.source_revision",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 107,
+        "end_line": 107,
+        "signature_hash": "40da72aa8de1bae9",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PagerBinding.__post_init__:9695ea0d8f84bf4d",
+        "name": "PagerBinding.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 128,
+        "end_line": 148,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:PagerReceipt.to_dict:5edeb37776a4eed9",
+        "name": "PagerReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 174,
+        "end_line": 175,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:SafetensorsFirstAxisReader.__init__:5b787f8a6cf31cad",
+        "name": "SafetensorsFirstAxisReader.__init__",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 397,
+        "end_line": 405,
+        "signature_hash": "5daf60cdad47ee1a",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:SafetensorsFirstAxisReader._safe_open:5cda7adbcf40c0c5",
+        "name": "SafetensorsFirstAxisReader._safe_open",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 416,
+        "end_line": 421,
+        "signature_hash": "bc16ebe23d1555b7",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:SafetensorsFirstAxisReader.first_axis_size:4fd09bea97e11d78",
+        "name": "SafetensorsFirstAxisReader.first_axis_size",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 423,
+        "end_line": 429,
+        "signature_hash": "4e853fbd95dacbff",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:SafetensorsFirstAxisReader.read_expert:a2e61dc2954f73de",
+        "name": "SafetensorsFirstAxisReader.read_expert",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 431,
+        "end_line": 448,
+        "signature_hash": "7f2f2acfd8f2bff8",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:SafetensorsFirstAxisReader.source_digest:3f475d32ecb59d79",
+        "name": "SafetensorsFirstAxisReader.source_digest",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 412,
+        "end_line": 413,
+        "signature_hash": "20bcfd623bf653bc",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
+        "semantic_id": "tools/awj032/packed_expert_pager.py#method:SafetensorsFirstAxisReader.source_revision:87fc51048cdda9b9",
+        "name": "SafetensorsFirstAxisReader.source_revision",
+        "kind": "method",
+        "file": "tools/awj032/packed_expert_pager.py",
+        "line": 408,
+        "end_line": 409,
+        "signature_hash": "40da72aa8de1bae9",
+        "file_digest8": "e6b9414c296ff858"
+      },
+      {
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
         "name": "GateTests",
         "kind": "class",
@@ -450717,7 +451620,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "a7b9730ec8b9513133690c932834238a",
-    "payload_hash": "dc3595f6ea980413822ff68b6ac64a8a"
+    "record_fingerprint": "91639604f9cedfef2664c99fd157fcb1",
+    "payload_hash": "2a6d7a1d9d990f0fcc5e8028b906bc4c"
   }
 }
