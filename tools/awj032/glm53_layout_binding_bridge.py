@@ -124,6 +124,7 @@ class PagerSourcePlan:
     weight_map_digest: str
     header_evidence_digest: str
     source_plan_digest: str
+    header_receipt_digest: str | None = None
     representative_header_bound: bool = False
     representative_layer: int | None = None
     representative_expert: int | None = None
@@ -141,6 +142,7 @@ class PagerSourcePlan:
             "probe_logical_id": self.probe_logical_id,
             "weight_map_digest": self.weight_map_digest,
             "header_evidence_digest": self.header_evidence_digest,
+            "header_receipt_digest": self.header_receipt_digest,
             "source_plan_digest": self.source_plan_digest,
             "representative_header_bound": self.representative_header_bound,
             "representative_layer": self.representative_layer,
@@ -182,6 +184,7 @@ def _finalize(
     weight_map: Mapping[str, str],
     header_digest: str,
     *,
+    header_receipt_digest: str | None = None,
     representative_header_bound: bool = False,
     representative_layer: int | None = None,
     representative_expert: int | None = None,
@@ -194,6 +197,7 @@ def _finalize(
         "probe_logical_id": logical_id,
         "weight_map_digest": weight_map_digest,
         "header_evidence_digest": header_digest,
+        "header_receipt_digest": header_receipt_digest,
         "representative_header_bound": representative_header_bound,
         "representative_layer": representative_layer,
         "representative_expert": representative_expert,
@@ -209,6 +213,7 @@ def _finalize(
         weight_map_digest=weight_map_digest,
         header_evidence_digest=header_digest,
         source_plan_digest=_digest(payload),
+        header_receipt_digest=header_receipt_digest,
         representative_header_bound=representative_header_bound,
         representative_layer=representative_layer,
         representative_expert=representative_expert,
@@ -224,7 +229,7 @@ def _per_expert_header_digest(
     layer_no: int,
     num_experts: int,
     block_size: tuple[int, int],
-) -> tuple[str, int]:
+) -> tuple[str, int, str]:
     if not isinstance(evidence, Mapping):
         raise LayoutBindingError("PER_EXPERT_HEADER_EVIDENCE_REQUIRED")
     if evidence.get("schema") != PER_EXPERT_HEADER_SCHEMA:
@@ -339,7 +344,7 @@ def _per_expert_header_digest(
             "PER_EXPERT_HEADER_RECEIPT_MISMATCH",
             f"expected={receipt},observed={observed_receipt}",
         )
-    return _digest({"transport_receipt_digest": receipt, "evidence": normalized_body}), selected_expert
+    return _digest({"transport_receipt_digest": receipt, "evidence": normalized_body}), selected_expert, receipt
 
 
 def compile_pager_source_plan(
@@ -382,7 +387,7 @@ def compile_pager_source_plan(
         block = _shape("block_size", geom.get("block_size"))
         if len(block) != 2:
             raise LayoutBindingError("INVALID_FP8_BLOCK_SIZE")
-        header_digest, selected_expert = _per_expert_header_digest(
+        header_digest, selected_expert, receipt_digest = _per_expert_header_digest(
             per_expert_header_evidence,
             weight_map=weight_map,
             model_revision=model_revision,
@@ -397,6 +402,7 @@ def compile_pager_source_plan(
             logical_id,
             weight_map,
             header_digest,
+            header_receipt_digest=receipt_digest,
             representative_header_bound=True,
             representative_layer=layer_no,
             representative_expert=selected_expert,
