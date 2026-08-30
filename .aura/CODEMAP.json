@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788112546,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -132,6 +132,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf08a-drive-bootstrap.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1631,6 +1632,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/aura_drive_bootstrap.py",
+      "tools/aura_adopt/test_aura_drive_bootstrap.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26435839,
+      "tokens_est": 6599312,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3895,6 +3898,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 37,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:_canonical:d2515349a2c44556",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4337,6 +4348,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:_digest:e9b0cba6ea895bba",
+        "signature_hash": "514f786724465716"
       }
     ],
     "_token_proxy": [
@@ -8067,6 +8086,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 55,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:_sha:0d1bbbf83930e04b",
+        "signature_hash": "1f7f7fe2646bf818"
       }
     ],
     "_repo": [
@@ -14713,6 +14740,14 @@
         "end_line": 106,
         "semantic_id": "aura_arena_attempt_archive.py#function:_safe:6db084dcea2c1f77",
         "signature_hash": "f83ad98bde6a94e5"
+      },
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 77,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:_safe:5b835b510d2d2c15",
+        "signature_hash": "6016d0f9cd65e624"
       }
     ],
     "_find_first": [
@@ -157181,6 +157216,416 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "BootstrapError": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:BootstrapError:f12e61f38a6d69b6",
+        "signature_hash": "d929216866b2fa1d"
+      }
+    ],
+    "BootstrapError.__init__": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 31,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:BootstrapError.__init__:7dfe4cf576a9db9c",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_ident": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 49,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:_ident:1e890b1648d030e1",
+        "signature_hash": "a5aac84d6e844d15"
+      }
+    ],
+    "SourceBinding": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "class",
+        "line": 81,
+        "end_line": 92,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:SourceBinding:ab2836c219ceccc9",
+        "signature_hash": "6d1250ea5ac06cd3"
+      }
+    ],
+    "SourceBinding.__post_init__": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 92,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:SourceBinding.__post_init__:79cb018e2671fee8",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "BindingEvidence": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "class",
+        "line": 96,
+        "end_line": 107,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:BindingEvidence:6c808fc2874b4b5d",
+        "signature_hash": "87bd36729de9892b"
+      }
+    ],
+    "BindingEvidence.__post_init__": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 107,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:BindingEvidence.__post_init__:a1e0aa03e5be74f4",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "StorageCapabilities": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "class",
+        "line": 111,
+        "end_line": 122,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:StorageCapabilities:4a07c3820d327dfe",
+        "signature_hash": "29847ee215a0e115"
+      }
+    ],
+    "StorageCapabilities.__post_init__": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 122,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:StorageCapabilities.__post_init__:f35e129d606cc9d3",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "StorageIntent": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "class",
+        "line": 126,
+        "end_line": 134,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:StorageIntent:be46d80dcbeff11e",
+        "signature_hash": "642b7e3c7ee3291c"
+      }
+    ],
+    "StorageIntent.__post_init__": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 134,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:StorageIntent.__post_init__:55846e96767da8b5",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CloudAdmissionEvidence": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "class",
+        "line": 138,
+        "end_line": 146,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:CloudAdmissionEvidence:0223e57cd5b2bb85",
+        "signature_hash": "ec7f3273622b59ef"
+      }
+    ],
+    "CloudAdmissionEvidence.__post_init__": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 146,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:CloudAdmissionEvidence.__post_init__:2b722054127219a2",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "BootstrapRequest": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "class",
+        "line": 150,
+        "end_line": 164,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:BootstrapRequest:17f25fdecc2a7e2d",
+        "signature_hash": "7fda7125e02e56ee"
+      }
+    ],
+    "BootstrapRequest.__post_init__": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 164,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:BootstrapRequest.__post_init__:e2e3976c9b05cc01",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "_binding_blockers": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "function",
+        "line": 167,
+        "end_line": 183,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:_binding_blockers:4c951339729cf706",
+        "signature_hash": "ba87c79e2d7b5473"
+      }
+    ],
+    "compile_bootstrap_plan": [
+      {
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "kind": "function",
+        "line": 186,
+        "end_line": 330,
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:compile_bootstrap_plan:c5b8ae953d19f4be",
+        "signature_hash": "7bd0c6ef359f557f"
+      }
+    ],
+    "BootstrapTests": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 189,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#class:BootstrapTests:b6f125e7b710ae89",
+        "signature_hash": "d4db3c165235bcad"
+      }
+    ],
+    "BootstrapTests.source": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.source:f4f52dc76747ad6c",
+        "signature_hash": "8c721d987168158f"
+      }
+    ],
+    "BootstrapTests.caps": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 29,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.caps:d98d8e06e0157e21",
+        "signature_hash": "530ca9064e8c40d7"
+      }
+    ],
+    "BootstrapTests.request": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 40,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.request:59220c4d0a20709a",
+        "signature_hash": "e3e8b851246839fa"
+      }
+    ],
+    "BootstrapTests.cloud": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 47,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.cloud:d9bf1885e1487bfe",
+        "signature_hash": "9071b2043150ce0d"
+      }
+    ],
+    "BootstrapTests.test_default_local_first_has_no_cloud_prompt": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 56,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_default_local_first_has_no_cloud_prompt:521e0286f9ab23ed",
+        "signature_hash": "56026ef01112077b"
+      }
+    ],
+    "BootstrapTests.test_nondefault_mode_requires_explicit_selection": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 60,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_nondefault_mode_requires_explicit_selection:0d691d9ade44075d",
+        "signature_hash": "f4ab375e3760d362"
+      }
+    ],
+    "BootstrapTests.test_portable_fallback_when_local_unavailable": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 67,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_portable_fallback_when_local_unavailable:5e65e09db742b5e0",
+        "signature_hash": "5ff6793975033c7a"
+      }
+    ],
+    "BootstrapTests.test_no_silent_cloud_fallback": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 74,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_no_silent_cloud_fallback:b9f3579948806d59",
+        "signature_hash": "cea4848e83247c32"
+      }
+    ],
+    "BootstrapTests.test_unknown_local_blocks_default": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 78,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_unknown_local_blocks_default:c121f75748764630",
+        "signature_hash": "4ceb5f620909ba79"
+      }
+    ],
+    "BootstrapTests.test_explicit_cloud_needs_admission": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 82,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_explicit_cloud_needs_admission:6544efd5931e561e",
+        "signature_hash": "776720faf3d864ec"
+      }
+    ],
+    "BootstrapTests.test_explicit_cloud_not_linked_requests_user_action_only": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 92,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_explicit_cloud_not_linked_requests_user_action_only:af98887492ab3d36",
+        "signature_hash": "451352fa3fdbe68b"
+      }
+    ],
+    "BootstrapTests.test_linked_cloud_still_requires_scope_confirmation": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 99,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_linked_cloud_still_requires_scope_confirmation:b13811827abf8259",
+        "signature_hash": "4abce0f043d85e41"
+      }
+    ],
+    "BootstrapTests.test_cloud_account_unknown_blocks": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 105,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_cloud_account_unknown_blocks:e52e6c5e46e94522",
+        "signature_hash": "3b378f3e1d6ef426"
+      }
+    ],
+    "BootstrapTests.test_cloud_connector_unavailable_blocks": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 115,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_cloud_connector_unavailable_blocks:fa17fe9a50797f97",
+        "signature_hash": "9c90bcc088d9cc4c"
+      }
+    ],
+    "BootstrapTests.test_network_unknown_blocks_cloud": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 125,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_network_unknown_blocks_cloud:2297f148a3700765",
+        "signature_hash": "c6d6fc466eae3a50"
+      }
+    ],
+    "BootstrapTests.test_hybrid_requires_local": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 135,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_hybrid_requires_local:a2b0e89f13951e34",
+        "signature_hash": "ebbf1e32e2d1f298"
+      }
+    ],
+    "BootstrapTests.test_stale_request_source_blocks": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 145,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_stale_request_source_blocks:5654aad7fb8c606c",
+        "signature_hash": "2d6df265b6a8d998"
+      }
+    ],
+    "BootstrapTests.test_stale_cloud_source_blocks": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 154,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_stale_cloud_source_blocks:3a45bab1b51e5b6a",
+        "signature_hash": "e354cc3552ceaec0"
+      }
+    ],
+    "BootstrapTests.test_connector_ref_mismatch_blocks": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 165,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_connector_ref_mismatch_blocks:4fe933c270ad48d8",
+        "signature_hash": "62009301090cbe57"
+      }
+    ],
+    "BootstrapTests.test_secret_policy_rejected": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 169,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_secret_policy_rejected:2f0e526a8f9f42da",
+        "signature_hash": "14fa75faeaa433a7"
+      }
+    ],
+    "BootstrapTests.test_remote_endpoint_rejected": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 171,
+        "end_line": 173,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_remote_endpoint_rejected:22aa7edd5ceaae04",
+        "signature_hash": "aec249599d819f5e"
+      }
+    ],
+    "BootstrapTests.test_all_effects_hard_false": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 183,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_all_effects_hard_false:5a62d10f7fe8327d",
+        "signature_hash": "9596639b6627bbf5"
+      }
+    ],
+    "BootstrapTests.test_plan_digest_is_deterministic": [
+      {
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "kind": "method",
+        "line": 185,
+        "end_line": 189,
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_plan_digest_is_deterministic:a3f53296ba47793e",
+        "signature_hash": "b851f65b25bb0ff8"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -167495,6 +167940,53 @@
         0.180531,
         0.255844,
         0.26249
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-adopt-zf08a-drive-bootstrap.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 737,
+      "lines": 26,
+      "tokens_est": 185,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5a48ce74d8c6478d",
+      "vector": [
+        -0.063086,
+        0.06556,
+        0.218944,
+        -0.02845,
+        0.023502,
+        -0.013607,
+        -0.226366,
+        -0.087825,
+        0.006185,
+        0.184309,
+        -0.300584,
+        -0.22884,
+        -0.162043,
+        -0.025976,
+        -0.152148,
+        -0.243684,
+        -0.023502,
+        0.218944,
+        -0.261001,
+        0.043294,
+        -0.236262,
+        0.021029,
+        -0.283267,
+        0.144726,
+        -0.102669,
+        -0.137304,
+        -0.275845,
+        0.290688,
+        0.238736,
+        -0.152148,
+        0.218944,
+        -0.055664
       ]
     },
     {
@@ -262648,6 +263140,100 @@
       ]
     },
     {
+      "path": "tools/aura_adopt/aura_drive_bootstrap.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12204,
+      "lines": 331,
+      "tokens_est": 3051,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4c6617d6147e9490",
+      "vector": [
+        0.085001,
+        0.20551,
+        -0.222725,
+        0.022595,
+        0.265764,
+        -0.147408,
+        0.00538,
+        0.069938,
+        0.263612,
+        0.046267,
+        0.231333,
+        -0.12804,
+        -0.168927,
+        0.041963,
+        -0.168927,
+        0.181839,
+        -0.248549,
+        0.130192,
+        -0.018291,
+        0.14956,
+        0.257156,
+        -0.27222,
+        0.181839,
+        0.121584,
+        0.274372,
+        -0.214118,
+        0.054874,
+        -0.27222,
+        0.211966,
+        -0.013988,
+        -0.181839,
+        -0.06133
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7850,
+      "lines": 194,
+      "tokens_est": 1963,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e18801c6773ec263",
+      "vector": [
+        -0.038111,
+        0.042731,
+        0.188245,
+        -0.112023,
+        -0.010394,
+        0.075067,
+        -0.213653,
+        0.227511,
+        0.181316,
+        0.148979,
+        0.282945,
+        -0.232131,
+        -0.165148,
+        -0.003465,
+        0.021943,
+        0.192865,
+        0.273706,
+        -0.204414,
+        -0.040421,
+        0.262158,
+        -0.14205,
+        0.218272,
+        -0.005774,
+        0.266777,
+        -0.185936,
+        -0.003465,
+        -0.123572,
+        -0.132811,
+        0.204414,
+        0.001155,
+        -0.276016,
+        0.282945
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -286646,16 +287232,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26435839,
+    "text_tokens_est": 6599312,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286797,6 +287383,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf08a-drive-bootstrap.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -288296,6 +288883,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/aura_drive_bootstrap.py",
+      "tools/aura_adopt/test_aura_drive_bootstrap.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445634,6 +446223,456 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:BindingEvidence:6c808fc2874b4b5d",
+        "name": "BindingEvidence",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 96,
+        "end_line": 107,
+        "signature_hash": "87bd36729de9892b",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:BootstrapError:f12e61f38a6d69b6",
+        "name": "BootstrapError",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "d929216866b2fa1d",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:BootstrapRequest:17f25fdecc2a7e2d",
+        "name": "BootstrapRequest",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 150,
+        "end_line": 164,
+        "signature_hash": "7fda7125e02e56ee",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:CloudAdmissionEvidence:0223e57cd5b2bb85",
+        "name": "CloudAdmissionEvidence",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 138,
+        "end_line": 146,
+        "signature_hash": "ec7f3273622b59ef",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:SourceBinding:ab2836c219ceccc9",
+        "name": "SourceBinding",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 81,
+        "end_line": 92,
+        "signature_hash": "6d1250ea5ac06cd3",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:StorageCapabilities:4a07c3820d327dfe",
+        "name": "StorageCapabilities",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 111,
+        "end_line": 122,
+        "signature_hash": "29847ee215a0e115",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#class:StorageIntent:be46d80dcbeff11e",
+        "name": "StorageIntent",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 126,
+        "end_line": 134,
+        "signature_hash": "642b7e3c7ee3291c",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:_binding_blockers:4c951339729cf706",
+        "name": "_binding_blockers",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 167,
+        "end_line": 183,
+        "signature_hash": "ba87c79e2d7b5473",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:_canonical:d2515349a2c44556",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 34,
+        "end_line": 37,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:_digest:e9b0cba6ea895bba",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:_ident:1e890b1648d030e1",
+        "name": "_ident",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 44,
+        "end_line": 49,
+        "signature_hash": "a5aac84d6e844d15",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:_safe:5b835b510d2d2c15",
+        "name": "_safe",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 58,
+        "end_line": 77,
+        "signature_hash": "6016d0f9cd65e624",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:_sha:0d1bbbf83930e04b",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 52,
+        "end_line": 55,
+        "signature_hash": "1f7f7fe2646bf818",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#function:compile_bootstrap_plan:c5b8ae953d19f4be",
+        "name": "compile_bootstrap_plan",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 186,
+        "end_line": 330,
+        "signature_hash": "7bd0c6ef359f557f",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:BindingEvidence.__post_init__:a1e0aa03e5be74f4",
+        "name": "BindingEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 102,
+        "end_line": 107,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:BootstrapError.__init__:7dfe4cf576a9db9c",
+        "name": "BootstrapError.__init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 28,
+        "end_line": 31,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:BootstrapRequest.__post_init__:e2e3976c9b05cc01",
+        "name": "BootstrapRequest.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 159,
+        "end_line": 164,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:CloudAdmissionEvidence.__post_init__:2b722054127219a2",
+        "name": "CloudAdmissionEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 143,
+        "end_line": 146,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:SourceBinding.__post_init__:79cb018e2671fee8",
+        "name": "SourceBinding.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 87,
+        "end_line": 92,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:StorageCapabilities.__post_init__:f35e129d606cc9d3",
+        "name": "StorageCapabilities.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 118,
+        "end_line": 122,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_drive_bootstrap.py#method:StorageIntent.__post_init__:55846e96767da8b5",
+        "name": "StorageIntent.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/aura_drive_bootstrap.py",
+        "line": 130,
+        "end_line": 134,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "4c6617d6147e9490"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#class:BootstrapTests:b6f125e7b710ae89",
+        "name": "BootstrapTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 18,
+        "end_line": 189,
+        "signature_hash": "d4db3c165235bcad",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.caps:d98d8e06e0157e21",
+        "name": "BootstrapTests.caps",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 22,
+        "end_line": 29,
+        "signature_hash": "530ca9064e8c40d7",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.cloud:d9bf1885e1487bfe",
+        "name": "BootstrapTests.cloud",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 42,
+        "end_line": 47,
+        "signature_hash": "9071b2043150ce0d",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.request:59220c4d0a20709a",
+        "name": "BootstrapTests.request",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 31,
+        "end_line": 40,
+        "signature_hash": "e3e8b851246839fa",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.source:f4f52dc76747ad6c",
+        "name": "BootstrapTests.source",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "8c721d987168158f",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_all_effects_hard_false:5a62d10f7fe8327d",
+        "name": "BootstrapTests.test_all_effects_hard_false",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 175,
+        "end_line": 183,
+        "signature_hash": "9596639b6627bbf5",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_cloud_account_unknown_blocks:e52e6c5e46e94522",
+        "name": "BootstrapTests.test_cloud_account_unknown_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 101,
+        "end_line": 105,
+        "signature_hash": "3b378f3e1d6ef426",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_cloud_connector_unavailable_blocks:fa17fe9a50797f97",
+        "name": "BootstrapTests.test_cloud_connector_unavailable_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 107,
+        "end_line": 115,
+        "signature_hash": "9c90bcc088d9cc4c",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_connector_ref_mismatch_blocks:4fe933c270ad48d8",
+        "name": "BootstrapTests.test_connector_ref_mismatch_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 156,
+        "end_line": 165,
+        "signature_hash": "62009301090cbe57",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_default_local_first_has_no_cloud_prompt:521e0286f9ab23ed",
+        "name": "BootstrapTests.test_default_local_first_has_no_cloud_prompt",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 49,
+        "end_line": 56,
+        "signature_hash": "56026ef01112077b",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_explicit_cloud_needs_admission:6544efd5931e561e",
+        "name": "BootstrapTests.test_explicit_cloud_needs_admission",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 80,
+        "end_line": 82,
+        "signature_hash": "776720faf3d864ec",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_explicit_cloud_not_linked_requests_user_action_only:af98887492ab3d36",
+        "name": "BootstrapTests.test_explicit_cloud_not_linked_requests_user_action_only",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 84,
+        "end_line": 92,
+        "signature_hash": "451352fa3fdbe68b",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_hybrid_requires_local:a2b0e89f13951e34",
+        "name": "BootstrapTests.test_hybrid_requires_local",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 127,
+        "end_line": 135,
+        "signature_hash": "ebbf1e32e2d1f298",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_linked_cloud_still_requires_scope_confirmation:b13811827abf8259",
+        "name": "BootstrapTests.test_linked_cloud_still_requires_scope_confirmation",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 94,
+        "end_line": 99,
+        "signature_hash": "4abce0f043d85e41",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_network_unknown_blocks_cloud:2297f148a3700765",
+        "name": "BootstrapTests.test_network_unknown_blocks_cloud",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 117,
+        "end_line": 125,
+        "signature_hash": "c6d6fc466eae3a50",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_no_silent_cloud_fallback:b9f3579948806d59",
+        "name": "BootstrapTests.test_no_silent_cloud_fallback",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 69,
+        "end_line": 74,
+        "signature_hash": "cea4848e83247c32",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_nondefault_mode_requires_explicit_selection:0d691d9ade44075d",
+        "name": "BootstrapTests.test_nondefault_mode_requires_explicit_selection",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 58,
+        "end_line": 60,
+        "signature_hash": "f4ab375e3760d362",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_plan_digest_is_deterministic:a3f53296ba47793e",
+        "name": "BootstrapTests.test_plan_digest_is_deterministic",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 185,
+        "end_line": 189,
+        "signature_hash": "b851f65b25bb0ff8",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_portable_fallback_when_local_unavailable:5e65e09db742b5e0",
+        "name": "BootstrapTests.test_portable_fallback_when_local_unavailable",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 62,
+        "end_line": 67,
+        "signature_hash": "5ff6793975033c7a",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_remote_endpoint_rejected:22aa7edd5ceaae04",
+        "name": "BootstrapTests.test_remote_endpoint_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 171,
+        "end_line": 173,
+        "signature_hash": "aec249599d819f5e",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_secret_policy_rejected:2f0e526a8f9f42da",
+        "name": "BootstrapTests.test_secret_policy_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 167,
+        "end_line": 169,
+        "signature_hash": "14fa75faeaa433a7",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_stale_cloud_source_blocks:3a45bab1b51e5b6a",
+        "name": "BootstrapTests.test_stale_cloud_source_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 147,
+        "end_line": 154,
+        "signature_hash": "e354cc3552ceaec0",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_stale_request_source_blocks:5654aad7fb8c606c",
+        "name": "BootstrapTests.test_stale_request_source_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 137,
+        "end_line": 145,
+        "signature_hash": "2d6df265b6a8d998",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_drive_bootstrap.py#method:BootstrapTests.test_unknown_local_blocks_default:c121f75748764630",
+        "name": "BootstrapTests.test_unknown_local_blocks_default",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_drive_bootstrap.py",
+        "line": 76,
+        "end_line": 78,
+        "signature_hash": "4ceb5f620909ba79",
+        "file_digest8": "e18801c6773ec263"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447923,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "828e7532d461ce49e5c2da210244afe6",
+    "payload_hash": "075d69c93db8c2b9e3b69d121c76b63c"
   }
 }
