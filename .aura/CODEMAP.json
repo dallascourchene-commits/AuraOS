@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788126374,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1648,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -142,6 +142,9 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/bughound-bugbot-lab.yml",
+      ".github/workflows/bughound-foundry-intake.yml",
+      ".github/workflows/bughound-matched-benchmark.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1244,6 +1247,9 @@
       "scripts/aura_spatial_s4b_architect_harness.py",
       "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
       "scripts/aura_verify_construction_demo_assets.py",
+      "scripts/bughound_bugbot_lab.py",
+      "scripts/bughound_foundry_intake.py",
+      "scripts/bughound_matched_benchmark.py",
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
@@ -1622,6 +1628,9 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_bughound_bugbot_lab.py",
+      "tests/test_bughound_foundry_intake.py",
+      "tests/test_bughound_matched_benchmark.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -1694,6 +1703,9 @@
       "scripts/aura_spatial_s4b_architect_harness.py",
       "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
       "scripts/aura_verify_construction_demo_assets.py",
+      "scripts/bughound_bugbot_lab.py",
+      "scripts/bughound_foundry_intake.py",
+      "scripts/bughound_matched_benchmark.py",
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
@@ -1744,10 +1756,7 @@
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
       "tests/test_aura_blind_gate10_benchmark.py",
-      "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_connectome.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,16 +1764,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1648,
+      "bytes": 26458773,
+      "tokens_est": 6605047,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 1003,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -3889,6 +3898,14 @@
         "signature_hash": "8d5bf5695239b859"
       },
       {
+        "file": "scripts/bughound_matched_benchmark.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:_canonical:d428d3c404b0c72b",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
         "file": "tests/test_aura_gate_egress.py",
         "kind": "function",
         "line": 32,
@@ -4320,6 +4337,22 @@
         "line": 86,
         "end_line": 87,
         "semantic_id": "scripts/aura_spatial_s5_s6_construction_architect_harness.py#function:_digest:c26125a4a37d1926",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 21,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:_digest:08a5ea06db7a83d1",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "scripts/bughound_matched_benchmark.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:_digest:3c55955ef69f49d7",
         "signature_hash": "514f786724465716"
       },
       {
@@ -45427,6 +45460,14 @@
         "end_line": 63,
         "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:canonical_json:db24948aa4a8caf8",
         "signature_hash": "c9911db40069043d"
+      },
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:canonical_json:aeba642440d474ec",
+        "signature_hash": "2af8a10abc3d606e"
       }
     ],
     "stable_digest": [
@@ -56419,6 +56460,14 @@
         "end_line": 252,
         "semantic_id": "aura_multistep_refactor_benchmark.py#function:run_case:8f56487c03e4894e",
         "signature_hash": "5fc40d14048d2de1"
+      },
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 224,
+        "end_line": 239,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:run_case:cea50ac0abdef315",
+        "signature_hash": "0ec7bbf9fa5f22f2"
       }
     ],
     "AuraHyperdimensionalProbeBridge": [
@@ -90211,6 +90260,14 @@
         "end_line": 47,
         "semantic_id": "aura_tcwaa.py#class:Task:80278b012b1d880e",
         "signature_hash": "e8124b632950c68c"
+      },
+      {
+        "file": "scripts/bughound_matched_benchmark.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 53,
+        "semantic_id": "scripts/bughound_matched_benchmark.py#class:Task:a1841f89e8ff3dae",
+        "signature_hash": "e8124b632950c68c"
       }
     ],
     "ThermalCostWeightedAPIArbitration": [
@@ -102183,6 +102240,574 @@
         "end_line": 653,
         "semantic_id": "scripts/aura_verify_construction_demo_assets.py#function:atomic_json:95031b5cde027f4b",
         "signature_hash": "f0ebdbb75505044c"
+      }
+    ],
+    "BugBotCase": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 39,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#class:BugBotCase:fe448e1948964270",
+        "signature_hash": "676b68a98a1c5f5f"
+      }
+    ],
+    "BugBotCase.receipt": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 39,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#method:BugBotCase.receipt:9670f67a13483a51",
+        "signature_hash": "c724ebd1d568bc4d"
+      }
+    ],
+    "stale_generation_buggy": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:stale_generation_buggy:a271ae0e4831ecb6",
+        "signature_hash": "b2b580ff6a357a90"
+      }
+    ],
+    "stale_generation_fixed": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:stale_generation_fixed:f333b2f363db64e0",
+        "signature_hash": "4e207a5e153b766d"
+      }
+    ],
+    "replay_buggy": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 52,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:replay_buggy:b479b88e95528ed8",
+        "signature_hash": "831ca68893c7d135"
+      }
+    ],
+    "replay_fixed": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 60,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:replay_fixed:61a3567d665c1f82",
+        "signature_hash": "edf955a1ea541b45"
+      }
+    ],
+    "identity_alias_buggy": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:identity_alias_buggy:fcf2ddbe543f32bb",
+        "signature_hash": "97327df6cf0e2ddf"
+      }
+    ],
+    "identity_alias_fixed": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 68,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:identity_alias_fixed:e12cda2bf6a10e54",
+        "signature_hash": "48555fd441914d55"
+      }
+    ],
+    "authority_substitution_buggy": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 72,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:authority_substitution_buggy:da2fb2621e667fdd",
+        "signature_hash": "cceee25b11ecfafe"
+      }
+    ],
+    "authority_substitution_fixed": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 76,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:authority_substitution_fixed:3b948099d60e2abc",
+        "signature_hash": "d0063351ae05d031"
+      }
+    ],
+    "noncommutation_buggy": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 83,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:noncommutation_buggy:ce8a7797daf94d2a",
+        "signature_hash": "cc907ba1c3550d9d"
+      }
+    ],
+    "noncommutation_fixed": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 90,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:noncommutation_fixed:d13ee4f8f2a4aa2a",
+        "signature_hash": "5af24b7c4fd69c37"
+      }
+    ],
+    "residue_consumer_buggy": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 95,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:residue_consumer_buggy:a74daec8d2416b6f",
+        "signature_hash": "658c4a20eb5ff1b8"
+      }
+    ],
+    "residue_consumer_fixed": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 102,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:residue_consumer_fixed:1f15d24d5e4c4af0",
+        "signature_hash": "3da576f514ccc967"
+      }
+    ],
+    "cache_invalidation_buggy": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 105,
+        "end_line": 110,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:cache_invalidation_buggy:6765875f4147ebf0",
+        "signature_hash": "a6bac4c442ed84ed"
+      }
+    ],
+    "cache_invalidation_fixed": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 113,
+        "end_line": 118,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:cache_invalidation_fixed:93f01d15cae7a6cd",
+        "signature_hash": "7ab0949d8b6d35df"
+      }
+    ],
+    "reopen_propagation_buggy": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 124,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:reopen_propagation_buggy:afa8d6e1a4fa0d7c",
+        "signature_hash": "f6d3818af0febf18"
+      }
+    ],
+    "reopen_propagation_fixed": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 127,
+        "end_line": 137,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:reopen_propagation_fixed:dd9b45512a51bfab",
+        "signature_hash": "5f2973139307c564"
+      }
+    ],
+    "parser_boundary_buggy": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 140,
+        "end_line": 144,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:parser_boundary_buggy:1a43a397e4b7f2a4",
+        "signature_hash": "569bc19e3cd0fdb2"
+      }
+    ],
+    "parser_boundary_fixed": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 147,
+        "end_line": 151,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:parser_boundary_fixed:e4df8fb70ce99fb4",
+        "signature_hash": "0970bde3b795992e"
+      }
+    ],
+    "merge_fallback_buggy": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 154,
+        "end_line": 155,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:merge_fallback_buggy:6e7408c1dcac967d",
+        "signature_hash": "17ae230b763d2480"
+      }
+    ],
+    "merge_fallback_fixed": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 158,
+        "end_line": 160,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:merge_fallback_fixed:08bd2efb8158919d",
+        "signature_hash": "36dc13debcbccc21"
+      }
+    ],
+    "endpoint_escape_buggy": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 163,
+        "end_line": 166,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:endpoint_escape_buggy:57c2b451cbcbbfea",
+        "signature_hash": "b944c569d01cd02f"
+      }
+    ],
+    "endpoint_escape_fixed": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 169,
+        "end_line": 174,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:endpoint_escape_fixed:27e62370ac23a0af",
+        "signature_hash": "09d7c791d302cdec"
+      }
+    ],
+    "identity_transplant_buggy": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 177,
+        "end_line": 178,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:identity_transplant_buggy:e32f2ba8f48fbdba",
+        "signature_hash": "3d972900109bf5b7"
+      }
+    ],
+    "identity_transplant_fixed": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 181,
+        "end_line": 183,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:identity_transplant_fixed:8e82f43581a48283",
+        "signature_hash": "eed7aa728c995d57"
+      }
+    ],
+    "_cases": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 202,
+        "end_line": 217,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:_cases:371bd26ef1c45309",
+        "signature_hash": "fe4272c0d8ffb658"
+      }
+    ],
+    "verify_ground_truth": [
+      {
+        "file": "scripts/bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 242,
+        "end_line": 256,
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:verify_ground_truth:1402b1de7d8dbdca",
+        "signature_hash": "c3bf43c2698b663c"
+      }
+    ],
+    "IntakeError": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "scripts/bughound_foundry_intake.py#class:IntakeError:fe8c6c5f30f936fd",
+        "signature_hash": "88b020be106c3b3e"
+      }
+    ],
+    "Authorization": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 28,
+        "semantic_id": "scripts/bughound_foundry_intake.py#class:Authorization:df79e26c2a38690b",
+        "signature_hash": "39d5403153c62a32"
+      }
+    ],
+    "DuplicateClass": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "scripts/bughound_foundry_intake.py#class:DuplicateClass:5131df78266cf24a",
+        "signature_hash": "728aa19ffa732161"
+      }
+    ],
+    "Visibility": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 41,
+        "semantic_id": "scripts/bughound_foundry_intake.py#class:Visibility:031d18187304767d",
+        "signature_hash": "f224481c5a6830e3"
+      }
+    ],
+    "sha256_hex": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 50,
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:sha256_hex:6d7b1e704785ff02",
+        "signature_hash": "c43d629a32af2456"
+      }
+    ],
+    "k27_hint": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 57,
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:k27_hint:e48da9a6fa05d701",
+        "signature_hash": "33b20638b88fb781"
+      }
+    ],
+    "_parse_time": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 67,
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:_parse_time:b66d295a9d958fc4",
+        "signature_hash": "0e7d03ca78676525"
+      },
+      {
+        "file": "travel_price_verifier.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 37,
+        "semantic_id": "travel_price_verifier.py#function:_parse_time:68e48e7f74100996",
+        "signature_hash": "92dd7ff707cc8d43"
+      }
+    ],
+    "_require_digest": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 76,
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:_require_digest:6fd4bc7d327304c5",
+        "signature_hash": "2ad8c8980548dae9"
+      }
+    ],
+    "ProgramCurrentnessReceiptV1": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 155,
+        "semantic_id": "scripts/bughound_foundry_intake.py#class:ProgramCurrentnessReceiptV1:53d3d6a9827f861d",
+        "signature_hash": "d2ef5c9b7861b433"
+      }
+    ],
+    "ProgramCurrentnessReceiptV1.validate": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 152,
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:ProgramCurrentnessReceiptV1.validate:814b8ccc84347bbe",
+        "signature_hash": "79720fe4490d4b70"
+      }
+    ],
+    "ProgramCurrentnessReceiptV1.digest": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 155,
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:ProgramCurrentnessReceiptV1.digest:6affe7d8fd4de1f6",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "BugCaseV1": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "class",
+        "line": 159,
+        "end_line": 248,
+        "semantic_id": "scripts/bughound_foundry_intake.py#class:BugCaseV1:2898dbe23370ff84",
+        "signature_hash": "8361835c21dfa210"
+      }
+    ],
+    "BugCaseV1.validate": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 198,
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:BugCaseV1.validate:dc87a74fcd35f26f",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "BugCaseV1.root_cause_descriptor": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "method",
+        "line": 200,
+        "end_line": 209,
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:BugCaseV1.root_cause_descriptor:c9d8636fb26ccc25",
+        "signature_hash": "68cb246efc7a7501"
+      }
+    ],
+    "BugCaseV1.root_cause_digest": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 212,
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:BugCaseV1.root_cause_digest:bb7e70ad1ab542e8",
+        "signature_hash": "e85904361d6d8588"
+      }
+    ],
+    "BugCaseV1.case_identity": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "method",
+        "line": 214,
+        "end_line": 224,
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:BugCaseV1.case_identity:17cb28646a38a587",
+        "signature_hash": "2d823462441118ec"
+      }
+    ],
+    "BugCaseV1.public_packet": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "method",
+        "line": 226,
+        "end_line": 248,
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:BugCaseV1.public_packet:0549f2106e003328",
+        "signature_hash": "ae2ea38bdaaa7438"
+      }
+    ],
+    "classify_duplicate": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 251,
+        "end_line": 258,
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:classify_duplicate:338a2810765ec8c5",
+        "signature_hash": "a9070fe280105aa6"
+      }
+    ],
+    "currentness_binding_digest": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 261,
+        "end_line": 270,
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:currentness_binding_digest:d6507800dc7acfdd",
+        "signature_hash": "5baa8a8483be274e"
+      }
+    ],
+    "compile_case_index": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 273,
+        "end_line": 295,
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:compile_case_index:d0dca601e36134cc",
+        "signature_hash": "566a038ea08d80c7"
+      }
+    ],
+    "lattice_registry_state": [
+      {
+        "file": "scripts/bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 298,
+        "end_line": 321,
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:lattice_registry_state:e3605de56429402e",
+        "signature_hash": "359bbc7c379a9a23"
+      }
+    ],
+    "Task.public_packet": [
+      {
+        "file": "scripts/bughound_matched_benchmark.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 45,
+        "semantic_id": "scripts/bughound_matched_benchmark.py#method:Task.public_packet:5684d44fcc705270",
+        "signature_hash": "ae2ea38bdaaa7438"
+      }
+    ],
+    "Task.hidden_key": [
+      {
+        "file": "scripts/bughound_matched_benchmark.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 53,
+        "semantic_id": "scripts/bughound_matched_benchmark.py#method:Task.hidden_key:2d1446956dd4c9ac",
+        "signature_hash": "abdfc1b92ac632ff"
+      }
+    ],
+    "task_bank": [
+      {
+        "file": "scripts/bughound_matched_benchmark.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 61,
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:task_bank:12bcefe886dfe68b",
+        "signature_hash": "f2c2b6a48f70f3d4"
+      }
+    ],
+    "control_smoke_route": [
+      {
+        "file": "scripts/bughound_matched_benchmark.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 70,
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:control_smoke_route:2dd08531a2f469db",
+        "signature_hash": "775c37396ab65518"
+      }
+    ],
+    "bughound_differential_route": [
+      {
+        "file": "scripts/bughound_matched_benchmark.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 77,
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:bughound_differential_route:8f265a859723f450",
+        "signature_hash": "15267027b8b77112"
+      }
+    ],
+    "_score": [
+      {
+        "file": "scripts/bughound_matched_benchmark.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 111,
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:_score:40f56cebda71cd80",
+        "signature_hash": "d2231ccab32f2bea"
+      }
+    ],
+    "run_matched_benchmark": [
+      {
+        "file": "scripts/bughound_matched_benchmark.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 139,
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:run_matched_benchmark:c5630e6ceed5736c",
+        "signature_hash": "2bb2945d36482a56"
       }
     ],
     "marked": [
@@ -156881,6 +157506,316 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "test_suite_contains_required_foundry_families": [
+      {
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 19,
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_suite_contains_required_foundry_families:01aae5144884abd7",
+        "signature_hash": "5623fc2a500f267b"
+      }
+    ],
+    "test_cross_boundary_review_lineage_adds_two_distinct_cases": [
+      {
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 27,
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_cross_boundary_review_lineage_adds_two_distinct_cases:4b2b9f8a54099e0f",
+        "signature_hash": "4d79b4d0e01ea5c0"
+      }
+    ],
+    "test_every_buggy_and_fixed_variant_matches_registered_oracle": [
+      {
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_every_buggy_and_fixed_variant_matches_registered_oracle:8399d6664917904a",
+        "signature_hash": "9d8006e5071c2bb3"
+      }
+    ],
+    "test_suite_receipt_is_deterministic_and_complete": [
+      {
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 46,
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_suite_receipt_is_deterministic_and_complete:94fdeb7a8ca3ba04",
+        "signature_hash": "d6e836a0c801505d"
+      }
+    ],
+    "test_case_receipts_have_exact_reproducer_contract_fields": [
+      {
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 58,
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_case_receipts_have_exact_reproducer_contract_fields:0157556e19639344",
+        "signature_hash": "2a9f0251c66f84c4"
+      }
+    ],
+    "test_endpoint_boundary_escape_is_blocked_by_fixed_variant": [
+      {
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 63,
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_endpoint_boundary_escape_is_blocked_by_fixed_variant:835a5d1c56e0d775",
+        "signature_hash": "89aacdc93640cb7f"
+      }
+    ],
+    "test_identity_transplant_is_rejected_by_fixed_variant": [
+      {
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 68,
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_identity_transplant_is_rejected_by_fixed_variant:37361d5791579717",
+        "signature_hash": "859f9b4a290ac7ab"
+      }
+    ],
+    "test_replay_effect_executes_once_in_fixed_variant": [
+      {
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 73,
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_replay_effect_executes_once_in_fixed_variant:b1c7c1665a73e892",
+        "signature_hash": "61dac3eb236bbe13"
+      }
+    ],
+    "test_reopen_propagation_reaches_transitive_hard_dependent": [
+      {
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 78,
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_reopen_propagation_reaches_transitive_hard_dependent:75223f0f75ede709",
+        "signature_hash": "ec2f6208ec7c68bc"
+      }
+    ],
+    "receipt": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 44,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:receipt:420a94ed2ed22e95",
+        "signature_hash": "40a8c550871eecf4"
+      }
+    ],
+    "case": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 65,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:case:bd7dd2136ee02395",
+        "signature_hash": "6455884b2a971585"
+      }
+    ],
+    "test_local_receipt_admits_local_not_live": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 72,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_local_receipt_admits_local_not_live:1e67270ba3e720d5",
+        "signature_hash": "5f81fd9d785dabaa"
+      }
+    ],
+    "test_safe_harbor_alone_never_creates_live_scope": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 82,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_safe_harbor_alone_never_creates_live_scope:3fd342ef574834c0",
+        "signature_hash": "d820985cd3a87abe"
+      }
+    ],
+    "test_exact_current_public_scope_can_admit_live_testing_input": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 92,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_exact_current_public_scope_can_admit_live_testing_input:a47ecdc1bff2213e",
+        "signature_hash": "5259aab4cd306c2f"
+      }
+    ],
+    "test_stale_program_receipt_fails_closed": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 98,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_stale_program_receipt_fails_closed:195ad739b38c2829",
+        "signature_hash": "2aff1d0503dc01ab"
+      }
+    ],
+    "test_submission_gate_cannot_be_silently_widened": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 103,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_submission_gate_cannot_be_silently_widened:728bd3889246121b",
+        "signature_hash": "1358e2ee317d9eb1"
+      }
+    ],
+    "test_root_cause_duplicate_beats_wording_or_source_difference": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 116,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_root_cause_duplicate_beats_wording_or_source_difference:b6001b112ca99a41",
+        "signature_hash": "0e0348fa1582b1d0"
+      }
+    ],
+    "test_same_patch_is_not_enough_to_call_same_vulnerability": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 119,
+        "end_line": 130,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_same_patch_is_not_enough_to_call_same_vulnerability:42ae8f0d4287b76a",
+        "signature_hash": "f6f2eeedab9c046e"
+      }
+    ],
+    "test_holdout_packet_hides_fix_and_patch_digest": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 133,
+        "end_line": 138,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_holdout_packet_hides_fix_and_patch_digest:7fe63cf3198b0b80",
+        "signature_hash": "b5e8433e190b1b6d"
+      }
+    ],
+    "test_source_generation_is_part_of_case_identity": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 144,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_source_generation_is_part_of_case_identity:f172e857c40a749a",
+        "signature_hash": "b75e7f390abe3584"
+      }
+    ],
+    "test_scope_or_rules_change_invalidates_currentness_binding": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 147,
+        "end_line": 152,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_scope_or_rules_change_invalidates_currentness_binding:088c615cacecbaee",
+        "signature_hash": "dcab619a00837cfd"
+      }
+    ],
+    "test_k27_is_deterministic_advisory_range": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 158,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_k27_is_deterministic_advisory_range:d6b80d34bd052d00",
+        "signature_hash": "6e01ae86fde14693"
+      }
+    ],
+    "test_case_index_rejects_duplicate_identity_even_with_new_case_id": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 161,
+        "end_line": 165,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_case_index_rejects_duplicate_identity_even_with_new_case_id:eb235b3f7121e4ff",
+        "signature_hash": "e28197dce456aba5"
+      }
+    ],
+    "test_case_index_preserves_k27_as_hint_only": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 168,
+        "end_line": 172,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_case_index_preserves_k27_as_hint_only:c501c3b140bc3971",
+        "signature_hash": "e29a6a24122ee469"
+      }
+    ],
+    "test_unresolved_lattice_registry_fails_closed_without_invention": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 175,
+        "end_line": 182,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_unresolved_lattice_registry_fails_closed_without_invention:2855c4986a216943",
+        "signature_hash": "62da56b2a20e51d1"
+      }
+    ],
+    "test_exact_eight_source_bound_lattice_entries_resolve_only_as_experiment_input": [
+      {
+        "file": "tests/test_bughound_foundry_intake.py",
+        "kind": "function",
+        "line": 185,
+        "end_line": 196,
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_exact_eight_source_bound_lattice_entries_resolve_only_as_experiment_input:5951f4e14fdb4f5c",
+        "signature_hash": "d5f1dcf3e4e6dea1"
+      }
+    ],
+    "test_task_bank_is_matched_buggy_fixed_per_case": [
+      {
+        "file": "tests/test_bughound_matched_benchmark.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 13,
+        "semantic_id": "tests/test_bughound_matched_benchmark.py#function:test_task_bank_is_matched_buggy_fixed_per_case:412ed9e1dd0bb329",
+        "signature_hash": "d3b9e66a82b6a5ae"
+      }
+    ],
+    "test_public_packets_do_not_expose_hidden_expected_label": [
+      {
+        "file": "tests/test_bughound_matched_benchmark.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 22,
+        "semantic_id": "tests/test_bughound_matched_benchmark.py#function:test_public_packets_do_not_expose_hidden_expected_label:7abbd5b64c926ec2",
+        "signature_hash": "4494866d72ab398c"
+      }
+    ],
+    "test_matched_benchmark_has_expected_observable_counts": [
+      {
+        "file": "tests/test_bughound_matched_benchmark.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 50,
+        "semantic_id": "tests/test_bughound_matched_benchmark.py#function:test_matched_benchmark_has_expected_observable_counts:fe353232f2efe3a2",
+        "signature_hash": "52f0827936fa04d0"
+      }
+    ],
+    "test_claim_ceiling_prevents_blind_hunt_or_lattice_overclaim": [
+      {
+        "file": "tests/test_bughound_matched_benchmark.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 60,
+        "semantic_id": "tests/test_bughound_matched_benchmark.py#function:test_claim_ceiling_prevents_blind_hunt_or_lattice_overclaim:485e64724676570b",
+        "signature_hash": "a8aafb6dce3ba7ad"
+      }
+    ],
+    "test_receipt_is_deterministic": [
+      {
+        "file": "tests/test_bughound_matched_benchmark.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 69,
+        "semantic_id": "tests/test_bughound_matched_benchmark.py#function:test_receipt_is_deterministic:63673612d34d7790",
+        "signature_hash": "834891cb2aea3ac1"
+      }
+    ],
     "test_space_app_card_declares_public_docker_runtime": [
       {
         "file": "tests/test_huggingface_space_deployment.py",
@@ -157677,16 +158612,6 @@
         "end_line": 716,
         "semantic_id": "travel_price_sidecar.py#method:TravelPriceSidecar.query_prices:8988baf067830c1f",
         "signature_hash": "b4c46a087d4d5110"
-      }
-    ],
-    "_parse_time": [
-      {
-        "file": "travel_price_verifier.py",
-        "kind": "function",
-        "line": 25,
-        "end_line": 37,
-        "semantic_id": "travel_price_verifier.py#function:_parse_time:68e48e7f74100996",
-        "signature_hash": "92dd7ff707cc8d43"
       }
     ],
     "TravelPriceVerification": [
@@ -168129,6 +169054,147 @@
         0.183493,
         0.241705,
         0.036699
+      ]
+    },
+    {
+      "path": ".github/workflows/bughound-bugbot-lab.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1127,
+      "lines": 35,
+      "tokens_est": 282,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "805ac7a278edd828",
+      "vector": [
+        0.147336,
+        -0.147336,
+        -0.230281,
+        0.003274,
+        -0.206271,
+        0.212819,
+        -0.182261,
+        -0.125509,
+        -0.073122,
+        -0.020736,
+        -0.081854,
+        -0.014188,
+        0.252109,
+        0.271754,
+        0.097133,
+        0.252109,
+        -0.105864,
+        -0.138605,
+        -0.014188,
+        0.256474,
+        -0.07094,
+        0.066574,
+        -0.252109,
+        0.225916,
+        0.016371,
+        -0.127692,
+        0.247743,
+        -0.271754,
+        0.271754,
+        0.184443,
+        -0.073122,
+        -0.241195
+      ]
+    },
+    {
+      "path": ".github/workflows/bughound-foundry-intake.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 845,
+      "lines": 31,
+      "tokens_est": 212,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bb67c3a483fe6809",
+      "vector": [
+        -0.242056,
+        -0.154264,
+        -0.174331,
+        0.317307,
+        0.05393,
+        -0.008779,
+        -0.239548,
+        -0.089047,
+        0.224498,
+        0.076505,
+        -0.31229,
+        -0.146739,
+        0.161789,
+        0.186872,
+        -0.154264,
+        0.151755,
+        -0.096572,
+        0.239548,
+        0.001254,
+        0.166806,
+        0.164297,
+        -0.006271,
+        -0.106605,
+        -0.071488,
+        -0.249581,
+        0.206939,
+        -0.319815,
+        -0.091555,
+        0.111622,
+        -0.206939,
+        0.036371,
+        -0.156772
+      ]
+    },
+    {
+      "path": ".github/workflows/bughound-matched-benchmark.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1252,
+      "lines": 37,
+      "tokens_est": 313,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7f7bd40739693b7f",
+      "vector": [
+        -0.146887,
+        -0.018515,
+        0.013578,
+        -0.048139,
+        -0.08517,
+        -0.240697,
+        -0.193792,
+        0.220948,
+        -0.025921,
+        0.208604,
+        0.211073,
+        -0.206136,
+        0.038265,
+        0.270322,
+        0.043202,
+        0.257978,
+        0.016046,
+        0.003703,
+        -0.191324,
+        -0.134544,
+        -0.285134,
+        0.151825,
+        -0.050608,
+        0.250572,
+        -0.17898,
+        0.181449,
+        -0.314758,
+        0.060483,
+        -0.280197,
+        0.230823,
+        -0.149356,
+        -0.058014
       ]
     },
     {
@@ -242424,6 +243490,147 @@
       ]
     },
     {
+      "path": "scripts/bughound_bugbot_lab.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12617,
+      "lines": 261,
+      "tokens_est": 3155,
+      "symbol_count": 30,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "be053edd0e3b6bea",
+      "vector": [
+        -0.136391,
+        -0.19934,
+        0.045464,
+        0.259958,
+        -0.061784,
+        -0.266953,
+        -0.022149,
+        -0.080436,
+        -0.187683,
+        -0.078104,
+        -0.003497,
+        -0.248301,
+        0.280942,
+        0.276279,
+        0.250632,
+        -0.187683,
+        0.290267,
+        0.238975,
+        0.238975,
+        -0.085098,
+        0.266953,
+        -0.148048,
+        -0.197009,
+        -0.052458,
+        -0.047795,
+        0.029143,
+        -0.064115,
+        -0.066447,
+        0.036138,
+        0.001166,
+        0.136391,
+        0.248301
+      ]
+    },
+    {
+      "path": "scripts/bughound_foundry_intake.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11071,
+      "lines": 322,
+      "tokens_est": 2768,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "afb379b7e8b7ce6b",
+      "vector": [
+        -0.037821,
+        0.019484,
+        0.134094,
+        0.179938,
+        -0.269334,
+        0.22349,
+        -0.250996,
+        -0.189107,
+        0.044698,
+        0.20286,
+        0.292256,
+        -0.134094,
+        -0.076789,
+        0.118048,
+        0.287672,
+        0.024068,
+        0.287672,
+        0.003438,
+        0.26475,
+        0.030945,
+        -0.134094,
+        -0.276211,
+        -0.20286,
+        0.005731,
+        0.216613,
+        0.18223,
+        0.010315,
+        0.184522,
+        -0.104295,
+        0.173061,
+        -0.010315,
+        -0.179938
+      ]
+    },
+    {
+      "path": "scripts/bughound_matched_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4920,
+      "lines": 144,
+      "tokens_est": 1230,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d702be5c1f091840",
+      "vector": [
+        0.162581,
+        0.244395,
+        -0.265374,
+        -0.019929,
+        0.156287,
+        0.152092,
+        -0.093353,
+        0.198244,
+        0.066081,
+        -0.181461,
+        0.164678,
+        -0.229711,
+        -0.03881,
+        0.093353,
+        0.133211,
+        0.256982,
+        0.254885,
+        -0.024125,
+        -0.026223,
+        -0.156287,
+        0.032516,
+        0.187754,
+        0.022027,
+        0.231809,
+        0.219222,
+        0.227613,
+        0.246493,
+        -0.261178,
+        -0.036712,
+        -0.175168,
+        -0.170972,
+        -0.254885
+      ]
+    },
+    {
       "path": "scripts/deploy_huggingface_space.py",
       "role": "python_module",
       "binary": false,
@@ -262222,6 +263429,147 @@
         0.008165,
         -0.075818,
         -0.066487
+      ]
+    },
+    {
+      "path": "tests/test_bughound_bugbot_lab.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2757,
+      "lines": 79,
+      "tokens_est": 690,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "28bb4e7bae696bcd",
+      "vector": [
+        0.170406,
+        0.098264,
+        -0.307229,
+        0.235086,
+        0.245037,
+        -0.289815,
+        0.060948,
+        0.118165,
+        -0.026121,
+        0.240062,
+        0.180357,
+        -0.105727,
+        0.075874,
+        -0.232599,
+        -0.12314,
+        -0.267426,
+        0.011195,
+        -0.006219,
+        -0.309717,
+        -0.190308,
+        0.026121,
+        -0.04851,
+        -0.299766,
+        -0.185333,
+        0.055973,
+        -0.098264,
+        0.185333,
+        0.282352,
+        0.028608,
+        -0.11319,
+        -0.006219,
+        0.036071
+      ]
+    },
+    {
+      "path": "tests/test_bughound_foundry_intake.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6904,
+      "lines": 197,
+      "tokens_est": 1726,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e26fbac111a24ad8",
+      "vector": [
+        0.068541,
+        0.041125,
+        0.125483,
+        0.157118,
+        0.173989,
+        0.03058,
+        -0.19297,
+        0.249912,
+        -0.013708,
+        0.252021,
+        0.258348,
+        -0.218278,
+        -0.216169,
+        0.100176,
+        0.230931,
+        -0.144464,
+        -0.1529,
+        -0.015817,
+        -0.173989,
+        0.184534,
+        0.235149,
+        0.1529,
+        -0.264675,
+        0.176098,
+        -0.057996,
+        -0.207733,
+        -0.21406,
+        0.226714,
+        0.028471,
+        0.09174,
+        0.142355,
+        0.268893
+      ]
+    },
+    {
+      "path": "tests/test_bughound_matched_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2232,
+      "lines": 70,
+      "tokens_est": 558,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "350e181034bae2d6",
+      "vector": [
+        -0.170756,
+        0.312844,
+        -0.090987,
+        0.14832,
+        -0.175741,
+        0.053595,
+        -0.168263,
+        0.195683,
+        0.023681,
+        0.277945,
+        -0.223104,
+        0.230582,
+        0.093479,
+        -0.153306,
+        0.280438,
+        -0.170756,
+        -0.088494,
+        0.038638,
+        -0.093479,
+        -0.028667,
+        0.033653,
+        0.041131,
+        -0.253017,
+        -0.31783,
+        0.123393,
+        -0.071044,
+        -0.153306,
+        0.118407,
+        -0.110929,
+        0.061073,
+        0.315337,
+        -0.248032
       ]
     },
     {
@@ -286646,16 +287994,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1648,
+    "total_bytes": 26458773,
+    "text_tokens_est": 6605047,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 1003,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286807,6 +288155,9 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/bughound-bugbot-lab.yml",
+      ".github/workflows/bughound-foundry-intake.yml",
+      ".github/workflows/bughound-matched-benchmark.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -287909,6 +289260,9 @@
       "scripts/aura_spatial_s4b_architect_harness.py",
       "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
       "scripts/aura_verify_construction_demo_assets.py",
+      "scripts/bughound_bugbot_lab.py",
+      "scripts/bughound_foundry_intake.py",
+      "scripts/bughound_matched_benchmark.py",
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
@@ -288287,6 +289641,9 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_bughound_bugbot_lab.py",
+      "tests/test_bughound_foundry_intake.py",
+      "tests/test_bughound_matched_benchmark.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -388964,6 +390321,626 @@
         "file_digest8": "2c6a5c58521489ab"
       },
       {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#class:BugBotCase:fe448e1948964270",
+        "name": "BugBotCase",
+        "kind": "class",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 25,
+        "end_line": 39,
+        "signature_hash": "676b68a98a1c5f5f",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:_cases:371bd26ef1c45309",
+        "name": "_cases",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 202,
+        "end_line": 217,
+        "signature_hash": "fe4272c0d8ffb658",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:_digest:08a5ea06db7a83d1",
+        "name": "_digest",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 18,
+        "end_line": 21,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:authority_substitution_buggy:da2fb2621e667fdd",
+        "name": "authority_substitution_buggy",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 71,
+        "end_line": 72,
+        "signature_hash": "cceee25b11ecfafe",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:authority_substitution_fixed:3b948099d60e2abc",
+        "name": "authority_substitution_fixed",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 75,
+        "end_line": 76,
+        "signature_hash": "d0063351ae05d031",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:cache_invalidation_buggy:6765875f4147ebf0",
+        "name": "cache_invalidation_buggy",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 105,
+        "end_line": 110,
+        "signature_hash": "a6bac4c442ed84ed",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:cache_invalidation_fixed:93f01d15cae7a6cd",
+        "name": "cache_invalidation_fixed",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 113,
+        "end_line": 118,
+        "signature_hash": "7ab0949d8b6d35df",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:endpoint_escape_buggy:57c2b451cbcbbfea",
+        "name": "endpoint_escape_buggy",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 163,
+        "end_line": 166,
+        "signature_hash": "b944c569d01cd02f",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:endpoint_escape_fixed:27e62370ac23a0af",
+        "name": "endpoint_escape_fixed",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 169,
+        "end_line": 174,
+        "signature_hash": "09d7c791d302cdec",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:identity_alias_buggy:fcf2ddbe543f32bb",
+        "name": "identity_alias_buggy",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "97327df6cf0e2ddf",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:identity_alias_fixed:e12cda2bf6a10e54",
+        "name": "identity_alias_fixed",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 67,
+        "end_line": 68,
+        "signature_hash": "48555fd441914d55",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:identity_transplant_buggy:e32f2ba8f48fbdba",
+        "name": "identity_transplant_buggy",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 177,
+        "end_line": 178,
+        "signature_hash": "3d972900109bf5b7",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:identity_transplant_fixed:8e82f43581a48283",
+        "name": "identity_transplant_fixed",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 181,
+        "end_line": 183,
+        "signature_hash": "eed7aa728c995d57",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:merge_fallback_buggy:6e7408c1dcac967d",
+        "name": "merge_fallback_buggy",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 154,
+        "end_line": 155,
+        "signature_hash": "17ae230b763d2480",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:merge_fallback_fixed:08bd2efb8158919d",
+        "name": "merge_fallback_fixed",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 158,
+        "end_line": 160,
+        "signature_hash": "36dc13debcbccc21",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:noncommutation_buggy:ce8a7797daf94d2a",
+        "name": "noncommutation_buggy",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 79,
+        "end_line": 83,
+        "signature_hash": "cc907ba1c3550d9d",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:noncommutation_fixed:d13ee4f8f2a4aa2a",
+        "name": "noncommutation_fixed",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 86,
+        "end_line": 90,
+        "signature_hash": "5af24b7c4fd69c37",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:parser_boundary_buggy:1a43a397e4b7f2a4",
+        "name": "parser_boundary_buggy",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 140,
+        "end_line": 144,
+        "signature_hash": "569bc19e3cd0fdb2",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:parser_boundary_fixed:e4df8fb70ce99fb4",
+        "name": "parser_boundary_fixed",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 147,
+        "end_line": 151,
+        "signature_hash": "0970bde3b795992e",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:reopen_propagation_buggy:afa8d6e1a4fa0d7c",
+        "name": "reopen_propagation_buggy",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 121,
+        "end_line": 124,
+        "signature_hash": "f6d3818af0febf18",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:reopen_propagation_fixed:dd9b45512a51bfab",
+        "name": "reopen_propagation_fixed",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 127,
+        "end_line": 137,
+        "signature_hash": "5f2973139307c564",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:replay_buggy:b479b88e95528ed8",
+        "name": "replay_buggy",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 50,
+        "end_line": 52,
+        "signature_hash": "831ca68893c7d135",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:replay_fixed:61a3567d665c1f82",
+        "name": "replay_fixed",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 55,
+        "end_line": 60,
+        "signature_hash": "edf955a1ea541b45",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:residue_consumer_buggy:a74daec8d2416b6f",
+        "name": "residue_consumer_buggy",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 93,
+        "end_line": 95,
+        "signature_hash": "658c4a20eb5ff1b8",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:residue_consumer_fixed:1f15d24d5e4c4af0",
+        "name": "residue_consumer_fixed",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 98,
+        "end_line": 102,
+        "signature_hash": "3da576f514ccc967",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:run_case:cea50ac0abdef315",
+        "name": "run_case",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 224,
+        "end_line": 239,
+        "signature_hash": "0ec7bbf9fa5f22f2",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:stale_generation_buggy:a271ae0e4831ecb6",
+        "name": "stale_generation_buggy",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "b2b580ff6a357a90",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:stale_generation_fixed:f333b2f363db64e0",
+        "name": "stale_generation_fixed",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "4e207a5e153b766d",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#function:verify_ground_truth:1402b1de7d8dbdca",
+        "name": "verify_ground_truth",
+        "kind": "function",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 242,
+        "end_line": 256,
+        "signature_hash": "c3bf43c2698b663c",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_bugbot_lab.py#method:BugBotCase.receipt:9670f67a13483a51",
+        "name": "BugBotCase.receipt",
+        "kind": "method",
+        "file": "scripts/bughound_bugbot_lab.py",
+        "line": 37,
+        "end_line": 39,
+        "signature_hash": "c724ebd1d568bc4d",
+        "file_digest8": "be053edd0e3b6bea"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#class:Authorization:df79e26c2a38690b",
+        "name": "Authorization",
+        "kind": "class",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 26,
+        "end_line": 28,
+        "signature_hash": "39d5403153c62a32",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#class:BugCaseV1:2898dbe23370ff84",
+        "name": "BugCaseV1",
+        "kind": "class",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 159,
+        "end_line": 248,
+        "signature_hash": "8361835c21dfa210",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#class:DuplicateClass:5131df78266cf24a",
+        "name": "DuplicateClass",
+        "kind": "class",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "728aa19ffa732161",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#class:IntakeError:fe8c6c5f30f936fd",
+        "name": "IntakeError",
+        "kind": "class",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "88b020be106c3b3e",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#class:ProgramCurrentnessReceiptV1:53d3d6a9827f861d",
+        "name": "ProgramCurrentnessReceiptV1",
+        "kind": "class",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 80,
+        "end_line": 155,
+        "signature_hash": "d2ef5c9b7861b433",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#class:Visibility:031d18187304767d",
+        "name": "Visibility",
+        "kind": "class",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 37,
+        "end_line": 41,
+        "signature_hash": "f224481c5a6830e3",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:_parse_time:b66d295a9d958fc4",
+        "name": "_parse_time",
+        "kind": "function",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 60,
+        "end_line": 67,
+        "signature_hash": "0e7d03ca78676525",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:_require_digest:6fd4bc7d327304c5",
+        "name": "_require_digest",
+        "kind": "function",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 70,
+        "end_line": 76,
+        "signature_hash": "2ad8c8980548dae9",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:canonical_json:aeba642440d474ec",
+        "name": "canonical_json",
+        "kind": "function",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "2af8a10abc3d606e",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:classify_duplicate:338a2810765ec8c5",
+        "name": "classify_duplicate",
+        "kind": "function",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 251,
+        "end_line": 258,
+        "signature_hash": "a9070fe280105aa6",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:compile_case_index:d0dca601e36134cc",
+        "name": "compile_case_index",
+        "kind": "function",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 273,
+        "end_line": 295,
+        "signature_hash": "566a038ea08d80c7",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:currentness_binding_digest:d6507800dc7acfdd",
+        "name": "currentness_binding_digest",
+        "kind": "function",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 261,
+        "end_line": 270,
+        "signature_hash": "5baa8a8483be274e",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:k27_hint:e48da9a6fa05d701",
+        "name": "k27_hint",
+        "kind": "function",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 53,
+        "end_line": 57,
+        "signature_hash": "33b20638b88fb781",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:lattice_registry_state:e3605de56429402e",
+        "name": "lattice_registry_state",
+        "kind": "function",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 298,
+        "end_line": 321,
+        "signature_hash": "359bbc7c379a9a23",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#function:sha256_hex:6d7b1e704785ff02",
+        "name": "sha256_hex",
+        "kind": "function",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 48,
+        "end_line": 50,
+        "signature_hash": "c43d629a32af2456",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:BugCaseV1.case_identity:17cb28646a38a587",
+        "name": "BugCaseV1.case_identity",
+        "kind": "method",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 214,
+        "end_line": 224,
+        "signature_hash": "2d823462441118ec",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:BugCaseV1.public_packet:0549f2106e003328",
+        "name": "BugCaseV1.public_packet",
+        "kind": "method",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 226,
+        "end_line": 248,
+        "signature_hash": "ae2ea38bdaaa7438",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:BugCaseV1.root_cause_descriptor:c9d8636fb26ccc25",
+        "name": "BugCaseV1.root_cause_descriptor",
+        "kind": "method",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 200,
+        "end_line": 209,
+        "signature_hash": "68cb246efc7a7501",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:BugCaseV1.root_cause_digest:bb7e70ad1ab542e8",
+        "name": "BugCaseV1.root_cause_digest",
+        "kind": "method",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 211,
+        "end_line": 212,
+        "signature_hash": "e85904361d6d8588",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:BugCaseV1.validate:dc87a74fcd35f26f",
+        "name": "BugCaseV1.validate",
+        "kind": "method",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 175,
+        "end_line": 198,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:ProgramCurrentnessReceiptV1.digest:6affe7d8fd4de1f6",
+        "name": "ProgramCurrentnessReceiptV1.digest",
+        "kind": "method",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 154,
+        "end_line": 155,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_foundry_intake.py#method:ProgramCurrentnessReceiptV1.validate:814b8ccc84347bbe",
+        "name": "ProgramCurrentnessReceiptV1.validate",
+        "kind": "method",
+        "file": "scripts/bughound_foundry_intake.py",
+        "line": 96,
+        "end_line": 152,
+        "signature_hash": "79720fe4490d4b70",
+        "file_digest8": "afb379b7e8b7ce6b"
+      },
+      {
+        "semantic_id": "scripts/bughound_matched_benchmark.py#class:Task:a1841f89e8ff3dae",
+        "name": "Task",
+        "kind": "class",
+        "file": "scripts/bughound_matched_benchmark.py",
+        "line": 31,
+        "end_line": 53,
+        "signature_hash": "e8124b632950c68c",
+        "file_digest8": "d702be5c1f091840"
+      },
+      {
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:_canonical:d428d3c404b0c72b",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "scripts/bughound_matched_benchmark.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "d702be5c1f091840"
+      },
+      {
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:_digest:3c55955ef69f49d7",
+        "name": "_digest",
+        "kind": "function",
+        "file": "scripts/bughound_matched_benchmark.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "d702be5c1f091840"
+      },
+      {
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:_score:40f56cebda71cd80",
+        "name": "_score",
+        "kind": "function",
+        "file": "scripts/bughound_matched_benchmark.py",
+        "line": 80,
+        "end_line": 111,
+        "signature_hash": "d2231ccab32f2bea",
+        "file_digest8": "d702be5c1f091840"
+      },
+      {
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:bughound_differential_route:8f265a859723f450",
+        "name": "bughound_differential_route",
+        "kind": "function",
+        "file": "scripts/bughound_matched_benchmark.py",
+        "line": 73,
+        "end_line": 77,
+        "signature_hash": "15267027b8b77112",
+        "file_digest8": "d702be5c1f091840"
+      },
+      {
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:control_smoke_route:2dd08531a2f469db",
+        "name": "control_smoke_route",
+        "kind": "function",
+        "file": "scripts/bughound_matched_benchmark.py",
+        "line": 64,
+        "end_line": 70,
+        "signature_hash": "775c37396ab65518",
+        "file_digest8": "d702be5c1f091840"
+      },
+      {
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:run_matched_benchmark:c5630e6ceed5736c",
+        "name": "run_matched_benchmark",
+        "kind": "function",
+        "file": "scripts/bughound_matched_benchmark.py",
+        "line": 114,
+        "end_line": 139,
+        "signature_hash": "2bb2945d36482a56",
+        "file_digest8": "d702be5c1f091840"
+      },
+      {
+        "semantic_id": "scripts/bughound_matched_benchmark.py#function:task_bank:12bcefe886dfe68b",
+        "name": "task_bank",
+        "kind": "function",
+        "file": "scripts/bughound_matched_benchmark.py",
+        "line": 56,
+        "end_line": 61,
+        "signature_hash": "f2c2b6a48f70f3d4",
+        "file_digest8": "d702be5c1f091840"
+      },
+      {
+        "semantic_id": "scripts/bughound_matched_benchmark.py#method:Task.hidden_key:2d1446956dd4c9ac",
+        "name": "Task.hidden_key",
+        "kind": "method",
+        "file": "scripts/bughound_matched_benchmark.py",
+        "line": 47,
+        "end_line": 53,
+        "signature_hash": "abdfc1b92ac632ff",
+        "file_digest8": "d702be5c1f091840"
+      },
+      {
+        "semantic_id": "scripts/bughound_matched_benchmark.py#method:Task.public_packet:5684d44fcc705270",
+        "name": "Task.public_packet",
+        "kind": "method",
+        "file": "scripts/bughound_matched_benchmark.py",
+        "line": 37,
+        "end_line": 45,
+        "signature_hash": "ae2ea38bdaaa7438",
+        "file_digest8": "d702be5c1f091840"
+      },
+      {
         "semantic_id": "scripts/deploy_huggingface_space.py#function:_parser:68b194f59cbec7c2",
         "name": "_parser",
         "kind": "function",
@@ -445314,6 +447291,316 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_case_receipts_have_exact_reproducer_contract_fields:0157556e19639344",
+        "name": "test_case_receipts_have_exact_reproducer_contract_fields",
+        "kind": "function",
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "line": 49,
+        "end_line": 58,
+        "signature_hash": "2a9f0251c66f84c4",
+        "file_digest8": "28bb4e7bae696bcd"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_cross_boundary_review_lineage_adds_two_distinct_cases:4b2b9f8a54099e0f",
+        "name": "test_cross_boundary_review_lineage_adds_two_distinct_cases",
+        "kind": "function",
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "line": 22,
+        "end_line": 27,
+        "signature_hash": "4d79b4d0e01ea5c0",
+        "file_digest8": "28bb4e7bae696bcd"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_endpoint_boundary_escape_is_blocked_by_fixed_variant:835a5d1c56e0d775",
+        "name": "test_endpoint_boundary_escape_is_blocked_by_fixed_variant",
+        "kind": "function",
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "line": 61,
+        "end_line": 63,
+        "signature_hash": "89aacdc93640cb7f",
+        "file_digest8": "28bb4e7bae696bcd"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_every_buggy_and_fixed_variant_matches_registered_oracle:8399d6664917904a",
+        "name": "test_every_buggy_and_fixed_variant_matches_registered_oracle",
+        "kind": "function",
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "9d8006e5071c2bb3",
+        "file_digest8": "28bb4e7bae696bcd"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_identity_transplant_is_rejected_by_fixed_variant:37361d5791579717",
+        "name": "test_identity_transplant_is_rejected_by_fixed_variant",
+        "kind": "function",
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "line": 66,
+        "end_line": 68,
+        "signature_hash": "859f9b4a290ac7ab",
+        "file_digest8": "28bb4e7bae696bcd"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_reopen_propagation_reaches_transitive_hard_dependent:75223f0f75ede709",
+        "name": "test_reopen_propagation_reaches_transitive_hard_dependent",
+        "kind": "function",
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "line": 76,
+        "end_line": 78,
+        "signature_hash": "ec2f6208ec7c68bc",
+        "file_digest8": "28bb4e7bae696bcd"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_replay_effect_executes_once_in_fixed_variant:b1c7c1665a73e892",
+        "name": "test_replay_effect_executes_once_in_fixed_variant",
+        "kind": "function",
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "line": 71,
+        "end_line": 73,
+        "signature_hash": "61dac3eb236bbe13",
+        "file_digest8": "28bb4e7bae696bcd"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_suite_contains_required_foundry_families:01aae5144884abd7",
+        "name": "test_suite_contains_required_foundry_families",
+        "kind": "function",
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "line": 6,
+        "end_line": 19,
+        "signature_hash": "5623fc2a500f267b",
+        "file_digest8": "28bb4e7bae696bcd"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bugbot_lab.py#function:test_suite_receipt_is_deterministic_and_complete:94fdeb7a8ca3ba04",
+        "name": "test_suite_receipt_is_deterministic_and_complete",
+        "kind": "function",
+        "file": "tests/test_bughound_bugbot_lab.py",
+        "line": 37,
+        "end_line": 46,
+        "signature_hash": "d6e836a0c801505d",
+        "file_digest8": "28bb4e7bae696bcd"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:case:bd7dd2136ee02395",
+        "name": "case",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 47,
+        "end_line": 65,
+        "signature_hash": "6455884b2a971585",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:receipt:420a94ed2ed22e95",
+        "name": "receipt",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 26,
+        "end_line": 44,
+        "signature_hash": "40a8c550871eecf4",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_case_index_preserves_k27_as_hint_only:c501c3b140bc3971",
+        "name": "test_case_index_preserves_k27_as_hint_only",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 168,
+        "end_line": 172,
+        "signature_hash": "e29a6a24122ee469",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_case_index_rejects_duplicate_identity_even_with_new_case_id:eb235b3f7121e4ff",
+        "name": "test_case_index_rejects_duplicate_identity_even_with_new_case_id",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 161,
+        "end_line": 165,
+        "signature_hash": "e28197dce456aba5",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_exact_current_public_scope_can_admit_live_testing_input:a47ecdc1bff2213e",
+        "name": "test_exact_current_public_scope_can_admit_live_testing_input",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 85,
+        "end_line": 92,
+        "signature_hash": "5259aab4cd306c2f",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_exact_eight_source_bound_lattice_entries_resolve_only_as_experiment_input:5951f4e14fdb4f5c",
+        "name": "test_exact_eight_source_bound_lattice_entries_resolve_only_as_experiment_input",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 185,
+        "end_line": 196,
+        "signature_hash": "d5f1dcf3e4e6dea1",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_holdout_packet_hides_fix_and_patch_digest:7fe63cf3198b0b80",
+        "name": "test_holdout_packet_hides_fix_and_patch_digest",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 133,
+        "end_line": 138,
+        "signature_hash": "b5e8433e190b1b6d",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_k27_is_deterministic_advisory_range:d6b80d34bd052d00",
+        "name": "test_k27_is_deterministic_advisory_range",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 155,
+        "end_line": 158,
+        "signature_hash": "6e01ae86fde14693",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_local_receipt_admits_local_not_live:1e67270ba3e720d5",
+        "name": "test_local_receipt_admits_local_not_live",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 68,
+        "end_line": 72,
+        "signature_hash": "5f81fd9d785dabaa",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_root_cause_duplicate_beats_wording_or_source_difference:b6001b112ca99a41",
+        "name": "test_root_cause_duplicate_beats_wording_or_source_difference",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 106,
+        "end_line": 116,
+        "signature_hash": "0e0348fa1582b1d0",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_safe_harbor_alone_never_creates_live_scope:3fd342ef574834c0",
+        "name": "test_safe_harbor_alone_never_creates_live_scope",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 75,
+        "end_line": 82,
+        "signature_hash": "d820985cd3a87abe",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_same_patch_is_not_enough_to_call_same_vulnerability:42ae8f0d4287b76a",
+        "name": "test_same_patch_is_not_enough_to_call_same_vulnerability",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 119,
+        "end_line": 130,
+        "signature_hash": "f6f2eeedab9c046e",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_scope_or_rules_change_invalidates_currentness_binding:088c615cacecbaee",
+        "name": "test_scope_or_rules_change_invalidates_currentness_binding",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 147,
+        "end_line": 152,
+        "signature_hash": "dcab619a00837cfd",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_source_generation_is_part_of_case_identity:f172e857c40a749a",
+        "name": "test_source_generation_is_part_of_case_identity",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 141,
+        "end_line": 144,
+        "signature_hash": "b75e7f390abe3584",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_stale_program_receipt_fails_closed:195ad739b38c2829",
+        "name": "test_stale_program_receipt_fails_closed",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 95,
+        "end_line": 98,
+        "signature_hash": "2aff1d0503dc01ab",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_submission_gate_cannot_be_silently_widened:728bd3889246121b",
+        "name": "test_submission_gate_cannot_be_silently_widened",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 101,
+        "end_line": 103,
+        "signature_hash": "1358e2ee317d9eb1",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_foundry_intake.py#function:test_unresolved_lattice_registry_fails_closed_without_invention:2855c4986a216943",
+        "name": "test_unresolved_lattice_registry_fails_closed_without_invention",
+        "kind": "function",
+        "file": "tests/test_bughound_foundry_intake.py",
+        "line": 175,
+        "end_line": 182,
+        "signature_hash": "62da56b2a20e51d1",
+        "file_digest8": "e26fbac111a24ad8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_matched_benchmark.py#function:test_claim_ceiling_prevents_blind_hunt_or_lattice_overclaim:485e64724676570b",
+        "name": "test_claim_ceiling_prevents_blind_hunt_or_lattice_overclaim",
+        "kind": "function",
+        "file": "tests/test_bughound_matched_benchmark.py",
+        "line": 53,
+        "end_line": 60,
+        "signature_hash": "a8aafb6dce3ba7ad",
+        "file_digest8": "350e181034bae2d6"
+      },
+      {
+        "semantic_id": "tests/test_bughound_matched_benchmark.py#function:test_matched_benchmark_has_expected_observable_counts:fe353232f2efe3a2",
+        "name": "test_matched_benchmark_has_expected_observable_counts",
+        "kind": "function",
+        "file": "tests/test_bughound_matched_benchmark.py",
+        "line": 25,
+        "end_line": 50,
+        "signature_hash": "52f0827936fa04d0",
+        "file_digest8": "350e181034bae2d6"
+      },
+      {
+        "semantic_id": "tests/test_bughound_matched_benchmark.py#function:test_public_packets_do_not_expose_hidden_expected_label:7abbd5b64c926ec2",
+        "name": "test_public_packets_do_not_expose_hidden_expected_label",
+        "kind": "function",
+        "file": "tests/test_bughound_matched_benchmark.py",
+        "line": 16,
+        "end_line": 22,
+        "signature_hash": "4494866d72ab398c",
+        "file_digest8": "350e181034bae2d6"
+      },
+      {
+        "semantic_id": "tests/test_bughound_matched_benchmark.py#function:test_receipt_is_deterministic:63673612d34d7790",
+        "name": "test_receipt_is_deterministic",
+        "kind": "function",
+        "file": "tests/test_bughound_matched_benchmark.py",
+        "line": 63,
+        "end_line": 69,
+        "signature_hash": "834891cb2aea3ac1",
+        "file_digest8": "350e181034bae2d6"
+      },
+      {
+        "semantic_id": "tests/test_bughound_matched_benchmark.py#function:test_task_bank_is_matched_buggy_fixed_per_case:412ed9e1dd0bb329",
+        "name": "test_task_bank_is_matched_buggy_fixed_per_case",
+        "kind": "function",
+        "file": "tests/test_bughound_matched_benchmark.py",
+        "line": 6,
+        "end_line": 13,
+        "signature_hash": "d3b9e66a82b6a5ae",
+        "file_digest8": "350e181034bae2d6"
+      },
+      {
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "name": "test_deployment_docs_have_submission_field_and_no_localhost_url_claim",
         "kind": "function",
@@ -446884,7 +449171,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "78cf4bd5ef6ef00285c73772bed5866b",
+    "payload_hash": "2cb65fc57c57590cc7b86cb5b8bbb6f6"
   }
 }
