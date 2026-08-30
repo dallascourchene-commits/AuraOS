@@ -26,6 +26,8 @@ class FakeSliceBackend:
             "binding_digest": binding_digest,
             "attestation_id": "fake-selected-only",
             "physical_selected_only": True,
+            "physical_bytes_read": 4096,
+            "physical_read_operations": len(self.reads),
             "whole_bank_reads": self.whole_reads,
             "whole_bank_materialized": False,
         }
@@ -41,6 +43,28 @@ class UnattestedSliceBackend:
         if key not in self.tensors:
             raise p.MissingSliceError(f"missing tensor {key}")
         return self.tensors[key][start:end]
+
+
+class HostileWholeReadBackend(FakeSliceBackend):
+    """Satisfies read_rows while materializing the whole bank internally."""
+
+    def read_rows(self, key, start, end):
+        self.whole_reads += 1
+        self.reads.append((key, start, end))
+        whole = self.tensors[key]
+        return whole[start:end]
+
+    def io_attestation(self, binding_digest):
+        return {
+            "schema": p.BACKEND_IO_ATTESTATION_SCHEMA,
+            "binding_digest": binding_digest,
+            "attestation_id": "hostile-whole-read",
+            "physical_selected_only": False,
+            "physical_bytes_read": 9999,
+            "physical_read_operations": len(self.reads),
+            "whole_bank_reads": self.whole_reads,
+            "whole_bank_materialized": True,
+        }
 
 
 def tiny_banks(offset=0.0):
@@ -95,9 +119,9 @@ def tensors_for_binding(binding, offset=0.0):
     return tensors, gate_up, down
 
 
-def make_backend(binding, offset=0.0):
+def make_backend(binding, offset=0.0, backend_cls=FakeSliceBackend):
     tensors, gate_up, down = tensors_for_binding(binding, offset)
-    return FakeSliceBackend(tensors), gate_up, down
+    return backend_cls(tensors), gate_up, down
 
 
 class PackedExpertPagerTests(unittest.TestCase):
@@ -110,7 +134,6 @@ class PackedExpertPagerTests(unittest.TestCase):
         page = self.load(p.PackedExpertPager(binding, backend), [3, 1, 0, 1])
         self.assertEqual((0, 1, 3), page.expert_ids)
         self.assertEqual(((0, 2), (3, 4)), page.contiguous_runs)
-        # 4 families (2 weights + 2 scale companions) * 2 bounded runs.
         self.assertEqual(8, page.read_count)
         self.assertEqual(0, backend.whole_reads)
         self.assertNotIn((binding.tensor_map["gate_up"], 0, 4), backend.reads)
@@ -194,7 +217,7 @@ class PackedExpertPagerTests(unittest.TestCase):
         self.assertEqual(set(range(binding.num_experts)), seen)
         self.assertEqual(0, backend.whole_reads)
 
-    def test_attested_receipt_never_admits_g2(self):
+    def test_attested_receipt_never_admits_g2_and_reports_bytes(self):
         binding = make_binding("model.layers.16", "weight")
         backend, _, _ = make_backend(binding)
         pager = p.PackedExpertPager(binding, backend)
@@ -204,6 +227,8 @@ class PackedExpertPagerTests(unittest.TestCase):
         self.assertTrue(receipt.logical_bounded_row_requests)
         self.assertTrue(receipt.physical_io_attested)
         self.assertTrue(receipt.physical_selected_only)
+        self.assertEqual(4096, receipt.physical_bytes_read)
+        self.assertEqual(len(backend.reads), receipt.physical_read_operations)
         self.assertEqual(0, receipt.whole_tensor_reads)
         self.assertFalse(receipt.whole_bank_materialized)
         self.assertEqual("fake-selected-only", receipt.backend_attestation_id)
@@ -218,9 +243,25 @@ class PackedExpertPagerTests(unittest.TestCase):
         self.assertTrue(receipt.logical_bounded_row_requests)
         self.assertFalse(receipt.physical_io_attested)
         self.assertIsNone(receipt.physical_selected_only)
+        self.assertIsNone(receipt.physical_bytes_read)
+        self.assertIsNone(receipt.physical_read_operations)
         self.assertIsNone(receipt.whole_tensor_reads)
         self.assertIsNone(receipt.whole_bank_materialized)
         self.assertIsNone(receipt.backend_attestation_id)
+
+    def test_hostile_backend_cannot_hide_whole_bank_materialization(self):
+        binding = make_binding("model.layers.16", "weight")
+        backend, _, _ = make_backend(binding, backend_cls=HostileWholeReadBackend)
+        pager = p.PackedExpertPager(binding, backend)
+        self.load(pager, [0, 3])
+        receipt = pager.receipt()
+        self.assertTrue(receipt.physical_io_attested)
+        self.assertFalse(receipt.physical_selected_only)
+        self.assertEqual(9999, receipt.physical_bytes_read)
+        self.assertEqual(len(backend.reads), receipt.physical_read_operations)
+        self.assertEqual(backend.whole_reads, receipt.whole_tensor_reads)
+        self.assertGreater(receipt.whole_tensor_reads, 0)
+        self.assertTrue(receipt.whole_bank_materialized)
 
     def test_attestation_must_match_binding(self):
         binding = make_binding("model.layers.16", "weight")
@@ -230,18 +271,41 @@ class PackedExpertPagerTests(unittest.TestCase):
             "binding_digest": "wrong",
             "attestation_id": "bad",
             "physical_selected_only": True,
+            "physical_bytes_read": 1,
+            "physical_read_operations": 1,
             "whole_bank_reads": 0,
             "whole_bank_materialized": False,
         }
         with self.assertRaises(p.SourceBindingError):
             self.load(p.PackedExpertPager(binding, backend), [0, 3])
 
+    def test_source_binding_copies_and_freezes_caller_maps(self):
+        tensor_map = {"gate_up": "layer.gate", "down": "layer.down"}
+        scale_map = {"gate_up_scale": "layer.gate_scale", "down_scale": "layer.down_scale"}
+        binding = p.ExpertSourceBinding(
+            model_revision="rev-glm53",
+            index_digest="idx-digest",
+            layer_id="model.layers.17",
+            num_experts=4,
+            tensor_map=tensor_map,
+            scale_map=scale_map,
+            representation="synthetic",
+        )
+        original_digest = binding.digest
+        tensor_map["gate_up"] = "attacker.rebound"
+        scale_map["gate_up_scale"] = "attacker.scale"
+        self.assertEqual("layer.gate", binding.tensor_map["gate_up"])
+        self.assertEqual("layer.gate_scale", binding.scale_map["gate_up_scale"])
+        self.assertEqual(original_digest, binding.digest)
+        with self.assertRaises(TypeError):
+            binding.tensor_map["gate_up"] = "mutation"
+
     def test_ambiguous_source_binding_rejected(self):
         with self.assertRaises(p.SourceBindingError):
             p.ExpertSourceBinding(
                 model_revision="rev-glm53",
                 index_digest="idx-digest",
-                layer_id="model.layers.17",
+                layer_id="model.layers.18",
                 num_experts=4,
                 tensor_map={"gate_up": "same-key", "down": "same-key"},
                 scale_map={},
