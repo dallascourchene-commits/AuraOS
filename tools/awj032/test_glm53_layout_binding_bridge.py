@@ -134,6 +134,12 @@ class BridgeTests(unittest.TestCase):
         r["layer"]["scale_keys"].append("model.layers.3.mlp.experts.gate_up_proj.alt_scale")
         self.code("FP8_SCALE_ROLE_AMBIGUOUS", lambda: compile_packed(report=r))
 
+    def test_serialized_plan_remains_nonpromoting(self):
+        payload = compile_packed().to_dict()
+        self.assertFalse(payload["g2_admitted"])
+        self.assertFalse(payload["large_checkpoint_admitted"])
+        self.assertFalse(payload["runtime_execution_proven"])
+
     def test_clock_metadata_does_not_churn_source_plan(self):
         a, _, _ = packed_fixture()
         b = copy.deepcopy(a)
