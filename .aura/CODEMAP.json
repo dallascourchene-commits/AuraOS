@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788101482,
+  "generated_at_unix": 1788101608,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1646,
+    "repo_file_count": 1647,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1637,6 +1637,7 @@
       "tools/project030/aura_arena_workgraph.py",
       "tools/project030/aura_creator_studio_harness_router.py",
       "tools/project030/creator_studio_continuation_harness.py",
+      "tools/project030/creator_studio_harness_integration.py",
       "tools/project030/creator_studio_wake_adapter.py",
       "tools/project030/test_creator_studio_continuation_harness.py",
       "tools/project030/test_creator_studio_wake_adapter.py",
@@ -1762,15 +1763,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1646,
-      "bytes": 26502907,
-      "tokens_est": 6616081,
+      "files": 1647,
+      "bytes": 26515362,
+      "tokens_est": 6619195,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1004,
+        "python_module": 1005,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -4360,6 +4361,14 @@
         "end_line": 68,
         "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_digest:229ed9f8e9498eb9",
         "signature_hash": "9edcae7e502cc579"
+      },
+      {
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:_digest:42260d8bd63efc03",
+        "signature_hash": "b642531ca9d9232d"
       }
     ],
     "_token_proxy": [
@@ -72586,6 +72595,14 @@
         "end_line": 12,
         "semantic_id": "tests/test_aura_coding_waboose_cli.py#function:_result:8d76435b170d3880",
         "signature_hash": "5cc11bd57c98564b"
+      },
+      {
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 65,
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:_result:a520305da8f5c91d",
+        "signature_hash": "e0ea465855f37742"
       }
     ],
     "compare_qdkt_dual_read": [
@@ -157844,6 +157861,26 @@
         "end_line": 438,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:continuation_snapshot:bbec937430e6e1ba",
         "signature_hash": "539a8ea0c99ffe91"
+      }
+    ],
+    "plan_idle_worker_wake": [
+      {
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 85,
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:plan_idle_worker_wake:2f7a921055bff14f",
+        "signature_hash": "b8fa937cd1e09ae7"
+      }
+    ],
+    "prepare_substantive_act": [
+      {
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 327,
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:prepare_substantive_act:d64890c7ec156a6d",
+        "signature_hash": "0be2b3d522d80ef9"
       }
     ],
     "WakeRefusal": [
@@ -264155,6 +264192,53 @@
       ]
     },
     {
+      "path": "tools/project030/creator_studio_harness_integration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12455,
+      "lines": 328,
+      "tokens_est": 3114,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "795f15fa517e89a7",
+      "vector": [
+        -0.020612,
+        0.103059,
+        0.191003,
+        -0.30643,
+        -0.33666,
+        0.028857,
+        0.012367,
+        0.237723,
+        0.02336,
+        -0.331164,
+        -0.114052,
+        -0.166269,
+        0.273451,
+        0.08657,
+        0.004122,
+        -0.177262,
+        -0.254213,
+        -0.067332,
+        -0.02336,
+        -0.020612,
+        0.245968,
+        0.009619,
+        -0.317423,
+        0.237723,
+        0.081073,
+        -0.100311,
+        0.119549,
+        0.012367,
+        0.081073,
+        -0.061836,
+        0.174514,
+        0.251465
+      ]
+    },
+    {
       "path": "tools/project030/creator_studio_wake_adapter.py",
       "role": "python_module",
       "binary": false,
@@ -288200,15 +288284,15 @@
     }
   },
   "summary": {
-    "file_count": 1646,
-    "total_bytes": 26502907,
-    "text_tokens_est": 6616081,
+    "file_count": 1647,
+    "total_bytes": 26515362,
+    "text_tokens_est": 6619195,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1004,
+      "python_module": 1005,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -289856,6 +289940,7 @@
       "tools/project030/aura_arena_workgraph.py",
       "tools/project030/aura_creator_studio_harness_router.py",
       "tools/project030/creator_studio_continuation_harness.py",
+      "tools/project030/creator_studio_harness_integration.py",
       "tools/project030/creator_studio_wake_adapter.py",
       "tools/project030/test_creator_studio_continuation_harness.py",
       "tools/project030/test_creator_studio_wake_adapter.py",
@@ -447865,6 +447950,46 @@
         "file_digest8": "2259b1feb3d4055b"
       },
       {
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:_digest:42260d8bd63efc03",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "b642531ca9d9232d",
+        "file_digest8": "795f15fa517e89a7"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:_result:a520305da8f5c91d",
+        "name": "_result",
+        "kind": "function",
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "line": 32,
+        "end_line": 65,
+        "signature_hash": "e0ea465855f37742",
+        "file_digest8": "795f15fa517e89a7"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:plan_idle_worker_wake:2f7a921055bff14f",
+        "name": "plan_idle_worker_wake",
+        "kind": "function",
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "line": 68,
+        "end_line": 85,
+        "signature_hash": "b8fa937cd1e09ae7",
+        "file_digest8": "795f15fa517e89a7"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:prepare_substantive_act:d64890c7ec156a6d",
+        "name": "prepare_substantive_act",
+        "kind": "function",
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "line": 88,
+        "end_line": 327,
+        "signature_hash": "0be2b3d522d80ef9",
+        "file_digest8": "795f15fa517e89a7"
+      },
+      {
         "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:ArenaWakeScheduler:cbdbe1176225fecb",
         "name": "ArenaWakeScheduler",
         "kind": "class",
@@ -449675,7 +449800,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f90d48636aa13b40208dd502626cef44",
-    "payload_hash": "ad0b6c1246afb919b59101e3d0146c1b"
+    "record_fingerprint": "effedeb84fe3296c03bcf1bb0c81bec1",
+    "payload_hash": "fbc7ea052501653dd1cddcb7a7f0657a"
   }
 }
