@@ -219,39 +219,40 @@ def compile_role_distinct_children(raw: Mapping[str, Any]) -> list[dict[str, Any
 
 
 def fanout_manifest(raw: Mapping[str, Any]) -> dict[str, Any]:
-    """Return a receiptable compile manifest without executing provider calls."""
+    """Return a receiptable compile manifest without executing provider calls.
+
+    The manifest digest covers every field used later to prove a manifest-to-leaf
+    bijection. Host persistence/currentness gives the manifest authority; this digest
+    only makes mutation detectable.
+    """
     parent = validate_parent_swarm(raw)
     children = compile_role_distinct_children(raw)
-    return {
+    child_refs = [
+        {
+            "command_id": child["command_id"],
+            "idempotency_key": child["idempotency_key"],
+            "role_id": child["_host_child_context"]["role_id"],
+            "worker_id": child["_host_child_context"]["worker_id"],
+            "ordinal": child["_host_child_context"]["ordinal"],
+        }
+        for child in children
+    ]
+    manifest_body = {
         "schema": "AuraPhysicalSwarmCompileReceiptV1",
         "parent_command_id": parent["parent_command_id"],
         "parent_idempotency_key": parent["parent_idempotency_key"],
         "parent_payload_digest": parent["parent_payload_digest"],
         "target_size": parent["target_size"],
+        "children": child_refs,
+    }
+    return {
+        "schema": manifest_body["schema"],
+        "parent_command_id": parent["parent_command_id"],
+        "parent_idempotency_key": parent["parent_idempotency_key"],
+        "parent_payload_digest": parent["parent_payload_digest"],
+        "target_size": parent["target_size"],
         "child_count": len(children),
-        "child_refs": [
-            {
-                "command_id": child["command_id"],
-                "idempotency_key": child["idempotency_key"],
-                "role_id": child["_host_child_context"]["role_id"],
-                "worker_id": child["_host_child_context"]["worker_id"],
-                "ordinal": child["_host_child_context"]["ordinal"],
-            }
-            for child in children
-        ],
-        "manifest_digest": _digest(
-            {
-                "parent_payload_digest": parent["parent_payload_digest"],
-                "children": [
-                    (
-                        child["command_id"],
-                        child["idempotency_key"],
-                        child["_host_child_context"]["role_id"],
-                        child["_host_child_context"]["worker_id"],
-                    )
-                    for child in children
-                ],
-            }
-        ),
+        "child_refs": child_refs,
+        "manifest_digest": _digest(manifest_body),
         "effect_started": False,
     }
