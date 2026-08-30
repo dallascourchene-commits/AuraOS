@@ -6,9 +6,11 @@ on:
       - "tools/awj032/airllm_source_admission.py"
       - "tools/awj032/airllm_hard_false_remediation.py"
       - "tools/awj032/airllm_hard_false_inspected_tree.py"
+      - "tools/awj032/airllm_runtime_hard_false.py"
       - "tools/awj032/test_airllm_source_admission.py"
       - "tools/awj032/test_airllm_hard_false_remediation.py"
       - "tools/awj032/test_airllm_hard_false_inspected_tree.py"
+      - "tools/awj032/test_airllm_runtime_hard_false.py"
       - ".github/workflows/awj032-airllm-g1-source-contract.yml"
   workflow_dispatch:
 
@@ -48,8 +50,10 @@ jobs:
           python -m py_compile \
             tools/awj032/airllm_source_admission.py \
             tools/awj032/airllm_hard_false_remediation.py \
-            tools/awj032/airllm_hard_false_inspected_tree.py
+            tools/awj032/airllm_hard_false_inspected_tree.py \
+            tools/awj032/airllm_runtime_hard_false.py
           python -m pytest -q \
             tools/awj032/test_airllm_source_admission.py \
             tools/awj032/test_airllm_hard_false_remediation.py \
-            tools/awj032/test_airllm_hard_false_inspected_tree.py
+            tools/awj032/test_airllm_hard_false_inspected_tree.py \
+            tools/awj032/test_airllm_runtime_hard_false.py
