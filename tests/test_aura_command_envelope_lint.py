@@ -1,10 +1,13 @@
 import json
+from pathlib import Path
 
 from tools.aura_command_envelope_lint import extract_drive_ids, lint_text, validate_d0_envelope
 
 
 AUTHORITY_ID = "1SnLzRLRDGib2DltXNDKBkgfgI3PWayj6O6b5I8AkyP8"
 WORK_ORDER_ID = "1PkEPzyF0_25yGA776_TIcHAWv9ho_N4mkqJ2WfM5mP4"
+R2_COMMAND_ID = "AWJ032-GLM53-06-STRICT-D0-PAGER-CACHE-TRACE-BENCHMARK-20260830-R2"
+R2_FIXTURE = Path(__file__).parent / "fixtures" / "awj032_glm53_06_r2_envelope.json"
 
 
 def _good_envelope():
@@ -115,3 +118,18 @@ def test_objective_task_is_not_a_substitute_for_dispatcher_text():
     receipt = validate_d0_envelope(env)
     assert receipt["valid"] is False
     assert receipt["errors"] == ["OBJECTIVE_TEXT_MISSING"]
+
+
+def test_actual_glm53_r2_successor_fixture_matches_current_profile():
+    text = R2_FIXTURE.read_text(encoding="utf-8")
+    env = json.loads(text)
+    assert env["command_id"] == R2_COMMAND_ID
+    assert env["idempotency_key"] == R2_COMMAND_ID
+    assert env["objective"]["text"].strip()
+
+    receipt = lint_text(text)
+    assert receipt["valid"] is True
+    assert receipt["errors"] == []
+    assert receipt["warnings"] == []
+    assert receipt["authority_resolution"] == "UNVERIFIED"
+    assert receipt["drive_ids"] == [AUTHORITY_ID, "17Kar9873--ZnIEdoqqXQ8Pdb6cEX9FpLZygfQZlXlEg"]
