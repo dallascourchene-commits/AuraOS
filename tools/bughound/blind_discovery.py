@@ -5,6 +5,10 @@ snapshot and neutral inspection instruction. Seeded labels, fixed references,
 oracles, case IDs, and causal cones remain evaluator-only. Novel findings are
 queued for independent verification rather than silently credited as true bugs.
 
+Seeded true-positive credit additionally requires an evaluator-owned resolution
+bound to the hidden case and oracle. Candidate localization alone is not an
+independent oracle and cannot earn seeded TP credit.
+
 This module performs no provider call, network scan, external target interaction,
 public submission, repair, merge, promotion, or authority widening.
 """
@@ -20,6 +24,7 @@ from tools.bughound.seedlab_benchmark import SeedBugCaseV1, Visibility
 SCHEMA = "BlindDiscoveryPacketV1"
 BINDING_SCHEMA = "HiddenCaseBindingV1"
 FINDING_SCHEMA = "BlindFindingV1"
+RESOLUTION_SCHEMA = "EvaluatorFindingResolutionV1"
 ADJUDICATION_SCHEMA = "BlindAdjudicationV1"
 NEUTRAL_INSTRUCTION = "Inspect this source snapshot proactively for correctness defects. No issue report is provided."
 
@@ -189,6 +194,42 @@ class BlindFindingV1:
         return _digest("AURA_BUGHOUND_BLIND_FINDING_V1", asdict(self))
 
 
+@dataclass(frozen=True)
+class EvaluatorFindingResolutionV1:
+    """Evaluator-only resolution; never serialized into a candidate packet."""
+
+    target_id: str
+    finding_id: str
+    hidden_case_digest: str
+    oracle_id: str
+    evaluator_generation: str
+    corroborates_seeded_bug: bool
+    evidence_refs: tuple[str, ...]
+    independent_oracle: bool = True
+    authority: bool = False
+    external_effect: bool = False
+    schema: str = RESOLUTION_SCHEMA
+
+    def __post_init__(self) -> None:
+        _text(self.target_id, "TARGET_ID_REQUIRED")
+        _text(self.finding_id, "FINDING_ID_REQUIRED")
+        _text(self.hidden_case_digest, "HIDDEN_CASE_DIGEST_REQUIRED")
+        _text(self.oracle_id, "ORACLE_ID_REQUIRED")
+        _text(self.evaluator_generation, "EVALUATOR_GENERATION_REQUIRED")
+        if type(self.corroborates_seeded_bug) is not bool:
+            raise BlindDiscoveryError("CORROBORATION_BOOL_REQUIRED")
+        if type(self.independent_oracle) is not bool:
+            raise BlindDiscoveryError("INDEPENDENT_ORACLE_BOOL_REQUIRED")
+        if not isinstance(self.evidence_refs, tuple):
+            raise BlindDiscoveryError("EVIDENCE_REFS_TUPLE_REQUIRED")
+        if self.authority or self.external_effect:
+            raise BlindDiscoveryError("EFFECT_OR_AUTHORITY_WIDENING_FORBIDDEN")
+
+    @property
+    def resolution_digest(self) -> str:
+        return _digest("AURA_BUGHOUND_EVALUATOR_RESOLUTION_V1", asdict(self))
+
+
 def parse_blind_finding(value: Mapping[str, Any]) -> BlindFindingV1:
     if not isinstance(value, Mapping):
         raise BlindDiscoveryError("BLIND_FINDING_MAPPING_REQUIRED")
@@ -284,6 +325,30 @@ def validate_packet_binding(
     packet.to_candidate_dict()
 
 
+def validate_evaluator_resolution(
+    resolution: EvaluatorFindingResolutionV1,
+    *,
+    packet: BlindDiscoveryPacketV1,
+    binding: HiddenCaseBindingV1,
+    case: SeedBugCaseV1,
+    finding: BlindFindingV1,
+) -> None:
+    if not isinstance(resolution, EvaluatorFindingResolutionV1):
+        raise BlindDiscoveryError("EVALUATOR_RESOLUTION_REQUIRED")
+    if resolution.target_id != packet.target_id or resolution.target_id != binding.target_id:
+        raise BlindDiscoveryError("EVALUATOR_BINDING_MISMATCH")
+    if resolution.finding_id != finding.finding_id:
+        raise BlindDiscoveryError("EVALUATOR_FINDING_MISMATCH")
+    if resolution.hidden_case_digest != case.case_digest or resolution.hidden_case_digest != binding.hidden_case_digest:
+        raise BlindDiscoveryError("EVALUATOR_BINDING_MISMATCH")
+    if resolution.oracle_id != case.oracle_id:
+        raise BlindDiscoveryError("EVALUATOR_ORACLE_MISMATCH")
+    if resolution.evaluator_generation != binding.evaluator_generation:
+        raise BlindDiscoveryError("EVALUATOR_BINDING_MISMATCH")
+    if not resolution.independent_oracle:
+        raise BlindDiscoveryError("INDEPENDENT_ORACLE_REQUIRED")
+
+
 @dataclass(frozen=True)
 class BlindAdjudicationV1:
     target_id: str
@@ -292,6 +357,8 @@ class BlindAdjudicationV1:
     clean_control_correct: bool
     novelty_verification_required: bool
     evaluator_generation: str
+    evaluator_resolution_digest: str | None = None
+    independent_oracle_observed: bool = False
     authority: bool = False
     external_effect: bool = False
     schema: str = ADJUDICATION_SCHEMA
@@ -307,7 +374,15 @@ def adjudicate_blind_finding(
     binding: HiddenCaseBindingV1,
     case: SeedBugCaseV1,
     finding: BlindFindingV1 | Mapping[str, Any] | None,
+    resolution: EvaluatorFindingResolutionV1 | None = None,
 ) -> BlindAdjudicationV1:
+    """Adjudicate one blind finding with independent evaluator evidence.
+
+    For a seeded positive case, candidate localization is necessary but never
+    sufficient. Seeded TP credit requires a bound evaluator resolution whose
+    oracle is explicitly independent. Without that resolution the result stays
+    POTENTIAL_NOVELTY_UNVERIFIED.
+    """
     validate_packet_binding(packet, binding, case)
     parsed: BlindFindingV1 | None
     if finding is None:
@@ -319,7 +394,12 @@ def adjudicate_blind_finding(
     if parsed is not None and parsed.target_id != packet.target_id:
         raise BlindDiscoveryError("EVALUATOR_BINDING_MISMATCH")
 
+    resolution_digest: str | None = None
+    independent = False
+
     if parsed is None:
+        if resolution is not None:
+            raise BlindDiscoveryError("EVALUATOR_FINDING_MISMATCH")
         if case.is_bug:
             outcome = "SEEDED_BUG_MISSED"
             tp = False
@@ -337,16 +417,31 @@ def adjudicate_blind_finding(
     else:
         localized = set(parsed.localized_symbols)
         expected = {case.expected_symbol, *case.causal_cone}
-        if localized.intersection(expected):
-            outcome = "SEEDED_BUG_DISCOVERED"
-            tp = True
-            clean = False
-            novelty = False
-        else:
+        if resolution is None:
             outcome = "POTENTIAL_NOVELTY_UNVERIFIED"
             tp = False
             clean = False
             novelty = True
+        else:
+            validate_evaluator_resolution(
+                resolution,
+                packet=packet,
+                binding=binding,
+                case=case,
+                finding=parsed,
+            )
+            resolution_digest = resolution.resolution_digest
+            independent = resolution.independent_oracle
+            if resolution.corroborates_seeded_bug and localized.intersection(expected):
+                outcome = "SEEDED_BUG_DISCOVERED"
+                tp = True
+                clean = False
+                novelty = False
+            else:
+                outcome = "POTENTIAL_NOVELTY_UNVERIFIED"
+                tp = False
+                clean = False
+                novelty = True
 
     return BlindAdjudicationV1(
         target_id=packet.target_id,
@@ -355,4 +450,6 @@ def adjudicate_blind_finding(
         clean_control_correct=clean,
         novelty_verification_required=novelty,
         evaluator_generation=binding.evaluator_generation,
+        evaluator_resolution_digest=resolution_digest,
+        independent_oracle_observed=independent,
     )
