@@ -50,10 +50,11 @@ def _receipt(*, errors: list[str], warnings: list[str], drive_ids: list[str]) ->
 def validate_d0_envelope(env: Any) -> dict[str, Any]:
     """Validate the observed hardened D0 authoring profile, not runtime authority.
 
-    This deliberately fails closed on shape ambiguity.  It mirrors the current
-    author-side constraints established by the 2026-08-30 Arena consumer repair:
-    byte-exact D0 declarations, JSON-first envelopes, real Drive-ID candidates,
-    and no known raw executor-command key.  Runtime currentness, authority walks,
+    This deliberately fails closed on shape ambiguity. It mirrors the current
+    author-side constraints established by the 2026-08-30 Arena admission and
+    dispatcher evidence: byte-exact D0 declarations, JSON-first envelopes,
+    real Drive-ID candidates, a dispatcher-compatible ``objective.text`` field,
+    and no known raw executor-command key. Runtime currentness, authority walks,
     allowlisting, provider admission, and effect execution remain separate gates.
     """
     errors: list[str] = []
@@ -94,9 +95,9 @@ def validate_d0_envelope(env: Any) -> dict[str, Any]:
     else:
         if objective.get("requested_effect") != "D0":
             errors.append("REQUESTED_EFFECT_NOT_EXACT_D0")
-        task = objective.get("task")
-        if not isinstance(task, str) or not task.strip():
-            errors.append("OBJECTIVE_TASK_MISSING")
+        text = objective.get("text")
+        if not isinstance(text, str) or not text.strip():
+            errors.append("OBJECTIVE_TEXT_MISSING")
 
     work_order_ref = env.get("work_order_ref")
     if not isinstance(work_order_ref, str) or not work_order_ref:
