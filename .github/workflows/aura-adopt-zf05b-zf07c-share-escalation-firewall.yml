@@ -1,0 +1,26 @@
+name: AURA ADOPT ZF-05B ZF-07C Share Escalation Firewall
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/zf05b_zf07c_share_escalation_firewall.py'
+      - 'tools/aura_adopt/test_zf05b_zf07c_share_escalation_firewall.py'
+      - '.github/workflows/aura-adopt-zf05b-zf07c-share-escalation-firewall.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-regressions:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile firewall
+        run: python -m py_compile tools/aura_adopt/zf05b_zf07c_share_escalation_firewall.py
+      - name: Run focused regressions
+        working-directory: tools/aura_adopt
+        run: python -m unittest -v test_zf05b_zf07c_share_escalation_firewall.py
