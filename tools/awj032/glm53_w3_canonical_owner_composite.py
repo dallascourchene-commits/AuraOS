@@ -1,9 +1,10 @@
 """Canonical-owner W3 composition for AWJ032 GLM-5.3.
 
-D0/nonpromoting. The live input is the PR410 W3 producer-consumption receipt.
-The MTP provenance owner is not caller-supplied: it is a code-owned receipt pinned
-from the independently observed PR421 exact hosted generation. This avoids turning
-a PR421-shaped mapping into self-authenticating evidence.
+D0/nonpromoting. The canonical public boundary accepts the lower pager plan plus
+current security/metadata evidence and invokes PR410's producer-consuming W3
+admission itself. A caller-supplied serialized PR410 receipt is not accepted as
+consequence authority. The MTP provenance owner remains a code-owned receipt pinned
+from the independently observed PR421 exact hosted generation.
 
 Success grants only eligibility for the deterministic native synthetic W3 fixture.
 It does not grant official tensor compatibility, numerical W3 proof, model/runtime
@@ -20,6 +21,7 @@ from tools.awj032.glm53_official_w2_observation import OFFICIAL_W2_OBSERVATION
 from tools.awj032.glm53_w3_official_producer_admission import (
     CURRENT_AIRLLM_SECURITY_SEMANTIC_HEAD,
     CURRENT_GLM53_METADATA_SEMANTIC_HEAD,
+    evaluate_w3_official_producer_admission,
 )
 
 SCHEMA = "AWJ032GLM53W3CanonicalOwnerCompositeV1"
@@ -161,6 +163,12 @@ def _validate_owner_receipt() -> PR421CanonicalOwnerReceipt:
 
 
 def _validate_w3_receipt(value: Any) -> dict[str, Any]:
+    """Validate the receipt emitted by the immediately preceding live PR410 call.
+
+    This helper is deliberately private. It exists for adversarial tests and for
+    the canonical public wrapper below; callers cannot use a serialized receipt
+    as the public consequence-bearing input.
+    """
     receipt = _as_mapping(value, "PR410_W3_RECEIPT_REQUIRED")
     if receipt.get("schema") != W3_SCHEMA:
         raise CanonicalOwnerCompositeError("PR410_W3_RECEIPT_SCHEMA_MISMATCH")
@@ -238,8 +246,8 @@ class W3CanonicalOwnerCompositeReceipt:
         return _digest(self.to_dict())
 
 
-def compose_canonical_w3_admission(*, w3_receipt: Any) -> W3CanonicalOwnerCompositeReceipt:
-    """Join current PR410 with the pinned PR421 owner and open only synthetic eligibility."""
+def _compose_verified_pr410_receipt(w3_receipt: Any) -> W3CanonicalOwnerCompositeReceipt:
+    """Private reduction after the canonical wrapper has executed PR410."""
     w3 = _validate_w3_receipt(w3_receipt)
     owner = _validate_owner_receipt()
     return W3CanonicalOwnerCompositeReceipt(
@@ -248,3 +256,23 @@ def compose_canonical_w3_admission(*, w3_receipt: Any) -> W3CanonicalOwnerCompos
         pr410_input_receipt_digest=_digest(w3),
         pr421_owner_receipt_digest=owner.receipt_digest,
     )
+
+
+def compose_canonical_w3_admission(
+    *,
+    pager_plan: Any,
+    airllm_security_evidence: Mapping[str, Any],
+    glm53_metadata_evidence: Mapping[str, Any],
+) -> W3CanonicalOwnerCompositeReceipt:
+    """Traverse PR410 live, then join its result with the pinned PR421 owner.
+
+    The caller cannot supply a PR410 receipt. PR410 itself must consume the lower
+    pager plan through its official-W2 producer binder at this consequence
+    boundary before the canonical-owner reduction may run.
+    """
+    w3_receipt = evaluate_w3_official_producer_admission(
+        pager_plan=pager_plan,
+        airllm_security_evidence=airllm_security_evidence,
+        glm53_metadata_evidence=glm53_metadata_evidence,
+    )
+    return _compose_verified_pr410_receipt(w3_receipt)
