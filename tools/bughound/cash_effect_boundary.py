@@ -12,6 +12,10 @@ AuraOS security hardening may reuse generic tools or sanitized abstract patterns
 but it is not a BugHound mission/profile and receives no BugHound payout, scope,
 testing, disclosure, or submission authority through this module.
 
+The live-effect grant and sanitizer receipt are producer-bound proof planes.
+Their own internal consistency is necessary but insufficient: the consumer must
+also receive independently supplied expected producer/receipt identities.
+
 D0 by default. Nothing here performs network access, credential use, submission,
 claiming/payment, provider calls, repository mutation, deployment, or spend.
 """
@@ -140,6 +144,9 @@ class BountyLiveEffectGrantV1:
     human_authorization_ref: str | None
     revocation_currentness_ref: str
     disclosure_policy_ref: str
+    producer_ref: str
+    producer_generation: str
+    producer_currentness_ref: str
     authority: bool = True
     schema: str = "BountyLiveEffectGrantV1"
 
@@ -152,6 +159,8 @@ class BountyLiveEffectGrantV1:
 class LiveEffectAdmissionReceiptV1:
     mission_receipt_digest: str
     effect_grant_digest: str
+    producer_ref: str
+    producer_generation: str
     program_ref: str
     target_ref: str
     target_generation: str
@@ -177,6 +186,9 @@ class SanitizedPatternReceiptV1:
     reusable_memory_policy_ref: str
     sanitizer_generation: str
     reviewer_ref: str
+    producer_ref: str
+    producer_generation: str
+    producer_currentness_ref: str
     removed_classes: tuple[str, ...]
     retained_abstract_pattern_ref: str
     target_specific_material_present: bool
@@ -197,6 +209,8 @@ class SanitizedPatternReceiptV1:
 class ReusablePatternExportV1:
     source_mission_receipt_digest: str
     sanitized_pattern_receipt_digest: str
+    producer_ref: str
+    producer_generation: str
     retained_abstract_pattern_ref: str
     destination_context: str
     bughound_mission_state_exported: bool = False
@@ -245,11 +259,16 @@ def admit_shared_tool_for_cash_research(
 def admit_live_effect(
     receipt: BugHoundCashMissionReceiptV1,
     grant: BountyLiveEffectGrantV1,
+    *,
+    expected_grant_digest: str,
+    expected_producer_ref: str,
+    expected_producer_generation: str,
 ) -> LiveEffectAdmissionReceiptV1:
-    """Admit exactly one bounded live-testing authority plane.
+    """Admit exactly one independently expected live-testing authority plane.
 
     This returns an admission receipt only. It does not execute the network
-    effect and grants no submission, payout, or payment authority.
+    effect and grants no submission, payout, or payment authority. A caller may
+    not self-certify a grant merely by constructing a self-consistent dataclass.
     """
     _verify_mission_receipt(receipt)
     if grant.profile_id != CANONICAL_PROFILE_ID:
@@ -264,6 +283,19 @@ def admit_live_effect(
         raise CashEffectBoundaryError("LIVE_GRANT_AUTHORITY_REQUIRED")
     if not grant.program_policy_current:
         raise CashEffectBoundaryError("LIVE_GRANT_PROGRAM_POLICY_STALE")
+
+    expected_digest = _text(expected_grant_digest, "EXPECTED_LIVE_GRANT_DIGEST_REQUIRED")
+    expected_ref = _text(expected_producer_ref, "EXPECTED_LIVE_GRANT_PRODUCER_REQUIRED")
+    expected_generation = _text(
+        expected_producer_generation,
+        "EXPECTED_LIVE_GRANT_PRODUCER_GENERATION_REQUIRED",
+    )
+    if grant.grant_digest != expected_digest:
+        raise CashEffectBoundaryError("LIVE_GRANT_EXPECTATION_MISMATCH")
+    if grant.producer_ref != expected_ref or grant.producer_generation != expected_generation:
+        raise CashEffectBoundaryError("LIVE_GRANT_PRODUCER_MISMATCH")
+    _text(grant.producer_currentness_ref, "LIVE_GRANT_PRODUCER_CURRENTNESS_REQUIRED")
+
     _text(grant.program_policy_snapshot_digest, "LIVE_GRANT_POLICY_DIGEST_REQUIRED")
     _text(grant.program_policy_generation, "LIVE_GRANT_POLICY_GENERATION_REQUIRED")
     _text(grant.scope_rules_digest, "LIVE_GRANT_SCOPE_DIGEST_REQUIRED")
@@ -283,6 +315,8 @@ def admit_live_effect(
     return LiveEffectAdmissionReceiptV1(
         mission_receipt_digest=receipt.receipt_digest,
         effect_grant_digest=grant.grant_digest,
+        producer_ref=grant.producer_ref,
+        producer_generation=grant.producer_generation,
         program_ref=receipt.program_ref,
         target_ref=receipt.target_ref,
         target_generation=receipt.target_generation,
@@ -298,8 +332,12 @@ def export_sanitized_pattern(
     sanitized: SanitizedPatternReceiptV1,
     *,
     destination_context: str,
+    expected_sanitized_receipt_digest: str,
+    expected_producer_ref: str,
+    expected_producer_generation: str,
+    expected_reviewer_ref: str,
 ) -> ReusablePatternExportV1:
-    """Export only authority-free abstract knowledge from a bounty mission."""
+    """Export only independently expected, authority-free abstract knowledge."""
     _verify_mission_receipt(receipt)
     if sanitized.mission_receipt_digest != receipt.receipt_digest:
         raise CashEffectBoundaryError("SANITIZED_PATTERN_MISSION_MISMATCH")
@@ -308,10 +346,28 @@ def export_sanitized_pattern(
         raise CashEffectBoundaryError("REUSE_DESTINATION_CONTEXT_NOT_ADMITTED")
     if sanitized.authority:
         raise CashEffectBoundaryError("SANITIZED_PATTERN_CANNOT_CARRY_AUTHORITY")
+
+    expected_digest = _text(
+        expected_sanitized_receipt_digest,
+        "EXPECTED_SANITIZED_RECEIPT_DIGEST_REQUIRED",
+    )
+    expected_ref = _text(expected_producer_ref, "EXPECTED_SANITIZER_PRODUCER_REQUIRED")
+    expected_generation = _text(
+        expected_producer_generation,
+        "EXPECTED_SANITIZER_PRODUCER_GENERATION_REQUIRED",
+    )
+    expected_reviewer = _text(expected_reviewer_ref, "EXPECTED_SANITIZER_REVIEWER_REQUIRED")
+    if sanitized.receipt_digest != expected_digest:
+        raise CashEffectBoundaryError("SANITIZED_PATTERN_EXPECTATION_MISMATCH")
+    if sanitized.producer_ref != expected_ref or sanitized.producer_generation != expected_generation:
+        raise CashEffectBoundaryError("SANITIZED_PATTERN_PRODUCER_MISMATCH")
+    if sanitized.reviewer_ref != expected_reviewer:
+        raise CashEffectBoundaryError("SANITIZED_PATTERN_REVIEWER_MISMATCH")
+    _text(sanitized.producer_currentness_ref, "SANITIZER_PRODUCER_CURRENTNESS_REQUIRED")
+
     _text(sanitized.disclosure_state_ref, "SANITIZED_DISCLOSURE_STATE_REQUIRED")
     _text(sanitized.reusable_memory_policy_ref, "SANITIZED_MEMORY_POLICY_REQUIRED")
     _text(sanitized.sanitizer_generation, "SANITIZER_GENERATION_REQUIRED")
-    _text(sanitized.reviewer_ref, "SANITIZER_REVIEWER_REQUIRED")
     pattern_ref = _text(sanitized.retained_abstract_pattern_ref, "SANITIZED_PATTERN_REF_REQUIRED")
 
     sensitive = {
@@ -332,6 +388,8 @@ def export_sanitized_pattern(
     return ReusablePatternExportV1(
         source_mission_receipt_digest=receipt.receipt_digest,
         sanitized_pattern_receipt_digest=sanitized.receipt_digest,
+        producer_ref=sanitized.producer_ref,
+        producer_generation=sanitized.producer_generation,
         retained_abstract_pattern_ref=pattern_ref,
         destination_context=destination,
     )
