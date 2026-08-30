@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788102435,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -146,6 +146,7 @@
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
+      ".github/workflows/cs-arena-sync-as02.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -1633,6 +1634,8 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project035/artifact_sync_core.py",
+      "tools/project035/test_artifact_sync_core.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26442786,
+      "tokens_est": 6601049,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3895,6 +3898,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 56,
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:_canonical:a906c84253d481c6",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4337,6 +4348,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:_digest:8ad93ee33fb266b0",
+        "signature_hash": "9edcae7e502cc579"
       }
     ],
     "_token_proxy": [
@@ -13707,6 +13726,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 73,
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:_sha256:946492bca38c9fce",
+        "signature_hash": "0e172a41a478a19f"
       }
     ],
     "PullRequestRouteBinding": [
@@ -14653,6 +14680,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 43,
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:_text:99f4b9ad0f700473",
+        "signature_hash": "a4ea29b9a7789fe0"
       }
     ],
     "_bounded": [
@@ -30695,6 +30730,14 @@
         "end_line": 388,
         "semantic_id": "aura_spatial_projection.py#function:_nonnegative_int:268b62b5575eb7c0",
         "signature_hash": "da3b10c24c5b5036"
+      },
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 66,
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:_nonnegative_int:89a17e4f033b2679",
+        "signature_hash": "b8739218d7c73d0c"
       }
     ],
     "WorkbenchState": [
@@ -128937,6 +128980,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_construction_state.py#function:event:1b154c011b0d5e53",
         "signature_hash": "17aefef5728da1b4"
+      },
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 35,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#function:event:adedee333eb728eb",
+        "signature_hash": "a2ceafe3d482d3d1"
       }
     ],
     "basic_state": [
@@ -157181,6 +157232,526 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "ArtifactSyncError": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 36,
+        "semantic_id": "tools/project035/artifact_sync_core.py#class:ArtifactSyncError:1f13f2c78ec83990",
+        "signature_hash": "0438cddf8e1353ce"
+      }
+    ],
+    "ArtifactSyncError.__init__": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 36,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactSyncError.__init__:aa6b43d804f6e1cc",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "ArtifactMutationEventV1": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "class",
+        "line": 77,
+        "end_line": 170,
+        "semantic_id": "tools/project035/artifact_sync_core.py#class:ArtifactMutationEventV1:fd0b1923fa27cd07",
+        "signature_hash": "8cd7daba8315f9af"
+      }
+    ],
+    "ArtifactMutationEventV1.validate": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 125,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMutationEventV1.validate:07badef07bd2648f",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ArtifactMutationEventV1.logical_payload": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 145,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMutationEventV1.logical_payload:7879a94aa521a13b",
+        "signature_hash": "c612902d452d55c3"
+      }
+    ],
+    "ArtifactMutationEventV1.expected_event_id": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 148,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMutationEventV1.expected_event_id:639df77fd85a2538",
+        "signature_hash": "cb20f95edba7c637"
+      }
+    ],
+    "ArtifactMutationEventV1.idempotency_key": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 152,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMutationEventV1.idempotency_key:104cfaf72795ffee",
+        "signature_hash": "3467d892c5738cea"
+      }
+    ],
+    "ArtifactMutationEventV1.to_dict": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 160,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMutationEventV1.to_dict:24c466ede2b315f0",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "ArtifactMutationEventV1.build": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 170,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMutationEventV1.build:a749c73cb61e19e5",
+        "signature_hash": "c5a9ff92d9b0250f"
+      }
+    ],
+    "ArtifactIdentityV1": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "class",
+        "line": 174,
+        "end_line": 264,
+        "semantic_id": "tools/project035/artifact_sync_core.py#class:ArtifactIdentityV1:254576e610c84782",
+        "signature_hash": "f7c994c1b248cd5f"
+      }
+    ],
+    "ArtifactIdentityV1.validate": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 204,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactIdentityV1.validate:ea462aba2743280d",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ArtifactIdentityV1.expected_artifact_sid": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 206,
+        "end_line": 216,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactIdentityV1.expected_artifact_sid:b35e7704e954c028",
+        "signature_hash": "128e4b7820523719"
+      }
+    ],
+    "ArtifactIdentityV1.content_key": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 220,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactIdentityV1.content_key:84855f85772d04f3",
+        "signature_hash": "f35612decc929832"
+      }
+    ],
+    "ArtifactIdentityV1.to_dict": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 222,
+        "end_line": 228,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactIdentityV1.to_dict:aeb9f2b4e412121f",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "ArtifactIdentityV1.from_bytes": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 231,
+        "end_line": 264,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactIdentityV1.from_bytes:c7795cf3deec250f",
+        "signature_hash": "b4cba9dcb2bb4881"
+      }
+    ],
+    "ArtifactMirrorFenceV1": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "class",
+        "line": 268,
+        "end_line": 304,
+        "semantic_id": "tools/project035/artifact_sync_core.py#class:ArtifactMirrorFenceV1:bba6214396b32fad",
+        "signature_hash": "7bc380c476b6a8cb"
+      }
+    ],
+    "ArtifactMirrorFenceV1.mint": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 276,
+        "end_line": 290,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMirrorFenceV1.mint:8f036c7f565fa082",
+        "signature_hash": "bb940f3712d0e2d8"
+      }
+    ],
+    "ArtifactMirrorFenceV1.validate": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 292,
+        "end_line": 300,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMirrorFenceV1.validate:63dce09ac3bb9885",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ArtifactMirrorFenceV1.to_dict": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 302,
+        "end_line": 304,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMirrorFenceV1.to_dict:74b819649905b46b",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "mirror_route_decision": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "function",
+        "line": 307,
+        "end_line": 337,
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:mirror_route_decision:37fa04b55176a9aa",
+        "signature_hash": "f1922212a304d254"
+      }
+    ],
+    "QuiescenceSampleV1": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "class",
+        "line": 341,
+        "end_line": 351,
+        "semantic_id": "tools/project035/artifact_sync_core.py#class:QuiescenceSampleV1:ae2b9b77ff00d54b",
+        "signature_hash": "0be6f5765288136a"
+      }
+    ],
+    "QuiescenceSampleV1.validate": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "method",
+        "line": 348,
+        "end_line": 351,
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:QuiescenceSampleV1.validate:fc1d0e50bfda86c9",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "evaluate_quiescence": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "function",
+        "line": 354,
+        "end_line": 397,
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:evaluate_quiescence:c740841334c54e2f",
+        "signature_hash": "d5922b95bed51794"
+      }
+    ],
+    "event_for_mirrored_observation": [
+      {
+        "file": "tools/project035/artifact_sync_core.py",
+        "kind": "function",
+        "line": 400,
+        "end_line": 432,
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:event_for_mirrored_observation:183bd63ba70a6f55",
+        "signature_hash": "002d46d21929a9a6"
+      }
+    ],
+    "ArtifactMutationTests": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 80,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#class:ArtifactMutationTests:0a258da1f8d1413e",
+        "signature_hash": "9324e902090bbb8c"
+      }
+    ],
+    "ArtifactMutationTests.test_observation_clock_does_not_churn_event_identity": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 43,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_observation_clock_does_not_churn_event_identity:54b738a1a76c7075",
+        "signature_hash": "c2516b6190c5376a"
+      }
+    ],
+    "ArtifactMutationTests.test_generation_changes_mutation_identity": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_generation_changes_mutation_identity:30798e10fab49e58",
+        "signature_hash": "eef7f56da40ed536"
+      }
+    ],
+    "ArtifactMutationTests.test_metadata_does_not_change_logical_mutation_identity": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 51,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_metadata_does_not_change_logical_mutation_identity:1f945d6fe743715c",
+        "signature_hash": "ba6a23082bfde38c"
+      }
+    ],
+    "ArtifactMutationTests.test_bad_event_id_fails_closed": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 58,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_bad_event_id_fails_closed:de1dfb0aa8485669",
+        "signature_hash": "424064c2fb032945"
+      }
+    ],
+    "ArtifactMutationTests.test_rename_requires_prior_lineage": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 63,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_rename_requires_prior_lineage:7677e70265aa5593",
+        "signature_hash": "5778c3c871036be7"
+      }
+    ],
+    "ArtifactMutationTests.test_rename_with_prior_source_is_valid": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 71,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_rename_with_prior_source_is_valid:6bb37f519ee79aac",
+        "signature_hash": "bba65a71580bf461"
+      }
+    ],
+    "ArtifactMutationTests.test_tombstone_requires_prior_lineage": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 76,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_tombstone_requires_prior_lineage:3bedcedcd2deabc3",
+        "signature_hash": "293b1786f90f829b"
+      }
+    ],
+    "ArtifactMutationTests.test_tombstone_preserves_prior_artifact_lineage": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 80,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_tombstone_preserves_prior_artifact_lineage:74697a060863b674",
+        "signature_hash": "fabb424d711654dd"
+      }
+    ],
+    "ArtifactIdentityTests": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "class",
+        "line": 83,
+        "end_line": 141,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#class:ArtifactIdentityTests:804dd38bfb514116",
+        "signature_hash": "5537b662a0480647"
+      }
+    ],
+    "ArtifactIdentityTests.test_same_bytes_same_provenance_same_sid": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 96,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactIdentityTests.test_same_bytes_same_provenance_same_sid:a8a0b58d8986a4ed",
+        "signature_hash": "90da41431096e70d"
+      }
+    ],
+    "ArtifactIdentityTests.test_same_bytes_different_provenance_do_not_collapse_sid": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 116,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactIdentityTests.test_same_bytes_different_provenance_do_not_collapse_sid:2134e27f86a663e0",
+        "signature_hash": "4d33df856101f0a2"
+      }
+    ],
+    "ArtifactIdentityTests.test_different_bytes_same_path_do_not_collapse": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 129,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactIdentityTests.test_different_bytes_same_path_do_not_collapse:bfa545de545cf679",
+        "signature_hash": "3586560d5b138f9a"
+      }
+    ],
+    "ArtifactIdentityTests.test_semantic_type_is_not_used_as_coordinate_truth": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 141,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactIdentityTests.test_semantic_type_is_not_used_as_coordinate_truth:58ded4026ca9922b",
+        "signature_hash": "487817d242540187"
+      }
+    ],
+    "MirrorFenceTests": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "class",
+        "line": 144,
+        "end_line": 202,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#class:MirrorFenceTests:cd9afa0c37ec7810",
+        "signature_hash": "ce356a017b689f5f"
+      }
+    ],
+    "MirrorFenceTests.test_forward_mirror_mints_deterministic_fence_without_authority": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 150,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:MirrorFenceTests.test_forward_mirror_mints_deterministic_fence_without_authority:c5fc602000015c4c",
+        "signature_hash": "a23322bb933b34d2"
+      }
+    ],
+    "MirrorFenceTests.test_same_surface_mirror_is_refused": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 154,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:MirrorFenceTests.test_same_surface_mirror_is_refused:e8d99f975bf89c0b",
+        "signature_hash": "f0b6b6691322d032"
+      }
+    ],
+    "MirrorFenceTests.test_reflected_mirror_is_suppressed": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 178,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:MirrorFenceTests.test_reflected_mirror_is_suppressed:1986e86adeb92769",
+        "signature_hash": "8dcfaad260df4707"
+      }
+    ],
+    "MirrorFenceTests.test_wrong_fence_lineage_is_refused": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 180,
+        "end_line": 193,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:MirrorFenceTests.test_wrong_fence_lineage_is_refused:dac7f8142494ceb4",
+        "signature_hash": "d483b9215c46942d"
+      }
+    ],
+    "MirrorFenceTests.test_generation_change_mints_new_fence": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 195,
+        "end_line": 202,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:MirrorFenceTests.test_generation_change_mints_new_fence:6e0acc968c8d279c",
+        "signature_hash": "88f763593d3beec4"
+      }
+    ],
+    "QuiescenceTests": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "class",
+        "line": 205,
+        "end_line": 255,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#class:QuiescenceTests:36864286b43b9bd7",
+        "signature_hash": "2426b2a8f75048f5"
+      }
+    ],
+    "QuiescenceTests.test_no_samples_waits": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 206,
+        "end_line": 209,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_no_samples_waits:81d8f9b313fe102f",
+        "signature_hash": "18bb01943c2b748c"
+      }
+    ],
+    "QuiescenceTests.test_partial_write_does_not_ingest": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 218,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_partial_write_does_not_ingest:6ec92af21b68e517",
+        "signature_hash": "4be54c28132a7cc8"
+      }
+    ],
+    "QuiescenceTests.test_stable_window_is_quiescent": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 220,
+        "end_line": 227,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_stable_window_is_quiescent:b5736af15059474a",
+        "signature_hash": "55fe1190dd30cbae"
+      }
+    ],
+    "QuiescenceTests.test_stability_window_must_be_long_enough": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 229,
+        "end_line": 236,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_stability_window_must_be_long_enough:d9b3810e3da143b8",
+        "signature_hash": "086ca96cc48479b0"
+      }
+    ],
+    "QuiescenceTests.test_close_evidence_short_circuits_sampling": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 238,
+        "end_line": 241,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_close_evidence_short_circuits_sampling:b95bd7b4fd054d9a",
+        "signature_hash": "b6d3bf5a93d4c676"
+      }
+    ],
+    "QuiescenceTests.test_atomic_publish_evidence_short_circuits_sampling": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 243,
+        "end_line": 246,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_atomic_publish_evidence_short_circuits_sampling:c5eef4c16367edeb",
+        "signature_hash": "bca5bf6ec6fa1bdd"
+      }
+    ],
+    "QuiescenceTests.test_out_of_order_samples_fail_closed": [
+      {
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "kind": "method",
+        "line": 248,
+        "end_line": 255,
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_out_of_order_samples_fail_closed:dcd96aa9fafd5f04",
+        "signature_hash": "ecd42e0c44aefe7a"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158299,6 +158870,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/ci.yml",
+      ".github/workflows/cs-arena-sync-as02.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -158627,6 +159199,10 @@
     ],
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/cs-arena-sync-as02.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
@@ -159293,9 +159869,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -168353,6 +168926,63 @@
         -0.075867,
         0.125616,
         0.088305
+      ]
+    },
+    {
+      "path": ".github/workflows/cs-arena-sync-as02.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 829,
+      "lines": 33,
+      "tokens_est": 208,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          31
+        ],
+        "python -m unittest": [
+          32
+        ]
+      },
+      "topology": {},
+      "digest8": "26fd970d352de711",
+      "vector": [
+        0.100495,
+        -0.279154,
+        0.155085,
+        -0.078163,
+        -0.241933,
+        -0.075682,
+        -0.070719,
+        -0.294042,
+        -0.19975,
+        0.202231,
+        -0.27171,
+        0.112902,
+        0.269228,
+        0.053349,
+        -0.016129,
+        0.028536,
+        -0.274191,
+        -0.284116,
+        -0.070719,
+        -0.102977,
+        0.152604,
+        -0.214638,
+        -0.194787,
+        0.269228,
+        -0.204713,
+        -0.016129,
+        0.021092,
+        -0.033498,
+        0.040943,
+        0.070719,
+        -0.281635,
+        0.03598
       ]
     },
     {
@@ -262742,6 +263372,100 @@
       ]
     },
     {
+      "path": "tools/project035/artifact_sync_core.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 16983,
+      "lines": 433,
+      "tokens_est": 4246,
+      "symbol_count": 29,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5647e9c40777fafa",
+      "vector": [
+        0.154675,
+        0.087223,
+        -0.103504,
+        -0.194215,
+        -0.236082,
+        -0.091874,
+        0.024422,
+        0.233756,
+        0.024422,
+        0.087223,
+        0.056985,
+        -0.219801,
+        0.287253,
+        -0.115134,
+        0.198867,
+        -0.19189,
+        0.270971,
+        -0.131415,
+        -0.273297,
+        0.182586,
+        -0.036052,
+        0.052334,
+        -0.10583,
+        0.175608,
+        -0.263993,
+        -0.012793,
+        0.250038,
+        -0.136067,
+        -0.140719,
+        0.277949,
+        -0.166304,
+        -0.219801
+      ]
+    },
+    {
+      "path": "tools/project035/test_artifact_sync_core.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9926,
+      "lines": 260,
+      "tokens_est": 2482,
+      "symbol_count": 29,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1461c0b329c0fc4b",
+      "vector": [
+        -0.138933,
+        0.026285,
+        0.078854,
+        -0.206523,
+        -0.056324,
+        -0.201516,
+        0.008762,
+        -0.16647,
+        0.14394,
+        0.001252,
+        -0.131423,
+        -0.314165,
+        0.254085,
+        0.196509,
+        -0.163966,
+        0.006258,
+        0.186496,
+        -0.096377,
+        0.088867,
+        0.163966,
+        -0.289132,
+        0.076351,
+        0.221542,
+        -0.286628,
+        0.083861,
+        -0.053821,
+        -0.239065,
+        0.148947,
+        -0.17398,
+        -0.194006,
+        0.244072,
+        0.276615
+      ]
+    },
+    {
       "path": "travel_extractors/__init__.py",
       "role": "python_module",
       "binary": false,
@@ -286646,16 +287370,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26442786,
+    "text_tokens_est": 6601049,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286811,6 +287535,7 @@
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
+      ".github/workflows/cs-arena-sync-as02.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -288298,6 +289023,8 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project035/artifact_sync_core.py",
+      "tools/project035/test_artifact_sync_core.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -445634,6 +446361,586 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/project035/artifact_sync_core.py#class:ArtifactIdentityV1:254576e610c84782",
+        "name": "ArtifactIdentityV1",
+        "kind": "class",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 174,
+        "end_line": 264,
+        "signature_hash": "f7c994c1b248cd5f",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#class:ArtifactMirrorFenceV1:bba6214396b32fad",
+        "name": "ArtifactMirrorFenceV1",
+        "kind": "class",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 268,
+        "end_line": 304,
+        "signature_hash": "7bc380c476b6a8cb",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#class:ArtifactMutationEventV1:fd0b1923fa27cd07",
+        "name": "ArtifactMutationEventV1",
+        "kind": "class",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 77,
+        "end_line": 170,
+        "signature_hash": "8cd7daba8315f9af",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#class:ArtifactSyncError:1f13f2c78ec83990",
+        "name": "ArtifactSyncError",
+        "kind": "class",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 30,
+        "end_line": 36,
+        "signature_hash": "0438cddf8e1353ce",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#class:QuiescenceSampleV1:ae2b9b77ff00d54b",
+        "name": "QuiescenceSampleV1",
+        "kind": "class",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 341,
+        "end_line": 351,
+        "signature_hash": "0be6f5765288136a",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:_canonical:a906c84253d481c6",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 46,
+        "end_line": 56,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:_digest:8ad93ee33fb266b0",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "9edcae7e502cc579",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:_nonnegative_int:89a17e4f033b2679",
+        "name": "_nonnegative_int",
+        "kind": "function",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 63,
+        "end_line": 66,
+        "signature_hash": "b8739218d7c73d0c",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:_sha256:946492bca38c9fce",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 69,
+        "end_line": 73,
+        "signature_hash": "0e172a41a478a19f",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:_text:99f4b9ad0f700473",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 39,
+        "end_line": 43,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:evaluate_quiescence:c740841334c54e2f",
+        "name": "evaluate_quiescence",
+        "kind": "function",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 354,
+        "end_line": 397,
+        "signature_hash": "d5922b95bed51794",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:event_for_mirrored_observation:183bd63ba70a6f55",
+        "name": "event_for_mirrored_observation",
+        "kind": "function",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 400,
+        "end_line": 432,
+        "signature_hash": "002d46d21929a9a6",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#function:mirror_route_decision:37fa04b55176a9aa",
+        "name": "mirror_route_decision",
+        "kind": "function",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 307,
+        "end_line": 337,
+        "signature_hash": "f1922212a304d254",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactIdentityV1.content_key:84855f85772d04f3",
+        "name": "ArtifactIdentityV1.content_key",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 218,
+        "end_line": 220,
+        "signature_hash": "f35612decc929832",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactIdentityV1.expected_artifact_sid:b35e7704e954c028",
+        "name": "ArtifactIdentityV1.expected_artifact_sid",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 206,
+        "end_line": 216,
+        "signature_hash": "128e4b7820523719",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactIdentityV1.from_bytes:c7795cf3deec250f",
+        "name": "ArtifactIdentityV1.from_bytes",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 231,
+        "end_line": 264,
+        "signature_hash": "b4cba9dcb2bb4881",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactIdentityV1.to_dict:aeb9f2b4e412121f",
+        "name": "ArtifactIdentityV1.to_dict",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 222,
+        "end_line": 228,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactIdentityV1.validate:ea462aba2743280d",
+        "name": "ArtifactIdentityV1.validate",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 187,
+        "end_line": 204,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMirrorFenceV1.mint:8f036c7f565fa082",
+        "name": "ArtifactMirrorFenceV1.mint",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 276,
+        "end_line": 290,
+        "signature_hash": "bb940f3712d0e2d8",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMirrorFenceV1.to_dict:74b819649905b46b",
+        "name": "ArtifactMirrorFenceV1.to_dict",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 302,
+        "end_line": 304,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMirrorFenceV1.validate:63dce09ac3bb9885",
+        "name": "ArtifactMirrorFenceV1.validate",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 292,
+        "end_line": 300,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMutationEventV1.build:a749c73cb61e19e5",
+        "name": "ArtifactMutationEventV1.build",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 163,
+        "end_line": 170,
+        "signature_hash": "c5a9ff92d9b0250f",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMutationEventV1.expected_event_id:639df77fd85a2538",
+        "name": "ArtifactMutationEventV1.expected_event_id",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 147,
+        "end_line": 148,
+        "signature_hash": "cb20f95edba7c637",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMutationEventV1.idempotency_key:104cfaf72795ffee",
+        "name": "ArtifactMutationEventV1.idempotency_key",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 150,
+        "end_line": 152,
+        "signature_hash": "3467d892c5738cea",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMutationEventV1.logical_payload:7879a94aa521a13b",
+        "name": "ArtifactMutationEventV1.logical_payload",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 127,
+        "end_line": 145,
+        "signature_hash": "c612902d452d55c3",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMutationEventV1.to_dict:24c466ede2b315f0",
+        "name": "ArtifactMutationEventV1.to_dict",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 154,
+        "end_line": 160,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactMutationEventV1.validate:07badef07bd2648f",
+        "name": "ArtifactMutationEventV1.validate",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 96,
+        "end_line": 125,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:ArtifactSyncError.__init__:aa6b43d804f6e1cc",
+        "name": "ArtifactSyncError.__init__",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 33,
+        "end_line": 36,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/artifact_sync_core.py#method:QuiescenceSampleV1.validate:fc1d0e50bfda86c9",
+        "name": "QuiescenceSampleV1.validate",
+        "kind": "method",
+        "file": "tools/project035/artifact_sync_core.py",
+        "line": 348,
+        "end_line": 351,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "5647e9c40777fafa"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#class:ArtifactIdentityTests:804dd38bfb514116",
+        "name": "ArtifactIdentityTests",
+        "kind": "class",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 83,
+        "end_line": 141,
+        "signature_hash": "5537b662a0480647",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#class:ArtifactMutationTests:0a258da1f8d1413e",
+        "name": "ArtifactMutationTests",
+        "kind": "class",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 38,
+        "end_line": 80,
+        "signature_hash": "9324e902090bbb8c",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#class:MirrorFenceTests:cd9afa0c37ec7810",
+        "name": "MirrorFenceTests",
+        "kind": "class",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 144,
+        "end_line": 202,
+        "signature_hash": "ce356a017b689f5f",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#class:QuiescenceTests:36864286b43b9bd7",
+        "name": "QuiescenceTests",
+        "kind": "class",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 205,
+        "end_line": 255,
+        "signature_hash": "2426b2a8f75048f5",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#function:event:adedee333eb728eb",
+        "name": "event",
+        "kind": "function",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 15,
+        "end_line": 35,
+        "signature_hash": "a2ceafe3d482d3d1",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactIdentityTests.test_different_bytes_same_path_do_not_collapse:bfa545de545cf679",
+        "name": "ArtifactIdentityTests.test_different_bytes_same_path_do_not_collapse",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 118,
+        "end_line": 129,
+        "signature_hash": "3586560d5b138f9a",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactIdentityTests.test_same_bytes_different_provenance_do_not_collapse_sid:2134e27f86a663e0",
+        "name": "ArtifactIdentityTests.test_same_bytes_different_provenance_do_not_collapse_sid",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 98,
+        "end_line": 116,
+        "signature_hash": "4d33df856101f0a2",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactIdentityTests.test_same_bytes_same_provenance_same_sid:a8a0b58d8986a4ed",
+        "name": "ArtifactIdentityTests.test_same_bytes_same_provenance_same_sid",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 84,
+        "end_line": 96,
+        "signature_hash": "90da41431096e70d",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactIdentityTests.test_semantic_type_is_not_used_as_coordinate_truth:58ded4026ca9922b",
+        "name": "ArtifactIdentityTests.test_semantic_type_is_not_used_as_coordinate_truth",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 131,
+        "end_line": 141,
+        "signature_hash": "487817d242540187",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_bad_event_id_fails_closed:de1dfb0aa8485669",
+        "name": "ArtifactMutationTests.test_bad_event_id_fails_closed",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 53,
+        "end_line": 58,
+        "signature_hash": "424064c2fb032945",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_generation_changes_mutation_identity:30798e10fab49e58",
+        "name": "ArtifactMutationTests.test_generation_changes_mutation_identity",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "eef7f56da40ed536",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_metadata_does_not_change_logical_mutation_identity:1f945d6fe743715c",
+        "name": "ArtifactMutationTests.test_metadata_does_not_change_logical_mutation_identity",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 48,
+        "end_line": 51,
+        "signature_hash": "ba6a23082bfde38c",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_observation_clock_does_not_churn_event_identity:54b738a1a76c7075",
+        "name": "ArtifactMutationTests.test_observation_clock_does_not_churn_event_identity",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 39,
+        "end_line": 43,
+        "signature_hash": "c2516b6190c5376a",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_rename_requires_prior_lineage:7677e70265aa5593",
+        "name": "ArtifactMutationTests.test_rename_requires_prior_lineage",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 60,
+        "end_line": 63,
+        "signature_hash": "5778c3c871036be7",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_rename_with_prior_source_is_valid:6bb37f519ee79aac",
+        "name": "ArtifactMutationTests.test_rename_with_prior_source_is_valid",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 65,
+        "end_line": 71,
+        "signature_hash": "bba65a71580bf461",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_tombstone_preserves_prior_artifact_lineage:74697a060863b674",
+        "name": "ArtifactMutationTests.test_tombstone_preserves_prior_artifact_lineage",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 78,
+        "end_line": 80,
+        "signature_hash": "fabb424d711654dd",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:ArtifactMutationTests.test_tombstone_requires_prior_lineage:3bedcedcd2deabc3",
+        "name": "ArtifactMutationTests.test_tombstone_requires_prior_lineage",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 73,
+        "end_line": 76,
+        "signature_hash": "293b1786f90f829b",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:MirrorFenceTests.test_forward_mirror_mints_deterministic_fence_without_authority:c5fc602000015c4c",
+        "name": "MirrorFenceTests.test_forward_mirror_mints_deterministic_fence_without_authority",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 145,
+        "end_line": 150,
+        "signature_hash": "a23322bb933b34d2",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:MirrorFenceTests.test_generation_change_mints_new_fence:6e0acc968c8d279c",
+        "name": "MirrorFenceTests.test_generation_change_mints_new_fence",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 195,
+        "end_line": 202,
+        "signature_hash": "88f763593d3beec4",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:MirrorFenceTests.test_reflected_mirror_is_suppressed:1986e86adeb92769",
+        "name": "MirrorFenceTests.test_reflected_mirror_is_suppressed",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 156,
+        "end_line": 178,
+        "signature_hash": "8dcfaad260df4707",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:MirrorFenceTests.test_same_surface_mirror_is_refused:e8d99f975bf89c0b",
+        "name": "MirrorFenceTests.test_same_surface_mirror_is_refused",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 152,
+        "end_line": 154,
+        "signature_hash": "f0b6b6691322d032",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:MirrorFenceTests.test_wrong_fence_lineage_is_refused:dac7f8142494ceb4",
+        "name": "MirrorFenceTests.test_wrong_fence_lineage_is_refused",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 180,
+        "end_line": 193,
+        "signature_hash": "d483b9215c46942d",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_atomic_publish_evidence_short_circuits_sampling:c5eef4c16367edeb",
+        "name": "QuiescenceTests.test_atomic_publish_evidence_short_circuits_sampling",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 243,
+        "end_line": 246,
+        "signature_hash": "bca5bf6ec6fa1bdd",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_close_evidence_short_circuits_sampling:b95bd7b4fd054d9a",
+        "name": "QuiescenceTests.test_close_evidence_short_circuits_sampling",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 238,
+        "end_line": 241,
+        "signature_hash": "b6d3bf5a93d4c676",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_no_samples_waits:81d8f9b313fe102f",
+        "name": "QuiescenceTests.test_no_samples_waits",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 206,
+        "end_line": 209,
+        "signature_hash": "18bb01943c2b748c",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_out_of_order_samples_fail_closed:dcd96aa9fafd5f04",
+        "name": "QuiescenceTests.test_out_of_order_samples_fail_closed",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 248,
+        "end_line": 255,
+        "signature_hash": "ecd42e0c44aefe7a",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_partial_write_does_not_ingest:6ec92af21b68e517",
+        "name": "QuiescenceTests.test_partial_write_does_not_ingest",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 211,
+        "end_line": 218,
+        "signature_hash": "4be54c28132a7cc8",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_stability_window_must_be_long_enough:d9b3810e3da143b8",
+        "name": "QuiescenceTests.test_stability_window_must_be_long_enough",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 229,
+        "end_line": 236,
+        "signature_hash": "086ca96cc48479b0",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
+        "semantic_id": "tools/project035/test_artifact_sync_core.py#method:QuiescenceTests.test_stable_window_is_quiescent:b5736af15059474a",
+        "name": "QuiescenceTests.test_stable_window_is_quiescent",
+        "kind": "method",
+        "file": "tools/project035/test_artifact_sync_core.py",
+        "line": 220,
+        "end_line": 227,
+        "signature_hash": "55fe1190dd30cbae",
+        "file_digest8": "1461c0b329c0fc4b"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +448191,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "dabc56c2b9e1d07d1a3322658e6bd71a",
+    "payload_hash": "c05526179f6cf1b3712cbf12fad080ff"
   }
 }
