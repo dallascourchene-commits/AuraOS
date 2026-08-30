@@ -49,8 +49,8 @@ class BugHoundArenaIsolationBackendTests(unittest.TestCase):
             backend_id="isolation://fixture-1",
             backend_generation="backend-gen-1",
             backend_kind="LINUX_PROCESS_SANDBOX",
-            implementation_digest="impl-1",
-            policy_digest="policy-1",
+            implementation_digest="1" * 64,
+            policy_digest="2" * 64,
             platform_ref="linux://fixture",
             filesystem_confinement=CONFINED,
             network_confinement=CONFINED,
@@ -60,7 +60,7 @@ class BugHoundArenaIsolationBackendTests(unittest.TestCase):
             host_writable_mounts_policy=NO_HOST_WRITABLE_MOUNTS,
             privilege_policy=NO_HOST_PRIVILEGE,
             egress_policy=DENY_BY_DEFAULT,
-            audit_log_digest="audit-1",
+            audit_log_digest="3" * 64,
             source_currentness_ref="backend-source-1",
             attester_ref="attester://backend-producer",
             attester_generation="attester-gen-1",
@@ -186,9 +186,9 @@ class BugHoundArenaIsolationBackendTests(unittest.TestCase):
             self.admit(att=bad)
 
     def test_attestation_must_be_current_and_observed(self) -> None:
-        with self.assertRaisesRegex(ValueError, "BUGHOUND_R1_ATTESTATION_NOT_CURRENT"):
+        with self.assertRaisesRegex(ValueError, "BUGHOUND_R1_ATTESTATION_CURRENT_REQUIRED"):
             self.admit(att=replace(self.attestation(), current=False))
-        with self.assertRaisesRegex(ValueError, "BUGHOUND_R1_BACKEND_POLICY_NOT_OBSERVED"):
+        with self.assertRaisesRegex(ValueError, "BUGHOUND_R1_BACKEND_POLICY_OBSERVED_REQUIRED"):
             self.admit(att=replace(self.attestation(), backend_policy_observed=False))
 
     def test_attestation_external_effect_is_forbidden(self) -> None:
@@ -196,20 +196,47 @@ class BugHoundArenaIsolationBackendTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "BUGHOUND_R1_ATTESTATION_EXTERNAL_EFFECT_FORBIDDEN"):
             self.admit(att=bad)
 
+    def test_attestation_and_registry_schemas_are_validated(self) -> None:
+        with self.assertRaisesRegex(ValueError, "BUGHOUND_R1_ATTESTATION_SCHEMA_MISMATCH"):
+            self.admit(att=replace(self.attestation(), schema="CallerAttestationV0"))
+        att = self.attestation()
+        with self.assertRaisesRegex(ValueError, "BUGHOUND_R1_REGISTRY_SCHEMA_MISMATCH"):
+            self.admit(att=att, record=replace(self.record(att), schema="CallerRegistryV0"))
+
+    def test_attestation_digest_fields_require_lowercase_sha256(self) -> None:
+        for field in ("implementation_digest", "policy_digest", "audit_log_digest"):
+            with self.subTest(field=field):
+                bad = replace(self.attestation(), **{field: "not-a-sha"})
+                with self.assertRaisesRegex(ValueError, "SHA256_REQUIRED"):
+                    self.admit(att=bad)
+
+    def test_attestation_booleans_are_exact_not_truthy(self) -> None:
+        with self.assertRaisesRegex(ValueError, "BUGHOUND_R1_ATTESTATION_CURRENT_REQUIRED"):
+            self.admit(att=replace(self.attestation(), current=1))
+        with self.assertRaisesRegex(ValueError, "BUGHOUND_R1_BACKEND_POLICY_OBSERVED_REQUIRED"):
+            self.admit(att=replace(self.attestation(), backend_policy_observed=1))
+
     def test_registry_must_be_current_independent_and_not_revoked(self) -> None:
         att = self.attestation()
         cases = (
-            (replace(self.record(att), current=False), "BUGHOUND_R1_REGISTRY_NOT_CURRENT"),
+            (replace(self.record(att), current=False), "BUGHOUND_R1_REGISTRY_CURRENT_REQUIRED"),
             (
                 replace(self.record(att), independently_observed=False),
                 "BUGHOUND_R1_REGISTRY_INDEPENDENT_OBSERVATION_REQUIRED",
             ),
-            (replace(self.record(att), revoked=True), "BUGHOUND_R1_BACKEND_REVOKED"),
+            (replace(self.record(att), revoked=True), "BUGHOUND_R1_BACKEND_REVOKED_FORBIDDEN"),
         )
         for record, error in cases:
             with self.subTest(error=error):
                 with self.assertRaisesRegex(ValueError, error):
                     self.admit(att=att, record=record)
+
+    def test_registry_booleans_are_exact_not_truthy(self) -> None:
+        att = self.attestation()
+        with self.assertRaisesRegex(ValueError, "BUGHOUND_R1_REGISTRY_CURRENT_REQUIRED"):
+            self.admit(att=att, record=replace(self.record(att), current=1))
+        with self.assertRaisesRegex(ValueError, "BUGHOUND_R1_BACKEND_REVOKED_FORBIDDEN"):
+            self.admit(att=att, record=replace(self.record(att), revoked=0))
 
     def test_registry_observer_must_be_distinct_from_attester(self) -> None:
         att = self.attestation()
@@ -219,8 +246,14 @@ class BugHoundArenaIsolationBackendTests(unittest.TestCase):
 
     def test_registry_attestation_digest_substitution_fails(self) -> None:
         att = self.attestation()
-        record = replace(self.record(att), attestation_digest="forged")
+        record = replace(self.record(att), attestation_digest="f" * 64)
         with self.assertRaisesRegex(ValueError, "BUGHOUND_R1_REGISTRY_ATTESTATION_DIGEST_MISMATCH"):
+            self.admit(att=att, record=record)
+
+    def test_registry_attestation_digest_shape_fails_before_matching(self) -> None:
+        att = self.attestation()
+        record = replace(self.record(att), attestation_digest="forged")
+        with self.assertRaisesRegex(ValueError, "REGISTRY_ATTESTATION_DIGEST_SHA256_REQUIRED"):
             self.admit(att=att, record=record)
 
     def test_registry_backend_identity_and_generation_substitutions_fail(self) -> None:
