@@ -188,6 +188,33 @@ class LocalArtifactOutbox:
         qualitative = _text("currentness", currentness).upper()
         return expected == self.config.source_currentness_ref and qualitative == "CURRENT"
 
+    def _mirror_preflight(
+        self,
+        inbound_mirror_lineage: MirrorLineage | None,
+        *,
+        expected_mirror_origin_id: str | None,
+        expected_mirror_generation: int | None,
+    ) -> str | None:
+        """Validate exact inbound mirror identity before any outbox/generation effect."""
+        if inbound_mirror_lineage is None:
+            return None
+        if self.config.source_surface in inbound_mirror_lineage.surfaces:
+            return "SELF_LOOP_SUPPRESSED"
+        if expected_mirror_origin_id is None or expected_mirror_generation is None:
+            raise LocalOutboxRefusal("MIRROR_EXPECTATION_REQUIRED")
+        expected_origin = _text("expected_mirror_origin_id", expected_mirror_origin_id)
+        if inbound_mirror_lineage.origin_id != expected_origin:
+            raise LocalOutboxRefusal("MIRROR_ORIGIN_BINDING_MISMATCH")
+        if (
+            not isinstance(expected_mirror_generation, int)
+            or isinstance(expected_mirror_generation, bool)
+            or expected_mirror_generation < 0
+        ):
+            raise LocalOutboxRefusal("INVALID_EXPECTED_MIRROR_GENERATION")
+        if inbound_mirror_lineage.artifact_generation != expected_mirror_generation:
+            raise LocalOutboxRefusal("MIRROR_GENERATION_BINDING_MISMATCH")
+        return None
+
     def _read_bound_bytes(self, path: Path, proof: QuiescenceProof) -> bytes:
         before = path.stat()
         if (before.st_size, before.st_mtime_ns) != (proof.byte_size, proof.mtime_ns):
@@ -334,22 +361,13 @@ class LocalArtifactOutbox:
         if not self._currentness_is_admitted(expected_currentness_ref, currentness):
             return LocalIngestResult("REBASE", None)
         path_obj, resource_ref = self._resource_for_path(path)
-        if inbound_mirror_lineage is not None:
-            if self.config.source_surface in inbound_mirror_lineage.surfaces:
-                return LocalIngestResult("SELF_LOOP_SUPPRESSED", None)
-            if expected_mirror_origin_id is None or expected_mirror_generation is None:
-                raise LocalOutboxRefusal("MIRROR_EXPECTATION_REQUIRED")
-            expected_origin = _text("expected_mirror_origin_id", expected_mirror_origin_id)
-            if inbound_mirror_lineage.origin_id != expected_origin:
-                raise LocalOutboxRefusal("MIRROR_ORIGIN_BINDING_MISMATCH")
-            if (
-                not isinstance(expected_mirror_generation, int)
-                or isinstance(expected_mirror_generation, bool)
-                or expected_mirror_generation < 0
-            ):
-                raise LocalOutboxRefusal("INVALID_EXPECTED_MIRROR_GENERATION")
-            if inbound_mirror_lineage.artifact_generation != expected_mirror_generation:
-                raise LocalOutboxRefusal("MIRROR_GENERATION_BINDING_MISMATCH")
+        mirror_disposition = self._mirror_preflight(
+            inbound_mirror_lineage,
+            expected_mirror_origin_id=expected_mirror_origin_id,
+            expected_mirror_generation=expected_mirror_generation,
+        )
+        if mirror_disposition is not None:
+            return LocalIngestResult(mirror_disposition, None)
         proof = prove_quiescence(
             observations,
             min_stable_samples=self.config.min_stable_samples,
@@ -385,10 +403,20 @@ class LocalArtifactOutbox:
         currentness: str = "CURRENT",
         prior_artifact_id: str = "",
         prior_resource_ref: str = "",
+        inbound_mirror_lineage: MirrorLineage | None = None,
+        expected_mirror_origin_id: str | None = None,
+        expected_mirror_generation: int | None = None,
     ) -> LocalIngestResult:
         if not self._currentness_is_admitted(expected_currentness_ref, currentness):
             return LocalIngestResult("REBASE", None)
         path_obj, resource_ref = self._resource_for_path(path)
+        mirror_disposition = self._mirror_preflight(
+            inbound_mirror_lineage,
+            expected_mirror_origin_id=expected_mirror_origin_id,
+            expected_mirror_generation=expected_mirror_generation,
+        )
+        if mirror_disposition is not None:
+            return LocalIngestResult(mirror_disposition, None)
         if not (prior_artifact_id.strip() or prior_resource_ref.strip()):
             raise LocalOutboxRefusal("PRIOR_LINEAGE_REQUIRED", resource_ref)
         return self._enqueue(
@@ -400,6 +428,7 @@ class LocalArtifactOutbox:
             observed_at=observed_at,
             prior_artifact_id=prior_artifact_id,
             prior_resource_ref=prior_resource_ref,
+            inbound_mirror_lineage=inbound_mirror_lineage,
         )
 
     def ingest_rename(
@@ -414,9 +443,19 @@ class LocalArtifactOutbox:
         prior_artifact_id: str = "",
         closed_evidence: bool = False,
         atomic_publish_evidence: bool = False,
+        inbound_mirror_lineage: MirrorLineage | None = None,
+        expected_mirror_origin_id: str | None = None,
+        expected_mirror_generation: int | None = None,
     ) -> LocalIngestResult:
         if not self._currentness_is_admitted(expected_currentness_ref, currentness):
             return LocalIngestResult("REBASE", None)
+        mirror_disposition = self._mirror_preflight(
+            inbound_mirror_lineage,
+            expected_mirror_origin_id=expected_mirror_origin_id,
+            expected_mirror_generation=expected_mirror_generation,
+        )
+        if mirror_disposition is not None:
+            return LocalIngestResult(mirror_disposition, None)
         _, old_resource = self._resource_for_path(old_path)
         return self.ingest_file_notification(
             new_path,
@@ -429,6 +468,9 @@ class LocalArtifactOutbox:
             atomic_publish_evidence=atomic_publish_evidence,
             prior_artifact_id=prior_artifact_id,
             prior_resource_ref=old_resource,
+            inbound_mirror_lineage=inbound_mirror_lineage,
+            expected_mirror_origin_id=expected_mirror_origin_id,
+            expected_mirror_generation=expected_mirror_generation,
         )
 
     def pending(self) -> list[LocalArtifactOutboxRecord]:
