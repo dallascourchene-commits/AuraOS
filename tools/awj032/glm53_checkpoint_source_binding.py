@@ -82,6 +82,15 @@ class GLM53CheckpointSourceBundle:
     schema: str = SOURCE_SCHEMA
 
     @property
+    def weight_map_digest(self) -> str:
+        index_map = self.index.mapping()
+        weight_map = index_map.get("weight_map")
+        if not isinstance(weight_map, Mapping) or not weight_map:
+            raise SourceBindingError("INDEX_WEIGHT_MAP_REQUIRED")
+        normalized = dict(sorted((str(k), str(v)) for k, v in weight_map.items()))
+        return _sha256_bytes(_canonical(normalized))
+
+    @property
     def source_bundle_id(self) -> str:
         return hashlib.sha256(
             _canonical(
@@ -92,6 +101,7 @@ class GLM53CheckpointSourceBundle:
                     "config_parsed_sha256": self.config.parsed_sha256,
                     "index_raw_sha256": self.index.raw_sha256,
                     "index_parsed_sha256": self.index.parsed_sha256,
+                    "weight_map_digest": self.weight_map_digest,
                 }
             )
         ).hexdigest()
@@ -193,5 +203,6 @@ def source_bound_probe(
         "source_bundle_id": sources.source_bundle_id,
         "config_parsed_sha256": sources.config.parsed_sha256,
         "index_parsed_sha256": sources.index.parsed_sha256,
+        "weight_map_digest": sources.weight_map_digest,
         "source_binding_proven": True,
     }
