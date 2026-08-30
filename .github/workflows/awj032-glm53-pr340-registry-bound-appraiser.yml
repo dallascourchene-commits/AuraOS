@@ -1,0 +1,71 @@
+name: AWJ032 GLM53 PR340 Registry-Bound MTP Appraiser
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_pr340_registry_bound_mtp_appraiser.py"
+      - "tools/awj032/test_glm53_pr340_registry_bound_mtp_appraiser.py"
+      - ".github/workflows/awj032-glm53-pr340-registry-bound-appraiser.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: awj032-glm53-pr340-registry-bound-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  registry-bound-appraiser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.12"
+
+      - name: Install focused test dependency
+        run: python -m pip install "pytest>=8.2,<9.0"
+
+      - name: Verify registry-bound successor and inherited PR409 source-role contract
+        run: |
+          python -m py_compile \
+            tools/awj032/glm53_official_mtp_role_source_appraiser.py \
+            tools/awj032/glm53_pr340_registry_bound_mtp_appraiser.py \
+            tools/awj032/test_glm53_pr340_registry_bound_mtp_appraiser.py
+          python -m pytest -q \
+            tools/awj032/test_glm53_official_mtp_role_source_appraiser.py \
+            tools/awj032/test_glm53_pr340_registry_bound_mtp_appraiser.py
+
+      - name: Verify code-owned production registry pin and public API ceiling
+        run: |
+          python - <<'PY'
+          import inspect
+          from tools.awj032 import glm53_pr340_registry_bound_mtp_appraiser as m
+
+          assert m.PINNED_FINAL_REPORT_DIGEST == "d7ff1b34d091a92449d59c0cb561bc5a87724c67ab9bdb7504a5b38f5c3dfaa9"
+          assert m.PINNED_SNAPSHOT_DIGEST == "e4f187dce49c3711d4c1a388107b190aed6ad5a99508d85c163238f4a8f1c851"
+          assert m.PINNED_CLASSIFICATION_STAGE_LOGICAL_ID == "d03c28d13e4c7c99f49d611c29c24bc9b509158c8a0b84883f584f0c09c43aaa"
+          assert m.PINNED_PRODUCER_BASE_HEAD == "6c1d65fceb084ea3cbe8a59b7e28818155788504"
+          assert m.PINNED_PRODUCER_EXECUTION_HEAD == "a120b0be445990a95476f2286bb75036039da7bb"
+          params = inspect.signature(m.verify_and_admit_registry_bound_official_mtp_role).parameters
+          assert "expected_pr340_logical_id" not in params
+          assert "expected_pr340_semantic_generation" not in params
+          assert m.public_interface_has_caller_expected_identity() is False
+          print("AURA_PR340_REGISTRY_BOUND_SUCCESSOR_PIN_OK")
+          PY
