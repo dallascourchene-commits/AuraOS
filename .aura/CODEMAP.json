@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788105137,
+  "generated_at_unix": 1788106190,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1667,
+    "repo_file_count": 1672,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -147,6 +147,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
+      ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1655,10 +1656,14 @@
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_layout_binding_bridge.py",
       "tools/awj032/glm53_packed_expert_pager.py",
+      "tools/awj032/glm53_per_expert_index_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_layout_binding_bridge.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
+      "tools/awj032/test_glm53_per_expert_index_pager.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1783,16 +1788,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1667,
-      "bytes": 26476794,
-      "tokens_est": 6609592,
+      "files": 1672,
+      "bytes": 26512934,
+      "tokens_est": 6618629,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1014,
-        "schema_or_lexicon": 276,
+        "python_module": 1018,
+        "schema_or_lexicon": 277,
         "support_file": 49
       }
     },
@@ -3955,6 +3960,22 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_canonical:f7426c2678e63cad",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:_canonical:714c5d4c48f7a6b2",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4397,6 +4418,22 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_digest:52413db1a1e1f0ba",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 59,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:_digest:069b97de835db085",
+        "signature_hash": "514f786724465716"
       }
     ],
     "_token_proxy": [
@@ -14721,6 +14758,22 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 44,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_text:d660ea48396dc251",
+        "signature_hash": "7c66637900aa94dc"
+      },
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:_text:73fd0946b38b42c6",
+        "signature_hash": "a4ea29b9a7789fe0"
       }
     ],
     "_bounded": [
@@ -158199,6 +158252,96 @@
         "signature_hash": "3313625eaf98b5c7"
       }
     ],
+    "LayoutBindingError": [
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 30,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#class:LayoutBindingError:12eccb976dbb5296",
+        "signature_hash": "8d670edc5216e16a"
+      }
+    ],
+    "LayoutBindingError.__init__": [
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#method:LayoutBindingError.__init__:56e9a4b401794637",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_shape": [
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_shape:e7b997ddc9d3945f",
+        "signature_hash": "2db45cfaa4dce474"
+      }
+    ],
+    "_scale_map": [
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 81,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_scale_map:60bdc27a744e88e5",
+        "signature_hash": "6a0f88000d98861f"
+      }
+    ],
+    "PagerSourcePlan": [
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "class",
+        "line": 85,
+        "end_line": 109,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#class:PagerSourcePlan:ef3a4541fe427a00",
+        "signature_hash": "b3e36a9066ad9627"
+      }
+    ],
+    "PagerSourcePlan.to_dict": [
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 109,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#method:PagerSourcePlan.to_dict:9bb97d45d0565d2d",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "_common": [
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_common:d3fe91f8e681e5eb",
+        "signature_hash": "6804c6a25977835e"
+      }
+    ],
+    "_finalize": [
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 135,
+        "end_line": 148,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_finalize:a5b94dee6ff46588",
+        "signature_hash": "89069d28ab42c774"
+      }
+    ],
+    "compile_pager_source_plan": [
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 151,
+        "end_line": 243,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:compile_pager_source_plan:bb0d8e5e56f7d7eb",
+        "signature_hash": "1260701a167bc6f7"
+      }
+    ],
     "PagerError": [
       {
         "file": "tools/awj032/glm53_packed_expert_pager.py",
@@ -158337,6 +158480,14 @@
         "end_line": 120,
         "semantic_id": "tools/awj032/glm53_packed_expert_pager.py#function:canonical_expert_ids:45983c136fc170d6",
         "signature_hash": "10893da2aab52b21"
+      },
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 72,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:canonical_expert_ids:559ddae3963768b8",
+        "signature_hash": "10893da2aab52b21"
       }
     ],
     "contiguous_runs": [
@@ -158467,6 +158618,226 @@
         "end_line": 294,
         "semantic_id": "tools/awj032/glm53_packed_expert_pager.py#function:routed_paged:165f29e6ce5ba369",
         "signature_hash": "497bb9d082182e47"
+      }
+    ],
+    "PerExpertPagerError": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 27,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertPagerError:6f9c27343a0845b3",
+        "signature_hash": "5e9b1838462c3a8d"
+      }
+    ],
+    "PerExpertPagerError.__init__": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 27,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertPagerError.__init__:1f762c492abea5cb",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "PerExpertSourceError": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 31,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertSourceError:2dcac49a12b1301f",
+        "signature_hash": "e347e4ce9c60198a"
+      }
+    ],
+    "PerExpertRangeError": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertRangeError:e556d848465172b6",
+        "signature_hash": "640cfcc33268e34c"
+      }
+    ],
+    "PerExpertReadError": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 39,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertReadError:b32e43d01023e7c6",
+        "signature_hash": "fcdea2f32d84e69b"
+      }
+    ],
+    "ExpertPhysicalKeys": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 76,
+        "end_line": 105,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:ExpertPhysicalKeys:08b0c347296b7c1a",
+        "signature_hash": "463355c1032e9b6e"
+      }
+    ],
+    "ExpertPhysicalKeys.__post_init__": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 97,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:ExpertPhysicalKeys.__post_init__:691c4143b4357fbf",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ExpertPhysicalKeys.logical": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 105,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:ExpertPhysicalKeys.logical:385f91331543bee4",
+        "signature_hash": "c2240ab695f360e8"
+      }
+    ],
+    "PerExpertIndexBinding": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 109,
+        "end_line": 147,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertIndexBinding:b48d3b55962762b1",
+        "signature_hash": "f6c2a20df3664d03"
+      }
+    ],
+    "PerExpertIndexBinding.__post_init__": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 133,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertIndexBinding.__post_init__:126f6efa5a50dd81",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "PerExpertIndexBinding.digest": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 147,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertIndexBinding.digest:7cc42e2097ba3874",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "build_standard_glm_per_expert_binding": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 211,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:build_standard_glm_per_expert_binding:1c288f3e91bf081e",
+        "signature_hash": "2562d226d4ea34d2"
+      }
+    ],
+    "TensorKeyBackend": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 214,
+        "end_line": 215,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:TensorKeyBackend:325812f4237ac99a",
+        "signature_hash": "4c5ff7b42f331742"
+      }
+    ],
+    "TensorKeyBackend.read_tensor": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 215,
+        "end_line": 215,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:TensorKeyBackend.read_tensor:54b3ea756451dfdb",
+        "signature_hash": "a8d89ef5ba6fb59c"
+      }
+    ],
+    "PerExpertPage": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 219,
+        "end_line": 224,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertPage:cdf4caca365729c7",
+        "signature_hash": "b788603b3d910996"
+      }
+    ],
+    "PerExpertPagerReceipt": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 228,
+        "end_line": 238,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertPagerReceipt:4be8daec0dd3d931",
+        "signature_hash": "c8212240e1d669a7"
+      }
+    ],
+    "PerExpertIndexPager": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 241,
+        "end_line": 314,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertIndexPager:fbca37b0de678dbd",
+        "signature_hash": "1c8a7bb93bcbb0bd"
+      }
+    ],
+    "PerExpertIndexPager.__init__": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 242,
+        "end_line": 245,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertIndexPager.__init__:598c36ce6f28dcd7",
+        "signature_hash": "8a4bd92cd9103fa9"
+      }
+    ],
+    "PerExpertIndexPager._assert_current": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 247,
+        "end_line": 251,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertIndexPager._assert_current:5049165060471157",
+        "signature_hash": "d258c4602dfe9c9f"
+      }
+    ],
+    "PerExpertIndexPager.load_selected": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 253,
+        "end_line": 309,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertIndexPager.load_selected:3df350a55a7d2128",
+        "signature_hash": "fd5747276363a079"
+      }
+    ],
+    "PerExpertIndexPager.receipt": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 311,
+        "end_line": 314,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertIndexPager.receipt:2ba28691a6c7d4fb",
+        "signature_hash": "c724ebd1d568bc4d"
+      }
+    ],
+    "fuse_gate_up_rows": [
+      {
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "kind": "function",
+        "line": 317,
+        "end_line": 319,
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:fuse_gate_up_rows:05c6d75d92447ec4",
+        "signature_hash": "2ed156b615b1bfef"
       }
     ],
     "make_tree": [
@@ -158749,6 +159120,136 @@
         "signature_hash": "a6a2281c320c3c5b"
       }
     ],
+    "packed_fixture": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 39,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:packed_fixture:e35d00aacd5a6029",
+        "signature_hash": "47558325ae779af0"
+      }
+    ],
+    "per_expert_fixture": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:per_expert_fixture:789312f3d7b60f3b",
+        "signature_hash": "04d1e5bdadc1803b"
+      }
+    ],
+    "compile_packed": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 74,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:compile_packed:2c0d63bdad3261f2",
+        "signature_hash": "30d12b760aec396f"
+      }
+    ],
+    "BridgeTests": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "class",
+        "line": 77,
+        "end_line": 138,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#class:BridgeTests:16295dc0a8a088a5",
+        "signature_hash": "f9a151d2cbcaaa4a"
+      }
+    ],
+    "BridgeTests.code": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 81,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.code:d3d7c2ee02383a3d",
+        "signature_hash": "da9870e5e2d1b723"
+      }
+    ],
+    "BridgeTests.test_packed_layout_binds_current_pager_abi": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 88,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_packed_layout_binds_current_pager_abi:403379fe79921d62",
+        "signature_hash": "36785f5b8d33485d"
+      }
+    ],
+    "BridgeTests.test_per_expert_layout_binds_current_per_expert_abi": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 99,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_layout_binds_current_per_expert_abi:111ec66cfbc56e36",
+        "signature_hash": "9fc75e653594f77e"
+      }
+    ],
+    "BridgeTests.test_per_expert_missing_scale_fails_in_sibling_abi": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 106,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_missing_scale_fails_in_sibling_abi:bc0584af6cc7606d",
+        "signature_hash": "3ef9beef2a07df61"
+      }
+    ],
+    "BridgeTests.test_stale_currentness_and_probe_blockers_fail_closed": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 112,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_stale_currentness_and_probe_blockers_fail_closed:5bf1473acb27193f",
+        "signature_hash": "d36704cf6fa2b159"
+      }
+    ],
+    "BridgeTests.test_packed_requires_header_axis_and_shard_binding": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 120,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_packed_requires_header_axis_and_shard_binding:79cf8346f8b18954",
+        "signature_hash": "800d81ea5b6ea948"
+      }
+    ],
+    "BridgeTests.test_vendor_and_partial_layouts_are_typed_residuals": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 127,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_vendor_and_partial_layouts_are_typed_residuals:8ffd4fca5f7f050f",
+        "signature_hash": "35a2724e252944e5"
+      }
+    ],
+    "BridgeTests.test_scale_ambiguity_is_not_guessed": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_scale_ambiguity_is_not_guessed:15e04551825893c8",
+        "signature_hash": "44b83db054898963"
+      }
+    ],
+    "BridgeTests.test_clock_metadata_does_not_churn_source_plan": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 138,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_clock_metadata_does_not_churn_source_plan:b0a28040725e1331",
+        "signature_hash": "4a072c4ecf897aa7"
+      }
+    ],
     "FakeSliceBackend": [
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
@@ -158937,6 +159438,166 @@
         "end_line": 182,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_ambiguous_source_binding_rejected:8d48b60e1830e153",
         "signature_hash": "f3ca812646ce458a"
+      }
+    ],
+    "weight_map": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 14,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#function:weight_map:a608c6367da174e2",
+        "signature_hash": "51ee7e5abf66a8ce"
+      }
+    ],
+    "FakeBackend": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 23,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#class:FakeBackend:bf8ef4712d835197",
+        "signature_hash": "25ede4c2b5b1e33f"
+      }
+    ],
+    "FakeBackend.__init__": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:FakeBackend.__init__:f43b9beb62496f21",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "FakeBackend.read_tensor": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 23,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:FakeBackend.read_tensor:cccb277ff74882ba",
+        "signature_hash": "b5e86620f84079e9"
+      }
+    ],
+    "PerExpertIndexPagerTests": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 135,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#class:PerExpertIndexPagerTests:0a76637d22226098",
+        "signature_hash": "921d5280351a3139"
+      }
+    ],
+    "PerExpertIndexPagerTests.binding": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.binding:4f72116ae727917f",
+        "signature_hash": "661bd3dd7f2ab1a8"
+      }
+    ],
+    "PerExpertIndexPagerTests.test_index_proves_complete_per_expert_layout": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 41,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_index_proves_complete_per_expert_layout:ee371e850723e950",
+        "signature_hash": "e0dd7bc0faff6e67"
+      }
+    ],
+    "PerExpertIndexPagerTests.test_selected_experts_only_are_read_and_deduped": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 54,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_selected_experts_only_are_read_and_deduped:419212a414ba405b",
+        "signature_hash": "da7c5816bb1a2f21"
+      }
+    ],
+    "PerExpertIndexPagerTests.test_stale_source_fails_before_any_read": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 64,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_stale_source_fails_before_any_read:907b0fbee40e1672",
+        "signature_hash": "e4b9dbf5e70e2640"
+      }
+    ],
+    "PerExpertIndexPagerTests.test_missing_weight_key_fails_at_binding_before_backend_exists": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 77,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_missing_weight_key_fails_at_binding_before_backend_exists:98409bddb4decad2",
+        "signature_hash": "6de9a888096a4db9"
+      }
+    ],
+    "PerExpertIndexPagerTests.test_missing_fp8_scale_key_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 91,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_missing_fp8_scale_key_fails_closed:ee54b25d9df64917",
+        "signature_hash": "36e9c15d4be0d8c7"
+      }
+    ],
+    "PerExpertIndexPagerTests.test_same_expert_number_different_layers_cannot_cross_read": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 101,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_same_expert_number_different_layers_cannot_cross_read:fde347f14d614696",
+        "signature_hash": "e4150ab4af34d876"
+      }
+    ],
+    "PerExpertIndexPagerTests.test_every_expert_remains_addressable": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 111,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_every_expert_remains_addressable:17628d89f979a7f7",
+        "signature_hash": "7de61eb3855b34c0"
+      }
+    ],
+    "PerExpertIndexPagerTests.test_receipt_never_admits_g2_or_whole_bank": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 121,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_receipt_never_admits_g2_or_whole_bank:a8342ce384514534",
+        "signature_hash": "2e06cf0476615532"
+      }
+    ],
+    "PerExpertIndexPagerTests.test_bad_ids_fail_closed": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 130,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_bad_ids_fail_closed:1510c04535dbd440",
+        "signature_hash": "9876f2eb42558356"
+      }
+    ],
+    "PerExpertIndexPagerTests.test_gate_up_fusion_order_matches_runtime_contract": [
+      {
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 135,
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_gate_up_fusion_order_matches_runtime_contract:57d224d8b17cdab7",
+        "signature_hash": "367b939ef8a336f6"
       }
     ],
     "_coordinates": [
@@ -160056,6 +160717,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -160363,6 +161025,11 @@
     ],
     "python scripts/aura_spatial_s5_s6_construction_architect_harness.py --repo-root . --base-ref \"origin/$BASE_REF\" --head-ref HEAD --observed-head \"$(git rev-parse HEAD)\" --receipt /tmp/aura-spatial-s5-s6-receipts/full.json": [
       ".github/workflows/aura-spatial-s5-s6-construction.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/awj032-glm53-01a-pager.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
+      "tools/awj032/README.md"
     ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
@@ -161051,10 +161718,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
-      "tools/awj032/README.md"
     ],
     "python aura_daemon.py": [
       "docs/staging/ready_review/README_STAGED.md"
@@ -170050,47 +170713,57 @@
       "path": ".github/workflows/awj032-glm53-01a-pager.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 766,
-      "lines": 27,
-      "tokens_est": 192,
+      "bytes": 1087,
+      "lines": 37,
+      "tokens_est": 272,
       "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          26
+        ],
+        "python -m unittest": [
+          34
+        ]
+      },
       "topology": {},
-      "digest8": "7ab36b3d3da25447",
+      "digest8": "9c08984e68b5b59a",
       "vector": [
-        -0.108989,
-        -0.058879,
-        -0.204198,
-        0.098967,
-        0.219231,
-        0.241781,
-        -0.256814,
-        0.06389,
-        0.234264,
-        0.071407,
-        -0.088945,
-        -0.021297,
-        -0.103978,
-        0.008769,
-        0.246792,
-        -0.096462,
-        0.206704,
-        0.161605,
-        0.246792,
-        -0.18666,
-        -0.204198,
-        0.229253,
-        0.01378,
-        0.189165,
-        0.304419,
-        0.269342,
-        -0.018791,
-        -0.174132,
-        -0.026308,
-        0.194176,
-        -0.25932,
-        -0.103978
+        0.102618,
+        0.080363,
+        0.144654,
+        0.080363,
+        -0.030909,
+        -0.18669,
+        0.105091,
+        -0.087782,
+        -0.228726,
+        -0.043273,
+        0.231199,
+        0.063054,
+        -0.184218,
+        -0.305381,
+        0.208945,
+        -0.236145,
+        0.100145,
+        0.085309,
+        0.228726,
+        -0.161963,
+        -0.114981,
+        0.119927,
+        0.161963,
+        -0.179272,
+        0.218836,
+        0.246036,
+        0.278181,
+        0.011127,
+        -0.189163,
+        0.248508,
+        -0.189163,
+        0.248508
       ]
     },
     {
@@ -170138,6 +170811,53 @@
         0.075468,
         0.236997,
         0.088708
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1234,
+      "lines": 32,
+      "tokens_est": 309,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "680c620c08b9a5a9",
+      "vector": [
+        -0.1428,
+        0.155128,
+        -0.237315,
+        0.148964,
+        -0.251698,
+        -0.249643,
+        -0.005137,
+        0.214714,
+        0.183893,
+        -0.01541,
+        -0.167456,
+        0.048285,
+        -0.146909,
+        0.23526,
+        0.224987,
+        -0.251698,
+        -0.163347,
+        -0.241424,
+        0.196221,
+        -0.159237,
+        0.261971,
+        0.007191,
+        0.202385,
+        0.083214,
+        -0.259916,
+        0.001027,
+        0.062668,
+        0.247588,
+        -0.134581,
+        -0.122253,
+        -0.109925,
+        -0.08116
       ]
     },
     {
@@ -265582,6 +266302,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_layout_binding_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10198,
+      "lines": 244,
+      "tokens_est": 2550,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "743240ddce3ac65f",
+      "vector": [
+        0.139173,
+        0.227619,
+        0.032517,
+        -0.045524,
+        0.01951,
+        -0.165187,
+        0.310863,
+        -0.331674,
+        0.240626,
+        0.084544,
+        0.03772,
+        0.159984,
+        -0.045524,
+        0.219815,
+        0.131369,
+        -0.149578,
+        0.274444,
+        0.006503,
+        -0.120963,
+        -0.050727,
+        -0.146977,
+        -0.251032,
+        -0.035118,
+        0.269241,
+        0.068936,
+        -0.326471,
+        -0.032517,
+        0.24843,
+        -0.196403,
+        0.009105,
+        0.157382,
+        0.144376
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_packed_expert_pager.py",
       "role": "python_module",
       "binary": false,
@@ -265626,6 +266393,53 @@
         0.141847,
         0.181775,
         -0.017862
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_per_expert_index_pager.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12523,
+      "lines": 320,
+      "tokens_est": 3131,
+      "symbol_count": 26,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e47cd6774e8b5415",
+      "vector": [
+        -0.231332,
+        0.082338,
+        0.275768,
+        -0.267926,
+        0.231332,
+        0.171212,
+        -0.032674,
+        0.087566,
+        -0.03006,
+        0.092794,
+        -0.011763,
+        -0.124161,
+        0.309749,
+        0.247015,
+        -0.014377,
+        -0.045744,
+        -0.040516,
+        -0.04313,
+        -0.155528,
+        -0.317591,
+        0.09018,
+        -0.226104,
+        -0.100636,
+        -0.241787,
+        -0.220876,
+        0.265313,
+        -0.108478,
+        -0.095408,
+        0.069269,
+        0.247015,
+        -0.176439,
+        -0.1503
       ]
     },
     {
@@ -265723,6 +266537,53 @@
       ]
     },
     {
+      "path": "tools/awj032/test_glm53_layout_binding_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5971,
+      "lines": 143,
+      "tokens_est": 1493,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9f33e19d72ee0302",
+      "vector": [
+        0.153875,
+        0.144478,
+        -0.16797,
+        0.036413,
+        -0.245495,
+        0.165621,
+        -0.226701,
+        -0.200859,
+        -0.128033,
+        0.182065,
+        -0.038762,
+        -0.085747,
+        0.083398,
+        0.292479,
+        -0.059905,
+        -0.048159,
+        -0.268987,
+        -0.193812,
+        -0.041112,
+        -0.203208,
+        -0.25959,
+        0.214955,
+        -0.165621,
+        -0.055207,
+        -0.193812,
+        -0.151525,
+        0.268987,
+        -0.184415,
+        -0.217304,
+        0.128033,
+        -0.130382,
+        -0.212605
+      ]
+    },
+    {
       "path": "tools/awj032/test_glm53_packed_expert_pager.py",
       "role": "python_module",
       "binary": false,
@@ -265767,6 +266628,53 @@
         0.295907,
         -0.235466,
         -0.124659
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_per_expert_index_pager.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5893,
+      "lines": 140,
+      "tokens_est": 1474,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "dc3b116b58ff4109",
+      "vector": [
+        -0.297246,
+        0.001213,
+        0.049743,
+        -0.272981,
+        -0.134671,
+        -0.049743,
+        0.14195,
+        -0.173495,
+        -0.071582,
+        -0.032758,
+        -0.243863,
+        -0.09342,
+        -0.030331,
+        0.253569,
+        -0.192907,
+        -0.178348,
+        -0.015772,
+        0.241437,
+        -0.265702,
+        0.275408,
+        -0.188054,
+        0.076435,
+        0.076435,
+        -0.090994,
+        -0.19048,
+        0.299673,
+        0.231731,
+        0.069155,
+        0.29482,
+        -0.132244,
+        0.066729,
+        -0.037611
       ]
     },
     {
@@ -289768,16 +290676,16 @@
     }
   },
   "summary": {
-    "file_count": 1667,
-    "total_bytes": 26476794,
-    "text_tokens_est": 6609592,
+    "file_count": 1672,
+    "total_bytes": 26512934,
+    "text_tokens_est": 6618629,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1014,
-      "schema_or_lexicon": 276,
+      "python_module": 1018,
+      "schema_or_lexicon": 277,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -289934,6 +290842,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
+      ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -291442,10 +292351,14 @@
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_layout_binding_bridge.py",
       "tools/awj032/glm53_packed_expert_pager.py",
+      "tools/awj032/glm53_per_expert_index_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_layout_binding_bridge.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
+      "tools/awj032/test_glm53_per_expert_index_pager.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -449794,6 +450707,126 @@
         "file_digest8": "e47f5028c4e7cc25"
       },
       {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#class:LayoutBindingError:12eccb976dbb5296",
+        "name": "LayoutBindingError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 26,
+        "end_line": 30,
+        "signature_hash": "8d670edc5216e16a",
+        "file_digest8": "743240ddce3ac65f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#class:PagerSourcePlan:ef3a4541fe427a00",
+        "name": "PagerSourcePlan",
+        "kind": "class",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 85,
+        "end_line": 109,
+        "signature_hash": "b3e36a9066ad9627",
+        "file_digest8": "743240ddce3ac65f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_canonical:f7426c2678e63cad",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "743240ddce3ac65f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_common:d3fe91f8e681e5eb",
+        "name": "_common",
+        "kind": "function",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 112,
+        "end_line": 132,
+        "signature_hash": "6804c6a25977835e",
+        "file_digest8": "743240ddce3ac65f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_digest:52413db1a1e1f0ba",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "743240ddce3ac65f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_finalize:a5b94dee6ff46588",
+        "name": "_finalize",
+        "kind": "function",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 135,
+        "end_line": 148,
+        "signature_hash": "89069d28ab42c774",
+        "file_digest8": "743240ddce3ac65f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_scale_map:60bdc27a744e88e5",
+        "name": "_scale_map",
+        "kind": "function",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 58,
+        "end_line": 81,
+        "signature_hash": "6a0f88000d98861f",
+        "file_digest8": "743240ddce3ac65f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_shape:e7b997ddc9d3945f",
+        "name": "_shape",
+        "kind": "function",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 47,
+        "end_line": 55,
+        "signature_hash": "2db45cfaa4dce474",
+        "file_digest8": "743240ddce3ac65f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_text:d660ea48396dc251",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 41,
+        "end_line": 44,
+        "signature_hash": "7c66637900aa94dc",
+        "file_digest8": "743240ddce3ac65f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:compile_pager_source_plan:bb0d8e5e56f7d7eb",
+        "name": "compile_pager_source_plan",
+        "kind": "function",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 151,
+        "end_line": 243,
+        "signature_hash": "1260701a167bc6f7",
+        "file_digest8": "743240ddce3ac65f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#method:LayoutBindingError.__init__:56e9a4b401794637",
+        "name": "LayoutBindingError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "743240ddce3ac65f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#method:PagerSourcePlan.to_dict:9bb97d45d0565d2d",
+        "name": "PagerSourcePlan.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 97,
+        "end_line": 109,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "743240ddce3ac65f"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_packed_expert_pager.py#class:ExpertRangeError:a8c6d962660c0c2f",
         "name": "ExpertRangeError",
         "kind": "class",
@@ -450062,6 +451095,266 @@
         "end_line": 43,
         "signature_hash": "bfb2db06fed10563",
         "file_digest8": "1aa8cb20dc113e47"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:ExpertPhysicalKeys:08b0c347296b7c1a",
+        "name": "ExpertPhysicalKeys",
+        "kind": "class",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 76,
+        "end_line": 105,
+        "signature_hash": "463355c1032e9b6e",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertIndexBinding:b48d3b55962762b1",
+        "name": "PerExpertIndexBinding",
+        "kind": "class",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 109,
+        "end_line": 147,
+        "signature_hash": "f6c2a20df3664d03",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertIndexPager:fbca37b0de678dbd",
+        "name": "PerExpertIndexPager",
+        "kind": "class",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 241,
+        "end_line": 314,
+        "signature_hash": "1c8a7bb93bcbb0bd",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertPage:cdf4caca365729c7",
+        "name": "PerExpertPage",
+        "kind": "class",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 219,
+        "end_line": 224,
+        "signature_hash": "b788603b3d910996",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertPagerError:6f9c27343a0845b3",
+        "name": "PerExpertPagerError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 23,
+        "end_line": 27,
+        "signature_hash": "5e9b1838462c3a8d",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertPagerReceipt:4be8daec0dd3d931",
+        "name": "PerExpertPagerReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 228,
+        "end_line": 238,
+        "signature_hash": "c8212240e1d669a7",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertRangeError:e556d848465172b6",
+        "name": "PerExpertRangeError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "640cfcc33268e34c",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertReadError:b32e43d01023e7c6",
+        "name": "PerExpertReadError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 38,
+        "end_line": 39,
+        "signature_hash": "fcdea2f32d84e69b",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:PerExpertSourceError:2dcac49a12b1301f",
+        "name": "PerExpertSourceError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 30,
+        "end_line": 31,
+        "signature_hash": "e347e4ce9c60198a",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#class:TensorKeyBackend:325812f4237ac99a",
+        "name": "TensorKeyBackend",
+        "kind": "class",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 214,
+        "end_line": 215,
+        "signature_hash": "4c5ff7b42f331742",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:_canonical:714c5d4c48f7a6b2",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 48,
+        "end_line": 55,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:_digest:069b97de835db085",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 58,
+        "end_line": 59,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:_text:73fd0946b38b42c6",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 42,
+        "end_line": 45,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:build_standard_glm_per_expert_binding:1c288f3e91bf081e",
+        "name": "build_standard_glm_per_expert_binding",
+        "kind": "function",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 150,
+        "end_line": 211,
+        "signature_hash": "2562d226d4ea34d2",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:canonical_expert_ids:559ddae3963768b8",
+        "name": "canonical_expert_ids",
+        "kind": "function",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 62,
+        "end_line": 72,
+        "signature_hash": "10893da2aab52b21",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:fuse_gate_up_rows:05c6d75d92447ec4",
+        "name": "fuse_gate_up_rows",
+        "kind": "function",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 317,
+        "end_line": 319,
+        "signature_hash": "2ed156b615b1bfef",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:ExpertPhysicalKeys.__post_init__:691c4143b4357fbf",
+        "name": "ExpertPhysicalKeys.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 82,
+        "end_line": 97,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:ExpertPhysicalKeys.logical:385f91331543bee4",
+        "name": "ExpertPhysicalKeys.logical",
+        "kind": "method",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 99,
+        "end_line": 105,
+        "signature_hash": "c2240ab695f360e8",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertIndexBinding.__post_init__:126f6efa5a50dd81",
+        "name": "PerExpertIndexBinding.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 118,
+        "end_line": 133,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertIndexBinding.digest:7cc42e2097ba3874",
+        "name": "PerExpertIndexBinding.digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 136,
+        "end_line": 147,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertIndexPager.__init__:598c36ce6f28dcd7",
+        "name": "PerExpertIndexPager.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 242,
+        "end_line": 245,
+        "signature_hash": "8a4bd92cd9103fa9",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertIndexPager._assert_current:5049165060471157",
+        "name": "PerExpertIndexPager._assert_current",
+        "kind": "method",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 247,
+        "end_line": 251,
+        "signature_hash": "d258c4602dfe9c9f",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertIndexPager.load_selected:3df350a55a7d2128",
+        "name": "PerExpertIndexPager.load_selected",
+        "kind": "method",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 253,
+        "end_line": 309,
+        "signature_hash": "fd5747276363a079",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertIndexPager.receipt:2ba28691a6c7d4fb",
+        "name": "PerExpertIndexPager.receipt",
+        "kind": "method",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 311,
+        "end_line": 314,
+        "signature_hash": "c724ebd1d568bc4d",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:PerExpertPagerError.__init__:1f762c492abea5cb",
+        "name": "PerExpertPagerError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 24,
+        "end_line": 27,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "e47cd6774e8b5415"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#method:TensorKeyBackend.read_tensor:54b3ea756451dfdb",
+        "name": "TensorKeyBackend.read_tensor",
+        "kind": "method",
+        "file": "tools/awj032/glm53_per_expert_index_pager.py",
+        "line": 215,
+        "end_line": 215,
+        "signature_hash": "a8d89ef5ba6fb59c",
+        "file_digest8": "e47cd6774e8b5415"
       },
       {
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
@@ -450344,6 +451637,136 @@
         "file_digest8": "8ea5e0d2c27b515d"
       },
       {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#class:BridgeTests:16295dc0a8a088a5",
+        "name": "BridgeTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 77,
+        "end_line": 138,
+        "signature_hash": "f9a151d2cbcaaa4a",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:compile_packed:2c0d63bdad3261f2",
+        "name": "compile_packed",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 66,
+        "end_line": 74,
+        "signature_hash": "30d12b760aec396f",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:packed_fixture:e35d00aacd5a6029",
+        "name": "packed_fixture",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 14,
+        "end_line": 39,
+        "signature_hash": "47558325ae779af0",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:per_expert_fixture:789312f3d7b60f3b",
+        "name": "per_expert_fixture",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 42,
+        "end_line": 63,
+        "signature_hash": "04d1e5bdadc1803b",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.code:d3d7c2ee02383a3d",
+        "name": "BridgeTests.code",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 78,
+        "end_line": 81,
+        "signature_hash": "da9870e5e2d1b723",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_clock_metadata_does_not_churn_source_plan:b0a28040725e1331",
+        "name": "BridgeTests.test_clock_metadata_does_not_churn_source_plan",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 134,
+        "end_line": 138,
+        "signature_hash": "4a072c4ecf897aa7",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_packed_layout_binds_current_pager_abi:403379fe79921d62",
+        "name": "BridgeTests.test_packed_layout_binds_current_pager_abi",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 83,
+        "end_line": 88,
+        "signature_hash": "36785f5b8d33485d",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_packed_requires_header_axis_and_shard_binding:79cf8346f8b18954",
+        "name": "BridgeTests.test_packed_requires_header_axis_and_shard_binding",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 114,
+        "end_line": 120,
+        "signature_hash": "800d81ea5b6ea948",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_layout_binds_current_per_expert_abi:111ec66cfbc56e36",
+        "name": "BridgeTests.test_per_expert_layout_binds_current_per_expert_abi",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 90,
+        "end_line": 99,
+        "signature_hash": "9fc75e653594f77e",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_missing_scale_fails_in_sibling_abi:bc0584af6cc7606d",
+        "name": "BridgeTests.test_per_expert_missing_scale_fails_in_sibling_abi",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 101,
+        "end_line": 106,
+        "signature_hash": "3ef9beef2a07df61",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_scale_ambiguity_is_not_guessed:15e04551825893c8",
+        "name": "BridgeTests.test_scale_ambiguity_is_not_guessed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 129,
+        "end_line": 132,
+        "signature_hash": "44b83db054898963",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_stale_currentness_and_probe_blockers_fail_closed:5bf1473acb27193f",
+        "name": "BridgeTests.test_stale_currentness_and_probe_blockers_fail_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 108,
+        "end_line": 112,
+        "signature_hash": "d36704cf6fa2b159",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_vendor_and_partial_layouts_are_typed_residuals:8ffd4fca5f7f050f",
+        "name": "BridgeTests.test_vendor_and_partial_layouts_are_typed_residuals",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 122,
+        "end_line": 127,
+        "signature_hash": "35a2724e252944e5",
+        "file_digest8": "9f33e19d72ee0302"
+      },
+      {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:FakeSliceBackend:bf8532e42602b3b5",
         "name": "FakeSliceBackend",
         "kind": "class",
@@ -450532,6 +451955,166 @@
         "end_line": 133,
         "signature_hash": "507c81fe5df488da",
         "file_digest8": "673a5ad8de343df1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#class:FakeBackend:bf8ef4712d835197",
+        "name": "FakeBackend",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 17,
+        "end_line": 23,
+        "signature_hash": "25ede4c2b5b1e33f",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#class:PerExpertIndexPagerTests:0a76637d22226098",
+        "name": "PerExpertIndexPagerTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 26,
+        "end_line": 135,
+        "signature_hash": "921d5280351a3139",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#function:weight_map:a608c6367da174e2",
+        "name": "weight_map",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 6,
+        "end_line": 14,
+        "signature_hash": "51ee7e5abf66a8ce",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:FakeBackend.__init__:f43b9beb62496f21",
+        "name": "FakeBackend.__init__",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:FakeBackend.read_tensor:cccb277ff74882ba",
+        "name": "FakeBackend.read_tensor",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 21,
+        "end_line": 23,
+        "signature_hash": "b5e86620f84079e9",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.binding:4f72116ae727917f",
+        "name": "PerExpertIndexPagerTests.binding",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 27,
+        "end_line": 35,
+        "signature_hash": "661bd3dd7f2ab1a8",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_bad_ids_fail_closed:1510c04535dbd440",
+        "name": "PerExpertIndexPagerTests.test_bad_ids_fail_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 123,
+        "end_line": 130,
+        "signature_hash": "9876f2eb42558356",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_every_expert_remains_addressable:17628d89f979a7f7",
+        "name": "PerExpertIndexPagerTests.test_every_expert_remains_addressable",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 103,
+        "end_line": 111,
+        "signature_hash": "7de61eb3855b34c0",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_gate_up_fusion_order_matches_runtime_contract:57d224d8b17cdab7",
+        "name": "PerExpertIndexPagerTests.test_gate_up_fusion_order_matches_runtime_contract",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 132,
+        "end_line": 135,
+        "signature_hash": "367b939ef8a336f6",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_index_proves_complete_per_expert_layout:ee371e850723e950",
+        "name": "PerExpertIndexPagerTests.test_index_proves_complete_per_expert_layout",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 37,
+        "end_line": 41,
+        "signature_hash": "e0dd7bc0faff6e67",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_missing_fp8_scale_key_fails_closed:ee54b25d9df64917",
+        "name": "PerExpertIndexPagerTests.test_missing_fp8_scale_key_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 79,
+        "end_line": 91,
+        "signature_hash": "36e9c15d4be0d8c7",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_missing_weight_key_fails_at_binding_before_backend_exists:98409bddb4decad2",
+        "name": "PerExpertIndexPagerTests.test_missing_weight_key_fails_at_binding_before_backend_exists",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 66,
+        "end_line": 77,
+        "signature_hash": "6de9a888096a4db9",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_receipt_never_admits_g2_or_whole_bank:a8342ce384514534",
+        "name": "PerExpertIndexPagerTests.test_receipt_never_admits_g2_or_whole_bank",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 113,
+        "end_line": 121,
+        "signature_hash": "2e06cf0476615532",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_same_expert_number_different_layers_cannot_cross_read:fde347f14d614696",
+        "name": "PerExpertIndexPagerTests.test_same_expert_number_different_layers_cannot_cross_read",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 93,
+        "end_line": 101,
+        "signature_hash": "e4150ab4af34d876",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_selected_experts_only_are_read_and_deduped:419212a414ba405b",
+        "name": "PerExpertIndexPagerTests.test_selected_experts_only_are_read_and_deduped",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 43,
+        "end_line": 54,
+        "signature_hash": "da7c5816bb1a2f21",
+        "file_digest8": "dc3b116b58ff4109"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_stale_source_fails_before_any_read:907b0fbee40e1672",
+        "name": "PerExpertIndexPagerTests.test_stale_source_fails_before_any_read",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_per_expert_index_pager.py",
+        "line": 56,
+        "end_line": 64,
+        "signature_hash": "e4b9dbf5e70e2640",
+        "file_digest8": "dc3b116b58ff4109"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -451784,7 +453367,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "01ad5081d592b38978b84c18ed398543",
-    "payload_hash": "25dde8fd5acff5a2182976d5615a7d6e"
+    "record_fingerprint": "40410b49ad735ba1bd49d7f9e6ceaac4",
+    "payload_hash": "892c1ac2a9d4efa248ae15183c595ae9"
   }
 }
