@@ -113,7 +113,9 @@ def bind_json_source(*, name: str, raw_bytes: bytes, expected_sha256: str) -> Bo
     expected = _expected_sha(expected_sha256, name)
     observed = _sha256_bytes(raw_bytes)
     if observed != expected:
-        raise SourceBindingError("RAW_SHA256_MISMATCH", f"{name}:expected={expected},observed={observed}")
+        raise SourceBindingError(
+            "RAW_SHA256_MISMATCH", f"{name}:expected={expected},observed={observed}"
+        )
     try:
         parsed = json.loads(raw_bytes.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -170,6 +172,7 @@ def source_bound_probe(
     representative_sparse_layer: int = 3,
     shard_sizes: Mapping[str, int] | None = None,
     observation_time: str | None = None,
+    extra_layer_classification: Any | None = None,
     probe_fn: Callable[..., dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     if not isinstance(sources, GLM53CheckpointSourceBundle) or sources.schema != SOURCE_SCHEMA:
@@ -198,6 +201,18 @@ def source_bound_probe(
     )
     if not isinstance(report, dict):
         raise SourceBindingError("PROBE_REPORT_INVALID")
+
+    if extra_layer_classification is not None:
+        try:
+            from .glm53_checkpoint_extra_layer_classification import (  # type: ignore
+                apply_extra_layer_classification,
+            )
+        except ImportError:
+            from glm53_checkpoint_extra_layer_classification import (  # type: ignore
+                apply_extra_layer_classification,
+            )
+        report = apply_extra_layer_classification(report, extra_layer_classification)
+
     return {
         **report,
         "source_bundle_id": sources.source_bundle_id,
