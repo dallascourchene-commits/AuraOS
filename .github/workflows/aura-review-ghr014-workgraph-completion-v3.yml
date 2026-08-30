@@ -1,0 +1,27 @@
+name: AURA REVIEW GHR-014 WorkGraph Completion V3
+
+on:
+  push:
+    branches:
+      - arena-review-harness/ghr014-workgraph-completion-v3-20260830
+  pull_request:
+    paths:
+      - 'tools/project030/workgraph_terminal_completion_v3.py'
+      - 'tools/project030/test_workgraph_terminal_completion_v3.py'
+      - '.github/workflows/aura-review-ghr014-workgraph-completion-v3.yml'
+
+jobs:
+  completion-v3:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile
+        run: |
+          python -m py_compile tools/project030/workgraph_terminal_completion_v3.py tools/project030/test_workgraph_terminal_completion_v3.py
+      - name: Focused regressions
+        env:
+          PYTHONPATH: tools/project030
+        run: python -m unittest -v tools.project030.test_workgraph_terminal_completion_v3
