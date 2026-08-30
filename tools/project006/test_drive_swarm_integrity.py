@@ -1,3 +1,4 @@
+import copy
 import unittest
 
 from drive_swarm_fanout import (
@@ -51,6 +52,22 @@ def parent_swarm():
     }
 
 
+def valid_receipts(provider="deepseek", model="deepseek-chat"):
+    return [
+        {
+            "parent_command_id": "swarm-1",
+            "worker_id": f"W{i}",
+            "role_id": role,
+            "attempt_id": f"A{i}",
+            "provider_request_id": f"R{i}",
+            "provider": provider,
+            "model": model,
+            "result": "Completed bounded analysis; evidence refs follow.",
+        }
+        for i, role in enumerate(("A+", "B-", "C0"))
+    ]
+
+
 class FanoutTests(unittest.TestCase):
     def test_target3_compiles_three_distinct_children(self):
         children = compile_role_distinct_children(parent_swarm())
@@ -72,6 +89,25 @@ class FanoutTests(unittest.TestCase):
         receipt = fanout_manifest(parent_swarm())
         self.assertEqual(3, receipt["child_count"])
         self.assertFalse(receipt["effect_started"])
+        self.assertTrue(receipt["parent_payload_digest"])
+
+    def test_same_parent_key_semantic_mutation_changes_child_identity(self):
+        original = parent_swarm()
+        mutated = copy.deepcopy(original)
+        mutated["roles"][0]["objective_suffix"] = "Construct a materially different task."
+        a = compile_role_distinct_children(original)
+        b = compile_role_distinct_children(mutated)
+        self.assertNotEqual(a[0]["idempotency_key"], b[0]["idempotency_key"])
+        self.assertNotEqual(
+            a[0]["_host_child_context"]["parent_payload_digest"],
+            b[0]["_host_child_context"]["parent_payload_digest"],
+        )
+
+    def test_base_command_cannot_forge_child_context(self):
+        raw = parent_swarm()
+        raw["base_command"]["_host_child_context"] = {"worker_id": "FORGED"}
+        with self.assertRaisesRegex(SwarmFanoutError, "BASE_COMMAND_ALREADY_CHILD"):
+            compile_role_distinct_children(raw)
 
 
 class IntegrityTests(unittest.TestCase):
@@ -81,6 +117,22 @@ class IntegrityTests(unittest.TestCase):
             expected_provider="deepseek",
         )
         self.assertEqual("PROVIDER_IDENTITY_MISMATCH", result["classification"])
+
+    def test_provider_metadata_mismatch_is_quarantined(self):
+        result = classify_model_output(
+            {"provider": "anthropic", "model": "claude-sonnet", "result": "Completed."},
+            expected_provider="deepseek",
+        )
+        self.assertEqual("PROVIDER_IDENTITY_MISMATCH", result["classification"])
+        self.assertIn("PROVIDER_METADATA_MISMATCH", result["reasons"])
+
+    def test_model_metadata_mismatch_is_quarantined(self):
+        result = classify_model_output(
+            {"provider": "deepseek", "model": "unexpected-model", "result": "Completed."},
+            expected_provider="deepseek",
+            expected_model="deepseek-chat",
+        )
+        self.assertEqual("MODEL_IDENTITY_MISMATCH", result["classification"])
 
     def test_refusal_is_not_success(self):
         result = classify_model_output(
@@ -101,42 +153,48 @@ class IntegrityTests(unittest.TestCase):
         self.assertEqual("ROLE_FANOUT_VIOLATION", result["classification"])
 
     def test_valid_physical_three_requires_three_request_ids(self):
-        receipts = [
-            {
-                "parent_command_id": "swarm-1",
-                "worker_id": f"W{i}",
-                "role_id": role,
-                "attempt_id": f"A{i}",
-                "provider_request_id": f"R{i}",
-                "provider": "deepseek",
-                "result": "Completed bounded analysis; evidence refs follow.",
-            }
-            for i, role in enumerate(("A+", "B-", "C0"))
-        ]
         result = validate_physical_swarm_receipts(
-            parent_command_id="swarm-1", target_size=3, child_receipts=receipts
+            parent_command_id="swarm-1",
+            target_size=3,
+            child_receipts=valid_receipts(),
+            expected_provider="deepseek",
+            expected_model="deepseek-chat",
         )
         self.assertTrue(result["physical_fanout_proven"])
         self.assertEqual(3, result["unique_provider_request_count"])
 
     def test_one_request_id_reused_fails(self):
-        receipts = [
-            {
-                "parent_command_id": "swarm-1",
-                "worker_id": f"W{i}",
-                "role_id": role,
-                "attempt_id": f"A{i}",
-                "provider_request_id": "SAME",
-                "provider": "deepseek",
-                "result": "Completed bounded analysis.",
-            }
-            for i, role in enumerate(("A+", "B-", "C0"))
-        ]
+        receipts = valid_receipts()
+        for receipt in receipts:
+            receipt["provider_request_id"] = "SAME"
         with self.assertRaisesRegex(
             SwarmIntegrityError, "PROVIDER_REQUEST_ID_MISSING_OR_DUPLICATE"
         ):
             validate_physical_swarm_receipts(
                 parent_command_id="swarm-1", target_size=3, child_receipts=receipts
+            )
+
+    def test_wrong_provider_child_fails_physical_validation(self):
+        receipts = valid_receipts()
+        receipts[1]["provider"] = "anthropic"
+        with self.assertRaisesRegex(SwarmIntegrityError, "PROVIDER_IDENTITY_MISMATCH"):
+            validate_physical_swarm_receipts(
+                parent_command_id="swarm-1",
+                target_size=3,
+                child_receipts=receipts,
+                expected_provider="deepseek",
+            )
+
+    def test_wrong_model_child_fails_physical_validation(self):
+        receipts = valid_receipts()
+        receipts[2]["model"] = "deepseek-v4-pro"
+        with self.assertRaisesRegex(SwarmIntegrityError, "MODEL_IDENTITY_MISMATCH"):
+            validate_physical_swarm_receipts(
+                parent_command_id="swarm-1",
+                target_size=3,
+                child_receipts=receipts,
+                expected_provider="deepseek",
+                expected_model="deepseek-chat",
             )
 
 
