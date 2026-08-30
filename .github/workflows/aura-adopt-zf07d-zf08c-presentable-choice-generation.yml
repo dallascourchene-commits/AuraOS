@@ -1,0 +1,26 @@
+name: AURA ADOPT ZF-07D ZF-08C Presentable Choice Generation
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py'
+      - 'tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py'
+      - '.github/workflows/aura-adopt-zf07d-zf08c-presentable-choice-generation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-choice-generation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile membrane
+        run: python -m py_compile tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py
+      - name: Run focused regressions
+        working-directory: tools/aura_adopt
+        run: python -m unittest -v test_zf07d_zf08c_presentable_choice_generation.py
