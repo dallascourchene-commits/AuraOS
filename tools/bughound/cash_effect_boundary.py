@@ -1,0 +1,337 @@
+"""Cash-bounty effect and sanitized-memory boundary for BugHound.
+
+Canonical mission admission lives in :mod:`tools.bughound.bounty_mission`.
+This module starts strictly *after* a valid cash-mission receipt and preserves
+three separate planes:
+
+1. mission/research admission,
+2. exact live-effect authority,
+3. authority-free sanitized reusable memory.
+
+AuraOS security hardening may reuse generic tools or sanitized abstract patterns,
+but it is not a BugHound mission/profile and receives no BugHound payout, scope,
+testing, disclosure, or submission authority through this module.
+
+D0 by default. Nothing here performs network access, credential use, submission,
+claiming/payment, provider calls, repository mutation, deployment, or spend.
+"""
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+import hashlib
+import json
+from typing import Iterable
+
+from tools.bughound.bounty_mission import (
+    CANONICAL_PROFILE_ID,
+    BugHoundCashMissionReceiptV1,
+)
+
+LIVE_EFFECT_CLASS = "BOUNTY_LIVE_NETWORK_TEST"
+GENERIC_REUSE_CONTEXTS = frozenset(
+    {
+        "GENERIC_SECURITY_TOOL_FOUNDRY",
+        "AURAOS_SECURITY_HARDENING_REUSE",
+    }
+)
+_REQUIRED_SANITIZED_CLASSES = frozenset(
+    {
+        "target_specific_material",
+        "credentials_or_tokens",
+        "private_endpoint",
+        "undisclosed_exploit_material",
+        "pii_or_third_party_data",
+        "private_report_identifier",
+    }
+)
+
+
+class CashEffectBoundaryError(ValueError):
+    def __init__(self, code: str, detail: str = "") -> None:
+        super().__init__(f"{code}: {detail}" if detail else code)
+        self.code = code
+        self.detail = detail
+
+
+def _canonical(value: object) -> bytes:
+    try:
+        return json.dumps(
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+            allow_nan=False,
+        ).encode("utf-8")
+    except (TypeError, ValueError) as exc:
+        raise CashEffectBoundaryError("NONCANONICAL_BOUNDARY_STATE") from exc
+
+
+def _digest(domain: str, value: object) -> str:
+    return hashlib.sha256(domain.encode("utf-8") + b"\0" + _canonical(value)).hexdigest()
+
+
+def _text(value: object, code: str) -> str:
+    if not isinstance(value, str) or not value.strip():
+        raise CashEffectBoundaryError(code)
+    return value.strip()
+
+
+def _strings(values: Iterable[str], code: str) -> frozenset[str]:
+    try:
+        out = frozenset(values)
+    except TypeError as exc:
+        raise CashEffectBoundaryError(code) from exc
+    if any(not isinstance(value, str) or not value for value in out):
+        raise CashEffectBoundaryError(code)
+    return out
+
+
+def _verify_mission_receipt(receipt: BugHoundCashMissionReceiptV1) -> None:
+    if not isinstance(receipt, BugHoundCashMissionReceiptV1):
+        raise CashEffectBoundaryError("CASH_MISSION_RECEIPT_REQUIRED")
+    if receipt.profile_id != CANONICAL_PROFILE_ID:
+        raise CashEffectBoundaryError("NONCANONICAL_BUGHOUND_MISSION_REJECTED")
+    if not receipt.cash_bounty_mission_admitted:
+        raise CashEffectBoundaryError("CASH_MISSION_NOT_ADMITTED")
+    if not (receipt.payout_current and receipt.scope_current and receipt.source_current):
+        raise CashEffectBoundaryError("CASH_MISSION_CURRENTNESS_REQUIRED")
+    if (
+        receipt.live_target_testing_authorized
+        or receipt.credential_use_authorized
+        or receipt.submission_authorized
+        or receipt.claim_or_payment_authorized
+        or receipt.external_effect
+    ):
+        raise CashEffectBoundaryError("CASH_MISSION_RECEIPT_AUTHORITY_WIDENED")
+
+
+@dataclass(frozen=True)
+class SharedSecurityToolCapabilityV1:
+    capability_id: str
+    contexts: tuple[str, ...]
+    local_only: bool = True
+    network_required: bool = False
+    credential_required: bool = False
+    authority: bool = False
+    schema: str = "SharedSecurityToolCapabilityV1"
+
+    @property
+    def capability_digest(self) -> str:
+        return _digest("AURA_SHARED_SECURITY_TOOL_CAPABILITY_V1", asdict(self))
+
+
+@dataclass(frozen=True)
+class BountyLiveEffectGrantV1:
+    profile_id: str
+    mission_receipt_digest: str
+    program_ref: str
+    target_ref: str
+    target_generation: str
+    program_policy_snapshot_digest: str
+    program_policy_generation: str
+    program_policy_current: bool
+    scope_rules_digest: str
+    scope_currentness_ref: str
+    target_currentness_ref: str
+    effect_class: str
+    network_origin: str
+    network_allowlist: tuple[str, ...]
+    credential_aliases: tuple[str, ...]
+    human_authorization_ref: str | None
+    revocation_currentness_ref: str
+    disclosure_policy_ref: str
+    authority: bool = True
+    schema: str = "BountyLiveEffectGrantV1"
+
+    @property
+    def grant_digest(self) -> str:
+        return _digest("AURA_BUGHOUND_LIVE_EFFECT_GRANT_V1", asdict(self))
+
+
+@dataclass(frozen=True)
+class LiveEffectAdmissionReceiptV1:
+    mission_receipt_digest: str
+    effect_grant_digest: str
+    program_ref: str
+    target_ref: str
+    target_generation: str
+    effect_class: str
+    network_origin: str
+    live_effect_authorized: bool
+    authority_scope: str
+    submission_authorized: bool = False
+    claim_or_payment_authorized: bool = False
+    authority: bool = True
+    external_effect_executed: bool = False
+    schema: str = "LiveEffectAdmissionReceiptV1"
+
+    @property
+    def admission_digest(self) -> str:
+        return _digest("AURA_BUGHOUND_LIVE_EFFECT_ADMISSION_V1", asdict(self))
+
+
+@dataclass(frozen=True)
+class SanitizedPatternReceiptV1:
+    mission_receipt_digest: str
+    disclosure_state_ref: str
+    reusable_memory_policy_ref: str
+    sanitizer_generation: str
+    reviewer_ref: str
+    removed_classes: tuple[str, ...]
+    retained_abstract_pattern_ref: str
+    target_specific_material_present: bool
+    credentials_or_tokens_present: bool
+    private_endpoint_present: bool
+    undisclosed_exploit_material_present: bool
+    pii_or_third_party_data_present: bool
+    private_report_identifier_present: bool
+    authority: bool = False
+    schema: str = "SanitizedPatternReceiptV1"
+
+    @property
+    def receipt_digest(self) -> str:
+        return _digest("AURA_BUGHOUND_SANITIZED_PATTERN_V1", asdict(self))
+
+
+@dataclass(frozen=True)
+class ReusablePatternExportV1:
+    source_mission_receipt_digest: str
+    sanitized_pattern_receipt_digest: str
+    retained_abstract_pattern_ref: str
+    destination_context: str
+    bughound_mission_state_exported: bool = False
+    payout_state_exported: bool = False
+    scope_authority_exported: bool = False
+    live_effect_authority_exported: bool = False
+    disclosure_authority_exported: bool = False
+    credential_state_exported: bool = False
+    authority: bool = False
+    external_effect: bool = False
+    schema: str = "ReusablePatternExportV1"
+
+    @property
+    def export_digest(self) -> str:
+        return _digest("AURA_BUGHOUND_REUSABLE_PATTERN_EXPORT_V1", asdict(self))
+
+
+def admit_shared_tool_for_cash_research(
+    receipt: BugHoundCashMissionReceiptV1,
+    capability: SharedSecurityToolCapabilityV1,
+) -> str:
+    """Admit an authority-free local capability into cash-bounty research.
+
+    The same generic capability may also be used outside BugHound (for example
+    AuraOS hardening), but this admission never transfers BugHound mission state
+    into that other context.
+    """
+    _verify_mission_receipt(receipt)
+    _text(capability.capability_id, "TOOL_CAPABILITY_ID_REQUIRED")
+    contexts = _strings(capability.contexts, "TOOL_CONTEXTS_INVALID")
+    if CANONICAL_PROFILE_ID not in contexts:
+        raise CashEffectBoundaryError("TOOL_NOT_ADMITTED_FOR_CASH_BOUNTY")
+    if capability.authority:
+        raise CashEffectBoundaryError("TOOL_CAPABILITY_CANNOT_SELF_GRANT_AUTHORITY")
+    if capability.network_required or capability.credential_required or not capability.local_only:
+        raise CashEffectBoundaryError("EFFECTFUL_TOOL_REQUIRES_SEPARATE_LIVE_GRANT")
+    return _digest(
+        "AURA_BUGHOUND_CASH_RESEARCH_TOOL_ADMISSION_V1",
+        {
+            "mission_receipt_digest": receipt.receipt_digest,
+            "capability_digest": capability.capability_digest,
+        },
+    )
+
+
+def admit_live_effect(
+    receipt: BugHoundCashMissionReceiptV1,
+    grant: BountyLiveEffectGrantV1,
+) -> LiveEffectAdmissionReceiptV1:
+    """Admit exactly one bounded live-testing authority plane.
+
+    This returns an admission receipt only. It does not execute the network
+    effect and grants no submission, payout, or payment authority.
+    """
+    _verify_mission_receipt(receipt)
+    if grant.profile_id != CANONICAL_PROFILE_ID:
+        raise CashEffectBoundaryError("LIVE_GRANT_NONCANONICAL_PROFILE")
+    if grant.mission_receipt_digest != receipt.receipt_digest:
+        raise CashEffectBoundaryError("LIVE_GRANT_MISSION_RECEIPT_MISMATCH")
+    if grant.program_ref != receipt.program_ref:
+        raise CashEffectBoundaryError("LIVE_GRANT_PROGRAM_MISMATCH")
+    if grant.target_ref != receipt.target_ref or grant.target_generation != receipt.target_generation:
+        raise CashEffectBoundaryError("LIVE_GRANT_TARGET_MISMATCH")
+    if not grant.authority:
+        raise CashEffectBoundaryError("LIVE_GRANT_AUTHORITY_REQUIRED")
+    if not grant.program_policy_current:
+        raise CashEffectBoundaryError("LIVE_GRANT_PROGRAM_POLICY_STALE")
+    _text(grant.program_policy_snapshot_digest, "LIVE_GRANT_POLICY_DIGEST_REQUIRED")
+    _text(grant.program_policy_generation, "LIVE_GRANT_POLICY_GENERATION_REQUIRED")
+    _text(grant.scope_rules_digest, "LIVE_GRANT_SCOPE_DIGEST_REQUIRED")
+    _text(grant.scope_currentness_ref, "LIVE_GRANT_SCOPE_CURRENTNESS_REQUIRED")
+    _text(grant.target_currentness_ref, "LIVE_GRANT_TARGET_CURRENTNESS_REQUIRED")
+    _text(grant.revocation_currentness_ref, "LIVE_GRANT_REVOCATION_CURRENTNESS_REQUIRED")
+    _text(grant.disclosure_policy_ref, "LIVE_GRANT_DISCLOSURE_POLICY_REQUIRED")
+    if grant.effect_class != LIVE_EFFECT_CLASS:
+        raise CashEffectBoundaryError("LIVE_GRANT_EFFECT_CLASS_UNSUPPORTED")
+    origin = _text(grant.network_origin, "LIVE_GRANT_NETWORK_ORIGIN_REQUIRED")
+    allowlist = _strings(grant.network_allowlist, "LIVE_GRANT_ALLOWLIST_INVALID")
+    if origin not in allowlist:
+        raise CashEffectBoundaryError("LIVE_GRANT_ORIGIN_NOT_ALLOWLISTED")
+    # Aliases are names only; secret values never enter this contract.
+    _strings(grant.credential_aliases, "LIVE_GRANT_CREDENTIAL_ALIASES_INVALID")
+
+    return LiveEffectAdmissionReceiptV1(
+        mission_receipt_digest=receipt.receipt_digest,
+        effect_grant_digest=grant.grant_digest,
+        program_ref=receipt.program_ref,
+        target_ref=receipt.target_ref,
+        target_generation=receipt.target_generation,
+        effect_class=grant.effect_class,
+        network_origin=origin,
+        live_effect_authorized=True,
+        authority_scope="EXACT_NAMED_LIVE_TEST_ONLY",
+    )
+
+
+def export_sanitized_pattern(
+    receipt: BugHoundCashMissionReceiptV1,
+    sanitized: SanitizedPatternReceiptV1,
+    *,
+    destination_context: str,
+) -> ReusablePatternExportV1:
+    """Export only authority-free abstract knowledge from a bounty mission."""
+    _verify_mission_receipt(receipt)
+    if sanitized.mission_receipt_digest != receipt.receipt_digest:
+        raise CashEffectBoundaryError("SANITIZED_PATTERN_MISSION_MISMATCH")
+    destination = _text(destination_context, "REUSE_DESTINATION_CONTEXT_REQUIRED")
+    if destination not in GENERIC_REUSE_CONTEXTS:
+        raise CashEffectBoundaryError("REUSE_DESTINATION_CONTEXT_NOT_ADMITTED")
+    if sanitized.authority:
+        raise CashEffectBoundaryError("SANITIZED_PATTERN_CANNOT_CARRY_AUTHORITY")
+    _text(sanitized.disclosure_state_ref, "SANITIZED_DISCLOSURE_STATE_REQUIRED")
+    _text(sanitized.reusable_memory_policy_ref, "SANITIZED_MEMORY_POLICY_REQUIRED")
+    _text(sanitized.sanitizer_generation, "SANITIZER_GENERATION_REQUIRED")
+    _text(sanitized.reviewer_ref, "SANITIZER_REVIEWER_REQUIRED")
+    pattern_ref = _text(sanitized.retained_abstract_pattern_ref, "SANITIZED_PATTERN_REF_REQUIRED")
+
+    sensitive = {
+        "target_specific_material": sanitized.target_specific_material_present,
+        "credentials_or_tokens": sanitized.credentials_or_tokens_present,
+        "private_endpoint": sanitized.private_endpoint_present,
+        "undisclosed_exploit_material": sanitized.undisclosed_exploit_material_present,
+        "pii_or_third_party_data": sanitized.pii_or_third_party_data_present,
+        "private_report_identifier": sanitized.private_report_identifier_present,
+    }
+    leaking = sorted(name for name, present in sensitive.items() if present)
+    if leaking:
+        raise CashEffectBoundaryError("SANITIZED_PATTERN_PRIVATE_STATE_REMAINS", ",".join(leaking))
+    removed = _strings(sanitized.removed_classes, "SANITIZED_REMOVED_CLASSES_INVALID")
+    if not _REQUIRED_SANITIZED_CLASSES <= removed:
+        raise CashEffectBoundaryError("SANITIZED_REMOVAL_COVERAGE_INCOMPLETE")
+
+    return ReusablePatternExportV1(
+        source_mission_receipt_digest=receipt.receipt_digest,
+        sanitized_pattern_receipt_digest=sanitized.receipt_digest,
+        retained_abstract_pattern_ref=pattern_ref,
+        destination_context=destination,
+    )
