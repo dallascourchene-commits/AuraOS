@@ -103,15 +103,16 @@ def sha(value):
 
 
 class ExtraLayerClassificationTests(unittest.TestCase):
-    def test_exact_current_evidence_discharges_only_mtp_blocker(self):
+    def test_exact_current_evidence_discharges_role_but_not_resolver_provenance(self):
         out = c.apply_extra_layer_classification(report(), classification(), evidence())
-        self.assertEqual([], out["blockers"])
-        self.assertEqual("READY_FOR_HEADER_AND_TINY_FIXTURE", out["status"])
+        self.assertEqual([c.RESOLVER_PROVENANCE_BLOCKER], out["blockers"])
+        self.assertEqual("PARTIAL", out["status"])
         self.assertEqual(
             [{"index": 78, "role": "MTP_NON_DECODER", "decoder_pager_membership": False}],
             out["classified_extra_checkpoint_layers"],
         )
         self.assertTrue(out["extra_layer_evidence_observation"]["evidence_current"])
+        self.assertFalse(out["extra_layer_resolver_provenance_proven"])
         self.assertNotEqual("old", out["logical_id"])
 
     def test_classification_without_resolver_observation_cannot_clear_blocker(self):
@@ -164,11 +165,12 @@ class ExtraLayerClassificationTests(unittest.TestCase):
             )
         self.assertEqual("DECODER_LAYER_CLASSIFICATION_FORBIDDEN", ctx.exception.code)
 
-    def test_unclassified_layer79_keeps_unexpected_blocker(self):
+    def test_unclassified_layer79_keeps_unexpected_and_resolver_blockers(self):
         out = c.apply_extra_layer_classification(
             report(extra=(78, 79), unexpected=(79,)), classification(), evidence()
         )
         self.assertNotIn("GLM53_MTP_CHECKPOINT_CLASSIFICATION_REQUIRED", out["blockers"])
+        self.assertIn(c.RESOLVER_PROVENANCE_BLOCKER, out["blockers"])
         self.assertIn(
             "GLM53_UNEXPECTED_CHECKPOINT_LAYER_CLASSIFICATION_REQUIRED", out["blockers"]
         )
@@ -186,7 +188,10 @@ class ExtraLayerClassificationTests(unittest.TestCase):
             classification(),
             evidence(),
         )
-        self.assertEqual(["GLM53_FP8_SCALE_LAYOUT_UNRESOLVED"], out["blockers"])
+        self.assertEqual(
+            ["GLM53_FP8_SCALE_LAYOUT_UNRESOLVED", c.RESOLVER_PROVENANCE_BLOCKER],
+            out["blockers"],
+        )
         self.assertEqual("PARTIAL", out["status"])
 
     def test_effect_ceiling_remains_hard_false(self):
@@ -275,9 +280,10 @@ class ExtraLayerClassificationTests(unittest.TestCase):
             extra_layer_evidence_observation=obs,
             probe_fn=fake_probe,
         )
-        self.assertEqual("READY_FOR_HEADER_AND_TINY_FIXTURE", out["status"])
-        self.assertEqual([], out["blockers"])
+        self.assertEqual("PARTIAL", out["status"])
+        self.assertEqual([c.RESOLVER_PROVENANCE_BLOCKER], out["blockers"])
         self.assertTrue(out["source_binding_proven"])
+        self.assertFalse(out["extra_layer_resolver_provenance_proven"])
         self.assertFalse(out["g2_admitted"])
 
 
