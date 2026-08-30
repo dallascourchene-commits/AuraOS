@@ -8,6 +8,7 @@ from aura_arena_artifact_event_core import (
     MirrorLineage,
     classify_replay,
     prove_quiescence,
+    require_prior_lineage,
     require_rename_parent,
     validate_event_identity_binding,
 )
@@ -26,6 +27,7 @@ class ArtifactEventCoreTests(unittest.TestCase):
             claim_id="AS-02",
             work_order_id="CS-ARENA-SYNC-001",
             source_currentness_ref="board-r1",
+            observed_at="2026-08-30T15:00:00Z",
             generation=0,
         )
         base.update(overrides)
@@ -62,49 +64,97 @@ class ArtifactEventCoreTests(unittest.TestCase):
         with self.assertRaisesRegex(ArtifactEventRefusal, "INVALID_SHA256"):
             ArtifactIdentity("notahash", 1, "", ".txt")
 
-    def test_quiescence_requires_stable_tail(self):
-        proof = prove_quiescence([FileObservation(5, 10), FileObservation(5, 10)])
+    def test_quiescence_requires_stable_tail_and_elapsed_window(self):
+        proof = prove_quiescence(
+            [FileObservation(5, 10, 0), FileObservation(5, 10, 100)],
+            min_stable_ns=100,
+        )
         self.assertEqual(proof.stable_samples, 2)
+        self.assertEqual(proof.stable_ns, 100)
         self.assertFalse(proof.closed_evidence)
+
+    def test_two_instantaneous_identical_samples_are_not_quiescent(self):
+        with self.assertRaisesRegex(ArtifactEventRefusal, "QUIESCENCE_OBSERVATION_ORDER_INVALID"):
+            prove_quiescence(
+                [FileObservation(5, 10, 100), FileObservation(5, 10, 100)],
+                min_stable_ns=50,
+            )
+
+    def test_stable_samples_shorter_than_required_window_refused(self):
+        with self.assertRaisesRegex(ArtifactEventRefusal, "ARTIFACT_STABILITY_WINDOW_TOO_SHORT"):
+            prove_quiescence(
+                [FileObservation(5, 10, 0), FileObservation(5, 10, 40)],
+                min_stable_ns=50,
+            )
 
     def test_unstable_file_refused(self):
         with self.assertRaisesRegex(ArtifactEventRefusal, "ARTIFACT_NOT_QUIESCENT"):
-            prove_quiescence([FileObservation(4, 9), FileObservation(5, 10)])
+            prove_quiescence(
+                [FileObservation(4, 9, 0), FileObservation(5, 10, 100)],
+                min_stable_ns=50,
+            )
 
     def test_single_sample_insufficient_without_close(self):
         with self.assertRaisesRegex(ArtifactEventRefusal, "ARTIFACT_NOT_QUIESCENT"):
-            prove_quiescence([FileObservation(5, 10)])
+            prove_quiescence([FileObservation(5, 10, 0)], min_stable_ns=50)
 
     def test_close_evidence_allows_one_observation(self):
-        proof = prove_quiescence([FileObservation(5, 10)], closed_evidence=True)
+        proof = prove_quiescence(
+            [FileObservation(5, 10, 0)], min_stable_ns=999, closed_evidence=True
+        )
         self.assertTrue(proof.closed_evidence)
 
-    def test_mirror_lineage_advances_generation(self):
-        line = MirrorLineage.start("o", "LOCAL")
+    def test_atomic_publish_evidence_allows_one_observation(self):
+        proof = prove_quiescence(
+            [FileObservation(5, 10, 0)], min_stable_ns=999, atomic_publish_evidence=True
+        )
+        self.assertTrue(proof.atomic_publish_evidence)
+
+    def test_out_of_order_quiescence_samples_refused(self):
+        with self.assertRaisesRegex(ArtifactEventRefusal, "QUIESCENCE_OBSERVATION_ORDER_INVALID"):
+            prove_quiescence(
+                [FileObservation(5, 10, 100), FileObservation(5, 10, 90)],
+                min_stable_ns=1,
+            )
+
+    def test_mirror_lineage_advances_hop_not_artifact_generation(self):
+        line = MirrorLineage.start("o", "LOCAL", artifact_generation=7)
         cloud = line.next_hop("CLOUD")
-        self.assertEqual(cloud.generation, 1)
+        self.assertEqual(cloud.artifact_generation, 7)
+        self.assertEqual(cloud.hop_index, 1)
         self.assertEqual(cloud.surfaces, ("LOCAL", "CLOUD"))
 
     def test_mirror_bounce_loop_is_refused(self):
-        line = MirrorLineage.start("o", "LOCAL").next_hop("CLOUD")
+        line = MirrorLineage.start("o", "LOCAL", artifact_generation=7).next_hop("CLOUD")
         with self.assertRaisesRegex(ArtifactEventRefusal, "MIRROR_LOOP_SUPPRESSED"):
             line.next_hop("LOCAL")
 
     def test_duplicate_surface_inside_lineage_refused(self):
         with self.assertRaisesRegex(ArtifactEventRefusal, "MIRROR_LINEAGE_LOOP"):
-            MirrorLineage("o", ("LOCAL", "CLOUD", "LOCAL"), generation=2)
+            MirrorLineage("o", 7, ("LOCAL", "CLOUD", "LOCAL"), hop_index=2)
 
-    def test_generation_must_match_lineage(self):
-        with self.assertRaisesRegex(ArtifactEventRefusal, "MIRROR_GENERATION_MISMATCH"):
-            MirrorLineage("o", ("LOCAL", "CLOUD"), generation=0)
+    def test_hop_index_must_match_lineage(self):
+        with self.assertRaisesRegex(ArtifactEventRefusal, "MIRROR_HOP_INDEX_MISMATCH"):
+            MirrorLineage("o", 7, ("LOCAL", "CLOUD"), hop_index=0)
 
     def test_mirror_fence_is_stable(self):
-        a = MirrorLineage.start("o", "LOCAL").next_hop("CLOUD")
-        b = MirrorLineage.start("o", "LOCAL").next_hop("CLOUD")
+        a = MirrorLineage.start("o", "LOCAL", artifact_generation=7).next_hop("CLOUD")
+        b = MirrorLineage.start("o", "LOCAL", artifact_generation=7).next_hop("CLOUD")
         self.assertEqual(a.fence, b.fence)
+
+    def test_same_origin_different_artifact_generations_get_different_fences(self):
+        a = MirrorLineage.start("o", "LOCAL", artifact_generation=7).next_hop("CLOUD")
+        b = MirrorLineage.start("o", "LOCAL", artifact_generation=8).next_hop("CLOUD")
+        self.assertNotEqual(a.fence, b.fence)
 
     def test_current_event_is_ingest(self):
         self.assertEqual(classify_replay(self.event(), currentness="CURRENT"), "INGEST")
+
+    def test_unknown_event_currentness_forces_rebase(self):
+        self.assertEqual(
+            classify_replay(self.event(source_currentness_ref="UNKNOWN"), currentness="CURRENT"),
+            "REBASE",
+        )
 
     def test_seen_event_is_idempotent_replay(self):
         e = self.event()
@@ -120,30 +170,40 @@ class ArtifactEventCoreTests(unittest.TestCase):
             "REBASE",
         )
 
-    def test_delete_is_tombstone_disposition(self):
-        e = self.event(event_type="DELETE")
+    def test_delete_is_tombstone_disposition_when_lineage_bound(self):
+        e = self.event(event_type="DELETE", prior_artifact_id="artifact-sha256-" + "a" * 64)
         self.assertEqual(classify_replay(e, currentness="CURRENT"), "TOMBSTONE")
 
-    def test_rename_requires_prior_artifact(self):
-        with self.assertRaisesRegex(ArtifactEventRefusal, "RENAME_PRIOR_ARTIFACT_REQUIRED"):
-            require_rename_parent(self.event(event_type="RENAME"))
+    def test_delete_without_prior_lineage_refused_at_event_boundary(self):
+        with self.assertRaisesRegex(ArtifactEventRefusal, "PRIOR_LINEAGE_REQUIRED"):
+            self.event(event_type="DELETE")
+
+    def test_rename_requires_prior_lineage(self):
+        with self.assertRaisesRegex(ArtifactEventRefusal, "PRIOR_LINEAGE_REQUIRED"):
+            self.event(event_type="RENAME")
 
     def test_rename_with_prior_artifact_is_allowed(self):
-        require_rename_parent(
-            self.event(event_type="RENAME", prior_artifact_id="artifact-sha256-" + "a" * 64)
-        )
+        e = self.event(event_type="RENAME", prior_artifact_id="artifact-sha256-" + "a" * 64)
+        require_rename_parent(e)
+        require_prior_lineage(e)
+
+    def test_rename_with_prior_resource_is_allowed(self):
+        e = self.event(event_type="RENAME", prior_resource_ref="C:/AuraDrive2/old.txt")
+        require_prior_lineage(e)
 
     def test_non_tombstone_requires_identity(self):
         with self.assertRaisesRegex(ArtifactEventRefusal, "ARTIFACT_IDENTITY_REQUIRED"):
             validate_event_identity_binding(self.event(), None)
 
     def test_tombstone_accepts_no_identity(self):
-        validate_event_identity_binding(self.event(event_type="TOMBSTONE"), None)
+        e = self.event(event_type="TOMBSTONE", prior_artifact_id="artifact-sha256-" + "a" * 64)
+        validate_event_identity_binding(e, None)
 
     def test_tombstone_rejects_attached_bytes_identity(self):
+        e = self.event(event_type="TOMBSTONE", prior_artifact_id="artifact-sha256-" + "a" * 64)
         ident = ArtifactIdentity.from_bytes(b"x")
         with self.assertRaisesRegex(ArtifactEventRefusal, "TOMBSTONE_MUST_NOT_REQUIRE_BYTES"):
-            validate_event_identity_binding(self.event(event_type="TOMBSTONE"), ident)
+            validate_event_identity_binding(e, ident)
 
     def test_parent_refs_deduplicate_and_sort(self):
         ident = ArtifactIdentity.from_bytes(b"x", parent_refs=("b", "a", "b"))
