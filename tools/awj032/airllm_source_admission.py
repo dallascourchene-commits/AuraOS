@@ -136,28 +136,42 @@ def _const_string(
 def _mapping_trust_state(
     node: ast.AST | None,
     bindings: dict[str, ast.AST],
+    opaque_names: frozenset[str] = frozenset(),
     seen: frozenset[str] = frozenset(),
 ) -> tuple[str, bool]:
     """Return (trust state, mapping_known) for one expanded mapping."""
     if isinstance(node, ast.Name):
-        if node.id in seen:
+        if node.id in opaque_names or node.id in seen:
             return "UNKNOWN", False
         value = bindings.get(node.id)
         if value is None:
             return "UNKNOWN", False
-        return _mapping_trust_state(value, bindings, seen | {node.id})
+        return _mapping_trust_state(
+            value,
+            bindings,
+            opaque_names,
+            seen | {node.id},
+        )
 
     if isinstance(node, ast.Dict):
         state = "ABSENT"
         for key, value in zip(node.keys, node.values):
             if key is None:
-                nested_state, known = _mapping_trust_state(value, bindings, seen)
+                nested_state, known = _mapping_trust_state(
+                    value,
+                    bindings,
+                    opaque_names,
+                    seen,
+                )
                 if not known:
                     return "UNKNOWN", False
                 if nested_state != "ABSENT":
                     state = nested_state
                 continue
-            if _const_string(key, bindings) == "trust_remote_code":
+            resolved_key = _const_string(key, bindings)
+            if resolved_key is None:
+                return "UNKNOWN", False
+            if resolved_key == "trust_remote_code":
                 state = _trust_value(value)
         return state, True
 
@@ -167,7 +181,12 @@ def _mapping_trust_state(
             if kw.arg == "trust_remote_code":
                 state = _trust_value(kw.value)
             elif kw.arg is None:
-                nested_state, known = _mapping_trust_state(kw.value, bindings, seen)
+                nested_state, known = _mapping_trust_state(
+                    kw.value,
+                    bindings,
+                    opaque_names,
+                    seen,
+                )
                 if not known:
                     return "UNKNOWN", False
                 if nested_state != "ABSENT":
@@ -182,11 +201,91 @@ def _mapping_trust_state(
                 if not isinstance(pair, (ast.List, ast.Tuple)) or len(pair.elts) != 2:
                     return "UNKNOWN", False
                 key, value = pair.elts
-                if _const_string(key, bindings) == "trust_remote_code":
+                resolved_key = _const_string(key, bindings)
+                if resolved_key is None:
+                    return "UNKNOWN", False
+                if resolved_key == "trust_remote_code":
                     state = _trust_value(value)
         return state, True
 
     return "UNKNOWN", False
+
+
+def _mapping_opaque_mutation_names(
+    tree: ast.AST,
+    bindings: dict[str, ast.AST],
+) -> frozenset[str]:
+    """Track aliases of mappings whose later mutation cannot be statically bounded.
+
+    This is intentionally conservative only for mappings that may later cross a
+    protected loader boundary. Merely mutating an opaque dictionary is not itself
+    a finding; the boundary expansion decides whether it is security-relevant.
+    """
+    opaque: set[str] = set()
+    aliases: set[tuple[str, str]] = set()
+
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and len(node.targets) == 1:
+            target = node.targets[0]
+            if isinstance(target, ast.Name) and isinstance(node.value, ast.Name):
+                aliases.add((target.id, node.value.id))
+            if isinstance(target, ast.Subscript) and isinstance(target.value, ast.Name):
+                resolved_key = _const_string(target.slice, bindings)
+                if resolved_key is None and _trust_value(node.value) != "FALSE":
+                    opaque.add(target.value.id)
+        elif isinstance(node, ast.AnnAssign):
+            target = node.target
+            if isinstance(target, ast.Name) and isinstance(node.value, ast.Name):
+                aliases.add((target.id, node.value.id))
+            if (
+                node.value is not None
+                and isinstance(target, ast.Subscript)
+                and isinstance(target.value, ast.Name)
+            ):
+                resolved_key = _const_string(target.slice, bindings)
+                if resolved_key is None and _trust_value(node.value) != "FALSE":
+                    opaque.add(target.value.id)
+        elif (
+            isinstance(node, ast.AugAssign)
+            and isinstance(node.target, ast.Name)
+            and isinstance(node.op, ast.BitOr)
+        ):
+            _, known = _mapping_trust_state(node.value, bindings)
+            if not known:
+                opaque.add(node.target.id)
+
+        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+            owner = node.func.value
+            if not isinstance(owner, ast.Name):
+                continue
+            if node.func.attr == "update":
+                unsafe = len(node.args) > 1
+                for arg in node.args:
+                    _, known = _mapping_trust_state(arg, bindings)
+                    unsafe = unsafe or not known
+                for kw in node.keywords:
+                    if kw.arg is None:
+                        _, known = _mapping_trust_state(kw.value, bindings)
+                        unsafe = unsafe or not known
+                if unsafe:
+                    opaque.add(owner.id)
+            elif node.func.attr == "setdefault":
+                if not node.args or _const_string(node.args[0], bindings) is None:
+                    value = node.args[1] if len(node.args) >= 2 else None
+                    if _trust_value(value) != "FALSE":
+                        opaque.add(owner.id)
+
+    changed = True
+    while changed:
+        changed = False
+        for left, right in aliases:
+            if left in opaque and right not in opaque:
+                opaque.add(right)
+                changed = True
+            if right in opaque and left not in opaque:
+                opaque.add(left)
+                changed = True
+    return frozenset(opaque)
 
 
 def _call_name(node: ast.Call) -> str | None:
@@ -201,6 +300,7 @@ def _scan_trust_remote_code(tree: ast.AST, rel: str) -> list[Finding]:
     """Reject direct, mapping-mediated, and loader-boundary remote-code widening."""
     findings: list[Finding] = []
     bindings = _static_bindings(tree)
+    opaque_names = _mapping_opaque_mutation_names(tree, bindings)
 
     for node in ast.walk(tree):
         if isinstance(node, ast.Call):
@@ -220,7 +320,11 @@ def _scan_trust_remote_code(tree: ast.AST, rel: str) -> list[Finding]:
                     if finding is not None:
                         findings.append(finding)
                 elif kw.arg is None:
-                    state, known = _mapping_trust_state(kw.value, bindings)
+                    state, known = _mapping_trust_state(
+                        kw.value,
+                        bindings,
+                        opaque_names,
+                    )
                     if state in {"TRUE", "DYNAMIC"}:
                         finding = _trust_finding(
                             state,
