@@ -1,8 +1,10 @@
 """AWJ032-GLM53-01A fail-closed packed-expert pager core.
 
-D0 synthetic/reference code only.  This module never downloads or imports GLM-5.3,
-never opens a real checkpoint by itself, and never grants G2.  It establishes the
-source-binding and bounded-row-read invariants a real safetensors backend must obey.
+D0 synthetic/reference code only. This module never downloads or imports GLM-5.3,
+never opens a real checkpoint by itself, and never grants G2. It establishes the
+source-binding and bounded-row-request invariants a real safetensors backend must
+obey while keeping physical I/O claims UNKNOWN unless the backend supplies a
+source-bound attestation.
 """
 from __future__ import annotations
 
@@ -11,6 +13,9 @@ import hashlib
 import json
 import math
 from typing import Any, Mapping, Protocol, Sequence
+
+
+BACKEND_IO_ATTESTATION_SCHEMA = "AuraExpertPagerBackendIOAttestationV1"
 
 
 class PagerError(RuntimeError):
@@ -38,7 +43,11 @@ class WholeTensorReadForbidden(PagerError):
 
 
 class SliceBackend(Protocol):
-    """Backend contract: bounded first-axis row reads only."""
+    """Logical backend contract: bounded first-axis row requests only.
+
+    The method name does not prove physical I/O behavior. Backends that can prove
+    physical selected-only reads may additionally expose ``io_attestation``.
+    """
 
     def read_rows(self, key: str, start: int, end: int) -> Sequence[Any]: ...
 
@@ -102,7 +111,12 @@ class PagerReceipt:
     selected_experts: tuple[int, ...]
     contiguous_runs: tuple[tuple[int, int], ...]
     read_count: int
-    whole_tensor_reads: int
+    logical_bounded_row_requests: bool
+    physical_io_attested: bool
+    physical_selected_only: bool | None
+    whole_tensor_reads: int | None
+    whole_bank_materialized: bool | None
+    backend_attestation_id: str | None
     g2_admitted: bool = False
     claim_ceiling: str = "SYNTHETIC_PAGER_CORE_ONLY_NO_FLAGSHIP_WEIGHT_OR_RUNTIME_PROOF"
 
@@ -137,12 +151,50 @@ def contiguous_runs(expert_ids: Sequence[int]) -> tuple[tuple[int, int], ...]:
     return tuple(runs)
 
 
+def _backend_io_attestation(backend: Any, binding_digest: str) -> dict[str, Any] | None:
+    """Return validated backend physical-I/O evidence, or UNKNOWN when absent.
+
+    A bounded ``read_rows`` API is only a logical request contract. It does not prove
+    mmap/page-cache/storage behavior. Optional backend evidence is trusted only when
+    it is explicitly bound to the same immutable pager binding digest.
+    """
+    attestor = getattr(backend, "io_attestation", None)
+    if not callable(attestor):
+        return None
+    raw = attestor(binding_digest)
+    if not isinstance(raw, Mapping):
+        raise SourceBindingError("backend I/O attestation must be a mapping")
+    if raw.get("schema") != BACKEND_IO_ATTESTATION_SCHEMA:
+        raise SourceBindingError("backend I/O attestation schema mismatch")
+    if raw.get("binding_digest") != binding_digest:
+        raise SourceBindingError("backend I/O attestation binding mismatch")
+    attestation_id = raw.get("attestation_id")
+    selected_only = raw.get("physical_selected_only")
+    whole_bank_reads = raw.get("whole_bank_reads")
+    whole_bank_materialized = raw.get("whole_bank_materialized")
+    if not isinstance(attestation_id, str) or not attestation_id.strip():
+        raise SourceBindingError("backend I/O attestation id required")
+    if not isinstance(selected_only, bool):
+        raise SourceBindingError("backend physical_selected_only must be bool")
+    if isinstance(whole_bank_reads, bool) or not isinstance(whole_bank_reads, int) or whole_bank_reads < 0:
+        raise SourceBindingError("backend whole_bank_reads must be a nonnegative int")
+    if not isinstance(whole_bank_materialized, bool):
+        raise SourceBindingError("backend whole_bank_materialized must be bool")
+    return {
+        "attestation_id": attestation_id.strip(),
+        "physical_selected_only": selected_only,
+        "whole_bank_reads": whole_bank_reads,
+        "whole_bank_materialized": whole_bank_materialized,
+    }
+
+
 class PackedExpertPager:
     """Source-bound first-axis pager for grouped expert tensors.
 
-    The binding is immutable.  Each load rechecks the caller's model revision and
+    The binding is immutable. Each load rechecks the caller's model revision and
     index digest before any backend read, eliminating execution-order/global-state
-    inference of layer identity.
+    inference of layer identity. A single call may not request every expert: full
+    reopenability is preserved across bounded calls rather than by whole-bank load.
     """
 
     def __init__(self, binding: ExpertSourceBinding, backend: SliceBackend):
@@ -165,6 +217,8 @@ class PackedExpertPager:
     ) -> PagedExperts:
         self._assert_current(model_revision, index_digest)
         selected = canonical_expert_ids(expert_ids, self.binding.num_experts)
+        if len(selected) == self.binding.num_experts:
+            raise WholeTensorReadForbidden("single-call selection may not materialize the full expert bank")
         runs = contiguous_runs(selected)
 
         families = dict(self.binding.tensor_map)
@@ -202,6 +256,7 @@ class PackedExpertPager:
             binding_digest=self.binding.digest,
             read_count=read_count,
         )
+        physical = _backend_io_attestation(self.backend, self.binding.digest)
         self._last_receipt = PagerReceipt(
             schema="AuraPackedExpertPagerReceiptV1",
             binding_digest=self.binding.digest,
@@ -209,7 +264,12 @@ class PackedExpertPager:
             selected_experts=selected,
             contiguous_runs=runs,
             read_count=read_count,
-            whole_tensor_reads=0,
+            logical_bounded_row_requests=True,
+            physical_io_attested=physical is not None,
+            physical_selected_only=None if physical is None else physical["physical_selected_only"],
+            whole_tensor_reads=None if physical is None else physical["whole_bank_reads"],
+            whole_bank_materialized=None if physical is None else physical["whole_bank_materialized"],
+            backend_attestation_id=None if physical is None else physical["attestation_id"],
         )
         return result
 
@@ -219,7 +279,7 @@ class PackedExpertPager:
         return self._last_receipt
 
     def evict(self) -> None:
-        # Core holds no tensor cache.  A future bounded cache may implement this
+        # Core holds no tensor cache. A future bounded cache may implement this
         # without weakening source identity or whole-bank prohibitions.
         return None
 
