@@ -9,7 +9,12 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Dict, Iterable, List, Mapping, Sequence
 
-from creator_studio_continuation_harness import HarnessState, WorkerContext, eligible_work
+from creator_studio_continuation_harness import (
+    PRIORITY_STAGE_ORDER,
+    HarnessState,
+    WorkerContext,
+    eligible_work,
+)
 
 
 class WakeRefusal(RuntimeError):
@@ -130,6 +135,34 @@ class ArenaWakeScheduler:
             ),
         )[0]
 
+    def emit_recommission_required(
+        self,
+        state: HarnessState,
+        *,
+        work_id: str,
+        work_version: str,
+        reason: str = "eligible work requires a ChatGPT-class worker but no lawful wake/input adapter is active",
+    ) -> WakeIntent:
+        event_id = self._event_id(
+            mission_id=state.active_mission_id,
+            event_type="RECOMMISSION_REQUIRED",
+            worker_id="__RECOMMISSION__",
+            work_id=work_id,
+            work_version=work_version,
+        )
+        intent = WakeIntent(
+            schema="CreatorStudioWakeIntentV1",
+            event_id=event_id,
+            event_type="RECOMMISSION_REQUIRED",
+            mission_id=state.active_mission_id,
+            worker_id="__RECOMMISSION__",
+            work_id=work_id,
+            work_version=work_version,
+            reason=reason,
+        )
+        self.ledger.append(intent)
+        return intent
+
     def scan_and_emit(
         self,
         state: HarnessState,
@@ -169,14 +202,31 @@ class ArenaWakeScheduler:
 
         candidates_by_work: Dict[str, List[WorkerContext]] = {}
         items: Dict[str, object] = {}
-        for worker in worker_list:
-            for item in eligible_work(state, worker):
-                candidates_by_work.setdefault(item.work_id, []).append(worker)
-                items[item.work_id] = item
+        ordered_work_ids: List[str] = []
+        seen_work_ids = set()
+        for stage in PRIORITY_STAGE_ORDER:
+            for worker in worker_list:
+                for item in eligible_work(state, worker, stage=stage):
+                    candidates_by_work.setdefault(item.work_id, []).append(worker)
+                    items[item.work_id] = item
+            for worker in worker_list:
+                for item in eligible_work(state, worker, stage=stage):
+                    if item.work_id not in seen_work_ids:
+                        ordered_work_ids.append(item.work_id)
+                        seen_work_ids.add(item.work_id)
 
-        for work_id in sorted(candidates_by_work):
+        assigned_workers = set()
+        for work_id in ordered_work_ids:
+            available = [
+                worker
+                for worker in candidates_by_work.get(work_id, [])
+                if worker.worker_id not in assigned_workers
+            ]
+            if not available:
+                continue
             item = items[work_id]
-            worker = self._best_worker(candidates_by_work[work_id], item.required_capabilities)
+            worker = self._best_worker(available, item.required_capabilities)
+            assigned_workers.add(worker.worker_id)
             version = versions.get(work_id, "v1")
             event_id = self._event_id(
                 mission_id=state.active_mission_id,
