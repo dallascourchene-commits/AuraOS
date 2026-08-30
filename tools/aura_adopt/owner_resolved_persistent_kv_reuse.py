@@ -100,6 +100,7 @@ class PersistentKVPathEvidenceV1:
         return self.prefill_saved_us-sum((self.transfer_us,self.restore_us,self.queue_penalty_us,self.memory_penalty_us,self.invalidation_penalty_us))
 
 def resolved_projection_payload_digest(target:PersistentKVReuseTargetV1,path:PersistentKVPathEvidenceV1)->str:
+    if not isinstance(target,PersistentKVReuseTargetV1) or not isinstance(path,PersistentKVPathEvidenceV1): raise KVAdmissionError("KV_TARGET_AND_PATH_REQUIRED")
     return _dig("AURA_PCK2_RESOLVED_PROJECTION_V1",{"target_digest":target.target_digest,"path_digest":path.path_digest})
 
 @dataclass(frozen=True)
@@ -148,6 +149,9 @@ def _sign(payload:Mapping[str,Any],key:bytes)->str:
     return hmac.new(key,_canon(dict(payload)),hashlib.sha256).hexdigest()
 
 def build_resolver_proof(*,claim:KVReuseProjectionClaimV1,resolver_ref:str,resolver_generation:str,resolver_currentness_ref:str,owner_recognized_projection_digest:str,disposition:ResolverDisposition,key:bytes,revoked:bool=False,supersedes_proof_digest:str|None=None)->OwnerResolverProofV1:
+    if not isinstance(claim,KVReuseProjectionClaimV1): raise KVAdmissionError("PROJECTION_CLAIM_REQUIRED")
+    if not isinstance(disposition,ResolverDisposition): raise KVAdmissionError("RESOLVER_DISPOSITION_INVALID")
+    if type(revoked) is not bool: raise KVAdmissionError("RESOLVER_REVOKED_BOOL_REQUIRED")
     u={"projection_claim_digest":claim.claim_digest,"owner_ref":claim.owner_ref,"owner_generation":claim.owner_generation,
        "owner_head":claim.owner_head,"owner_blob":claim.owner_blob,"owner_abi":claim.owner_abi,
        "resolver_ref":_text(resolver_ref,"RESOLVER_REF_INVALID"),"resolver_generation":_text(resolver_generation,"RESOLVER_GENERATION_INVALID"),
@@ -159,6 +163,8 @@ def build_resolver_proof(*,claim:KVReuseProjectionClaimV1,resolver_ref:str,resol
     return OwnerResolverProofV1(**{**u,"disposition":disposition,"resolver_signature":sig})
 
 def _verify_resolver(claim,proof,keys,state):
+    if not isinstance(claim,KVReuseProjectionClaimV1) or not isinstance(proof,OwnerResolverProofV1): raise KVAdmissionError("RESOLVER_CLAIM_AND_PROOF_REQUIRED")
+    if not isinstance(keys,Mapping) or not isinstance(state,Mapping): raise KVAdmissionError("TRUSTED_RESOLVER_STATE_REQUIRED")
     if proof.projection_claim_digest!=claim.claim_digest: raise KVAdmissionError("RESOLVER_CLAIM_DIGEST_MISMATCH")
     for f in ("owner_ref","owner_generation","owner_head","owner_blob","owner_abi"):
         if getattr(proof,f)!=getattr(claim,f): raise KVAdmissionError("RESOLVER_OWNER_BINDING_MISMATCH",f)
@@ -188,6 +194,11 @@ def _blockers(t,p):
     return b
 
 def admit_persistent_kv_reuse(*,target,claim,resolver_proof,path_evidence,trusted_resolver_keys,trusted_resolver_state):
+    if not isinstance(target,PersistentKVReuseTargetV1): raise KVAdmissionError("KV_TARGET_REQUIRED")
+    if not isinstance(path_evidence,PersistentKVPathEvidenceV1): raise KVAdmissionError("KV_PATH_EVIDENCE_REQUIRED")
+    if not isinstance(claim,KVReuseProjectionClaimV1): raise KVAdmissionError("PROJECTION_CLAIM_REQUIRED")
+    if not isinstance(resolver_proof,OwnerResolverProofV1): raise KVAdmissionError("OWNER_RESOLVER_PROOF_REQUIRED")
+    if not isinstance(trusted_resolver_keys,Mapping) or not isinstance(trusted_resolver_state,Mapping): raise KVAdmissionError("TRUSTED_RESOLVER_STATE_REQUIRED")
     if claim.projection_payload_digest!=resolved_projection_payload_digest(target,path_evidence): raise KVAdmissionError("PROJECTION_PAYLOAD_DIGEST_MISMATCH")
     if claim.subject_ref!=target.coordinate_ref: raise KVAdmissionError("PROJECTION_COORDINATE_SUBJECT_MISMATCH")
     if claim.subject_generation!=target.source_generation: raise KVAdmissionError("PROJECTION_SUBJECT_GENERATION_MISMATCH")
