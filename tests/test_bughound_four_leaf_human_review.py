@@ -325,14 +325,16 @@ class FourLeafHumanReviewTests(unittest.TestCase):
 
     def test_public_known_duplicate_never_reaches_human_review(self):
         duplicate = replace(self.duplicate(), publicly_known_root_cause=True)
-        with self.assertRaisesRegex(ValueError, "PUBLIC_ROOT_CAUSE_ALREADY_KNOWN"):
-            self.call(duplicate=duplicate)
+        with patch.object(repro_registry, "_CANONICAL_REPRODUCTION_RECORDS", (self.repro_record(),)):
+            with self.assertRaisesRegex(ValueError, "PUBLIC_ROOT_CAUSE_ALREADY_KNOWN"):
+                self.call(duplicate=duplicate)
 
     def test_unclean_lint_and_nonadmissible_program_never_reach_human_review(self):
-        with self.assertRaisesRegex(ValueError, "REPORT_LINT_REQUIRED"):
-            self.call(lint=replace(self.lint(), report_lint_state="REPORT_LINT_DIRTY"))
-        with self.assertRaisesRegex(ValueError, "PROGRAM_ADMISSIBILITY_REQUIRED"):
-            self.call(program=replace(self.program(), program_admissibility_state="STALE"))
+        with patch.object(repro_registry, "_CANONICAL_REPRODUCTION_RECORDS", (self.repro_record(),)):
+            with self.assertRaisesRegex(ValueError, "REPORT_LINT_REQUIRED"):
+                self.call(lint=replace(self.lint(), report_lint_state="REPORT_LINT_DIRTY"))
+            with self.assertRaisesRegex(ValueError, "PROGRAM_ADMISSIBILITY_REQUIRED"):
+                self.call(program=replace(self.program(), program_admissibility_state="STALE"))
 
     def test_packet_digest_is_deterministic_under_same_private_state(self):
         self.assertEqual(self.exact_private_path().packet_digest, self.exact_private_path().packet_digest)
