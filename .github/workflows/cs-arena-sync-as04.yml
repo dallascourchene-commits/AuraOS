@@ -1,0 +1,24 @@
+name: CS Arena Sync AS-04
+
+on:
+  pull_request:
+    paths:
+      - 'aura_arena_artifact_event_core.py'
+      - 'aura_arena_local_artifact_outbox.py'
+      - 'tests/test_aura_arena_artifact_event_core.py'
+      - 'tests/test_aura_arena_local_artifact_outbox.py'
+      - '.github/workflows/cs-arena-sync-as04.yml'
+  workflow_dispatch:
+
+jobs:
+  focused-as04:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile exact AS-02/AS-04 sources
+        run: python -m py_compile aura_arena_artifact_event_core.py aura_arena_local_artifact_outbox.py
+      - name: Run inherited event-core and local-outbox regressions
+        run: python -m unittest tests.test_aura_arena_artifact_event_core tests.test_aura_arena_local_artifact_outbox -v
