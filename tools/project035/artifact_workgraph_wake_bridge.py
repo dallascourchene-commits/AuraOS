@@ -5,20 +5,22 @@ and an explicit artifact->WorkGraph dependency binding. It may compile a canonic
 WorkGraph REOPEN proposal, but it never mutates WorkGraph, never emits a WakeIntent,
 and never grants execution/effect/provider/background authority.
 
-Only after an external canonical WorkGraph owner applies REOPEN under its own CAS
-and returns a matching transition receipt may this bridge say that the existing
-H-G wake scanner is allowed to rescan the new WorkGraph projection.
+A deterministic WorkGraph transition receipt is integrity evidence, not persistence
+authority. Only after an injected trusted canonical-transition resolver confirms the
+exact REOPEN was durably persisted/read back by the canonical WorkGraph owner may
+this bridge say that the existing H-G wake scanner is allowed to rescan.
 """
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import hashlib
 import json
-from typing import Any, Mapping
+from typing import Any, Callable, Mapping
 
 ARTIFACT_AVAILABLE_SCHEMA = "ArtifactAvailableEventV1"
 WORKGRAPH_PROJECTION_SCHEMA = "AuraArenaWorkGraphProjectionV1"
 WORKGRAPH_TRANSITION_RECEIPT_SCHEMA = "AuraArenaWorkGraphTransitionReceiptV1"
+WORKGRAPH_TRANSITION_EVIDENCE_SCHEMA = "CanonicalWorkGraphTransitionEvidenceV1"
 BINDING_SCHEMA = "ArtifactWorkDependencyBindingV1"
 PROPOSAL_SCHEMA = "ArtifactDependencyReadyProposalV1"
 VERIFICATION_SCHEMA = "ArtifactDependencyTransitionVerificationV1"
@@ -56,6 +58,12 @@ def _digest(domain: str, value: Any) -> str:
 
 def _mapping(value: Any, code: str) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
+        raise ArtifactWakeBridgeError(code)
+    return value
+
+
+def _strict_bool(value: Any, code: str) -> bool:
+    if type(value) is not bool:
         raise ArtifactWakeBridgeError(code)
     return value
 
@@ -228,7 +236,6 @@ def compile_dependency_ready_proposal(
     cell = _target_cell(projection, binding.target_cell_id)
     if cell.get("state") in {"COMPLETE", "SUPERSEDED"} or cell.get("effective_state") in {"COMPLETE", "SUPERSEDED"}:
         raise ArtifactWakeBridgeError("HISTORICAL_CELL_REQUIRES_SUCCESSOR")
-    # Canonical WorkGraph REOPEN is lawful only for a declared BLOCKED cell.
     if cell.get("state") != "BLOCKED" or cell.get("effective_state") != "BLOCKED":
         raise ArtifactWakeBridgeError("TARGET_CELL_NOT_DECLARED_BLOCKED")
     if cell.get("execution_state") not in {"NOT_STARTED", "FAILED"}:
@@ -251,13 +258,108 @@ def compile_dependency_ready_proposal(
     )
 
 
+def compute_workgraph_transition_receipt_digest(receipt: Mapping[str, Any]) -> str:
+    """Recompute the canonical WorkGraph reference-receipt integrity digest.
+
+    This proves deterministic receipt integrity only. It does not prove the returned
+    state was persisted by the canonical WorkGraph owner.
+    """
+    row = _mapping(receipt, "WORKGRAPH_TRANSITION_RECEIPT_MAPPING_REQUIRED")
+    if row.get("schema") != WORKGRAPH_TRANSITION_RECEIPT_SCHEMA:
+        raise ArtifactWakeBridgeError("WORKGRAPH_TRANSITION_RECEIPT_SCHEMA_INVALID")
+    now_ms = row.get("now_ms")
+    if isinstance(now_ms, bool) or not isinstance(now_ms, int) or now_ms < 0:
+        raise ArtifactWakeBridgeError("TRANSITION_NOW_INVALID")
+    body = {
+        "action": _text(row.get("action"), "WORKGRAPH_TRANSITION_ACTION_REQUIRED").upper(),
+        "project_id": _text(row.get("project_id"), "TRANSITION_PROJECT_REQUIRED"),
+        "worker_id": _text(row.get("worker_id"), "TRANSITION_WORKER_REQUIRED"),
+        "cell_id": _text(row.get("cell_id"), "TRANSITION_CELL_REQUIRED"),
+        "basis_graph_digest": _text(row.get("basis_graph_digest"), "TRANSITION_BASIS_REQUIRED"),
+        "before_state_digest": _text(row.get("before_state_digest"), "TRANSITION_BEFORE_STATE_REQUIRED"),
+        "after_state_digest": _text(row.get("after_state_digest"), "TRANSITION_AFTER_STATE_REQUIRED"),
+        "after_graph_digest": _text(row.get("after_graph_digest"), "TRANSITION_AFTER_GRAPH_REQUIRED"),
+        "now_ms": now_ms,
+    }
+    return _digest("AURA_ARENA_WORKGRAPH_TRANSITION_RECEIPT_V1", body)
+
+
+def _resolve_canonical_transition_evidence(
+    *,
+    resolver: Callable[[str], Mapping[str, Any]] | None,
+    transition_receipt: Mapping[str, Any],
+    proposal: ArtifactDependencyReadyProposal,
+    after_projection: Mapping[str, Any],
+) -> Mapping[str, Any]:
+    if resolver is None or not callable(resolver):
+        raise ArtifactWakeBridgeError("CANONICAL_TRANSITION_EVIDENCE_RESOLVER_REQUIRED")
+
+    expected_digest = compute_workgraph_transition_receipt_digest(transition_receipt)
+    supplied_digest = _text(
+        transition_receipt.get("receipt_digest"), "TRANSITION_RECEIPT_DIGEST_REQUIRED"
+    )
+    if supplied_digest != expected_digest:
+        raise ArtifactWakeBridgeError("TRANSITION_RECEIPT_DIGEST_MISMATCH")
+
+    evidence = _mapping(
+        resolver(expected_digest), "CANONICAL_TRANSITION_EVIDENCE_MAPPING_REQUIRED"
+    )
+    if evidence.get("schema") != WORKGRAPH_TRANSITION_EVIDENCE_SCHEMA:
+        raise ArtifactWakeBridgeError("CANONICAL_TRANSITION_EVIDENCE_SCHEMA_INVALID")
+    if evidence.get("status") != "VERIFIED_PERSISTED_TRANSITION":
+        raise ArtifactWakeBridgeError("CANONICAL_TRANSITION_NOT_PERSISTED")
+    if _strict_bool(
+        evidence.get("persistence_verified"), "CANONICAL_PERSISTENCE_VERIFIED_BOOLEAN_REQUIRED"
+    ) is not True:
+        raise ArtifactWakeBridgeError("CANONICAL_TRANSITION_NOT_PERSISTED")
+    if _strict_bool(
+        evidence.get("readback_verified"), "CANONICAL_READBACK_VERIFIED_BOOLEAN_REQUIRED"
+    ) is not True:
+        raise ArtifactWakeBridgeError("CANONICAL_TRANSITION_READBACK_REQUIRED")
+
+    for field_name, code in (
+        ("canonical_workgraph_owner_ref", "CANONICAL_WORKGRAPH_OWNER_REF_REQUIRED"),
+        ("canonical_store_ref", "CANONICAL_WORKGRAPH_STORE_REF_REQUIRED"),
+        ("persistence_verification_ref", "TRANSITION_PERSISTENCE_VERIFICATION_REF_REQUIRED"),
+        ("readback_ref", "TRANSITION_READBACK_REF_REQUIRED"),
+    ):
+        _text(evidence.get(field_name), code)
+
+    exact_pairs = (
+        (evidence.get("transition_receipt_digest"), expected_digest, "CANONICAL_EVIDENCE_RECEIPT_DIGEST_MISMATCH"),
+        (evidence.get("project_id"), proposal.project_id, "CANONICAL_EVIDENCE_PROJECT_MISMATCH"),
+        (evidence.get("cell_id"), proposal.target_cell_id, "CANONICAL_EVIDENCE_CELL_MISMATCH"),
+        (evidence.get("currentness_ref"), proposal.currentness_ref, "CANONICAL_EVIDENCE_CURRENTNESS_MISMATCH"),
+        (evidence.get("basis_graph_digest"), proposal.basis_graph_digest, "CANONICAL_EVIDENCE_BASIS_MISMATCH"),
+        (evidence.get("before_state_digest"), transition_receipt.get("before_state_digest"), "CANONICAL_EVIDENCE_BEFORE_STATE_MISMATCH"),
+        (evidence.get("after_state_digest"), transition_receipt.get("after_state_digest"), "CANONICAL_EVIDENCE_AFTER_STATE_MISMATCH"),
+        (evidence.get("after_graph_digest"), transition_receipt.get("after_graph_digest"), "CANONICAL_EVIDENCE_AFTER_GRAPH_MISMATCH"),
+        (evidence.get("after_graph_digest"), after_projection.get("graph_digest"), "CANONICAL_READBACK_GRAPH_MISMATCH"),
+    )
+    for actual, expected, code in exact_pairs:
+        if actual != expected:
+            raise ArtifactWakeBridgeError(code)
+
+    for field in (
+        "execution_authorized",
+        "effect_authorized",
+        "provider_calls_authorized",
+        "runtime_execution_proven",
+        "background_execution_claimed",
+    ):
+        if evidence.get(field) is not False:
+            raise ArtifactWakeBridgeError("CANONICAL_TRANSITION_EVIDENCE_AUTHORITY_WIDENING", field)
+    return evidence
+
+
 def verify_canonical_reopen_transition(
     *,
     proposal: ArtifactDependencyReadyProposal,
     transition_receipt: Mapping[str, Any],
     after_projection: Mapping[str, Any],
+    canonical_transition_resolver: Callable[[str], Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Verify external canonical REOPEN before allowing the ordinary H-G wake scan."""
+    """Verify persisted canonical REOPEN evidence before allowing the H-G wake scan."""
     receipt = _mapping(transition_receipt, "WORKGRAPH_TRANSITION_RECEIPT_MAPPING_REQUIRED")
     projection = _mapping(after_projection, "AFTER_PROJECTION_MAPPING_REQUIRED")
     if receipt.get("schema") != WORKGRAPH_TRANSITION_RECEIPT_SCHEMA:
@@ -279,6 +381,13 @@ def verify_canonical_reopen_transition(
     if receipt.get("runtime_execution_proven") is not False or receipt.get("provider_calls") != 0:
         raise ArtifactWakeBridgeError("TRANSITION_RECEIPT_AUTHORITY_WIDENING")
 
+    evidence = _resolve_canonical_transition_evidence(
+        resolver=canonical_transition_resolver,
+        transition_receipt=receipt,
+        proposal=proposal,
+        after_projection=projection,
+    )
+
     cell = _target_cell(projection, proposal.target_cell_id)
     if cell.get("state") != "OPEN" or cell.get("effective_state") != "OPEN":
         raise ArtifactWakeBridgeError("REOPEN_TRANSITION_NOT_VISIBLE_AS_OPEN")
@@ -294,6 +403,11 @@ def verify_canonical_reopen_transition(
         "before_graph_digest": proposal.basis_graph_digest,
         "after_graph_digest": projection.get("graph_digest"),
         "currentness_ref": proposal.currentness_ref,
+        "transition_receipt_digest": evidence.get("transition_receipt_digest"),
+        "canonical_workgraph_owner_ref": evidence.get("canonical_workgraph_owner_ref"),
+        "canonical_store_ref": evidence.get("canonical_store_ref"),
+        "persistence_verification_ref": evidence.get("persistence_verification_ref"),
+        "readback_ref": evidence.get("readback_ref"),
         "requires_existing_h_g_wake_scan": True,
         "wake_intent_emitted": False,
         "execution_authorized": False,
