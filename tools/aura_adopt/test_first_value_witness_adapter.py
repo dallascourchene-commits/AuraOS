@@ -52,9 +52,9 @@ def unrendered(**overrides):
 
 
 def compile_receipt(obs=None, dec=None, **kwargs):
-    return bridge.compile_first_value_receipt(
-        dec or decision(), obs or observation(),
-        route_id="zf01-title-card-v1", mission_head="AURA-ADOPT-001@20260830",
+    values = dict(
+        route_id="zf01-title-card-v1",
+        mission_head="AURA-ADOPT-001@20260830",
         build_refs=(
             "PR354@bece539b94096ef54686d900165f11602839eb82",
             "PR355@89c8696097f7fa3cb51aae02a6088f30ad0fad98",
@@ -62,7 +62,10 @@ def compile_receipt(obs=None, dec=None, **kwargs):
         ),
         cohort={"device_class": "CI_BROWSER", "skill_class": "UNKNOWN"},
         recipe_ref="arena-recipe:aura-adopt-zf01-title-card-v1@a95b233f",
-        **kwargs,
+    )
+    values.update(kwargs)
+    return bridge.compile_first_value_receipt(
+        dec or decision(), obs or observation(), **values
     )
 
 
