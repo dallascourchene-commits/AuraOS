@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1653
-- **total_bytes**: 26512971
-- **text_tokens_est**: 6618665
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1011, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1655
+- **total_bytes**: 26527447
+- **text_tokens_est**: 6622286
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1013, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1653,
+  "repo_file_count": 1655,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1650,6 +1650,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/project006/drive_command_executor_hook.py",
+    "tools/project006/drive_command_executor_integrity_adapter.py",
     "tools/project006/drive_swarm_fanout.py",
     "tools/project006/drive_swarm_integrity.py",
     "tools/project006/local_runner_preflight.py",
@@ -1663,6 +1664,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
     "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
     "tools/project006/test_drive_command_executor_hook.py",
+    "tools/project006/test_drive_command_executor_integrity_adapter.py",
     "tools/project006/test_drive_swarm_integrity.py",
     "tools/project006/test_local_runner_preflight.py",
     "travel_extractors/__init__.py",
@@ -1793,15 +1795,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1653,
-  "bytes": 26512971,
-  "tokens_est": 6618665,
+  "files": 1655,
+  "bytes": 26527447,
+  "tokens_est": 6622286,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1011,
+    "python_module": 1013,
     "schema_or_lexicon": 273,
     "support_file": 49
   }

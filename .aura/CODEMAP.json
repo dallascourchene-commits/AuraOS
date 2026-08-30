@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788071786,
+  "generated_at_unix": 1788071917,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1653,
+    "repo_file_count": 1655,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1632,6 +1632,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/drive_command_executor_hook.py",
+      "tools/project006/drive_command_executor_integrity_adapter.py",
       "tools/project006/drive_swarm_fanout.py",
       "tools/project006/drive_swarm_integrity.py",
       "tools/project006/local_runner_preflight.py",
@@ -1645,6 +1646,7 @@
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
       "tools/project006/test_drive_command_executor_hook.py",
+      "tools/project006/test_drive_command_executor_integrity_adapter.py",
       "tools/project006/test_drive_swarm_integrity.py",
       "tools/project006/test_local_runner_preflight.py",
       "travel_extractors/__init__.py",
@@ -1769,15 +1771,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1653,
-      "bytes": 26512971,
-      "tokens_est": 6618665,
+      "files": 1655,
+      "bytes": 26527447,
+      "tokens_est": 6622286,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1011,
+        "python_module": 1013,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -8361,6 +8363,14 @@
         "end_line": 121,
         "semantic_id": "tests/test_aura_relational_index.py#function:_identity:84d4c2748e3febaf",
         "signature_hash": "4bef8b9e398b26a8"
+      },
+      {
+        "file": "tools/project006/drive_swarm_integrity.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 49,
+        "semantic_id": "tools/project006/drive_swarm_integrity.py#function:_identity:8297ed1951c8ede9",
+        "signature_hash": "3718a7e3824d5c9a"
       }
     ],
     "_private_changes": [
@@ -157387,6 +157397,46 @@
         "signature_hash": "57197d63ed2eeeed"
       }
     ],
+    "_nonempty_text": [
+      {
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:_nonempty_text:a8905ae0767b8bd9",
+        "signature_hash": "a15f95084039a78b"
+      }
+    ],
+    "validate_single_call_route": [
+      {
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 100,
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:validate_single_call_route:365a67df774b48b6",
+        "signature_hash": "045f0484b0e6db33"
+      }
+    ],
+    "integrity_gate_result": [
+      {
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 139,
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:integrity_gate_result:340cdc12f9ceb6eb",
+        "signature_hash": "426dd399604cff41"
+      }
+    ],
+    "execute_integrity_checked_command": [
+      {
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "kind": "function",
+        "line": 142,
+        "end_line": 163,
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:execute_integrity_checked_command:33fa0c805bc874fd",
+        "signature_hash": "8bdd05cad5ab465d"
+      }
+    ],
     "SwarmFanoutError": [
       {
         "file": "tools/project006/drive_swarm_fanout.py",
@@ -157451,8 +157501,8 @@
       {
         "file": "tools/project006/drive_swarm_integrity.py",
         "kind": "class",
-        "line": 40,
-        "end_line": 43,
+        "line": 41,
+        "end_line": 44,
         "semantic_id": "tools/project006/drive_swarm_integrity.py#class:SwarmIntegrityError:6a5e4e418f4ee82f",
         "signature_hash": "1e0426cd11008649"
       }
@@ -157461,8 +157511,8 @@
       {
         "file": "tools/project006/drive_swarm_integrity.py",
         "kind": "method",
-        "line": 41,
-        "end_line": 43,
+        "line": 42,
+        "end_line": 44,
         "semantic_id": "tools/project006/drive_swarm_integrity.py#method:SwarmIntegrityError.__init__:6b936b0fe5d21d04",
         "signature_hash": "025780840ff5ba63"
       }
@@ -157471,20 +157521,20 @@
       {
         "file": "tools/project006/drive_swarm_integrity.py",
         "kind": "function",
-        "line": 46,
-        "end_line": 90,
-        "semantic_id": "tools/project006/drive_swarm_integrity.py#function:classify_model_output:7b9ffaef59a88a92",
-        "signature_hash": "8b3bc9e8ccbfd6c4"
+        "line": 52,
+        "end_line": 115,
+        "semantic_id": "tools/project006/drive_swarm_integrity.py#function:classify_model_output:ff9ab15f8858fffc",
+        "signature_hash": "a985219b04e8c1c8"
       }
     ],
     "validate_physical_swarm_receipts": [
       {
         "file": "tools/project006/drive_swarm_integrity.py",
         "kind": "function",
-        "line": 93,
-        "end_line": 164,
-        "semantic_id": "tools/project006/drive_swarm_integrity.py#function:validate_physical_swarm_receipts:1dc1109a7fc7a768",
-        "signature_hash": "0a33021d371acc07"
+        "line": 118,
+        "end_line": 194,
+        "semantic_id": "tools/project006/drive_swarm_integrity.py#function:validate_physical_swarm_receipts:5928360a86162081",
+        "signature_hash": "cef5fc9424e84ee9"
       }
     ],
     "_file_identity": [
@@ -159529,12 +159579,112 @@
         "signature_hash": "c3314c95f87c8cd4"
       }
     ],
+    "RouteGuardTests": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 47,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:RouteGuardTests:cdc9da1cb2df44dd",
+        "signature_hash": "49aa41fdb728b1c9"
+      }
+    ],
+    "RouteGuardTests.test_parent_swarm_schema_fails_before_single_call": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 17,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_parent_swarm_schema_fails_before_single_call:d5aef2c370369df7",
+        "signature_hash": "e742175dab16b7cd"
+      }
+    ],
+    "RouteGuardTests.test_top_level_target3_without_child_context_fails": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 25,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_top_level_target3_without_child_context_fails:898bf2f7037ee6fa",
+        "signature_hash": "dd6bbf0238f557e8"
+      }
+    ],
+    "RouteGuardTests.test_child_context_must_bind_command_and_idempotency": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 47,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_child_context_must_bind_command_and_idempotency:450e7c7fb4e9744c",
+        "signature_hash": "980f093c68906d16"
+      }
+    ],
+    "IntegrityGateTests": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 119,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:IntegrityGateTests:831011c163b85808",
+        "signature_hash": "6ccfbc5f5e4e7a3e"
+      }
+    ],
+    "IntegrityGateTests.test_good_transport_is_partial_not_success": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 62,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_good_transport_is_partial_not_success:bfbeb544eed3481f",
+        "signature_hash": "1e8dd6dd40bbe742"
+      }
+    ],
+    "IntegrityGateTests.test_refusal_is_quarantined": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 74,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_refusal_is_quarantined:5a6cd7d74fa71d94",
+        "signature_hash": "db5a960db824339d"
+      }
+    ],
+    "IntegrityGateTests.test_deepseek_claude_contradiction_is_quarantined": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 86,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_deepseek_claude_contradiction_is_quarantined:5f65a212be63e9de",
+        "signature_hash": "31792477896affe2"
+      }
+    ],
+    "IntegrityGateTests.test_wrapper_preserves_child_lineage_and_does_not_claim_swarm": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 119,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_wrapper_preserves_child_lineage_and_does_not_claim_swarm:a7752398189f834b",
+        "signature_hash": "d3568a1034d7b0e4"
+      }
+    ],
+    "IntegrityGateTests.test_wrapper_preserves_child_lineage_and_does_not_claim_swarm.fake_executor": [
+      {
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 112,
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_wrapper_preserves_child_lineage_and_does_not_claim_swarm.fake_executor:43e885a1d3502927",
+        "signature_hash": "09a7bbe82440eca5"
+      }
+    ],
     "base_command": [
       {
         "file": "tools/project006/test_drive_swarm_integrity.py",
         "kind": "function",
-        "line": 17,
-        "end_line": 36,
+        "line": 18,
+        "end_line": 37,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#function:base_command:b4f14870b624f832",
         "signature_hash": "e43c9a96b0f4e356"
       }
@@ -159543,18 +159693,28 @@
       {
         "file": "tools/project006/test_drive_swarm_integrity.py",
         "kind": "function",
-        "line": 39,
-        "end_line": 51,
+        "line": 40,
+        "end_line": 52,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#function:parent_swarm:0d480dade6b1907f",
         "signature_hash": "0679e6b827ed94c2"
+      }
+    ],
+    "valid_receipts": [
+      {
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 68,
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#function:valid_receipts:51694225a45ca016",
+        "signature_hash": "156df97e158c9391"
       }
     ],
     "FanoutTests": [
       {
         "file": "tools/project006/test_drive_swarm_integrity.py",
         "kind": "class",
-        "line": 54,
-        "end_line": 74,
+        "line": 71,
+        "end_line": 110,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#class:FanoutTests:db69c6d3deac20fc",
         "signature_hash": "148a9415a3c98f77"
       }
@@ -159563,8 +159723,8 @@
       {
         "file": "tools/project006/test_drive_swarm_integrity.py",
         "kind": "method",
-        "line": 55,
-        "end_line": 63,
+        "line": 72,
+        "end_line": 80,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:FanoutTests.test_target3_compiles_three_distinct_children:a6915a0c0a9cc5e8",
         "signature_hash": "f99a69935d284959"
       }
@@ -159573,8 +159733,8 @@
       {
         "file": "tools/project006/test_drive_swarm_integrity.py",
         "kind": "method",
-        "line": 65,
-        "end_line": 69,
+        "line": 82,
+        "end_line": 86,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:FanoutTests.test_role_count_mismatch_fails_closed:e61035f4f0cdf950",
         "signature_hash": "b56a28b4eb376441"
       }
@@ -159583,18 +159743,38 @@
       {
         "file": "tools/project006/test_drive_swarm_integrity.py",
         "kind": "method",
-        "line": 71,
-        "end_line": 74,
+        "line": 88,
+        "end_line": 92,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:FanoutTests.test_manifest_starts_no_effect:a231196455de1060",
         "signature_hash": "590b0d3b6ace70f6"
+      }
+    ],
+    "FanoutTests.test_same_parent_key_semantic_mutation_changes_child_identity": [
+      {
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 104,
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:FanoutTests.test_same_parent_key_semantic_mutation_changes_child_identity:ccb9f5710f43e7d1",
+        "signature_hash": "5216da08c0d2fcfe"
+      }
+    ],
+    "FanoutTests.test_base_command_cannot_forge_child_context": [
+      {
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 110,
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:FanoutTests.test_base_command_cannot_forge_child_context:16e1b5974888cdf1",
+        "signature_hash": "c5174c8ed894a3d8"
       }
     ],
     "IntegrityTests": [
       {
         "file": "tools/project006/test_drive_swarm_integrity.py",
         "kind": "class",
-        "line": 77,
-        "end_line": 140,
+        "line": 113,
+        "end_line": 198,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#class:IntegrityTests:10baa9836e85b6bb",
         "signature_hash": "e17a2f96d6b6bf44"
       }
@@ -159603,18 +159783,38 @@
       {
         "file": "tools/project006/test_drive_swarm_integrity.py",
         "kind": "method",
-        "line": 78,
-        "end_line": 83,
+        "line": 114,
+        "end_line": 119,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_claude_text_under_deepseek_is_quarantined:8e90b247c78e7cf4",
         "signature_hash": "fadec28a69d04f7f"
+      }
+    ],
+    "IntegrityTests.test_provider_metadata_mismatch_is_quarantined": [
+      {
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 127,
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_provider_metadata_mismatch_is_quarantined:4457cb9bff5757e6",
+        "signature_hash": "a64a4d033d51dbc8"
+      }
+    ],
+    "IntegrityTests.test_model_metadata_mismatch_is_quarantined": [
+      {
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 135,
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_model_metadata_mismatch_is_quarantined:18ce2250bcb25249",
+        "signature_hash": "f126ee931734bcae"
       }
     ],
     "IntegrityTests.test_refusal_is_not_success": [
       {
         "file": "tools/project006/test_drive_swarm_integrity.py",
         "kind": "method",
-        "line": 85,
-        "end_line": 90,
+        "line": 137,
+        "end_line": 142,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_refusal_is_not_success:e6cb95ea2ae23223",
         "signature_hash": "c273c6aa138ac06e"
       }
@@ -159623,8 +159823,8 @@
       {
         "file": "tools/project006/test_drive_swarm_integrity.py",
         "kind": "method",
-        "line": 92,
-        "end_line": 101,
+        "line": 144,
+        "end_line": 153,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_single_response_simulating_roles_is_flagged:466776b4063f2f07",
         "signature_hash": "f412effbd7a0447f"
       }
@@ -159633,8 +159833,8 @@
       {
         "file": "tools/project006/test_drive_swarm_integrity.py",
         "kind": "method",
-        "line": 103,
-        "end_line": 120,
+        "line": 155,
+        "end_line": 164,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_valid_physical_three_requires_three_request_ids:a369227a68a594d4",
         "signature_hash": "b5b15e01856a09d9"
       }
@@ -159643,10 +159843,30 @@
       {
         "file": "tools/project006/test_drive_swarm_integrity.py",
         "kind": "method",
-        "line": 122,
-        "end_line": 140,
+        "line": 166,
+        "end_line": 175,
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_one_request_id_reused_fails:6173b05df9cdddd5",
         "signature_hash": "f3e9b3241bc896a2"
+      }
+    ],
+    "IntegrityTests.test_wrong_provider_child_fails_physical_validation": [
+      {
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 186,
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_wrong_provider_child_fails_physical_validation:84c480cd6926a7a9",
+        "signature_hash": "a12b6b67090c40b9"
+      }
+    ],
+    "IntegrityTests.test_wrong_model_child_fails_physical_validation": [
+      {
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 198,
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_wrong_model_child_fails_physical_validation:10bfe8a200a7460c",
+        "signature_hash": "e8531f08d071ad7e"
       }
     ],
     "LocalRunnerPreflightTests": [
@@ -265237,6 +265457,53 @@
       ]
     },
     {
+      "path": "tools/project006/drive_command_executor_integrity_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5955,
+      "lines": 164,
+      "tokens_est": 1489,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "aca246589d564ba7",
+      "vector": [
+        -0.166039,
+        0.117788,
+        0.222805,
+        -0.208613,
+        -0.353365,
+        -0.061023,
+        -0.219966,
+        0.041155,
+        0.041155,
+        -0.200098,
+        0.202937,
+        -0.288085,
+        0.046832,
+        -0.21429,
+        0.004257,
+        0.041155,
+        -0.163201,
+        -0.180231,
+        0.194422,
+        -0.13198,
+        0.208613,
+        0.219966,
+        0.330659,
+        -0.001419,
+        -0.140495,
+        0.072376,
+        0.248349,
+        0.106435,
+        0.103597,
+        0.052508,
+        0.202937,
+        0.052508
+      ]
+    },
+    {
       "path": "tools/project006/drive_swarm_fanout.py",
       "role": "python_module",
       "binary": false,
@@ -265287,47 +265554,47 @@
       "path": "tools/project006/drive_swarm_integrity.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 5776,
-      "lines": 165,
-      "tokens_est": 1444,
-      "symbol_count": 4,
+      "bytes": 7213,
+      "lines": 195,
+      "tokens_est": 1804,
+      "symbol_count": 5,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2e1fa2a4a1aa63fd",
+      "digest8": "36ab887857ebf195",
       "vector": [
-        0.160819,
-        0.053606,
-        0.208469,
-        0.222764,
-        0.125082,
-        0.077431,
-        0.115552,
-        0.270414,
-        0.153672,
-        0.001191,
-        0.225147,
-        -0.120317,
-        -0.027399,
-        0.094109,
-        -0.158437,
-        -0.30377,
-        0.275179,
-        -0.30377,
-        -0.113169,
-        -0.279944,
-        0.129847,
-        -0.227529,
-        -0.065519,
-        0.079814,
-        0.213234,
-        -0.115552,
-        -0.010721,
-        0.175114,
-        -0.282327,
-        0.082196,
-        0.170349,
-        -0.103639
+        -0.077207,
+        -0.127742,
+        0.217583,
+        0.102475,
+        -0.012634,
+        0.057554,
+        -0.088437,
+        0.307424,
+        0.183893,
+        -0.167048,
+        0.060362,
+        -0.080015,
+        -0.228813,
+        0.304617,
+        -0.327077,
+        -0.09686,
+        -0.355152,
+        -0.116512,
+        -0.046324,
+        0.004211,
+        -0.332692,
+        0.09686,
+        0.063169,
+        0.127742,
+        -0.192316,
+        0.124935,
+        0.15301,
+        -0.105282,
+        0.068784,
+        -0.113705,
+        0.15301,
+        0.265311
       ]
     },
     {
@@ -265848,50 +266115,97 @@
       ]
     },
     {
-      "path": "tools/project006/test_drive_swarm_integrity.py",
+      "path": "tools/project006/test_drive_command_executor_integrity_adapter.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 5324,
-      "lines": 145,
-      "tokens_est": 1331,
-      "symbol_count": 12,
+      "bytes": 4525,
+      "lines": 124,
+      "tokens_est": 1132,
+      "symbol_count": 10,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "de37794f5c157b70",
+      "digest8": "9c39190c391f0cf0",
       "vector": [
-        -0.351045,
-        0.086695,
-        -0.078168,
-        0.12649,
-        0.129332,
-        0.112278,
-        0.228819,
-        -0.288511,
-        0.12649,
-        -0.140702,
-        0.299881,
-        -0.13786,
-        0.228819,
-        -0.029846,
-        0.058271,
-        0.08101,
-        0.265771,
-        0.353887,
-        0.044058,
-        0.197552,
-        0.12649,
-        0.1606,
-        0.129332,
-        -0.018476,
-        -0.183339,
-        0.117962,
-        0.041216,
-        -0.200394,
-        -0.015634,
-        -0.132175,
-        -0.191867,
-        0.186182
+        0.017432,
+        -0.231259,
+        -0.049971,
+        -0.063916,
+        0.054619,
+        0.038349,
+        0.017432,
+        -0.122021,
+        0.235907,
+        -0.163857,
+        0.224286,
+        0.284716,
+        -0.147587,
+        0.061592,
+        0.108076,
+        0.189423,
+        0.224286,
+        -0.261474,
+        0.245204,
+        -0.096455,
+        0.080185,
+        -0.231259,
+        -0.280068,
+        -0.296337,
+        0.1104,
+        -0.084834,
+        0.010459,
+        -0.249853,
+        -0.233583,
+        -0.091806,
+        0.180126,
+        0.203369
+      ]
+    },
+    {
+      "path": "tools/project006/test_drive_swarm_integrity.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7883,
+      "lines": 203,
+      "tokens_est": 1971,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c709ff0982567986",
+      "vector": [
+        -0.306015,
+        0.253555,
+        0.203594,
+        0.046214,
+        -0.233571,
+        -0.121157,
+        0.023732,
+        0.146138,
+        -0.081188,
+        0.226076,
+        -0.151134,
+        -0.013739,
+        -0.096176,
+        -0.163624,
+        0.181111,
+        -0.16862,
+        -0.216084,
+        0.216084,
+        0.113663,
+        -0.181111,
+        -0.198597,
+        -0.246061,
+        0.118659,
+        0.27354,
+        0.268544,
+        0.188605,
+        0.161126,
+        -0.193601,
+        0.033724,
+        -0.151134,
+        0.07869,
+        -0.006245
       ]
     },
     {
@@ -289846,15 +290160,15 @@
     }
   },
   "summary": {
-    "file_count": 1653,
-    "total_bytes": 26512971,
-    "text_tokens_est": 6618665,
+    "file_count": 1655,
+    "total_bytes": 26527447,
+    "text_tokens_est": 6622286,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1011,
+      "python_module": 1013,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -291497,6 +291811,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/drive_command_executor_hook.py",
+      "tools/project006/drive_command_executor_integrity_adapter.py",
       "tools/project006/drive_swarm_fanout.py",
       "tools/project006/drive_swarm_integrity.py",
       "tools/project006/local_runner_preflight.py",
@@ -291510,6 +291825,7 @@
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
       "tools/project006/test_drive_command_executor_hook.py",
+      "tools/project006/test_drive_command_executor_integrity_adapter.py",
       "tools/project006/test_drive_swarm_integrity.py",
       "tools/project006/test_local_runner_preflight.py",
       "travel_extractors/__init__.py",
@@ -448788,6 +449104,46 @@
         "file_digest8": "736d11ba2dde41d7"
       },
       {
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:_nonempty_text:a8905ae0767b8bd9",
+        "name": "_nonempty_text",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "a15f95084039a78b",
+        "file_digest8": "aca246589d564ba7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:execute_integrity_checked_command:33fa0c805bc874fd",
+        "name": "execute_integrity_checked_command",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "line": 142,
+        "end_line": 163,
+        "signature_hash": "8bdd05cad5ab465d",
+        "file_digest8": "aca246589d564ba7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:integrity_gate_result:340cdc12f9ceb6eb",
+        "name": "integrity_gate_result",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "line": 103,
+        "end_line": 139,
+        "signature_hash": "426dd399604cff41",
+        "file_digest8": "aca246589d564ba7"
+      },
+      {
+        "semantic_id": "tools/project006/drive_command_executor_integrity_adapter.py#function:validate_single_call_route:365a67df774b48b6",
+        "name": "validate_single_call_route",
+        "kind": "function",
+        "file": "tools/project006/drive_command_executor_integrity_adapter.py",
+        "line": 39,
+        "end_line": 100,
+        "signature_hash": "045f0484b0e6db33",
+        "file_digest8": "aca246589d564ba7"
+      },
+      {
         "semantic_id": "tools/project006/drive_swarm_fanout.py#class:SwarmFanoutError:86ad3ec280c23856",
         "name": "SwarmFanoutError",
         "kind": "class",
@@ -448882,40 +449238,50 @@
         "name": "SwarmIntegrityError",
         "kind": "class",
         "file": "tools/project006/drive_swarm_integrity.py",
-        "line": 40,
-        "end_line": 43,
+        "line": 41,
+        "end_line": 44,
         "signature_hash": "1e0426cd11008649",
-        "file_digest8": "2e1fa2a4a1aa63fd"
+        "file_digest8": "36ab887857ebf195"
       },
       {
-        "semantic_id": "tools/project006/drive_swarm_integrity.py#function:classify_model_output:7b9ffaef59a88a92",
+        "semantic_id": "tools/project006/drive_swarm_integrity.py#function:_identity:8297ed1951c8ede9",
+        "name": "_identity",
+        "kind": "function",
+        "file": "tools/project006/drive_swarm_integrity.py",
+        "line": 47,
+        "end_line": 49,
+        "signature_hash": "3718a7e3824d5c9a",
+        "file_digest8": "36ab887857ebf195"
+      },
+      {
+        "semantic_id": "tools/project006/drive_swarm_integrity.py#function:classify_model_output:ff9ab15f8858fffc",
         "name": "classify_model_output",
         "kind": "function",
         "file": "tools/project006/drive_swarm_integrity.py",
-        "line": 46,
-        "end_line": 90,
-        "signature_hash": "8b3bc9e8ccbfd6c4",
-        "file_digest8": "2e1fa2a4a1aa63fd"
+        "line": 52,
+        "end_line": 115,
+        "signature_hash": "a985219b04e8c1c8",
+        "file_digest8": "36ab887857ebf195"
       },
       {
-        "semantic_id": "tools/project006/drive_swarm_integrity.py#function:validate_physical_swarm_receipts:1dc1109a7fc7a768",
+        "semantic_id": "tools/project006/drive_swarm_integrity.py#function:validate_physical_swarm_receipts:5928360a86162081",
         "name": "validate_physical_swarm_receipts",
         "kind": "function",
         "file": "tools/project006/drive_swarm_integrity.py",
-        "line": 93,
-        "end_line": 164,
-        "signature_hash": "0a33021d371acc07",
-        "file_digest8": "2e1fa2a4a1aa63fd"
+        "line": 118,
+        "end_line": 194,
+        "signature_hash": "cef5fc9424e84ee9",
+        "file_digest8": "36ab887857ebf195"
       },
       {
         "semantic_id": "tools/project006/drive_swarm_integrity.py#method:SwarmIntegrityError.__init__:6b936b0fe5d21d04",
         "name": "SwarmIntegrityError.__init__",
         "kind": "method",
         "file": "tools/project006/drive_swarm_integrity.py",
-        "line": 41,
-        "end_line": 43,
+        "line": 42,
+        "end_line": 44,
         "signature_hash": "025780840ff5ba63",
-        "file_digest8": "2e1fa2a4a1aa63fd"
+        "file_digest8": "36ab887857ebf195"
       },
       {
         "semantic_id": "tools/project006/local_runner_preflight.py#function:_canonical_digest:a725766ed40de685",
@@ -451268,124 +451634,294 @@
         "file_digest8": "cd417695f36e77f2"
       },
       {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:IntegrityGateTests:831011c163b85808",
+        "name": "IntegrityGateTests",
+        "kind": "class",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 50,
+        "end_line": 119,
+        "signature_hash": "6ccfbc5f5e4e7a3e",
+        "file_digest8": "9c39190c391f0cf0"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#class:RouteGuardTests:cdc9da1cb2df44dd",
+        "name": "RouteGuardTests",
+        "kind": "class",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 12,
+        "end_line": 47,
+        "signature_hash": "49aa41fdb728b1c9",
+        "file_digest8": "9c39190c391f0cf0"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_deepseek_claude_contradiction_is_quarantined:5f65a212be63e9de",
+        "name": "IntegrityGateTests.test_deepseek_claude_contradiction_is_quarantined",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 76,
+        "end_line": 86,
+        "signature_hash": "31792477896affe2",
+        "file_digest8": "9c39190c391f0cf0"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_good_transport_is_partial_not_success:bfbeb544eed3481f",
+        "name": "IntegrityGateTests.test_good_transport_is_partial_not_success",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 51,
+        "end_line": 62,
+        "signature_hash": "1e8dd6dd40bbe742",
+        "file_digest8": "9c39190c391f0cf0"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_refusal_is_quarantined:5a6cd7d74fa71d94",
+        "name": "IntegrityGateTests.test_refusal_is_quarantined",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 64,
+        "end_line": 74,
+        "signature_hash": "db5a960db824339d",
+        "file_digest8": "9c39190c391f0cf0"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_wrapper_preserves_child_lineage_and_does_not_claim_swarm.fake_executor:43e885a1d3502927",
+        "name": "IntegrityGateTests.test_wrapper_preserves_child_lineage_and_does_not_claim_swarm.fake_executor",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 106,
+        "end_line": 112,
+        "signature_hash": "09a7bbe82440eca5",
+        "file_digest8": "9c39190c391f0cf0"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:IntegrityGateTests.test_wrapper_preserves_child_lineage_and_does_not_claim_swarm:a7752398189f834b",
+        "name": "IntegrityGateTests.test_wrapper_preserves_child_lineage_and_does_not_claim_swarm",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 88,
+        "end_line": 119,
+        "signature_hash": "d3568a1034d7b0e4",
+        "file_digest8": "9c39190c391f0cf0"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_child_context_must_bind_command_and_idempotency:450e7c7fb4e9744c",
+        "name": "RouteGuardTests.test_child_context_must_bind_command_and_idempotency",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 27,
+        "end_line": 47,
+        "signature_hash": "980f093c68906d16",
+        "file_digest8": "9c39190c391f0cf0"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_parent_swarm_schema_fails_before_single_call:d5aef2c370369df7",
+        "name": "RouteGuardTests.test_parent_swarm_schema_fails_before_single_call",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 13,
+        "end_line": 17,
+        "signature_hash": "e742175dab16b7cd",
+        "file_digest8": "9c39190c391f0cf0"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_command_executor_integrity_adapter.py#method:RouteGuardTests.test_top_level_target3_without_child_context_fails:898bf2f7037ee6fa",
+        "name": "RouteGuardTests.test_top_level_target3_without_child_context_fails",
+        "kind": "method",
+        "file": "tools/project006/test_drive_command_executor_integrity_adapter.py",
+        "line": 19,
+        "end_line": 25,
+        "signature_hash": "dd6bbf0238f557e8",
+        "file_digest8": "9c39190c391f0cf0"
+      },
+      {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#class:FanoutTests:db69c6d3deac20fc",
         "name": "FanoutTests",
         "kind": "class",
         "file": "tools/project006/test_drive_swarm_integrity.py",
-        "line": 54,
-        "end_line": 74,
+        "line": 71,
+        "end_line": 110,
         "signature_hash": "148a9415a3c98f77",
-        "file_digest8": "de37794f5c157b70"
+        "file_digest8": "c709ff0982567986"
       },
       {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#class:IntegrityTests:10baa9836e85b6bb",
         "name": "IntegrityTests",
         "kind": "class",
         "file": "tools/project006/test_drive_swarm_integrity.py",
-        "line": 77,
-        "end_line": 140,
+        "line": 113,
+        "end_line": 198,
         "signature_hash": "e17a2f96d6b6bf44",
-        "file_digest8": "de37794f5c157b70"
+        "file_digest8": "c709ff0982567986"
       },
       {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#function:base_command:b4f14870b624f832",
         "name": "base_command",
         "kind": "function",
         "file": "tools/project006/test_drive_swarm_integrity.py",
-        "line": 17,
-        "end_line": 36,
+        "line": 18,
+        "end_line": 37,
         "signature_hash": "e43c9a96b0f4e356",
-        "file_digest8": "de37794f5c157b70"
+        "file_digest8": "c709ff0982567986"
       },
       {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#function:parent_swarm:0d480dade6b1907f",
         "name": "parent_swarm",
         "kind": "function",
         "file": "tools/project006/test_drive_swarm_integrity.py",
-        "line": 39,
-        "end_line": 51,
+        "line": 40,
+        "end_line": 52,
         "signature_hash": "0679e6b827ed94c2",
-        "file_digest8": "de37794f5c157b70"
+        "file_digest8": "c709ff0982567986"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#function:valid_receipts:51694225a45ca016",
+        "name": "valid_receipts",
+        "kind": "function",
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "line": 55,
+        "end_line": 68,
+        "signature_hash": "156df97e158c9391",
+        "file_digest8": "c709ff0982567986"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:FanoutTests.test_base_command_cannot_forge_child_context:16e1b5974888cdf1",
+        "name": "FanoutTests.test_base_command_cannot_forge_child_context",
+        "kind": "method",
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "line": 106,
+        "end_line": 110,
+        "signature_hash": "c5174c8ed894a3d8",
+        "file_digest8": "c709ff0982567986"
       },
       {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:FanoutTests.test_manifest_starts_no_effect:a231196455de1060",
         "name": "FanoutTests.test_manifest_starts_no_effect",
         "kind": "method",
         "file": "tools/project006/test_drive_swarm_integrity.py",
-        "line": 71,
-        "end_line": 74,
+        "line": 88,
+        "end_line": 92,
         "signature_hash": "590b0d3b6ace70f6",
-        "file_digest8": "de37794f5c157b70"
+        "file_digest8": "c709ff0982567986"
       },
       {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:FanoutTests.test_role_count_mismatch_fails_closed:e61035f4f0cdf950",
         "name": "FanoutTests.test_role_count_mismatch_fails_closed",
         "kind": "method",
         "file": "tools/project006/test_drive_swarm_integrity.py",
-        "line": 65,
-        "end_line": 69,
+        "line": 82,
+        "end_line": 86,
         "signature_hash": "b56a28b4eb376441",
-        "file_digest8": "de37794f5c157b70"
+        "file_digest8": "c709ff0982567986"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:FanoutTests.test_same_parent_key_semantic_mutation_changes_child_identity:ccb9f5710f43e7d1",
+        "name": "FanoutTests.test_same_parent_key_semantic_mutation_changes_child_identity",
+        "kind": "method",
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "line": 94,
+        "end_line": 104,
+        "signature_hash": "5216da08c0d2fcfe",
+        "file_digest8": "c709ff0982567986"
       },
       {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:FanoutTests.test_target3_compiles_three_distinct_children:a6915a0c0a9cc5e8",
         "name": "FanoutTests.test_target3_compiles_three_distinct_children",
         "kind": "method",
         "file": "tools/project006/test_drive_swarm_integrity.py",
-        "line": 55,
-        "end_line": 63,
+        "line": 72,
+        "end_line": 80,
         "signature_hash": "f99a69935d284959",
-        "file_digest8": "de37794f5c157b70"
+        "file_digest8": "c709ff0982567986"
       },
       {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_claude_text_under_deepseek_is_quarantined:8e90b247c78e7cf4",
         "name": "IntegrityTests.test_claude_text_under_deepseek_is_quarantined",
         "kind": "method",
         "file": "tools/project006/test_drive_swarm_integrity.py",
-        "line": 78,
-        "end_line": 83,
+        "line": 114,
+        "end_line": 119,
         "signature_hash": "fadec28a69d04f7f",
-        "file_digest8": "de37794f5c157b70"
+        "file_digest8": "c709ff0982567986"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_model_metadata_mismatch_is_quarantined:18ce2250bcb25249",
+        "name": "IntegrityTests.test_model_metadata_mismatch_is_quarantined",
+        "kind": "method",
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "line": 129,
+        "end_line": 135,
+        "signature_hash": "f126ee931734bcae",
+        "file_digest8": "c709ff0982567986"
       },
       {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_one_request_id_reused_fails:6173b05df9cdddd5",
         "name": "IntegrityTests.test_one_request_id_reused_fails",
         "kind": "method",
         "file": "tools/project006/test_drive_swarm_integrity.py",
-        "line": 122,
-        "end_line": 140,
+        "line": 166,
+        "end_line": 175,
         "signature_hash": "f3e9b3241bc896a2",
-        "file_digest8": "de37794f5c157b70"
+        "file_digest8": "c709ff0982567986"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_provider_metadata_mismatch_is_quarantined:4457cb9bff5757e6",
+        "name": "IntegrityTests.test_provider_metadata_mismatch_is_quarantined",
+        "kind": "method",
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "line": 121,
+        "end_line": 127,
+        "signature_hash": "a64a4d033d51dbc8",
+        "file_digest8": "c709ff0982567986"
       },
       {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_refusal_is_not_success:e6cb95ea2ae23223",
         "name": "IntegrityTests.test_refusal_is_not_success",
         "kind": "method",
         "file": "tools/project006/test_drive_swarm_integrity.py",
-        "line": 85,
-        "end_line": 90,
+        "line": 137,
+        "end_line": 142,
         "signature_hash": "c273c6aa138ac06e",
-        "file_digest8": "de37794f5c157b70"
+        "file_digest8": "c709ff0982567986"
       },
       {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_single_response_simulating_roles_is_flagged:466776b4063f2f07",
         "name": "IntegrityTests.test_single_response_simulating_roles_is_flagged",
         "kind": "method",
         "file": "tools/project006/test_drive_swarm_integrity.py",
-        "line": 92,
-        "end_line": 101,
+        "line": 144,
+        "end_line": 153,
         "signature_hash": "f412effbd7a0447f",
-        "file_digest8": "de37794f5c157b70"
+        "file_digest8": "c709ff0982567986"
       },
       {
         "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_valid_physical_three_requires_three_request_ids:a369227a68a594d4",
         "name": "IntegrityTests.test_valid_physical_three_requires_three_request_ids",
         "kind": "method",
         "file": "tools/project006/test_drive_swarm_integrity.py",
-        "line": 103,
-        "end_line": 120,
+        "line": 155,
+        "end_line": 164,
         "signature_hash": "b5b15e01856a09d9",
-        "file_digest8": "de37794f5c157b70"
+        "file_digest8": "c709ff0982567986"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_wrong_model_child_fails_physical_validation:10bfe8a200a7460c",
+        "name": "IntegrityTests.test_wrong_model_child_fails_physical_validation",
+        "kind": "method",
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "line": 188,
+        "end_line": 198,
+        "signature_hash": "e8531f08d071ad7e",
+        "file_digest8": "c709ff0982567986"
+      },
+      {
+        "semantic_id": "tools/project006/test_drive_swarm_integrity.py#method:IntegrityTests.test_wrong_provider_child_fails_physical_validation:84c480cd6926a7a9",
+        "name": "IntegrityTests.test_wrong_provider_child_fails_physical_validation",
+        "kind": "method",
+        "file": "tools/project006/test_drive_swarm_integrity.py",
+        "line": 177,
+        "end_line": 186,
+        "signature_hash": "a12b6b67090c40b9",
+        "file_digest8": "c709ff0982567986"
       },
       {
         "semantic_id": "tools/project006/test_local_runner_preflight.py#class:LocalRunnerPreflightTests:3efc565f71afeb08",
@@ -452698,7 +453234,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "54ffacfd9d0cb9f00ba468ce62c8c7e6",
-    "payload_hash": "0fe048c4344425855d57bb749d8643fe"
+    "record_fingerprint": "c6443c34843a80eefdfa77e9ba6ddd77",
+    "payload_hash": "33080e6d5f7ab40560a8903e63b1281e"
   }
 }
