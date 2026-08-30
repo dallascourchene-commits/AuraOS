@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788099615,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1641,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -486,6 +486,7 @@
       "aura_cost_experiment_runner.py",
       "aura_cost_observatory_mcp.py",
       "aura_cost_telemetry_events.py",
+      "aura_creator_studio_workgraph.py",
       "aura_crucible_cli.py",
       "aura_crucible_miner.py",
       "aura_crucible_store.py",
@@ -1441,6 +1442,7 @@
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
+      "tests/test_aura_creator_studio_workgraph.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
@@ -1659,6 +1661,7 @@
       "aura_blockchain/memory_staking.py",
       "aura_blockchain/node.py",
       "aura_blockchain/phasor_ledger.py",
+      "aura_creator_studio_workgraph.py",
       "aura_spatial_importers/__init__.py",
       "aura_spatial_importers/contracts.py",
       "aura_spatial_importers/gaussian_gltf.py",
@@ -1746,8 +1749,7 @@
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_lane_registry.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,15 +1757,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1641,
+      "bytes": 26440067,
+      "tokens_est": 6600369,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
+        "python_module": 999,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -2265,6 +2267,7 @@
         "aura_cost_experiment_runner.py",
         "aura_cost_observatory_mcp.py",
         "aura_cost_telemetry_events.py",
+        "aura_creator_studio_workgraph.py",
         "aura_crucible_cli.py",
         "aura_crucible_miner.py",
         "aura_crucible_store.py",
@@ -2443,8 +2446,7 @@
         "aura_planning_events.py",
         "aura_planning_frontier.py",
         "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_planning_regression.py"
       ]
     }
   ],
@@ -14575,6 +14577,14 @@
         "signature_hash": "e925189d3373d66a"
       },
       {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 42,
+        "semantic_id": "aura_creator_studio_workgraph.py#function:_text:c2cd8fec2505634e",
+        "signature_hash": "6aabdab0e2d03513"
+      },
+      {
         "file": "aura_ephemeral_workspace_contracts.py",
         "kind": "function",
         "line": 391,
@@ -19485,6 +19495,14 @@
         "end_line": 188,
         "semantic_id": "aura_continuity_packet.py#function:_strings:f0630bf95988a9e6",
         "signature_hash": "b2ce105f43dda6aa"
+      },
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 67,
+        "semantic_id": "aura_creator_studio_workgraph.py#function:_strings:baae651349ccbdef",
+        "signature_hash": "d3b65a6a420af09a"
       },
       {
         "file": "aura_emergent_evidence_spine.py",
@@ -27131,6 +27149,14 @@
         "end_line": 334,
         "semantic_id": "aura_codemap_verify.py#function:_integer:4ce4f6b22e5d1302",
         "signature_hash": "ecb6632d8f432715"
+      },
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 56,
+        "semantic_id": "aura_creator_studio_workgraph.py#function:_integer:a71bfd1eff2d3d69",
+        "signature_hash": "ef39aa397e2dc2c6"
       },
       {
         "file": "aura_ephemeral_workspace_runtime_v2.py",
@@ -38087,6 +38113,14 @@
         "signature_hash": "d8108fa4ca672d8d"
       },
       {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 50,
+        "semantic_id": "aura_creator_studio_workgraph.py#function:_optional:690bc573fd075cab",
+        "signature_hash": "d3a2b225cc2b5d4b"
+      },
+      {
         "file": "aura_intent_refinement.py",
         "kind": "function",
         "line": 158,
@@ -39413,6 +39447,264 @@
         "end_line": 198,
         "semantic_id": "aura_cost_telemetry_events.py#function:visual_state_for_savings:64a3e6ca6bb78d7a",
         "signature_hash": "1fce03e17e738bd1"
+      }
+    ],
+    "WorkState": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 24,
+        "semantic_id": "aura_creator_studio_workgraph.py#class:WorkState:d42ea0f4ceb76088",
+        "signature_hash": "5d6e1a075d8be006"
+      }
+    ],
+    "Priority": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 32,
+        "semantic_id": "aura_creator_studio_workgraph.py#class:Priority:dc9c23094acf510b",
+        "signature_hash": "f80f3109c50b43c6"
+      }
+    ],
+    "_state": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 74,
+        "semantic_id": "aura_creator_studio_workgraph.py#function:_state:648c27b2ee329a1f",
+        "signature_hash": "46c767ace2c72650"
+      },
+      {
+        "file": "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py#function:_state:fc84b404b01d0888",
+        "signature_hash": "e7a0fd0a90453616"
+      }
+    ],
+    "_priority": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 81,
+        "semantic_id": "aura_creator_studio_workgraph.py#function:_priority:42bce2eca2ccd603",
+        "signature_hash": "7e6fb8da36528c98"
+      }
+    ],
+    "WorkerSpec": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "class",
+        "line": 85,
+        "end_line": 95,
+        "semantic_id": "aura_creator_studio_workgraph.py#class:WorkerSpec:98f14a2167bd57cf",
+        "signature_hash": "0407366b579a8190"
+      }
+    ],
+    "WorkerSpec.__post_init__": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 95,
+        "semantic_id": "aura_creator_studio_workgraph.py#method:WorkerSpec.__post_init__:c39b5f998169152c",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "WorkItem": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "class",
+        "line": 99,
+        "end_line": 129,
+        "semantic_id": "aura_creator_studio_workgraph.py#class:WorkItem:7b8ef4980d0b4819",
+        "signature_hash": "c3729f1ebfe7e6c2"
+      }
+    ],
+    "WorkItem.__post_init__": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 129,
+        "semantic_id": "aura_creator_studio_workgraph.py#method:WorkItem.__post_init__:e784437e02ccb572",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ClaimRecord": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "class",
+        "line": 133,
+        "end_line": 149,
+        "semantic_id": "aura_creator_studio_workgraph.py#class:ClaimRecord:77bedfac8eec4222",
+        "signature_hash": "51230e5f72923a28"
+      }
+    ],
+    "ClaimRecord.__post_init__": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 141,
+        "end_line": 149,
+        "semantic_id": "aura_creator_studio_workgraph.py#method:ClaimRecord.__post_init__:3058ada10cd21450",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "Finding": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "class",
+        "line": 153,
+        "end_line": 157,
+        "semantic_id": "aura_creator_studio_workgraph.py#class:Finding:cf78fe17eb985210",
+        "signature_hash": "dcd7516b5d2a8d5d"
+      }
+    ],
+    "WorkProjection": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "class",
+        "line": 161,
+        "end_line": 169,
+        "semantic_id": "aura_creator_studio_workgraph.py#class:WorkProjection:81db2287a7b90169",
+        "signature_hash": "7f21072b2e7be9a5"
+      }
+    ],
+    "WorkGraphSnapshot": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "class",
+        "line": 173,
+        "end_line": 206,
+        "semantic_id": "aura_creator_studio_workgraph.py#class:WorkGraphSnapshot:9af402838661d245",
+        "signature_hash": "59efbc1572383e8d"
+      }
+    ],
+    "WorkGraphSnapshot.__post_init__": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 184,
+        "end_line": 186,
+        "semantic_id": "aura_creator_studio_workgraph.py#method:WorkGraphSnapshot.__post_init__:778131e6c4418644",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "WorkGraphSnapshot.to_dict": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 202,
+        "semantic_id": "aura_creator_studio_workgraph.py#method:WorkGraphSnapshot.to_dict:38dc07ad977becdc",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "WorkGraphSnapshot.digest": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 205,
+        "end_line": 206,
+        "semantic_id": "aura_creator_studio_workgraph.py#method:WorkGraphSnapshot.digest:2997badd70293bce",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "SelectionProposal": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "class",
+        "line": 210,
+        "end_line": 221,
+        "semantic_id": "aura_creator_studio_workgraph.py#class:SelectionProposal:621c42095997bf45",
+        "signature_hash": "1418f7a4f1dce4ab"
+      }
+    ],
+    "SelectionProposal.__post_init__": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 219,
+        "end_line": 221,
+        "semantic_id": "aura_creator_studio_workgraph.py#method:SelectionProposal.__post_init__:72fca723752883d2",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CompletionRecord": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "class",
+        "line": 225,
+        "end_line": 241,
+        "semantic_id": "aura_creator_studio_workgraph.py#class:CompletionRecord:141587108b4b04aa",
+        "signature_hash": "69d60635da7f0254"
+      }
+    ],
+    "CompletionRecord.__post_init__": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 233,
+        "end_line": 241,
+        "semantic_id": "aura_creator_studio_workgraph.py#method:CompletionRecord.__post_init__:c3cf3aae34cd2f3b",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "project_workgraph": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 244,
+        "end_line": 316,
+        "semantic_id": "aura_creator_studio_workgraph.py#function:project_workgraph:fb7bd03b20935622",
+        "signature_hash": "23825ee7a8d64a77"
+      }
+    ],
+    "select_next_work": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 319,
+        "end_line": 335,
+        "semantic_id": "aura_creator_studio_workgraph.py#function:select_next_work:8f3b4e579f60fa5b",
+        "signature_hash": "0d27063560e6562a"
+      }
+    ],
+    "compile_successor_residual": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 338,
+        "end_line": 353,
+        "semantic_id": "aura_creator_studio_workgraph.py#function:compile_successor_residual:2fed2f7af638ca70",
+        "signature_hash": "d9257794c203322d"
+      }
+    ],
+    "parse_group_work_orders": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 364,
+        "end_line": 410,
+        "semantic_id": "aura_creator_studio_workgraph.py#function:parse_group_work_orders:01b661160f8da999",
+        "signature_hash": "7996f2291597708d"
+      }
+    ],
+    "projection_json": [
+      {
+        "file": "aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 413,
+        "end_line": 414,
+        "semantic_id": "aura_creator_studio_workgraph.py#function:projection_json:692c6d5f5cf01110",
+        "signature_hash": "61948fdb1747368b"
       }
     ],
     "_json_object": [
@@ -127255,16 +127547,6 @@
         "signature_hash": "db0c2fc56c37e3ba"
       }
     ],
-    "_state": [
-      {
-        "file": "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
-        "kind": "function",
-        "line": 18,
-        "end_line": 24,
-        "semantic_id": "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py#function:_state:fc84b404b01d0888",
-        "signature_hash": "e7a0fd0a90453616"
-      }
-    ],
     "_json_body": [
       {
         "file": "tests/test_aura_construction_pascal_spatial_foundry_p3_server.py",
@@ -129693,6 +129975,136 @@
         "end_line": 162,
         "semantic_id": "tests/test_aura_continuity_packet_merge_gate.py#function:test_j1_adapter_accepts_canonical_authority_constants:df59a4595e57124e",
         "signature_hash": "0b3757b9a4f8f0fd"
+      }
+    ],
+    "worker": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#function:worker:ac7d32738aaf1378",
+        "signature_hash": "9083bf4bfa82049f"
+      }
+    ],
+    "item": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 38,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#function:item:7869158b2545a692",
+        "signature_hash": "f5f9d475b767e31f"
+      }
+    ],
+    "WorkGraphTests": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 187,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#class:WorkGraphTests:9b112e2cb55189d4",
+        "signature_hash": "433e927c2d872056"
+      }
+    ],
+    "WorkGraphTests.test_projection_is_deterministic_and_never_proves_execution": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 57,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_projection_is_deterministic_and_never_proves_execution:c90bb7b132d31bbe",
+        "signature_hash": "f7f3fe35c742fc8b"
+      }
+    ],
+    "WorkGraphTests.test_selector_prefers_p0_then_board_order_and_requires_claim": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 73,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_selector_prefers_p0_then_board_order_and_requires_claim:9a0ee20d68c63753",
+        "signature_hash": "3c62df4e204ad1cf"
+      }
+    ],
+    "WorkGraphTests.test_dependency_and_capability_fit_block_unqualified_work": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_dependency_and_capability_fit_block_unqualified_work:376a866d500a44af",
+        "signature_hash": "f49f12c715dd7a39"
+      }
+    ],
+    "WorkGraphTests.test_live_claim_prevents_collision": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 98,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_live_claim_prevents_collision:8cdcb4c965ffd607",
+        "signature_hash": "7b2986b4f9ec63eb"
+      }
+    ],
+    "WorkGraphTests.test_stale_claim_is_recoverable_without_execution_claim": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_stale_claim_is_recoverable_without_execution_claim:051acad1cde034e4",
+        "signature_hash": "73f08adcb50fa70f"
+      }
+    ],
+    "WorkGraphTests.test_claim_collision_fails_closed": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 127,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_claim_collision_fails_closed:ba6c85148cf95206",
+        "signature_hash": "b429ba0b7e39815c"
+      }
+    ],
+    "WorkGraphTests.test_successor_residual_is_explicit_and_deterministic": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 144,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_successor_residual_is_explicit_and_deterministic:4c8a968b0af54f25",
+        "signature_hash": "446a269e0383470c"
+      }
+    ],
+    "WorkGraphTests.test_no_residual_means_no_invented_successor": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 153,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_no_residual_means_no_invented_successor:333c73a57a037e7a",
+        "signature_hash": "49f2b62a9e2b58da"
+      }
+    ],
+    "WorkGraphTests.test_stale_currentness_blocks_selection": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 162,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_stale_currentness_blocks_selection:49060d7376aa1808",
+        "signature_hash": "dbd5acce3321c6e2"
+      }
+    ],
+    "WorkGraphTests.test_parse_formal_group_wo_subset": [
+      {
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 187,
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_parse_formal_group_wo_subset:824869645df57374",
+        "signature_hash": "e04f3df3fe17cac3"
       }
     ],
     "_grammar": [
@@ -193055,6 +193467,53 @@
       ]
     },
     {
+      "path": "aura_creator_studio_workgraph.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 17210,
+      "lines": 415,
+      "tokens_est": 4303,
+      "symbol_count": 29,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1714549e77fc5afd",
+      "vector": [
+        -0.009617,
+        -0.320096,
+        -0.22393,
+        -0.204697,
+        -0.157987,
+        -0.317348,
+        -0.314601,
+        0.218435,
+        0.212939,
+        -0.212939,
+        0.100288,
+        0.017859,
+        -0.111278,
+        0.070064,
+        0.02885,
+        -0.190959,
+        0.083802,
+        -0.254153,
+        -0.048083,
+        0.08655,
+        0.114026,
+        0.026102,
+        -0.089297,
+        0.100288,
+        0.185463,
+        0.045335,
+        -0.251406,
+        0.130511,
+        0.28163,
+        0.119521,
+        0.199201,
+        0.119521
+      ]
+    },
+    {
       "path": "aura_crucible_cli.py",
       "role": "python_module",
       "binary": false,
@@ -253718,6 +254177,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_creator_studio_workgraph.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7809,
+      "lines": 192,
+      "tokens_est": 1953,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cc054620265ce1c9",
+      "vector": [
+        0.178162,
+        -0.127259,
+        0.185434,
+        -0.098171,
+        0.204826,
+        0.01818,
+        0.294513,
+        -0.212098,
+        -0.246033,
+        0.199978,
+        -0.066659,
+        -0.003636,
+        -0.064235,
+        -0.112715,
+        0.301785,
+        -0.071507,
+        0.202402,
+        0.246033,
+        0.124835,
+        -0.132107,
+        0.236337,
+        0.277545,
+        0.069083,
+        -0.117563,
+        0.081203,
+        -0.01818,
+        -0.214522,
+        0.163618,
+        -0.025452,
+        0.263001,
+        0.136955,
+        -0.248457
+      ]
+    },
+    {
       "path": "tests/test_aura_crucible_phase_b.py",
       "role": "python_module",
       "binary": false,
@@ -286646,15 +287152,15 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1641,
+    "total_bytes": 26440067,
+    "text_tokens_est": 6600369,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
+      "python_module": 999,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -287151,6 +287657,7 @@
       "aura_cost_experiment_runner.py",
       "aura_cost_observatory_mcp.py",
       "aura_cost_telemetry_events.py",
+      "aura_creator_studio_workgraph.py",
       "aura_crucible_cli.py",
       "aura_crucible_miner.py",
       "aura_crucible_store.py",
@@ -288106,6 +288613,7 @@
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
+      "tests/test_aura_creator_studio_workgraph.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
@@ -321032,6 +321540,296 @@
         "end_line": 89,
         "signature_hash": "5817fb6d0c861663",
         "file_digest8": "dd9102b2049dcd0f"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#class:ClaimRecord:77bedfac8eec4222",
+        "name": "ClaimRecord",
+        "kind": "class",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 133,
+        "end_line": 149,
+        "signature_hash": "51230e5f72923a28",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#class:CompletionRecord:141587108b4b04aa",
+        "name": "CompletionRecord",
+        "kind": "class",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 225,
+        "end_line": 241,
+        "signature_hash": "69d60635da7f0254",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#class:Finding:cf78fe17eb985210",
+        "name": "Finding",
+        "kind": "class",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 153,
+        "end_line": 157,
+        "signature_hash": "dcd7516b5d2a8d5d",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#class:Priority:dc9c23094acf510b",
+        "name": "Priority",
+        "kind": "class",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 27,
+        "end_line": 32,
+        "signature_hash": "f80f3109c50b43c6",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#class:SelectionProposal:621c42095997bf45",
+        "name": "SelectionProposal",
+        "kind": "class",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 210,
+        "end_line": 221,
+        "signature_hash": "1418f7a4f1dce4ab",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#class:WorkGraphSnapshot:9af402838661d245",
+        "name": "WorkGraphSnapshot",
+        "kind": "class",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 173,
+        "end_line": 206,
+        "signature_hash": "59efbc1572383e8d",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#class:WorkItem:7b8ef4980d0b4819",
+        "name": "WorkItem",
+        "kind": "class",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 99,
+        "end_line": 129,
+        "signature_hash": "c3729f1ebfe7e6c2",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#class:WorkProjection:81db2287a7b90169",
+        "name": "WorkProjection",
+        "kind": "class",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 161,
+        "end_line": 169,
+        "signature_hash": "7f21072b2e7be9a5",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#class:WorkState:d42ea0f4ceb76088",
+        "name": "WorkState",
+        "kind": "class",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 19,
+        "end_line": 24,
+        "signature_hash": "5d6e1a075d8be006",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#class:WorkerSpec:98f14a2167bd57cf",
+        "name": "WorkerSpec",
+        "kind": "class",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 85,
+        "end_line": 95,
+        "signature_hash": "0407366b579a8190",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#function:_integer:a71bfd1eff2d3d69",
+        "name": "_integer",
+        "kind": "function",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 53,
+        "end_line": 56,
+        "signature_hash": "ef39aa397e2dc2c6",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#function:_optional:690bc573fd075cab",
+        "name": "_optional",
+        "kind": "function",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 45,
+        "end_line": 50,
+        "signature_hash": "d3a2b225cc2b5d4b",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#function:_priority:42bce2eca2ccd603",
+        "name": "_priority",
+        "kind": "function",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 77,
+        "end_line": 81,
+        "signature_hash": "7e6fb8da36528c98",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#function:_state:648c27b2ee329a1f",
+        "name": "_state",
+        "kind": "function",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 70,
+        "end_line": 74,
+        "signature_hash": "46c767ace2c72650",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#function:_strings:baae651349ccbdef",
+        "name": "_strings",
+        "kind": "function",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 59,
+        "end_line": 67,
+        "signature_hash": "d3b65a6a420af09a",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#function:_text:c2cd8fec2505634e",
+        "name": "_text",
+        "kind": "function",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 39,
+        "end_line": 42,
+        "signature_hash": "6aabdab0e2d03513",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#function:compile_successor_residual:2fed2f7af638ca70",
+        "name": "compile_successor_residual",
+        "kind": "function",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 338,
+        "end_line": 353,
+        "signature_hash": "d9257794c203322d",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#function:parse_group_work_orders:01b661160f8da999",
+        "name": "parse_group_work_orders",
+        "kind": "function",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 364,
+        "end_line": 410,
+        "signature_hash": "7996f2291597708d",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#function:project_workgraph:fb7bd03b20935622",
+        "name": "project_workgraph",
+        "kind": "function",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 244,
+        "end_line": 316,
+        "signature_hash": "23825ee7a8d64a77",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#function:projection_json:692c6d5f5cf01110",
+        "name": "projection_json",
+        "kind": "function",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 413,
+        "end_line": 414,
+        "signature_hash": "61948fdb1747368b",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#function:select_next_work:8f3b4e579f60fa5b",
+        "name": "select_next_work",
+        "kind": "function",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 319,
+        "end_line": 335,
+        "signature_hash": "0d27063560e6562a",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#method:ClaimRecord.__post_init__:3058ada10cd21450",
+        "name": "ClaimRecord.__post_init__",
+        "kind": "method",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 141,
+        "end_line": 149,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#method:CompletionRecord.__post_init__:c3cf3aae34cd2f3b",
+        "name": "CompletionRecord.__post_init__",
+        "kind": "method",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 233,
+        "end_line": 241,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#method:SelectionProposal.__post_init__:72fca723752883d2",
+        "name": "SelectionProposal.__post_init__",
+        "kind": "method",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 219,
+        "end_line": 221,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#method:WorkGraphSnapshot.__post_init__:778131e6c4418644",
+        "name": "WorkGraphSnapshot.__post_init__",
+        "kind": "method",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 184,
+        "end_line": 186,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#method:WorkGraphSnapshot.digest:2997badd70293bce",
+        "name": "WorkGraphSnapshot.digest",
+        "kind": "method",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 205,
+        "end_line": 206,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#method:WorkGraphSnapshot.to_dict:38dc07ad977becdc",
+        "name": "WorkGraphSnapshot.to_dict",
+        "kind": "method",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 188,
+        "end_line": 202,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#method:WorkItem.__post_init__:e784437e02ccb572",
+        "name": "WorkItem.__post_init__",
+        "kind": "method",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 114,
+        "end_line": 129,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "1714549e77fc5afd"
+      },
+      {
+        "semantic_id": "aura_creator_studio_workgraph.py#method:WorkerSpec.__post_init__:c39b5f998169152c",
+        "name": "WorkerSpec.__post_init__",
+        "kind": "method",
+        "file": "aura_creator_studio_workgraph.py",
+        "line": 91,
+        "end_line": 95,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "1714549e77fc5afd"
       },
       {
         "semantic_id": "aura_crucible_cli.py#function:_json_object:3ac1d79bc68eed40",
@@ -416784,6 +417582,136 @@
         "file_digest8": "c9a90818f5d9c7ab"
       },
       {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#class:WorkGraphTests:9b112e2cb55189d4",
+        "name": "WorkGraphTests",
+        "kind": "class",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 41,
+        "end_line": 187,
+        "signature_hash": "433e927c2d872056",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#function:item:7869158b2545a692",
+        "name": "item",
+        "kind": "function",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 26,
+        "end_line": 38,
+        "signature_hash": "f5f9d475b767e31f",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#function:worker:ac7d32738aaf1378",
+        "name": "worker",
+        "kind": "function",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "9083bf4bfa82049f",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_claim_collision_fails_closed:ba6c85148cf95206",
+        "name": "WorkGraphTests.test_claim_collision_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 116,
+        "end_line": 127,
+        "signature_hash": "b429ba0b7e39815c",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_dependency_and_capability_fit_block_unqualified_work:376a866d500a44af",
+        "name": "WorkGraphTests.test_dependency_and_capability_fit_block_unqualified_work",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 75,
+        "end_line": 87,
+        "signature_hash": "f49f12c715dd7a39",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_live_claim_prevents_collision:8cdcb4c965ffd607",
+        "name": "WorkGraphTests.test_live_claim_prevents_collision",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 89,
+        "end_line": 98,
+        "signature_hash": "7b2986b4f9ec63eb",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_no_residual_means_no_invented_successor:333c73a57a037e7a",
+        "name": "WorkGraphTests.test_no_residual_means_no_invented_successor",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 146,
+        "end_line": 153,
+        "signature_hash": "49f2b62a9e2b58da",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_parse_formal_group_wo_subset:824869645df57374",
+        "name": "WorkGraphTests.test_parse_formal_group_wo_subset",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 164,
+        "end_line": 187,
+        "signature_hash": "e04f3df3fe17cac3",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_projection_is_deterministic_and_never_proves_execution:c90bb7b132d31bbe",
+        "name": "WorkGraphTests.test_projection_is_deterministic_and_never_proves_execution",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 42,
+        "end_line": 57,
+        "signature_hash": "f7f3fe35c742fc8b",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_selector_prefers_p0_then_board_order_and_requires_claim:9a0ee20d68c63753",
+        "name": "WorkGraphTests.test_selector_prefers_p0_then_board_order_and_requires_claim",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 59,
+        "end_line": 73,
+        "signature_hash": "3c62df4e204ad1cf",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_stale_claim_is_recoverable_without_execution_claim:051acad1cde034e4",
+        "name": "WorkGraphTests.test_stale_claim_is_recoverable_without_execution_claim",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 100,
+        "end_line": 114,
+        "signature_hash": "73f08adcb50fa70f",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_stale_currentness_blocks_selection:49060d7376aa1808",
+        "name": "WorkGraphTests.test_stale_currentness_blocks_selection",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 155,
+        "end_line": 162,
+        "signature_hash": "dbd5acce3321c6e2",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_workgraph.py#method:WorkGraphTests.test_successor_residual_is_explicit_and_deterministic:4c8a968b0af54f25",
+        "name": "WorkGraphTests.test_successor_residual_is_explicit_and_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_workgraph.py",
+        "line": 129,
+        "end_line": 144,
+        "signature_hash": "446a269e0383470c",
+        "file_digest8": "cc054620265ce1c9"
+      },
+      {
         "semantic_id": "tests/test_aura_crucible_phase_b.py#function:_experience:21ffd8555ec59a7b",
         "name": "_experience",
         "kind": "function",
@@ -446884,7 +447812,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "669f3dfa856a3bfaf053b4d7c41c0ee3",
+    "payload_hash": "b640d70c11354785b9ab4f52b66b3bf4"
   }
 }
