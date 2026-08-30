@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788126729,
+  "generated_at_unix": 1788127875,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1676,
+    "repo_file_count": 1680,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1657,6 +1657,8 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/glm53_layout_binding_bridge.py",
+      "tools/awj032/glm53_official_w2_observation.py",
+      "tools/awj032/glm53_official_w2_plan_binding.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
@@ -1664,10 +1666,12 @@
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_layout_binding_bridge.py",
+      "tools/awj032/test_glm53_official_w2_plan_binding.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
       "tools/awj032/test_glm53_source_bound_layout_bridge.py",
+      "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1792,15 +1796,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1676,
-      "bytes": 26582023,
-      "tokens_est": 6635903,
+      "files": 1680,
+      "bytes": 26613752,
+      "tokens_est": 6643837,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1022,
+        "python_module": 1026,
         "schema_or_lexicon": 277,
         "support_file": 49
       }
@@ -3968,9 +3972,25 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 38,
-        "end_line": 39,
+        "line": 39,
+        "end_line": 40,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_canonical:f7426c2678e63cad",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 42,
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#function:_canonical:f75680700272d3e1",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 39,
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_canonical:1661526c4b9f2835",
         "signature_hash": "8d5bf5695239b859"
       },
       {
@@ -3984,8 +4004,8 @@
       {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
         "kind": "function",
-        "line": 29,
-        "end_line": 30,
+        "line": 30,
+        "end_line": 31,
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:_canonical:615a0d6c893a79bf",
         "signature_hash": "8d5bf5695239b859"
       }
@@ -4434,9 +4454,25 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_digest:52413db1a1e1f0ba",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#function:_digest:b62a416340782ace",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "function",
         "line": 42,
         "end_line": 43,
-        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_digest:52413db1a1e1f0ba",
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_digest:50a78e0547136596",
         "signature_hash": "514f786724465716"
       },
       {
@@ -8180,8 +8216,8 @@
       {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
         "kind": "function",
-        "line": 33,
-        "end_line": 34,
+        "line": 34,
+        "end_line": 35,
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:_sha:2c848eaeb1dec83b",
         "signature_hash": "e47bc2e8d0ade77b"
       }
@@ -13836,8 +13872,8 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 63,
-        "end_line": 67,
+        "line": 64,
+        "end_line": 68,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_sha256:38feddaf19b1dd95",
         "signature_hash": "ddcb28c0cb88d369"
       }
@@ -14790,10 +14826,18 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 57,
-        "end_line": 60,
+        "line": 58,
+        "end_line": 61,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_text:d660ea48396dc251",
         "signature_hash": "7c66637900aa94dc"
+      },
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 70,
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_text:3d6c730280c47cfa",
+        "signature_hash": "a4ea29b9a7789fe0"
       },
       {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
@@ -46818,6 +46862,14 @@
         "end_line": 301,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_receipt:d3ae73715f72c220",
         "signature_hash": "e3dc9e7f8b7c4d5c"
+      },
+      {
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_receipt:6fadcf563c18234a",
+        "signature_hash": "668c94a29a48f2b8"
       }
     ],
     "prepare_spatial_action_certificate_v2": [
@@ -94860,6 +94912,14 @@
         "end_line": 203,
         "semantic_id": "aura_unified_memory_continuity_learning.py#function:_binding:78543e55ec846298",
         "signature_hash": "6bbbe3a348f13ccd"
+      },
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 64,
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_binding:9c618f30723de356",
+        "signature_hash": "a268f72b3d5ea7ff"
       }
     ],
     "_intent": [
@@ -158284,8 +158344,8 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "class",
-        "line": 31,
-        "end_line": 35,
+        "line": 32,
+        "end_line": 36,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#class:LayoutBindingError:12eccb976dbb5296",
         "signature_hash": "8d670edc5216e16a"
       }
@@ -158294,8 +158354,8 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 32,
-        "end_line": 35,
+        "line": 33,
+        "end_line": 36,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#method:LayoutBindingError.__init__:56e9a4b401794637",
         "signature_hash": "0b6534a3148e5c5d"
       }
@@ -158304,8 +158364,8 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 46,
-        "end_line": 54,
+        "line": 47,
+        "end_line": 55,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_transport_receipt_digest:9e7afc6d4603ce13",
         "signature_hash": "60dc9d227f17e572"
       }
@@ -158314,8 +158374,8 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 70,
-        "end_line": 78,
+        "line": 78,
+        "end_line": 86,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_shape:e7b997ddc9d3945f",
         "signature_hash": "2db45cfaa4dce474"
       }
@@ -158324,8 +158384,8 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 81,
-        "end_line": 90,
+        "line": 89,
+        "end_line": 98,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_offsets:297070d8c1338e79",
         "signature_hash": "b7a7f121c3b232e5"
       }
@@ -158334,8 +158394,8 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 93,
-        "end_line": 116,
+        "line": 101,
+        "end_line": 124,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_scale_map:60bdc27a744e88e5",
         "signature_hash": "6a0f88000d98861f"
       }
@@ -158344,8 +158404,8 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "class",
-        "line": 120,
-        "end_line": 154,
+        "line": 128,
+        "end_line": 166,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#class:PagerSourcePlan:ef3a4541fe427a00",
         "signature_hash": "b3e36a9066ad9627"
       }
@@ -158354,8 +158414,8 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 137,
-        "end_line": 154,
+        "line": 147,
+        "end_line": 166,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#method:PagerSourcePlan.to_dict:9bb97d45d0565d2d",
         "signature_hash": "5c1a69a9659e2089"
       }
@@ -158364,8 +158424,8 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 157,
-        "end_line": 177,
+        "line": 169,
+        "end_line": 189,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_common:d3fe91f8e681e5eb",
         "signature_hash": "6804c6a25977835e"
       }
@@ -158374,30 +158434,170 @@
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 180,
-        "end_line": 220,
-        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_finalize:961fc88f73d10bac",
-        "signature_hash": "e31683ce8a2b4571"
+        "line": 192,
+        "end_line": 238,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_finalize:234a06e08f0d4cf1",
+        "signature_hash": "6102846b7434dce8"
       }
     ],
     "_per_expert_header_digest": [
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 223,
-        "end_line": 347,
-        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_per_expert_header_digest:47f49dfe055778a8",
-        "signature_hash": "9f157afd7133d6f1"
+        "line": 241,
+        "end_line": 396,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_per_expert_header_digest:18e1da9b43711f01",
+        "signature_hash": "0ed8d1a4c8374b10"
       }
     ],
     "compile_pager_source_plan": [
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 350,
-        "end_line": 468,
-        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:compile_pager_source_plan:7a940e97ab205991",
-        "signature_hash": "d72fe7ca77b6bd48"
+        "line": 399,
+        "end_line": 523,
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:compile_pager_source_plan:0fad39d904ad6660",
+        "signature_hash": "58bd05ed3cf52aad"
+      }
+    ],
+    "OfficialW2ObservationError": [
+      {
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 32,
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#class:OfficialW2ObservationError:95bdae3fe9c02bf3",
+        "signature_hash": "b224774675bd723c"
+      }
+    ],
+    "OfficialW2ObservationError.__init__": [
+      {
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 32,
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#method:OfficialW2ObservationError.__init__:df5dcc7a90d40a68",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "OfficialW2Observation": [
+      {
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 71,
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#class:OfficialW2Observation:cba3d21b65a65441",
+        "signature_hash": "4c6c2d4f0b41d939"
+      }
+    ],
+    "OfficialW2Observation.to_dict": [
+      {
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#method:OfficialW2Observation.to_dict:f98947db1d03abeb",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "OfficialW2Observation.observation_digest": [
+      {
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 71,
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#method:OfficialW2Observation.observation_digest:66f7b17859a313bf",
+        "signature_hash": "28f677c5b8842bca"
+      }
+    ],
+    "bind_official_w2_observation": [
+      {
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 107,
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#function:bind_official_w2_observation:557a50cb0ab98dd7",
+        "signature_hash": "f2c8e0c2fb073306"
+      }
+    ],
+    "OfficialW2PlanBindingError": [
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 29,
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#class:OfficialW2PlanBindingError:e1403a68fa3b8b29",
+        "signature_hash": "1b88779c284b1e74"
+      }
+    ],
+    "OfficialW2PlanBindingError.__init__": [
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 29,
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingError.__init__:ddded21941d3d328",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_plan_dict": [
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_plan_dict:491a7826f4946b66",
+        "signature_hash": "bb6a47c38f49c5eb"
+      }
+    ],
+    "_exact_false": [
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_exact_false:cf4d2eb50bb7e657",
+        "signature_hash": "e088d9cc20555008"
+      }
+    ],
+    "OfficialW2BoundPagerPlan": [
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "class",
+        "line": 79,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#class:OfficialW2BoundPagerPlan:4a8810a7ebd37776",
+        "signature_hash": "b48d43db14a942a3"
+      }
+    ],
+    "OfficialW2BoundPagerPlan.source_plan_digest": [
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 98,
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#method:OfficialW2BoundPagerPlan.source_plan_digest:664f58a64bb77673",
+        "signature_hash": "bb96ecd1672c9944"
+      }
+    ],
+    "OfficialW2BoundPagerPlan.to_dict": [
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#method:OfficialW2BoundPagerPlan.to_dict:c41660a7f68602a5",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "bind_official_w2_pager_plan": [
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "function",
+        "line": 120,
+        "end_line": 164,
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:bind_official_w2_pager_plan:80e0ac387e5361fe",
+        "signature_hash": "cb85d64dbedf2972"
       }
     ],
     "PagerError": [
@@ -159210,8 +159410,8 @@
       {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
         "kind": "class",
-        "line": 22,
-        "end_line": 26,
+        "line": 23,
+        "end_line": 27,
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#class:SourceBoundLayoutError:3940c4d2fd1e52a2",
         "signature_hash": "1fb452f8eaf4a002"
       }
@@ -159220,8 +159420,8 @@
       {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
         "kind": "method",
-        "line": 23,
-        "end_line": 26,
+        "line": 24,
+        "end_line": 27,
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutError.__init__:81eebc7a41ab1270",
         "signature_hash": "0b6534a3148e5c5d"
       }
@@ -159230,8 +159430,8 @@
       {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
         "kind": "function",
-        "line": 37,
-        "end_line": 43,
+        "line": 38,
+        "end_line": 44,
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:_sha_field:b93576564497e00e",
         "signature_hash": "de26700e2f26c864"
       }
@@ -159240,8 +159440,8 @@
       {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
         "kind": "function",
-        "line": 46,
-        "end_line": 54,
+        "line": 47,
+        "end_line": 55,
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:weight_map_digest:33ded90a430cec8f",
         "signature_hash": "c5299b7905aa7cfe"
       }
@@ -159250,8 +159450,8 @@
       {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
         "kind": "class",
-        "line": 58,
-        "end_line": 86,
+        "line": 59,
+        "end_line": 87,
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#class:SourceBoundPagerSourcePlan:cabc68c976cf979a",
         "signature_hash": "0dcf044d7d516211"
       }
@@ -159260,8 +159460,8 @@
       {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
         "kind": "method",
-        "line": 69,
-        "end_line": 70,
+        "line": 70,
+        "end_line": 71,
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#method:SourceBoundPagerSourcePlan.binding:de3faf5c41019311",
         "signature_hash": "10c9c9087d1a2889"
       }
@@ -159270,8 +159470,8 @@
       {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
         "kind": "method",
-        "line": 72,
-        "end_line": 86,
+        "line": 73,
+        "end_line": 87,
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#method:SourceBoundPagerSourcePlan.to_dict:057bbe5e56d3cb85",
         "signature_hash": "5c1a69a9659e2089"
       }
@@ -159280,10 +159480,10 @@
       {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
         "kind": "function",
-        "line": 89,
-        "end_line": 142,
-        "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:compile_source_bound_pager_source_plan:78e68fa52e1b2cc4",
-        "signature_hash": "11acbe643973c993"
+        "line": 90,
+        "end_line": 147,
+        "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:compile_source_bound_pager_source_plan:2750b89147955d2d",
+        "signature_hash": "2a6f22e307185174"
       }
     ],
     "make_tree": [
@@ -159570,8 +159770,8 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 16,
-        "end_line": 41,
+        "line": 17,
+        "end_line": 42,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:packed_fixture:e35d00aacd5a6029",
         "signature_hash": "47558325ae779af0"
       }
@@ -159580,8 +159780,8 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 44,
-        "end_line": 65,
+        "line": 45,
+        "end_line": 66,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:per_expert_fixture:789312f3d7b60f3b",
         "signature_hash": "04d1e5bdadc1803b"
       }
@@ -159590,8 +159790,8 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 68,
-        "end_line": 75,
+        "line": 69,
+        "end_line": 76,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:refresh_receipt:44e43b0c07a3b1cc",
         "signature_hash": "31b5aba3b7eb26e6"
       }
@@ -159600,8 +159800,8 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 78,
-        "end_line": 115,
+        "line": 79,
+        "end_line": 116,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:per_expert_header_fixture:f34fd23de47649a8",
         "signature_hash": "f3e48d6efe070c1b"
       }
@@ -159610,8 +159810,8 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 118,
-        "end_line": 126,
+        "line": 119,
+        "end_line": 127,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:compile_packed:2c0d63bdad3261f2",
         "signature_hash": "30d12b760aec396f"
       }
@@ -159620,18 +159820,18 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "function",
-        "line": 129,
-        "end_line": 140,
-        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:compile_per_expert:3d1204eda66dd84e",
-        "signature_hash": "b64eeec4a194c658"
+        "line": 130,
+        "end_line": 152,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:compile_per_expert:6dfe2b0133072f5b",
+        "signature_hash": "8d113fcb60e85fc4"
       }
     ],
     "BridgeTests": [
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "class",
-        "line": 143,
-        "end_line": 284,
+        "line": 155,
+        "end_line": 329,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#class:BridgeTests:16295dc0a8a088a5",
         "signature_hash": "f9a151d2cbcaaa4a"
       }
@@ -159640,8 +159840,8 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 144,
-        "end_line": 147,
+        "line": 156,
+        "end_line": 159,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.code:d3d7c2ee02383a3d",
         "signature_hash": "da9870e5e2d1b723"
       }
@@ -159650,38 +159850,38 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 149,
-        "end_line": 155,
+        "line": 161,
+        "end_line": 168,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_packed_layout_binds_current_pager_abi:403379fe79921d62",
         "signature_hash": "36785f5b8d33485d"
       }
     ],
-    "BridgeTests.test_per_expert_layout_binds_current_per_expert_abi_and_w2_canary": [
+    "BridgeTests.test_per_expert_layout_binds_current_per_expert_abi_and_official_w2_canary": [
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 157,
-        "end_line": 167,
-        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_layout_binds_current_per_expert_abi_and_w2_canary:007168e2cbb7f4da",
-        "signature_hash": "ebdee69cbd19a29f"
+        "line": 170,
+        "end_line": 182,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_layout_binds_current_per_expert_abi_and_official_w2_canary:07676bcab31f07cd",
+        "signature_hash": "916693b8ecdd7c33"
       }
     ],
-    "BridgeTests.test_per_expert_index_only_plan_is_no_longer_w3_eligible": [
+    "BridgeTests.test_per_expert_index_only_plan_requires_independent_w2_observation": [
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 169,
-        "end_line": 180,
-        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_index_only_plan_is_no_longer_w3_eligible:4ad9c695d7584228",
-        "signature_hash": "78585df7c18cd075"
+        "line": 184,
+        "end_line": 195,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_index_only_plan_requires_independent_w2_observation:5b58af026ba1b011",
+        "signature_hash": "23ec81aab714cb88"
       }
     ],
     "BridgeTests.test_per_expert_missing_scale_fails_in_sibling_abi": [
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 182,
-        "end_line": 194,
+        "line": 197,
+        "end_line": 211,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_missing_scale_fails_in_sibling_abi:bc0584af6cc7606d",
         "signature_hash": "3ef9beef2a07df61"
       }
@@ -159690,8 +159890,8 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 196,
-        "end_line": 204,
+        "line": 213,
+        "end_line": 221,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_header_source_and_shard_substitution_fail_closed:16a5d178b8ee3e9d",
         "signature_hash": "adcea94b44f652ba"
       }
@@ -159700,8 +159900,8 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 206,
-        "end_line": 222,
+        "line": 223,
+        "end_line": 239,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_header_shape_dtype_and_effect_widening_fail_closed:1fe7f6a0c4d9ba50",
         "signature_hash": "b3fe0a099cbce0cb"
       }
@@ -159710,28 +159910,48 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 224,
-        "end_line": 228,
+        "line": 241,
+        "end_line": 245,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_transport_receipt_is_recomputed_not_trusted:24486cea25f10735",
         "signature_hash": "cda9503b6e115d82"
       }
     ],
-    "BridgeTests.test_per_expert_canary_change_changes_plan_identity_without_universalizing": [
+    "BridgeTests.test_self_consistent_fabricated_header_fails_official_observation_binding": [
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 230,
-        "end_line": 241,
-        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_canary_change_changes_plan_identity_without_universalizing:75ae204ba89f061d",
-        "signature_hash": "77dff954a53de8bd"
+        "line": 247,
+        "end_line": 261,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_self_consistent_fabricated_header_fails_official_observation_binding:15fae1ca4d072e1f",
+        "signature_hash": "b701fe8c726ce86a"
+      }
+    ],
+    "BridgeTests.test_self_consistent_repo_substitution_fails_official_repo_binding": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 263,
+        "end_line": 271,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_self_consistent_repo_substitution_fails_official_repo_binding:bdf608ff79af5e52",
+        "signature_hash": "837b5f46ef61b3bf"
+      }
+    ],
+    "BridgeTests.test_independently_changed_observation_changes_plan_identity_without_universalizing": [
+      {
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "kind": "method",
+        "line": 273,
+        "end_line": 284,
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_independently_changed_observation_changes_plan_identity_without_universalizing:63dd971dfe4bb20a",
+        "signature_hash": "a4fd0888a65a3986"
       }
     ],
     "BridgeTests.test_stale_currentness_and_probe_blockers_fail_closed": [
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 243,
-        "end_line": 247,
+        "line": 286,
+        "end_line": 290,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_stale_currentness_and_probe_blockers_fail_closed:5bf1473acb27193f",
         "signature_hash": "d36704cf6fa2b159"
       }
@@ -159740,8 +159960,8 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 249,
-        "end_line": 258,
+        "line": 292,
+        "end_line": 301,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_packed_requires_header_axis_shard_and_fp8_dtype:d1f5be54d2f193d7",
         "signature_hash": "81a598243b3c85ec"
       }
@@ -159750,8 +159970,8 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 260,
-        "end_line": 265,
+        "line": 303,
+        "end_line": 308,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_vendor_and_partial_layouts_are_typed_residuals:8ffd4fca5f7f050f",
         "signature_hash": "35a2724e252944e5"
       }
@@ -159760,8 +159980,8 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 267,
-        "end_line": 270,
+        "line": 310,
+        "end_line": 313,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_scale_ambiguity_is_not_guessed:15e04551825893c8",
         "signature_hash": "44b83db054898963"
       }
@@ -159770,8 +159990,8 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 272,
-        "end_line": 278,
+        "line": 315,
+        "end_line": 323,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_serialized_plan_remains_nonpromoting:ecdd9f803ca9a834",
         "signature_hash": "7e1ce69a27beb4a7"
       }
@@ -159780,10 +160000,150 @@
       {
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
         "kind": "method",
-        "line": 280,
-        "end_line": 284,
+        "line": 325,
+        "end_line": 329,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_clock_metadata_does_not_churn_source_plan:b0a28040725e1331",
         "signature_hash": "4a072c4ecf897aa7"
+      }
+    ],
+    "plan": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 37,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#function:plan:3427973d2c642baf",
+        "signature_hash": "95131f80d668731b"
+      }
+    ],
+    "plan.FakePlan": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#class:plan.FakePlan:38316e2c4666144b",
+        "signature_hash": "6b5435fc0dea4581"
+      }
+    ],
+    "plan.FakePlan.__init__": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 32,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:plan.FakePlan.__init__:07b4dbc08c61ed61",
+        "signature_hash": "8734a51fad6ab5fe"
+      }
+    ],
+    "plan.FakePlan.to_dict": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:plan.FakePlan.to_dict:c4786168ce3d8c5d",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "OfficialW2PlanBindingTests": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "class",
+        "line": 40,
+        "end_line": 100,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#class:OfficialW2PlanBindingTests:5962abc5e516c7e6",
+        "signature_hash": "9cd997927a7876b4"
+      }
+    ],
+    "OfficialW2PlanBindingTests.code": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 44,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.code:30751aa9ea78aa15",
+        "signature_hash": "bc8d2f3c19474255"
+      }
+    ],
+    "OfficialW2PlanBindingTests.test_exact_pr398_observation_binds_producer_identity": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 54,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_exact_pr398_observation_binds_producer_identity:819b324de2d1fe41",
+        "signature_hash": "ae8bd38a2d46e336"
+      }
+    ],
+    "OfficialW2PlanBindingTests.test_caller_claimed_official_flag_cannot_override_forged_receipt": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_caller_claimed_official_flag_cannot_override_forged_receipt:da7e29d1ec3fe418",
+        "signature_hash": "ab7eaea5d658d129"
+      }
+    ],
+    "OfficialW2PlanBindingTests.test_repo_or_coordinate_substitution_cannot_bind": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 70,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_repo_or_coordinate_substitution_cannot_bind:6797e0fa0435fc24",
+        "signature_hash": "3673864a71cb684f"
+      }
+    ],
+    "OfficialW2PlanBindingTests.test_model_or_index_generation_substitution_cannot_bind": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_model_or_index_generation_substitution_cannot_bind:a1003c83f860ee35",
+        "signature_hash": "d8e0292ac9dc8a8c"
+      }
+    ],
+    "OfficialW2PlanBindingTests.test_missing_representative_header_binding_fails": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 83,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_missing_representative_header_binding_fails:583debb9d9dbc623",
+        "signature_hash": "e115f04d08104e98"
+      }
+    ],
+    "OfficialW2PlanBindingTests.test_representative_to_universal_cast_fails": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 89,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_representative_to_universal_cast_fails:428c13424c26efa8",
+        "signature_hash": "91b98195e94a50d7"
+      }
+    ],
+    "OfficialW2PlanBindingTests.test_effect_ceiling_widening_fails": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 94,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_effect_ceiling_widening_fails:cbfd79fe334ad0ec",
+        "signature_hash": "6605fdbc03fceff1"
+      }
+    ],
+    "OfficialW2PlanBindingTests.test_producer_bound_plan_identity_includes_inner_plan_identity": [
+      {
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 100,
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_producer_bound_plan_identity_includes_inner_plan_identity:f4a7569f093dd435",
+        "signature_hash": "1fcbb9f80354a9cc"
       }
     ],
     "FakeSliceBackend": [
@@ -160491,7 +160851,7 @@
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
         "kind": "class",
         "line": 28,
-        "end_line": 136,
+        "end_line": 164,
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#class:SourceBoundLayoutBridgeTests:2380891971f3f641",
         "signature_hash": "21e78325924c092c"
       }
@@ -160536,12 +160896,32 @@
         "signature_hash": "045bd88a2d4af26b"
       }
     ],
-    "SourceBoundLayoutBridgeTests.test_unproven_report_rejected": [
+    "SourceBoundLayoutBridgeTests.test_independent_w2_observation_inputs_are_forwarded_to_inner_bridge": [
       {
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
         "kind": "method",
         "line": 56,
-        "end_line": 68,
+        "end_line": 82,
+        "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_independent_w2_observation_inputs_are_forwarded_to_inner_bridge:92c296d177ab1c9b",
+        "signature_hash": "baba96dd964de3c3"
+      }
+    ],
+    "SourceBoundLayoutBridgeTests.test_independent_w2_observation_inputs_are_forwarded_to_inner_bridge.compile_fn": [
+      {
+        "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 61,
+        "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_independent_w2_observation_inputs_are_forwarded_to_inner_bridge.compile_fn:81207d333114c28e",
+        "signature_hash": "dcac659347cc9dbb"
+      }
+    ],
+    "SourceBoundLayoutBridgeTests.test_unproven_report_rejected": [
+      {
+        "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 96,
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_unproven_report_rejected:62ac286c59c12994",
         "signature_hash": "63f502bf52946213"
       }
@@ -160550,8 +160930,8 @@
       {
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
         "kind": "method",
-        "line": 70,
-        "end_line": 86,
+        "line": 98,
+        "end_line": 114,
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_substituted_weight_map_rejected_before_compile:62540329000189af",
         "signature_hash": "c81f006936aa1843"
       }
@@ -160560,8 +160940,8 @@
       {
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
         "kind": "method",
-        "line": 73,
-        "end_line": 74,
+        "line": 101,
+        "end_line": 102,
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_substituted_weight_map_rejected_before_compile.compile_fn:b9857affeb83d822",
         "signature_hash": "7f365fed3f10cd1b"
       }
@@ -160570,8 +160950,8 @@
       {
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
         "kind": "method",
-        "line": 88,
-        "end_line": 99,
+        "line": 116,
+        "end_line": 127,
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_missing_source_bundle_rejected:b2a2d10801730c44",
         "signature_hash": "e3f0a9db742ce3f5"
       }
@@ -160580,8 +160960,8 @@
       {
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
         "kind": "method",
-        "line": 101,
-        "end_line": 114,
+        "line": 129,
+        "end_line": 142,
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_inner_digest_mismatch_rejected:e743d2bffa3efbb8",
         "signature_hash": "1eccc78e72830266"
       }
@@ -160590,8 +160970,8 @@
       {
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
         "kind": "method",
-        "line": 102,
-        "end_line": 103,
+        "line": 130,
+        "end_line": 131,
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_inner_digest_mismatch_rejected.bad:6d60c80cf7d24e27",
         "signature_hash": "4224906089aab28f"
       }
@@ -160600,10 +160980,240 @@
       {
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
         "kind": "method",
-        "line": 116,
-        "end_line": 136,
+        "line": 144,
+        "end_line": 164,
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_source_bundle_changes_final_identity:125873f527d03d2a",
         "signature_hash": "63656146e120775e"
+      }
+    ],
+    "_decode_e4m3": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 52,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_decode_e4m3:c54424a6fbaa533d",
+        "signature_hash": "618ac859f3b0eea9"
+      }
+    ],
+    "_fp8_bytes": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_fp8_bytes:197fac17e6b48c2f",
+        "signature_hash": "1961029d7464b771"
+      }
+    ],
+    "_f32_bytes": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 61,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_f32_bytes:1a2aa752ae9527d6",
+        "signature_hash": "f9ea02b5157f9d75"
+      }
+    ],
+    "_fixture_values": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_fixture_values:3aba0f20210e37a3",
+        "signature_hash": "fbbc30bdb606c33b"
+      }
+    ],
+    "_weight_map": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_weight_map:2a6733cdae1a75eb",
+        "signature_hash": "72eb1d19ec8dc7e6"
+      }
+    ],
+    "_tensor_spec": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 90,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_tensor_spec:30e7ced50ffd5174",
+        "signature_hash": "050b1ec373ab3aef"
+      }
+    ],
+    "_build_safetensors": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 116,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_build_safetensors:f16b63f2b0084782",
+        "signature_hash": "6369cfe8758ce4d9"
+      }
+    ],
+    "_read_matrix": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "function",
+        "line": 119,
+        "end_line": 127,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_read_matrix:924596a63829133c",
+        "signature_hash": "a95c302547706adc"
+      }
+    ],
+    "TinySafetensorsBackend": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "class",
+        "line": 130,
+        "end_line": 163,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#class:TinySafetensorsBackend:08c176318a544aaf",
+        "signature_hash": "a260c9e88ff0d61e"
+      }
+    ],
+    "TinySafetensorsBackend.__init__": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 133,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:TinySafetensorsBackend.__init__:8d4e20e18e1dbab7",
+        "signature_hash": "bfcf261dfacfbafc"
+      }
+    ],
+    "TinySafetensorsBackend._header": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 139,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:TinySafetensorsBackend._header:ff9d63c9ec465763",
+        "signature_hash": "235342280558655e"
+      }
+    ],
+    "TinySafetensorsBackend.read_tensor": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "method",
+        "line": 141,
+        "end_line": 153,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:TinySafetensorsBackend.read_tensor:4873abb8e5557a28",
+        "signature_hash": "b5e86620f84079e9"
+      }
+    ],
+    "TinySafetensorsBackend.io_attestation": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 163,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:TinySafetensorsBackend.io_attestation:3e4572e50b64114b",
+        "signature_hash": "d3cfe7ec781686af"
+      }
+    ],
+    "_matvec": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "function",
+        "line": 166,
+        "end_line": 167,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_matvec:629deeee55b4de73",
+        "signature_hash": "22b825839ed74505"
+      }
+    ],
+    "_dequant": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "function",
+        "line": 170,
+        "end_line": 174,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_dequant:6f3f4b805cc5198a",
+        "signature_hash": "f506bdf64c33ddef"
+      }
+    ],
+    "_forward": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "function",
+        "line": 177,
+        "end_line": 184,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_forward:641da78c0310ef92",
+        "signature_hash": "d7faeb18858b67df"
+      }
+    ],
+    "W3NativePerExpertFixtureTests": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "class",
+        "line": 187,
+        "end_line": 259,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#class:W3NativePerExpertFixtureTests:5b847f06af2d8d69",
+        "signature_hash": "1fd1f59534d7d108"
+      }
+    ],
+    "W3NativePerExpertFixtureTests.setUp": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 200,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:W3NativePerExpertFixtureTests.setUp:1d32d6cba887806c",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "W3NativePerExpertFixtureTests.tearDown": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "method",
+        "line": 202,
+        "end_line": 203,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:W3NativePerExpertFixtureTests.tearDown:29c46f72f65c70ef",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "W3NativePerExpertFixtureTests.test_actual_per_expert_pager_reads_only_selected_tiny_safetensors_ranges": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "method",
+        "line": 205,
+        "end_line": 219,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:W3NativePerExpertFixtureTests.test_actual_per_expert_pager_reads_only_selected_tiny_safetensors_ranges:9bff6e658b1795d6",
+        "signature_hash": "1c9721ae53589aa1"
+      }
+    ],
+    "W3NativePerExpertFixtureTests.test_test_local_fp8_oracle_matches_actual_pager_payload": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "method",
+        "line": 221,
+        "end_line": 235,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:W3NativePerExpertFixtureTests.test_test_local_fp8_oracle_matches_actual_pager_payload:c50792cfb5583574",
+        "signature_hash": "ef4aece6ded04f12"
+      }
+    ],
+    "W3NativePerExpertFixtureTests.test_synthetic_fixture_stays_below_official_w2_producer_plane": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "method",
+        "line": 237,
+        "end_line": 247,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:W3NativePerExpertFixtureTests.test_synthetic_fixture_stays_below_official_w2_producer_plane:ea15b5e64d8214db",
+        "signature_hash": "57642ae1049be070"
+      }
+    ],
+    "W3NativePerExpertFixtureTests.test_official_source_receipt_contradiction_fails_hard": [
+      {
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "kind": "method",
+        "line": 249,
+        "end_line": 259,
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:W3NativePerExpertFixtureTests.test_official_source_receipt_contradiction_fails_hard:95f4b0d3121199e9",
+        "signature_hash": "03e4f595ca49a9f9"
       }
     ],
     "_coordinates": [
@@ -171825,9 +172435,9 @@
       "path": ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 1746,
-      "lines": 49,
-      "tokens_est": 437,
+      "bytes": 3862,
+      "lines": 87,
+      "tokens_est": 966,
       "symbol_count": 0,
       "commands": [
         "python -m py_compile",
@@ -171835,48 +172445,48 @@
       ],
       "command_lines": {
         "python -m py_compile": [
-          29
+          61
         ],
         "python -m unittest": [
-          39,
-          45
+          75,
+          83
         ]
       },
       "topology": {},
-      "digest8": "2a40dccf4785c15f",
+      "digest8": "dc66455e94693f63",
       "vector": [
-        -0.302702,
-        -0.139217,
-        0.256722,
-        -0.28993,
-        0.118782,
-        0.118782,
-        -0.195415,
-        -0.014049,
-        -0.261831,
-        0.246504,
-        0.149435,
-        0.146881,
-        0.080465,
-        0.169871,
-        0.218405,
-        0.164762,
-        0.203079,
-        -0.162207,
-        0.011495,
-        -0.024267,
-        -0.205633,
-        -0.011495,
-        -0.031931,
-        0.016604,
-        -0.026822,
-        -0.307811,
-        0.300148,
-        0.042148,
-        0.118782,
-        0.172425,
-        -0.213296,
-        0.019158
+        0.270981,
+        -0.262204,
+        -0.194185,
+        -0.040592,
+        0.21832,
+        0.213932,
+        0.231485,
+        0.209544,
+        0.170049,
+        0.181019,
+        0.012068,
+        0.001097,
+        0.132748,
+        0.266592,
+        0.273175,
+        0.08667,
+        0.211738,
+        0.255621,
+        -0.16566,
+        0.044981,
+        -0.071311,
+        0.040592,
+        0.211738,
+        0.08667,
+        0.117388,
+        0.143718,
+        0.069117,
+        0.167854,
+        0.088864,
+        0.19199,
+        -0.174437,
+        -0.231485
       ]
     },
     {
@@ -267324,47 +267934,141 @@
       "path": "tools/awj032/glm53_layout_binding_bridge.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 19929,
-      "lines": 469,
-      "tokens_est": 4983,
-      "symbol_count": 16,
+      "bytes": 22152,
+      "lines": 523,
+      "tokens_est": 5538,
+      "symbol_count": 17,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "363052085fb72c6f",
+      "digest8": "abcfdbf63c9ebf9a",
       "vector": [
-        -0.01853,
-        0.250773,
-        0.218654,
-        -0.154417,
-        -0.102533,
-        0.161829,
-        0.050649,
-        0.268067,
-        -0.12971,
-        0.127239,
-        -0.072885,
-        -0.045707,
-        -0.122298,
-        0.196418,
-        -0.305127,
-        0.295244,
-        0.216183,
-        -0.070414,
-        -0.038295,
-        0.193947,
-        -0.100062,
-        0.223595,
-        0.28042,
-        0.048178,
-        -0.147005,
-        -0.169241,
-        0.179123,
-        0.169241,
-        0.307598,
-        0.132181,
-        0.154417,
-        -0.033354
+        0.160745,
+        0.270401,
+        -0.125855,
+        -0.245479,
+        -0.305292,
+        -0.100933,
+        -0.095949,
+        -0.133331,
+        0.093457,
+        -0.118378,
+        0.310276,
+        -0.20062,
+        -0.031152,
+        0.140808,
+        -0.158253,
+        -0.093457,
+        0.021184,
+        0.013707,
+        0.135824,
+        -0.205605,
+        0.115886,
+        0.026168,
+        -0.110902,
+        0.252956,
+        0.262925,
+        -0.183175,
+        -0.170714,
+        -0.203112,
+        0.238003,
+        0.053582,
+        0.1433,
+        0.275386
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_official_w2_observation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3699,
+      "lines": 108,
+      "tokens_est": 925,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "04f011cc7e765fe5",
+      "vector": [
+        -0.109099,
+        0.255271,
+        -0.08156,
+        0.151468,
+        0.265864,
+        -0.018007,
+        -0.090033,
+        -0.198074,
+        -0.12181,
+        0.225613,
+        0.001059,
+        0.159942,
+        0.09427,
+        0.166297,
+        -0.062494,
+        -0.25739,
+        -0.066731,
+        -0.030717,
+        0.221376,
+        0.077323,
+        -0.231969,
+        0.236205,
+        0.2701,
+        -0.164179,
+        0.263745,
+        -0.238324,
+        -0.153587,
+        0.25739,
+        -0.261627,
+        0.138757,
+        -0.056139,
+        0.005296
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_official_w2_plan_binding.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6532,
+      "lines": 165,
+      "tokens_est": 1633,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d024f06ceeb2f33d",
+      "vector": [
+        0.025982,
+        0.175096,
+        0.00113,
+        0.073427,
+        -0.025982,
+        -0.184133,
+        0.215763,
+        0.003389,
+        0.09602,
+        0.190911,
+        -0.057612,
+        -0.215763,
+        -0.25869,
+        -0.249653,
+        0.143466,
+        0.233838,
+        -0.107317,
+        -0.021463,
+        0.132169,
+        -0.102798,
+        -0.208985,
+        0.288061,
+        0.211245,
+        -0.068909,
+        -0.172836,
+        0.25869,
+        0.2248,
+        0.179614,
+        -0.188652,
+        -0.190911,
+        -0.206726,
+        0.267727
       ]
     },
     {
@@ -267512,47 +268216,47 @@
       "path": "tools/awj032/glm53_source_bound_layout_bridge.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 5564,
-      "lines": 143,
-      "tokens_est": 1391,
+      "bytes": 5922,
+      "lines": 147,
+      "tokens_est": 1481,
       "symbol_count": 10,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "68c5bd805265f8bb",
+      "digest8": "a9af3a9bf1c851ac",
       "vector": [
-        -0.328127,
-        -0.127233,
-        -0.081697,
-        -0.103126,
-        0.092411,
-        -0.229019,
-        -0.060268,
-        0.247769,
-        0.204912,
-        -0.124554,
-        -0.207591,
-        0.006696,
-        -0.325449,
-        0.025447,
-        0.336163,
-        0.309377,
-        -0.11384,
-        0.127233,
-        -0.006696,
-        0.183483,
-        0.030804,
-        -0.070983,
-        -0.089733,
-        0.237055,
-        -0.26652,
-        0.017411,
-        0.097768,
-        -0.09509,
-        -0.186162,
-        -0.054911,
-        -0.001339,
-        -0.237055
+        -0.229588,
+        0.014109,
+        0.098761,
+        -0.060283,
+        0.203936,
+        -0.178284,
+        0.13724,
+        0.065413,
+        0.124414,
+        -0.065413,
+        -0.185979,
+        -0.093631,
+        -0.14237,
+        0.229588,
+        -0.088501,
+        0.314241,
+        -0.134675,
+        0.055153,
+        0.314241,
+        -0.119283,
+        -0.25011,
+        0.114153,
+        -0.08337,
+        -0.214197,
+        -0.265502,
+        0.052587,
+        0.201371,
+        0.224458,
+        0.286023,
+        -0.073109,
+        -0.085935,
+        -0.270632
       ]
     },
     {
@@ -267653,47 +268357,94 @@
       "path": "tools/awj032/test_glm53_layout_binding_bridge.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 12024,
-      "lines": 289,
-      "tokens_est": 3006,
-      "symbol_count": 22,
+      "bytes": 14045,
+      "lines": 333,
+      "tokens_est": 3512,
+      "symbol_count": 24,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "4cea2df3fbd3124c",
+      "digest8": "0bc5171222798741",
       "vector": [
-        0.199089,
-        -0.026616,
-        -0.143727,
-        -0.250191,
-        -0.237416,
-        -0.209735,
-        0.099012,
-        0.265097,
-        -0.211864,
-        0.22464,
-        -0.201218,
-        -0.096883,
-        0.143727,
-        -0.179925,
-        -0.248062,
-        -0.018099,
-        -0.250191,
-        0.050038,
-        0.096883,
-        0.192701,
-        -0.058555,
-        -0.196959,
-        0.04578,
-        -0.154373,
-        -0.052168,
-        0.190571,
-        0.267226,
-        0.035133,
-        0.190571,
-        -0.018099,
-        -0.235286,
-        0.228899
+        -0.168423,
+        0.214011,
+        0.018995,
+        -0.315318,
+        0.1279,
+        0.140564,
+        -0.322916,
+        0.001266,
+        -0.279861,
+        -0.049387,
+        0.186152,
+        0.287459,
+        0.011397,
+        0.021528,
+        -0.173488,
+        -0.054453,
+        -0.224142,
+        0.011397,
+        0.046855,
+        0.054453,
+        0.056985,
+        0.282393,
+        0.008864,
+        0.196282,
+        0.214011,
+        0.229207,
+        -0.115237,
+        0.201348,
+        -0.317851,
+        -0.054453,
+        0.143096,
+        -0.01393
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4310,
+      "lines": 105,
+      "tokens_est": 1078,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cf5c15f5731bd4b3",
+      "vector": [
+        -0.269082,
+        0.240052,
+        -0.027913,
+        -0.264616,
+        0.278014,
+        0.119468,
+        -0.056943,
+        -0.00335,
+        -0.233353,
+        -0.188692,
+        -0.213256,
+        0.068108,
+        0.126167,
+        -0.213256,
+        -0.237819,
+        -0.164129,
+        0.161896,
+        0.222188,
+        0.072574,
+        -0.257917,
+        0.074807,
+        0.264616,
+        0.068108,
+        0.032379,
+        -0.135099,
+        -0.26015,
+        0.085972,
+        -0.1284,
+        -0.253451,
+        0.115002,
+        0.010049,
+        -0.056943
       ]
     },
     {
@@ -267841,47 +268592,94 @@
       "path": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 4730,
-      "lines": 141,
-      "tokens_est": 1183,
-      "symbol_count": 14,
+      "bytes": 5765,
+      "lines": 168,
+      "tokens_est": 1442,
+      "symbol_count": 16,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "69c27f5cc5791d22",
+      "digest8": "d9ed21bf8a32f14d",
       "vector": [
-        0.330284,
-        -0.134049,
-        -0.239076,
-        0.14234,
-        0.128521,
-        -0.316465,
-        -0.316465,
-        -0.167215,
-        -0.321993,
-        0.070479,
-        0.017965,
-        0.037312,
-        -0.070479,
-        0.098118,
-        -0.189326,
-        -0.048368,
-        0.288826,
-        0.134049,
-        0.037312,
-        -0.067715,
-        0.089826,
-        -0.125757,
-        0.19209,
-        -0.001382,
-        0.134049,
-        -0.158923,
-        0.128521,
-        -0.200382,
-        0.161687,
-        -0.131285,
-        0.183798,
-        -0.20591
+        0.135606,
+        0.107789,
+        0.135606,
+        0.177331,
+        0.031294,
+        0.089245,
+        -0.258462,
+        0.283961,
+        0.05911,
+        -0.112425,
+        0.14256,
+        0.096199,
+        -0.281643,
+        0.010431,
+        0.207465,
+        0.202829,
+        0.235282,
+        -0.2376,
+        0.093881,
+        0.256144,
+        -0.256144,
+        -0.033612,
+        0.082291,
+        0.015067,
+        -0.198193,
+        -0.077655,
+        -0.216737,
+        0.133288,
+        0.008113,
+        0.288597,
+        0.175013,
+        0.265416
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9435,
+      "lines": 264,
+      "tokens_est": 2359,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "351fdbc32e2678aa",
+      "vector": [
+        0.104874,
+        -0.068114,
+        0.145958,
+        0.044328,
+        0.23029,
+        0.029192,
+        -0.271374,
+        -0.197855,
+        0.040003,
+        -0.269212,
+        0.072439,
+        0.005406,
+        -0.232452,
+        -0.271374,
+        0.148121,
+        0.087575,
+        0.074601,
+        -0.169744,
+        0.232452,
+        0.107036,
+        0.113523,
+        -0.107036,
+        0.111361,
+        0.001081,
+        0.165419,
+        -0.262725,
+        0.225965,
+        0.206504,
+        -0.254076,
+        -0.22164,
+        -0.264887,
+        0.217316
       ]
     },
     {
@@ -291883,15 +292681,15 @@
     }
   },
   "summary": {
-    "file_count": 1676,
-    "total_bytes": 26582023,
-    "text_tokens_est": 6635903,
+    "file_count": 1680,
+    "total_bytes": 26613752,
+    "text_tokens_est": 6643837,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1022,
+      "python_module": 1026,
       "schema_or_lexicon": 277,
       "support_file": 49
     },
@@ -293559,6 +294357,8 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/glm53_layout_binding_bridge.py",
+      "tools/awj032/glm53_official_w2_observation.py",
+      "tools/awj032/glm53_official_w2_plan_binding.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
@@ -293566,10 +294366,12 @@
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_layout_binding_bridge.py",
+      "tools/awj032/test_glm53_official_w2_plan_binding.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
       "tools/awj032/test_glm53_source_bound_layout_bridge.py",
+      "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -451922,160 +452724,370 @@
         "name": "LayoutBindingError",
         "kind": "class",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 31,
-        "end_line": 35,
+        "line": 32,
+        "end_line": 36,
         "signature_hash": "8d670edc5216e16a",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#class:PagerSourcePlan:ef3a4541fe427a00",
         "name": "PagerSourcePlan",
         "kind": "class",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 120,
-        "end_line": 154,
+        "line": 128,
+        "end_line": 166,
         "signature_hash": "b3e36a9066ad9627",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_canonical:f7426c2678e63cad",
         "name": "_canonical",
         "kind": "function",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 38,
-        "end_line": 39,
+        "line": 39,
+        "end_line": 40,
         "signature_hash": "8d5bf5695239b859",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_common:d3fe91f8e681e5eb",
         "name": "_common",
         "kind": "function",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 157,
-        "end_line": 177,
+        "line": 169,
+        "end_line": 189,
         "signature_hash": "6804c6a25977835e",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_digest:52413db1a1e1f0ba",
         "name": "_digest",
         "kind": "function",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 42,
-        "end_line": 43,
+        "line": 43,
+        "end_line": 44,
         "signature_hash": "514f786724465716",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
-        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_finalize:961fc88f73d10bac",
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_finalize:234a06e08f0d4cf1",
         "name": "_finalize",
         "kind": "function",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 180,
-        "end_line": 220,
-        "signature_hash": "e31683ce8a2b4571",
-        "file_digest8": "363052085fb72c6f"
+        "line": 192,
+        "end_line": 238,
+        "signature_hash": "6102846b7434dce8",
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_offsets:297070d8c1338e79",
         "name": "_offsets",
         "kind": "function",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 81,
-        "end_line": 90,
+        "line": 89,
+        "end_line": 98,
         "signature_hash": "b7a7f121c3b232e5",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
-        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_per_expert_header_digest:47f49dfe055778a8",
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_per_expert_header_digest:18e1da9b43711f01",
         "name": "_per_expert_header_digest",
         "kind": "function",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 223,
-        "end_line": 347,
-        "signature_hash": "9f157afd7133d6f1",
-        "file_digest8": "363052085fb72c6f"
+        "line": 241,
+        "end_line": 396,
+        "signature_hash": "0ed8d1a4c8374b10",
+        "file_digest8": "abcfdbf63c9ebf9a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_receipt:6fadcf563c18234a",
+        "name": "_receipt",
+        "kind": "function",
+        "file": "tools/awj032/glm53_layout_binding_bridge.py",
+        "line": 71,
+        "end_line": 75,
+        "signature_hash": "668c94a29a48f2b8",
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_scale_map:60bdc27a744e88e5",
         "name": "_scale_map",
         "kind": "function",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 93,
-        "end_line": 116,
+        "line": 101,
+        "end_line": 124,
         "signature_hash": "6a0f88000d98861f",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_sha256:38feddaf19b1dd95",
         "name": "_sha256",
         "kind": "function",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 63,
-        "end_line": 67,
+        "line": 64,
+        "end_line": 68,
         "signature_hash": "ddcb28c0cb88d369",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_shape:e7b997ddc9d3945f",
         "name": "_shape",
         "kind": "function",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 70,
-        "end_line": 78,
+        "line": 78,
+        "end_line": 86,
         "signature_hash": "2db45cfaa4dce474",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_text:d660ea48396dc251",
         "name": "_text",
         "kind": "function",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 57,
-        "end_line": 60,
+        "line": 58,
+        "end_line": 61,
         "signature_hash": "7c66637900aa94dc",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_transport_receipt_digest:9e7afc6d4603ce13",
         "name": "_transport_receipt_digest",
         "kind": "function",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 46,
-        "end_line": 54,
+        "line": 47,
+        "end_line": 55,
         "signature_hash": "60dc9d227f17e572",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
-        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:compile_pager_source_plan:7a940e97ab205991",
+        "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:compile_pager_source_plan:0fad39d904ad6660",
         "name": "compile_pager_source_plan",
         "kind": "function",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 350,
-        "end_line": 468,
-        "signature_hash": "d72fe7ca77b6bd48",
-        "file_digest8": "363052085fb72c6f"
+        "line": 399,
+        "end_line": 523,
+        "signature_hash": "58bd05ed3cf52aad",
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#method:LayoutBindingError.__init__:56e9a4b401794637",
         "name": "LayoutBindingError.__init__",
         "kind": "method",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 32,
-        "end_line": 35,
+        "line": 33,
+        "end_line": 36,
         "signature_hash": "0b6534a3148e5c5d",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#method:PagerSourcePlan.to_dict:9bb97d45d0565d2d",
         "name": "PagerSourcePlan.to_dict",
         "kind": "method",
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
-        "line": 137,
-        "end_line": 154,
+        "line": 147,
+        "end_line": 166,
         "signature_hash": "5c1a69a9659e2089",
-        "file_digest8": "363052085fb72c6f"
+        "file_digest8": "abcfdbf63c9ebf9a"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#class:OfficialW2Observation:cba3d21b65a65441",
+        "name": "OfficialW2Observation",
+        "kind": "class",
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "line": 50,
+        "end_line": 71,
+        "signature_hash": "4c6c2d4f0b41d939",
+        "file_digest8": "04f011cc7e765fe5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#class:OfficialW2ObservationError:95bdae3fe9c02bf3",
+        "name": "OfficialW2ObservationError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "line": 28,
+        "end_line": 32,
+        "signature_hash": "b224774675bd723c",
+        "file_digest8": "04f011cc7e765fe5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#function:_canonical:f75680700272d3e1",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "line": 35,
+        "end_line": 42,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "04f011cc7e765fe5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#function:_digest:b62a416340782ace",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "04f011cc7e765fe5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#function:bind_official_w2_observation:557a50cb0ab98dd7",
+        "name": "bind_official_w2_observation",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "line": 77,
+        "end_line": 107,
+        "signature_hash": "f2c8e0c2fb073306",
+        "file_digest8": "04f011cc7e765fe5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#method:OfficialW2Observation.observation_digest:66f7b17859a313bf",
+        "name": "OfficialW2Observation.observation_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "line": 70,
+        "end_line": 71,
+        "signature_hash": "28f677c5b8842bca",
+        "file_digest8": "04f011cc7e765fe5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#method:OfficialW2Observation.to_dict:f98947db1d03abeb",
+        "name": "OfficialW2Observation.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "line": 66,
+        "end_line": 67,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "04f011cc7e765fe5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_observation.py#method:OfficialW2ObservationError.__init__:df5dcc7a90d40a68",
+        "name": "OfficialW2ObservationError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_official_w2_observation.py",
+        "line": 29,
+        "end_line": 32,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "04f011cc7e765fe5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#class:OfficialW2BoundPagerPlan:4a8810a7ebd37776",
+        "name": "OfficialW2BoundPagerPlan",
+        "kind": "class",
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "line": 79,
+        "end_line": 117,
+        "signature_hash": "b48d43db14a942a3",
+        "file_digest8": "d024f06ceeb2f33d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#class:OfficialW2PlanBindingError:e1403a68fa3b8b29",
+        "name": "OfficialW2PlanBindingError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "line": 25,
+        "end_line": 29,
+        "signature_hash": "1b88779c284b1e74",
+        "file_digest8": "d024f06ceeb2f33d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_binding:9c618f30723de356",
+        "name": "_binding",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "line": 58,
+        "end_line": 64,
+        "signature_hash": "a268f72b3d5ea7ff",
+        "file_digest8": "d024f06ceeb2f33d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_canonical:1661526c4b9f2835",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "line": 32,
+        "end_line": 39,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "d024f06ceeb2f33d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_digest:50a78e0547136596",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "d024f06ceeb2f33d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_exact_false:cf4d2eb50bb7e657",
+        "name": "_exact_false",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "line": 73,
+        "end_line": 75,
+        "signature_hash": "e088d9cc20555008",
+        "file_digest8": "d024f06ceeb2f33d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_plan_dict:491a7826f4946b66",
+        "name": "_plan_dict",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "line": 46,
+        "end_line": 55,
+        "signature_hash": "bb6a47c38f49c5eb",
+        "file_digest8": "d024f06ceeb2f33d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_text:3d6c730280c47cfa",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "line": 67,
+        "end_line": 70,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "d024f06ceeb2f33d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:bind_official_w2_pager_plan:80e0ac387e5361fe",
+        "name": "bind_official_w2_pager_plan",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "line": 120,
+        "end_line": 164,
+        "signature_hash": "cb85d64dbedf2972",
+        "file_digest8": "d024f06ceeb2f33d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#method:OfficialW2BoundPagerPlan.source_plan_digest:664f58a64bb77673",
+        "name": "OfficialW2BoundPagerPlan.source_plan_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "line": 97,
+        "end_line": 98,
+        "signature_hash": "bb96ecd1672c9944",
+        "file_digest8": "d024f06ceeb2f33d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#method:OfficialW2BoundPagerPlan.to_dict:c41660a7f68602a5",
+        "name": "OfficialW2BoundPagerPlan.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "line": 100,
+        "end_line": 117,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "d024f06ceeb2f33d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingError.__init__:ddded21941d3d328",
+        "name": "OfficialW2PlanBindingError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "line": 26,
+        "end_line": 29,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "d024f06ceeb2f33d"
       },
       {
         "semantic_id": "tools/awj032/glm53_packed_expert_pager.py#class:ExpertRangeError:a8c6d962660c0c2f",
@@ -452922,100 +453934,100 @@
         "name": "SourceBoundLayoutError",
         "kind": "class",
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
-        "line": 22,
-        "end_line": 26,
+        "line": 23,
+        "end_line": 27,
         "signature_hash": "1fb452f8eaf4a002",
-        "file_digest8": "68c5bd805265f8bb"
+        "file_digest8": "a9af3a9bf1c851ac"
       },
       {
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#class:SourceBoundPagerSourcePlan:cabc68c976cf979a",
         "name": "SourceBoundPagerSourcePlan",
         "kind": "class",
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
-        "line": 58,
-        "end_line": 86,
+        "line": 59,
+        "end_line": 87,
         "signature_hash": "0dcf044d7d516211",
-        "file_digest8": "68c5bd805265f8bb"
+        "file_digest8": "a9af3a9bf1c851ac"
       },
       {
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:_canonical:615a0d6c893a79bf",
         "name": "_canonical",
         "kind": "function",
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
-        "line": 29,
-        "end_line": 30,
+        "line": 30,
+        "end_line": 31,
         "signature_hash": "8d5bf5695239b859",
-        "file_digest8": "68c5bd805265f8bb"
+        "file_digest8": "a9af3a9bf1c851ac"
       },
       {
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:_sha:2c848eaeb1dec83b",
         "name": "_sha",
         "kind": "function",
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
-        "line": 33,
-        "end_line": 34,
+        "line": 34,
+        "end_line": 35,
         "signature_hash": "e47bc2e8d0ade77b",
-        "file_digest8": "68c5bd805265f8bb"
+        "file_digest8": "a9af3a9bf1c851ac"
       },
       {
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:_sha_field:b93576564497e00e",
         "name": "_sha_field",
         "kind": "function",
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
-        "line": 37,
-        "end_line": 43,
+        "line": 38,
+        "end_line": 44,
         "signature_hash": "de26700e2f26c864",
-        "file_digest8": "68c5bd805265f8bb"
+        "file_digest8": "a9af3a9bf1c851ac"
       },
       {
-        "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:compile_source_bound_pager_source_plan:78e68fa52e1b2cc4",
+        "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:compile_source_bound_pager_source_plan:2750b89147955d2d",
         "name": "compile_source_bound_pager_source_plan",
         "kind": "function",
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
-        "line": 89,
-        "end_line": 142,
-        "signature_hash": "11acbe643973c993",
-        "file_digest8": "68c5bd805265f8bb"
+        "line": 90,
+        "end_line": 147,
+        "signature_hash": "2a6f22e307185174",
+        "file_digest8": "a9af3a9bf1c851ac"
       },
       {
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:weight_map_digest:33ded90a430cec8f",
         "name": "weight_map_digest",
         "kind": "function",
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
-        "line": 46,
-        "end_line": 54,
+        "line": 47,
+        "end_line": 55,
         "signature_hash": "c5299b7905aa7cfe",
-        "file_digest8": "68c5bd805265f8bb"
+        "file_digest8": "a9af3a9bf1c851ac"
       },
       {
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutError.__init__:81eebc7a41ab1270",
         "name": "SourceBoundLayoutError.__init__",
         "kind": "method",
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
-        "line": 23,
-        "end_line": 26,
+        "line": 24,
+        "end_line": 27,
         "signature_hash": "0b6534a3148e5c5d",
-        "file_digest8": "68c5bd805265f8bb"
+        "file_digest8": "a9af3a9bf1c851ac"
       },
       {
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#method:SourceBoundPagerSourcePlan.binding:de3faf5c41019311",
         "name": "SourceBoundPagerSourcePlan.binding",
         "kind": "method",
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
-        "line": 69,
-        "end_line": 70,
+        "line": 70,
+        "end_line": 71,
         "signature_hash": "10c9c9087d1a2889",
-        "file_digest8": "68c5bd805265f8bb"
+        "file_digest8": "a9af3a9bf1c851ac"
       },
       {
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#method:SourceBoundPagerSourcePlan.to_dict:057bbe5e56d3cb85",
         "name": "SourceBoundPagerSourcePlan.to_dict",
         "kind": "method",
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
-        "line": 72,
-        "end_line": 86,
+        "line": 73,
+        "end_line": 87,
         "signature_hash": "5c1a69a9659e2089",
-        "file_digest8": "68c5bd805265f8bb"
+        "file_digest8": "a9af3a9bf1c851ac"
       },
       {
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
@@ -453302,220 +454314,380 @@
         "name": "BridgeTests",
         "kind": "class",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 143,
-        "end_line": 284,
+        "line": 155,
+        "end_line": 329,
         "signature_hash": "f9a151d2cbcaaa4a",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:compile_packed:2c0d63bdad3261f2",
         "name": "compile_packed",
         "kind": "function",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 118,
-        "end_line": 126,
+        "line": 119,
+        "end_line": 127,
         "signature_hash": "30d12b760aec396f",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:compile_per_expert:3d1204eda66dd84e",
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:compile_per_expert:6dfe2b0133072f5b",
         "name": "compile_per_expert",
         "kind": "function",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 129,
-        "end_line": 140,
-        "signature_hash": "b64eeec4a194c658",
-        "file_digest8": "4cea2df3fbd3124c"
+        "line": 130,
+        "end_line": 152,
+        "signature_hash": "8d113fcb60e85fc4",
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:packed_fixture:e35d00aacd5a6029",
         "name": "packed_fixture",
         "kind": "function",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 16,
-        "end_line": 41,
+        "line": 17,
+        "end_line": 42,
         "signature_hash": "47558325ae779af0",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:per_expert_fixture:789312f3d7b60f3b",
         "name": "per_expert_fixture",
         "kind": "function",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 44,
-        "end_line": 65,
+        "line": 45,
+        "end_line": 66,
         "signature_hash": "04d1e5bdadc1803b",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:per_expert_header_fixture:f34fd23de47649a8",
         "name": "per_expert_header_fixture",
         "kind": "function",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 78,
-        "end_line": 115,
+        "line": 79,
+        "end_line": 116,
         "signature_hash": "f3e48d6efe070c1b",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#function:refresh_receipt:44e43b0c07a3b1cc",
         "name": "refresh_receipt",
         "kind": "function",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 68,
-        "end_line": 75,
+        "line": 69,
+        "end_line": 76,
         "signature_hash": "31b5aba3b7eb26e6",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.code:d3d7c2ee02383a3d",
         "name": "BridgeTests.code",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 144,
-        "end_line": 147,
+        "line": 156,
+        "end_line": 159,
         "signature_hash": "da9870e5e2d1b723",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_clock_metadata_does_not_churn_source_plan:b0a28040725e1331",
         "name": "BridgeTests.test_clock_metadata_does_not_churn_source_plan",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 280,
-        "end_line": 284,
+        "line": 325,
+        "end_line": 329,
         "signature_hash": "4a072c4ecf897aa7",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_independently_changed_observation_changes_plan_identity_without_universalizing:63dd971dfe4bb20a",
+        "name": "BridgeTests.test_independently_changed_observation_changes_plan_identity_without_universalizing",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 273,
+        "end_line": 284,
+        "signature_hash": "a4fd0888a65a3986",
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_packed_layout_binds_current_pager_abi:403379fe79921d62",
         "name": "BridgeTests.test_packed_layout_binds_current_pager_abi",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 149,
-        "end_line": 155,
+        "line": 161,
+        "end_line": 168,
         "signature_hash": "36785f5b8d33485d",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_packed_requires_header_axis_shard_and_fp8_dtype:d1f5be54d2f193d7",
         "name": "BridgeTests.test_packed_requires_header_axis_shard_and_fp8_dtype",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 249,
-        "end_line": 258,
+        "line": 292,
+        "end_line": 301,
         "signature_hash": "81a598243b3c85ec",
-        "file_digest8": "4cea2df3fbd3124c"
-      },
-      {
-        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_canary_change_changes_plan_identity_without_universalizing:75ae204ba89f061d",
-        "name": "BridgeTests.test_per_expert_canary_change_changes_plan_identity_without_universalizing",
-        "kind": "method",
-        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 230,
-        "end_line": 241,
-        "signature_hash": "77dff954a53de8bd",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_header_shape_dtype_and_effect_widening_fail_closed:1fe7f6a0c4d9ba50",
         "name": "BridgeTests.test_per_expert_header_shape_dtype_and_effect_widening_fail_closed",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 206,
-        "end_line": 222,
+        "line": 223,
+        "end_line": 239,
         "signature_hash": "b3fe0a099cbce0cb",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_header_source_and_shard_substitution_fail_closed:16a5d178b8ee3e9d",
         "name": "BridgeTests.test_per_expert_header_source_and_shard_substitution_fail_closed",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 196,
-        "end_line": 204,
+        "line": 213,
+        "end_line": 221,
         "signature_hash": "adcea94b44f652ba",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_index_only_plan_is_no_longer_w3_eligible:4ad9c695d7584228",
-        "name": "BridgeTests.test_per_expert_index_only_plan_is_no_longer_w3_eligible",
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_index_only_plan_requires_independent_w2_observation:5b58af026ba1b011",
+        "name": "BridgeTests.test_per_expert_index_only_plan_requires_independent_w2_observation",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 169,
-        "end_line": 180,
-        "signature_hash": "78585df7c18cd075",
-        "file_digest8": "4cea2df3fbd3124c"
+        "line": 184,
+        "end_line": 195,
+        "signature_hash": "23ec81aab714cb88",
+        "file_digest8": "0bc5171222798741"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_layout_binds_current_per_expert_abi_and_w2_canary:007168e2cbb7f4da",
-        "name": "BridgeTests.test_per_expert_layout_binds_current_per_expert_abi_and_w2_canary",
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_layout_binds_current_per_expert_abi_and_official_w2_canary:07676bcab31f07cd",
+        "name": "BridgeTests.test_per_expert_layout_binds_current_per_expert_abi_and_official_w2_canary",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 157,
-        "end_line": 167,
-        "signature_hash": "ebdee69cbd19a29f",
-        "file_digest8": "4cea2df3fbd3124c"
+        "line": 170,
+        "end_line": 182,
+        "signature_hash": "916693b8ecdd7c33",
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_missing_scale_fails_in_sibling_abi:bc0584af6cc7606d",
         "name": "BridgeTests.test_per_expert_missing_scale_fails_in_sibling_abi",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 182,
-        "end_line": 194,
+        "line": 197,
+        "end_line": 211,
         "signature_hash": "3ef9beef2a07df61",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_per_expert_transport_receipt_is_recomputed_not_trusted:24486cea25f10735",
         "name": "BridgeTests.test_per_expert_transport_receipt_is_recomputed_not_trusted",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 224,
-        "end_line": 228,
+        "line": 241,
+        "end_line": 245,
         "signature_hash": "cda9503b6e115d82",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_scale_ambiguity_is_not_guessed:15e04551825893c8",
         "name": "BridgeTests.test_scale_ambiguity_is_not_guessed",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 267,
-        "end_line": 270,
+        "line": 310,
+        "end_line": 313,
         "signature_hash": "44b83db054898963",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_self_consistent_fabricated_header_fails_official_observation_binding:15fae1ca4d072e1f",
+        "name": "BridgeTests.test_self_consistent_fabricated_header_fails_official_observation_binding",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 247,
+        "end_line": 261,
+        "signature_hash": "b701fe8c726ce86a",
+        "file_digest8": "0bc5171222798741"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_self_consistent_repo_substitution_fails_official_repo_binding:bdf608ff79af5e52",
+        "name": "BridgeTests.test_self_consistent_repo_substitution_fails_official_repo_binding",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
+        "line": 263,
+        "end_line": 271,
+        "signature_hash": "837b5f46ef61b3bf",
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_serialized_plan_remains_nonpromoting:ecdd9f803ca9a834",
         "name": "BridgeTests.test_serialized_plan_remains_nonpromoting",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 272,
-        "end_line": 278,
+        "line": 315,
+        "end_line": 323,
         "signature_hash": "7e1ce69a27beb4a7",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_stale_currentness_and_probe_blockers_fail_closed:5bf1473acb27193f",
         "name": "BridgeTests.test_stale_currentness_and_probe_blockers_fail_closed",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 243,
-        "end_line": 247,
+        "line": 286,
+        "end_line": 290,
         "signature_hash": "d36704cf6fa2b159",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_vendor_and_partial_layouts_are_typed_residuals:8ffd4fca5f7f050f",
         "name": "BridgeTests.test_vendor_and_partial_layouts_are_typed_residuals",
         "kind": "method",
         "file": "tools/awj032/test_glm53_layout_binding_bridge.py",
-        "line": 260,
-        "end_line": 265,
+        "line": 303,
+        "end_line": 308,
         "signature_hash": "35a2724e252944e5",
-        "file_digest8": "4cea2df3fbd3124c"
+        "file_digest8": "0bc5171222798741"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#class:OfficialW2PlanBindingTests:5962abc5e516c7e6",
+        "name": "OfficialW2PlanBindingTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 40,
+        "end_line": 100,
+        "signature_hash": "9cd997927a7876b4",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#class:plan.FakePlan:38316e2c4666144b",
+        "name": "plan.FakePlan",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 29,
+        "end_line": 35,
+        "signature_hash": "6b5435fc0dea4581",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#function:plan:3427973d2c642baf",
+        "name": "plan",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 8,
+        "end_line": 37,
+        "signature_hash": "95131f80d668731b",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.code:30751aa9ea78aa15",
+        "name": "OfficialW2PlanBindingTests.code",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 41,
+        "end_line": 44,
+        "signature_hash": "bc8d2f3c19474255",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_caller_claimed_official_flag_cannot_override_forged_receipt:da7e29d1ec3fe418",
+        "name": "OfficialW2PlanBindingTests.test_caller_claimed_official_flag_cannot_override_forged_receipt",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 56,
+        "end_line": 60,
+        "signature_hash": "ab7eaea5d658d129",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_effect_ceiling_widening_fails:cbfd79fe334ad0ec",
+        "name": "OfficialW2PlanBindingTests.test_effect_ceiling_widening_fails",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 91,
+        "end_line": 94,
+        "signature_hash": "6605fdbc03fceff1",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_exact_pr398_observation_binds_producer_identity:819b324de2d1fe41",
+        "name": "OfficialW2PlanBindingTests.test_exact_pr398_observation_binds_producer_identity",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 46,
+        "end_line": 54,
+        "signature_hash": "ae8bd38a2d46e336",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_missing_representative_header_binding_fails:583debb9d9dbc623",
+        "name": "OfficialW2PlanBindingTests.test_missing_representative_header_binding_fails",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 82,
+        "end_line": 83,
+        "signature_hash": "e115f04d08104e98",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_model_or_index_generation_substitution_cannot_bind:a1003c83f860ee35",
+        "name": "OfficialW2PlanBindingTests.test_model_or_index_generation_substitution_cannot_bind",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 72,
+        "end_line": 80,
+        "signature_hash": "d8e0292ac9dc8a8c",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_producer_bound_plan_identity_includes_inner_plan_identity:f4a7569f093dd435",
+        "name": "OfficialW2PlanBindingTests.test_producer_bound_plan_identity_includes_inner_plan_identity",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 96,
+        "end_line": 100,
+        "signature_hash": "1fcbb9f80354a9cc",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_repo_or_coordinate_substitution_cannot_bind:6797e0fa0435fc24",
+        "name": "OfficialW2PlanBindingTests.test_repo_or_coordinate_substitution_cannot_bind",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 62,
+        "end_line": 70,
+        "signature_hash": "3673864a71cb684f",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_representative_to_universal_cast_fails:428c13424c26efa8",
+        "name": "OfficialW2PlanBindingTests.test_representative_to_universal_cast_fails",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 85,
+        "end_line": 89,
+        "signature_hash": "91b98195e94a50d7",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:plan.FakePlan.__init__:07b4dbc08c61ed61",
+        "name": "plan.FakePlan.__init__",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 30,
+        "end_line": 32,
+        "signature_hash": "8734a51fad6ab5fe",
+        "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:plan.FakePlan.to_dict:c4786168ce3d8c5d",
+        "name": "plan.FakePlan.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_official_w2_plan_binding.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "cf5c15f5731bd4b3"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:FakeSliceBackend:bf8532e42602b3b5",
@@ -454205,7 +455377,7 @@
         "line": 16,
         "end_line": 25,
         "signature_hash": "6b5435fc0dea4581",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#class:SourceBoundLayoutBridgeTests:2380891971f3f641",
@@ -454213,9 +455385,9 @@
         "kind": "class",
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
         "line": 28,
-        "end_line": 136,
+        "end_line": 164,
         "signature_hash": "21e78325924c092c",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:FakePlan.to_dict:8a3f2e935b3eb3a8",
@@ -454225,7 +455397,7 @@
         "line": 21,
         "end_line": 25,
         "signature_hash": "5c1a69a9659e2089",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.compile:d19a4d8c7787be6d",
@@ -454235,7 +455407,7 @@
         "line": 39,
         "end_line": 40,
         "signature_hash": "21a9f2ff92cd340a",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.report:e56392bf1bd4873b",
@@ -454245,67 +455417,87 @@
         "line": 32,
         "end_line": 37,
         "signature_hash": "426b7cf759b7870a",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_independent_w2_observation_inputs_are_forwarded_to_inner_bridge.compile_fn:81207d333114c28e",
+        "name": "SourceBoundLayoutBridgeTests.test_independent_w2_observation_inputs_are_forwarded_to_inner_bridge.compile_fn",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
+        "line": 59,
+        "end_line": 61,
+        "signature_hash": "dcac659347cc9dbb",
+        "file_digest8": "d9ed21bf8a32f14d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_independent_w2_observation_inputs_are_forwarded_to_inner_bridge:92c296d177ab1c9b",
+        "name": "SourceBoundLayoutBridgeTests.test_independent_w2_observation_inputs_are_forwarded_to_inner_bridge",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
+        "line": 56,
+        "end_line": 82,
+        "signature_hash": "baba96dd964de3c3",
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_inner_digest_mismatch_rejected.bad:6d60c80cf7d24e27",
         "name": "SourceBoundLayoutBridgeTests.test_inner_digest_mismatch_rejected.bad",
         "kind": "method",
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
-        "line": 102,
-        "end_line": 103,
+        "line": 130,
+        "end_line": 131,
         "signature_hash": "4224906089aab28f",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_inner_digest_mismatch_rejected:e743d2bffa3efbb8",
         "name": "SourceBoundLayoutBridgeTests.test_inner_digest_mismatch_rejected",
         "kind": "method",
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
-        "line": 101,
-        "end_line": 114,
+        "line": 129,
+        "end_line": 142,
         "signature_hash": "1eccc78e72830266",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_missing_source_bundle_rejected:b2a2d10801730c44",
         "name": "SourceBoundLayoutBridgeTests.test_missing_source_bundle_rejected",
         "kind": "method",
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
-        "line": 88,
-        "end_line": 99,
+        "line": 116,
+        "end_line": 127,
         "signature_hash": "e3f0a9db742ce3f5",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_source_bundle_changes_final_identity:125873f527d03d2a",
         "name": "SourceBoundLayoutBridgeTests.test_source_bundle_changes_final_identity",
         "kind": "method",
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
-        "line": 116,
-        "end_line": 136,
+        "line": 144,
+        "end_line": 164,
         "signature_hash": "63656146e120775e",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_substituted_weight_map_rejected_before_compile.compile_fn:b9857affeb83d822",
         "name": "SourceBoundLayoutBridgeTests.test_substituted_weight_map_rejected_before_compile.compile_fn",
         "kind": "method",
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
-        "line": 73,
-        "end_line": 74,
+        "line": 101,
+        "end_line": 102,
         "signature_hash": "7f365fed3f10cd1b",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_substituted_weight_map_rejected_before_compile:62540329000189af",
         "name": "SourceBoundLayoutBridgeTests.test_substituted_weight_map_rejected_before_compile",
         "kind": "method",
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
-        "line": 70,
-        "end_line": 86,
+        "line": 98,
+        "end_line": 114,
         "signature_hash": "c81f006936aa1843",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_success_binds_source_bundle_and_map:ba075a83cd7bd696",
@@ -454315,17 +455507,17 @@
         "line": 42,
         "end_line": 54,
         "signature_hash": "045bd88a2d4af26b",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.test_unproven_report_rejected:62ac286c59c12994",
         "name": "SourceBoundLayoutBridgeTests.test_unproven_report_rejected",
         "kind": "method",
         "file": "tools/awj032/test_glm53_source_bound_layout_bridge.py",
-        "line": 56,
-        "end_line": 68,
+        "line": 84,
+        "end_line": 96,
         "signature_hash": "63f502bf52946213",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_source_bound_layout_bridge.py#method:SourceBoundLayoutBridgeTests.wm:d12c7f949a591002",
@@ -454335,7 +455527,237 @@
         "line": 29,
         "end_line": 30,
         "signature_hash": "f4ba5f4f293a349f",
-        "file_digest8": "69c27f5cc5791d22"
+        "file_digest8": "d9ed21bf8a32f14d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#class:TinySafetensorsBackend:08c176318a544aaf",
+        "name": "TinySafetensorsBackend",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 130,
+        "end_line": 163,
+        "signature_hash": "a260c9e88ff0d61e",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#class:W3NativePerExpertFixtureTests:5b847f06af2d8d69",
+        "name": "W3NativePerExpertFixtureTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 187,
+        "end_line": 259,
+        "signature_hash": "1fd1f59534d7d108",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_build_safetensors:f16b63f2b0084782",
+        "name": "_build_safetensors",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 93,
+        "end_line": 116,
+        "signature_hash": "6369cfe8758ce4d9",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_decode_e4m3:c54424a6fbaa533d",
+        "name": "_decode_e4m3",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 44,
+        "end_line": 52,
+        "signature_hash": "618ac859f3b0eea9",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_dequant:6f3f4b805cc5198a",
+        "name": "_dequant",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 170,
+        "end_line": 174,
+        "signature_hash": "f506bdf64c33ddef",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_f32_bytes:1a2aa752ae9527d6",
+        "name": "_f32_bytes",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 59,
+        "end_line": 61,
+        "signature_hash": "f9ea02b5157f9d75",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_fixture_values:3aba0f20210e37a3",
+        "name": "_fixture_values",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 64,
+        "end_line": 75,
+        "signature_hash": "fbbc30bdb606c33b",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_forward:641da78c0310ef92",
+        "name": "_forward",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 177,
+        "end_line": 184,
+        "signature_hash": "d7faeb18858b67df",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_fp8_bytes:197fac17e6b48c2f",
+        "name": "_fp8_bytes",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 55,
+        "end_line": 56,
+        "signature_hash": "1961029d7464b771",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_matvec:629deeee55b4de73",
+        "name": "_matvec",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 166,
+        "end_line": 167,
+        "signature_hash": "22b825839ed74505",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_read_matrix:924596a63829133c",
+        "name": "_read_matrix",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 119,
+        "end_line": 127,
+        "signature_hash": "a95c302547706adc",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_tensor_spec:30e7ced50ffd5174",
+        "name": "_tensor_spec",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 87,
+        "end_line": 90,
+        "signature_hash": "050b1ec373ab3aef",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#function:_weight_map:2a6733cdae1a75eb",
+        "name": "_weight_map",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 78,
+        "end_line": 84,
+        "signature_hash": "72eb1d19ec8dc7e6",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:TinySafetensorsBackend.__init__:8d4e20e18e1dbab7",
+        "name": "TinySafetensorsBackend.__init__",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 131,
+        "end_line": 133,
+        "signature_hash": "bfcf261dfacfbafc",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:TinySafetensorsBackend._header:ff9d63c9ec465763",
+        "name": "TinySafetensorsBackend._header",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 135,
+        "end_line": 139,
+        "signature_hash": "235342280558655e",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:TinySafetensorsBackend.io_attestation:3e4572e50b64114b",
+        "name": "TinySafetensorsBackend.io_attestation",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 155,
+        "end_line": 163,
+        "signature_hash": "d3cfe7ec781686af",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:TinySafetensorsBackend.read_tensor:4873abb8e5557a28",
+        "name": "TinySafetensorsBackend.read_tensor",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 141,
+        "end_line": 153,
+        "signature_hash": "b5e86620f84079e9",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:W3NativePerExpertFixtureTests.setUp:1d32d6cba887806c",
+        "name": "W3NativePerExpertFixtureTests.setUp",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 188,
+        "end_line": 200,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:W3NativePerExpertFixtureTests.tearDown:29c46f72f65c70ef",
+        "name": "W3NativePerExpertFixtureTests.tearDown",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 202,
+        "end_line": 203,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:W3NativePerExpertFixtureTests.test_actual_per_expert_pager_reads_only_selected_tiny_safetensors_ranges:9bff6e658b1795d6",
+        "name": "W3NativePerExpertFixtureTests.test_actual_per_expert_pager_reads_only_selected_tiny_safetensors_ranges",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 205,
+        "end_line": 219,
+        "signature_hash": "1c9721ae53589aa1",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:W3NativePerExpertFixtureTests.test_official_source_receipt_contradiction_fails_hard:95f4b0d3121199e9",
+        "name": "W3NativePerExpertFixtureTests.test_official_source_receipt_contradiction_fails_hard",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 249,
+        "end_line": 259,
+        "signature_hash": "03e4f595ca49a9f9",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:W3NativePerExpertFixtureTests.test_synthetic_fixture_stays_below_official_w2_producer_plane:ea15b5e64d8214db",
+        "name": "W3NativePerExpertFixtureTests.test_synthetic_fixture_stays_below_official_w2_producer_plane",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 237,
+        "end_line": 247,
+        "signature_hash": "57642ae1049be070",
+        "file_digest8": "351fdbc32e2678aa"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py#method:W3NativePerExpertFixtureTests.test_test_local_fp8_oracle_matches_actual_pager_payload:c50792cfb5583574",
+        "name": "W3NativePerExpertFixtureTests.test_test_local_fp8_oracle_matches_actual_pager_payload",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_native_per_expert_fixture.py",
+        "line": 221,
+        "end_line": 235,
+        "signature_hash": "ef4aece6ded04f12",
+        "file_digest8": "351fdbc32e2678aa"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -455588,7 +457010,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "3531b238a16dddc31cffef565621ec1c",
-    "payload_hash": "40eb65a5c17226b43418a8e2fca9850b"
+    "record_fingerprint": "05cff857f905aca94ce29ff498d35941",
+    "payload_hash": "866fd48cc7bd3ef79772b631f86a0d8c"
   }
 }
