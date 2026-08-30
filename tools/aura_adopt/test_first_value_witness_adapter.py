@@ -96,16 +96,29 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
                         save_evidence_ref="evidence:save-01", save_artifact_sha256=OTHER)
         self.assertEqual("SAVE_ARTIFACT_DIGEST_MISMATCH", ctx.exception.code)
 
-    def test_reopen_requires_distinct_save_and_reopen_evidence_and_same_artifact(self):
+    def test_reopen_requires_distinct_chain_but_remains_unauthenticated_unknown(self):
         receipt = compile_receipt(observation(
             save_mode=bridge.SaveEvidenceMode.REOPEN_OBSERVED,
             save_evidence_ref="evidence:save-01", save_artifact_sha256=OUT,
             reopen_evidence_ref="evidence:reopen-01", reopen_artifact_sha256=OUT,
         ))
         stage = self.stage(receipt, "SAVE_REOPEN")
-        self.assertEqual(afr.StageStatus.COMPLETED, stage.status)
+        self.assertEqual(afr.StageStatus.UNKNOWN, stage.status)
         self.assertEqual(2, stage.steps)
-        self.assertTrue(stage.reason.startswith("EVIDENCE_COMMITMENT:"))
+        self.assertIn("STRUCTURALLY_BOUND_REOPEN_REQUIRES_TRUSTED_WITNESS_RESOLVER", stage.reason)
+        self.assertIn("EVIDENCE_COMMITMENT:", stage.reason)
+
+    def test_even_consented_study_caller_assertion_cannot_complete_without_resolver(self):
+        receipt = compile_receipt(
+            observation(
+                save_mode=bridge.SaveEvidenceMode.REOPEN_OBSERVED,
+                save_evidence_ref="evidence:save-study", save_artifact_sha256=OUT,
+                reopen_evidence_ref="evidence:reopen-study", reopen_artifact_sha256=OUT,
+            ),
+            evidence_class="CONSENTED_STUDY",
+            privacy_telemetry_mode="CONSENTED_STUDY_LOCAL_NO_CONTENT_UPLOAD",
+        )
+        self.assertEqual(afr.StageStatus.UNKNOWN, self.stage(receipt, "SAVE_REOPEN").status)
 
     def test_reopen_pointer_alone_cannot_complete(self):
         with self.assertRaises(afr.FrictionReceiptError):
