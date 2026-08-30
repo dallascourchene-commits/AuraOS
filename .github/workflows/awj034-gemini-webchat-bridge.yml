@@ -1,0 +1,40 @@
+name: AWJ-034 Gemini Webchat Bridge
+
+on:
+  push:
+    branches:
+      - awj034/gemini-webchat-bridge-20260830
+    paths:
+      - "tools/project034/**"
+      - ".github/workflows/awj034-gemini-webchat-bridge.yml"
+  pull_request:
+    paths:
+      - "tools/project034/**"
+      - ".github/workflows/awj034-gemini-webchat-bridge.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Python protocol and relay tests
+        working-directory: tools/project034
+        run: |
+          python -m unittest -v \
+            test_gemini_webchat_endpoint.py \
+            test_gemini_webchat_relay.py \
+            test_gemini_webchat_loopback.py
+      - name: Validate extension manifest
+        run: python -m json.tool tools/project034/gemini_extension/manifest.json >/dev/null
+      - name: JavaScript syntax checks
+        run: |
+          node --check tools/project034/gemini_extension/content.js
+          node --check tools/project034/gemini_extension/popup.js
