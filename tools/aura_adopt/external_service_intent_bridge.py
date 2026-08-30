@@ -7,7 +7,7 @@ downloads models, calls providers, or takes payment.
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass, is_dataclass
 import hashlib
 import json
 import re
@@ -82,12 +82,21 @@ def _string_list(v: Any, code: str) -> tuple[str, ...]:
         out.append(_token(item, code))
     return tuple(out)
 
-def _storage_projection(plan: Mapping[str, Any]) -> dict[str, Any]:
-    if not isinstance(plan, Mapping):
-        raise IntentBridgeError("STORAGE_PLAN_MAPPING_REQUIRED")
+def _as_mapping(value: Any, code: str) -> Mapping[str, Any]:
+    if isinstance(value, Mapping):
+        return value
+    if is_dataclass(value) and not isinstance(value, type):
+        return asdict(value)
+    raise IntentBridgeError(code)
+
+def _enum_value(value: Any) -> Any:
+    return getattr(value, "value", value)
+
+def _storage_projection(plan: Mapping[str, Any] | Any) -> dict[str, Any]:
+    plan = _as_mapping(plan, "STORAGE_PLAN_MAPPING_REQUIRED")
     if plan.get("schema") != STORAGE_SCHEMA:
         raise IntentBridgeError("STORAGE_SCHEMA_MISMATCH")
-    status = _token(plan.get("status"), "STORAGE_STATUS_INVALID")
+    status = _token(_enum_value(plan.get("status")), "STORAGE_STATUS_INVALID")
     if status not in STORAGE_STATUSES:
         raise IntentBridgeError("STORAGE_STATUS_UNSUPPORTED", status)
     digest = _sha(plan.get("plan_digest"), "STORAGE_PLAN_DIGEST_INVALID")
@@ -117,13 +126,12 @@ def _storage_projection(plan: Mapping[str, Any]) -> dict[str, Any]:
         "secondary_location": _token(plan.get("secondary_location"), "SECONDARY_LOCATION_INVALID"),
     }
 
-def _model_projection(decision: Mapping[str, Any]) -> dict[str, Any]:
-    if not isinstance(decision, Mapping):
-        raise IntentBridgeError("MODEL_DECISION_MAPPING_REQUIRED")
+def _model_projection(decision: Mapping[str, Any] | Any) -> dict[str, Any]:
+    decision = _as_mapping(decision, "MODEL_DECISION_MAPPING_REQUIRED")
     if decision.get("schema") != MODEL_SCHEMA:
         raise IntentBridgeError("MODEL_SCHEMA_MISMATCH")
     digest = _sha(decision.get("decision_digest"), "MODEL_DECISION_DIGEST_INVALID")
-    disposition = _token(decision.get("disposition"), "MODEL_DISPOSITION_INVALID")
+    disposition = _token(_enum_value(decision.get("disposition")), "MODEL_DISPOSITION_INVALID")
     if disposition not in MODEL_DISPOSITIONS:
         raise IntentBridgeError("MODEL_DISPOSITION_UNSUPPORTED", disposition)
     _bool_false(decision, (
@@ -179,8 +187,8 @@ class ScopeEvidenceV1:
         _token(self.currentness_ref, "EVIDENCE_CURRENTNESS_REF_INVALID")
 
 def compile_external_service_intent_plan(
-    storage_plan: Mapping[str, Any],
-    model_decision: Mapping[str, Any],
+    storage_plan: Mapping[str, Any] | Any,
+    model_decision: Mapping[str, Any] | Any,
     *,
     scope_evidence: Sequence[ScopeEvidenceV1] = (),
 ) -> dict[str, Any]:
