@@ -44,7 +44,7 @@ jobs:
       - name: Install focused test dependency
         run: python -m pip install "pytest>=8.2,<9.0"
 
-      - name: Verify current PR410 traversal plus canonical owner composition
+      - name: Verify canonical public boundary traverses PR410 live
         run: |
           python -m py_compile \
             tools/awj032/glm53_w3_official_producer_admission.py \
@@ -54,24 +54,20 @@ jobs:
             tools/awj032/test_glm53_w3_official_producer_admission.py \
             tools/awj032/test_glm53_w3_canonical_owner_composite.py
 
-      - name: Emit composition identity and ceilings
+      - name: Emit composition identity and ceilings through public live path
         run: |
           python - <<'PY'
-          from tools.awj032.glm53_w3_official_producer_admission import evaluate_w3_official_producer_admission
           from tools.awj032.test_glm53_w3_official_producer_admission import LowerPlan, metadata, security
           from tools.awj032.glm53_w3_canonical_owner_composite import (
               CANONICAL_PR421_OWNER_RECEIPT,
               compose_canonical_w3_admission,
           )
 
-          w3 = evaluate_w3_official_producer_admission(
+          out = compose_canonical_w3_admission(
               pager_plan=LowerPlan(),
               airllm_security_evidence=security(),
               glm53_metadata_evidence=metadata(),
           )
-          assert w3.status == "BLOCKED"
-          assert tuple(w3.blockers) == ("GLM53_MTP_RESOLVER_PROVENANCE_REQUIRED",)
-          out = compose_canonical_w3_admission(w3_receipt=w3)
           assert out.status == "ELIGIBLE_FOR_NATIVE_SYNTHETIC_W3_FIXTURE"
           assert out.blockers == ()
           assert out.official_w2_producer_proof_consumed is True
@@ -86,6 +82,8 @@ jobs:
           assert out.authority is False
           print("PR421_OWNER_RECEIPT_DIGEST=" + CANONICAL_PR421_OWNER_RECEIPT.receipt_digest)
           print("W3_CANONICAL_OWNER_COMPOSITE_LOGICAL_ID=" + out.logical_id)
+          print("PR410_PUBLIC_LIVE_TRAVERSAL=true")
+          print("CALLER_SERIALIZED_PR410_RECEIPT_ACCEPTED=false")
           print("W3_NATIVE_SYNTHETIC_ELIGIBLE=true")
           print("W3_NATIVE_SYNTHETIC_NUMERICAL_PROVEN=false")
           print("G2_ADMITTED=false")
