@@ -1,0 +1,28 @@
+name: Materialization Admission Currentness V1
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_integration/materialization_admission_currentness.py"
+      - "tests/test_materialization_admission_currentness.py"
+      - ".github/workflows/materialization-admission-currentness.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.12"
+      - name: Compile
+        run: python -m py_compile tools/aura_integration/materialization_admission_currentness.py
+      - name: Focused regressions
+        run: python -m unittest -v tests.test_materialization_admission_currentness
