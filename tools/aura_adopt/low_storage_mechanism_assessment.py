@@ -1,11 +1,12 @@
 """AURA-ADOPT-001 ZF-06A low-storage mechanism assessment.
 
 Pure evidence reducer. It does not benchmark a device, execute a mechanism,
-or convert historical mechanism names into performance claims.
+or convert historical mechanism names or literature claims into device
+performance claims.
 """
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, fields
 from enum import Enum
 import hashlib
 import json
@@ -24,6 +25,7 @@ class AssessmentError(ValueError):
 
 class EvidenceClass(str, Enum):
     SYNTHETIC = "SYNTHETIC"
+    LITERATURE_REPORTED = "LITERATURE_REPORTED"
     REPOSITORY_BENCHMARK = "REPOSITORY_BENCHMARK"
     BROWSER_MEASURED = "BROWSER_MEASURED"
     ANDROID_MEASURED = "ANDROID_MEASURED"
@@ -32,6 +34,7 @@ class EvidenceClass(str, Enum):
 
 class FidelityClass(str, Enum):
     EXACT = "EXACT"
+    BOUNDED_ACCEPTED = "BOUNDED_ACCEPTED"
     BOUNDED_LOSS = "BOUNDED_LOSS"
     UNKNOWN = "UNKNOWN"
 
@@ -60,6 +63,12 @@ def _num(v: Any, code: str) -> float | None:
     return f
 
 
+def _positive_int(v: Any, code: str) -> int:
+    if isinstance(v, bool) or not isinstance(v, int) or v <= 0:
+        raise AssessmentError(code)
+    return v
+
+
 def _canonical(v: Any) -> bytes:
     try:
         return json.dumps(
@@ -74,6 +83,43 @@ def _digest(domain: str, v: Any) -> str:
 
 
 @dataclass(frozen=True)
+class BenchmarkScenario:
+    """Common workload/environment binding for candidate and baseline.
+
+    The mechanism may change representation/algorithm, but the comparison target
+    must not silently change model, prompt/generation shape, batch, or execution
+    environment.
+    """
+
+    workload_id: str
+    model_ref: str
+    runtime_ref: str
+    execution_environment_ref: str
+    prompt_tokens: int
+    generated_tokens: int
+    batch_size: int
+    configured_context_tokens: int
+
+    def __post_init__(self) -> None:
+        for value, code in (
+            (self.workload_id, "WORKLOAD_ID_REQUIRED"),
+            (self.model_ref, "MODEL_REF_REQUIRED"),
+            (self.runtime_ref, "RUNTIME_REF_REQUIRED"),
+            (self.execution_environment_ref, "EXECUTION_ENVIRONMENT_REF_REQUIRED"),
+        ):
+            _text(value, code)
+        for value, code in (
+            (self.prompt_tokens, "PROMPT_TOKENS_INVALID"),
+            (self.generated_tokens, "GENERATED_TOKENS_INVALID"),
+            (self.batch_size, "BATCH_SIZE_INVALID"),
+            (self.configured_context_tokens, "CONFIGURED_CONTEXT_TOKENS_INVALID"),
+        ):
+            _positive_int(value, code)
+        if self.prompt_tokens + self.generated_tokens > self.configured_context_tokens:
+            raise AssessmentError("WORKLOAD_EXCEEDS_CONFIGURED_CONTEXT")
+
+
+@dataclass(frozen=True)
 class MetricSet:
     logical_payload_bytes: int | None
     encoded_or_retained_bytes: int | None
@@ -85,16 +131,20 @@ class MetricSet:
     downloaded_bytes: int | None
     network_bytes: int | None
     energy_proxy: float | None = None
+    kv_cache_peak_bytes: int | None = None
+    ttft_ms: float | None = None
+    prefill_ms: float | None = None
+    decode_ms_per_token: float | None = None
+    recompute_or_cache_load_ms: float | None = None
 
     def __post_init__(self) -> None:
-        for name in (
-            "logical_payload_bytes", "encoded_or_retained_bytes", "peak_working_memory_bytes",
-            "startup_ms", "encode_ms", "decode_or_reopen_ms", "lookup_ms",
-            "downloaded_bytes", "network_bytes", "energy_proxy",
-        ):
-            value = getattr(self, name)
+        for f in fields(self):
+            value = getattr(self, f.name)
             if value is not None:
-                _num(value, f"INVALID_METRIC:{name}")
+                _num(value, f"INVALID_METRIC:{f.name}")
+
+
+METRIC_NAMES = frozenset(f.name for f in fields(MetricSet))
 
 
 @dataclass(frozen=True)
@@ -109,10 +159,13 @@ class MechanismEvidence:
     baseline_id: str
     logical_payload_id: str
     quality_target: str
+    scenario: BenchmarkScenario
+    required_metrics: tuple[str, ...]
     candidate: MetricSet
     baseline: MetricSet
     fidelity: FidelityClass
     fidelity_evidence_ref: str | None
+    quality_threshold_ref: str | None
     evidence_class: EvidenceClass
     benchmark_ref: str | None
     counterexample: str
@@ -136,6 +189,8 @@ class MechanismEvidence:
             (self.trust_update_overhead, "TRUST_UPDATE_OVERHEAD_REQUIRED"),
         ):
             _text(value, code)
+        if not isinstance(self.scenario, BenchmarkScenario):
+            raise AssessmentError("BENCHMARK_SCENARIO_REQUIRED")
         if not isinstance(self.evidence_class, EvidenceClass):
             raise AssessmentError("EVIDENCE_CLASS_REQUIRED")
         if not isinstance(self.fidelity, FidelityClass):
@@ -144,13 +199,27 @@ class MechanismEvidence:
             raise AssessmentError("PLATFORM_SCOPE_REQUIRED")
         if any(not isinstance(x, str) or not x.strip() for x in self.platform_scope):
             raise AssessmentError("PLATFORM_SCOPE_INVALID")
+        if not isinstance(self.required_metrics, tuple) or not self.required_metrics:
+            raise AssessmentError("REQUIRED_METRICS_REQUIRED")
+        invalid_metrics = sorted(set(self.required_metrics) - METRIC_NAMES)
+        if invalid_metrics:
+            raise AssessmentError("REQUIRED_METRIC_INVALID", ",".join(invalid_metrics))
+        if len(set(self.required_metrics)) != len(self.required_metrics):
+            raise AssessmentError("REQUIRED_METRIC_DUPLICATE")
         if not isinstance(self.invalidators, tuple) or not self.invalidators:
             raise AssessmentError("INVALIDATORS_REQUIRED")
-        if self.fidelity is FidelityClass.EXACT and not self.fidelity_evidence_ref:
-            raise AssessmentError("EXACT_FIDELITY_EVIDENCE_REQUIRED")
+        if self.fidelity in {FidelityClass.EXACT, FidelityClass.BOUNDED_ACCEPTED} and not self.fidelity_evidence_ref:
+            raise AssessmentError("FIDELITY_EVIDENCE_REQUIRED")
+        if self.fidelity is FidelityClass.BOUNDED_ACCEPTED and not self.quality_threshold_ref:
+            raise AssessmentError("QUALITY_THRESHOLD_REF_REQUIRED")
         if (
             self.evidence_class
-            in {EvidenceClass.ANDROID_MEASURED, EvidenceClass.BROWSER_MEASURED, EvidenceClass.REPOSITORY_BENCHMARK}
+            in {
+                EvidenceClass.LITERATURE_REPORTED,
+                EvidenceClass.ANDROID_MEASURED,
+                EvidenceClass.BROWSER_MEASURED,
+                EvidenceClass.REPOSITORY_BENCHMARK,
+            }
             and not self.benchmark_ref
         ):
             raise AssessmentError("BENCHMARK_REF_REQUIRED")
@@ -169,16 +238,33 @@ def assess(e: MechanismEvidence) -> Mapping[str, Any]:
         raise AssessmentError("MECHANISM_EVIDENCE_REQUIRED")
     c, b = e.candidate, e.baseline
     reasons: list[str] = []
-    storage_ratio = _ratio(c.encoded_or_retained_bytes, b.encoded_or_retained_bytes)
-    memory_ratio = _ratio(c.peak_working_memory_bytes, b.peak_working_memory_bytes)
-    startup_ratio = _ratio(c.startup_ms, b.startup_ms)
-    reopen_ratio = _ratio(c.decode_or_reopen_ms, b.decode_or_reopen_ms)
-    download_ratio = _ratio(c.downloaded_bytes, b.downloaded_bytes)
-    network_ratio = _ratio(c.network_bytes, b.network_bytes)
+
+    required_unknown = tuple(
+        name for name in e.required_metrics
+        if getattr(c, name) is None or getattr(b, name) is None
+    )
+
+    ratios = {
+        "retained_bytes": _ratio(c.encoded_or_retained_bytes, b.encoded_or_retained_bytes),
+        "peak_working_memory": _ratio(c.peak_working_memory_bytes, b.peak_working_memory_bytes),
+        "startup": _ratio(c.startup_ms, b.startup_ms),
+        "decode_or_reopen": _ratio(c.decode_or_reopen_ms, b.decode_or_reopen_ms),
+        "downloaded_bytes": _ratio(c.downloaded_bytes, b.downloaded_bytes),
+        "network_bytes": _ratio(c.network_bytes, b.network_bytes),
+        "kv_cache_peak_bytes": _ratio(c.kv_cache_peak_bytes, b.kv_cache_peak_bytes),
+        "ttft": _ratio(c.ttft_ms, b.ttft_ms),
+        "prefill": _ratio(c.prefill_ms, b.prefill_ms),
+        "decode_ms_per_token": _ratio(c.decode_ms_per_token, b.decode_ms_per_token),
+        "recompute_or_cache_load": _ratio(c.recompute_or_cache_load_ms, b.recompute_or_cache_load_ms),
+    }
+    storage_ratio = ratios["retained_bytes"]
 
     if e.evidence_class is EvidenceClass.UNKNOWN:
         disposition = Disposition.UNKNOWN
         reasons.append("MEASURED_EVIDENCE_UNKNOWN")
+    elif required_unknown:
+        disposition = Disposition.UNKNOWN
+        reasons.extend(f"REQUIRED_METRIC_UNKNOWN:{name}" for name in required_unknown)
     elif storage_ratio is None:
         disposition = Disposition.UNKNOWN
         reasons.append("STORAGE_RATIO_UNKNOWN")
@@ -190,8 +276,9 @@ def assess(e: MechanismEvidence) -> Mapping[str, Any]:
         reasons.append("LOSSY_REQUIRES_QUALITY_DISPOSITION")
     else:
         hidden_cost = any(
-            r is not None and r > 2.0
-            for r in (memory_ratio, startup_ratio, reopen_ratio, download_ratio, network_ratio)
+            ratio is not None and ratio > 2.0
+            for name, ratio in ratios.items()
+            if name != "retained_bytes"
         )
         if storage_ratio >= 1.0:
             disposition = Disposition.DEMOTE
@@ -201,11 +288,15 @@ def assess(e: MechanismEvidence) -> Mapping[str, Any]:
             reasons.append("STORAGE_WIN_WITH_GT2X_MEASURED_LIFECYCLE_COST")
         else:
             disposition = Disposition.RETAIN
-            reasons.append("EXACT_FIDELITY_STORAGE_WIN_NO_GT2X_MEASURED_REGRESSION")
+            reasons.append("QUALITY_ADMITTED_STORAGE_WIN_NO_GT2X_MEASURED_REGRESSION")
 
-    if e.evidence_class is EvidenceClass.SYNTHETIC and disposition is Disposition.RETAIN:
+    if e.evidence_class in {EvidenceClass.SYNTHETIC, EvidenceClass.LITERATURE_REPORTED} and disposition is Disposition.RETAIN:
         disposition = Disposition.CONDITIONAL
-        reasons.append("SYNTHETIC_CANNOT_PROVE_DEVICE_LIFECYCLE_WIN")
+        reasons.append(
+            "LITERATURE_CANNOT_PROVE_LOCAL_DEVICE_LIFECYCLE_WIN"
+            if e.evidence_class is EvidenceClass.LITERATURE_REPORTED
+            else "SYNTHETIC_CANNOT_PROVE_DEVICE_LIFECYCLE_WIN"
+        )
     if e.host_witness_ref is None and "ANDROID" in {x.upper() for x in e.platform_scope}:
         reasons.append("ANDROID_VIABILITY_NOT_PROVEN_WITHOUT_HOST_WITNESS")
         if disposition is Disposition.RETAIN:
@@ -223,18 +314,14 @@ def assess(e: MechanismEvidence) -> Mapping[str, Any]:
         "baseline_id": e.baseline_id,
         "logical_payload_id": e.logical_payload_id,
         "quality_target": e.quality_target,
+        "scenario": asdict(e.scenario),
+        "required_metrics": e.required_metrics,
         "candidate": asdict(c),
         "baseline": asdict(b),
-        "ratios": {
-            "retained_bytes": storage_ratio,
-            "peak_working_memory": memory_ratio,
-            "startup": startup_ratio,
-            "decode_or_reopen": reopen_ratio,
-            "downloaded_bytes": download_ratio,
-            "network_bytes": network_ratio,
-        },
+        "ratios": ratios,
         "fidelity": e.fidelity.value,
         "fidelity_evidence_ref": e.fidelity_evidence_ref,
+        "quality_threshold_ref": e.quality_threshold_ref,
         "evidence_class": e.evidence_class.value,
         "benchmark_ref": e.benchmark_ref,
         "counterexample": e.counterexample,
