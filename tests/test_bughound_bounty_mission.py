@@ -7,6 +7,7 @@ from tools.bughound.bounty_mission import (
     BugHoundCashMissionInputV1,
     admit_cash_bounty_mission,
 )
+from tools.bughound.target_profile import AURAOS_HARDENING_PROFILE_ID
 
 
 class BugHoundCashMissionTests(unittest.TestCase):
@@ -42,9 +43,13 @@ class BugHoundCashMissionTests(unittest.TestCase):
         self.assertFalse(receipt.claim_or_payment_authorized)
         self.assertFalse(receipt.external_effect)
 
-    def test_auraos_internal_profile_is_not_bughound_work(self) -> None:
-        with self.assertRaisesRegex(ValueError, "BUGHOUND_NON_CASH_PROFILE_REJECTED"):
-            admit_cash_bounty_mission(replace(self.clean(), profile_id="BUGHOUND_AURAOS_INTERNAL"))
+    def test_auraos_bughound_profile_is_rejected_only_by_cash_compiler(self) -> None:
+        with self.assertRaisesRegex(
+            ValueError, "BUGHOUND_CASH_COMPILER_PROFILE_MISMATCH"
+        ):
+            admit_cash_bounty_mission(
+                replace(self.clean(), profile_id=AURAOS_HARDENING_PROFILE_ID)
+            )
 
     def test_noncash_vdp_is_rejected(self) -> None:
         with self.assertRaisesRegex(ValueError, "BUGHOUND_CASH_REWARD_NOT_CURRENT"):
