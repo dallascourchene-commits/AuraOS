@@ -82,12 +82,27 @@ class SourceBinding:
     ref: str
     digest: str
     source_generation: str
-    currentness: str
+    currentness: str = "UNKNOWN"
 
     def __post_init__(self) -> None:
         _ident("ref", self.ref)
         _sha("digest", self.digest)
         _ident("source_generation", self.source_generation)
+        if self.currentness not in CURRENTNESS:
+            raise BootstrapError("INVALID_CURRENTNESS", self.currentness)
+
+
+@dataclass(frozen=True)
+class BindingEvidence:
+    ref: str
+    digest: str
+    source_generation: str
+    currentness: str
+
+    def __post_init__(self) -> None:
+        _ident("binding.ref", self.ref)
+        _sha("binding.digest", self.digest)
+        _ident("binding.source_generation", self.source_generation)
         if self.currentness not in CURRENTNESS:
             raise BootstrapError("INVALID_CURRENTNESS", self.currentness)
 
@@ -149,24 +164,48 @@ class BootstrapRequest:
         _safe(self.policy, "$.policy")
 
 
-def _source_blocker(name: str, source: SourceBinding) -> str | None:
-    if source.currentness == "CURRENT":
-        return None
-    return f"{name}_CURRENTNESS_{source.currentness}"
+def _binding_blockers(
+    name: str, claimed: SourceBinding, observed: BindingEvidence | None
+) -> list[str]:
+    if observed is None:
+        return [f"{name}_BINDING_EVIDENCE_REQUIRED"]
+    blockers: list[str] = []
+    if observed.ref != claimed.ref:
+        blockers.append(f"{name}_REF_MISMATCH")
+    if observed.digest != claimed.digest:
+        blockers.append(f"{name}_DIGEST_MISMATCH")
+    if observed.source_generation != claimed.source_generation:
+        blockers.append(f"{name}_GENERATION_MISMATCH")
+    if observed.currentness != "CURRENT":
+        blockers.append(f"{name}_CURRENTNESS_{observed.currentness}")
+    if claimed.currentness in {"STALE", "UNKNOWN"}:
+        blockers.append(f"{name}_CLAIM_CURRENTNESS_{claimed.currentness}")
+    return blockers
 
 
-def compile_bootstrap_plan(request: BootstrapRequest) -> dict[str, Any]:
+def compile_bootstrap_plan(
+    request: BootstrapRequest,
+    *,
+    current_bindings: Mapping[str, BindingEvidence],
+) -> dict[str, Any]:
+    if not isinstance(current_bindings, Mapping):
+        raise BootstrapError("CURRENT_BINDINGS_REQUIRED")
     blockers: list[str] = []
     warnings: list[str] = []
     required_actions: list[str] = []
 
-    for name, source in (
-        ("REQUEST_SOURCE", request.source),
-        ("CAPABILITY_SOURCE", request.capabilities.source),
-    ):
-        blocker = _source_blocker(name, source)
-        if blocker:
-            blockers.append(blocker)
+    blockers.extend(
+        _binding_blockers(
+            "REQUEST_SOURCE", request.source, current_bindings.get(request.source.ref)
+        )
+    )
+    blockers.extend(
+        _binding_blockers(
+            "CAPABILITY_SOURCE",
+            request.capabilities.source,
+            current_bindings.get(request.capabilities.source.ref),
+        )
+    )
 
     mode = request.intent.mode
     local = request.capabilities.local_persistence
@@ -209,9 +248,13 @@ def compile_bootstrap_plan(request: BootstrapRequest) -> dict[str, Any]:
         if request.cloud is None:
             blockers.append("CLOUD_ADMISSION_EVIDENCE_REQUIRED")
         else:
-            blocker = _source_blocker("CLOUD_SOURCE", request.cloud.source)
-            if blocker:
-                blockers.append(blocker)
+            blockers.extend(
+                _binding_blockers(
+                    "CLOUD_SOURCE",
+                    request.cloud.source,
+                    current_bindings.get(request.cloud.source.ref),
+                )
+            )
             if request.cloud.connector_ref != request.cloud.source.ref:
                 blockers.append("CLOUD_CONNECTOR_REF_MISMATCH")
         if cloud_cap == "UNKNOWN":
