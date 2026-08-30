@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1667
-- **total_bytes**: 26486525
-- **text_tokens_est**: 6612025
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1016, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1670
+- **total_bytes**: 26506718
+- **text_tokens_est**: 6617075
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1018, 'schema_or_lexicon': 275, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1667,
+  "repo_file_count": 1670,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -163,6 +163,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-spatial-s3-s4a.yml",
     ".github/workflows/aura-spatial-s4.yml",
     ".github/workflows/aura-spatial-s5-s6-construction.yml",
+    ".github/workflows/awj032-glm53-bounded-header-transport.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1673,10 +1674,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
     "tools/awj032/glm53_checkpoint_layout_probe.py",
     "tools/awj032/glm53_checkpoint_source_binding.py",
+    "tools/awj032/glm53_safetensors_header_transport.py",
     "tools/awj032/test_airllm_source_admission.py",
     "tools/awj032/test_glm53_checkpoint_extra_layer_classification.py",
     "tools/awj032/test_glm53_checkpoint_layout_probe.py",
     "tools/awj032/test_glm53_checkpoint_source_binding.py",
+    "tools/awj032/test_glm53_safetensors_header_transport.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1807,16 +1810,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1667,
-  "bytes": 26486525,
-  "tokens_est": 6612025,
+  "files": 1670,
+  "bytes": 26506718,
+  "tokens_est": 6617075,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1016,
-    "schema_or_lexicon": 274,
+    "python_module": 1018,
+    "schema_or_lexicon": 275,
     "support_file": 49
   }
 }
