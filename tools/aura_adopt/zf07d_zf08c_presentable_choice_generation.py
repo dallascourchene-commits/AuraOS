@@ -108,10 +108,12 @@ def build_choice_generation_requirement(choice:PresentableChoiceEnvelopeV1,*,res
       GenerationAxisRequirementV1(TARGET,choice.target_ref(),choice.target_generation,target_currentness_ref,target_basis_ref),
       GenerationAxisRequirementV1(PRINCIPAL,choice.principal_ref,choice.principal_policy_generation,principal_currentness_ref,principal_basis_ref)]
     extras=(runtime_cache_route_generation,runtime_cache_route_currentness_ref,runtime_cache_route_basis_ref)
+    if any(extras) and not all(extras):raise ChoiceMembraneError("RUNTIME_CACHE_ROUTE_REQUIREMENT_INCOMPLETE")
     if choice.execution_location=="REMOTE":
         if not all(extras):raise ChoiceMembraneError("REMOTE_RUNTIME_CACHE_ROUTE_REQUIREMENT_REQUIRED")
         axes.append(GenerationAxisRequirementV1(RUNTIME,choice.provider_ref,*extras))
-    elif any(extras):raise ChoiceMembraneError("LOCAL_RUNTIME_CACHE_ROUTE_REQUIREMENT_FORBIDDEN")
+    elif all(extras):
+        axes.append(GenerationAxisRequirementV1(RUNTIME,choice.model_ref,*extras))
     return ChoiceGenerationRequirementV1(choice.choice_digest,tuple(axes))
 
 def verify_requirement_binding(choice:PresentableChoiceEnvelopeV1,req:ChoiceGenerationRequirementV1)->None:
@@ -124,7 +126,8 @@ def verify_requirement_binding(choice:PresentableChoiceEnvelopeV1,req:ChoiceGene
     if choice.execution_location=="REMOTE":
         if not has_runtime:raise ChoiceMembraneError("REMOTE_RUNTIME_CACHE_ROUTE_REQUIREMENT_REQUIRED")
         if by[RUNTIME].identity_ref!=choice.provider_ref:raise ChoiceMembraneError("REMOTE_RUNTIME_CACHE_ROUTE_PROVIDER_MISMATCH")
-    elif has_runtime:raise ChoiceMembraneError("LOCAL_RUNTIME_CACHE_ROUTE_REQUIREMENT_FORBIDDEN")
+    elif has_runtime and by[RUNTIME].identity_ref!=choice.model_ref:
+        raise ChoiceMembraneError("LOCAL_RUNTIME_CACHE_ROUTE_MODEL_MISMATCH")
 
 @dataclass(frozen=True)
 class ChoiceGenerationQueryV1:
