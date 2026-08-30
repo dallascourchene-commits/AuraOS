@@ -40,6 +40,16 @@ class LocalOutboxTests(unittest.TestCase):
     def current(self):
         return {"expected_currentness_ref": "board-rev-1", "currentness": "CURRENT"}
 
+    def cloud_lineage(self, generation=7):
+        return MirrorLineage.start("cloud-origin", "AURA_DRIVE_CLOUD", artifact_generation=generation)
+
+    def mirror_kwargs(self, generation=7):
+        return {
+            "inbound_mirror_lineage": self.cloud_lineage(generation),
+            "expected_mirror_origin_id": "cloud-origin",
+            "expected_mirror_generation": generation,
+        }
+
     def test_outside_root_refused(self):
         p = Path(self.tmp.name) / "x.txt"
         p.write_text("x")
@@ -188,9 +198,7 @@ class LocalOutboxTests(unittest.TestCase):
     def test_inbound_mirror_to_same_surface_is_suppressed(self):
         p = self.root / "x.txt"
         p.write_text("one")
-        lineage = MirrorLineage.start(
-            "cloud-origin", "CLOUD", artifact_generation=7
-        ).next_hop("AURA_DRIVE_2_LOCAL")
+        lineage = self.cloud_lineage().next_hop("AURA_DRIVE_2_LOCAL")
         result = self.out.ingest_file_notification(
             p,
             event_type="MODIFY",
@@ -262,7 +270,7 @@ class LocalOutboxTests(unittest.TestCase):
     def test_inbound_cloud_lineage_is_extended_not_reset(self):
         p = self.root / "x.txt"
         p.write_text("one")
-        inbound = MirrorLineage.start("cloud-origin", "AURA_DRIVE_CLOUD", artifact_generation=7)
+        inbound = self.cloud_lineage()
         expected = inbound.next_hop("AURA_DRIVE_2_LOCAL")
         result = self.out.ingest_file_notification(
             p,
@@ -292,7 +300,7 @@ class LocalOutboxTests(unittest.TestCase):
     def test_inbound_mirror_binding_mismatch_fails_closed(self):
         p = self.root / "x.txt"
         p.write_text("one")
-        inbound = MirrorLineage.start("cloud-origin", "AURA_DRIVE_CLOUD", artifact_generation=7)
+        inbound = self.cloud_lineage()
         with self.assertRaisesRegex(LocalOutboxRefusal, "MIRROR_ORIGIN_BINDING_MISMATCH"):
             self.out.ingest_file_notification(
                 p,
@@ -306,6 +314,137 @@ class LocalOutboxTests(unittest.TestCase):
             )
         self.assertEqual(self.out.generation_for(p), 0)
         self.assertEqual(self.out.pending(), [])
+
+    def test_mirrored_rename_preserves_origin_generation_fence_without_local_generation(self):
+        old = self.root / "old.txt"
+        new = self.root / "new.txt"
+        new.write_text("mirrored body")
+        inbound = self.cloud_lineage(11)
+        expected = inbound.next_hop("AURA_DRIVE_2_LOCAL")
+        result = self.out.ingest_rename(
+            old,
+            new,
+            observations=self.stable(new),
+            observed_at="t",
+            inbound_mirror_lineage=inbound,
+            expected_mirror_origin_id="cloud-origin",
+            expected_mirror_generation=11,
+            **self.current(),
+        )
+        self.assertEqual(result.disposition, "ENQUEUED")
+        self.assertEqual(result.record.event.event_type, "RENAME")
+        self.assertEqual(result.record.event.origin_id, "cloud-origin")
+        self.assertEqual(result.record.event.generation, 11)
+        self.assertEqual(result.record.event.mirror_fence, expected.fence)
+        self.assertEqual(self.out.generation_for(new), 0)
+
+    def test_mirrored_tombstone_preserves_origin_generation_fence_and_prior_lineage(self):
+        gone = self.root / "gone-cloud.txt"
+        inbound = self.cloud_lineage(12)
+        expected = inbound.next_hop("AURA_DRIVE_2_LOCAL")
+        result = self.out.ingest_tombstone(
+            gone,
+            observed_at="t",
+            prior_artifact_id="artifact-sha256-" + "a" * 64,
+            inbound_mirror_lineage=inbound,
+            expected_mirror_origin_id="cloud-origin",
+            expected_mirror_generation=12,
+            **self.current(),
+        )
+        self.assertEqual(result.disposition, "ENQUEUED")
+        self.assertEqual(result.record.event.event_type, "TOMBSTONE")
+        self.assertEqual(result.record.event.origin_id, "cloud-origin")
+        self.assertEqual(result.record.event.generation, 12)
+        self.assertEqual(result.record.event.mirror_fence, expected.fence)
+        self.assertIsNone(result.record.identity)
+        self.assertEqual(self.out.generation_for(gone), 0)
+
+    def test_mirrored_rename_and_tombstone_binding_mismatch_are_zero_state(self):
+        old = self.root / "old.txt"
+        new = self.root / "new.txt"
+        new.write_text("body")
+        inbound = self.cloud_lineage(7)
+        with self.assertRaisesRegex(LocalOutboxRefusal, "MIRROR_ORIGIN_BINDING_MISMATCH"):
+            self.out.ingest_rename(
+                old,
+                new,
+                observations=self.stable(new),
+                observed_at="t",
+                inbound_mirror_lineage=inbound,
+                expected_mirror_origin_id="wrong",
+                expected_mirror_generation=7,
+                **self.current(),
+            )
+        with self.assertRaisesRegex(LocalOutboxRefusal, "MIRROR_GENERATION_BINDING_MISMATCH"):
+            self.out.ingest_tombstone(
+                self.root / "gone.txt",
+                observed_at="t2",
+                prior_artifact_id="artifact-sha256-" + "b" * 64,
+                inbound_mirror_lineage=inbound,
+                expected_mirror_origin_id="cloud-origin",
+                expected_mirror_generation=8,
+                **self.current(),
+            )
+        self.assertEqual(self.out.generation_for(new), 0)
+        self.assertEqual(self.out.generation_for(self.root / "gone.txt"), 0)
+        self.assertEqual(self.out.pending(), [])
+
+    def test_mirrored_rename_and_tombstone_self_loop_suppress_without_state(self):
+        lineage = self.cloud_lineage().next_hop("AURA_DRIVE_2_LOCAL")
+        rename = self.out.ingest_rename(
+            self.root / "old.txt",
+            self.root / "new.txt",
+            observations=[],
+            observed_at="t",
+            inbound_mirror_lineage=lineage,
+            **self.current(),
+        )
+        tomb = self.out.ingest_tombstone(
+            self.root / "gone.txt",
+            observed_at="t2",
+            inbound_mirror_lineage=lineage,
+            **self.current(),
+        )
+        self.assertEqual(rename.disposition, "SELF_LOOP_SUPPRESSED")
+        self.assertEqual(tomb.disposition, "SELF_LOOP_SUPPRESSED")
+        self.assertEqual(self.out.pending(), [])
+        self.assertEqual(self.out.generation_for(self.root / "new.txt"), 0)
+        self.assertEqual(self.out.generation_for(self.root / "gone.txt"), 0)
+
+    def test_local_mutations_after_mirrored_rename_and_tombstone_use_independent_generation(self):
+        old = self.root / "old.txt"
+        new = self.root / "new.txt"
+        new.write_text("mirrored rename")
+        self.out.ingest_rename(
+            old,
+            new,
+            observations=self.stable(new),
+            observed_at="t1",
+            **self.mirror_kwargs(21),
+            **self.current(),
+        )
+        time.sleep(0.001)
+        new.write_text("true local edit")
+        local_new = self.out.ingest_file_notification(
+            new, event_type="MODIFY", observations=self.stable(new), observed_at="t2", **self.current()
+        )
+        self.assertEqual(local_new.record.event.generation, 1)
+        self.assertEqual(self.out.generation_for(new), 1)
+
+        gone = self.root / "gone.txt"
+        self.out.ingest_tombstone(
+            gone,
+            observed_at="t3",
+            prior_artifact_id="artifact-sha256-" + "c" * 64,
+            **self.mirror_kwargs(22),
+            **self.current(),
+        )
+        gone.write_text("recreated locally")
+        local_gone = self.out.ingest_file_notification(
+            gone, event_type="CREATE", observations=self.stable(gone), observed_at="t4", **self.current()
+        )
+        self.assertEqual(local_gone.record.event.generation, 1)
+        self.assertEqual(self.out.generation_for(gone), 1)
 
 
 if __name__ == "__main__":
