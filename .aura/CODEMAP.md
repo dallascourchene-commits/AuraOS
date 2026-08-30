@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1641
-- **total_bytes**: 26434791
-- **text_tokens_est**: 6599049
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1644
+- **total_bytes**: 26458178
+- **text_tokens_est**: 6604897
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1002, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1641,
+  "repo_file_count": 1644,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -504,6 +504,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_cost_experiment_runner.py",
     "aura_cost_observatory_mcp.py",
     "aura_cost_telemetry_events.py",
+    "aura_creator_studio_harness_router.py",
     "aura_crucible_cli.py",
     "aura_crucible_miner.py",
     "aura_crucible_store.py",
@@ -1459,6 +1460,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_continuity_packet.py",
     "tests/test_aura_continuity_packet_digest_hardening.py",
     "tests/test_aura_continuity_packet_merge_gate.py",
+    "tests/test_aura_creator_studio_harness_router.py",
     "tests/test_aura_crucible_phase_b.py",
     "tests/test_aura_dikwp_router_pipeline.py",
     "tests/test_aura_efficiency_benchmark.py",
@@ -1652,6 +1654,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/project030/creator_studio_continuation_harness.py",
+    "tools/project030/creator_studio_wake_adapter.py",
     "tools/project030/test_creator_studio_continuation_harness.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
@@ -1679,6 +1682,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_blockchain/memory_staking.py",
     "aura_blockchain/node.py",
     "aura_blockchain/phasor_ledger.py",
+    "aura_creator_studio_harness_router.py",
     "aura_spatial_importers/__init__.py",
     "aura_spatial_importers/contracts.py",
     "aura_spatial_importers/gaussian_gltf.py",
@@ -1766,8 +1770,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_blind_gate10_benchmark.py",
     "tests/test_aura_capability_connectome.py",
     "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py"
+    "tests/test_aura_capability_lane_registry.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1781,15 +1784,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1641,
-  "bytes": 26434791,
-  "tokens_est": 6599049,
+  "files": 1644,
+  "bytes": 26458178,
+  "tokens_est": 6604897,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 999,
+    "python_module": 1002,
     "schema_or_lexicon": 271,
     "support_file": 49
   }
@@ -2306,6 +2309,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_cost_experiment_runner.py",
     "aura_cost_observatory_mcp.py",
     "aura_cost_telemetry_events.py",
+    "aura_creator_studio_harness_router.py",
     "aura_crucible_cli.py",
     "aura_crucible_miner.py",
     "aura_crucible_store.py",
@@ -2484,8 +2488,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_planning_events.py",
     "aura_planning_frontier.py",
     "aura_planning_projector.py",
-    "aura_planning_regression.py",
-    "aura_plugin_registry.py"
+    "aura_planning_regression.py"
   ]
 }
 ```

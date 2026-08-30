@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788099548,
+  "generated_at_unix": 1788100190,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1641,
+    "repo_file_count": 1644,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -486,6 +486,7 @@
       "aura_cost_experiment_runner.py",
       "aura_cost_observatory_mcp.py",
       "aura_cost_telemetry_events.py",
+      "aura_creator_studio_harness_router.py",
       "aura_crucible_cli.py",
       "aura_crucible_miner.py",
       "aura_crucible_store.py",
@@ -1441,6 +1442,7 @@
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
+      "tests/test_aura_creator_studio_harness_router.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
@@ -1634,6 +1636,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project030/creator_studio_continuation_harness.py",
+      "tools/project030/creator_studio_wake_adapter.py",
       "tools/project030/test_creator_studio_continuation_harness.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -1661,6 +1664,7 @@
       "aura_blockchain/memory_staking.py",
       "aura_blockchain/node.py",
       "aura_blockchain/phasor_ledger.py",
+      "aura_creator_studio_harness_router.py",
       "aura_spatial_importers/__init__.py",
       "aura_spatial_importers/contracts.py",
       "aura_spatial_importers/gaussian_gltf.py",
@@ -1748,8 +1752,7 @@
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_lane_registry.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1757,15 +1760,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1641,
-      "bytes": 26434791,
-      "tokens_est": 6599049,
+      "files": 1644,
+      "bytes": 26458178,
+      "tokens_est": 6604897,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
+        "python_module": 1002,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -2267,6 +2270,7 @@
         "aura_cost_experiment_runner.py",
         "aura_cost_observatory_mcp.py",
         "aura_cost_telemetry_events.py",
+        "aura_creator_studio_harness_router.py",
         "aura_crucible_cli.py",
         "aura_crucible_miner.py",
         "aura_crucible_store.py",
@@ -2445,8 +2449,7 @@
         "aura_planning_events.py",
         "aura_planning_frontier.py",
         "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_planning_regression.py"
       ]
     }
   ],
@@ -14577,6 +14580,14 @@
         "signature_hash": "e925189d3373d66a"
       },
       {
+        "file": "aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_text:2ca051f904b9701c",
+        "signature_hash": "0cd3c0d3d227cce3"
+      },
+      {
         "file": "aura_ephemeral_workspace_contracts.py",
         "kind": "function",
         "line": 391,
@@ -23979,6 +23990,14 @@
         "end_line": 81,
         "semantic_id": "aura_civic_model_broker.py#function:_validate_request:9bf28f21e56b7b1c",
         "signature_hash": "d53a7b9cc10902a1"
+      },
+      {
+        "file": "aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 74,
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_validate_request:faaba906e1a848ac",
+        "signature_hash": "d24eb79cdd25ee5a"
       }
     ],
     "_redact_input": [
@@ -39415,6 +39434,86 @@
         "end_line": 198,
         "semantic_id": "aura_cost_telemetry_events.py#function:visual_state_for_savings:64a3e6ca6bb78d7a",
         "signature_hash": "1fce03e17e738bd1"
+      }
+    ],
+    "HarnessRoutePolicyError": [
+      {
+        "file": "aura_creator_studio_harness_router.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 51,
+        "semantic_id": "aura_creator_studio_harness_router.py#class:HarnessRoutePolicyError:835ed30a40ecf4dd",
+        "signature_hash": "f548122f76c7375e"
+      }
+    ],
+    "HarnessRoutePolicyError.__init__": [
+      {
+        "file": "aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "aura_creator_studio_harness_router.py#method:HarnessRoutePolicyError.__init__:27113765606ce76c",
+        "signature_hash": "025780840ff5ba63"
+      }
+    ],
+    "_is_number": [
+      {
+        "file": "aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 59,
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_is_number:f8f19acb20198f01",
+        "signature_hash": "1aa5ac8e28648a7a"
+      }
+    ],
+    "_candidate_id": [
+      {
+        "file": "aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_candidate_id:7dc002ceb7b81761",
+        "signature_hash": "82f021ae5b299d50"
+      }
+    ],
+    "_candidate_rejection": [
+      {
+        "file": "aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 125,
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_candidate_rejection:0a2ed800758d0d78",
+        "signature_hash": "db2f9bb46cd9c20e"
+      }
+    ],
+    "_cost_key": [
+      {
+        "file": "aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 133,
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_cost_key:8100696da0bd1520",
+        "signature_hash": "73eafa77919892b5"
+      }
+    ],
+    "select_creator_studio_route": [
+      {
+        "file": "aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 136,
+        "end_line": 175,
+        "semantic_id": "aura_creator_studio_harness_router.py#function:select_creator_studio_route:131ed3a7fbab1fdd",
+        "signature_hash": "81e8b1439bf79931"
+      }
+    ],
+    "select_creator_studio_route.sort_key": [
+      {
+        "file": "aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 162,
+        "semantic_id": "aura_creator_studio_harness_router.py#method:select_creator_studio_route.sort_key:92563aae4ce73842",
+        "signature_hash": "f169442037d23e2a"
       }
     ],
     "_json_object": [
@@ -113515,6 +113614,14 @@
         "signature_hash": "c3d68e6bce1db336"
       },
       {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 44,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#function:candidate:65c5dcf92b3f41c3",
+        "signature_hash": "d69b698c037bba04"
+      },
+      {
         "file": "tests/test_aura_shadow_model_router.py",
         "kind": "function",
         "line": 42,
@@ -129697,6 +129804,232 @@
         "signature_hash": "0b3757b9a4f8f0fd"
       }
     ],
+    "request": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#function:request:1b529d8b2d54d53f",
+        "signature_hash": "aa30402c5be12ee6"
+      },
+      {
+        "file": "tests/test_aura_forge.py",
+        "kind": "function",
+        "line": 149,
+        "end_line": 165,
+        "semantic_id": "tests/test_aura_forge.py#function:request:c5b24e2ac94dd485",
+        "signature_hash": "0a92ba0bcaac69ef"
+      },
+      {
+        "file": "tests/test_aura_gate.py",
+        "kind": "function",
+        "line": 187,
+        "end_line": 223,
+        "semantic_id": "tests/test_aura_gate.py#function:request:7c151532eef8bfd3",
+        "signature_hash": "9045b73142116e1c"
+      }
+    ],
+    "HarnessRouteTests": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 122,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#class:HarnessRouteTests:0f0880878965de13",
+        "signature_hash": "a84a6e1cad424d7a"
+      }
+    ],
+    "HarnessRouteTests.test_r0_reuse_beats_every_higher_route": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 50,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_r0_reuse_beats_every_higher_route:bec7c773e9cbdeef",
+        "signature_hash": "78ceded31993c7c7"
+      }
+    ],
+    "HarnessRouteTests.test_local_beats_chatgpt": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 54,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_local_beats_chatgpt:b752c2c94175ed0a",
+        "signature_hash": "3a5aa92df48d4461"
+      }
+    ],
+    "HarnessRouteTests.test_stale_project_requires_rebase": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 57,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_stale_project_requires_rebase:e88a538d4fccf9fb",
+        "signature_hash": "8ccd10eb7e642676"
+      }
+    ],
+    "HarnessRouteTests.test_stale_candidate_is_not_selected": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 61,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_stale_candidate_is_not_selected:ec14a829d9dacc0a",
+        "signature_hash": "4486ca3bd505bb5e"
+      }
+    ],
+    "HarnessRouteTests.test_model_role_alias_is_forbidden_for_external_effect": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 65,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_model_role_alias_is_forbidden_for_external_effect:67826a8cec6357a5",
+        "signature_hash": "adee754209af175c"
+      }
+    ],
+    "HarnessRouteTests.test_external_route_requires_exact_provider_and_model": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 69,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_external_route_requires_exact_provider_and_model:6a38021d9c47dc9a",
+        "signature_hash": "eae6c8c153d04e28"
+      }
+    ],
+    "HarnessRouteTests.test_provider_fallback_is_forbidden": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 73,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_provider_fallback_is_forbidden:4a9f632c2d1745e9",
+        "signature_hash": "54d37d97a3d94d2d"
+      }
+    ],
+    "HarnessRouteTests.test_paid_route_requires_authority": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 77,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_paid_route_requires_authority:8e71f3a7c9670d62",
+        "signature_hash": "a58026449efb189b"
+      }
+    ],
+    "HarnessRouteTests.test_paid_unknown_cost_is_not_treated_as_zero": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 81,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_paid_unknown_cost_is_not_treated_as_zero:11ad6f859ebc7704",
+        "signature_hash": "9530dd715150fae4"
+      }
+    ],
+    "HarnessRouteTests.test_paid_route_over_ceiling_is_rejected": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 85,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_paid_route_over_ceiling_is_rejected:86b9fb466182ea2a",
+        "signature_hash": "44c5c3f7b09f7d41"
+      }
+    ],
+    "HarnessRouteTests.test_no_swarm_by_default": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 89,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_no_swarm_by_default:bbc5d40088756406",
+        "signature_hash": "f73a22f0d6c36705"
+      }
+    ],
+    "HarnessRouteTests.test_explicit_owner_swarm_authority_allows_bounded_swarm": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 93,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_explicit_owner_swarm_authority_allows_bounded_swarm:f05131124f39c553",
+        "signature_hash": "f39765c5d46c37c3"
+      }
+    ],
+    "HarnessRouteTests.test_each_typed_earned_parallelism_reason_can_enable_swarm_route": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 99,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_each_typed_earned_parallelism_reason_can_enable_swarm_route:46da94888a87ac66",
+        "signature_hash": "1e7a4a38e5d8ea10"
+      }
+    ],
+    "HarnessRouteTests.test_swarm_routing_does_not_invent_effect_authority": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 103,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_swarm_routing_does_not_invent_effect_authority:139a00ebb9e2b7f4",
+        "signature_hash": "7f11eb981667b684"
+      }
+    ],
+    "HarnessRouteTests.test_deepseek_physical_swarm_requires_awj033": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 107,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_deepseek_physical_swarm_requires_awj033:47c5b0ea457be7f9",
+        "signature_hash": "50359c7db90e8d0a"
+      }
+    ],
+    "HarnessRouteTests.test_deepseek_pro_requires_earned_escalation": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 111,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_deepseek_pro_requires_earned_escalation:bc82b42480833da1",
+        "signature_hash": "fa599a6c0099d576"
+      }
+    ],
+    "HarnessRouteTests.test_deepseek_pro_may_route_with_typed_escalation": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 115,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_deepseek_pro_may_route_with_typed_escalation:0739b4ab16eac02f",
+        "signature_hash": "2fb8aa2852818348"
+      }
+    ],
+    "HarnessRouteTests.test_no_implicit_fallback_in_decision_receipt": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 118,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_no_implicit_fallback_in_decision_receipt:d1b0241466845d57",
+        "signature_hash": "d01a08f0cf848ab7"
+      }
+    ],
+    "HarnessRouteTests.test_invalid_cost_ceiling_fails_input_validation": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 122,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_invalid_cost_ceiling_fails_input_validation:29e1c2452e23c724",
+        "signature_hash": "381d83262eaae8c1"
+      }
+    ],
     "_grammar": [
       {
         "file": "tests/test_aura_crucible_phase_b.py",
@@ -136135,24 +136468,6 @@
         "end_line": 251,
         "semantic_id": "tests/test_aura_gate.py#function:build_runtime:f7976feb6eae94b1",
         "signature_hash": "9817e92e7c3eb5d7"
-      }
-    ],
-    "request": [
-      {
-        "file": "tests/test_aura_forge.py",
-        "kind": "function",
-        "line": 149,
-        "end_line": 165,
-        "semantic_id": "tests/test_aura_forge.py#function:request:c5b24e2ac94dd485",
-        "signature_hash": "0a92ba0bcaac69ef"
-      },
-      {
-        "file": "tests/test_aura_gate.py",
-        "kind": "function",
-        "line": 187,
-        "end_line": 223,
-        "semantic_id": "tests/test_aura_gate.py#function:request:7c151532eef8bfd3",
-        "signature_hash": "9045b73142116e1c"
       }
     ],
     "test_prepare_compiles_exact_evidence_contract": [
@@ -157381,6 +157696,156 @@
         "end_line": 355,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:continuation_snapshot:bbec937430e6e1ba",
         "signature_hash": "539a8ea0c99ffe91"
+      }
+    ],
+    "WakeRefusal": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 19,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:WakeRefusal:0aafb6df299438b5",
+        "signature_hash": "5ae430d772fb691b"
+      }
+    ],
+    "WakeRefusal.__init__": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 19,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:WakeRefusal.__init__:43386a86be893156",
+        "signature_hash": "42bd2d17d3dd6102"
+      }
+    ],
+    "WakeIntent": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 38,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:WakeIntent:aa7122378e174607",
+        "signature_hash": "15352cf900d59e83"
+      }
+    ],
+    "WakeIntent.canonical_bytes": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:WakeIntent.canonical_bytes:4e6a1e558324c699",
+        "signature_hash": "2f07c43e7574fbf0"
+      }
+    ],
+    "FileWakeLedger": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 104,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:FileWakeLedger:ddb86f11cc7262aa",
+        "signature_hash": "e9425ba8559885c9"
+      }
+    ],
+    "FileWakeLedger.__init__": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 46,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.__init__:ba2d63e2291b33a4",
+        "signature_hash": "977a4d9126c48d60"
+      }
+    ],
+    "FileWakeLedger.path_for": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.path_for:8dc28fa6f9109414",
+        "signature_hash": "078dc3c45475194f"
+      }
+    ],
+    "FileWakeLedger._read_landed": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 59,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger._read_landed:a66d94f2b7a4d641",
+        "signature_hash": "97498012ca8a0675"
+      }
+    ],
+    "FileWakeLedger.append": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 98,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.append:c6d9233c4d402782",
+        "signature_hash": "4b01af1f5a5efbee"
+      }
+    ],
+    "FileWakeLedger.events": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 104,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.events:5fc1a3850db2fd38",
+        "signature_hash": "f313fb85cbb4b333"
+      }
+    ],
+    "ArenaWakeScheduler": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 107,
+        "end_line": 200,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:ArenaWakeScheduler:cbdbe1176225fecb",
+        "signature_hash": "37e53c944b82381b"
+      }
+    ],
+    "ArenaWakeScheduler.__init__": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 111,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.__init__:bac6205636337383",
+        "signature_hash": "188e0eaf70d47cbe"
+      }
+    ],
+    "ArenaWakeScheduler._event_id": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 118,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler._event_id:434cac3e74149235",
+        "signature_hash": "2e70e5ac54cff2c7"
+      }
+    ],
+    "ArenaWakeScheduler._best_worker": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 131,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler._best_worker:4fc35b70752f2276",
+        "signature_hash": "7f5ef351913906f7"
+      }
+    ],
+    "ArenaWakeScheduler.scan_and_emit": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 200,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.scan_and_emit:d4fc18fd5188e4f3",
+        "signature_hash": "6f072d1f5b6814b5"
       }
     ],
     "state_with": [
@@ -193444,6 +193909,53 @@
         -0.025643,
         0.279838,
         -0.233013
+      ]
+    },
+    {
+      "path": "aura_creator_studio_harness_router.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8102,
+      "lines": 176,
+      "tokens_est": 2026,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "040b1d9831251c8c",
+      "vector": [
+        -0.282106,
+        -0.125822,
+        0.136417,
+        0.051653,
+        0.041058,
+        0.215884,
+        -0.162906,
+        -0.165555,
+        0.160257,
+        -0.260915,
+        -0.027813,
+        -0.08344,
+        -0.308594,
+        0.178799,
+        -0.046355,
+        0.086089,
+        -0.215884,
+        -0.186746,
+        0.025164,
+        0.144364,
+        0.186746,
+        -0.030462,
+        0.221181,
+        -0.276808,
+        0.207937,
+        -0.260915,
+        -0.207937,
+        -0.054302,
+        0.030462,
+        -0.260915,
+        0.099333,
+        0.205288
       ]
     },
     {
@@ -254110,6 +254622,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_creator_studio_harness_router.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8160,
+      "lines": 127,
+      "tokens_est": 2040,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7277d4842b19e36d",
+      "vector": [
+        -0.019751,
+        0.29626,
+        0.240494,
+        0.112695,
+        0.147549,
+        -0.254435,
+        0.221905,
+        0.124313,
+        -0.087135,
+        -0.145226,
+        0.196345,
+        0.247464,
+        0.005809,
+        -0.098753,
+        -0.173109,
+        0.138255,
+        -0.121989,
+        -0.068546,
+        -0.242817,
+        -0.277671,
+        0.073194,
+        -0.026722,
+        -0.010456,
+        -0.068546,
+        -0.23817,
+        -0.049958,
+        -0.284642,
+        -0.131284,
+        0.103401,
+        0.210287,
+        0.259082,
+        -0.23817
+      ]
+    },
+    {
       "path": "tests/test_aura_crucible_phase_b.py",
       "role": "python_module",
       "binary": false,
@@ -263178,6 +263737,53 @@
         -0.071939,
         0.071939,
         0.180477
+      ]
+    },
+    {
+      "path": "tools/project030/creator_studio_wake_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7125,
+      "lines": 201,
+      "tokens_est": 1782,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0ac2f10349a5e114",
+      "vector": [
+        -0.289974,
+        0.270881,
+        -0.063245,
+        0.189736,
+        0.001193,
+        -0.17303,
+        0.278041,
+        -0.301907,
+        -0.101431,
+        0.294747,
+        0.058472,
+        0.282814,
+        0.029833,
+        -0.106204,
+        0.29236,
+        -0.096658,
+        -0.261334,
+        -0.13723,
+        0.025059,
+        -0.120524,
+        -0.096658,
+        -0.125297,
+        0.223148,
+        0.029833,
+        0.068019,
+        0.058472,
+        0.192122,
+        -0.249401,
+        -0.065632,
+        -0.103818,
+        -0.127684,
+        0.005967
       ]
     },
     {
@@ -287132,15 +287738,15 @@
     }
   },
   "summary": {
-    "file_count": 1641,
-    "total_bytes": 26434791,
-    "text_tokens_est": 6599049,
+    "file_count": 1644,
+    "total_bytes": 26458178,
+    "text_tokens_est": 6604897,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
+      "python_module": 1002,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -287637,6 +288243,7 @@
       "aura_cost_experiment_runner.py",
       "aura_cost_observatory_mcp.py",
       "aura_cost_telemetry_events.py",
+      "aura_creator_studio_harness_router.py",
       "aura_crucible_cli.py",
       "aura_crucible_miner.py",
       "aura_crucible_store.py",
@@ -288592,6 +289199,7 @@
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
+      "tests/test_aura_creator_studio_harness_router.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
@@ -288785,6 +289393,7 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project030/creator_studio_continuation_harness.py",
+      "tools/project030/creator_studio_wake_adapter.py",
       "tools/project030/test_creator_studio_continuation_harness.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -321520,6 +322129,106 @@
         "end_line": 89,
         "signature_hash": "5817fb6d0c861663",
         "file_digest8": "dd9102b2049dcd0f"
+      },
+      {
+        "semantic_id": "aura_creator_studio_harness_router.py#class:HarnessRoutePolicyError:835ed30a40ecf4dd",
+        "name": "HarnessRoutePolicyError",
+        "kind": "class",
+        "file": "aura_creator_studio_harness_router.py",
+        "line": 47,
+        "end_line": 51,
+        "signature_hash": "f548122f76c7375e",
+        "file_digest8": "040b1d9831251c8c"
+      },
+      {
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_candidate_id:7dc002ceb7b81761",
+        "name": "_candidate_id",
+        "kind": "function",
+        "file": "aura_creator_studio_harness_router.py",
+        "line": 62,
+        "end_line": 63,
+        "signature_hash": "82f021ae5b299d50",
+        "file_digest8": "040b1d9831251c8c"
+      },
+      {
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_candidate_rejection:0a2ed800758d0d78",
+        "name": "_candidate_rejection",
+        "kind": "function",
+        "file": "aura_creator_studio_harness_router.py",
+        "line": 77,
+        "end_line": 125,
+        "signature_hash": "db2f9bb46cd9c20e",
+        "file_digest8": "040b1d9831251c8c"
+      },
+      {
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_cost_key:8100696da0bd1520",
+        "name": "_cost_key",
+        "kind": "function",
+        "file": "aura_creator_studio_harness_router.py",
+        "line": 128,
+        "end_line": 133,
+        "signature_hash": "73eafa77919892b5",
+        "file_digest8": "040b1d9831251c8c"
+      },
+      {
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_is_number:f8f19acb20198f01",
+        "name": "_is_number",
+        "kind": "function",
+        "file": "aura_creator_studio_harness_router.py",
+        "line": 58,
+        "end_line": 59,
+        "signature_hash": "1aa5ac8e28648a7a",
+        "file_digest8": "040b1d9831251c8c"
+      },
+      {
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_text:2ca051f904b9701c",
+        "name": "_text",
+        "kind": "function",
+        "file": "aura_creator_studio_harness_router.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "0cd3c0d3d227cce3",
+        "file_digest8": "040b1d9831251c8c"
+      },
+      {
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_validate_request:faaba906e1a848ac",
+        "name": "_validate_request",
+        "kind": "function",
+        "file": "aura_creator_studio_harness_router.py",
+        "line": 66,
+        "end_line": 74,
+        "signature_hash": "d24eb79cdd25ee5a",
+        "file_digest8": "040b1d9831251c8c"
+      },
+      {
+        "semantic_id": "aura_creator_studio_harness_router.py#function:select_creator_studio_route:131ed3a7fbab1fdd",
+        "name": "select_creator_studio_route",
+        "kind": "function",
+        "file": "aura_creator_studio_harness_router.py",
+        "line": 136,
+        "end_line": 175,
+        "signature_hash": "81e8b1439bf79931",
+        "file_digest8": "040b1d9831251c8c"
+      },
+      {
+        "semantic_id": "aura_creator_studio_harness_router.py#method:HarnessRoutePolicyError.__init__:27113765606ce76c",
+        "name": "HarnessRoutePolicyError.__init__",
+        "kind": "method",
+        "file": "aura_creator_studio_harness_router.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "025780840ff5ba63",
+        "file_digest8": "040b1d9831251c8c"
+      },
+      {
+        "semantic_id": "aura_creator_studio_harness_router.py#method:select_creator_studio_route.sort_key:92563aae4ce73842",
+        "name": "select_creator_studio_route.sort_key",
+        "kind": "method",
+        "file": "aura_creator_studio_harness_router.py",
+        "line": 160,
+        "end_line": 162,
+        "signature_hash": "f169442037d23e2a",
+        "file_digest8": "040b1d9831251c8c"
       },
       {
         "semantic_id": "aura_crucible_cli.py#function:_json_object:3ac1d79bc68eed40",
@@ -417272,6 +417981,226 @@
         "file_digest8": "c9a90818f5d9c7ab"
       },
       {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#class:HarnessRouteTests:0f0880878965de13",
+        "name": "HarnessRouteTests",
+        "kind": "class",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 47,
+        "end_line": 122,
+        "signature_hash": "a84a6e1cad424d7a",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#function:candidate:65c5dcf92b3f41c3",
+        "name": "candidate",
+        "kind": "function",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 26,
+        "end_line": 44,
+        "signature_hash": "d69b698c037bba04",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#function:request:1b529d8b2d54d53f",
+        "name": "request",
+        "kind": "function",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 10,
+        "end_line": 23,
+        "signature_hash": "aa30402c5be12ee6",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_deepseek_physical_swarm_requires_awj033:47c5b0ea457be7f9",
+        "name": "HarnessRouteTests.test_deepseek_physical_swarm_requires_awj033",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 105,
+        "end_line": 107,
+        "signature_hash": "50359c7db90e8d0a",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_deepseek_pro_may_route_with_typed_escalation:0739b4ab16eac02f",
+        "name": "HarnessRouteTests.test_deepseek_pro_may_route_with_typed_escalation",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 113,
+        "end_line": 115,
+        "signature_hash": "2fb8aa2852818348",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_deepseek_pro_requires_earned_escalation:bc82b42480833da1",
+        "name": "HarnessRouteTests.test_deepseek_pro_requires_earned_escalation",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 109,
+        "end_line": 111,
+        "signature_hash": "fa599a6c0099d576",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_each_typed_earned_parallelism_reason_can_enable_swarm_route:46da94888a87ac66",
+        "name": "HarnessRouteTests.test_each_typed_earned_parallelism_reason_can_enable_swarm_route",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 95,
+        "end_line": 99,
+        "signature_hash": "1e7a4a38e5d8ea10",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_explicit_owner_swarm_authority_allows_bounded_swarm:f05131124f39c553",
+        "name": "HarnessRouteTests.test_explicit_owner_swarm_authority_allows_bounded_swarm",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 91,
+        "end_line": 93,
+        "signature_hash": "f39765c5d46c37c3",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_external_route_requires_exact_provider_and_model:6a38021d9c47dc9a",
+        "name": "HarnessRouteTests.test_external_route_requires_exact_provider_and_model",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 67,
+        "end_line": 69,
+        "signature_hash": "eae6c8c153d04e28",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_invalid_cost_ceiling_fails_input_validation:29e1c2452e23c724",
+        "name": "HarnessRouteTests.test_invalid_cost_ceiling_fails_input_validation",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 120,
+        "end_line": 122,
+        "signature_hash": "381d83262eaae8c1",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_local_beats_chatgpt:b752c2c94175ed0a",
+        "name": "HarnessRouteTests.test_local_beats_chatgpt",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 52,
+        "end_line": 54,
+        "signature_hash": "3a5aa92df48d4461",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_model_role_alias_is_forbidden_for_external_effect:67826a8cec6357a5",
+        "name": "HarnessRouteTests.test_model_role_alias_is_forbidden_for_external_effect",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 63,
+        "end_line": 65,
+        "signature_hash": "adee754209af175c",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_no_implicit_fallback_in_decision_receipt:d1b0241466845d57",
+        "name": "HarnessRouteTests.test_no_implicit_fallback_in_decision_receipt",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 117,
+        "end_line": 118,
+        "signature_hash": "d01a08f0cf848ab7",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_no_swarm_by_default:bbc5d40088756406",
+        "name": "HarnessRouteTests.test_no_swarm_by_default",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 87,
+        "end_line": 89,
+        "signature_hash": "f73a22f0d6c36705",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_paid_route_over_ceiling_is_rejected:86b9fb466182ea2a",
+        "name": "HarnessRouteTests.test_paid_route_over_ceiling_is_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 83,
+        "end_line": 85,
+        "signature_hash": "44c5c3f7b09f7d41",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_paid_route_requires_authority:8e71f3a7c9670d62",
+        "name": "HarnessRouteTests.test_paid_route_requires_authority",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 75,
+        "end_line": 77,
+        "signature_hash": "a58026449efb189b",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_paid_unknown_cost_is_not_treated_as_zero:11ad6f859ebc7704",
+        "name": "HarnessRouteTests.test_paid_unknown_cost_is_not_treated_as_zero",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 79,
+        "end_line": 81,
+        "signature_hash": "9530dd715150fae4",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_provider_fallback_is_forbidden:4a9f632c2d1745e9",
+        "name": "HarnessRouteTests.test_provider_fallback_is_forbidden",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 71,
+        "end_line": 73,
+        "signature_hash": "54d37d97a3d94d2d",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_r0_reuse_beats_every_higher_route:bec7c773e9cbdeef",
+        "name": "HarnessRouteTests.test_r0_reuse_beats_every_higher_route",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 48,
+        "end_line": 50,
+        "signature_hash": "78ceded31993c7c7",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_stale_candidate_is_not_selected:ec14a829d9dacc0a",
+        "name": "HarnessRouteTests.test_stale_candidate_is_not_selected",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 59,
+        "end_line": 61,
+        "signature_hash": "4486ca3bd505bb5e",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_stale_project_requires_rebase:e88a538d4fccf9fb",
+        "name": "HarnessRouteTests.test_stale_project_requires_rebase",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 56,
+        "end_line": 57,
+        "signature_hash": "8ccd10eb7e642676",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_swarm_routing_does_not_invent_effect_authority:139a00ebb9e2b7f4",
+        "name": "HarnessRouteTests.test_swarm_routing_does_not_invent_effect_authority",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router.py",
+        "line": 101,
+        "end_line": 103,
+        "signature_hash": "7f11eb981667b684",
+        "file_digest8": "7277d4842b19e36d"
+      },
+      {
         "semantic_id": "tests/test_aura_crucible_phase_b.py#function:_experience:21ffd8555ec59a7b",
         "name": "_experience",
         "kind": "function",
@@ -446322,6 +447251,156 @@
         "file_digest8": "03e6ae09275639cb"
       },
       {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:ArenaWakeScheduler:cbdbe1176225fecb",
+        "name": "ArenaWakeScheduler",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 107,
+        "end_line": 200,
+        "signature_hash": "37e53c944b82381b",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:FileWakeLedger:ddb86f11cc7262aa",
+        "name": "FileWakeLedger",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 41,
+        "end_line": 104,
+        "signature_hash": "e9425ba8559885c9",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:WakeIntent:aa7122378e174607",
+        "name": "WakeIntent",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 23,
+        "end_line": 38,
+        "signature_hash": "15352cf900d59e83",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:WakeRefusal:0aafb6df299438b5",
+        "name": "WakeRefusal",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 15,
+        "end_line": 19,
+        "signature_hash": "5ae430d772fb691b",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.__init__:bac6205636337383",
+        "name": "ArenaWakeScheduler.__init__",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 110,
+        "end_line": 111,
+        "signature_hash": "188e0eaf70d47cbe",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler._best_worker:4fc35b70752f2276",
+        "name": "ArenaWakeScheduler._best_worker",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 121,
+        "end_line": 131,
+        "signature_hash": "7f5ef351913906f7",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler._event_id:434cac3e74149235",
+        "name": "ArenaWakeScheduler._event_id",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 114,
+        "end_line": 118,
+        "signature_hash": "2e70e5ac54cff2c7",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.scan_and_emit:d4fc18fd5188e4f3",
+        "name": "ArenaWakeScheduler.scan_and_emit",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 133,
+        "end_line": 200,
+        "signature_hash": "6f072d1f5b6814b5",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.__init__:ba2d63e2291b33a4",
+        "name": "FileWakeLedger.__init__",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 44,
+        "end_line": 46,
+        "signature_hash": "977a4d9126c48d60",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger._read_landed:a66d94f2b7a4d641",
+        "name": "FileWakeLedger._read_landed",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 51,
+        "end_line": 59,
+        "signature_hash": "97498012ca8a0675",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.append:c6d9233c4d402782",
+        "name": "FileWakeLedger.append",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 61,
+        "end_line": 98,
+        "signature_hash": "4b01af1f5a5efbee",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.events:5fc1a3850db2fd38",
+        "name": "FileWakeLedger.events",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 100,
+        "end_line": 104,
+        "signature_hash": "f313fb85cbb4b333",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.path_for:8dc28fa6f9109414",
+        "name": "FileWakeLedger.path_for",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "078dc3c45475194f",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:WakeIntent.canonical_bytes:4e6a1e558324c699",
+        "name": "WakeIntent.canonical_bytes",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "2f07c43e7574fbf0",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:WakeRefusal.__init__:43386a86be893156",
+        "name": "WakeRefusal.__init__",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 16,
+        "end_line": 19,
+        "signature_hash": "42bd2d17d3dd6102",
+        "file_digest8": "0ac2f10349a5e114"
+      },
+      {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#class:ContinuationHarnessTests:e40a4e8190d90aa7",
         "name": "ContinuationHarnessTests",
         "kind": "class",
@@ -447762,7 +448841,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "9989f21130fd1664413955b78f6f6a3f",
-    "payload_hash": "65607f13160f25ac6dde6a57f9272da9"
+    "record_fingerprint": "edbfe47236523e3af5852f441c923e2d",
+    "payload_hash": "58f2ad34e9846122549be4922ec6a31c"
   }
 }
