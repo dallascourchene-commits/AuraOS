@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788102406,
+  "generated_at_unix": 1788103286,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1641,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -339,6 +339,7 @@
       "aura_arena_wfst_registry.py",
       "aura_arena_wfst_runtime.py",
       "aura_arena_wfst_types.py",
+      "aura_artifact_persistence_index.py",
       "aura_associative_core.py",
       "aura_att_fst_runtime.py",
       "aura_attention_palace.py",
@@ -1361,6 +1362,7 @@
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
       "tests/test_aura_arena_wfst_phase_a.py",
+      "tests/test_aura_artifact_persistence_index.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
@@ -1655,6 +1657,7 @@
       "06_refactor/D0_MUTANT_HARNESS.py",
       "06_refactor/aura_os_minimal.py",
       "aura_arena_artifact_event_core.py",
+      "aura_artifact_persistence_index.py",
       "aura_blockchain/__init__.py",
       "aura_blockchain/block.py",
       "aura_blockchain/consensus.py",
@@ -1741,15 +1744,14 @@
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
       "tests/test_aura_arena_wfst_phase_a.py",
+      "tests/test_aura_artifact_persistence_index.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
-      "tests/test_aura_blind_gate10_benchmark.py",
-      "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py"
+      "tests/test_aura_blind_gate10_benchmark.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1757,15 +1759,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1641,
-      "bytes": 26433491,
-      "tokens_est": 6598724,
+      "files": 1643,
+      "bytes": 26471360,
+      "tokens_est": 6608192,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
+        "python_module": 1001,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -2124,6 +2126,7 @@
         "aura_arena_wfst_registry.py",
         "aura_arena_wfst_runtime.py",
         "aura_arena_wfst_types.py",
+        "aura_artifact_persistence_index.py",
         "aura_associative_core.py",
         "aura_att_fst_runtime.py",
         "aura_attention_palace.py",
@@ -2445,8 +2448,7 @@
         "aura_planning_board.py",
         "aura_planning_events.py",
         "aura_planning_frontier.py",
-        "aura_planning_projector.py",
-        "aura_planning_regression.py"
+        "aura_planning_projector.py"
       ]
     }
   ],
@@ -3811,6 +3813,14 @@
         "signature_hash": "8d5bf5695239b859"
       },
       {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 60,
+        "semantic_id": "aura_artifact_persistence_index.py#function:_canonical:4ddb6af3f8fdd196",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
         "file": "aura_benchmark_registry.py",
         "kind": "function",
         "line": 23,
@@ -3955,6 +3965,14 @@
         "end_line": 67,
         "semantic_id": "aura_arena_gate_dialogue.py#function:_digest:3e91147678285ab4",
         "signature_hash": "6a2769a8ecbe738e"
+      },
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "aura_artifact_persistence_index.py#function:_digest:93f891f7d91e5c69",
+        "signature_hash": "9edcae7e502cc579"
       },
       {
         "file": "aura_benchmark_registry.py",
@@ -12031,6 +12049,14 @@
         "signature_hash": "483c1663714a4eca"
       },
       {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 77,
+        "semantic_id": "aura_artifact_persistence_index.py#function:_strict_bool:740a36f60afff406",
+        "signature_hash": "b049d9e361434acf"
+      },
+      {
         "file": "aura_coding_arena_planning.py",
         "kind": "function",
         "line": 100,
@@ -14751,6 +14777,14 @@
         "end_line": 166,
         "semantic_id": "aura_arena_state_packet.py#function:_text:c5091da919a489ba",
         "signature_hash": "0cd3c0d3d227cce3"
+      },
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 40,
+        "semantic_id": "aura_artifact_persistence_index.py#function:_text:97eba5183462cb59",
+        "signature_hash": "8c231bd295ec466f"
       },
       {
         "file": "aura_civic_planning.py",
@@ -18783,6 +18817,300 @@
         "end_line": 325,
         "semantic_id": "aura_arena_wfst_types.py#function:_optional_nonnegative:07f968a9f2f91cf9",
         "signature_hash": "d561773b615bd852"
+      }
+    ],
+    "ArtifactPersistenceError": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "aura_artifact_persistence_index.py#class:ArtifactPersistenceError:b4aeadd39747d60d",
+        "signature_hash": "fa5db0c03c0d403a"
+      }
+    ],
+    "ArtifactPersistenceError.__init__": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 31,
+        "semantic_id": "aura_artifact_persistence_index.py#method:ArtifactPersistenceError.__init__:b7069de1ecea6fc9",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_optional_text": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 47,
+        "semantic_id": "aura_artifact_persistence_index.py#function:_optional_text:6e04d42dfcf9a075",
+        "signature_hash": "1f3655824bf0de0a"
+      },
+      {
+        "file": "aura_cockpit_planner.py",
+        "kind": "function",
+        "line": 336,
+        "end_line": 339,
+        "semantic_id": "aura_cockpit_planner.py#function:_optional_text:0815b40b8961ff47",
+        "signature_hash": "a269637703105dd3"
+      },
+      {
+        "file": "aura_coding_arena_planning_integrity.py",
+        "kind": "function",
+        "line": 165,
+        "end_line": 171,
+        "semantic_id": "aura_coding_arena_planning_integrity.py#function:_optional_text:5ef3b3d2f93177a9",
+        "signature_hash": "860a7620a248d73d"
+      },
+      {
+        "file": "aura_coding_arena_planning_types.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 43,
+        "semantic_id": "aura_coding_arena_planning_types.py#function:_optional_text:91d782b91b7682e4",
+        "signature_hash": "7781ce802a805c97"
+      },
+      {
+        "file": "aura_gate.py",
+        "kind": "function",
+        "line": 127,
+        "end_line": 130,
+        "semantic_id": "aura_gate.py#function:_optional_text:5eb60122b9fc9dae",
+        "signature_hash": "caed1bbe28e8193f"
+      },
+      {
+        "file": "aura_relational_synthesis.py",
+        "kind": "function",
+        "line": 151,
+        "end_line": 156,
+        "semantic_id": "aura_relational_synthesis.py#function:_optional_text:a4192fbfdb675a7a",
+        "signature_hash": "7781ce802a805c97"
+      },
+      {
+        "file": "aura_spatial_contracts.py",
+        "kind": "function",
+        "line": 214,
+        "end_line": 218,
+        "semantic_id": "aura_spatial_contracts.py#function:_optional_text:8583faca45e3f118",
+        "signature_hash": "dc2d34123f0d676b"
+      }
+    ],
+    "_sha256_text": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 71,
+        "semantic_id": "aura_artifact_persistence_index.py#function:_sha256_text:664e421493b6296d",
+        "signature_hash": "097bfaeb18a9c73d"
+      }
+    ],
+    "_mapping": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 83,
+        "semantic_id": "aura_artifact_persistence_index.py#function:_mapping:d07f675632532ee4",
+        "signature_hash": "a1152ed109535e6e"
+      },
+      {
+        "file": "aura_gate_adapters.py",
+        "kind": "function",
+        "line": 234,
+        "end_line": 237,
+        "semantic_id": "aura_gate_adapters.py#function:_mapping:2d9e46dfff02ca50",
+        "signature_hash": "a1152ed109535e6e"
+      },
+      {
+        "file": "aura_relational_synthesis.py",
+        "kind": "function",
+        "line": 188,
+        "end_line": 193,
+        "semantic_id": "aura_relational_synthesis.py#function:_mapping:4cb19db962085e6b",
+        "signature_hash": "19532fcccdc0c7d6"
+      },
+      {
+        "file": "aura_relationship_contracts.py",
+        "kind": "function",
+        "line": 273,
+        "end_line": 276,
+        "semantic_id": "aura_relationship_contracts.py#function:_mapping:da2ece04bb6e85a5",
+        "signature_hash": "4bd45af63723081c"
+      },
+      {
+        "file": "aura_temporal_persistence.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 68,
+        "semantic_id": "aura_temporal_persistence.py#function:_mapping:1d6ab25e29a6a64d",
+        "signature_hash": "4bd45af63723081c"
+      },
+      {
+        "file": "aura_unified_memory_continuity.py",
+        "kind": "function",
+        "line": 185,
+        "end_line": 206,
+        "semantic_id": "aura_unified_memory_continuity.py#function:_mapping:9bd0a5a069baf1b5",
+        "signature_hash": "4bd45af63723081c"
+      },
+      {
+        "file": "aura_unified_memory_continuity_learning.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 113,
+        "semantic_id": "aura_unified_memory_continuity_learning.py#function:_mapping:db2a06283e96ce8f",
+        "signature_hash": "4bd45af63723081c"
+      },
+      {
+        "file": "scripts/aura_arch_v2_3_capsule_validator.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 35,
+        "semantic_id": "scripts/aura_arch_v2_3_capsule_validator.py#function:_mapping:9ef1cc0ac2a87086",
+        "signature_hash": "4bd45af63723081c"
+      }
+    ],
+    "ArtifactPersistenceReceipt": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "class",
+        "line": 87,
+        "end_line": 252,
+        "semantic_id": "aura_artifact_persistence_index.py#class:ArtifactPersistenceReceipt:df22b1ae84ce1498",
+        "signature_hash": "74fe9916f934b4a1"
+      }
+    ],
+    "ArtifactPersistenceReceipt.__post_init__": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 213,
+        "semantic_id": "aura_artifact_persistence_index.py#method:ArtifactPersistenceReceipt.__post_init__:91dd95ffa34807d5",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ArtifactPersistenceReceipt.logical_payload": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 215,
+        "end_line": 246,
+        "semantic_id": "aura_artifact_persistence_index.py#method:ArtifactPersistenceReceipt.logical_payload:4de7d82aec084dbe",
+        "signature_hash": "c612902d452d55c3"
+      }
+    ],
+    "ArtifactPersistenceReceipt.compute_receipt_id": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 248,
+        "end_line": 249,
+        "semantic_id": "aura_artifact_persistence_index.py#method:ArtifactPersistenceReceipt.compute_receipt_id:9163deb34b913e3b",
+        "signature_hash": "9df22a459583aa97"
+      }
+    ],
+    "ArtifactPersistenceReceipt.to_dict": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 251,
+        "end_line": 252,
+        "semantic_id": "aura_artifact_persistence_index.py#method:ArtifactPersistenceReceipt.to_dict:af370add29de0be6",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "build_persistence_receipt_from_landed_verification": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 255,
+        "end_line": 333,
+        "semantic_id": "aura_artifact_persistence_index.py#function:build_persistence_receipt_from_landed_verification:6661b9c4c85ed879",
+        "signature_hash": "c91ae18a710d7d0d"
+      }
+    ],
+    "build_tombstone_receipt": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 336,
+        "end_line": 387,
+        "semantic_id": "aura_artifact_persistence_index.py#function:build_tombstone_receipt:302b581f67c53e0a",
+        "signature_hash": "3ea605bec3ba9de0"
+      }
+    ],
+    "new_live_artifact_index": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 390,
+        "end_line": 403,
+        "semantic_id": "aura_artifact_persistence_index.py#function:new_live_artifact_index:2062d4508179c389",
+        "signature_hash": "bc51265f7a3a21cc"
+      }
+    ],
+    "_normalize_index": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 406,
+        "end_line": 428,
+        "semantic_id": "aura_artifact_persistence_index.py#function:_normalize_index:d7ad17adef04c70b",
+        "signature_hash": "6393ebce72a5e898"
+      }
+    ],
+    "index_revision": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 431,
+        "end_line": 448,
+        "semantic_id": "aura_artifact_persistence_index.py#function:index_revision:22498c33cefb0619",
+        "signature_hash": "f4f3d9eff976ad76"
+      }
+    ],
+    "_receipt_logical_from_row": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 451,
+        "end_line": 456,
+        "semantic_id": "aura_artifact_persistence_index.py#function:_receipt_logical_from_row:2d0a65aae7663ceb",
+        "signature_hash": "25fea39a6d33a16f"
+      }
+    ],
+    "_refresh_artifact_state": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 459,
+        "end_line": 463,
+        "semantic_id": "aura_artifact_persistence_index.py#function:_refresh_artifact_state:268b7ed9e7045152",
+        "signature_hash": "11a0743eae171951"
+      }
+    ],
+    "apply_persistence_receipt": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 466,
+        "end_line": 581,
+        "semantic_id": "aura_artifact_persistence_index.py#function:apply_persistence_receipt:182b533e8ed00a86",
+        "signature_hash": "458ee5ed1da555ef"
+      }
+    ],
+    "artifact_available_event": [
+      {
+        "file": "aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 584,
+        "end_line": 613,
+        "semantic_id": "aura_artifact_persistence_index.py#function:artifact_available_event:1c1d654fa3c267e8",
+        "signature_hash": "7adc1a64a5ae4c26"
       }
     ],
     "AuraAssociativeCore": [
@@ -26483,56 +26811,6 @@
         "end_line": 232,
         "semantic_id": "aura_relationship_contracts.py#function:_canonical_text:6df34ff7c027dd4f",
         "signature_hash": "28cc3bc7d20fb5de"
-      }
-    ],
-    "_optional_text": [
-      {
-        "file": "aura_cockpit_planner.py",
-        "kind": "function",
-        "line": 336,
-        "end_line": 339,
-        "semantic_id": "aura_cockpit_planner.py#function:_optional_text:0815b40b8961ff47",
-        "signature_hash": "a269637703105dd3"
-      },
-      {
-        "file": "aura_coding_arena_planning_integrity.py",
-        "kind": "function",
-        "line": 165,
-        "end_line": 171,
-        "semantic_id": "aura_coding_arena_planning_integrity.py#function:_optional_text:5ef3b3d2f93177a9",
-        "signature_hash": "860a7620a248d73d"
-      },
-      {
-        "file": "aura_coding_arena_planning_types.py",
-        "kind": "function",
-        "line": 37,
-        "end_line": 43,
-        "semantic_id": "aura_coding_arena_planning_types.py#function:_optional_text:91d782b91b7682e4",
-        "signature_hash": "7781ce802a805c97"
-      },
-      {
-        "file": "aura_gate.py",
-        "kind": "function",
-        "line": 127,
-        "end_line": 130,
-        "semantic_id": "aura_gate.py#function:_optional_text:5eb60122b9fc9dae",
-        "signature_hash": "caed1bbe28e8193f"
-      },
-      {
-        "file": "aura_relational_synthesis.py",
-        "kind": "function",
-        "line": 151,
-        "end_line": 156,
-        "semantic_id": "aura_relational_synthesis.py#function:_optional_text:a4192fbfdb675a7a",
-        "signature_hash": "7781ce802a805c97"
-      },
-      {
-        "file": "aura_spatial_contracts.py",
-        "kind": "function",
-        "line": 214,
-        "end_line": 218,
-        "semantic_id": "aura_spatial_contracts.py#function:_optional_text:8583faca45e3f118",
-        "signature_hash": "dc2d34123f0d676b"
       }
     ],
     "_optional_repo_path": [
@@ -51049,64 +51327,6 @@
         "end_line": 231,
         "semantic_id": "aura_gate_adapters.py#function:_without_body_identity:6146334235bf63e5",
         "signature_hash": "29a1aef0ac8d30d7"
-      }
-    ],
-    "_mapping": [
-      {
-        "file": "aura_gate_adapters.py",
-        "kind": "function",
-        "line": 234,
-        "end_line": 237,
-        "semantic_id": "aura_gate_adapters.py#function:_mapping:2d9e46dfff02ca50",
-        "signature_hash": "a1152ed109535e6e"
-      },
-      {
-        "file": "aura_relational_synthesis.py",
-        "kind": "function",
-        "line": 188,
-        "end_line": 193,
-        "semantic_id": "aura_relational_synthesis.py#function:_mapping:4cb19db962085e6b",
-        "signature_hash": "19532fcccdc0c7d6"
-      },
-      {
-        "file": "aura_relationship_contracts.py",
-        "kind": "function",
-        "line": 273,
-        "end_line": 276,
-        "semantic_id": "aura_relationship_contracts.py#function:_mapping:da2ece04bb6e85a5",
-        "signature_hash": "4bd45af63723081c"
-      },
-      {
-        "file": "aura_temporal_persistence.py",
-        "kind": "function",
-        "line": 62,
-        "end_line": 68,
-        "semantic_id": "aura_temporal_persistence.py#function:_mapping:1d6ab25e29a6a64d",
-        "signature_hash": "4bd45af63723081c"
-      },
-      {
-        "file": "aura_unified_memory_continuity.py",
-        "kind": "function",
-        "line": 185,
-        "end_line": 206,
-        "semantic_id": "aura_unified_memory_continuity.py#function:_mapping:9bd0a5a069baf1b5",
-        "signature_hash": "4bd45af63723081c"
-      },
-      {
-        "file": "aura_unified_memory_continuity_learning.py",
-        "kind": "function",
-        "line": 103,
-        "end_line": 113,
-        "semantic_id": "aura_unified_memory_continuity_learning.py#function:_mapping:db2a06283e96ce8f",
-        "signature_hash": "4bd45af63723081c"
-      },
-      {
-        "file": "scripts/aura_arch_v2_3_capsule_validator.py",
-        "kind": "function",
-        "line": 32,
-        "end_line": 35,
-        "semantic_id": "scripts/aura_arch_v2_3_capsule_validator.py#function:_mapping:9ef1cc0ac2a87086",
-        "signature_hash": "4bd45af63723081c"
       }
     ],
     "_exact_or_subset": [
@@ -118095,6 +118315,292 @@
         "signature_hash": "e32de3db9ab18df2"
       }
     ],
+    "event": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 32,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#function:event:53016d245a11f290",
+        "signature_hash": "89c56c687560fde0"
+      },
+      {
+        "file": "tests/test_aura_construction_state.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tests/test_aura_construction_state.py#function:event:1b154c011b0d5e53",
+        "signature_hash": "17aefef5728da1b4"
+      }
+    ],
+    "identity": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 41,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#function:identity:6aec5ad29db713a4",
+        "signature_hash": "3b3526c2db03cf4d"
+      },
+      {
+        "file": "tests/test_aura_bilateral_live_repair_foundry.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 46,
+        "semantic_id": "tests/test_aura_bilateral_live_repair_foundry.py#function:identity:b1882763671a2899",
+        "signature_hash": "57a85f3724e82db0"
+      },
+      {
+        "file": "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 47,
+        "semantic_id": "tests/test_aura_bilateral_live_repair_foundry_hardening.py#function:identity:ec58839774c3785b",
+        "signature_hash": "7cfd625189ef942a"
+      },
+      {
+        "file": "tests/test_aura_construction_spatial_foundry.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 79,
+        "semantic_id": "tests/test_aura_construction_spatial_foundry.py#function:identity:9e40dcf39eb10cae",
+        "signature_hash": "57a85f3724e82db0"
+      },
+      {
+        "file": "tests/test_aura_gate.py",
+        "kind": "function",
+        "line": 133,
+        "end_line": 149,
+        "semantic_id": "tests/test_aura_gate.py#function:identity:a0e1bf1fb591886a",
+        "signature_hash": "ab07d1eeab28b952"
+      },
+      {
+        "file": "tests/test_aura_gate_adapters.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 39,
+        "semantic_id": "tests/test_aura_gate_adapters.py#function:identity:5127c7ca057bdd3c",
+        "signature_hash": "692ad59da92063a4"
+      },
+      {
+        "file": "tests/test_aura_showcase_live_repair_server.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 29,
+        "semantic_id": "tests/test_aura_showcase_live_repair_server.py#function:identity:360f1427b4c79502",
+        "signature_hash": "7cfd625189ef942a"
+      }
+    ],
+    "landed": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 52,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#function:landed:ba8bd19f1c68a339",
+        "signature_hash": "16744c0e4997694d"
+      }
+    ],
+    "receipt_a": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 68,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#function:receipt_a:a182266450873381",
+        "signature_hash": "e7cb8f5c07344c83"
+      }
+    ],
+    "ArtifactPersistenceIndexTests": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "class",
+        "line": 71,
+        "end_line": 267,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#class:ArtifactPersistenceIndexTests:afeb82d9c8b9076e",
+        "signature_hash": "1180c78bac855c7f"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_01_receipt_id_is_replay_stable_across_observation_time": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 75,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_01_receipt_id_is_replay_stable_across_observation_time:b6981040bffacfe6",
+        "signature_hash": "5dbe704e8e4e53ee"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_02_landed_hash_must_match_artifact_identity": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 79,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_02_landed_hash_must_match_artifact_identity:4aee8270c11c6856",
+        "signature_hash": "1ffec3a12d0303da"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_03_verified_landed_write_is_required": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 85,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_03_verified_landed_write_is_required:fe2bbde8521f890a",
+        "signature_hash": "61cf8786a0ef436a"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_04_claim_id_requires_monotonic_fence_operand": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 89,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_04_claim_id_requires_monotonic_fence_operand:d2c8bd9537dd000e",
+        "signature_hash": "a81dcc64bde1cee5"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_05_effect_authority_cannot_be_laundered_into_receipt": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 109,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_05_effect_authority_cannot_be_laundered_into_receipt:ecbcaa225b11cce5",
+        "signature_hash": "2e4629df19031b17"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_06_pending_external_owner_and_coordinate_are_explicit_and_allowed": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 116,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_06_pending_external_owner_and_coordinate_are_explicit_and_allowed:f750283350d8d85a",
+        "signature_hash": "d6dff889fce98b4c"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_07_apply_requires_currentness_match": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 121,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_07_apply_requires_currentness_match:342acd8b01637551",
+        "signature_hash": "aef85871fcc3a3c0"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_08_apply_is_compare_and_set": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 126,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_08_apply_is_compare_and_set:59559aceed0ec1e9",
+        "signature_hash": "2c1b5b89617a71ec"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_09_replay_is_idempotent_and_does_not_change_revision": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 141,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_09_replay_is_idempotent_and_does_not_change_revision:b7c01e82ef315a56",
+        "signature_hash": "df171e03e81d9083"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_10_append_only_receipt_history_survives_same_resource_new_content": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 159,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_10_append_only_receipt_history_survives_same_resource_new_content:101879b57a013f34",
+        "signature_hash": "e0ebe62d65fd588a"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_11_tombstone_removes_live_head_but_preserves_history": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 179,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_11_tombstone_removes_live_head_but_preserves_history:ca4aa0686e37bf96",
+        "signature_hash": "73d2360c54abe9fa"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_12_tombstone_never_claims_new_bytes": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 181,
+        "end_line": 199,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_12_tombstone_never_claims_new_bytes:bc56f6c412c9baca",
+        "signature_hash": "019cfda429690f31"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_13_observation_metadata_alone_does_not_churn_logical_index_revision": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 201,
+        "end_line": 209,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_13_observation_metadata_alone_does_not_churn_logical_index_revision:aadfda4dceb91bc2",
+        "signature_hash": "3960b49254d30ea6"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_14_artifact_available_is_coordination_only": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 220,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_14_artifact_available_is_coordination_only:2c605addc37fa4f5",
+        "signature_hash": "e92a9d950fdcdfe5"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_15_tombstone_event_is_typed_and_not_execution": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 222,
+        "end_line": 235,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_15_tombstone_event_is_typed_and_not_execution:1313be665ebfb386",
+        "signature_hash": "47d377215e6aa4a0"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_16_bound_owner_or_coordinate_requires_exact_ref": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 237,
+        "end_line": 241,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_16_bound_owner_or_coordinate_requires_exact_ref:aa274d7e52ca97e7",
+        "signature_hash": "d70ea50c19d9c4e4"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_17_artifact_sid_is_hash_bound": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 243,
+        "end_line": 260,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_17_artifact_sid_is_hash_bound:d6f7e0b7d62eea63",
+        "signature_hash": "7ae31715ab87117d"
+      }
+    ],
+    "ArtifactPersistenceIndexTests.test_18_index_projection_itself_has_no_semantic_or_effect_authority": [
+      {
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "kind": "method",
+        "line": 262,
+        "end_line": 267,
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_18_index_projection_itself_has_no_semantic_or_effect_authority:fa2f1740bbf7e495",
+        "signature_hash": "1d39c839336cf2a7"
+      }
+    ],
     "test_route_failure_never_raises_on_untrusted_counts": [
       {
         "file": "tests/test_aura_benchmark_four.py",
@@ -118873,56 +119379,6 @@
         "end_line": 16,
         "semantic_id": "tests/test_aura_showcase_live_repair_server.py#function:git_oid:517692c3f8cd00d0",
         "signature_hash": "f11ea60efd10fbea"
-      }
-    ],
-    "identity": [
-      {
-        "file": "tests/test_aura_bilateral_live_repair_foundry.py",
-        "kind": "function",
-        "line": 34,
-        "end_line": 46,
-        "semantic_id": "tests/test_aura_bilateral_live_repair_foundry.py#function:identity:b1882763671a2899",
-        "signature_hash": "57a85f3724e82db0"
-      },
-      {
-        "file": "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-        "kind": "function",
-        "line": 35,
-        "end_line": 47,
-        "semantic_id": "tests/test_aura_bilateral_live_repair_foundry_hardening.py#function:identity:ec58839774c3785b",
-        "signature_hash": "7cfd625189ef942a"
-      },
-      {
-        "file": "tests/test_aura_construction_spatial_foundry.py",
-        "kind": "function",
-        "line": 67,
-        "end_line": 79,
-        "semantic_id": "tests/test_aura_construction_spatial_foundry.py#function:identity:9e40dcf39eb10cae",
-        "signature_hash": "57a85f3724e82db0"
-      },
-      {
-        "file": "tests/test_aura_gate.py",
-        "kind": "function",
-        "line": 133,
-        "end_line": 149,
-        "semantic_id": "tests/test_aura_gate.py#function:identity:a0e1bf1fb591886a",
-        "signature_hash": "ab07d1eeab28b952"
-      },
-      {
-        "file": "tests/test_aura_gate_adapters.py",
-        "kind": "function",
-        "line": 23,
-        "end_line": 39,
-        "semantic_id": "tests/test_aura_gate_adapters.py#function:identity:5127c7ca057bdd3c",
-        "signature_hash": "692ad59da92063a4"
-      },
-      {
-        "file": "tests/test_aura_showcase_live_repair_server.py",
-        "kind": "function",
-        "line": 17,
-        "end_line": 29,
-        "semantic_id": "tests/test_aura_showcase_live_repair_server.py#function:identity:360f1427b4c79502",
-        "signature_hash": "7cfd625189ef942a"
       }
     ],
     "runtime_proof": [
@@ -129457,16 +129913,6 @@
         "end_line": 13,
         "semantic_id": "tests/test_aura_construction_state.py#function:clm:fcaa16f369b47b9b",
         "signature_hash": "ca037d267814ccc7"
-      }
-    ],
-    "event": [
-      {
-        "file": "tests/test_aura_construction_state.py",
-        "kind": "function",
-        "line": 14,
-        "end_line": 15,
-        "semantic_id": "tests/test_aura_construction_state.py#function:event:1b154c011b0d5e53",
-        "signature_hash": "17aefef5728da1b4"
       }
     ],
     "basic_state": [
@@ -182036,6 +182482,53 @@
         -0.134457,
         0.11607,
         0.228692
+      ]
+    },
+    {
+      "path": "aura_artifact_persistence_index.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 26344,
+      "lines": 614,
+      "tokens_est": 6586,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8dcc0c5fb7ad6a47",
+      "vector": [
+        0.001196,
+        0.127995,
+        -0.242831,
+        -0.080146,
+        0.051437,
+        -0.242831,
+        0.039475,
+        0.065792,
+        0.190198,
+        0.154312,
+        0.302642,
+        -0.020336,
+        0.180628,
+        0.209337,
+        -0.221299,
+        0.084931,
+        -0.101678,
+        -0.297857,
+        -0.259578,
+        0.118425,
+        0.001196,
+        -0.147134,
+        -0.029905,
+        -0.238046,
+        0.003589,
+        -0.041867,
+        -0.264363,
+        -0.214122,
+        -0.127995,
+        -0.27154,
+        -0.293072,
+        -0.11364
       ]
     },
     {
@@ -250488,6 +250981,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_artifact_persistence_index.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11525,
+      "lines": 272,
+      "tokens_est": 2882,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "55a75644e59af3d3",
+      "vector": [
+        0.315168,
+        0.030899,
+        -0.025955,
+        -0.216291,
+        -0.048202,
+        -0.196516,
+        0.102584,
+        0.221235,
+        0.087753,
+        0.245954,
+        0.043258,
+        0.315168,
+        -0.142134,
+        0.315168,
+        -0.060562,
+        0.070449,
+        -0.107528,
+        -0.14955,
+        0.315168,
+        0.181685,
+        -0.043258,
+        -0.307752,
+        0.129775,
+        -0.169325,
+        0.139663,
+        0.174269,
+        -0.003708,
+        0.008652,
+        -0.018539,
+        -0.164382,
+        0.043258,
+        -0.258314
+      ]
+    },
+    {
       "path": "tests/test_aura_benchmark_four.py",
       "role": "python_module",
       "binary": false,
@@ -287270,15 +287810,15 @@
     }
   },
   "summary": {
-    "file_count": 1641,
-    "total_bytes": 26433491,
-    "text_tokens_est": 6598724,
+    "file_count": 1643,
+    "total_bytes": 26471360,
+    "text_tokens_est": 6608192,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
+      "python_module": 1001,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -287628,6 +288168,7 @@
       "aura_arena_wfst_registry.py",
       "aura_arena_wfst_runtime.py",
       "aura_arena_wfst_types.py",
+      "aura_artifact_persistence_index.py",
       "aura_associative_core.py",
       "aura_att_fst_runtime.py",
       "aura_attention_palace.py",
@@ -288650,6 +289191,7 @@
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
       "tests/test_aura_arena_wfst_phase_a.py",
+      "tests/test_aura_artifact_persistence_index.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
@@ -301338,6 +301880,236 @@
         "end_line": 66,
         "signature_hash": "5c1a69a9659e2089",
         "file_digest8": "2f9b1c2fab302db7"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#class:ArtifactPersistenceError:b4aeadd39747d60d",
+        "name": "ArtifactPersistenceError",
+        "kind": "class",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "fa5db0c03c0d403a",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#class:ArtifactPersistenceReceipt:df22b1ae84ce1498",
+        "name": "ArtifactPersistenceReceipt",
+        "kind": "class",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 87,
+        "end_line": 252,
+        "signature_hash": "74fe9916f934b4a1",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:_canonical:4ddb6af3f8fdd196",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 50,
+        "end_line": 60,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:_digest:93f891f7d91e5c69",
+        "name": "_digest",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "9edcae7e502cc579",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:_mapping:d07f675632532ee4",
+        "name": "_mapping",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 80,
+        "end_line": 83,
+        "signature_hash": "a1152ed109535e6e",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:_normalize_index:d7ad17adef04c70b",
+        "name": "_normalize_index",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 406,
+        "end_line": 428,
+        "signature_hash": "6393ebce72a5e898",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:_optional_text:6e04d42dfcf9a075",
+        "name": "_optional_text",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 43,
+        "end_line": 47,
+        "signature_hash": "1f3655824bf0de0a",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:_receipt_logical_from_row:2d0a65aae7663ceb",
+        "name": "_receipt_logical_from_row",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 451,
+        "end_line": 456,
+        "signature_hash": "25fea39a6d33a16f",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:_refresh_artifact_state:268b7ed9e7045152",
+        "name": "_refresh_artifact_state",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 459,
+        "end_line": 463,
+        "signature_hash": "11a0743eae171951",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:_sha256_text:664e421493b6296d",
+        "name": "_sha256_text",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 67,
+        "end_line": 71,
+        "signature_hash": "097bfaeb18a9c73d",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:_strict_bool:740a36f60afff406",
+        "name": "_strict_bool",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 74,
+        "end_line": 77,
+        "signature_hash": "b049d9e361434acf",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:_text:97eba5183462cb59",
+        "name": "_text",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 34,
+        "end_line": 40,
+        "signature_hash": "8c231bd295ec466f",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:apply_persistence_receipt:182b533e8ed00a86",
+        "name": "apply_persistence_receipt",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 466,
+        "end_line": 581,
+        "signature_hash": "458ee5ed1da555ef",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:artifact_available_event:1c1d654fa3c267e8",
+        "name": "artifact_available_event",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 584,
+        "end_line": 613,
+        "signature_hash": "7adc1a64a5ae4c26",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:build_persistence_receipt_from_landed_verification:6661b9c4c85ed879",
+        "name": "build_persistence_receipt_from_landed_verification",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 255,
+        "end_line": 333,
+        "signature_hash": "c91ae18a710d7d0d",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:build_tombstone_receipt:302b581f67c53e0a",
+        "name": "build_tombstone_receipt",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 336,
+        "end_line": 387,
+        "signature_hash": "3ea605bec3ba9de0",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:index_revision:22498c33cefb0619",
+        "name": "index_revision",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 431,
+        "end_line": 448,
+        "signature_hash": "f4f3d9eff976ad76",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#function:new_live_artifact_index:2062d4508179c389",
+        "name": "new_live_artifact_index",
+        "kind": "function",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 390,
+        "end_line": 403,
+        "signature_hash": "bc51265f7a3a21cc",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#method:ArtifactPersistenceError.__init__:b7069de1ecea6fc9",
+        "name": "ArtifactPersistenceError.__init__",
+        "kind": "method",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 28,
+        "end_line": 31,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#method:ArtifactPersistenceReceipt.__post_init__:91dd95ffa34807d5",
+        "name": "ArtifactPersistenceReceipt.__post_init__",
+        "kind": "method",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 119,
+        "end_line": 213,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#method:ArtifactPersistenceReceipt.compute_receipt_id:9163deb34b913e3b",
+        "name": "ArtifactPersistenceReceipt.compute_receipt_id",
+        "kind": "method",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 248,
+        "end_line": 249,
+        "signature_hash": "9df22a459583aa97",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#method:ArtifactPersistenceReceipt.logical_payload:4de7d82aec084dbe",
+        "name": "ArtifactPersistenceReceipt.logical_payload",
+        "kind": "method",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 215,
+        "end_line": 246,
+        "signature_hash": "c612902d452d55c3",
+        "file_digest8": "8dcc0c5fb7ad6a47"
+      },
+      {
+        "semantic_id": "aura_artifact_persistence_index.py#method:ArtifactPersistenceReceipt.to_dict:af370add29de0be6",
+        "name": "ArtifactPersistenceReceipt.to_dict",
+        "kind": "method",
+        "file": "aura_artifact_persistence_index.py",
+        "line": 251,
+        "end_line": 252,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "8dcc0c5fb7ad6a47"
       },
       {
         "semantic_id": "aura_associative_core.py#class:AuraAssociativeCore:f0a726e3b3a2ba85",
@@ -405700,6 +406472,236 @@
         "file_digest8": "209f276f9a6c5c18"
       },
       {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#class:ArtifactPersistenceIndexTests:afeb82d9c8b9076e",
+        "name": "ArtifactPersistenceIndexTests",
+        "kind": "class",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 71,
+        "end_line": 267,
+        "signature_hash": "1180c78bac855c7f",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#function:event:53016d245a11f290",
+        "name": "event",
+        "kind": "function",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 21,
+        "end_line": 32,
+        "signature_hash": "89c56c687560fde0",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#function:identity:6aec5ad29db713a4",
+        "name": "identity",
+        "kind": "function",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 35,
+        "end_line": 41,
+        "signature_hash": "3b3526c2db03cf4d",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#function:landed:ba8bd19f1c68a339",
+        "name": "landed",
+        "kind": "function",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 44,
+        "end_line": 52,
+        "signature_hash": "16744c0e4997694d",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#function:receipt_a:a182266450873381",
+        "name": "receipt_a",
+        "kind": "function",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 55,
+        "end_line": 68,
+        "signature_hash": "e7cb8f5c07344c83",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_01_receipt_id_is_replay_stable_across_observation_time:b6981040bffacfe6",
+        "name": "ArtifactPersistenceIndexTests.test_01_receipt_id_is_replay_stable_across_observation_time",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 72,
+        "end_line": 75,
+        "signature_hash": "5dbe704e8e4e53ee",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_02_landed_hash_must_match_artifact_identity:4aee8270c11c6856",
+        "name": "ArtifactPersistenceIndexTests.test_02_landed_hash_must_match_artifact_identity",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 77,
+        "end_line": 79,
+        "signature_hash": "1ffec3a12d0303da",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_03_verified_landed_write_is_required:fe2bbde8521f890a",
+        "name": "ArtifactPersistenceIndexTests.test_03_verified_landed_write_is_required",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 81,
+        "end_line": 85,
+        "signature_hash": "61cf8786a0ef436a",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_04_claim_id_requires_monotonic_fence_operand:d2c8bd9537dd000e",
+        "name": "ArtifactPersistenceIndexTests.test_04_claim_id_requires_monotonic_fence_operand",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 87,
+        "end_line": 89,
+        "signature_hash": "a81dcc64bde1cee5",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_05_effect_authority_cannot_be_laundered_into_receipt:ecbcaa225b11cce5",
+        "name": "ArtifactPersistenceIndexTests.test_05_effect_authority_cannot_be_laundered_into_receipt",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 91,
+        "end_line": 109,
+        "signature_hash": "2e4629df19031b17",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_06_pending_external_owner_and_coordinate_are_explicit_and_allowed:f750283350d8d85a",
+        "name": "ArtifactPersistenceIndexTests.test_06_pending_external_owner_and_coordinate_are_explicit_and_allowed",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 111,
+        "end_line": 116,
+        "signature_hash": "d6dff889fce98b4c",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_07_apply_requires_currentness_match:342acd8b01637551",
+        "name": "ArtifactPersistenceIndexTests.test_07_apply_requires_currentness_match",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 118,
+        "end_line": 121,
+        "signature_hash": "aef85871fcc3a3c0",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_08_apply_is_compare_and_set:59559aceed0ec1e9",
+        "name": "ArtifactPersistenceIndexTests.test_08_apply_is_compare_and_set",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 123,
+        "end_line": 126,
+        "signature_hash": "2c1b5b89617a71ec",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_09_replay_is_idempotent_and_does_not_change_revision:b7c01e82ef315a56",
+        "name": "ArtifactPersistenceIndexTests.test_09_replay_is_idempotent_and_does_not_change_revision",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 128,
+        "end_line": 141,
+        "signature_hash": "df171e03e81d9083",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_10_append_only_receipt_history_survives_same_resource_new_content:101879b57a013f34",
+        "name": "ArtifactPersistenceIndexTests.test_10_append_only_receipt_history_survives_same_resource_new_content",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 143,
+        "end_line": 159,
+        "signature_hash": "e0ebe62d65fd588a",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_11_tombstone_removes_live_head_but_preserves_history:ca4aa0686e37bf96",
+        "name": "ArtifactPersistenceIndexTests.test_11_tombstone_removes_live_head_but_preserves_history",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 161,
+        "end_line": 179,
+        "signature_hash": "73d2360c54abe9fa",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_12_tombstone_never_claims_new_bytes:bc56f6c412c9baca",
+        "name": "ArtifactPersistenceIndexTests.test_12_tombstone_never_claims_new_bytes",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 181,
+        "end_line": 199,
+        "signature_hash": "019cfda429690f31",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_13_observation_metadata_alone_does_not_churn_logical_index_revision:aadfda4dceb91bc2",
+        "name": "ArtifactPersistenceIndexTests.test_13_observation_metadata_alone_does_not_churn_logical_index_revision",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 201,
+        "end_line": 209,
+        "signature_hash": "3960b49254d30ea6",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_14_artifact_available_is_coordination_only:2c605addc37fa4f5",
+        "name": "ArtifactPersistenceIndexTests.test_14_artifact_available_is_coordination_only",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 211,
+        "end_line": 220,
+        "signature_hash": "e92a9d950fdcdfe5",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_15_tombstone_event_is_typed_and_not_execution:1313be665ebfb386",
+        "name": "ArtifactPersistenceIndexTests.test_15_tombstone_event_is_typed_and_not_execution",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 222,
+        "end_line": 235,
+        "signature_hash": "47d377215e6aa4a0",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_16_bound_owner_or_coordinate_requires_exact_ref:aa274d7e52ca97e7",
+        "name": "ArtifactPersistenceIndexTests.test_16_bound_owner_or_coordinate_requires_exact_ref",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 237,
+        "end_line": 241,
+        "signature_hash": "d70ea50c19d9c4e4",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_17_artifact_sid_is_hash_bound:d6f7e0b7d62eea63",
+        "name": "ArtifactPersistenceIndexTests.test_17_artifact_sid_is_hash_bound",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 243,
+        "end_line": 260,
+        "signature_hash": "7ae31715ab87117d",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
+        "semantic_id": "tests/test_aura_artifact_persistence_index.py#method:ArtifactPersistenceIndexTests.test_18_index_projection_itself_has_no_semantic_or_effect_authority:fa2f1740bbf7e495",
+        "name": "ArtifactPersistenceIndexTests.test_18_index_projection_itself_has_no_semantic_or_effect_authority",
+        "kind": "method",
+        "file": "tests/test_aura_artifact_persistence_index.py",
+        "line": 262,
+        "end_line": 267,
+        "signature_hash": "1d39c839336cf2a7",
+        "file_digest8": "55a75644e59af3d3"
+      },
+      {
         "semantic_id": "tests/test_aura_benchmark_four.py#class:_FakeConnector:49726edfa0a76ca9",
         "name": "_FakeConnector",
         "kind": "class",
@@ -448040,7 +449042,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "32617ee3d6b2bb1c9eaa304c7b9edbb5",
-    "payload_hash": "2951010d1a19d721e5c54a7500c240ec"
+    "record_fingerprint": "e1ea2ceab36c8be249deabf23ceeed2a",
+    "payload_hash": "c3e1cd00d35a7fc179ea4564c3160e8e"
   }
 }
