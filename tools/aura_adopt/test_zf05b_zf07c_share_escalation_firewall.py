@@ -1,269 +1,189 @@
+import copy
 import unittest
 
 from zf05b_zf07c_share_escalation_firewall import (
-    EscalationDecisionProjectionV1,
-    FirewallDisposition,
     FirewallError,
-    RecipientCapabilityResidualV1,
-    ResidualKind,
-    ScopedEvidenceV1,
-    ShareLaunchProjectionV1,
+    ProviderTargetEvidenceV1,
+    _domain_digest,
+    _plain_digest,
     compile_share_escalation_firewall,
+    verify_router_currentness,
 )
 
-D = "a" * 64
-E = "b" * 64
-F = "c" * 64
-G = "d" * 64
-H = "e" * 64
-I = "f" * 64
-J = "0" * 64
+A = "a" * 64
+B = "b" * 64
+C = "c" * 64
+D = "d" * 64
+E = "e" * 64
 
 
-def ev(ref, digest, scope, current="CURRENT"):
-    return ScopedEvidenceV1(
-        ref=ref,
-        digest=digest,
-        source_generation=f"gen:{ref}",
-        currentness_ref=f"cur:{ref}",
-        currentness_state=current,
-        scope=scope,
-    )
+def make_share_plan(status="READY_FOR_USER_ACTION"):
+    blockers = [] if status == "READY_FOR_USER_ACTION" else ["MISSING_BINDING:x"]
+    raw = {
+        "schema": "ShareLaunchPlanV1", "capsule_digest": A, "capsule_id": "capsule-1",
+        "preferred_entry_surface": "ZERO_INSTALL_WEB_PWA", "next_surface": None,
+        "creator_ref": "creator:alice", "claimed_attribution_refs": ["creator:alice"],
+        "attribution_evidence_current": status == "READY_FOR_USER_ACTION",
+        "attribution_identity_proven": False, "referral_depth": 0,
+        "required_user_actions": ["OPEN_ENTRY_SURFACE", "REVIEW_PROVENANCE_AND_ATTRIBUTION", "CONFIRM_REPRODUCTION_INTENT"],
+        "blockers": blockers, "status": status, "network_fetch_authorized": False,
+        "install_authorized": False, "execution_authorized": False, "execution_proven": False,
+        "publication_authorized": False, "payment_authorized": False, "telemetry_authorized": False,
+        "recipient_tracking_authorized": False, "provider_call_authorized": False,
+        "adoption_success_proven": False,
+    }
+    raw["plan_digest"] = _plain_digest(raw)
+    return raw
 
 
-SHARE_EVIDENCE = (
-    ev("source-evidence", "1" * 64, "SHARE_SOURCE"),
-    ev("recipe-evidence", "2" * 64, "SHARE_RECIPE"),
-    ev("distribution-evidence", "3" * 64, "SHARE_DISTRIBUTION"),
-    ev("creator-attribution", "4" * 64, "SHARE_ATTRIBUTION"),
-)
-LAUNCH_EVIDENCE = ev("share-launch-plan", J, "SHARE_LAUNCH_PLAN")
-DERIVATION = ev("recipient-derivation", E, "RECIPIENT_CAPABILITY_PLAN")
-DECISION_EVIDENCE = ev("escalation-decision", G, "ESCALATION_DECISION")
-PROVIDER_EVIDENCE = (
-    ev("provider-current", H, "PROVIDER_CATALOG"),
-    ev("rate-current", I, "RATE_CATALOG"),
-)
+def make_recipe_plan(status="READY_FOR_ADMISSION"):
+    blockers = [] if status == "READY_FOR_ADMISSION" else ["MISSING_BINDING:cap:model"]
+    raw = {
+        "schema": "ArenaRecipePlanV1", "recipe_digest": B, "recipe_id": "recipe-1",
+        "recipe_version": "v1", "purpose": "reproduce shared task", "capability_refs": ["cap:model"],
+        "asset_refs": [], "parameters": {}, "constraints": {}, "effect_ceiling": "NONE",
+        "rights": {"use": "ALLOWED", "modify": "ALLOWED", "redistribute": "ALLOWED", "commercial": "UNKNOWN", "attribution_required": True, "license_ref": None},
+        "blockers": blockers, "status": status, "authority_owner_resolved": False,
+        "effect_authorized": False, "execution_proven": False, "publication_authorized": False,
+        "payment_authorized": False, "marketplace_listed": False,
+    }
+    raw["plan_digest"] = _plain_digest(raw)
+    return raw
 
 
-def share(**kw):
-    data = dict(
-        capsule_digest=D,
-        capsule_id="capsule-1",
-        launch_plan_digest=J,
-        launch_evidence=LAUNCH_EVIDENCE,
-        status="READY_FOR_USER_ACTION",
-        creator_ref="creator:alice",
-        evidence=SHARE_EVIDENCE,
-        required_user_actions=("OPEN_ENTRY_SURFACE", "CONFIRM_REPRODUCTION_INTENT"),
-    )
-    data.update(kw)
-    return ShareLaunchProjectionV1(**data)
+def make_currentness():
+    return {"source_currentness_ref": "cur:recipe", "model_catalog_currentness_ref": "cur:model-catalog", "provider_catalog_currentness_ref": "cur:provider-catalog", "rate_catalog_currentness_ref": "cur:rate-catalog"}
 
 
-def residual(**kw):
-    data = dict(
-        residual_id="residual-1",
-        recipe_plan_digest=E,
-        capability_ref="cap:model-inference",
-        residual_kind=ResidualKind.MODEL_INFERENCE_REQUIRED,
-        unresolved=True,
-        derivation_origin="RECIPIENT_CAPABILITY_PLAN",
-        derivation_evidence=DERIVATION,
-    )
-    data.update(kw)
-    return RecipientCapabilityResidualV1(**data)
+def make_residual(recipe_plan=None, kind="MODEL_INFERENCE_REQUIRED", unresolved=True):
+    recipe_plan = recipe_plan or make_recipe_plan()
+    return {"residual_id": "residual-1", "recipe_plan_digest": recipe_plan["plan_digest"], "capability_ref": "cap:model", "residual_kind": kind, "unresolved": unresolved, "source_generation": "gen:recipe-plan", "source_currentness_ref": "cur:recipe", "minimum_context_tokens": 1024}
 
 
-def escalation(**kw):
-    data = dict(
-        residual_id="residual-1",
-        capability_ref="cap:model-inference",
-        recipe_plan_digest=E,
-        disposition="USER_CHOICE_REQUIRED",
-        decision_digest=G,
-        decision_evidence=DECISION_EVIDENCE,
-        selected_route_id=None,
-        earned_action_classes=("EXPLICIT_REMOTE_EXECUTION_CONSENT", "REQUEST_CREDENTIAL_VIA_SECURE_OWNER"),
-        provider_evidence=PROVIDER_EVIDENCE,
-    )
-    data.update(kw)
-    return EscalationDecisionProjectionV1(**data)
+def local_option():
+    return {"route_id": "local:present", "model_ref": "model:local", "provider_ref": "", "execution_location": "LOCAL", "cost_class": "INCLUDED", "required_actions": (), "zero_effect_ready": True, "download_bytes": None, "candidate_evidence_ref": "evidence:local", "candidate_evidence_digest": C, "evidence_summary": ("source_generation=gen:model", "model_currentness=cur:model-catalog", "availability=PROVEN_AVAILABLE", "cost=INCLUDED")}
+
+
+def remote_option():
+    return {"route_id": "remote:provider-a", "model_ref": "model:remote-a", "provider_ref": "provider:a", "execution_location": "REMOTE", "cost_class": "PAID", "required_actions": ("EXPLICIT_REMOTE_EXECUTION_CONSENT", "REQUEST_CREDENTIAL_VIA_SECURE_OWNER", "EXPLICIT_PAYMENT_CONSENT"), "zero_effect_ready": False, "download_bytes": None, "candidate_evidence_ref": "evidence:remote-a", "candidate_evidence_digest": D, "evidence_summary": ("source_generation=gen:model-a", "model_currentness=cur:model-catalog", "availability=PROVEN_AVAILABLE", "cost=PAID", "provider=provider:a", "provider_currentness=cur:provider-catalog", "rate_currentness=cur:rate-catalog")}
+
+
+def make_router_decision(residual=None, currentness=None, *, disposition="USER_CHOICE_REQUIRED", options=None, selected_route_id=None):
+    recipe = make_recipe_plan(); residual = residual or make_residual(recipe); currentness = currentness or make_currentness()
+    _, currentness_digest = verify_router_currentness(currentness)
+    options = list(options if options is not None else [remote_option()])
+    earned = sorted({a for o in options for a in o["required_actions"]})
+    logical = {"schema": "CapabilityEscalationDecisionV1", "router_schema": "CapabilityEscalationRouterV1", "residual_id": residual["residual_id"], "capability_ref": residual["capability_ref"], "recipe_plan_digest": residual["recipe_plan_digest"], "residual_source_generation": residual["source_generation"], "residual_source_currentness_ref": residual["source_currentness_ref"], "router_currentness_digest": currentness_digest, "disposition": disposition, "selected_route_id": selected_route_id, "options": options, "blockers": (), "earned_action_classes": earned, "credential_prompt_performed": False, "credential_collected": False, "model_download_started": False, "provider_call_made": False, "payment_performed": False, "effect_authorized": False, "execution_proven": False, "catalog_evidence_authenticated": False}
+    raw = copy.deepcopy(logical); raw["decision_digest"] = _domain_digest("AURA_ADOPT_CAPABILITY_ESCALATION_DECISION_V1", logical); return raw
+
+
+def provider_target(option=None, principal="recipient:1", **kw):
+    option = option or remote_option()
+    data = dict(evidence_ref="target-evidence:provider-a", evidence_digest=E, currentness_ref="cur:target-a", currentness_state="CURRENT", principal_ref=principal, route_id=option["route_id"], model_ref=option["model_ref"], provider_ref=option["provider_ref"], candidate_evidence_ref=option["candidate_evidence_ref"], candidate_evidence_digest=option["candidate_evidence_digest"], cost_class=option["cost_class"], provider_currentness_ref="cur:provider-catalog", rate_currentness_ref="cur:rate-catalog")
+    data.update(kw); return ProviderTargetEvidenceV1(**data)
+
+
+def compile_default(*, share=None, recipe=None, residual=None, currentness=None, decision=None, targets=None):
+    share = share or make_share_plan(); recipe = recipe or make_recipe_plan(); currentness = currentness or make_currentness(); residual = residual or make_residual(recipe); decision = decision or make_router_decision(residual, currentness); targets = [provider_target()] if targets is None else targets
+    return compile_share_escalation_firewall(share, recipe, residual, decision, router_currentness=currentness, principal_ref="recipient:1", provider_targets=targets)
 
 
 class FirewallTests(unittest.TestCase):
-    def test_happy_path(self):
-        out = compile_share_escalation_firewall(share(), residual(), escalation())
-        self.assertEqual(out.disposition, FirewallDisposition.RECIPIENT_ESCALATION_READY)
-        self.assertFalse(out.provider_call_authorized)
-        self.assertFalse(out.network_authorized)
+    def test_remote_owner_projection_and_target_pass(self):
+        out = compile_default(); self.assertEqual(out["disposition"], "RECIPIENT_ESCALATION_READY"); self.assertTrue(out["owner_projection_identity_recomputed"]); self.assertTrue(out["provider_targets_verified"]); self.assertFalse(out["provider_call_authorized"])
+
+    def test_share_plan_tamper_rejected(self):
+        share = make_share_plan(); share["creator_ref"] = "creator:mallory"
+        with self.assertRaisesRegex(FirewallError, "SHARE_PLAN_DIGEST_MISMATCH"): compile_default(share=share)
+
+    def test_share_authority_rejected_even_rehashed(self):
+        share = make_share_plan(); share["provider_call_authorized"] = True; logical = dict(share); logical.pop("plan_digest"); share["plan_digest"] = _plain_digest(logical)
+        with self.assertRaisesRegex(FirewallError, "SHARE_AUTHORITY_WIDENING"): compile_default(share=share)
 
     def test_share_not_ready(self):
-        out = compile_share_escalation_firewall(share(status="EVIDENCE_REQUIRED"), residual(), escalation())
-        self.assertEqual(out.disposition, FirewallDisposition.SHARE_EVIDENCE_REQUIRED)
+        self.assertEqual(compile_default(share=make_share_plan("EVIDENCE_REQUIRED"))["disposition"], "SHARE_EVIDENCE_REQUIRED")
 
-    def test_non_model_residual(self):
-        r = residual(residual_kind=ResidualKind.NON_MODEL_RESIDUAL)
-        e = escalation(disposition="NO_ESCALATION_REQUIRED", earned_action_classes=(), provider_evidence=())
-        self.assertEqual(compile_share_escalation_firewall(share(), r, e).disposition, FirewallDisposition.NO_MODEL_ESCALATION)
+    def test_recipe_plan_tamper(self):
+        recipe = make_recipe_plan(); recipe["purpose"] = "tampered"
+        with self.assertRaisesRegex(FirewallError, "RECIPE_PLAN_DIGEST_MISMATCH"): compile_default(recipe=recipe)
 
-    def test_resolved_residual(self):
-        r = residual(unresolved=False)
-        e = escalation(disposition="NO_ESCALATION_REQUIRED", earned_action_classes=(), provider_evidence=())
-        self.assertEqual(compile_share_escalation_firewall(share(), r, e).disposition, FirewallDisposition.NO_MODEL_ESCALATION)
+    def test_recipe_not_ready(self):
+        recipe = make_recipe_plan("BINDING_EVIDENCE_REQUIRED"); residual = make_residual(recipe); decision = make_router_decision(residual)
+        self.assertEqual(compile_default(recipe=recipe, residual=residual, decision=decision)["disposition"], "EVIDENCE_REQUIRED")
 
-    def test_share_cannot_mint_credential_action(self):
-        with self.assertRaisesRegex(FirewallError, "SHARE_CANNOT_MINT_ESCALATION_ACTION"):
-            share(required_user_actions=("REQUEST_CREDENTIAL_VIA_SECURE_OWNER",))
+    def test_residual_recipe_binding(self):
+        recipe = make_recipe_plan(); residual = make_residual(recipe); residual["recipe_plan_digest"] = "9" * 64
+        with self.assertRaisesRegex(FirewallError, "RESIDUAL_RECIPE_PLAN_MISMATCH"): compile_default(recipe=recipe, residual=residual)
 
-    def test_share_cannot_mint_model_residual_action(self):
-        with self.assertRaisesRegex(FirewallError, "SHARE_CANNOT_MINT_ESCALATION_ACTION"):
-            share(required_user_actions=("MODEL_INFERENCE_REQUIRED",))
+    def test_residual_capability_binding(self):
+        recipe = make_recipe_plan(); residual = make_residual(recipe); residual["capability_ref"] = "cap:not-in-plan"
+        with self.assertRaisesRegex(FirewallError, "RESIDUAL_CAPABILITY_NOT_IN_RECIPE_PLAN"): compile_default(recipe=recipe, residual=residual)
 
-    def test_residual_must_be_recipient_derived(self):
-        with self.assertRaisesRegex(FirewallError, "RESIDUAL_MUST_BE_RECIPIENT_DERIVED"):
-            residual(derivation_origin="SHARE_CAPSULE")
+    def test_residual_currentness_binding(self):
+        recipe = make_recipe_plan(); residual = make_residual(recipe); residual["source_currentness_ref"] = "cur:stale"
+        with self.assertRaisesRegex(FirewallError, "RESIDUAL_SOURCE_CURRENTNESS_STALE"): compile_default(recipe=recipe, residual=residual)
 
-    def test_residual_derivation_must_be_current(self):
-        with self.assertRaisesRegex(FirewallError, "RECIPIENT_DERIVATION_NOT_CURRENT"):
-            residual(derivation_evidence=ev("recipient-stale", E, "RECIPIENT_CAPABILITY_PLAN", "STALE"))
+    def test_router_decision_digest_recomputed(self):
+        recipe = make_recipe_plan(); residual = make_residual(recipe); decision = make_router_decision(residual); decision["decision_digest"] = "8" * 64
+        with self.assertRaisesRegex(FirewallError, "ROUTER_DECISION_DIGEST_MISMATCH"): compile_default(recipe=recipe, residual=residual, decision=decision)
 
-    def test_recipient_derivation_digest_match(self):
-        with self.assertRaisesRegex(FirewallError, "RECIPIENT_DERIVATION_DIGEST_MISMATCH"):
-            residual(derivation_evidence=ev("recipient-wrong", F, "RECIPIENT_CAPABILITY_PLAN"))
+    def test_decision_source_generation_binding(self):
+        recipe = make_recipe_plan(); residual = make_residual(recipe); decision = make_router_decision(residual); decision["residual_source_generation"] = "gen:other"; logical = dict(decision); logical.pop("decision_digest"); decision["decision_digest"] = _domain_digest("AURA_ADOPT_CAPABILITY_ESCALATION_DECISION_V1", logical)
+        with self.assertRaisesRegex(FirewallError, "DECISION_RESIDUAL_SOURCE_GENERATION_MISMATCH"): compile_default(recipe=recipe, residual=residual, decision=decision)
 
-    def test_ready_share_requires_current_evidence(self):
-        stale = (ev("source-stale", "5" * 64, "SHARE_SOURCE", "STALE"),)
-        with self.assertRaisesRegex(FirewallError, "READY_SHARE_EVIDENCE_NOT_CURRENT"):
-            share(evidence=stale)
+    def test_router_currentness_binding(self):
+        recipe = make_recipe_plan(); currentness = make_currentness(); residual = make_residual(recipe); decision = make_router_decision(residual, currentness); changed = dict(currentness); changed["provider_catalog_currentness_ref"] = "cur:provider-new"
+        with self.assertRaisesRegex(FirewallError, "DECISION_ROUTER_CURRENTNESS_MISMATCH"): compile_default(recipe=recipe, residual=residual, currentness=changed, decision=decision)
 
-    def test_nonready_share_may_carry_stale_evidence(self):
-        stale = (ev("source-stale", "5" * 64, "SHARE_SOURCE", "STALE"),)
-        self.assertEqual(share(status="EVIDENCE_REQUIRED", evidence=stale).status, "EVIDENCE_REQUIRED")
+    def test_earned_action_union(self):
+        recipe = make_recipe_plan(); residual = make_residual(recipe); decision = make_router_decision(residual); decision["earned_action_classes"] = []; logical = dict(decision); logical.pop("decision_digest"); decision["decision_digest"] = _domain_digest("AURA_ADOPT_CAPABILITY_ESCALATION_DECISION_V1", logical)
+        with self.assertRaisesRegex(FirewallError, "DECISION_EARNED_ACTIONS_MISMATCH"): compile_default(recipe=recipe, residual=residual, decision=decision)
 
-    def test_launch_current(self):
-        with self.assertRaisesRegex(FirewallError, "SHARE_LAUNCH_EVIDENCE_NOT_CURRENT"):
-            share(launch_evidence=ev("launch-stale", J, "SHARE_LAUNCH_PLAN", "STALE"))
+    def test_decision_effect_refused(self):
+        recipe = make_recipe_plan(); residual = make_residual(recipe); decision = make_router_decision(residual); decision["provider_call_made"] = True; logical = dict(decision); logical.pop("decision_digest"); decision["decision_digest"] = _domain_digest("AURA_ADOPT_CAPABILITY_ESCALATION_DECISION_V1", logical)
+        with self.assertRaisesRegex(FirewallError, "ROUTER_DECISION_AUTHORITY_WIDENING"): compile_default(recipe=recipe, residual=residual, decision=decision)
 
-    def test_launch_digest_match(self):
-        with self.assertRaisesRegex(FirewallError, "SHARE_LAUNCH_EVIDENCE_DIGEST_MISMATCH"):
-            share(launch_evidence=ev("launch-wrong", F, "SHARE_LAUNCH_PLAN"))
+    def test_remote_requires_target(self):
+        out = compile_default(targets=[]); self.assertEqual(out["disposition"], "EVIDENCE_REQUIRED"); self.assertIn("PROVIDER_TARGET_EVIDENCE_REQUIRED:remote:provider-a", out["blockers"])
 
-    def test_launch_distinct(self):
-        alias = ev("launch-renamed", "1" * 64, "SHARE_LAUNCH_PLAN")
-        with self.assertRaisesRegex(FirewallError, "SHARE_LAUNCH_EVIDENCE_MUST_BE_DISTINCT"):
-            share(launch_plan_digest="1" * 64, launch_evidence=alias)
+    def test_wrong_target_route(self):
+        with self.assertRaisesRegex(FirewallError, "PROVIDER_TARGET_ROUTE_NOT_IN_DECISION"): compile_default(targets=[provider_target(route_id="remote:provider-b")])
 
-    def test_share_ref_alias_residual(self):
-        alias = ev("recipe-evidence", E, "RECIPIENT_CAPABILITY_PLAN")
-        with self.assertRaisesRegex(FirewallError, "SHARE_EVIDENCE_CANNOT_DERIVE_RECIPIENT_RESIDUAL"):
-            compile_share_escalation_firewall(share(), residual(derivation_evidence=alias), escalation())
+    def test_wrong_target_provider(self):
+        with self.assertRaisesRegex(FirewallError, "PROVIDER_TARGET_EVIDENCE_MISMATCH"): compile_default(targets=[provider_target(provider_ref="provider:b")])
 
-    def test_share_digest_alias_residual(self):
-        digest = "2" * 64
-        r = residual(recipe_plan_digest=digest, derivation_evidence=ev("renamed", digest, "RECIPIENT_CAPABILITY_PLAN"))
-        e = escalation(recipe_plan_digest=digest)
-        with self.assertRaisesRegex(FirewallError, "SHARE_EVIDENCE_CANNOT_DERIVE_RECIPIENT_RESIDUAL"):
-            compile_share_escalation_firewall(share(), r, e)
+    def test_wrong_target_model(self):
+        with self.assertRaisesRegex(FirewallError, "PROVIDER_TARGET_EVIDENCE_MISMATCH"): compile_default(targets=[provider_target(model_ref="model:other")])
 
-    def test_share_ref_alias_provider(self):
-        alias = ev("distribution-evidence", "8" * 64, "PROVIDER_CATALOG")
-        with self.assertRaisesRegex(FirewallError, "SHARE_EVIDENCE_CANNOT_SATISFY_PROVIDER_EVIDENCE"):
-            compile_share_escalation_firewall(share(), residual(), escalation(provider_evidence=(alias,)))
+    def test_wrong_target_principal(self):
+        with self.assertRaisesRegex(FirewallError, "PROVIDER_TARGET_EVIDENCE_MISMATCH"): compile_default(targets=[provider_target(principal_ref="recipient:2")])
 
-    def test_share_digest_alias_provider(self):
-        alias = ev("renamed-provider", "3" * 64, "PROVIDER_CATALOG")
-        with self.assertRaisesRegex(FirewallError, "SHARE_EVIDENCE_CANNOT_SATISFY_PROVIDER_EVIDENCE"):
-            compile_share_escalation_firewall(share(), residual(), escalation(provider_evidence=(alias,)))
+    def test_wrong_candidate_digest(self):
+        with self.assertRaisesRegex(FirewallError, "PROVIDER_TARGET_EVIDENCE_MISMATCH"): compile_default(targets=[provider_target(candidate_evidence_digest="7" * 64)])
 
-    def test_launch_alias_provider(self):
-        alias = ev("renamed-launch-provider", J, "PROVIDER_CATALOG")
-        with self.assertRaisesRegex(FirewallError, "SHARE_EVIDENCE_CANNOT_SATISFY_PROVIDER_EVIDENCE"):
-            compile_share_escalation_firewall(share(), residual(), escalation(provider_evidence=(alias,)))
+    def test_wrong_provider_currentness(self):
+        with self.assertRaisesRegex(FirewallError, "PROVIDER_TARGET_EVIDENCE_MISMATCH"): compile_default(targets=[provider_target(provider_currentness_ref="cur:other-provider")])
 
-    def test_derivation_alias_provider(self):
-        alias = ev("provider-renamed", E, "PROVIDER_CATALOG")
-        with self.assertRaisesRegex(FirewallError, "RECIPIENT_DERIVATION_CANNOT_SATISFY_PROVIDER_EVIDENCE"):
-            compile_share_escalation_firewall(share(), residual(), escalation(provider_evidence=(alias,)))
+    def test_wrong_rate_currentness(self):
+        with self.assertRaisesRegex(FirewallError, "PROVIDER_TARGET_EVIDENCE_MISMATCH"): compile_default(targets=[provider_target(rate_currentness_ref="cur:other-rate")])
 
-    def test_provider_actions_require_evidence(self):
-        with self.assertRaisesRegex(FirewallError, "PROVIDER_EVIDENCE_REQUIRED_FOR_ACTIONS"):
-            escalation(provider_evidence=())
+    def test_stale_target(self):
+        with self.assertRaisesRegex(FirewallError, "TARGET_EVIDENCE_NOT_CURRENT"): provider_target(currentness_state="STALE")
 
-    def test_provider_current(self):
-        with self.assertRaisesRegex(FirewallError, "PROVIDER_EVIDENCE_NOT_CURRENT"):
-            escalation(provider_evidence=(ev("provider-stale", H, "PROVIDER_CATALOG", "STALE"),))
+    def test_local_needs_no_provider_target(self):
+        recipe = make_recipe_plan(); currentness = make_currentness(); residual = make_residual(recipe); decision = make_router_decision(residual, currentness, disposition="LOCAL_ROUTE_READY", options=[local_option()], selected_route_id="local:present"); out = compile_default(recipe=recipe, residual=residual, currentness=currentness, decision=decision, targets=[]); self.assertEqual(out["disposition"], "RECIPIENT_ESCALATION_READY")
 
-    def test_decision_current(self):
-        with self.assertRaisesRegex(FirewallError, "ESCALATION_DECISION_EVIDENCE_NOT_CURRENT"):
-            escalation(decision_evidence=ev("decision-stale", G, "ESCALATION_DECISION", "STALE"))
+    def test_non_model_no_escalation(self):
+        recipe = make_recipe_plan(); currentness = make_currentness(); residual = make_residual(recipe, kind="NON_MODEL_RESIDUAL"); decision = make_router_decision(residual, currentness, disposition="NO_ESCALATION_REQUIRED", options=[]); out = compile_default(recipe=recipe, residual=residual, currentness=currentness, decision=decision, targets=[]); self.assertEqual(out["disposition"], "NO_MODEL_ESCALATION")
 
-    def test_decision_digest_match(self):
-        with self.assertRaisesRegex(FirewallError, "ESCALATION_DECISION_EVIDENCE_DIGEST_MISMATCH"):
-            escalation(decision_evidence=ev("decision-wrong", F, "ESCALATION_DECISION"))
+    def test_router_evidence_required_propagates(self):
+        recipe = make_recipe_plan(); currentness = make_currentness(); residual = make_residual(recipe); decision = make_router_decision(residual, currentness, disposition="EVIDENCE_REQUIRED", options=[]); out = compile_default(recipe=recipe, residual=residual, currentness=currentness, decision=decision, targets=[]); self.assertEqual(out["disposition"], "EVIDENCE_REQUIRED")
 
-    def test_decision_alias_share(self):
-        alias = ev("decision-renamed", "1" * 64, "ESCALATION_DECISION")
-        e = escalation(decision_digest="1" * 64, decision_evidence=alias)
-        with self.assertRaisesRegex(FirewallError, "ESCALATION_DECISION_EVIDENCE_MUST_BE_DISTINCT"):
-            compile_share_escalation_firewall(share(), residual(), e)
+    def test_deterministic_firewall_digest(self):
+        self.assertEqual(compile_default()["firewall_digest"], compile_default()["firewall_digest"])
 
-    def test_decision_alias_provider(self):
-        alias = ev("provider-same-decision", G, "PROVIDER_CATALOG")
-        with self.assertRaisesRegex(FirewallError, "ESCALATION_DECISION_CANNOT_DOUBLE_AS_PROVIDER_EVIDENCE"):
-            escalation(provider_evidence=(alias,))
-
-    def test_residual_identity_match(self):
-        with self.assertRaisesRegex(FirewallError, "ESCALATION_RESIDUAL_MISMATCH"):
-            compile_share_escalation_firewall(share(), residual(), escalation(residual_id="other"))
-
-    def test_capability_identity_match(self):
-        with self.assertRaisesRegex(FirewallError, "ESCALATION_CAPABILITY_MISMATCH"):
-            compile_share_escalation_firewall(share(), residual(), escalation(capability_ref="cap:other"))
-
-    def test_plan_identity_match(self):
-        with self.assertRaisesRegex(FirewallError, "ESCALATION_RECIPE_PLAN_MISMATCH"):
-            compile_share_escalation_firewall(share(), residual(), escalation(recipe_plan_digest="9" * 64))
-
-    def test_share_authority_widening_refused(self):
-        with self.assertRaisesRegex(FirewallError, "SHARE_AUTHORITY_WIDENING"):
-            share(provider_call_authorized=True)
-
-    def test_prior_provider_effect_refused(self):
-        with self.assertRaisesRegex(FirewallError, "ESCALATION_EFFECT_ALREADY_OCCURRED"):
-            escalation(provider_call_made=True)
-
-    def test_local_ready_actions_forbidden(self):
-        with self.assertRaisesRegex(FirewallError, "LOCAL_READY_CANNOT_HAVE_EARNED_ACTIONS"):
-            escalation(disposition="LOCAL_ROUTE_READY")
-
-    def test_local_ready_zero_effect(self):
-        e = escalation(disposition="LOCAL_ROUTE_READY", selected_route_id="local:present", earned_action_classes=(), provider_evidence=())
-        out = compile_share_escalation_firewall(share(), residual(), e)
-        self.assertEqual(out.disposition, FirewallDisposition.RECIPIENT_ESCALATION_READY)
-        self.assertEqual(out.presentable_action_classes, ())
-
-    def test_escalation_evidence_required(self):
-        e = escalation(disposition="EVIDENCE_REQUIRED", earned_action_classes=(), provider_evidence=())
-        out = compile_share_escalation_firewall(share(), residual(), e)
-        self.assertEqual(out.disposition, FirewallDisposition.EVIDENCE_REQUIRED)
-
-    def test_deterministic_digest(self):
-        a = compile_share_escalation_firewall(share(), residual(), escalation())
-        b = compile_share_escalation_firewall(share(), residual(), escalation())
-        self.assertEqual(a.firewall_digest, b.firewall_digest)
-
-    def test_nonmodel_cannot_carry_escalation(self):
-        with self.assertRaisesRegex(FirewallError, "ESCALATION_PRESENT_WITHOUT_MODEL_RESIDUAL"):
-            compile_share_escalation_firewall(share(), residual(residual_kind=ResidualKind.NON_MODEL_RESIDUAL), escalation())
-
-    def test_share_scope(self):
-        with self.assertRaisesRegex(FirewallError, "SHARE_EVIDENCE_SCOPE_INVALID"):
-            share(evidence=(ev("bad-share", "7" * 64, "MODEL_CATALOG"),))
-
-    def test_provider_scope(self):
-        with self.assertRaisesRegex(FirewallError, "PROVIDER_EVIDENCE_SCOPE_INVALID"):
-            escalation(provider_evidence=(ev("bad-provider", "7" * 64, "SHARE_SOURCE"),))
+    def test_owner_contract_refs(self):
+        out = compile_default(); self.assertEqual(out["owner_contract_refs"]["zf07a"]["head"], "bf9de86246709003574143a847706a5c3cbc9afc"); self.assertEqual(out["owner_contract_refs"]["zf05a"]["blob"], "87a5bd403f1180c580a6352c36da9e326ce23711")
 
 
 if __name__ == "__main__":
