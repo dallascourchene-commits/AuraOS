@@ -14,6 +14,7 @@ on:
       - 'tools/awj032/glm53_per_expert_index_pager.py'
       - 'tools/awj032/glm53_pager_cache_telemetry.py'
       - 'tools/awj032/test_glm53_w3_native_per_expert_fixture.py'
+      - 'tools/awj032/test_glm53_w3_scale_semantic_oracle.py'
       - '.github/workflows/awj032-glm53-layout-bind-bridge.yml'
   push:
     branches:
@@ -28,6 +29,7 @@ on:
       - 'tools/awj032/glm53_official_w2_plan_binding.py'
       - 'tools/awj032/test_glm53_official_w2_plan_binding.py'
       - 'tools/awj032/test_glm53_w3_native_per_expert_fixture.py'
+      - 'tools/awj032/test_glm53_w3_scale_semantic_oracle.py'
       - '.github/workflows/awj032-glm53-layout-bind-bridge.yml'
   workflow_dispatch:
 
@@ -70,6 +72,7 @@ jobs:
           tools/awj032/test_glm53_source_bound_layout_bridge.py
           tools/awj032/test_glm53_official_w2_plan_binding.py
           tools/awj032/test_glm53_w3_native_per_expert_fixture.py
+          tools/awj032/test_glm53_w3_scale_semantic_oracle.py
       - name: Run bridge, official-producer, and lower-plane fixture regressions
         run: >-
           python -m unittest
@@ -77,6 +80,7 @@ jobs:
           tools.awj032.test_glm53_source_bound_layout_bridge
           tools.awj032.test_glm53_official_w2_plan_binding
           tools.awj032.test_glm53_w3_native_per_expert_fixture
+          tools.awj032.test_glm53_w3_scale_semantic_oracle
       - name: Re-run current pager owner regressions
         working-directory: tools/awj032
         run: >-
