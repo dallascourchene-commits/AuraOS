@@ -1,8 +1,10 @@
-name: AWJ032 GLM53-01A expert paging
+name: AWJ032 GLM53 G1+G1A expert paging
 
 on:
   pull_request:
     paths:
+      - 'tools/awj032/glm53_compatibility_probe.py'
+      - 'tools/awj032/test_glm53_compatibility_probe.py'
       - 'tools/awj032/glm53_packed_expert_pager.py'
       - 'tools/awj032/test_glm53_packed_expert_pager.py'
       - 'tools/awj032/glm53_per_expert_index_pager.py'
@@ -14,21 +16,26 @@ permissions:
   contents: read
 
 jobs:
-  expert-paging:
+  g1-g1a:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Compile
+      - name: Compile G1 and G1A
         run: >-
           python -m py_compile
+          tools/awj032/glm53_compatibility_probe.py
+          tools/awj032/test_glm53_compatibility_probe.py
           tools/awj032/glm53_packed_expert_pager.py
           tools/awj032/test_glm53_packed_expert_pager.py
           tools/awj032/glm53_per_expert_index_pager.py
           tools/awj032/test_glm53_per_expert_index_pager.py
-      - name: Focused regressions
+      - name: G1 compatibility regressions
+        working-directory: tools/awj032
+        run: python -m unittest -v test_glm53_compatibility_probe.py
+      - name: G1A expert paging regressions
         working-directory: tools/awj032
         run: >-
           python -m unittest -v
