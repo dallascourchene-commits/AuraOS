@@ -1,0 +1,34 @@
+name: AURA-ADOPT ZF-07A Capability Escalation
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/capability_escalation_router.py'
+      - 'tools/aura_adopt/test_capability_escalation_router.py'
+      - 'tools/aura_adopt/arena_recipe.py'
+      - 'tools/aura_adopt/test_arena_recipe.py'
+      - '.github/workflows/aura-adopt-zf07a-capability-escalation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capability-escalation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile focused sources
+        run: >-
+          python -m py_compile
+          tools/aura_adopt/arena_recipe.py
+          tools/aura_adopt/capability_escalation_router.py
+          tools/aura_adopt/test_arena_recipe.py
+          tools/aura_adopt/test_capability_escalation_router.py
+      - name: Run ZF-07A regressions
+        run: python -m unittest tools.aura_adopt.test_capability_escalation_router
+      - name: Replay ZF-03A recipe regressions
+        run: python -m unittest tools.aura_adopt.test_arena_recipe

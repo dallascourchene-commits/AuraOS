@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788110389,
+  "generated_at_unix": 1788112598,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1642,
+    "repo_file_count": 1645,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -133,6 +133,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-adopt-zf03a-recipe.yml",
+      ".github/workflows/aura-adopt-zf07a-capability-escalation.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1633,7 +1634,9 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/aura_adopt/arena_recipe.py",
+      "tools/aura_adopt/capability_escalation_router.py",
       "tools/aura_adopt/test_arena_recipe.py",
+      "tools/aura_adopt/test_capability_escalation_router.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1758,16 +1761,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1642,
-      "bytes": 26434858,
-      "tokens_est": 6599067,
+      "files": 1645,
+      "bytes": 26473674,
+      "tokens_est": 6608773,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
-        "schema_or_lexicon": 272,
+        "python_module": 1001,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -3906,6 +3909,14 @@
         "end_line": 32,
         "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_canonical:a8cca6eb6693e74e",
         "signature_hash": "8e43409cca322220"
+      },
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 128,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_canonical:9245a22e55e0d77a",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -4356,6 +4367,14 @@
         "end_line": 35,
         "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_digest:11ffc127d64e42ca",
         "signature_hash": "8d381d1850a0b155"
+      },
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 131,
+        "end_line": 132,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_digest:d129c942f098037b",
+        "signature_hash": "c978f5ef05fda5cb"
       }
     ],
     "_token_proxy": [
@@ -8094,6 +8113,14 @@
         "end_line": 43,
         "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_sha:585b5731f335febb",
         "signature_hash": "51ad05b727d38ce8"
+      },
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 105,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_sha:6f85c2f78b536068",
+        "signature_hash": "161ac484b7831614"
       }
     ],
     "_repo": [
@@ -14680,6 +14707,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 89,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_text:806bfe5c644d36b3",
+        "signature_hash": "ef40803fdf7cca70"
       }
     ],
     "_bounded": [
@@ -138068,6 +138103,14 @@
         "end_line": 72,
         "semantic_id": "tests/test_aura_gate_server.py#function:_token:647371b875b04b3a",
         "signature_hash": "c9ac11b578e6d9c7"
+      },
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 98,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_token:3c5b6a4bc97b484b",
+        "signature_hash": "579603574c105c9e"
       }
     ],
     "key_one": [
@@ -149932,6 +149975,14 @@
         "end_line": 27,
         "semantic_id": "tests/test_aura_shadow_tool_observability.py#function:_decision:54ec1730b687141b",
         "signature_hash": "5a7f6afd4061ff16"
+      },
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 441,
+        "end_line": 489,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_decision:f0a22ece67839bb4",
+        "signature_hash": "e7b285f3e4108874"
       }
     ],
     "test_wrapper_forwards_only_original_tool_arguments": [
@@ -157456,6 +157507,276 @@
         "signature_hash": "51ebf7e1802cb047"
       }
     ],
+    "RouterError": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 30,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:RouterError:f8109f564df3df20",
+        "signature_hash": "ce27107537be3a3e"
+      }
+    ],
+    "RouterError.__init__": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#method:RouterError.__init__:9a5dd0029b4c8c50",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "ResidualKind": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 35,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:ResidualKind:6c48b084d63e9214",
+        "signature_hash": "0e9480bb31fd51f1"
+      }
+    ],
+    "Availability": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 41,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:Availability:68dca884aa323b67",
+        "signature_hash": "8ed2be8497caadfa"
+      }
+    ],
+    "ExecutionLocation": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 46,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:ExecutionLocation:deb21fcc62cfe8ae",
+        "signature_hash": "d4abaff92472689b"
+      }
+    ],
+    "Materialization": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 49,
+        "end_line": 52,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:Materialization:a00a3aa09e2c846c",
+        "signature_hash": "32012e48b358b2e2"
+      }
+    ],
+    "CostClass": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 55,
+        "end_line": 59,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:CostClass:ce89d405918c6d39",
+        "signature_hash": "f1f42e7cee929ef7"
+      }
+    ],
+    "CredentialRequirement": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 62,
+        "end_line": 65,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:CredentialRequirement:c61194147eb2acc5",
+        "signature_hash": "73d435477621001f"
+      }
+    ],
+    "RemoteAdmission": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 68,
+        "end_line": 72,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:RemoteAdmission:43cf238dd989040d",
+        "signature_hash": "78a642aa341a1e2f"
+      }
+    ],
+    "EscalationDisposition": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 75,
+        "end_line": 80,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:EscalationDisposition:ebb0824871e3bf6c",
+        "signature_hash": "b4d12fe38357deea"
+      }
+    ],
+    "_strict_enum": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 111,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_strict_enum:1bb3dad74b5e2f0d",
+        "signature_hash": "0d97b016f8271f7b"
+      }
+    ],
+    "_nn_int": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 119,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_nn_int:0b367c190802f7bd",
+        "signature_hash": "113b5f21b7ebec03"
+      }
+    ],
+    "RouterCurrentnessV1": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 136,
+        "end_line": 153,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:RouterCurrentnessV1:eaabde882d0b5e56",
+        "signature_hash": "86d05606861a7c15"
+      }
+    ],
+    "RouterCurrentnessV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 149,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#method:RouterCurrentnessV1.__post_init__:a76e484c3d943909",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RouterCurrentnessV1.digest": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 153,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#method:RouterCurrentnessV1.digest:f524841d93ae47a0",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "CapabilityResidualV1": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 157,
+        "end_line": 188,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:CapabilityResidualV1:a74614faa1fc5b6a",
+        "signature_hash": "d8e4e731936dd55e"
+      }
+    ],
+    "CapabilityResidualV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 188,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#method:CapabilityResidualV1.__post_init__:031de5a3c93da449",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CandidateRouteEvidenceV1": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 192,
+        "end_line": 282,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:CandidateRouteEvidenceV1:62540d611504e444",
+        "signature_hash": "5bb651162e6720ae"
+      }
+    ],
+    "CandidateRouteEvidenceV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "method",
+        "line": 214,
+        "end_line": 282,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#method:CandidateRouteEvidenceV1.__post_init__:1d4c24c796ede385",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EscalationOptionV1": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 286,
+        "end_line": 303,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:EscalationOptionV1:d503523ee0400ee2",
+        "signature_hash": "4d922999c49d5cb9"
+      }
+    ],
+    "EscalationOptionV1.logical": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "method",
+        "line": 299,
+        "end_line": 303,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#method:EscalationOptionV1.logical:b93736dde9278f6f",
+        "signature_hash": "c2240ab695f360e8"
+      }
+    ],
+    "CapabilityEscalationDecisionV1": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "class",
+        "line": 307,
+        "end_line": 329,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:CapabilityEscalationDecisionV1:3e0a991c678b76ff",
+        "signature_hash": "c57e10de9036b34b"
+      }
+    ],
+    "_validate_plan": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 332,
+        "end_line": 352,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_validate_plan:f44fde21fb530e5c",
+        "signature_hash": "56d26200b696cbfc"
+      }
+    ],
+    "_candidate_blockers": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 355,
+        "end_line": 387,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_candidate_blockers:77ec15c930eb3121",
+        "signature_hash": "796cba8cc947be6e"
+      }
+    ],
+    "_option": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 390,
+        "end_line": 433,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_option:fddc96450e33775b",
+        "signature_hash": "607521c432e050a1"
+      }
+    ],
+    "_option_sort_key": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 436,
+        "end_line": 438,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_option_sort_key:c4f6f3891cab279e",
+        "signature_hash": "055a4b6f0b859751"
+      }
+    ],
+    "compile_capability_escalation": [
+      {
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "kind": "function",
+        "line": 492,
+        "end_line": 587,
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:compile_capability_escalation:01d8158fc3dfb848",
+        "signature_hash": "f571ab824cd451e0"
+      }
+    ],
     "ArenaRecipeTests": [
       {
         "file": "tools/aura_adopt/test_arena_recipe.py",
@@ -157654,6 +157975,276 @@
         "end_line": 67,
         "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_unknown_top_level_field_rejected:bb5a1a3d0a7e007a",
         "signature_hash": "d0a539914298cd2d"
+      }
+    ],
+    "residual": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 50,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#function:residual:ad7e954d8846cc42",
+        "signature_hash": "50af067a2de4e6a4"
+      }
+    ],
+    "local_present": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 71,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#function:local_present:a7422af6bb0c7297",
+        "signature_hash": "2e30884c9e85e744"
+      }
+    ],
+    "local_download": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 93,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#function:local_download:525fb7a0abbee5c3",
+        "signature_hash": "9d736075494f4ba7"
+      }
+    ],
+    "remote_free": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 119,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#function:remote_free:9b39d06881a93723",
+        "signature_hash": "cd5df090997756ce"
+      }
+    ],
+    "remote_paid": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 143,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#function:remote_paid:c3e0e6181b646874",
+        "signature_hash": "6649de5f7c41f2de"
+      }
+    ],
+    "CapabilityEscalationRouterTests": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "class",
+        "line": 146,
+        "end_line": 373,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#class:CapabilityEscalationRouterTests:107ef34e2d3d4570",
+        "signature_hash": "2748d2ee4bfe7a88"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_startup_without_residual_never_prompts": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 154,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_startup_without_residual_never_prompts:eebde40ddfaf207e",
+        "signature_hash": "074d003898686cd8"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_non_model_residual_never_prompts": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 163,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_non_model_residual_never_prompts:e5e07df4ceb5bdb9",
+        "signature_hash": "818f520ff5cfcd1b"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_local_present_auto_ready_no_effect": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 174,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_local_present_auto_ready_no_effect:00b1f53bc68095d5",
+        "signature_hash": "543f5abc80b6d8de"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_download_consent_only_after_model_residual": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 181,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_download_consent_only_after_model_residual:4a058409b48407ae",
+        "signature_hash": "825035f9e39dc107"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_remote_free_requires_remote_consent_but_no_payment": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 192,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_remote_free_requires_remote_consent_but_no_payment:74e2f3d4b74c54bc",
+        "signature_hash": "dc4682deafa79912"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_remote_byok_key_prompt_is_only_earned_not_performed": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 194,
+        "end_line": 201,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_remote_byok_key_prompt_is_only_earned_not_performed:84a7727367fffa32",
+        "signature_hash": "cc29283f7fe04dab"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_free_rate_currentness_mismatch_not_offered": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 203,
+        "end_line": 211,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_free_rate_currentness_mismatch_not_offered:628af6103ffbd1b4",
+        "signature_hash": "3ac22c0830d02942"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_unknown_cost_is_not_called_free_or_offered": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 223,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_unknown_cost_is_not_called_free_or_offered:859274914c3fa786",
+        "signature_hash": "c18bf6291230c56e"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_remote_not_admitted_not_offered": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 225,
+        "end_line": 233,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_remote_not_admitted_not_offered:14a231a712861c50",
+        "signature_hash": "32e5baab560dc3ac"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_stale_model_not_offered": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 235,
+        "end_line": 243,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_stale_model_not_offered:71439f8e69838d2c",
+        "signature_hash": "cdbb883e785c1075"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_context_insufficient_not_offered": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 245,
+        "end_line": 252,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_context_insufficient_not_offered:f18d112fa04c0f62",
+        "signature_hash": "305be4b8b7baea01"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_residual_currentness_stale_blocks_before_options": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 254,
+        "end_line": 263,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_residual_currentness_stale_blocks_before_options:1fdb5e9c39a6f477",
+        "signature_hash": "721643ad8d4c4e5c"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_upstream_recipe_plan_blocked_means_no_model_prompt": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 265,
+        "end_line": 271,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_upstream_recipe_plan_blocked_means_no_model_prompt:353d25611e61678a",
+        "signature_hash": "cc33dfeae0f6bf98"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_plan_digest_mismatch_refused": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 273,
+        "end_line": 280,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_plan_digest_mismatch_refused:a41bf6814a96bc92",
+        "signature_hash": "37feb5a6daabe059"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_capability_not_in_plan_refused": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 282,
+        "end_line": 289,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_capability_not_in_plan_refused:412adc75472b379f",
+        "signature_hash": "855f6c86bb8cd50d"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_remote_provider_currentness_stale": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 291,
+        "end_line": 298,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_remote_provider_currentness_stale:392640a7a12019cb",
+        "signature_hash": "183bd94df60a934e"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_deterministic_options": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 300,
+        "end_line": 317,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_deterministic_options:b68ab7f03edec44f",
+        "signature_hash": "b2f49cb2456f2f9c"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_unknown_availability_not_assumed_available": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 319,
+        "end_line": 327,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_unknown_availability_not_assumed_available:0647ba1b880598e4",
+        "signature_hash": "f8fb5a31ea5bdb43"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_multiple_zero_effect_locals_require_choice_not_route_name_tiebreak": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 329,
+        "end_line": 349,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_multiple_zero_effect_locals_require_choice_not_route_name_tiebreak:43ef8787cc596873",
+        "signature_hash": "0dd58255cceef9c7"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_decision_identity_changes_when_currentness_generation_changes": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 351,
+        "end_line": 369,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_decision_identity_changes_when_currentness_generation_changes:31d9403b1cdf3b77",
+        "signature_hash": "eaff5856f9a5e761"
+      }
+    ],
+    "CapabilityEscalationRouterTests.test_candidate_requires_exact_evidence_digest": [
+      {
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "kind": "method",
+        "line": 371,
+        "end_line": 373,
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_candidate_requires_exact_evidence_digest:6f21346a3add13a2",
+        "signature_hash": "bc668418b79c4126"
       }
     ],
     "_coordinates": [
@@ -158763,6 +159354,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf07a-capability-escalation.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -168017,6 +168609,59 @@
         -0.184572,
         0.022149,
         0.166853
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-adopt-zf07a-capability-escalation.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1137,
+      "lines": 35,
+      "tokens_est": 285,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          26
+        ]
+      },
+      "topology": {},
+      "digest8": "aa65016203079b58",
+      "vector": [
+        0.023386,
+        -0.144008,
+        -0.129238,
+        -0.286786,
+        0.163702,
+        -0.025848,
+        0.008616,
+        0.141547,
+        0.016001,
+        -0.168625,
+        0.097236,
+        0.262169,
+        0.080005,
+        -0.028309,
+        -0.067696,
+        0.092313,
+        -0.301556,
+        0.291709,
+        -0.082466,
+        0.166163,
+        0.284324,
+        -0.291709,
+        -0.178472,
+        0.060311,
+        -0.294171,
+        0.235091,
+        -0.200627,
+        0.1317,
+        0.240014,
+        0.001231,
+        0.092313,
+        0.166163
       ]
     },
     {
@@ -263217,6 +263862,53 @@
       ]
     },
     {
+      "path": "tools/aura_adopt/capability_escalation_router.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 22786,
+      "lines": 588,
+      "tokens_est": 5697,
+      "symbol_count": 33,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a841120158c4513d",
+      "vector": [
+        -0.181673,
+        -0.256848,
+        0.00877,
+        -0.319494,
+        0.199214,
+        -0.0213,
+        -0.096475,
+        0.028817,
+        0.281906,
+        0.146591,
+        -0.048864,
+        0.003759,
+        -0.041346,
+        0.166638,
+        0.251836,
+        0.196708,
+        -0.028817,
+        -0.2794,
+        0.241813,
+        0.151603,
+        -0.144085,
+        0.05137,
+        -0.17165,
+        -0.078934,
+        -0.284412,
+        -0.24933,
+        0.08144,
+        0.144085,
+        -0.15912,
+        -0.12905,
+        -0.071416,
+        -0.276895
+      ]
+    },
+    {
       "path": "tools/aura_adopt/test_arena_recipe.py",
       "role": "python_module",
       "binary": false,
@@ -263261,6 +263953,53 @@
         0.134665,
         -0.206486,
         0.314218
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_capability_escalation_router.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14893,
+      "lines": 378,
+      "tokens_est": 3724,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bc3fb4b8cb01b623",
+      "vector": [
+        0.009186,
+        0.227019,
+        -0.311003,
+        -0.316252,
+        -0.224395,
+        0.229644,
+        0.014435,
+        0.284758,
+        -0.077423,
+        0.106292,
+        -0.153533,
+        -0.263762,
+        -0.072174,
+        -0.077423,
+        -0.085296,
+        -0.329375,
+        0.127288,
+        -0.045929,
+        0.038055,
+        -0.069549,
+        -0.129913,
+        0.090545,
+        0.287383,
+        -0.216521,
+        0.124664,
+        -0.156158,
+        0.098419,
+        -0.053802,
+        0.190276,
+        -0.085296,
+        0.227019,
+        0.056427
       ]
     },
     {
@@ -287262,16 +288001,16 @@
     }
   },
   "summary": {
-    "file_count": 1642,
-    "total_bytes": 26434858,
-    "text_tokens_est": 6599067,
+    "file_count": 1645,
+    "total_bytes": 26473674,
+    "text_tokens_est": 6608773,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
-      "schema_or_lexicon": 272,
+      "python_module": 1001,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287414,6 +288153,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-adopt-zf03a-recipe.yml",
+      ".github/workflows/aura-adopt-zf07a-capability-escalation.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -288914,7 +289654,9 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/aura_adopt/arena_recipe.py",
+      "tools/aura_adopt/capability_escalation_router.py",
       "tools/aura_adopt/test_arena_recipe.py",
+      "tools/aura_adopt/test_capability_escalation_router.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -446533,6 +447275,336 @@
         "file_digest8": "fe430b55696a57ec"
       },
       {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:Availability:68dca884aa323b67",
+        "name": "Availability",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 38,
+        "end_line": 41,
+        "signature_hash": "8ed2be8497caadfa",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:CandidateRouteEvidenceV1:62540d611504e444",
+        "name": "CandidateRouteEvidenceV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 192,
+        "end_line": 282,
+        "signature_hash": "5bb651162e6720ae",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:CapabilityEscalationDecisionV1:3e0a991c678b76ff",
+        "name": "CapabilityEscalationDecisionV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 307,
+        "end_line": 329,
+        "signature_hash": "c57e10de9036b34b",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:CapabilityResidualV1:a74614faa1fc5b6a",
+        "name": "CapabilityResidualV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 157,
+        "end_line": 188,
+        "signature_hash": "d8e4e731936dd55e",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:CostClass:ce89d405918c6d39",
+        "name": "CostClass",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 55,
+        "end_line": 59,
+        "signature_hash": "f1f42e7cee929ef7",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:CredentialRequirement:c61194147eb2acc5",
+        "name": "CredentialRequirement",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 62,
+        "end_line": 65,
+        "signature_hash": "73d435477621001f",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:EscalationDisposition:ebb0824871e3bf6c",
+        "name": "EscalationDisposition",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 75,
+        "end_line": 80,
+        "signature_hash": "b4d12fe38357deea",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:EscalationOptionV1:d503523ee0400ee2",
+        "name": "EscalationOptionV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 286,
+        "end_line": 303,
+        "signature_hash": "4d922999c49d5cb9",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:ExecutionLocation:deb21fcc62cfe8ae",
+        "name": "ExecutionLocation",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 44,
+        "end_line": 46,
+        "signature_hash": "d4abaff92472689b",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:Materialization:a00a3aa09e2c846c",
+        "name": "Materialization",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 49,
+        "end_line": 52,
+        "signature_hash": "32012e48b358b2e2",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:RemoteAdmission:43cf238dd989040d",
+        "name": "RemoteAdmission",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 68,
+        "end_line": 72,
+        "signature_hash": "78a642aa341a1e2f",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:ResidualKind:6c48b084d63e9214",
+        "name": "ResidualKind",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 33,
+        "end_line": 35,
+        "signature_hash": "0e9480bb31fd51f1",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:RouterCurrentnessV1:eaabde882d0b5e56",
+        "name": "RouterCurrentnessV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 136,
+        "end_line": 153,
+        "signature_hash": "86d05606861a7c15",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#class:RouterError:f8109f564df3df20",
+        "name": "RouterError",
+        "kind": "class",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 26,
+        "end_line": 30,
+        "signature_hash": "ce27107537be3a3e",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_candidate_blockers:77ec15c930eb3121",
+        "name": "_candidate_blockers",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 355,
+        "end_line": 387,
+        "signature_hash": "796cba8cc947be6e",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_canonical:9245a22e55e0d77a",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 122,
+        "end_line": 128,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_decision:f0a22ece67839bb4",
+        "name": "_decision",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 441,
+        "end_line": 489,
+        "signature_hash": "e7b285f3e4108874",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_digest:d129c942f098037b",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 131,
+        "end_line": 132,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_nn_int:0b367c190802f7bd",
+        "name": "_nn_int",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 114,
+        "end_line": 119,
+        "signature_hash": "113b5f21b7ebec03",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_option:fddc96450e33775b",
+        "name": "_option",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 390,
+        "end_line": 433,
+        "signature_hash": "607521c432e050a1",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_option_sort_key:c4f6f3891cab279e",
+        "name": "_option_sort_key",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 436,
+        "end_line": 438,
+        "signature_hash": "055a4b6f0b859751",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_sha:6f85c2f78b536068",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 101,
+        "end_line": 105,
+        "signature_hash": "161ac484b7831614",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_strict_enum:1bb3dad74b5e2f0d",
+        "name": "_strict_enum",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 108,
+        "end_line": 111,
+        "signature_hash": "0d97b016f8271f7b",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_text:806bfe5c644d36b3",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 83,
+        "end_line": 89,
+        "signature_hash": "ef40803fdf7cca70",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_token:3c5b6a4bc97b484b",
+        "name": "_token",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 92,
+        "end_line": 98,
+        "signature_hash": "579603574c105c9e",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:_validate_plan:f44fde21fb530e5c",
+        "name": "_validate_plan",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 332,
+        "end_line": 352,
+        "signature_hash": "56d26200b696cbfc",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#function:compile_capability_escalation:01d8158fc3dfb848",
+        "name": "compile_capability_escalation",
+        "kind": "function",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 492,
+        "end_line": 587,
+        "signature_hash": "f571ab824cd451e0",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#method:CandidateRouteEvidenceV1.__post_init__:1d4c24c796ede385",
+        "name": "CandidateRouteEvidenceV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 214,
+        "end_line": 282,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#method:CapabilityResidualV1.__post_init__:031de5a3c93da449",
+        "name": "CapabilityResidualV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 167,
+        "end_line": 188,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#method:EscalationOptionV1.logical:b93736dde9278f6f",
+        "name": "EscalationOptionV1.logical",
+        "kind": "method",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 299,
+        "end_line": 303,
+        "signature_hash": "c2240ab695f360e8",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#method:RouterCurrentnessV1.__post_init__:a76e484c3d943909",
+        "name": "RouterCurrentnessV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 142,
+        "end_line": 149,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#method:RouterCurrentnessV1.digest:f524841d93ae47a0",
+        "name": "RouterCurrentnessV1.digest",
+        "kind": "method",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 152,
+        "end_line": 153,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/capability_escalation_router.py#method:RouterError.__init__:9a5dd0029b4c8c50",
+        "name": "RouterError.__init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/capability_escalation_router.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "a841120158c4513d"
+      },
+      {
         "semantic_id": "tools/aura_adopt/test_arena_recipe.py#class:ArenaRecipeTests:55022f22769bfd19",
         "name": "ArenaRecipeTests",
         "kind": "class",
@@ -446731,6 +447803,276 @@
         "end_line": 67,
         "signature_hash": "d0a539914298cd2d",
         "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#class:CapabilityEscalationRouterTests:107ef34e2d3d4570",
+        "name": "CapabilityEscalationRouterTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 146,
+        "end_line": 373,
+        "signature_hash": "2748d2ee4bfe7a88",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#function:local_download:525fb7a0abbee5c3",
+        "name": "local_download",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 74,
+        "end_line": 93,
+        "signature_hash": "9d736075494f4ba7",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#function:local_present:a7422af6bb0c7297",
+        "name": "local_present",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 53,
+        "end_line": 71,
+        "signature_hash": "2e30884c9e85e744",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#function:remote_free:9b39d06881a93723",
+        "name": "remote_free",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 96,
+        "end_line": 119,
+        "signature_hash": "cd5df090997756ce",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#function:remote_paid:c3e0e6181b646874",
+        "name": "remote_paid",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 122,
+        "end_line": 143,
+        "signature_hash": "6649de5f7c41f2de",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#function:residual:ad7e954d8846cc42",
+        "name": "residual",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 38,
+        "end_line": 50,
+        "signature_hash": "50af067a2de4e6a4",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_candidate_requires_exact_evidence_digest:6f21346a3add13a2",
+        "name": "CapabilityEscalationRouterTests.test_candidate_requires_exact_evidence_digest",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 371,
+        "end_line": 373,
+        "signature_hash": "bc668418b79c4126",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_capability_not_in_plan_refused:412adc75472b379f",
+        "name": "CapabilityEscalationRouterTests.test_capability_not_in_plan_refused",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 282,
+        "end_line": 289,
+        "signature_hash": "855f6c86bb8cd50d",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_context_insufficient_not_offered:f18d112fa04c0f62",
+        "name": "CapabilityEscalationRouterTests.test_context_insufficient_not_offered",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 245,
+        "end_line": 252,
+        "signature_hash": "305be4b8b7baea01",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_decision_identity_changes_when_currentness_generation_changes:31d9403b1cdf3b77",
+        "name": "CapabilityEscalationRouterTests.test_decision_identity_changes_when_currentness_generation_changes",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 351,
+        "end_line": 369,
+        "signature_hash": "eaff5856f9a5e761",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_deterministic_options:b68ab7f03edec44f",
+        "name": "CapabilityEscalationRouterTests.test_deterministic_options",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 300,
+        "end_line": 317,
+        "signature_hash": "b2f49cb2456f2f9c",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_download_consent_only_after_model_residual:4a058409b48407ae",
+        "name": "CapabilityEscalationRouterTests.test_download_consent_only_after_model_residual",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 176,
+        "end_line": 181,
+        "signature_hash": "825035f9e39dc107",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_free_rate_currentness_mismatch_not_offered:628af6103ffbd1b4",
+        "name": "CapabilityEscalationRouterTests.test_free_rate_currentness_mismatch_not_offered",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 203,
+        "end_line": 211,
+        "signature_hash": "3ac22c0830d02942",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_local_present_auto_ready_no_effect:00b1f53bc68095d5",
+        "name": "CapabilityEscalationRouterTests.test_local_present_auto_ready_no_effect",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 165,
+        "end_line": 174,
+        "signature_hash": "543f5abc80b6d8de",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_multiple_zero_effect_locals_require_choice_not_route_name_tiebreak:43ef8787cc596873",
+        "name": "CapabilityEscalationRouterTests.test_multiple_zero_effect_locals_require_choice_not_route_name_tiebreak",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 329,
+        "end_line": 349,
+        "signature_hash": "0dd58255cceef9c7",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_non_model_residual_never_prompts:e5e07df4ceb5bdb9",
+        "name": "CapabilityEscalationRouterTests.test_non_model_residual_never_prompts",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 156,
+        "end_line": 163,
+        "signature_hash": "818f520ff5cfcd1b",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_plan_digest_mismatch_refused:a41bf6814a96bc92",
+        "name": "CapabilityEscalationRouterTests.test_plan_digest_mismatch_refused",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 273,
+        "end_line": 280,
+        "signature_hash": "37feb5a6daabe059",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_remote_byok_key_prompt_is_only_earned_not_performed:84a7727367fffa32",
+        "name": "CapabilityEscalationRouterTests.test_remote_byok_key_prompt_is_only_earned_not_performed",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 194,
+        "end_line": 201,
+        "signature_hash": "cc29283f7fe04dab",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_remote_free_requires_remote_consent_but_no_payment:74e2f3d4b74c54bc",
+        "name": "CapabilityEscalationRouterTests.test_remote_free_requires_remote_consent_but_no_payment",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 183,
+        "end_line": 192,
+        "signature_hash": "dc4682deafa79912",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_remote_not_admitted_not_offered:14a231a712861c50",
+        "name": "CapabilityEscalationRouterTests.test_remote_not_admitted_not_offered",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 225,
+        "end_line": 233,
+        "signature_hash": "32e5baab560dc3ac",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_remote_provider_currentness_stale:392640a7a12019cb",
+        "name": "CapabilityEscalationRouterTests.test_remote_provider_currentness_stale",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 291,
+        "end_line": 298,
+        "signature_hash": "183bd94df60a934e",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_residual_currentness_stale_blocks_before_options:1fdb5e9c39a6f477",
+        "name": "CapabilityEscalationRouterTests.test_residual_currentness_stale_blocks_before_options",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 254,
+        "end_line": 263,
+        "signature_hash": "721643ad8d4c4e5c",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_stale_model_not_offered:71439f8e69838d2c",
+        "name": "CapabilityEscalationRouterTests.test_stale_model_not_offered",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 235,
+        "end_line": 243,
+        "signature_hash": "cdbb883e785c1075",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_startup_without_residual_never_prompts:eebde40ddfaf207e",
+        "name": "CapabilityEscalationRouterTests.test_startup_without_residual_never_prompts",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 147,
+        "end_line": 154,
+        "signature_hash": "074d003898686cd8",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_unknown_availability_not_assumed_available:0647ba1b880598e4",
+        "name": "CapabilityEscalationRouterTests.test_unknown_availability_not_assumed_available",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 319,
+        "end_line": 327,
+        "signature_hash": "f8fb5a31ea5bdb43",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_unknown_cost_is_not_called_free_or_offered:859274914c3fa786",
+        "name": "CapabilityEscalationRouterTests.test_unknown_cost_is_not_called_free_or_offered",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 213,
+        "end_line": 223,
+        "signature_hash": "c18bf6291230c56e",
+        "file_digest8": "bc3fb4b8cb01b623"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_capability_escalation_router.py#method:CapabilityEscalationRouterTests.test_upstream_recipe_plan_blocked_means_no_model_prompt:353d25611e61678a",
+        "name": "CapabilityEscalationRouterTests.test_upstream_recipe_plan_blocked_means_no_model_prompt",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_capability_escalation_router.py",
+        "line": 265,
+        "end_line": 271,
+        "signature_hash": "cc33dfeae0f6bf98",
+        "file_digest8": "bc3fb4b8cb01b623"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -447983,7 +449325,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "df9fd7ef5ea7c678f350a2ca1b149853",
-    "payload_hash": "edf55c8f8416e0c0bea16f8c1ac594b7"
+    "record_fingerprint": "bb780d4853ef01f6049f06e5afce1ad8",
+    "payload_hash": "c1470466468735cb6e90e08dce46eee4"
   }
 }
