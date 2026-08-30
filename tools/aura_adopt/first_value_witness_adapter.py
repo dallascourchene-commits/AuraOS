@@ -1,19 +1,22 @@
 """AURA-ADOPT-001: zero-install first-value witness -> ZF-00B adapter.
 
-This is a pure observation adapter. It does not own browser execution, route
-selection, telemetry collection, user consent, storage, sharing, or effects.
-It converts already-observed first-value witness facts into the canonical
-AdoptionFrictionReceiptV1 owner without creating a parallel receipt identity.
+Pure observation adapter only. It does not own browser execution, route selection,
+telemetry collection, user consent, trust verification, storage, sharing, or effects.
+It converts already-observed witness facts into the canonical
+AdoptionFrictionReceiptV1 without creating a parallel receipt identity.
 
-Critical evidence law:
+Evidence law:
 - SYNTHETIC_TECHNICAL never satisfies USER_EXPLICIT acceptance.
 - DOWNLOAD_INITIATED or SAVE_OBSERVED never proves REOPEN_OBSERVED.
+- This adapter cannot complete TRUST; a trust-owner bridge must do that.
+- Causally impossible witness combinations fail closed.
 - UNKNOWN remains UNKNOWN.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+import re
 from typing import Mapping, Sequence
 
 from tools.aura_adopt.adoption_friction_receipt import (
@@ -29,6 +32,10 @@ from tools.aura_adopt.adoption_friction_receipt import (
 SCHEMA = "FirstValueWitnessObservationV1"
 ZERO_INSTALL_SURFACE = "ZERO_INSTALL_WEB_PWA"
 READY_DISPOSITION = "READY_BOUNDED"
+_REF_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/@#?=&%+-]{1,255}$")
+_SENSITIVE_REF_MARKERS = (
+    "api_key=", "apikey=", "token=", "secret=", "password=", "bearer ", "sk-",
+)
 
 
 class AcceptanceEvidenceMode(str, Enum):
@@ -45,14 +52,19 @@ class SaveEvidenceMode(str, Enum):
     REOPEN_OBSERVED = "REOPEN_OBSERVED"
 
 
-def _ref(value: str | None) -> bool:
-    return isinstance(value, str) and bool(value.strip())
+def _ref(value: str | None, code: str = "EVIDENCE_REF_INVALID") -> str:
+    if not isinstance(value, str):
+        raise FrictionReceiptError(code)
+    clean = value.strip()
+    lowered = clean.casefold()
+    if not _REF_RE.fullmatch(clean) or any(marker in lowered for marker in _SENSITIVE_REF_MARKERS):
+        raise FrictionReceiptError(code)
+    return clean
 
 
 @dataclass(frozen=True)
 class FirstValueWitnessObservationV1:
     opened: bool
-    trust_satisfied: bool | None
     input_selected: bool
     browser_capability_available: bool | None
     rendered: bool
@@ -61,6 +73,7 @@ class FirstValueWitnessObservationV1:
     acceptance_evidence_ref: str | None = None
     save_mode: SaveEvidenceMode = SaveEvidenceMode.NONE
     save_evidence_ref: str | None = None
+    trust_failed: bool = False
     share_or_reuse_observed: bool = False
     share_or_reuse_evidence_ref: str | None = None
     schema: str = SCHEMA
@@ -69,13 +82,11 @@ class FirstValueWitnessObservationV1:
         if self.schema != SCHEMA:
             raise FrictionReceiptError("WITNESS_OBSERVATION_SCHEMA_MISMATCH")
         for name in (
-            "opened", "input_selected", "rendered", "preview_shown",
+            "opened", "input_selected", "rendered", "preview_shown", "trust_failed",
             "share_or_reuse_observed",
         ):
             if type(getattr(self, name)) is not bool:
                 raise FrictionReceiptError("WITNESS_BOOL_REQUIRED", name)
-        if self.trust_satisfied is not None and type(self.trust_satisfied) is not bool:
-            raise FrictionReceiptError("WITNESS_TRUST_STATE_INVALID")
         if self.browser_capability_available is not None and type(self.browser_capability_available) is not bool:
             raise FrictionReceiptError("WITNESS_BROWSER_CAPABILITY_STATE_INVALID")
         if not isinstance(self.acceptance_mode, AcceptanceEvidenceMode):
@@ -83,32 +94,40 @@ class FirstValueWitnessObservationV1:
         if not isinstance(self.save_mode, SaveEvidenceMode):
             raise FrictionReceiptError("WITNESS_SAVE_MODE_INVALID")
 
-        if self.acceptance_mode in {
+        explicit = self.acceptance_mode in {
             AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT,
             AcceptanceEvidenceMode.USER_EXPLICIT_REJECT,
-        } and not _ref(self.acceptance_evidence_ref):
-            raise FrictionReceiptError("USER_ACCEPTANCE_EVIDENCE_REF_REQUIRED")
-        if self.acceptance_mode in {
-            AcceptanceEvidenceMode.NONE,
-            AcceptanceEvidenceMode.SYNTHETIC_TECHNICAL,
-        } and self.acceptance_evidence_ref is not None:
+        }
+        if explicit:
+            _ref(self.acceptance_evidence_ref, "USER_ACCEPTANCE_EVIDENCE_REF_REQUIRED")
+        elif self.acceptance_evidence_ref is not None:
             raise FrictionReceiptError("UNBOUND_ACCEPTANCE_EVIDENCE_REF")
 
-        if self.save_mode in {
-            SaveEvidenceMode.SAVE_OBSERVED,
-            SaveEvidenceMode.REOPEN_OBSERVED,
-        } and not _ref(self.save_evidence_ref):
-            raise FrictionReceiptError("SAVE_EVIDENCE_REF_REQUIRED")
-        if self.save_mode in {
-            SaveEvidenceMode.NONE,
-            SaveEvidenceMode.DOWNLOAD_INITIATED,
-        } and self.save_evidence_ref is not None:
+        if self.save_mode in {SaveEvidenceMode.SAVE_OBSERVED, SaveEvidenceMode.REOPEN_OBSERVED}:
+            _ref(self.save_evidence_ref, "SAVE_EVIDENCE_REF_REQUIRED")
+        elif self.save_evidence_ref is not None:
             raise FrictionReceiptError("UNBOUND_SAVE_EVIDENCE_REF")
 
-        if self.share_or_reuse_observed and not _ref(self.share_or_reuse_evidence_ref):
-            raise FrictionReceiptError("SHARE_REUSE_EVIDENCE_REF_REQUIRED")
-        if not self.share_or_reuse_observed and self.share_or_reuse_evidence_ref is not None:
+        if self.share_or_reuse_observed:
+            _ref(self.share_or_reuse_evidence_ref, "SHARE_REUSE_EVIDENCE_REF_REQUIRED")
+        elif self.share_or_reuse_evidence_ref is not None:
             raise FrictionReceiptError("UNBOUND_SHARE_REUSE_EVIDENCE_REF")
+
+        # Witness-causality membrane. These are route facts, not inferred effects.
+        if self.rendered and not self.opened:
+            raise FrictionReceiptError("RENDER_REQUIRES_OPENED_WITNESS")
+        if self.rendered and not self.input_selected:
+            raise FrictionReceiptError("RENDER_REQUIRES_SELECTED_INPUT")
+        if self.rendered and self.browser_capability_available is not True:
+            raise FrictionReceiptError("RENDER_REQUIRES_BROWSER_CAPABILITY")
+        if self.preview_shown and not self.rendered:
+            raise FrictionReceiptError("PREVIEW_REQUIRES_RENDER")
+        if explicit and not self.preview_shown:
+            raise FrictionReceiptError("USER_ACCEPTANCE_REQUIRES_PREVIEW")
+        if self.save_mode is not SaveEvidenceMode.NONE and not self.rendered:
+            raise FrictionReceiptError("SAVE_OBSERVATION_REQUIRES_RENDER")
+        if self.share_or_reuse_observed and not self.rendered:
+            raise FrictionReceiptError("SHARE_REUSE_REQUIRES_RENDER")
 
 
 def _event(
@@ -136,54 +155,33 @@ def _event(
 def _binary_stage(stage: str, observed: bool, *, blocked_code: str, blocked_reason: str) -> StageEvent:
     if observed:
         return _event(stage, StageStatus.COMPLETED, steps=1)
-    return _event(
-        stage,
-        StageStatus.BLOCKED,
-        reason=blocked_reason,
-        failure_code=blocked_code,
-        steps=0,
-    )
+    return _event(stage, StageStatus.BLOCKED, reason=blocked_reason, failure_code=blocked_code, steps=0)
 
 
 def _acceptance(obs: FirstValueWitnessObservationV1) -> tuple[StageEvent, AcceptedValue]:
     if obs.acceptance_mode is AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT:
+        ref = _ref(obs.acceptance_evidence_ref, "USER_ACCEPTANCE_EVIDENCE_REF_REQUIRED")
         return (
             _event("VERIFY_ACCEPT", StageStatus.COMPLETED, steps=1),
-            AcceptedValue(
-                criterion="USER_EXPLICIT_FIRST_VALUE",
-                result=True,
-                verifier=f"USER_EXPLICIT:{obs.acceptance_evidence_ref}",
-            ),
+            AcceptedValue("USER_EXPLICIT_FIRST_VALUE", True, f"USER_EXPLICIT_REF:{ref}"),
         )
     if obs.acceptance_mode is AcceptanceEvidenceMode.USER_EXPLICIT_REJECT:
+        ref = _ref(obs.acceptance_evidence_ref, "USER_ACCEPTANCE_EVIDENCE_REF_REQUIRED")
         return (
             _event("VERIFY_ACCEPT", StageStatus.COMPLETED, steps=1),
-            AcceptedValue(
-                criterion="USER_EXPLICIT_FIRST_VALUE",
-                result=False,
-                verifier=f"USER_EXPLICIT:{obs.acceptance_evidence_ref}",
-            ),
+            AcceptedValue("USER_EXPLICIT_FIRST_VALUE", False, f"USER_EXPLICIT_REF:{ref}"),
         )
     if obs.acceptance_mode is AcceptanceEvidenceMode.SYNTHETIC_TECHNICAL:
         return (
             _event(
-                "VERIFY_ACCEPT",
-                StageStatus.UNKNOWN,
+                "VERIFY_ACCEPT", StageStatus.UNKNOWN,
                 reason="SYNTHETIC_TECHNICAL_OUTPUT_DOES_NOT_PROVE_USER_ACCEPTANCE",
             ),
-            AcceptedValue(
-                criterion="USER_EXPLICIT_FIRST_VALUE",
-                result=None,
-                verifier="SYNTHETIC_TECHNICAL",
-            ),
+            AcceptedValue("USER_EXPLICIT_FIRST_VALUE", None, "SYNTHETIC_TECHNICAL"),
         )
     return (
         _event("VERIFY_ACCEPT", StageStatus.UNKNOWN, reason="USER_ACCEPTANCE_NOT_OBSERVED"),
-        AcceptedValue(
-            criterion="USER_EXPLICIT_FIRST_VALUE",
-            result=None,
-            verifier="UNOBSERVED",
-        ),
+        AcceptedValue("USER_EXPLICIT_FIRST_VALUE", None, "UNOBSERVED"),
     )
 
 
@@ -213,7 +211,6 @@ def compile_first_value_receipt(
     cohort: Mapping[str, str],
     recipe_ref: str,
     capability_refs: Sequence[str] = (),
-    trust_evidence_ref: str | None = None,
     evidence_class: str = "LOCAL_TEST",
     privacy_telemetry_mode: str = "LOCAL_NO_TELEMETRY",
 ) -> FrictionReceipt:
@@ -226,21 +223,22 @@ def compile_first_value_receipt(
         raise FrictionReceiptError("ROUTE_NOT_READY_FOR_FIRST_VALUE_WITNESS")
     if not isinstance(observation, FirstValueWitnessObservationV1):
         raise FrictionReceiptError("WITNESS_OBSERVATION_REQUIRED")
-    if not _ref(recipe_ref):
-        raise FrictionReceiptError("RECIPE_REF_REQUIRED")
 
-    events: list[StageEvent] = []
-    events.append(_binary_stage(
-        "DISCOVER", observation.opened,
-        blocked_code="WITNESS_NOT_OPENED",
-        blocked_reason="ZERO_INSTALL_ENTRY_WAS_NOT_OPENED",
-    ))
+    recipe = _ref(recipe_ref, "RECIPE_REF_REQUIRED")
+    cap_refs = tuple(_ref(value, "CAPABILITY_REF_INVALID") for value in capability_refs)
 
-    if observation.trust_satisfied is True:
-        if not _ref(trust_evidence_ref):
-            raise FrictionReceiptError("TRUST_EVIDENCE_REF_REQUIRED")
-        events.append(_event("TRUST", StageStatus.COMPLETED, steps=0))
-    elif observation.trust_satisfied is False:
+    events: list[StageEvent] = [
+        _binary_stage(
+            "DISCOVER", observation.opened,
+            blocked_code="WITNESS_NOT_OPENED",
+            blocked_reason="ZERO_INSTALL_ENTRY_WAS_NOT_OPENED",
+        )
+    ]
+
+    # Trust is deliberately not completable here. This prevents arbitrary pointer
+    # presence from becoming trust evidence. A successor trust-owner bridge can
+    # replace UNKNOWN with source-bound TRUST completion without changing ZF-00B.
+    if observation.trust_failed:
         events.append(_event(
             "TRUST", StageStatus.BLOCKED,
             reason="TRUST_ADMISSION_FAILED",
@@ -248,9 +246,10 @@ def compile_first_value_receipt(
             steps=0,
         ))
     else:
-        if trust_evidence_ref is not None:
-            raise FrictionReceiptError("UNBOUND_TRUST_EVIDENCE_REF")
-        events.append(_event("TRUST", StageStatus.UNKNOWN, reason="TRUST_EVIDENCE_NOT_OBSERVED"))
+        events.append(_event(
+            "TRUST", StageStatus.UNKNOWN,
+            reason="TRUST_OWNER_EVIDENCE_NOT_BOUND_BY_WITNESS_ADAPTER",
+        ))
 
     for stage, reason in (
         ("OPEN_INSTALL", "ZERO_INSTALL_BROWSER_ROUTE"),
@@ -300,17 +299,16 @@ def compile_first_value_receipt(
             reason="NO_SHARE_OR_REUSE_CLAIM_FOR_FIRST_VALUE_WITNESS", steps=0,
         ))
 
-    refs = list(capability_refs)
-    for value in (
-        trust_evidence_ref,
-        observation.acceptance_evidence_ref,
-        observation.save_evidence_ref,
-        observation.share_or_reuse_evidence_ref,
+    refs = list(cap_refs)
+    for value, code in (
+        (observation.acceptance_evidence_ref, "USER_ACCEPTANCE_EVIDENCE_REF_REQUIRED"),
+        (observation.save_evidence_ref, "SAVE_EVIDENCE_REF_REQUIRED"),
+        (observation.share_or_reuse_evidence_ref, "SHARE_REUSE_EVIDENCE_REF_REQUIRED"),
     ):
-        if value:
-            refs.append(value)
+        if value is not None:
+            refs.append(_ref(value, code))
 
-    unknown_vector = {
+    vector = {
         "discovery": None,
         "trust": None,
         "install": 0,
@@ -321,7 +319,6 @@ def compile_first_value_receipt(
         "creation_time_to_value": None,
         "reuse_recovery": None,
     }
-    unit_weights = {key: 1.0 for key in unknown_vector}
 
     return build_friction_receipt(
         decision,
@@ -332,32 +329,26 @@ def compile_first_value_receipt(
         starting_state={"witness_schema": SCHEMA, "entry_surface": ZERO_INSTALL_SURFACE},
         stage_events=tuple(events),
         accepted_value=accepted_value,
-        friction_vector=unknown_vector,
-        weights=unit_weights,
+        friction_vector=vector,
+        weights={key: 1.0 for key in vector},
         weighting_method="UNWEIGHTED_UNTIL_OBSERVED_FRICTION_VALUES_EXIST",
         reopen_trigger="WITNESS_OR_ZF00B_CONTRACT_CHANGES_OR_NEW_REAL_EVIDENCE",
-        permissions=(),
-        mandatory_account=False,
-        mandatory_key=False,
-        clarification_events=0,
-        support_events=0,
-        route_changes=(),
-        capability_refs=tuple(refs),
-        recipe_refs=(recipe_ref,),
+        permissions=(), mandatory_account=False, mandatory_key=False,
+        clarification_events=0, support_events=0, route_changes=(),
+        capability_refs=tuple(refs), recipe_refs=(recipe,),
         privacy_telemetry_mode=privacy_telemetry_mode,
         invalidators=(
             "SOURCE_CURRENTNESS_MISMATCH",
             "SYNTHETIC_ACCEPTANCE_LAUNDERED_AS_USER_ACCEPTANCE",
             "SIMULATED_SAVE_LAUNDERED_AS_REOPEN",
+            "TRUST_POINTER_PRESENCE_LAUNDERED_AS_TRUST_COMPLETION",
+            "WITNESS_CAUSALITY_CONTRADICTION",
         ),
         evidence_class=evidence_class,
     )
 
 
 __all__ = [
-    "AcceptanceEvidenceMode",
-    "FirstValueWitnessObservationV1",
-    "SCHEMA",
-    "SaveEvidenceMode",
-    "compile_first_value_receipt",
+    "AcceptanceEvidenceMode", "FirstValueWitnessObservationV1", "SCHEMA",
+    "SaveEvidenceMode", "compile_first_value_receipt",
 ]
