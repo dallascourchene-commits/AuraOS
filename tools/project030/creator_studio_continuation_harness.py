@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 from dataclasses import dataclass, field
@@ -168,6 +169,11 @@ def _score(item: WorkItem) -> Tuple[float, float, float, float, int, str]:
     )
 
 
+def _worker_claim_ids(state: HarnessState, worker: WorkerContext) -> List[str]:
+    """Return the active claim IDs currently owned by one worker."""
+    return sorted(work_id for work_id, owner in state.claims.items() if owner == worker.worker_id)
+
+
 def eligible_work(
     state: HarnessState,
     worker: WorkerContext,
@@ -207,8 +213,20 @@ def claim_best_available(state: HarnessState, worker: WorkerContext) -> HarnessA
             mission_id=state.active_mission_id,
             recheck_trigger="currentness becomes CURRENT",
         )
-    if state.gate >= 10:
+    if state.gate >= 10 and state.temporary_mission:
         return restore_canonical_mission(state)
+
+    current_claims = _worker_claim_ids(state, worker)
+    if len(current_claims) > 1:
+        raise HarnessRefusal("WORKER_MULTIPLE_ACTIVE_CLAIMS", ",".join(current_claims))
+    if len(current_claims) == 1:
+        return HarnessAction(
+            "CONTINUE_ACTIVE_CLAIM",
+            "WORKER_ALREADY_CLAIMED",
+            work_id=current_claims[0],
+            mission_id=state.active_mission_id,
+            requires_inference=False,
+        )
 
     for stage in ("PRIORITY", "REVIEW", "BACKBURNER"):
         candidates = eligible_work(state, worker, stage=stage)
@@ -295,7 +313,7 @@ def complete_and_continue(
     *,
     residuals: Sequence[Residual] = (),
 ) -> HarnessAction:
-    """Finish -> release -> compile residuals -> scan -> claim next work."""
+    """Atomically finish, compile successors, release, scan and claim next work."""
     if state.currentness != "CURRENT":
         return HarnessAction("REBASE", "SUPERSEDED_CURRENTNESS", mission_id=state.active_mission_id)
     item = state.work.get(work_id)
@@ -304,14 +322,22 @@ def complete_and_continue(
     if state.claims.get(work_id) != worker.worker_id:
         raise HarnessRefusal("CLAIM_OWNERSHIP_MISMATCH", work_id)
 
-    item.state = "COMPLETE"
-    state.completed.add(work_id)
-    state.claims.pop(work_id, None)
-    state.history.append(
+    # All mutation happens against a staged copy. If residual compilation or next-selection
+    # fails, the caller's live state is unchanged and the active claim remains recoverable.
+    staged = copy.deepcopy(state)
+    staged_item = staged.work[work_id]
+    staged_item.state = "COMPLETE"
+    staged.completed.add(work_id)
+    staged.claims.pop(work_id, None)
+    staged.history.append(
         {"event": "FINISH_RELEASE", "work_id": work_id, "worker_id": worker.worker_id}
     )
-    compile_successor_work(state, work_id, residuals)
-    return claim_best_available(state, worker)
+    compile_successor_work(staged, work_id, residuals)
+    action = claim_best_available(staged, worker)
+
+    state.__dict__.clear()
+    state.__dict__.update(staged.__dict__)
+    return action
 
 
 def advance_gate(
@@ -355,9 +381,11 @@ def advance_gate(
 
 
 def restore_canonical_mission(state: HarnessState) -> HarnessAction:
-    """At Gate 10, infrastructure remains but temporary mission automatically releases."""
+    """At Gate 10, release the temporary mission exactly once."""
     if state.gate < 10:
         raise HarnessRefusal("GATE10_REQUIRED_FOR_MISSION_RETURN", str(state.gate))
+    if not state.temporary_mission:
+        raise HarnessRefusal("CANONICAL_MISSION_ALREADY_RESTORED", state.canonical_mission_id)
     previous = state.active_mission_id
     state.active_mission_id = state.canonical_mission_id
     state.temporary_mission = False
