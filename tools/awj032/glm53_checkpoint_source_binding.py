@@ -173,6 +173,7 @@ def source_bound_probe(
     shard_sizes: Mapping[str, int] | None = None,
     observation_time: str | None = None,
     extra_layer_classification: Any | None = None,
+    extra_layer_evidence_observation: Any | None = None,
     probe_fn: Callable[..., dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     if not isinstance(sources, GLM53CheckpointSourceBundle) or sources.schema != SOURCE_SCHEMA:
@@ -202,6 +203,8 @@ def source_bound_probe(
     if not isinstance(report, dict):
         raise SourceBindingError("PROBE_REPORT_INVALID")
 
+    if extra_layer_evidence_observation is not None and extra_layer_classification is None:
+        raise SourceBindingError("EXTRA_LAYER_CLASSIFICATION_REQUIRED_FOR_EVIDENCE")
     if extra_layer_classification is not None:
         try:
             from .glm53_checkpoint_extra_layer_classification import (  # type: ignore
@@ -211,7 +214,11 @@ def source_bound_probe(
             from glm53_checkpoint_extra_layer_classification import (  # type: ignore
                 apply_extra_layer_classification,
             )
-        report = apply_extra_layer_classification(report, extra_layer_classification)
+        report = apply_extra_layer_classification(
+            report,
+            extra_layer_classification,
+            extra_layer_evidence_observation,
+        )
 
     return {
         **report,
