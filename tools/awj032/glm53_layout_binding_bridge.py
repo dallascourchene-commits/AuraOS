@@ -2,15 +2,17 @@
 
 G1A integration only. No checkpoint download/model import/G2 admission. Consumes
 GLM53CheckpointLayoutProbeV1 plus the exact pinned weight map. Packed physical
-layouts additionally require exact safetensors-header evidence before first-axis
-paging is considered lawful; index-proven per-expert layouts reuse the current
-PerExpertIndexBinding ABI from the stabilized pager owner.
+layouts require exact safetensors-header evidence before first-axis paging is
+considered lawful. Per-expert layouts additionally require one exact bounded
+GLM53SafetensorsHeaderEvidenceV1 canary before a W3 source plan can be emitted;
+that representative canary is never generalized to all experts.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
 import hashlib
 import json
+import re
 from typing import Any, Mapping, Sequence
 
 from tools.awj032.glm53_packed_expert_pager import ExpertSourceBinding
@@ -21,6 +23,9 @@ from tools.awj032.glm53_per_expert_index_pager import (
 
 PROBE_SCHEMA = "GLM53CheckpointLayoutProbeV1"
 PLAN_SCHEMA = "GLM53PagerSourcePlanV2"
+PER_EXPERT_HEADER_SCHEMA = "GLM53SafetensorsHeaderEvidenceV1"
+_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_RECEIPT_RE = re.compile(r"^[0-9a-f]{40}$")
 
 
 class LayoutBindingError(RuntimeError):
@@ -38,10 +43,28 @@ def _digest(value: Any) -> str:
     return hashlib.sha256(_canonical(value)).hexdigest()
 
 
+def _transport_receipt_digest(value: Any) -> str:
+    body = json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        allow_nan=False,
+    ).encode("utf-8")
+    return hashlib.blake2b(body, digest_size=20).hexdigest()
+
+
 def _text(name: str, value: Any) -> str:
     if not isinstance(value, str) or not value.strip():
         raise LayoutBindingError(f"{name.upper()}_REQUIRED")
     return value.strip()
+
+
+def _sha256(name: str, value: Any) -> str:
+    out = _text(name, value).lower()
+    if not _SHA256_RE.fullmatch(out):
+        raise LayoutBindingError("HEADER_SHA256_INVALID", name)
+    return out
 
 
 def _shape(name: str, value: Any) -> tuple[int, ...]:
@@ -53,6 +76,18 @@ def _shape(name: str, value: Any) -> tuple[int, ...]:
             raise LayoutBindingError("INVALID_HEADER_SHAPE", name)
         out.append(dim)
     return tuple(out)
+
+
+def _offsets(name: str, value: Any) -> tuple[int, int]:
+    if (
+        not isinstance(value, Sequence)
+        or isinstance(value, (str, bytes))
+        or len(value) != 2
+        or any(isinstance(v, bool) or not isinstance(v, int) or v < 0 for v in value)
+        or value[1] <= value[0]
+    ):
+        raise LayoutBindingError("INVALID_HEADER_OFFSETS", name)
+    return int(value[0]), int(value[1])
 
 
 def _scale_map(scale_keys: Sequence[Any]) -> dict[str, str]:
@@ -89,6 +124,10 @@ class PagerSourcePlan:
     weight_map_digest: str
     header_evidence_digest: str
     source_plan_digest: str
+    representative_header_bound: bool = False
+    representative_layer: int | None = None
+    representative_expert: int | None = None
+    all_experts_header_uniformity_proven: bool = False
     g2_admitted: bool = False
     large_checkpoint_admitted: bool = False
     runtime_execution_proven: bool = False
@@ -103,6 +142,10 @@ class PagerSourcePlan:
             "weight_map_digest": self.weight_map_digest,
             "header_evidence_digest": self.header_evidence_digest,
             "source_plan_digest": self.source_plan_digest,
+            "representative_header_bound": self.representative_header_bound,
+            "representative_layer": self.representative_layer,
+            "representative_expert": self.representative_expert,
+            "all_experts_header_uniformity_proven": False,
             "g2_admitted": False,
             "large_checkpoint_admitted": False,
             "runtime_execution_proven": False,
@@ -132,7 +175,17 @@ def _common(report: Mapping[str, Any], *, expected_model_revision: str, expected
     return model_revision, index_digest, logical_id, layer
 
 
-def _finalize(kind: str, binding, logical_id: str, weight_map: Mapping[str, str], header_digest: str) -> PagerSourcePlan:
+def _finalize(
+    kind: str,
+    binding: Any,
+    logical_id: str,
+    weight_map: Mapping[str, str],
+    header_digest: str,
+    *,
+    representative_header_bound: bool = False,
+    representative_layer: int | None = None,
+    representative_expert: int | None = None,
+) -> PagerSourcePlan:
     weight_map_digest = _digest(dict(sorted((str(k), str(v)) for k, v in weight_map.items())))
     payload = {
         "schema": PLAN_SCHEMA,
@@ -141,11 +194,152 @@ def _finalize(kind: str, binding, logical_id: str, weight_map: Mapping[str, str]
         "probe_logical_id": logical_id,
         "weight_map_digest": weight_map_digest,
         "header_evidence_digest": header_digest,
+        "representative_header_bound": representative_header_bound,
+        "representative_layer": representative_layer,
+        "representative_expert": representative_expert,
+        "all_experts_header_uniformity_proven": False,
         "g2_admitted": False,
         "large_checkpoint_admitted": False,
         "runtime_execution_proven": False,
     }
-    return PagerSourcePlan(kind, binding, logical_id, weight_map_digest, header_digest, _digest(payload))
+    return PagerSourcePlan(
+        binding_kind=kind,
+        binding=binding,
+        probe_logical_id=logical_id,
+        weight_map_digest=weight_map_digest,
+        header_evidence_digest=header_digest,
+        source_plan_digest=_digest(payload),
+        representative_header_bound=representative_header_bound,
+        representative_layer=representative_layer,
+        representative_expert=representative_expert,
+    )
+
+
+def _per_expert_header_digest(
+    evidence: Mapping[str, Any] | None,
+    *,
+    weight_map: Mapping[str, str],
+    model_revision: str,
+    index_digest: str,
+    layer_no: int,
+    num_experts: int,
+    block_size: tuple[int, int],
+) -> tuple[str, int]:
+    if not isinstance(evidence, Mapping):
+        raise LayoutBindingError("PER_EXPERT_HEADER_EVIDENCE_REQUIRED")
+    if evidence.get("schema") != PER_EXPERT_HEADER_SCHEMA:
+        raise LayoutBindingError("PER_EXPERT_HEADER_SCHEMA_MISMATCH")
+    if _text("header_model_revision", evidence.get("model_revision")) != model_revision:
+        raise LayoutBindingError("PER_EXPERT_HEADER_MODEL_REVISION_MISMATCH")
+    if _text("header_index_sha256", evidence.get("index_sha256")) != index_digest:
+        raise LayoutBindingError("PER_EXPERT_HEADER_INDEX_MISMATCH")
+    repo_id = _text("header_repo_id", evidence.get("repo_id"))
+    index_size = evidence.get("index_size_bytes")
+    if isinstance(index_size, bool) or not isinstance(index_size, int) or index_size <= 0:
+        raise LayoutBindingError("PER_EXPERT_HEADER_INDEX_SIZE_INVALID")
+    selected_layer = evidence.get("selected_layer")
+    selected_expert = evidence.get("selected_expert")
+    if isinstance(selected_layer, bool) or not isinstance(selected_layer, int) or selected_layer != layer_no:
+        raise LayoutBindingError("PER_EXPERT_HEADER_LAYER_MISMATCH")
+    if (
+        isinstance(selected_expert, bool)
+        or not isinstance(selected_expert, int)
+        or selected_expert < 0
+        or selected_expert >= num_experts
+    ):
+        raise LayoutBindingError("PER_EXPERT_HEADER_EXPERT_INVALID")
+    if type(evidence.get("payload_bytes_read")) is not int or evidence.get("payload_bytes_read") != 0:
+        raise LayoutBindingError("PER_EXPERT_HEADER_PAYLOAD_EFFECT_FORBIDDEN")
+    if evidence.get("g2_admitted") is not False or evidence.get("runtime_executed") is not False or evidence.get("authority") is not False:
+        raise LayoutBindingError("PER_EXPERT_HEADER_AUTHORITY_WIDENING_FORBIDDEN")
+
+    entries = evidence.get("entries")
+    if not isinstance(entries, Sequence) or isinstance(entries, (str, bytes)) or len(entries) != 6:
+        raise LayoutBindingError("PER_EXPERT_HEADER_SIX_ENTRIES_REQUIRED")
+    prefix = f"model.layers.{layer_no}.mlp.experts.{selected_expert}."
+    suffixes = (
+        "gate_proj.weight",
+        "gate_proj.weight_scale_inv",
+        "up_proj.weight",
+        "up_proj.weight_scale_inv",
+        "down_proj.weight",
+        "down_proj.weight_scale_inv",
+    )
+    required_keys = tuple(prefix + suffix for suffix in suffixes)
+    normalized_entries: list[dict[str, Any]] = []
+    shapes: dict[str, tuple[int, ...]] = {}
+    dtypes: dict[str, str] = {}
+    for expected_key, raw in zip(required_keys, entries):
+        if not isinstance(raw, Mapping):
+            raise LayoutBindingError("PER_EXPERT_HEADER_ENTRY_INVALID", expected_key)
+        key = _text("tensor_key", raw.get("tensor_key"))
+        if key != expected_key:
+            raise LayoutBindingError("PER_EXPERT_HEADER_KEY_MISMATCH", f"expected={expected_key},observed={key}")
+        shard = _text("shard_name", raw.get("shard_name"))
+        if weight_map.get(key) != shard:
+            raise LayoutBindingError("PER_EXPERT_HEADER_SHARD_MISMATCH", key)
+        dtype = _text("dtype", raw.get("dtype"))
+        shape = _shape(key, raw.get("shape"))
+        offsets = _offsets(key, raw.get("data_offsets"))
+        header_sha = _sha256(key, raw.get("header_sha256"))
+        normalized_entries.append(
+            {
+                "tensor_key": key,
+                "shard_name": shard,
+                "dtype": dtype,
+                "shape": list(shape),
+                "data_offsets": list(offsets),
+                "header_sha256": header_sha,
+            }
+        )
+        shapes[key] = shape
+        dtypes[key] = dtype.upper()
+
+    gate = required_keys[0]
+    gate_scale = required_keys[1]
+    up = required_keys[2]
+    up_scale = required_keys[3]
+    down = required_keys[4]
+    down_scale = required_keys[5]
+    if "E4M3" not in dtypes[gate] or "E4M3" not in dtypes[up] or "E4M3" not in dtypes[down]:
+        raise LayoutBindingError("PER_EXPERT_HEADER_WEIGHT_DTYPE_MISMATCH")
+    if dtypes[gate_scale] != "F32" or dtypes[up_scale] != "F32" or dtypes[down_scale] != "F32":
+        raise LayoutBindingError("PER_EXPERT_HEADER_SCALE_DTYPE_MISMATCH")
+    if len(shapes[gate]) != 2 or shapes[up] != shapes[gate] or shapes[down] != tuple(reversed(shapes[gate])):
+        raise LayoutBindingError("PER_EXPERT_HEADER_WEIGHT_SHAPE_MISMATCH")
+    rows, cols = shapes[gate]
+    br, bc = block_size
+    expected_forward_scale = ((rows + br - 1) // br, (cols + bc - 1) // bc)
+    expected_down_scale = ((cols + br - 1) // br, (rows + bc - 1) // bc)
+    if shapes[gate_scale] != expected_forward_scale or shapes[up_scale] != expected_forward_scale:
+        raise LayoutBindingError("PER_EXPERT_HEADER_FORWARD_SCALE_SHAPE_MISMATCH")
+    if shapes[down_scale] != expected_down_scale:
+        raise LayoutBindingError("PER_EXPERT_HEADER_DOWN_SCALE_SHAPE_MISMATCH")
+
+    normalized_body = {
+        "repo_id": repo_id,
+        "model_revision": model_revision,
+        "index_sha256": index_digest,
+        "index_size_bytes": index_size,
+        "selected_layer": selected_layer,
+        "selected_expert": selected_expert,
+        "entries": normalized_entries,
+        "payload_bytes_read": 0,
+        "g2_admitted": False,
+        "runtime_executed": False,
+        "authority": False,
+        "schema": PER_EXPERT_HEADER_SCHEMA,
+    }
+    receipt = _text("receipt_digest", evidence.get("receipt_digest")).lower()
+    if not _RECEIPT_RE.fullmatch(receipt):
+        raise LayoutBindingError("PER_EXPERT_HEADER_RECEIPT_INVALID")
+    observed_receipt = _transport_receipt_digest(normalized_body)
+    if receipt != observed_receipt:
+        raise LayoutBindingError(
+            "PER_EXPERT_HEADER_RECEIPT_MISMATCH",
+            f"expected={receipt},observed={observed_receipt}",
+        )
+    return _digest({"transport_receipt_digest": receipt, "evidence": normalized_body}), selected_expert
 
 
 def compile_pager_source_plan(
@@ -155,6 +349,7 @@ def compile_pager_source_plan(
     headers: Mapping[str, Mapping[str, Any]] | None,
     expected_model_revision: str,
     expected_index_digest: str,
+    per_expert_header_evidence: Mapping[str, Any] | None = None,
 ) -> PagerSourcePlan:
     model_revision, index_digest, logical_id, layer = _common(
         report,
@@ -184,7 +379,28 @@ def compile_pager_source_plan(
             num_experts=num_experts,
             require_fp8_scales=True,
         )
-        return _finalize("PER_EXPERT_INDEX", binding, logical_id, weight_map, "INDEX_PROVEN_NO_HEADER_BINDING")
+        block = _shape("block_size", geom.get("block_size"))
+        if len(block) != 2:
+            raise LayoutBindingError("INVALID_FP8_BLOCK_SIZE")
+        header_digest, selected_expert = _per_expert_header_digest(
+            per_expert_header_evidence,
+            weight_map=weight_map,
+            model_revision=model_revision,
+            index_digest=index_digest,
+            layer_no=layer_no,
+            num_experts=num_experts,
+            block_size=(block[0], block[1]),
+        )
+        return _finalize(
+            "PER_EXPERT_INDEX",
+            binding,
+            logical_id,
+            weight_map,
+            header_digest,
+            representative_header_bound=True,
+            representative_layer=layer_no,
+            representative_expert=selected_expert,
+        )
 
     if layout == "PARTIAL_PER_EXPERT_LAYOUT":
         raise LayoutBindingError("PER_EXPERT_LAYOUT_PARTIAL")
