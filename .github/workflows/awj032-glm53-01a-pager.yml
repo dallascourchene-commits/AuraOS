@@ -11,6 +11,8 @@ on:
       - 'tools/awj032/test_glm53_per_expert_index_pager.py'
       - 'tools/awj032/glm53_pager_cache_telemetry.py'
       - 'tools/awj032/test_glm53_pager_cache_telemetry.py'
+      - 'tools/awj032/glm53_w4_host_preflight.py'
+      - 'tools/awj032/test_glm53_w4_host_preflight.py'
       - '.github/workflows/awj032-glm53-01a-pager.yml'
   workflow_dispatch:
 
@@ -25,7 +27,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Compile G1 and G1A
+      - name: Compile G1, G1A, and W4 preflight
         run: >-
           python -m py_compile
           tools/awj032/glm53_compatibility_probe.py
@@ -36,13 +38,16 @@ jobs:
           tools/awj032/test_glm53_per_expert_index_pager.py
           tools/awj032/glm53_pager_cache_telemetry.py
           tools/awj032/test_glm53_pager_cache_telemetry.py
+          tools/awj032/glm53_w4_host_preflight.py
+          tools/awj032/test_glm53_w4_host_preflight.py
       - name: G1 compatibility regressions
         working-directory: tools/awj032
         run: python -m unittest -v test_glm53_compatibility_probe.py
-      - name: G1A expert paging regressions
+      - name: G1A expert paging and W4 reducer regressions
         working-directory: tools/awj032
         run: >-
           python -m unittest -v
           test_glm53_packed_expert_pager.py
           test_glm53_per_expert_index_pager.py
           test_glm53_pager_cache_telemetry.py
+          test_glm53_w4_host_preflight.py
