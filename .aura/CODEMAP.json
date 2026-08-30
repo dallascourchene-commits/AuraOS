@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788115863,
+  "generated_at_unix": 1788123322,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1645,
+    "repo_file_count": 1646,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1624,6 +1624,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_codemap_sync_diagnostic_security.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -1761,15 +1762,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1645,
-      "bytes": 26479690,
-      "tokens_est": 6610276,
+      "files": 1646,
+      "bytes": 26482300,
+      "tokens_est": 6610929,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1001,
+        "python_module": 1002,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -116679,6 +116680,14 @@
         "end_line": 8,
         "semantic_id": "tests/test_aura_architecture_harness_export_workflow.py#function:_workflow_text:45a218479e5847b1",
         "signature_hash": "7461bd9275f656d2"
+      },
+      {
+        "file": "tests/test_codemap_sync_diagnostic_security.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 8,
+        "semantic_id": "tests/test_codemap_sync_diagnostic_security.py#function:_workflow_text:28d102f876aac8ec",
+        "signature_hash": "7461bd9275f656d2"
       }
     ],
     "test_export_uses_request_harness_against_exact_main": [
@@ -156975,6 +156984,46 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "_commit_step": [
+      {
+        "file": "tests/test_codemap_sync_diagnostic_security.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 16,
+        "semantic_id": "tests/test_codemap_sync_diagnostic_security.py#function:_commit_step:3b55664b007d0617",
+        "signature_hash": "f80b4f303dcaf5e7"
+      }
+    ],
+    "test_codemap_push_diagnostics_never_archive_shell_trace": [
+      {
+        "file": "tests/test_codemap_sync_diagnostic_security.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 25,
+        "semantic_id": "tests/test_codemap_sync_diagnostic_security.py#function:test_codemap_push_diagnostics_never_archive_shell_trace:8fac4242f594ec6e",
+        "signature_hash": "3b1f335f33bab68c"
+      }
+    ],
+    "test_codemap_push_diagnostics_are_bounded_status_only": [
+      {
+        "file": "tests/test_codemap_sync_diagnostic_security.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 40,
+        "semantic_id": "tests/test_codemap_sync_diagnostic_security.py#function:test_codemap_push_diagnostics_are_bounded_status_only:239b9eec76d6759c",
+        "signature_hash": "2637b5bba14a3114"
+      }
+    ],
+    "test_auth_header_is_ephemeral_and_not_uploaded": [
+      {
+        "file": "tests/test_codemap_sync_diagnostic_security.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 53,
+        "semantic_id": "tests/test_codemap_sync_diagnostic_security.py#function:test_auth_header_is_ephemeral_and_not_uploaded:dc5e89733b01458e",
+        "signature_hash": "3ed046af2ca5fb82"
+      }
+    ],
     "test_space_app_card_declares_public_docker_runtime": [
       {
         "file": "tests/test_huggingface_space_deployment.py",
@@ -172127,9 +172176,9 @@
       "path": ".github/workflows/sync-analysis-codemap.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 5329,
-      "lines": 143,
-      "tokens_est": 1333,
+      "bytes": 6353,
+      "lines": 170,
+      "tokens_est": 1589,
       "symbol_count": 0,
       "commands": [
         "python -m pip",
@@ -172155,40 +172204,40 @@
         ]
       },
       "topology": {},
-      "digest8": "dc81d45a00405ea1",
+      "digest8": "b1097686a1844a52",
       "vector": [
-        0.036778,
-        0.22382,
-        0.0662,
-        0.135553,
-        -0.068302,
-        0.185991,
-        -0.139756,
-        0.26375,
-        0.257445,
-        -0.236429,
-        0.242734,
-        0.072505,
-        -0.26375,
-        -0.202804,
-        0.01366,
-        -0.154467,
-        -0.236429,
-        -0.093521,
-        -0.110334,
-        0.089318,
-        0.209108,
-        -0.125045,
-        -0.267953,
-        -0.183889,
-        0.26375,
-        0.249039,
-        0.085114,
-        -0.116638,
-        -0.01366,
-        0.028371,
-        0.110334,
-        0.246937
+        0.153476,
+        0.12256,
+        -0.166726,
+        0.038645,
+        -0.261682,
+        -0.071769,
+        0.065144,
+        -0.224141,
+        0.19985,
+        0.107102,
+        0.160101,
+        0.230766,
+        -0.149059,
+        0.027604,
+        0.252849,
+        -0.2131,
+        -0.051895,
+        -0.232974,
+        -0.230766,
+        -0.281556,
+        0.029812,
+        -0.124768,
+        0.157892,
+        0.268307,
+        0.038645,
+        -0.036437,
+        0.252849,
+        0.193225,
+        -0.153476,
+        -0.177767,
+        0.003312,
+        -0.281556
       ]
     },
     {
@@ -263551,6 +263600,53 @@
       ]
     },
     {
+      "path": "tests/test_codemap_sync_diagnostic_security.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1586,
+      "lines": 54,
+      "tokens_est": 397,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "52b150601ad0a29d",
+      "vector": [
+        -0.030647,
+        0.041997,
+        0.017026,
+        -0.032917,
+        0.284899,
+        0.253118,
+        0.028376,
+        -0.130532,
+        -0.055618,
+        0.244037,
+        0.09421,
+        -0.250848,
+        -0.191825,
+        -0.023836,
+        -0.044267,
+        0.005675,
+        -0.255388,
+        -0.259928,
+        0.205445,
+        0.194095,
+        -0.157773,
+        -0.248577,
+        -0.10556,
+        -0.182744,
+        -0.287169,
+        0.132802,
+        0.173664,
+        -0.259928,
+        0.239497,
+        -0.209986,
+        0.125991,
+        -0.001135
+      ]
+    },
+    {
       "path": "tests/test_huggingface_space_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -288160,15 +288256,15 @@
     }
   },
   "summary": {
-    "file_count": 1645,
-    "total_bytes": 26479690,
-    "text_tokens_est": 6610276,
+    "file_count": 1646,
+    "total_bytes": 26482300,
+    "text_tokens_est": 6610929,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1001,
+      "python_module": 1002,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -289803,6 +289899,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_codemap_sync_diagnostic_security.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -446834,6 +446931,56 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_codemap_sync_diagnostic_security.py#function:_commit_step:3b55664b007d0617",
+        "name": "_commit_step",
+        "kind": "function",
+        "file": "tests/test_codemap_sync_diagnostic_security.py",
+        "line": 11,
+        "end_line": 16,
+        "signature_hash": "f80b4f303dcaf5e7",
+        "file_digest8": "52b150601ad0a29d"
+      },
+      {
+        "semantic_id": "tests/test_codemap_sync_diagnostic_security.py#function:_workflow_text:28d102f876aac8ec",
+        "name": "_workflow_text",
+        "kind": "function",
+        "file": "tests/test_codemap_sync_diagnostic_security.py",
+        "line": 7,
+        "end_line": 8,
+        "signature_hash": "7461bd9275f656d2",
+        "file_digest8": "52b150601ad0a29d"
+      },
+      {
+        "semantic_id": "tests/test_codemap_sync_diagnostic_security.py#function:test_auth_header_is_ephemeral_and_not_uploaded:dc5e89733b01458e",
+        "name": "test_auth_header_is_ephemeral_and_not_uploaded",
+        "kind": "function",
+        "file": "tests/test_codemap_sync_diagnostic_security.py",
+        "line": 43,
+        "end_line": 53,
+        "signature_hash": "3ed046af2ca5fb82",
+        "file_digest8": "52b150601ad0a29d"
+      },
+      {
+        "semantic_id": "tests/test_codemap_sync_diagnostic_security.py#function:test_codemap_push_diagnostics_are_bounded_status_only:239b9eec76d6759c",
+        "name": "test_codemap_push_diagnostics_are_bounded_status_only",
+        "kind": "function",
+        "file": "tests/test_codemap_sync_diagnostic_security.py",
+        "line": 28,
+        "end_line": 40,
+        "signature_hash": "2637b5bba14a3114",
+        "file_digest8": "52b150601ad0a29d"
+      },
+      {
+        "semantic_id": "tests/test_codemap_sync_diagnostic_security.py#function:test_codemap_push_diagnostics_never_archive_shell_trace:8fac4242f594ec6e",
+        "name": "test_codemap_push_diagnostics_never_archive_shell_trace",
+        "kind": "function",
+        "file": "tests/test_codemap_sync_diagnostic_security.py",
+        "line": 19,
+        "end_line": 25,
+        "signature_hash": "3b1f335f33bab68c",
+        "file_digest8": "52b150601ad0a29d"
+      },
+      {
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "name": "test_deployment_docs_have_submission_field_and_no_localhost_url_claim",
         "kind": "function",
@@ -449644,7 +449791,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "4c2197143abc8b3d1c8ffe4f97ffc975",
-    "payload_hash": "0bb52120998daa48903facd4225d8f12"
+    "record_fingerprint": "bf07f68ee9454e107fcafbbeb4ff4909",
+    "payload_hash": "ec3e56cef8d6cf96904b060a3c22f890"
   }
 }
