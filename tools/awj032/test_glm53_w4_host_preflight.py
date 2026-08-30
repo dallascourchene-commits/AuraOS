@@ -1,7 +1,7 @@
 import unittest
 
-from tools.awj032.glm53_pager_cache_telemetry import CACHE_SCHEMA, CacheTelemetryReceipt
-from tools.awj032.glm53_w4_host_preflight import (
+from glm53_pager_cache_telemetry import CACHE_SCHEMA, CacheTelemetryReceipt
+from glm53_w4_host_preflight import (
     COLD_EXPERT_WEIGHT_BYTES_PER_TOKEN,
     W4CounterSnapshot,
     W4PreflightError,
