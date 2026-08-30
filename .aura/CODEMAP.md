@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1647
-- **total_bytes**: 26515362
-- **text_tokens_est**: 6619195
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1005, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1648
+- **total_bytes**: 26528005
+- **text_tokens_est**: 6622356
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1006, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1647,
+  "repo_file_count": 1648,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1658,6 +1658,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project030/creator_studio_harness_integration.py",
     "tools/project030/creator_studio_wake_adapter.py",
     "tools/project030/test_creator_studio_continuation_harness.py",
+    "tools/project030/test_creator_studio_harness_integration.py",
     "tools/project030/test_creator_studio_wake_adapter.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
@@ -1787,15 +1788,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1647,
-  "bytes": 26515362,
-  "tokens_est": 6619195,
+  "files": 1648,
+  "bytes": 26528005,
+  "tokens_est": 6622356,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1005,
+    "python_module": 1006,
     "schema_or_lexicon": 271,
     "support_file": 49
   }
