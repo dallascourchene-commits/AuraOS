@@ -4,6 +4,11 @@ D0 metadata-only helper. It couples the raw config/index bytes, their SHA-256
 identities, and the parsed mappings so a caller cannot classify parsed source Y
 while emitting a receipt that claims raw source X. It performs no network access,
 weight materialization, model import, or G2 admission.
+
+The producer also emits a domain-separated identity for the *final* source-bound
+report after any extra-layer classification and source-binding fields have been
+applied. The legacy logical_id is preserved as the lower classification-state
+identity; it is intentionally not reused as final producer provenance.
 """
 from __future__ import annotations
 
@@ -14,6 +19,17 @@ import re
 from typing import Any, Callable, Mapping
 
 SOURCE_SCHEMA = "GLM53CheckpointSourceBundleV1"
+FINAL_SNAPSHOT_SCHEMA = "PR340ProducerSnapshotV1"
+FINAL_REPORT_DIGEST_DOMAIN = "AURA/AWJ032/GLM53/PR340/FINAL_SOURCE_BOUND_REPORT/V1"
+_FINAL_REPORT_EXCLUDED_FIELDS = frozenset(
+    {
+        "observation_time",
+        "logical_id",
+        "producer_snapshot_schema",
+        "final_source_bound_report_digest",
+        "final_source_bound_report_digest_domain",
+    }
+)
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
 
@@ -58,6 +74,54 @@ def _immutable_commit(value: str) -> str:
     if not _COMMIT_RE.fullmatch(value):
         raise SourceBindingError("IMMUTABLE_MODEL_REVISION_REQUIRED", value)
     return value
+
+
+def final_source_bound_report_payload(report: Mapping[str, Any]) -> dict[str, Any]:
+    """Return the canonical consequence-complete PR340 report payload.
+
+    Receipt time and the lower-plane legacy logical_id are excluded. Snapshot
+    metadata/digest fields are also excluded so repeated decoration is idempotent.
+    Every other final report field remains in the producer identity, including
+    status/blockers, classification state, source bundle/parsing identities,
+    source_binding_proven, claim ceiling, and hard effect ceilings.
+    """
+    if not isinstance(report, Mapping):
+        raise SourceBindingError("FINAL_SOURCE_BOUND_REPORT_REQUIRED")
+    cleaned = {
+        str(key): value
+        for key, value in report.items()
+        if key not in _FINAL_REPORT_EXCLUDED_FIELDS
+    }
+    if not cleaned:
+        raise SourceBindingError("FINAL_SOURCE_BOUND_REPORT_REQUIRED")
+    return {
+        "schema": FINAL_SNAPSHOT_SCHEMA,
+        "final_report": cleaned,
+    }
+
+
+def final_source_bound_report_digest(report: Mapping[str, Any]) -> str:
+    payload = final_source_bound_report_payload(report)
+    return hashlib.sha256(
+        FINAL_REPORT_DIGEST_DOMAIN.encode("utf-8")
+        + b"\0"
+        + _canonical(payload)
+    ).hexdigest()
+
+
+def decorate_final_source_bound_report(report: Mapping[str, Any]) -> dict[str, Any]:
+    """Emit the producer-owned final-report snapshot identity without granting trust."""
+    if not isinstance(report, Mapping):
+        raise SourceBindingError("FINAL_SOURCE_BOUND_REPORT_REQUIRED")
+    out = dict(report)
+    out.update(
+        {
+            "producer_snapshot_schema": FINAL_SNAPSHOT_SCHEMA,
+            "final_source_bound_report_digest_domain": FINAL_REPORT_DIGEST_DOMAIN,
+            "final_source_bound_report_digest": final_source_bound_report_digest(out),
+        }
+    )
+    return out
 
 
 @dataclass(frozen=True)
@@ -220,7 +284,7 @@ def source_bound_probe(
             extra_layer_evidence_observation,
         )
 
-    return {
+    final_report = {
         **report,
         "source_bundle_id": sources.source_bundle_id,
         "config_parsed_sha256": sources.config.parsed_sha256,
@@ -228,3 +292,4 @@ def source_bound_probe(
         "weight_map_digest": sources.weight_map_digest,
         "source_binding_proven": True,
     }
+    return decorate_final_source_bound_report(final_report)
