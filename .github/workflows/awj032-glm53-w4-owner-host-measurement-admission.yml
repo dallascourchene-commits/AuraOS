@@ -1,0 +1,104 @@
+name: AWJ032 GLM53 W4 owner-host measurement admission
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_w4_host_preflight.py"
+      - "tools/awj032/glm53_w4_cache_policy_decision.py"
+      - "tools/awj032/glm53_w4_owner_host_measurement_admission.py"
+      - "tools/awj032/test_glm53_w4_owner_host_measurement_admission.py"
+      - ".github/workflows/awj032-glm53-w4-owner-host-measurement-admission.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: awj032-glm53-w4-owner-host-measurement-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  contract-only-no-owner-host-claim:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+      - name: Compile W4 proof planes
+        run: |
+          python -m py_compile \
+            tools/awj032/glm53_w4_host_preflight.py \
+            tools/awj032/glm53_w4_cache_policy_decision.py \
+            tools/awj032/glm53_w4_owner_host_measurement_admission.py \
+            tools/awj032/test_glm53_w4_owner_host_measurement_admission.py
+      - name: Run inherited W4 contracts and owner-host membrane regressions
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools/awj032
+        run: |
+          python -m unittest -v \
+            tools.awj032.test_glm53_w4_host_preflight \
+            tools.awj032.test_glm53_w4_cache_policy_decision \
+            tools.awj032.test_glm53_w4_owner_host_measurement_admission
+      - name: Prove hosted CI cannot become owner-host measurement
+        run: |
+          python - <<'PY'
+          from tools.awj032.glm53_w4_owner_host_measurement_admission import (
+              W4HostPhaseCounters,
+              W4OwnerHostMeasurementError,
+              W4OwnerHostMeasurementObservation,
+              W4OwnerHostMeasurementRequest,
+              evaluate_owner_host_measurement,
+          )
+          r = W4OwnerHostMeasurementRequest(
+              scope_ref="owner-thinkpad-wsl:awj032",
+              source_generation="glm53-w4-source-generation",
+              workload_ref="glm53-expert-trace-A",
+              measurement_campaign_ref="campaign-owner-host-001",
+              policy_id="baseline-page-directory-lru",
+              command_contract_digest="a" * 64,
+              logical_expert_bytes_required=1000,
+              exposed_io_budget_seconds=2.0,
+          )
+          def p(name):
+              return W4HostPhaseCounters(name, 800, 0, 0, 200, 0, 0, 1000.0, 0.0, 0.0, 1.0, 1024, 1.0)
+          o = W4OwnerHostMeasurementObservation(
+              request_digest=r.request_digest,
+              scope_ref=r.scope_ref,
+              source_generation=r.source_generation,
+              workload_ref=r.workload_ref,
+              measurement_campaign_ref=r.measurement_campaign_ref,
+              policy_id=r.policy_id,
+              command_contract_digest=r.command_contract_digest,
+              runner_class="GITHUB_ACTIONS",
+              runner_instance_ref="github-hosted",
+              attestation_ref="none",
+              phases=(p("COLD"), p("WARM"), p("RESTART")),
+              source_current=True,
+              workload_current=True,
+              command_observed_exact=True,
+              run_completed=True,
+          )
+          try:
+              evaluate_owner_host_measurement(r, o)
+          except W4OwnerHostMeasurementError as exc:
+              assert exc.code == "GITHUB_ACTIONS_RUNNER_FORBIDDEN"
+          else:
+              raise AssertionError("GitHub CI was incorrectly admitted as owner host")
+          print("OWNER_HOST_MEASUREMENT_PROVEN=false")
+          print("HOST_MEASUREMENT_BOUNDARY=WAITING_OWNER_HOST_ATTESTATION")
+          PY
