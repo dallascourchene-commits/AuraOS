@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1686
-- **total_bytes**: 26654260
-- **text_tokens_est**: 6653967
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1030, 'schema_or_lexicon': 279, 'support_file': 49}
+- **file_count**: 1691
+- **total_bytes**: 26713257
+- **text_tokens_est**: 6668718
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1035, 'schema_or_lexicon': 279, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1686,
+  "repo_file_count": 1691,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1675,6 +1675,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/awj032/README.md",
     "tools/awj032/airllm_source_admission.py",
+    "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+    "tools/awj032/glm53_checkpoint_layout_probe.py",
+    "tools/awj032/glm53_checkpoint_source_binding.py",
     "tools/awj032/glm53_compatibility_probe.py",
     "tools/awj032/glm53_layout_binding_bridge.py",
     "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
@@ -1683,6 +1686,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/glm53_packed_expert_pager.py",
     "tools/awj032/glm53_pager_cache_telemetry.py",
     "tools/awj032/glm53_per_expert_index_pager.py",
+    "tools/awj032/glm53_pr340_producer_snapshot.py",
+    "tools/awj032/glm53_pr340_producer_snapshot_registry.py",
     "tools/awj032/glm53_source_bound_layout_bridge.py",
     "tools/awj032/glm53_w3_official_producer_admission.py",
     "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
@@ -1826,15 +1831,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1686,
-  "bytes": 26654260,
-  "tokens_est": 6653967,
+  "files": 1691,
+  "bytes": 26713257,
+  "tokens_est": 6668718,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1030,
+    "python_module": 1035,
     "schema_or_lexicon": 279,
     "support_file": 49
   }

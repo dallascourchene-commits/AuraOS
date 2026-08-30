@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788129477,
+  "generated_at_unix": 1788130402,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1686,
+    "repo_file_count": 1691,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1657,6 +1657,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
+      "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+      "tools/awj032/glm53_checkpoint_layout_probe.py",
+      "tools/awj032/glm53_checkpoint_source_binding.py",
       "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/glm53_layout_binding_bridge.py",
       "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
@@ -1665,6 +1668,8 @@
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
+      "tools/awj032/glm53_pr340_producer_snapshot.py",
+      "tools/awj032/glm53_pr340_producer_snapshot_registry.py",
       "tools/awj032/glm53_source_bound_layout_bridge.py",
       "tools/awj032/glm53_w3_official_producer_admission.py",
       "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
@@ -1802,15 +1807,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1686,
-      "bytes": 26654260,
-      "tokens_est": 6653967,
+      "files": 1691,
+      "bytes": 26713257,
+      "tokens_est": 6668718,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1030,
+        "python_module": 1035,
         "schema_or_lexicon": 279,
         "support_file": 49
       }
@@ -3976,6 +3981,30 @@
         "signature_hash": "711cdedc61c63424"
       },
       {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_canonical:10e548c72387fb86",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_canonical:aaf01bd1d8109e0b",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 42,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:_canonical:e60c8017bb0c9dc5",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
         "kind": "function",
         "line": 39,
@@ -3986,8 +4015,8 @@
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 42,
-        "end_line": 52,
+        "line": 67,
+        "end_line": 77,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_canonical:e373cabd37733c91",
         "signature_hash": "8d5bf5695239b859"
       },
@@ -4016,6 +4045,14 @@
         "signature_hash": "8d5bf5695239b859"
       },
       {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 62,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:_canonical:690595777cf5e7be",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
         "kind": "function",
         "line": 30,
@@ -4034,8 +4071,8 @@
       {
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
         "kind": "function",
-        "line": 44,
-        "end_line": 45,
+        "line": 49,
+        "end_line": 50,
         "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:_canonical:a5e64f65ddf944ec",
         "signature_hash": "8d5bf5695239b859"
       }
@@ -4524,8 +4561,8 @@
       {
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
         "kind": "function",
-        "line": 48,
-        "end_line": 49,
+        "line": 53,
+        "end_line": 54,
         "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:_digest:0762f066a3eaae7e",
         "signature_hash": "514f786724465716"
       }
@@ -8258,6 +8295,30 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_sha:e2efb6e36fd85f5a",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_sha:116e5b617174946a",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 66,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:_sha:1821215fb7106a6c",
+        "signature_hash": "e47bc2e8d0ade77b"
       },
       {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
@@ -13914,6 +13975,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_sha256:73d52987c94b1edc",
+        "signature_hash": "685edab582e6b347"
       },
       {
         "file": "tools/awj032/glm53_layout_binding_bridge.py",
@@ -36074,10 +36143,18 @@
         "signature_hash": "14fa37530afca5ef"
       },
       {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:_sha256_bytes:733d5f1f757a0f6f",
+        "signature_hash": "46d985396fb3f8c4"
+      },
+      {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 55,
-        "end_line": 56,
+        "line": 80,
+        "end_line": 81,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_sha256_bytes:60c1af0f37947c72",
         "signature_hash": "46d985396fb3f8c4"
       }
@@ -45818,6 +45895,14 @@
         "end_line": 172,
         "semantic_id": "aura_project_context_compiler.py#function:_int:8a0a00dcd2538f6b",
         "signature_hash": "e77fdaf331f45530"
+      },
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_int:ef74868636877e09",
+        "signature_hash": "0d9d7bc3e65394e3"
       }
     ],
     "_prob": [
@@ -138926,6 +139011,14 @@
         "end_line": 72,
         "semantic_id": "tests/test_aura_gate_server.py#function:_token:647371b875b04b3a",
         "signature_hash": "c9ac11b578e6d9c7"
+      },
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_token:a4d81a07a6e7c014",
+        "signature_hash": "3f76f5429ebcf8ae"
       }
     ],
     "key_one": [
@@ -149964,6 +150057,14 @@
         "end_line": 38,
         "semantic_id": "tests/test_aura_review_arena.py#function:_commit:eaf51295dfeaa12c",
         "signature_hash": "63a1801611288167"
+      },
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 76,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_commit:376d4934db9a8176",
+        "signature_hash": "01e3f5ebacced2ea"
       }
     ],
     "build_review_repo": [
@@ -158302,6 +158403,462 @@
         "signature_hash": "46b37ab1f36534cb"
       }
     ],
+    "ExtraLayerClassificationError": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#class:ExtraLayerClassificationError:f6de349c58164a9d",
+        "signature_hash": "7364d2796ae8aca8"
+      }
+    ],
+    "ExtraLayerClassificationError.__init__": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:ExtraLayerClassificationError.__init__:438dec9afe26340f",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_hidden_layers": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 82,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_hidden_layers:8085852a85c4f860",
+        "signature_hash": "3a130f5f945308d8"
+      }
+    ],
+    "_role_map": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 110,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_role_map:1a590aba50134101",
+        "signature_hash": "d56735caa47ca1eb"
+      }
+    ],
+    "_roles_payload": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "function",
+        "line": 113,
+        "end_line": 121,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_roles_payload:29e2eed52013f5bf",
+        "signature_hash": "1ccf6bb5c0a9f330"
+      }
+    ],
+    "CheckpointExtraLayerClassification": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "class",
+        "line": 125,
+        "end_line": 169,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#class:CheckpointExtraLayerClassification:20f9354a4edbd474",
+        "signature_hash": "36b5c6dfbfb280f8"
+      }
+    ],
+    "CheckpointExtraLayerClassification.normalized": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 159,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerClassification.normalized:2e1c4f6c08bf580c",
+        "signature_hash": "3e30758942a7bf1b"
+      }
+    ],
+    "CheckpointExtraLayerClassification.role_map": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 162,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerClassification.role_map:8790d381eeef2b40",
+        "signature_hash": "1585c511c2bb4d06"
+      }
+    ],
+    "CheckpointExtraLayerClassification.to_dict": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 165,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerClassification.to_dict:46c45359e3347c09",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "CheckpointExtraLayerClassification.classification_id": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 169,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerClassification.classification_id:2d36c1532dcc0882",
+        "signature_hash": "342b16041777b438"
+      }
+    ],
+    "CheckpointExtraLayerEvidenceObservation": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "class",
+        "line": 173,
+        "end_line": 227,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#class:CheckpointExtraLayerEvidenceObservation:13e61a9fefe9c296",
+        "signature_hash": "71f618beded67d11"
+      }
+    ],
+    "CheckpointExtraLayerEvidenceObservation.normalized": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 217,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerEvidenceObservation.normalized:0a767cf5ff151796",
+        "signature_hash": "3e30758942a7bf1b"
+      }
+    ],
+    "CheckpointExtraLayerEvidenceObservation.role_map": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "method",
+        "line": 219,
+        "end_line": 220,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerEvidenceObservation.role_map:4845d1d97a2ef092",
+        "signature_hash": "1585c511c2bb4d06"
+      }
+    ],
+    "CheckpointExtraLayerEvidenceObservation.to_dict": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "method",
+        "line": 222,
+        "end_line": 223,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerEvidenceObservation.to_dict:986dcbec620c9964",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "CheckpointExtraLayerEvidenceObservation.observation_id": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "method",
+        "line": 226,
+        "end_line": 227,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerEvidenceObservation.observation_id:7720a4c8914a54cb",
+        "signature_hash": "77c0c78e4b5e35f5"
+      }
+    ],
+    "_validate_binding": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "function",
+        "line": 230,
+        "end_line": 295,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_validate_binding:9860f19a9cca706a",
+        "signature_hash": "d877371532a0ffe3"
+      }
+    ],
+    "_status_from_blockers": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "function",
+        "line": 298,
+        "end_line": 305,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_status_from_blockers:8f76cada95684dd1",
+        "signature_hash": "035ad67a97b7cf93"
+      },
+      {
+        "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
+        "kind": "function",
+        "line": 283,
+        "end_line": 290,
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_status_from_blockers:0b7ca20c74edbfb1",
+        "signature_hash": "035ad67a97b7cf93"
+      }
+    ],
+    "apply_extra_layer_classification": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "kind": "function",
+        "line": 308,
+        "end_line": 372,
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:apply_extra_layer_classification:0809cc36ec54f90a",
+        "signature_hash": "37cc7154d0dea1df"
+      }
+    ],
+    "ProbeError": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 28,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#class:ProbeError:e35cf5b01384b72e",
+        "signature_hash": "7c421b08047c1609"
+      }
+    ],
+    "ProbeError.__init__": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 28,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:ProbeError.__init__:2dde176739535269",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "Geometry": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "class",
+        "line": 53,
+        "end_line": 90,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#class:Geometry:6909379da99ddcb0",
+        "signature_hash": "1550b2056b16f0be"
+      }
+    ],
+    "Geometry.total_fp8_weight_bytes": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:Geometry.total_fp8_weight_bytes:0da0dc38c9fec035",
+        "signature_hash": "4d6139f0239feb94"
+      }
+    ],
+    "Geometry.candidate_fp32_scale_bank_bytes": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 73,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:Geometry.candidate_fp32_scale_bank_bytes:b6ef61ba43c985c7",
+        "signature_hash": "667682036cfb86d9"
+      }
+    ],
+    "Geometry.to_dict": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 90,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:Geometry.to_dict:00d612851f20d7fb",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "geometry_from_config": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 131,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:geometry_from_config:4bba51429afe0a75",
+        "signature_hash": "717229019f609fe1"
+      }
+    ],
+    "_layer_prefix": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 134,
+        "end_line": 135,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_layer_prefix:3fbd992a71a926df",
+        "signature_hash": "df196be264c348ba"
+      }
+    ],
+    "_packed_candidates": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 138,
+        "end_line": 140,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_packed_candidates:6e26b13eba99bf22",
+        "signature_hash": "012f9a8c56e6bb7f"
+      }
+    ],
+    "_scale_keys_for_layer": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 143,
+        "end_line": 150,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_scale_keys_for_layer:20b4b7abd14977ef",
+        "signature_hash": "53cfba367b4dc0c3"
+      }
+    ],
+    "_per_expert_projection_coverage": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 153,
+        "end_line": 163,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_per_expert_projection_coverage:41792882d3e2a3ce",
+        "signature_hash": "4a0d17c23beecf9c"
+      }
+    ],
+    "_all_layer_indices": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 166,
+        "end_line": 173,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_all_layer_indices:50133c5efd74f6ce",
+        "signature_hash": "fc74b6a78f691f3f"
+      }
+    ],
+    "classify_layer_layout": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 176,
+        "end_line": 253,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:classify_layer_layout:e18076da396e6a45",
+        "signature_hash": "8a5119975d5c4611"
+      }
+    ],
+    "probe_checkpoint": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 256,
+        "end_line": 353,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:probe_checkpoint:c0f32f855e67c055",
+        "signature_hash": "89ad21b6871b488b"
+      }
+    ],
+    "SourceBindingError": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 25,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#class:SourceBindingError:8d6823a08f22af3f",
+        "signature_hash": "09cfa98af8d5fe6b"
+      },
+      {
+        "file": "tools/awj032/glm53_packed_expert_pager.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/awj032/glm53_packed_expert_pager.py#class:SourceBindingError:b342725898b160fc",
+        "signature_hash": "36882372233eba85"
+      }
+    ],
+    "SourceBindingError.__init__": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#method:SourceBindingError.__init__:ccc3a2170c1b8289",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_expected_sha": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:_expected_sha:c5882f96693e03d1",
+        "signature_hash": "5f1df2e7a0614f6f"
+      }
+    ],
+    "_immutable_commit": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:_immutable_commit:cac8dd27a4b41e74",
+        "signature_hash": "f4a32d4cd5237246"
+      }
+    ],
+    "BoundJsonSource": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 74,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#class:BoundJsonSource:612945fb0bd01622",
+        "signature_hash": "ef526106a46c61e1"
+      }
+    ],
+    "BoundJsonSource.mapping": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 74,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#method:BoundJsonSource.mapping:1a4b657785282580",
+        "signature_hash": "198092afd75e782c"
+      }
+    ],
+    "GLM53CheckpointSourceBundle": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "class",
+        "line": 78,
+        "end_line": 107,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#class:GLM53CheckpointSourceBundle:f1baaf817f72297c",
+        "signature_hash": "9280fb2b20588314"
+      }
+    ],
+    "GLM53CheckpointSourceBundle.weight_map_digest": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 91,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#method:GLM53CheckpointSourceBundle.weight_map_digest:0861f02e7c9ede91",
+        "signature_hash": "061f5902f66cf1ae"
+      }
+    ],
+    "GLM53CheckpointSourceBundle.source_bundle_id": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 107,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#method:GLM53CheckpointSourceBundle.source_bundle_id:35ab1d3202872690",
+        "signature_hash": "06a69bbdb440bbea"
+      }
+    ],
+    "bind_json_source": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 131,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:bind_json_source:a9eda82b7329892d",
+        "signature_hash": "d75917b63d3894d6"
+      }
+    ],
+    "bind_checkpoint_sources": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "function",
+        "line": 134,
+        "end_line": 164,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:bind_checkpoint_sources:36e8790157395423",
+        "signature_hash": "95cae4de85863bb5"
+      }
+    ],
+    "source_bound_probe": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "kind": "function",
+        "line": 167,
+        "end_line": 230,
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:source_bound_probe:3d56726d5bc0365f",
+        "signature_hash": "2f88fcc554340afa"
+      }
+    ],
     "CompatibilityReceipt": [
       {
         "file": "tools/awj032/glm53_compatibility_probe.py",
@@ -158526,8 +159083,8 @@
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "class",
-        "line": 35,
-        "end_line": 39,
+        "line": 60,
+        "end_line": 64,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#class:OfficialSourceMTPRoleError:caee8f3f08a75da0",
         "signature_hash": "3edcbc40e1d9c00c"
       }
@@ -158536,8 +159093,8 @@
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "method",
-        "line": 36,
-        "end_line": 39,
+        "line": 61,
+        "end_line": 64,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#method:OfficialSourceMTPRoleError.__init__:b8830a43b4a7ec71",
         "signature_hash": "0b6534a3148e5c5d"
       }
@@ -158546,18 +159103,38 @@
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 59,
-        "end_line": 60,
+        "line": 84,
+        "end_line": 85,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_sha256_json:8c8b682fafd6faf0",
         "signature_hash": "583097ecac7a5ede"
+      }
+    ],
+    "_sha256_token": [
+      {
+        "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 94,
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_sha256_token:319ecc4af82afddc",
+        "signature_hash": "6443f090122dc3a4"
+      }
+    ],
+    "_commit_token": [
+      {
+        "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 103,
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_commit_token:cffb29acae35e849",
+        "signature_hash": "de14371368cebf27"
       }
     ],
     "_immutable_url": [
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 63,
-        "end_line": 69,
+        "line": 106,
+        "end_line": 112,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_immutable_url:49c259fa3e01b8df",
         "signature_hash": "aecd3029bcbae7a2"
       }
@@ -158566,8 +159143,8 @@
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 72,
-        "end_line": 80,
+        "line": 115,
+        "end_line": 123,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:urllib_read_full:26f981d8c1e63839",
         "signature_hash": "42c9071be7846878"
       }
@@ -158576,8 +159153,8 @@
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 83,
-        "end_line": 92,
+        "line": 126,
+        "end_line": 135,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_parse_json_object:fe4d799e4835e02b",
         "signature_hash": "707b755d330f6e53"
       }
@@ -158586,8 +159163,8 @@
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 95,
-        "end_line": 104,
+        "line": 138,
+        "end_line": 147,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_normalize_weight_map:cb33624503e562b2",
         "signature_hash": "06cb214e9eeda81b"
       }
@@ -158596,8 +159173,8 @@
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 107,
-        "end_line": 117,
+        "line": 150,
+        "end_line": 160,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_layer_indices:8b4bca37a3ea95f0",
         "signature_hash": "3b4fdd0e6cbb31f5"
       }
@@ -158606,8 +159183,8 @@
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 120,
-        "end_line": 138,
+        "line": 163,
+        "end_line": 181,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_source_bundle_id:7db6a52a33a0211d",
         "signature_hash": "fe9f26dc662c13a2"
       }
@@ -158616,8 +159193,8 @@
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "class",
-        "line": 142,
-        "end_line": 167,
+        "line": 185,
+        "end_line": 210,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#class:OfficialSourceMTPRoleEvidence:8e943610797f93b1",
         "signature_hash": "b47349a994cb8933"
       }
@@ -158626,8 +159203,8 @@
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "method",
-        "line": 166,
-        "end_line": 167,
+        "line": 209,
+        "end_line": 210,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#method:OfficialSourceMTPRoleEvidence.evidence_id:feb982f380331033",
         "signature_hash": "cbdae7ebcb023961"
       }
@@ -158636,40 +159213,50 @@
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 170,
-        "end_line": 237,
+        "line": 213,
+        "end_line": 280,
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:observe_official_mtp_role:4270000f34cc3027",
         "signature_hash": "1cd9f692dd906644"
       }
     ],
-    "_status_from_blockers": [
+    "_pr340_classification_stage_logical_id": [
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 240,
-        "end_line": 247,
-        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_status_from_blockers:0b7ca20c74edbfb1",
-        "signature_hash": "035ad67a97b7cf93"
+        "line": 293,
+        "end_line": 303,
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_pr340_classification_stage_logical_id:6917b10f4b7eec26",
+        "signature_hash": "7a90fafcdbe7dd34"
+      }
+    ],
+    "_verify_pr340_producer_report": [
+      {
+        "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
+        "kind": "function",
+        "line": 306,
+        "end_line": 341,
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_verify_pr340_producer_report:efa5104644c92723",
+        "signature_hash": "c35381a61ae55051"
       }
     ],
     "_apply_verified_source_role": [
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 250,
-        "end_line": 351,
-        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_apply_verified_source_role:a0e665c3a2157f12",
-        "signature_hash": "3f827cdf9ddcca73"
+        "line": 344,
+        "end_line": 457,
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_apply_verified_source_role:e50fccf79cf3d556",
+        "signature_hash": "e346a2c5cfe930ab"
       }
     ],
     "verify_and_admit_official_mtp_role": [
       {
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
         "kind": "function",
-        "line": 354,
-        "end_line": 363,
-        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:verify_and_admit_official_mtp_role:c0edb03a208bece8",
-        "signature_hash": "463703239b0a1237"
+        "line": 460,
+        "end_line": 473,
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:verify_and_admit_official_mtp_role:ebead46426d9bd22",
+        "signature_hash": "2ad75f18a8673d51"
       }
     ],
     "OfficialW2ObservationError": [
@@ -158830,16 +159417,6 @@
         "end_line": 26,
         "semantic_id": "tools/awj032/glm53_packed_expert_pager.py#class:StaleSourceError:6437d7d607493c15",
         "signature_hash": "3afeb5d9a3f518ff"
-      }
-    ],
-    "SourceBindingError": [
-      {
-        "file": "tools/awj032/glm53_packed_expert_pager.py",
-        "kind": "class",
-        "line": 29,
-        "end_line": 30,
-        "semantic_id": "tools/awj032/glm53_packed_expert_pager.py#class:SourceBindingError:b342725898b160fc",
-        "signature_hash": "36882372233eba85"
       }
     ],
     "ExpertRangeError": [
@@ -159618,6 +160195,164 @@
         "signature_hash": "2ed156b615b1bfef"
       }
     ],
+    "PR340ProducerSnapshotError": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 52,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#class:PR340ProducerSnapshotError:1a17fd8555cf2a1e",
+        "signature_hash": "3d0e0327e9d3a24e"
+      }
+    ],
+    "PR340ProducerSnapshotError.__init__": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 52,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#method:PR340ProducerSnapshotError.__init__:10fc6e944e284939",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_sha40": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:_sha40:fdb8160f4bf10d4e",
+        "signature_hash": "26703d793ed2601a"
+      },
+      {
+        "file": "tools/awj032/glm53_w3_official_producer_admission.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 66,
+        "semantic_id": "tools/awj032/glm53_w3_official_producer_admission.py#function:_sha40:9d4578326da5de40",
+        "signature_hash": "26703d793ed2601a"
+      }
+    ],
+    "_weight_map": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 83,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:_weight_map:9ce6ce1707f3d8c3",
+        "signature_hash": "821e26bd590d3a2d"
+      }
+    ],
+    "_role_intent_digest": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 100,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:_role_intent_digest:d4734d255c4a9874",
+        "signature_hash": "4f529ba982210fb3"
+      }
+    ],
+    "build_canonical_role_intent": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 150,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:build_canonical_role_intent:b50071f57bfe666f",
+        "signature_hash": "1daaefa343cbd8a1"
+      }
+    ],
+    "build_final_source_bound_report": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "function",
+        "line": 153,
+        "end_line": 192,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:build_final_source_bound_report:b5d366c8ce882055",
+        "signature_hash": "ea02a746f8736bcc"
+      }
+    ],
+    "final_source_bound_report_digest": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "function",
+        "line": 195,
+        "end_line": 200,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:final_source_bound_report_digest:23e2ff6bfe372a56",
+        "signature_hash": "68e0496ba42e46d8"
+      }
+    ],
+    "PR340ProducerSnapshot": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "class",
+        "line": 204,
+        "end_line": 231,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#class:PR340ProducerSnapshot:966f1e034c15e972",
+        "signature_hash": "4cc808c570c2c34a"
+      }
+    ],
+    "PR340ProducerSnapshot.snapshot_digest": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "method",
+        "line": 227,
+        "end_line": 228,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#method:PR340ProducerSnapshot.snapshot_digest:5fc069f037380dc1",
+        "signature_hash": "189c0bac868597a8"
+      }
+    ],
+    "PR340ProducerSnapshot.to_dict": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "method",
+        "line": 230,
+        "end_line": 231,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#method:PR340ProducerSnapshot.to_dict:15c83e032300f4ec",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "emit_pr340_producer_snapshot": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "kind": "function",
+        "line": 234,
+        "end_line": 256,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:emit_pr340_producer_snapshot:7f04a727ecc773cd",
+        "signature_hash": "9c2264e403826f90"
+      }
+    ],
+    "PR340ProducerRegistryError": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot_registry.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot_registry.py#class:PR340ProducerRegistryError:cd1f4b5bdf1f7ebb",
+        "signature_hash": "a503b68c5babab8e"
+      }
+    ],
+    "PR340ProducerRegistryError.__init__": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot_registry.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot_registry.py#method:PR340ProducerRegistryError.__init__:3597060abd67d034",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "verify_registered_pr340_snapshot": [
+      {
+        "file": "tools/awj032/glm53_pr340_producer_snapshot_registry.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot_registry.py#function:verify_registered_pr340_snapshot:5125ca44f4294b54",
+        "signature_hash": "e37f9eb7612c1204"
+      }
+    ],
     "SourceBoundLayoutError": [
       {
         "file": "tools/awj032/glm53_source_bound_layout_bridge.py",
@@ -159718,16 +160453,6 @@
         "signature_hash": "0b6534a3148e5c5d"
       }
     ],
-    "_sha40": [
-      {
-        "file": "tools/awj032/glm53_w3_official_producer_admission.py",
-        "kind": "function",
-        "line": 60,
-        "end_line": 66,
-        "semantic_id": "tools/awj032/glm53_w3_official_producer_admission.py#function:_sha40:9d4578326da5de40",
-        "signature_hash": "26703d793ed2601a"
-      }
-    ],
     "_security_payload": [
       {
         "file": "tools/awj032/glm53_w3_official_producer_admission.py",
@@ -159802,8 +160527,8 @@
       {
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
         "kind": "class",
-        "line": 37,
-        "end_line": 41,
+        "line": 42,
+        "end_line": 46,
         "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#class:W3ProofPlaneAdmissionError:08e81bca5d5928fb",
         "signature_hash": "78e3e76384677585"
       }
@@ -159812,70 +160537,70 @@
       {
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
         "kind": "method",
-        "line": 38,
-        "end_line": 41,
+        "line": 43,
+        "end_line": 46,
         "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionError.__init__:acf4cf018811bf35",
         "signature_hash": "0b6534a3148e5c5d"
       }
     ],
-    "_validate_official_mtp_evidence": [
+    "_official_url": [
       {
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
         "kind": "function",
-        "line": 52,
-        "end_line": 74,
-        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:_validate_official_mtp_evidence:14f18930f5d1dcde",
-        "signature_hash": "70ae0ca0626378ca"
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:_official_url:9344ca8b34cd660a",
+        "signature_hash": "f019eee5d0fc42d3"
       }
     ],
-    "W3ProofPlaneAdmissionReceipt": [
+    "_observe_registered_pr340": [
+      {
+        "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 104,
+        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:_observe_registered_pr340:0ad824f22dd25b79",
+        "signature_hash": "4afb016dc186d0ea"
+      }
+    ],
+    "W3RegisteredAdmissionReceipt": [
       {
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
         "kind": "class",
-        "line": 78,
-        "end_line": 136,
-        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#class:W3ProofPlaneAdmissionReceipt:e79b2a3cb8cce958",
-        "signature_hash": "022bf2309e8e1e2c"
+        "line": 108,
+        "end_line": 166,
+        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#class:W3RegisteredAdmissionReceipt:0ec9d2e44b8dd254",
+        "signature_hash": "a358862c620bec5d"
       }
     ],
-    "W3ProofPlaneAdmissionReceipt.logical_id": [
+    "W3RegisteredAdmissionReceipt.logical_id": [
       {
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
         "kind": "method",
-        "line": 106,
-        "end_line": 107,
-        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionReceipt.logical_id:79722e5e4cd963d8",
+        "line": 136,
+        "end_line": 137,
+        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#method:W3RegisteredAdmissionReceipt.logical_id:c71d0d9a342683a7",
         "signature_hash": "77512dea4c34aaf7"
       }
     ],
-    "W3ProofPlaneAdmissionReceipt.to_dict": [
+    "W3RegisteredAdmissionReceipt.to_dict": [
       {
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
         "kind": "method",
-        "line": 109,
-        "end_line": 136,
-        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionReceipt.to_dict:5afae3e79b2df95c",
-        "signature_hash": "5c1a69a9659e2089"
-      }
-    ],
-    "_reduce_with_observed_source": [
-      {
-        "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
-        "kind": "function",
         "line": 139,
-        "end_line": 158,
-        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:_reduce_with_observed_source:c295d1f6f7995c63",
-        "signature_hash": "9181667c1118b9a4"
+        "end_line": 166,
+        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#method:W3RegisteredAdmissionReceipt.to_dict:0d636b3e2328ff36",
+        "signature_hash": "5c1a69a9659e2089"
       }
     ],
     "evaluate_w3_proof_plane_admission": [
       {
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
         "kind": "function",
-        "line": 161,
-        "end_line": 176,
-        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:evaluate_w3_proof_plane_admission:37fa863f4b4c87fc",
-        "signature_hash": "0657d64ab45b4320"
+        "line": 169,
+        "end_line": 205,
+        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:evaluate_w3_proof_plane_admission:69c1ecb4e80fc0f7",
+        "signature_hash": "50ff3b4a5bf39727"
       }
     ],
     "make_tree": [
@@ -161548,114 +162273,104 @@
         "signature_hash": "4e3aaeb01e0b2e82"
       }
     ],
+    "exact_snapshot": [
+      {
+        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 27,
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#function:exact_snapshot:6c3c30f87b974a48",
+        "signature_hash": "22bd9401afa839d8"
+      }
+    ],
+    "exact_report": [
+      {
+        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 36,
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#function:exact_report:c4093fe496162287",
+        "signature_hash": "069f970d2bebadbf"
+      }
+    ],
     "source_evidence": [
       {
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
         "kind": "function",
-        "line": 10,
-        "end_line": 28,
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#function:source_evidence:a32e8c0fdf48ef68",
-        "signature_hash": "bbe76f94b0077cbe"
+        "line": 39,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#function:source_evidence:17c3c5c0b7e7f239",
+        "signature_hash": "436a4d607408a5fc"
       }
     ],
-    "base_receipt": [
-      {
-        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "kind": "function",
-        "line": 31,
-        "end_line": 36,
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#function:base_receipt:88bd1106a3ea23a8",
-        "signature_hash": "9ecc5f82659466f3"
-      }
-    ],
-    "W3ProofPlaneAdmissionV2Tests": [
+    "RegisteredProducerTests": [
       {
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
         "kind": "class",
-        "line": 39,
-        "end_line": 130,
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#class:W3ProofPlaneAdmissionV2Tests:d341dec7ba1e3cb9",
-        "signature_hash": "bddc0c183554c855"
+        "line": 58,
+        "end_line": 140,
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#class:RegisteredProducerTests:be0fc9044b6f5b4e",
+        "signature_hash": "73bed8cc996afe0e"
       }
     ],
-    "W3ProofPlaneAdmissionV2Tests.test_exact_source_reduces_only_mtp_blocker_and_admits_synthetic_fixture": [
+    "RegisteredProducerTests.test_registry_accepts_exact_hosted_snapshot_only": [
       {
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
         "kind": "method",
-        "line": 40,
-        "end_line": 51,
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_exact_source_reduces_only_mtp_blocker_and_admits_synthetic_fixture:50df7f577a1f4c81",
-        "signature_hash": "f53969715ef10efe"
-      }
-    ],
-    "W3ProofPlaneAdmissionV2Tests.test_public_path_observes_source_internally_not_from_caller": [
-      {
-        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "kind": "method",
-        "line": 53,
+        "line": 59,
         "end_line": 62,
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_public_path_observes_source_internally_not_from_caller:14b0b6199abc9e05",
-        "signature_hash": "b433b356c45de5cc"
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:RegisteredProducerTests.test_registry_accepts_exact_hosted_snapshot_only:2bdac49cf5cdd315",
+        "signature_hash": "6078884393db04db"
       }
     ],
-    "W3ProofPlaneAdmissionV2Tests.test_caller_provenance_boolean_is_rejected_before_source_observation": [
+    "RegisteredProducerTests.test_registry_rejects_execution_report_and_snapshot_substitution": [
       {
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
         "kind": "method",
         "line": 64,
-        "end_line": 73,
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_caller_provenance_boolean_is_rejected_before_source_observation:282539905f3750ed",
-        "signature_hash": "ee41d27ef0cbed81"
+        "end_line": 75,
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:RegisteredProducerTests.test_registry_rejects_execution_report_and_snapshot_substitution:b6261e6f8cd8cd80",
+        "signature_hash": "f6079880af34ee61"
       }
     ],
-    "W3ProofPlaneAdmissionV2Tests.test_unresolved_non_mtp_blocker_prevents_source_credit": [
+    "RegisteredProducerTests.test_registry_rejects_producer_self_verification_and_effect_widening": [
       {
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
         "kind": "method",
-        "line": 75,
-        "end_line": 79,
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_unresolved_non_mtp_blocker_prevents_source_credit:b639eafb6722985b",
-        "signature_hash": "633ebfe523701783"
+        "line": 77,
+        "end_line": 87,
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:RegisteredProducerTests.test_registry_rejects_producer_self_verification_and_effect_widening:35f47bcc1f8cb8ea",
+        "signature_hash": "d771093b59b9872c"
       }
     ],
-    "W3ProofPlaneAdmissionV2Tests.test_repo_revision_index_and_role_substitutions_fail": [
+    "RegisteredProducerTests.test_public_w3_path_cannot_use_caller_resolver_true": [
       {
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
         "kind": "method",
-        "line": 81,
-        "end_line": 92,
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_repo_revision_index_and_role_substitutions_fail:e8927ddb5e80a234",
-        "signature_hash": "b4f35bcd925f7dec"
+        "line": 89,
+        "end_line": 98,
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:RegisteredProducerTests.test_public_w3_path_cannot_use_caller_resolver_true:c1211513768c8153",
+        "signature_hash": "d95d21e9358ff7e9"
       }
     ],
-    "W3ProofPlaneAdmissionV2Tests.test_mtp_geometry_and_marker_substitutions_fail": [
+    "RegisteredProducerTests.test_unresolved_non_mtp_blocker_prevents_registry_use": [
       {
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
         "kind": "method",
-        "line": 94,
-        "end_line": 106,
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_mtp_geometry_and_marker_substitutions_fail:1c11bc745945016a",
-        "signature_hash": "a65c988c60ede2a0"
+        "line": 100,
+        "end_line": 109,
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:RegisteredProducerTests.test_unresolved_non_mtp_blocker_prevents_registry_use:160781dc6869c9c9",
+        "signature_hash": "efb593c5789f9667"
       }
     ],
-    "W3ProofPlaneAdmissionV2Tests.test_source_effect_widening_fails": [
+    "RegisteredProducerTests.test_registered_composition_admits_only_native_synthetic_fixture": [
       {
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
         "kind": "method",
-        "line": 108,
-        "end_line": 119,
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_source_effect_widening_fails:7144eeb832dbb06a",
-        "signature_hash": "9b8de03d41e10c31"
-      }
-    ],
-    "W3ProofPlaneAdmissionV2Tests.test_lower_plan_producer_failure_prevents_source_observation": [
-      {
-        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "kind": "method",
-        "line": 121,
-        "end_line": 130,
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_lower_plan_producer_failure_prevents_source_observation:4d4da4ef3e7010f8",
-        "signature_hash": "13c9a0173e9e0edf"
+        "line": 111,
+        "end_line": 140,
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:RegisteredProducerTests.test_registered_composition_admits_only_native_synthetic_fixture:5e16d121b8b09b1d",
+        "signature_hash": "c10a483a452fa883"
       }
     ],
     "_coordinates": [
@@ -172991,9 +173706,9 @@
       "path": ".github/workflows/awj032-glm53-w3-proof-plane-v2.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 3577,
-      "lines": 79,
-      "tokens_est": 895,
+      "bytes": 5137,
+      "lines": 103,
+      "tokens_est": 1285,
       "symbol_count": 0,
       "commands": [
         "python -m py_compile",
@@ -173001,47 +173716,47 @@
       ],
       "command_lines": {
         "python -m py_compile": [
-          44
+          51
         ],
         "python -m unittest": [
-          54
+          66
         ]
       },
       "topology": {},
-      "digest8": "efb3df7cc8314182",
+      "digest8": "57488dd8a847e734",
       "vector": [
-        0.267923,
-        -0.021123,
-        -0.172316,
-        0.25903,
-        -0.007782,
-        0.001112,
-        -0.219008,
-        0.263476,
-        0.112283,
-        0.276817,
-        -0.003335,
-        0.283487,
-        0.176763,
-        -0.134518,
-        -0.161199,
-        0.150082,
-        0.090049,
-        -0.090049,
-        0.250136,
-        0.10339,
-        -0.161199,
-        0.185656,
-        0.170092,
-        -0.212338,
-        -0.118954,
-        -0.245689,
-        0.170092,
-        -0.154528,
-        0.216784,
-        -0.021123,
-        0.210114,
-        0.056697
+        0.203295,
+        0.277704,
+        -0.134201,
+        -0.07308,
+        0.001329,
+        -0.259101,
+        -0.065108,
+        0.171406,
+        0.221897,
+        0.035876,
+        0.011959,
+        0.089025,
+        -0.038533,
+        -0.003986,
+        0.126229,
+        0.168748,
+        0.306936,
+        0.259101,
+        -0.112942,
+        -0.285676,
+        -0.195323,
+        0.18735,
+        0.267074,
+        0.176721,
+        -0.014616,
+        0.099654,
+        0.046505,
+        -0.251129,
+        0.011959,
+        -0.216582,
+        -0.275046,
+        0.152803
       ]
     },
     {
@@ -268439,6 +269154,147 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13932,
+      "lines": 372,
+      "tokens_est": 3483,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0b8211557b762012",
+      "vector": [
+        0.219401,
+        0.041064,
+        -0.005866,
+        -0.17951,
+        0.263986,
+        0.156045,
+        0.137273,
+        0.245213,
+        0.045758,
+        -0.120847,
+        0.12554,
+        0.104421,
+        0.073916,
+        0.076263,
+        -0.233481,
+        -0.256946,
+        0.285104,
+        -0.193589,
+        0.130233,
+        0.221748,
+        0.130233,
+        -0.228788,
+        0.188896,
+        0.048104,
+        0.085649,
+        -0.198283,
+        -0.05749,
+        -0.235827,
+        0.261639,
+        0.111461,
+        -0.141966,
+        0.266332
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_checkpoint_layout_probe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13315,
+      "lines": 354,
+      "tokens_est": 3329,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "404ea17e56f34af3",
+      "vector": [
+        -0.239142,
+        -0.111455,
+        -0.141754,
+        -0.037873,
+        -0.228321,
+        -0.17638,
+        0.027052,
+        -0.262948,
+        -0.122276,
+        0.120112,
+        -0.230485,
+        -0.2175,
+        0.087649,
+        0.009739,
+        0.275933,
+        0.055187,
+        -0.107127,
+        -0.057351,
+        0.275933,
+        -0.260783,
+        0.141754,
+        -0.19153,
+        0.213172,
+        0.213172,
+        0.042201,
+        0.055187,
+        -0.252127,
+        0.19153,
+        -0.265112,
+        -0.102798,
+        -0.068172,
+        0.204515
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_checkpoint_source_binding.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8288,
+      "lines": 231,
+      "tokens_est": 2072,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d65427be6382795d",
+      "vector": [
+        0.305591,
+        0.228288,
+        -0.088175,
+        0.008455,
+        -0.211377,
+        -0.252445,
+        0.032613,
+        0.047107,
+        -0.027781,
+        0.114748,
+        0.295928,
+        0.28385,
+        -0.262108,
+        0.155815,
+        -0.129242,
+        0.17031,
+        -0.03986,
+        -0.213793,
+        -0.07368,
+        0.129242,
+        -0.025365,
+        -0.025365,
+        -0.286265,
+        -0.030197,
+        0.194467,
+        0.143737,
+        0.295928,
+        -0.047107,
+        0.008455,
+        -0.257276,
+        -0.037444,
+        -0.211377
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_compatibility_probe.py",
       "role": "python_module",
       "binary": false,
@@ -268536,47 +269392,47 @@
       "path": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 14000,
-      "lines": 364,
-      "tokens_est": 3500,
-      "symbol_count": 17,
+      "bytes": 18372,
+      "lines": 474,
+      "tokens_est": 4593,
+      "symbol_count": 21,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "d75225af95492c64",
+      "digest8": "09dbc986729ff013",
       "vector": [
-        0.241017,
-        -0.288508,
-        0.051053,
-        0.029682,
-        -0.008311,
-        0.20065,
-        0.290883,
-        0.212523,
-        -0.248141,
-        0.286134,
-        -0.138911,
-        0.186402,
-        0.131788,
-        0.25289,
-        0.100919,
-        -0.072424,
-        -0.217272,
-        0.245766,
-        -0.150784,
-        0.0653,
-        0.108042,
-        -0.155533,
-        0.165031,
-        0.138911,
-        0.010685,
-        0.269512,
-        0.0653,
-        0.195901,
-        -0.11754,
-        0.172155,
-        -0.115166,
-        -0.041555
+        0.2355,
+        -0.233268,
+        -0.273448,
+        -0.036832,
+        -0.233268,
+        -0.166301,
+        0.039064,
+        -0.210946,
+        -0.17523,
+        0.070315,
+        0.119424,
+        0.224339,
+        -0.070315,
+        -0.262287,
+        0.07478,
+        0.143979,
+        -0.099334,
+        -0.110495,
+        -0.007813,
+        0.085941,
+        -0.179695,
+        -0.097102,
+        -0.244429,
+        0.161837,
+        0.117192,
+        0.228804,
+        0.206481,
+        -0.19532,
+        -0.262287,
+        -0.007813,
+        0.255591,
+        0.217643
       ]
     },
     {
@@ -268815,6 +269671,100 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_pr340_producer_snapshot.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10609,
+      "lines": 257,
+      "tokens_est": 2653,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f28303458710e394",
+      "vector": [
+        -0.223117,
+        0.256525,
+        -0.091872,
+        -0.28516,
+        -0.015511,
+        -0.187323,
+        0.122893,
+        0.258911,
+        -0.122893,
+        -0.299477,
+        -0.130052,
+        -0.010738,
+        -0.020283,
+        0.289932,
+        -0.130052,
+        0.235048,
+        -0.292319,
+        -0.211185,
+        -0.139597,
+        0.26607,
+        0.07994,
+        0.070395,
+        -0.027442,
+        -0.013125,
+        0.044146,
+        0.101417,
+        0.108575,
+        0.096644,
+        -0.244593,
+        -0.26607,
+        0.04176,
+        0.020283
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_pr340_producer_snapshot_registry.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4537,
+      "lines": 81,
+      "tokens_est": 1135,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "dfdc4cd19b1d210c",
+      "vector": [
+        0.034771,
+        0.171459,
+        -0.08513,
+        0.181052,
+        0.053956,
+        -0.077936,
+        -0.137887,
+        -0.185848,
+        0.257789,
+        0.20743,
+        0.164265,
+        0.029975,
+        0.025179,
+        0.269779,
+        -0.065946,
+        -0.20743,
+        -0.214624,
+        -0.257789,
+        -0.229012,
+        0.087528,
+        -0.173857,
+        0.260187,
+        0.233808,
+        0.214624,
+        0.020383,
+        0.020383,
+        0.111509,
+        -0.188246,
+        0.238604,
+        0.121101,
+        -0.190644,
+        0.284167
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_source_bound_layout_bridge.py",
       "role": "python_module",
       "binary": false,
@@ -268912,47 +269862,47 @@
       "path": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 7863,
-      "lines": 177,
-      "tokens_est": 1966,
+      "bytes": 9350,
+      "lines": 206,
+      "tokens_est": 2338,
       "symbol_count": 10,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "b007757c9a1b7a54",
+      "digest8": "5b86db9a25a57798",
       "vector": [
-        0.16998,
-        -0.280299,
-        0.237522,
-        -0.091182,
-        0.102439,
-        -0.275796,
-        -0.158723,
-        -0.246528,
-        0.043902,
-        -0.233019,
-        0.030394,
-        0.082176,
-        0.251031,
-        0.273545,
-        -0.133958,
-        0.046154,
-        -0.025891,
-        0.086679,
-        0.275796,
-        0.095684,
-        -0.187992,
-        -0.001126,
-        -0.224014,
-        -0.109193,
-        -0.142964,
-        0.178986,
-        0.151969,
-        -0.124952,
-        -0.156472,
-        0.127204,
-        -0.257785,
-        -0.210506
+        -0.110844,
+        -0.127897,
+        -0.093791,
+        -0.303298,
+        -0.010963,
+        0.115716,
+        0.135205,
+        -0.079174,
+        -0.191236,
+        0.239959,
+        0.193672,
+        0.015835,
+        -0.049941,
+        -0.198544,
+        -0.305734,
+        0.123024,
+        0.26432,
+        -0.186364,
+        0.023143,
+        -0.174183,
+        0.30817,
+        0.259448,
+        0.127897,
+        -0.115716,
+        -0.074302,
+        -0.210725,
+        -0.179055,
+        0.22047,
+        -0.26432,
+        -0.066994,
+        -0.132769,
+        -0.001218
       ]
     },
     {
@@ -269382,47 +270332,47 @@
       "path": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 6234,
-      "lines": 135,
-      "tokens_est": 1559,
-      "symbol_count": 11,
+      "bytes": 7131,
+      "lines": 145,
+      "tokens_est": 1783,
+      "symbol_count": 10,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "ea111037bf8bab7c",
+      "digest8": "21ae21d2283f8104",
       "vector": [
-        0.096629,
-        -0.189588,
-        -0.250745,
-        0.015901,
-        -0.047703,
-        -0.170018,
-        0.223836,
-        -0.223836,
-        -0.231175,
-        -0.211605,
-        -0.013455,
-        -0.157786,
-        0.140662,
-        0.304564,
-        0.037918,
-        -0.211605,
-        0.135769,
-        -0.231175,
-        0.02324,
-        -0.177357,
-        -0.309457,
-        -0.199373,
-        0.143108,
-        0.062381,
-        -0.013455,
-        0.172464,
-        0.304564,
-        0.018347,
-        0.177357,
-        0.196927,
-        -0.099075,
-        0.106414
+        0.026972,
+        0.278706,
+        -0.05009,
+        0.106602,
+        0.265862,
+        -0.165682,
+        0.147701,
+        0.165682,
+        0.086052,
+        -0.304393,
+        0.02954,
+        0.12972,
+        0.093758,
+        -0.15027,
+        0.142564,
+        -0.042384,
+        0.042384,
+        0.065502,
+        0.186232,
+        0.114308,
+        -0.283843,
+        0.227331,
+        -0.119445,
+        -0.319805,
+        0.060365,
+        0.255587,
+        0.319805,
+        -0.042384,
+        0.016697,
+        0.145133,
+        -0.20935,
+        0.219625
       ]
     },
     {
@@ -293424,15 +294374,15 @@
     }
   },
   "summary": {
-    "file_count": 1686,
-    "total_bytes": 26654260,
-    "text_tokens_est": 6653967,
+    "file_count": 1691,
+    "total_bytes": 26713257,
+    "text_tokens_est": 6668718,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1030,
+      "python_module": 1035,
       "schema_or_lexicon": 279,
       "support_file": 49
     },
@@ -295100,6 +296050,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
+      "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+      "tools/awj032/glm53_checkpoint_layout_probe.py",
+      "tools/awj032/glm53_checkpoint_source_binding.py",
       "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/glm53_layout_binding_bridge.py",
       "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
@@ -295108,6 +296061,8 @@
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
+      "tools/awj032/glm53_pr340_producer_snapshot.py",
+      "tools/awj032/glm53_pr340_producer_snapshot_registry.py",
       "tools/awj032/glm53_source_bound_layout_bridge.py",
       "tools/awj032/glm53_w3_official_producer_admission.py",
       "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
@@ -453339,6 +454294,546 @@
         "file_digest8": "cecff98d2a4fb9ba"
       },
       {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#class:CheckpointExtraLayerClassification:20f9354a4edbd474",
+        "name": "CheckpointExtraLayerClassification",
+        "kind": "class",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 125,
+        "end_line": 169,
+        "signature_hash": "36b5c6dfbfb280f8",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#class:CheckpointExtraLayerEvidenceObservation:13e61a9fefe9c296",
+        "name": "CheckpointExtraLayerEvidenceObservation",
+        "kind": "class",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 173,
+        "end_line": 227,
+        "signature_hash": "71f618beded67d11",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#class:ExtraLayerClassificationError:f6de349c58164a9d",
+        "name": "ExtraLayerClassificationError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 31,
+        "end_line": 35,
+        "signature_hash": "7364d2796ae8aca8",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_canonical:10e548c72387fb86",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 38,
+        "end_line": 45,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_commit:376d4934db9a8176",
+        "name": "_commit",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 70,
+        "end_line": 76,
+        "signature_hash": "01e3f5ebacced2ea",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_hidden_layers:8085852a85c4f860",
+        "name": "_hidden_layers",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 79,
+        "end_line": 82,
+        "signature_hash": "3a130f5f945308d8",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_role_map:1a590aba50134101",
+        "name": "_role_map",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 85,
+        "end_line": 110,
+        "signature_hash": "d56735caa47ca1eb",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_roles_payload:29e2eed52013f5bf",
+        "name": "_roles_payload",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 113,
+        "end_line": 121,
+        "signature_hash": "1ccf6bb5c0a9f330",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_sha256:73d52987c94b1edc",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 61,
+        "end_line": 67,
+        "signature_hash": "685edab582e6b347",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_sha:e2efb6e36fd85f5a",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_status_from_blockers:8f76cada95684dd1",
+        "name": "_status_from_blockers",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 298,
+        "end_line": 305,
+        "signature_hash": "035ad67a97b7cf93",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_token:a4d81a07a6e7c014",
+        "name": "_token",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 52,
+        "end_line": 58,
+        "signature_hash": "3f76f5429ebcf8ae",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_validate_binding:9860f19a9cca706a",
+        "name": "_validate_binding",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 230,
+        "end_line": 295,
+        "signature_hash": "d877371532a0ffe3",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:apply_extra_layer_classification:0809cc36ec54f90a",
+        "name": "apply_extra_layer_classification",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 308,
+        "end_line": 372,
+        "signature_hash": "37cc7154d0dea1df",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerClassification.classification_id:2d36c1532dcc0882",
+        "name": "CheckpointExtraLayerClassification.classification_id",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 168,
+        "end_line": 169,
+        "signature_hash": "342b16041777b438",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerClassification.normalized:2e1c4f6c08bf580c",
+        "name": "CheckpointExtraLayerClassification.normalized",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 137,
+        "end_line": 159,
+        "signature_hash": "3e30758942a7bf1b",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerClassification.role_map:8790d381eeef2b40",
+        "name": "CheckpointExtraLayerClassification.role_map",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 161,
+        "end_line": 162,
+        "signature_hash": "1585c511c2bb4d06",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerClassification.to_dict:46c45359e3347c09",
+        "name": "CheckpointExtraLayerClassification.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 164,
+        "end_line": 165,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerEvidenceObservation.normalized:0a767cf5ff151796",
+        "name": "CheckpointExtraLayerEvidenceObservation.normalized",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 187,
+        "end_line": 217,
+        "signature_hash": "3e30758942a7bf1b",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerEvidenceObservation.observation_id:7720a4c8914a54cb",
+        "name": "CheckpointExtraLayerEvidenceObservation.observation_id",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 226,
+        "end_line": 227,
+        "signature_hash": "77c0c78e4b5e35f5",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerEvidenceObservation.role_map:4845d1d97a2ef092",
+        "name": "CheckpointExtraLayerEvidenceObservation.role_map",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 219,
+        "end_line": 220,
+        "signature_hash": "1585c511c2bb4d06",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:CheckpointExtraLayerEvidenceObservation.to_dict:986dcbec620c9964",
+        "name": "CheckpointExtraLayerEvidenceObservation.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 222,
+        "end_line": 223,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#method:ExtraLayerClassificationError.__init__:438dec9afe26340f",
+        "name": "ExtraLayerClassificationError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
+        "line": 32,
+        "end_line": 35,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "0b8211557b762012"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#class:Geometry:6909379da99ddcb0",
+        "name": "Geometry",
+        "kind": "class",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 53,
+        "end_line": 90,
+        "signature_hash": "1550b2056b16f0be",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#class:ProbeError:e35cf5b01384b72e",
+        "name": "ProbeError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 24,
+        "end_line": 28,
+        "signature_hash": "7c421b08047c1609",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_all_layer_indices:50133c5efd74f6ce",
+        "name": "_all_layer_indices",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 166,
+        "end_line": 173,
+        "signature_hash": "fc74b6a78f691f3f",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_canonical:aaf01bd1d8109e0b",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 38,
+        "end_line": 45,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_int:ef74868636877e09",
+        "name": "_int",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 31,
+        "end_line": 35,
+        "signature_hash": "0d9d7bc3e65394e3",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_layer_prefix:3fbd992a71a926df",
+        "name": "_layer_prefix",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 134,
+        "end_line": 135,
+        "signature_hash": "df196be264c348ba",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_packed_candidates:6e26b13eba99bf22",
+        "name": "_packed_candidates",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 138,
+        "end_line": 140,
+        "signature_hash": "012f9a8c56e6bb7f",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_per_expert_projection_coverage:41792882d3e2a3ce",
+        "name": "_per_expert_projection_coverage",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 153,
+        "end_line": 163,
+        "signature_hash": "4a0d17c23beecf9c",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_scale_keys_for_layer:20b4b7abd14977ef",
+        "name": "_scale_keys_for_layer",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 143,
+        "end_line": 150,
+        "signature_hash": "53cfba367b4dc0c3",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_sha:116e5b617174946a",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:classify_layer_layout:e18076da396e6a45",
+        "name": "classify_layer_layout",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 176,
+        "end_line": 253,
+        "signature_hash": "8a5119975d5c4611",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:geometry_from_config:4bba51429afe0a75",
+        "name": "geometry_from_config",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 93,
+        "end_line": 131,
+        "signature_hash": "717229019f609fe1",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:probe_checkpoint:c0f32f855e67c055",
+        "name": "probe_checkpoint",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 256,
+        "end_line": 353,
+        "signature_hash": "89ad21b6871b488b",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:Geometry.candidate_fp32_scale_bank_bytes:b6ef61ba43c985c7",
+        "name": "Geometry.candidate_fp32_scale_bank_bytes",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 70,
+        "end_line": 73,
+        "signature_hash": "667682036cfb86d9",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:Geometry.to_dict:00d612851f20d7fb",
+        "name": "Geometry.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 75,
+        "end_line": 90,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:Geometry.total_fp8_weight_bytes:0da0dc38c9fec035",
+        "name": "Geometry.total_fp8_weight_bytes",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 66,
+        "end_line": 67,
+        "signature_hash": "4d6139f0239feb94",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:ProbeError.__init__:2dde176739535269",
+        "name": "ProbeError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 25,
+        "end_line": 28,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "404ea17e56f34af3"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#class:BoundJsonSource:612945fb0bd01622",
+        "name": "BoundJsonSource",
+        "kind": "class",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 64,
+        "end_line": 74,
+        "signature_hash": "ef526106a46c61e1",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#class:GLM53CheckpointSourceBundle:f1baaf817f72297c",
+        "name": "GLM53CheckpointSourceBundle",
+        "kind": "class",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 78,
+        "end_line": 107,
+        "signature_hash": "9280fb2b20588314",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#class:SourceBindingError:8d6823a08f22af3f",
+        "name": "SourceBindingError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 21,
+        "end_line": 25,
+        "signature_hash": "09cfa98af8d5fe6b",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:_canonical:e60c8017bb0c9dc5",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 32,
+        "end_line": 42,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:_expected_sha:c5882f96693e03d1",
+        "name": "_expected_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 45,
+        "end_line": 51,
+        "signature_hash": "5f1df2e7a0614f6f",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:_immutable_commit:cac8dd27a4b41e74",
+        "name": "_immutable_commit",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 54,
+        "end_line": 60,
+        "signature_hash": "f4a32d4cd5237246",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:_sha256_bytes:733d5f1f757a0f6f",
+        "name": "_sha256_bytes",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "46d985396fb3f8c4",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:bind_checkpoint_sources:36e8790157395423",
+        "name": "bind_checkpoint_sources",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 134,
+        "end_line": 164,
+        "signature_hash": "95cae4de85863bb5",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:bind_json_source:a9eda82b7329892d",
+        "name": "bind_json_source",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 110,
+        "end_line": 131,
+        "signature_hash": "d75917b63d3894d6",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:source_bound_probe:3d56726d5bc0365f",
+        "name": "source_bound_probe",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 167,
+        "end_line": 230,
+        "signature_hash": "2f88fcc554340afa",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#method:BoundJsonSource.mapping:1a4b657785282580",
+        "name": "BoundJsonSource.mapping",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 70,
+        "end_line": 74,
+        "signature_hash": "198092afd75e782c",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#method:GLM53CheckpointSourceBundle.source_bundle_id:35ab1d3202872690",
+        "name": "GLM53CheckpointSourceBundle.source_bundle_id",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 94,
+        "end_line": 107,
+        "signature_hash": "06a69bbdb440bbea",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#method:GLM53CheckpointSourceBundle.weight_map_digest:0861f02e7c9ede91",
+        "name": "GLM53CheckpointSourceBundle.weight_map_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 85,
+        "end_line": 91,
+        "signature_hash": "061f5902f66cf1ae",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#method:SourceBindingError.__init__:ccc3a2170c1b8289",
+        "name": "SourceBindingError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_source_binding.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "d65427be6382795d"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_compatibility_probe.py#class:CompatibilityReceipt:cf47c7f40f630a26",
         "name": "CompatibilityReceipt",
         "kind": "class",
@@ -453643,170 +455138,210 @@
         "name": "OfficialSourceMTPRoleError",
         "kind": "class",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 35,
-        "end_line": 39,
+        "line": 60,
+        "end_line": 64,
         "signature_hash": "3edcbc40e1d9c00c",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#class:OfficialSourceMTPRoleEvidence:8e943610797f93b1",
         "name": "OfficialSourceMTPRoleEvidence",
         "kind": "class",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 142,
-        "end_line": 167,
+        "line": 185,
+        "end_line": 210,
         "signature_hash": "b47349a994cb8933",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
       },
       {
-        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_apply_verified_source_role:a0e665c3a2157f12",
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_apply_verified_source_role:e50fccf79cf3d556",
         "name": "_apply_verified_source_role",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 250,
-        "end_line": 351,
-        "signature_hash": "3f827cdf9ddcca73",
-        "file_digest8": "d75225af95492c64"
+        "line": 344,
+        "end_line": 457,
+        "signature_hash": "e346a2c5cfe930ab",
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_canonical:e373cabd37733c91",
         "name": "_canonical",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 42,
-        "end_line": 52,
+        "line": 67,
+        "end_line": 77,
         "signature_hash": "8d5bf5695239b859",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_commit_token:cffb29acae35e849",
+        "name": "_commit_token",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
+        "line": 97,
+        "end_line": 103,
+        "signature_hash": "de14371368cebf27",
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_immutable_url:49c259fa3e01b8df",
         "name": "_immutable_url",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 63,
-        "end_line": 69,
+        "line": 106,
+        "end_line": 112,
         "signature_hash": "aecd3029bcbae7a2",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_layer_indices:8b4bca37a3ea95f0",
         "name": "_layer_indices",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 107,
-        "end_line": 117,
+        "line": 150,
+        "end_line": 160,
         "signature_hash": "3b4fdd0e6cbb31f5",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_normalize_weight_map:cb33624503e562b2",
         "name": "_normalize_weight_map",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 95,
-        "end_line": 104,
+        "line": 138,
+        "end_line": 147,
         "signature_hash": "06cb214e9eeda81b",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_parse_json_object:fe4d799e4835e02b",
         "name": "_parse_json_object",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 83,
-        "end_line": 92,
+        "line": 126,
+        "end_line": 135,
         "signature_hash": "707b755d330f6e53",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_pr340_classification_stage_logical_id:6917b10f4b7eec26",
+        "name": "_pr340_classification_stage_logical_id",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
+        "line": 293,
+        "end_line": 303,
+        "signature_hash": "7a90fafcdbe7dd34",
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_sha256_bytes:60c1af0f37947c72",
         "name": "_sha256_bytes",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 55,
-        "end_line": 56,
+        "line": 80,
+        "end_line": 81,
         "signature_hash": "46d985396fb3f8c4",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_sha256_json:8c8b682fafd6faf0",
         "name": "_sha256_json",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 59,
-        "end_line": 60,
+        "line": 84,
+        "end_line": 85,
         "signature_hash": "583097ecac7a5ede",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_sha256_token:319ecc4af82afddc",
+        "name": "_sha256_token",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
+        "line": 88,
+        "end_line": 94,
+        "signature_hash": "6443f090122dc3a4",
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_source_bundle_id:7db6a52a33a0211d",
         "name": "_source_bundle_id",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 120,
-        "end_line": 138,
+        "line": 163,
+        "end_line": 181,
         "signature_hash": "fe9f26dc662c13a2",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_status_from_blockers:0b7ca20c74edbfb1",
         "name": "_status_from_blockers",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 240,
-        "end_line": 247,
+        "line": 283,
+        "end_line": 290,
         "signature_hash": "035ad67a97b7cf93",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:_verify_pr340_producer_report:efa5104644c92723",
+        "name": "_verify_pr340_producer_report",
+        "kind": "function",
+        "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
+        "line": 306,
+        "end_line": 341,
+        "signature_hash": "c35381a61ae55051",
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:observe_official_mtp_role:4270000f34cc3027",
         "name": "observe_official_mtp_role",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 170,
-        "end_line": 237,
+        "line": 213,
+        "end_line": 280,
         "signature_hash": "1cd9f692dd906644",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:urllib_read_full:26f981d8c1e63839",
         "name": "urllib_read_full",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 72,
-        "end_line": 80,
+        "line": 115,
+        "end_line": 123,
         "signature_hash": "42c9071be7846878",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
       },
       {
-        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:verify_and_admit_official_mtp_role:c0edb03a208bece8",
+        "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#function:verify_and_admit_official_mtp_role:ebead46426d9bd22",
         "name": "verify_and_admit_official_mtp_role",
         "kind": "function",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 354,
-        "end_line": 363,
-        "signature_hash": "463703239b0a1237",
-        "file_digest8": "d75225af95492c64"
+        "line": 460,
+        "end_line": 473,
+        "signature_hash": "2ad75f18a8673d51",
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#method:OfficialSourceMTPRoleError.__init__:b8830a43b4a7ec71",
         "name": "OfficialSourceMTPRoleError.__init__",
         "kind": "method",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 36,
-        "end_line": 39,
+        "line": 61,
+        "end_line": 64,
         "signature_hash": "0b6534a3148e5c5d",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_mtp_role_source_appraiser.py#method:OfficialSourceMTPRoleEvidence.evidence_id:feb982f380331033",
         "name": "OfficialSourceMTPRoleEvidence.evidence_id",
         "kind": "method",
         "file": "tools/awj032/glm53_official_mtp_role_source_appraiser.py",
-        "line": 166,
-        "end_line": 167,
+        "line": 209,
+        "end_line": 210,
         "signature_hash": "cbdae7ebcb023961",
-        "file_digest8": "d75225af95492c64"
+        "file_digest8": "09dbc986729ff013"
       },
       {
         "semantic_id": "tools/awj032/glm53_official_w2_observation.py#class:OfficialW2Observation:cba3d21b65a65441",
@@ -454849,6 +456384,176 @@
         "file_digest8": "d0a2de3800965bca"
       },
       {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#class:PR340ProducerSnapshot:966f1e034c15e972",
+        "name": "PR340ProducerSnapshot",
+        "kind": "class",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 204,
+        "end_line": 231,
+        "signature_hash": "4cc808c570c2c34a",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#class:PR340ProducerSnapshotError:1a17fd8555cf2a1e",
+        "name": "PR340ProducerSnapshotError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 48,
+        "end_line": 52,
+        "signature_hash": "3d0e0327e9d3a24e",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:_canonical:690595777cf5e7be",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 55,
+        "end_line": 62,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:_role_intent_digest:d4734d255c4a9874",
+        "name": "_role_intent_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 86,
+        "end_line": 100,
+        "signature_hash": "4f529ba982210fb3",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:_sha40:fdb8160f4bf10d4e",
+        "name": "_sha40",
+        "kind": "function",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 69,
+        "end_line": 75,
+        "signature_hash": "26703d793ed2601a",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:_sha:1821215fb7106a6c",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 65,
+        "end_line": 66,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:_weight_map:9ce6ce1707f3d8c3",
+        "name": "_weight_map",
+        "kind": "function",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 78,
+        "end_line": 83,
+        "signature_hash": "821e26bd590d3a2d",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:build_canonical_role_intent:b50071f57bfe666f",
+        "name": "build_canonical_role_intent",
+        "kind": "function",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 103,
+        "end_line": 150,
+        "signature_hash": "1daaefa343cbd8a1",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:build_final_source_bound_report:b5d366c8ce882055",
+        "name": "build_final_source_bound_report",
+        "kind": "function",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 153,
+        "end_line": 192,
+        "signature_hash": "ea02a746f8736bcc",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:emit_pr340_producer_snapshot:7f04a727ecc773cd",
+        "name": "emit_pr340_producer_snapshot",
+        "kind": "function",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 234,
+        "end_line": 256,
+        "signature_hash": "9c2264e403826f90",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#function:final_source_bound_report_digest:23e2ff6bfe372a56",
+        "name": "final_source_bound_report_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 195,
+        "end_line": 200,
+        "signature_hash": "68e0496ba42e46d8",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#method:PR340ProducerSnapshot.snapshot_digest:5fc069f037380dc1",
+        "name": "PR340ProducerSnapshot.snapshot_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 227,
+        "end_line": 228,
+        "signature_hash": "189c0bac868597a8",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#method:PR340ProducerSnapshot.to_dict:15c83e032300f4ec",
+        "name": "PR340ProducerSnapshot.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 230,
+        "end_line": 231,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot.py#method:PR340ProducerSnapshotError.__init__:10fc6e944e284939",
+        "name": "PR340ProducerSnapshotError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot.py",
+        "line": 49,
+        "end_line": 52,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "f28303458710e394"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot_registry.py#class:PR340ProducerRegistryError:cd1f4b5bdf1f7ebb",
+        "name": "PR340ProducerRegistryError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot_registry.py",
+        "line": 31,
+        "end_line": 35,
+        "signature_hash": "a503b68c5babab8e",
+        "file_digest8": "dfdc4cd19b1d210c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot_registry.py#function:verify_registered_pr340_snapshot:5125ca44f4294b54",
+        "name": "verify_registered_pr340_snapshot",
+        "kind": "function",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot_registry.py",
+        "line": 38,
+        "end_line": 80,
+        "signature_hash": "e37f9eb7612c1204",
+        "file_digest8": "dfdc4cd19b1d210c"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_pr340_producer_snapshot_registry.py#method:PR340ProducerRegistryError.__init__:3597060abd67d034",
+        "name": "PR340ProducerRegistryError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_pr340_producer_snapshot_registry.py",
+        "line": 32,
+        "end_line": 35,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "dfdc4cd19b1d210c"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#class:SourceBoundLayoutError:3940c4d2fd1e52a2",
         "name": "SourceBoundLayoutError",
         "kind": "class",
@@ -455083,100 +456788,100 @@
         "name": "W3ProofPlaneAdmissionError",
         "kind": "class",
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
-        "line": 37,
-        "end_line": 41,
+        "line": 42,
+        "end_line": 46,
         "signature_hash": "78e3e76384677585",
-        "file_digest8": "b007757c9a1b7a54"
+        "file_digest8": "5b86db9a25a57798"
       },
       {
-        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#class:W3ProofPlaneAdmissionReceipt:e79b2a3cb8cce958",
-        "name": "W3ProofPlaneAdmissionReceipt",
+        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#class:W3RegisteredAdmissionReceipt:0ec9d2e44b8dd254",
+        "name": "W3RegisteredAdmissionReceipt",
         "kind": "class",
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
-        "line": 78,
-        "end_line": 136,
-        "signature_hash": "022bf2309e8e1e2c",
-        "file_digest8": "b007757c9a1b7a54"
+        "line": 108,
+        "end_line": 166,
+        "signature_hash": "a358862c620bec5d",
+        "file_digest8": "5b86db9a25a57798"
       },
       {
         "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:_canonical:a5e64f65ddf944ec",
         "name": "_canonical",
         "kind": "function",
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
-        "line": 44,
-        "end_line": 45,
+        "line": 49,
+        "end_line": 50,
         "signature_hash": "8d5bf5695239b859",
-        "file_digest8": "b007757c9a1b7a54"
+        "file_digest8": "5b86db9a25a57798"
       },
       {
         "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:_digest:0762f066a3eaae7e",
         "name": "_digest",
         "kind": "function",
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
-        "line": 48,
-        "end_line": 49,
+        "line": 53,
+        "end_line": 54,
         "signature_hash": "514f786724465716",
-        "file_digest8": "b007757c9a1b7a54"
+        "file_digest8": "5b86db9a25a57798"
       },
       {
-        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:_reduce_with_observed_source:c295d1f6f7995c63",
-        "name": "_reduce_with_observed_source",
+        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:_observe_registered_pr340:0ad824f22dd25b79",
+        "name": "_observe_registered_pr340",
         "kind": "function",
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
-        "line": 139,
-        "end_line": 158,
-        "signature_hash": "9181667c1118b9a4",
-        "file_digest8": "b007757c9a1b7a54"
+        "line": 61,
+        "end_line": 104,
+        "signature_hash": "4afb016dc186d0ea",
+        "file_digest8": "5b86db9a25a57798"
       },
       {
-        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:_validate_official_mtp_evidence:14f18930f5d1dcde",
-        "name": "_validate_official_mtp_evidence",
+        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:_official_url:9344ca8b34cd660a",
+        "name": "_official_url",
         "kind": "function",
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
-        "line": 52,
-        "end_line": 74,
-        "signature_hash": "70ae0ca0626378ca",
-        "file_digest8": "b007757c9a1b7a54"
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "f019eee5d0fc42d3",
+        "file_digest8": "5b86db9a25a57798"
       },
       {
-        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:evaluate_w3_proof_plane_admission:37fa863f4b4c87fc",
+        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#function:evaluate_w3_proof_plane_admission:69c1ecb4e80fc0f7",
         "name": "evaluate_w3_proof_plane_admission",
         "kind": "function",
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
-        "line": 161,
-        "end_line": 176,
-        "signature_hash": "0657d64ab45b4320",
-        "file_digest8": "b007757c9a1b7a54"
+        "line": 169,
+        "end_line": 205,
+        "signature_hash": "50ff3b4a5bf39727",
+        "file_digest8": "5b86db9a25a57798"
       },
       {
         "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionError.__init__:acf4cf018811bf35",
         "name": "W3ProofPlaneAdmissionError.__init__",
         "kind": "method",
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
-        "line": 38,
-        "end_line": 41,
+        "line": 43,
+        "end_line": 46,
         "signature_hash": "0b6534a3148e5c5d",
-        "file_digest8": "b007757c9a1b7a54"
+        "file_digest8": "5b86db9a25a57798"
       },
       {
-        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionReceipt.logical_id:79722e5e4cd963d8",
-        "name": "W3ProofPlaneAdmissionReceipt.logical_id",
+        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#method:W3RegisteredAdmissionReceipt.logical_id:c71d0d9a342683a7",
+        "name": "W3RegisteredAdmissionReceipt.logical_id",
         "kind": "method",
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
-        "line": 106,
-        "end_line": 107,
+        "line": 136,
+        "end_line": 137,
         "signature_hash": "77512dea4c34aaf7",
-        "file_digest8": "b007757c9a1b7a54"
+        "file_digest8": "5b86db9a25a57798"
       },
       {
-        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionReceipt.to_dict:5afae3e79b2df95c",
-        "name": "W3ProofPlaneAdmissionReceipt.to_dict",
+        "semantic_id": "tools/awj032/glm53_w3_proof_plane_admission_v2.py#method:W3RegisteredAdmissionReceipt.to_dict:0d636b3e2328ff36",
+        "name": "W3RegisteredAdmissionReceipt.to_dict",
         "kind": "method",
         "file": "tools/awj032/glm53_w3_proof_plane_admission_v2.py",
-        "line": 109,
-        "end_line": 136,
+        "line": 139,
+        "end_line": 166,
         "signature_hash": "5c1a69a9659e2089",
-        "file_digest8": "b007757c9a1b7a54"
+        "file_digest8": "5b86db9a25a57798"
       },
       {
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
@@ -456849,114 +458554,104 @@
         "file_digest8": "e9df70823ab17afa"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#class:W3ProofPlaneAdmissionV2Tests:d341dec7ba1e3cb9",
-        "name": "W3ProofPlaneAdmissionV2Tests",
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#class:RegisteredProducerTests:be0fc9044b6f5b4e",
+        "name": "RegisteredProducerTests",
         "kind": "class",
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "line": 39,
-        "end_line": 130,
-        "signature_hash": "bddc0c183554c855",
-        "file_digest8": "ea111037bf8bab7c"
+        "line": 58,
+        "end_line": 140,
+        "signature_hash": "73bed8cc996afe0e",
+        "file_digest8": "21ae21d2283f8104"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#function:base_receipt:88bd1106a3ea23a8",
-        "name": "base_receipt",
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#function:exact_report:c4093fe496162287",
+        "name": "exact_report",
         "kind": "function",
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "line": 31,
+        "line": 30,
         "end_line": 36,
-        "signature_hash": "9ecc5f82659466f3",
-        "file_digest8": "ea111037bf8bab7c"
+        "signature_hash": "069f970d2bebadbf",
+        "file_digest8": "21ae21d2283f8104"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#function:source_evidence:a32e8c0fdf48ef68",
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#function:exact_snapshot:6c3c30f87b974a48",
+        "name": "exact_snapshot",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
+        "line": 11,
+        "end_line": 27,
+        "signature_hash": "22bd9401afa839d8",
+        "file_digest8": "21ae21d2283f8104"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#function:source_evidence:17c3c5c0b7e7f239",
         "name": "source_evidence",
         "kind": "function",
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "line": 10,
-        "end_line": 28,
-        "signature_hash": "bbe76f94b0077cbe",
-        "file_digest8": "ea111037bf8bab7c"
+        "line": 39,
+        "end_line": 55,
+        "signature_hash": "436a4d607408a5fc",
+        "file_digest8": "21ae21d2283f8104"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_caller_provenance_boolean_is_rejected_before_source_observation:282539905f3750ed",
-        "name": "W3ProofPlaneAdmissionV2Tests.test_caller_provenance_boolean_is_rejected_before_source_observation",
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:RegisteredProducerTests.test_public_w3_path_cannot_use_caller_resolver_true:c1211513768c8153",
+        "name": "RegisteredProducerTests.test_public_w3_path_cannot_use_caller_resolver_true",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
+        "line": 89,
+        "end_line": 98,
+        "signature_hash": "d95d21e9358ff7e9",
+        "file_digest8": "21ae21d2283f8104"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:RegisteredProducerTests.test_registered_composition_admits_only_native_synthetic_fixture:5e16d121b8b09b1d",
+        "name": "RegisteredProducerTests.test_registered_composition_admits_only_native_synthetic_fixture",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
+        "line": 111,
+        "end_line": 140,
+        "signature_hash": "c10a483a452fa883",
+        "file_digest8": "21ae21d2283f8104"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:RegisteredProducerTests.test_registry_accepts_exact_hosted_snapshot_only:2bdac49cf5cdd315",
+        "name": "RegisteredProducerTests.test_registry_accepts_exact_hosted_snapshot_only",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
+        "line": 59,
+        "end_line": 62,
+        "signature_hash": "6078884393db04db",
+        "file_digest8": "21ae21d2283f8104"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:RegisteredProducerTests.test_registry_rejects_execution_report_and_snapshot_substitution:b6261e6f8cd8cd80",
+        "name": "RegisteredProducerTests.test_registry_rejects_execution_report_and_snapshot_substitution",
         "kind": "method",
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
         "line": 64,
-        "end_line": 73,
-        "signature_hash": "ee41d27ef0cbed81",
-        "file_digest8": "ea111037bf8bab7c"
+        "end_line": 75,
+        "signature_hash": "f6079880af34ee61",
+        "file_digest8": "21ae21d2283f8104"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_exact_source_reduces_only_mtp_blocker_and_admits_synthetic_fixture:50df7f577a1f4c81",
-        "name": "W3ProofPlaneAdmissionV2Tests.test_exact_source_reduces_only_mtp_blocker_and_admits_synthetic_fixture",
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:RegisteredProducerTests.test_registry_rejects_producer_self_verification_and_effect_widening:35f47bcc1f8cb8ea",
+        "name": "RegisteredProducerTests.test_registry_rejects_producer_self_verification_and_effect_widening",
         "kind": "method",
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "line": 40,
-        "end_line": 51,
-        "signature_hash": "f53969715ef10efe",
-        "file_digest8": "ea111037bf8bab7c"
+        "line": 77,
+        "end_line": 87,
+        "signature_hash": "d771093b59b9872c",
+        "file_digest8": "21ae21d2283f8104"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_lower_plan_producer_failure_prevents_source_observation:4d4da4ef3e7010f8",
-        "name": "W3ProofPlaneAdmissionV2Tests.test_lower_plan_producer_failure_prevents_source_observation",
+        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:RegisteredProducerTests.test_unresolved_non_mtp_blocker_prevents_registry_use:160781dc6869c9c9",
+        "name": "RegisteredProducerTests.test_unresolved_non_mtp_blocker_prevents_registry_use",
         "kind": "method",
         "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "line": 121,
-        "end_line": 130,
-        "signature_hash": "13c9a0173e9e0edf",
-        "file_digest8": "ea111037bf8bab7c"
-      },
-      {
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_mtp_geometry_and_marker_substitutions_fail:1c11bc745945016a",
-        "name": "W3ProofPlaneAdmissionV2Tests.test_mtp_geometry_and_marker_substitutions_fail",
-        "kind": "method",
-        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "line": 94,
-        "end_line": 106,
-        "signature_hash": "a65c988c60ede2a0",
-        "file_digest8": "ea111037bf8bab7c"
-      },
-      {
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_public_path_observes_source_internally_not_from_caller:14b0b6199abc9e05",
-        "name": "W3ProofPlaneAdmissionV2Tests.test_public_path_observes_source_internally_not_from_caller",
-        "kind": "method",
-        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "line": 53,
-        "end_line": 62,
-        "signature_hash": "b433b356c45de5cc",
-        "file_digest8": "ea111037bf8bab7c"
-      },
-      {
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_repo_revision_index_and_role_substitutions_fail:e8927ddb5e80a234",
-        "name": "W3ProofPlaneAdmissionV2Tests.test_repo_revision_index_and_role_substitutions_fail",
-        "kind": "method",
-        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "line": 81,
-        "end_line": 92,
-        "signature_hash": "b4f35bcd925f7dec",
-        "file_digest8": "ea111037bf8bab7c"
-      },
-      {
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_source_effect_widening_fails:7144eeb832dbb06a",
-        "name": "W3ProofPlaneAdmissionV2Tests.test_source_effect_widening_fails",
-        "kind": "method",
-        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "line": 108,
-        "end_line": 119,
-        "signature_hash": "9b8de03d41e10c31",
-        "file_digest8": "ea111037bf8bab7c"
-      },
-      {
-        "semantic_id": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py#method:W3ProofPlaneAdmissionV2Tests.test_unresolved_non_mtp_blocker_prevents_source_credit:b639eafb6722985b",
-        "name": "W3ProofPlaneAdmissionV2Tests.test_unresolved_non_mtp_blocker_prevents_source_credit",
-        "kind": "method",
-        "file": "tools/awj032/test_glm53_w3_proof_plane_admission_v2.py",
-        "line": 75,
-        "end_line": 79,
-        "signature_hash": "633ebfe523701783",
-        "file_digest8": "ea111037bf8bab7c"
+        "line": 100,
+        "end_line": 109,
+        "signature_hash": "efb593c5789f9667",
+        "file_digest8": "21ae21d2283f8104"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -458209,7 +459904,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "d99a9a67fa675c337b557b888653510e",
-    "payload_hash": "2e3e4bc00e03dbbd1e55173a40f1f1dd"
+    "record_fingerprint": "14df4b037ec11a425bfd041ad26918ea",
+    "payload_hash": "1e26f29376f664cff9fd12105a8da15d"
   }
 }
