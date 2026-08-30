@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788106907,
+  "generated_at_unix": 1788107029,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1669,
+    "repo_file_count": 1671,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -146,6 +146,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
+      ".github/workflows/awj032-glm53-05a-pager-evidence-guard.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
@@ -1652,6 +1653,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/awj032/GLM53_05A_REPAIR_RECEIPT.md",
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
@@ -1785,16 +1787,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1669,
-      "bytes": 26500430,
-      "tokens_est": 6615502,
+      "files": 1671,
+      "bytes": 26506502,
+      "tokens_est": 6617021,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 243,
+        "knowledge_artifact": 244,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1016,
-        "schema_or_lexicon": 276,
+        "schema_or_lexicon": 277,
         "support_file": 49
       }
     },
@@ -159083,12 +159085,62 @@
         "signature_hash": "ba4d231b49eeeeba"
       }
     ],
+    "AttestedSliceBackend": [
+      {
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 31,
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:AttestedSliceBackend:e2af1ee9394491f6",
+        "signature_hash": "24b2e010261368ec"
+      }
+    ],
+    "AttestedSliceBackend.read_evidence": [
+      {
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 31,
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:AttestedSliceBackend.read_evidence:5d7194a7498728c8",
+        "signature_hash": "c50fef719278ac9c"
+      }
+    ],
+    "HostileWholeReadBackend": [
+      {
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 49,
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:HostileWholeReadBackend:a1f54b706e67654e",
+        "signature_hash": "9b48467cfab10641"
+      }
+    ],
+    "HostileWholeReadBackend.read_rows": [
+      {
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 41,
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:HostileWholeReadBackend.read_rows:7fcd956ed6608867",
+        "signature_hash": "3844ad845259e223"
+      }
+    ],
+    "HostileWholeReadBackend.read_evidence": [
+      {
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 49,
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:HostileWholeReadBackend.read_evidence:5e196f8849164e6a",
+        "signature_hash": "c50fef719278ac9c"
+      }
+    ],
     "tiny_banks": [
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "function",
-        "line": 24,
-        "end_line": 44,
+        "line": 52,
+        "end_line": 72,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#function:tiny_banks:f174eadbf577ddae",
         "signature_hash": "c7ce13b43379626a"
       }
@@ -159097,8 +159149,8 @@
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "function",
-        "line": 47,
-        "end_line": 62,
+        "line": 75,
+        "end_line": 90,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#function:make_binding:8d0e951145d9ae86",
         "signature_hash": "b94ae8c144a7880b"
       }
@@ -159107,18 +159159,18 @@
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "function",
-        "line": 65,
-        "end_line": 73,
-        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#function:make_backend:4203d8a9180ae823",
-        "signature_hash": "8ee3d89686316830"
+        "line": 93,
+        "end_line": 101,
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#function:make_backend:935d6b9bdb8be441",
+        "signature_hash": "05b802238d303c5d"
       }
     ],
     "PackedExpertPagerTests": [
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "class",
-        "line": 76,
-        "end_line": 182,
+        "line": 104,
+        "end_line": 266,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:PackedExpertPagerTests:5c4fcb5a5b67e2eb",
         "signature_hash": "7ee09b52aa96050d"
       }
@@ -159127,8 +159179,8 @@
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "method",
-        "line": 77,
-        "end_line": 78,
+        "line": 105,
+        "end_line": 106,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.load:68ed683dfc06e207",
         "signature_hash": "c93c2cde10072342"
       }
@@ -159137,18 +159189,28 @@
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "method",
-        "line": 80,
-        "end_line": 89,
+        "line": 108,
+        "end_line": 117,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_contiguous_runs_dedupe_and_never_whole_read:eca6132248030bc8",
         "signature_hash": "b4757bca70985ae1"
+      }
+    ],
+    "PackedExpertPagerTests.test_full_bank_selection_fails_before_backend_read": [
+      {
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 127,
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_full_bank_selection_fails_before_backend_read:ec12fc326ad5a1f7",
+        "signature_hash": "0cf81fd00901ad8f"
       }
     ],
     "PackedExpertPagerTests.test_reference_equivalence_with_overlapping_routes": [
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "method",
-        "line": 91,
-        "end_line": 104,
+        "line": 129,
+        "end_line": 142,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_reference_equivalence_with_overlapping_routes:8eb93d1f12cf88e5",
         "signature_hash": "4d1abab62e87d9a7"
       }
@@ -159157,8 +159219,8 @@
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "method",
-        "line": 106,
-        "end_line": 111,
+        "line": 144,
+        "end_line": 149,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_scale_companions_are_expert_aligned:ea6aae8dedb8f0e4",
         "signature_hash": "0c68bc2f006c87e0"
       }
@@ -159167,8 +159229,8 @@
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "method",
-        "line": 113,
-        "end_line": 123,
+        "line": 151,
+        "end_line": 161,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_same_expert_ids_across_layers_cannot_cross_read:bb04710b43db7992",
         "signature_hash": "86e559ad48d07230"
       }
@@ -159177,8 +159239,8 @@
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "method",
-        "line": 125,
-        "end_line": 133,
+        "line": 163,
+        "end_line": 171,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_stale_revision_or_index_stops_before_read:47ab064f71968891",
         "signature_hash": "507c81fe5df488da"
       }
@@ -159187,8 +159249,8 @@
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "method",
-        "line": 135,
-        "end_line": 142,
+        "line": 173,
+        "end_line": 180,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_out_of_range_and_non_integer_fail_before_read:84cd091ca0859ff6",
         "signature_hash": "474edfaa2a33a34b"
       }
@@ -159197,38 +159259,68 @@
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "method",
-        "line": 144,
-        "end_line": 149,
+        "line": 182,
+        "end_line": 187,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_missing_slice_fails_closed_never_zero_fills:a266f15a79cbfade",
         "signature_hash": "fcabee504d0482e4"
       }
     ],
-    "PackedExpertPagerTests.test_all_experts_remain_reopenable": [
+    "PackedExpertPagerTests.test_all_experts_remain_reopenable_across_bounded_calls": [
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "method",
-        "line": 151,
-        "end_line": 160,
-        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_all_experts_remain_reopenable:f0af26425b364772",
-        "signature_hash": "15a7790446db6c30"
+        "line": 189,
+        "end_line": 198,
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_all_experts_remain_reopenable_across_bounded_calls:c34d6654d1dbeee8",
+        "signature_hash": "2a19d94df43ea2ea"
       }
     ],
-    "PackedExpertPagerTests.test_receipt_never_admits_g2": [
+    "PackedExpertPagerTests.test_receipt_keeps_unmeasured_physical_io_unknown": [
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "method",
-        "line": 162,
-        "end_line": 170,
-        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_receipt_never_admits_g2:016fb84989694b69",
-        "signature_hash": "4ff1aaa888a6bcb3"
+        "line": 200,
+        "end_line": 211,
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_receipt_keeps_unmeasured_physical_io_unknown:b26a4f35fea9e979",
+        "signature_hash": "84c3e0c2918e7ae8"
+      }
+    ],
+    "PackedExpertPagerTests.test_attested_backend_evidence_is_preserved": [
+      {
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 223,
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_attested_backend_evidence_is_preserved:b3bdf7ea1963ed1b",
+        "signature_hash": "225a1f3839e06f0f"
+      }
+    ],
+    "PackedExpertPagerTests.test_hostile_backend_cannot_emit_false_zero_whole_reads": [
+      {
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "kind": "method",
+        "line": 225,
+        "end_line": 233,
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_hostile_backend_cannot_emit_false_zero_whole_reads:90ac4402cd74eccb",
+        "signature_hash": "8a80f3f21b7883fe"
+      }
+    ],
+    "PackedExpertPagerTests.test_source_binding_copies_and_freezes_input_mappings": [
+      {
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "kind": "method",
+        "line": 235,
+        "end_line": 254,
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_source_binding_copies_and_freezes_input_mappings:ddda1f90ddf256ce",
+        "signature_hash": "b16f7db53ceb5cd9"
       }
     ],
     "PackedExpertPagerTests.test_ambiguous_source_binding_rejected": [
       {
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
         "kind": "method",
-        "line": 172,
-        "end_line": 182,
+        "line": 256,
+        "end_line": 266,
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_ambiguous_source_binding_rejected:8d48b60e1830e153",
         "signature_hash": "f3ca812646ce458a"
       }
@@ -170557,6 +170649,53 @@
         0.251372,
         -0.033434,
         0.159739
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-05a-pager-evidence-guard.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 783,
+      "lines": 27,
+      "tokens_est": 196,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e2ee6746be30def2",
+      "vector": [
+        -0.093719,
+        0.262177,
+        0.115073,
+        -0.077111,
+        -0.126936,
+        0.200488,
+        0.257432,
+        -0.081856,
+        0.048639,
+        -0.262177,
+        -0.06762,
+        0.136427,
+        -0.27404,
+        0.157781,
+        -0.098465,
+        -0.036776,
+        0.271667,
+        -0.179134,
+        0.010677,
+        0.174389,
+        0.247941,
+        -0.290649,
+        -0.091347,
+        0.219469,
+        -0.207606,
+        -0.134054,
+        0.143545,
+        0.285903,
+        -0.015422,
+        -0.174389,
+        -0.043894,
+        -0.18388
       ]
     },
     {
@@ -265897,6 +266036,53 @@
       ]
     },
     {
+      "path": "tools/awj032/GLM53_05A_REPAIR_RECEIPT.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1563,
+      "lines": 28,
+      "tokens_est": 391,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b4b5f77359e4708a",
+      "vector": [
+        -0.001346,
+        0.292144,
+        0.160208,
+        -0.14136,
+        0.22483,
+        0.243678,
+        -0.289452,
+        -0.100971,
+        0.055198,
+        -0.302914,
+        0.197904,
+        0.189826,
+        0.208674,
+        -0.310992,
+        -0.028272,
+        -0.025579,
+        0.030965,
+        0.238293,
+        0.117127,
+        -0.012117,
+        -0.071353,
+        -0.168286,
+        -0.068661,
+        0.238293,
+        -0.001346,
+        -0.179056,
+        -0.262526,
+        0.071353,
+        -0.079431,
+        -0.065968,
+        0.082123,
+        -0.251756
+      ]
+    },
+    {
       "path": "tools/awj032/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -266239,47 +266425,47 @@
       "path": "tools/awj032/test_glm53_packed_expert_pager.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 7688,
-      "lines": 187,
-      "tokens_est": 1922,
-      "symbol_count": 19,
+      "bytes": 11414,
+      "lines": 271,
+      "tokens_est": 2854,
+      "symbol_count": 28,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "673a5ad8de343df1",
+      "digest8": "980c68845ed923ab",
       "vector": [
-        0.026443,
-        0.32109,
-        0.23043,
-        -0.200209,
-        -0.086883,
-        -0.023924,
-        0.180062,
-        0.028961,
-        -0.033998,
-        -0.086883,
-        -0.006296,
-        0.210283,
-        0.104512,
-        0.308499,
-        -0.23043,
-        0.182581,
-        0.008814,
-        0.318572,
-        -0.011333,
-        0.162434,
-        0.240503,
-        -0.13725,
-        -0.169989,
-        -0.018888,
-        -0.114585,
-        0.154879,
-        -0.006296,
-        0.182581,
-        -0.23043,
-        0.295907,
-        -0.235466,
-        -0.124659
+        -0.26339,
+        0.26094,
+        -0.050228,
+        0.295242,
+        -0.015926,
+        -0.008575,
+        0.180085,
+        -0.111481,
+        0.238889,
+        -0.047778,
+        -0.028177,
+        -0.055128,
+        0.025726,
+        -0.096781,
+        -0.224188,
+        0.25849,
+        -0.003675,
+        -0.162934,
+        0.26094,
+        0.025726,
+        -0.221738,
+        0.006125,
+        0.140883,
+        0.292792,
+        0.170285,
+        0.241339,
+        0.035527,
+        -0.011026,
+        -0.180085,
+        0.312393,
+        0.143333,
+        0.219288
       ]
     },
     {
@@ -290328,16 +290514,16 @@
     }
   },
   "summary": {
-    "file_count": 1669,
-    "total_bytes": 26500430,
-    "text_tokens_est": 6615502,
+    "file_count": 1671,
+    "total_bytes": 26506502,
+    "text_tokens_est": 6617021,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 243,
+      "knowledge_artifact": 244,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1016,
-      "schema_or_lexicon": 276,
+      "schema_or_lexicon": 277,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -290493,6 +290679,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
+      ".github/workflows/awj032-glm53-05a-pager-evidence-guard.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
@@ -291999,6 +292186,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/awj032/GLM53_05A_REPAIR_RECEIPT.md",
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
@@ -451206,6 +451394,16 @@
         "file_digest8": "8ea5e0d2c27b515d"
       },
       {
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:AttestedSliceBackend:e2af1ee9394491f6",
+        "name": "AttestedSliceBackend",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "line": 24,
+        "end_line": 31,
+        "signature_hash": "24b2e010261368ec",
+        "file_digest8": "980c68845ed923ab"
+      },
+      {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:FakeSliceBackend:bf8532e42602b3b5",
         "name": "FakeSliceBackend",
         "kind": "class",
@@ -451213,47 +451411,67 @@
         "line": 7,
         "end_line": 21,
         "signature_hash": "3659a2ae6e835fd3",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:HostileWholeReadBackend:a1f54b706e67654e",
+        "name": "HostileWholeReadBackend",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "line": 34,
+        "end_line": 49,
+        "signature_hash": "9b48467cfab10641",
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:PackedExpertPagerTests:5c4fcb5a5b67e2eb",
         "name": "PackedExpertPagerTests",
         "kind": "class",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 76,
-        "end_line": 182,
+        "line": 104,
+        "end_line": 266,
         "signature_hash": "7ee09b52aa96050d",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#function:make_backend:4203d8a9180ae823",
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#function:make_backend:935d6b9bdb8be441",
         "name": "make_backend",
         "kind": "function",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 65,
-        "end_line": 73,
-        "signature_hash": "8ee3d89686316830",
-        "file_digest8": "673a5ad8de343df1"
+        "line": 93,
+        "end_line": 101,
+        "signature_hash": "05b802238d303c5d",
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#function:make_binding:8d0e951145d9ae86",
         "name": "make_binding",
         "kind": "function",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 47,
-        "end_line": 62,
+        "line": 75,
+        "end_line": 90,
         "signature_hash": "b94ae8c144a7880b",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#function:tiny_banks:f174eadbf577ddae",
         "name": "tiny_banks",
         "kind": "function",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 24,
-        "end_line": 44,
+        "line": 52,
+        "end_line": 72,
         "signature_hash": "c7ce13b43379626a",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:AttestedSliceBackend.read_evidence:5d7194a7498728c8",
+        "name": "AttestedSliceBackend.read_evidence",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "line": 25,
+        "end_line": 31,
+        "signature_hash": "c50fef719278ac9c",
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:FakeSliceBackend.__init__:45b7d2060f067f03",
@@ -451263,7 +451481,7 @@
         "line": 8,
         "end_line": 11,
         "signature_hash": "be7491c2e7f68d95",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:FakeSliceBackend.read_rows:6d3ae512cfbc1c49",
@@ -451273,7 +451491,7 @@
         "line": 13,
         "end_line": 17,
         "signature_hash": "3844ad845259e223",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:FakeSliceBackend.read_tensor:b5f78e23c5d939c5",
@@ -451283,117 +451501,177 @@
         "line": 19,
         "end_line": 21,
         "signature_hash": "ba4d231b49eeeeba",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:HostileWholeReadBackend.read_evidence:5e196f8849164e6a",
+        "name": "HostileWholeReadBackend.read_evidence",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "line": 43,
+        "end_line": 49,
+        "signature_hash": "c50fef719278ac9c",
+        "file_digest8": "980c68845ed923ab"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:HostileWholeReadBackend.read_rows:7fcd956ed6608867",
+        "name": "HostileWholeReadBackend.read_rows",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "line": 37,
+        "end_line": 41,
+        "signature_hash": "3844ad845259e223",
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.load:68ed683dfc06e207",
         "name": "PackedExpertPagerTests.load",
         "kind": "method",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 77,
-        "end_line": 78,
+        "line": 105,
+        "end_line": 106,
         "signature_hash": "c93c2cde10072342",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_all_experts_remain_reopenable:f0af26425b364772",
-        "name": "PackedExpertPagerTests.test_all_experts_remain_reopenable",
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_all_experts_remain_reopenable_across_bounded_calls:c34d6654d1dbeee8",
+        "name": "PackedExpertPagerTests.test_all_experts_remain_reopenable_across_bounded_calls",
         "kind": "method",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 151,
-        "end_line": 160,
-        "signature_hash": "15a7790446db6c30",
-        "file_digest8": "673a5ad8de343df1"
+        "line": 189,
+        "end_line": 198,
+        "signature_hash": "2a19d94df43ea2ea",
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_ambiguous_source_binding_rejected:8d48b60e1830e153",
         "name": "PackedExpertPagerTests.test_ambiguous_source_binding_rejected",
         "kind": "method",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 172,
-        "end_line": 182,
+        "line": 256,
+        "end_line": 266,
         "signature_hash": "f3ca812646ce458a",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_attested_backend_evidence_is_preserved:b3bdf7ea1963ed1b",
+        "name": "PackedExpertPagerTests.test_attested_backend_evidence_is_preserved",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "line": 213,
+        "end_line": 223,
+        "signature_hash": "225a1f3839e06f0f",
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_contiguous_runs_dedupe_and_never_whole_read:eca6132248030bc8",
         "name": "PackedExpertPagerTests.test_contiguous_runs_dedupe_and_never_whole_read",
         "kind": "method",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 80,
-        "end_line": 89,
+        "line": 108,
+        "end_line": 117,
         "signature_hash": "b4757bca70985ae1",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_full_bank_selection_fails_before_backend_read:ec12fc326ad5a1f7",
+        "name": "PackedExpertPagerTests.test_full_bank_selection_fails_before_backend_read",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "line": 119,
+        "end_line": 127,
+        "signature_hash": "0cf81fd00901ad8f",
+        "file_digest8": "980c68845ed923ab"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_hostile_backend_cannot_emit_false_zero_whole_reads:90ac4402cd74eccb",
+        "name": "PackedExpertPagerTests.test_hostile_backend_cannot_emit_false_zero_whole_reads",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "line": 225,
+        "end_line": 233,
+        "signature_hash": "8a80f3f21b7883fe",
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_missing_slice_fails_closed_never_zero_fills:a266f15a79cbfade",
         "name": "PackedExpertPagerTests.test_missing_slice_fails_closed_never_zero_fills",
         "kind": "method",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 144,
-        "end_line": 149,
+        "line": 182,
+        "end_line": 187,
         "signature_hash": "fcabee504d0482e4",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_out_of_range_and_non_integer_fail_before_read:84cd091ca0859ff6",
         "name": "PackedExpertPagerTests.test_out_of_range_and_non_integer_fail_before_read",
         "kind": "method",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 135,
-        "end_line": 142,
+        "line": 173,
+        "end_line": 180,
         "signature_hash": "474edfaa2a33a34b",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
       },
       {
-        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_receipt_never_admits_g2:016fb84989694b69",
-        "name": "PackedExpertPagerTests.test_receipt_never_admits_g2",
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_receipt_keeps_unmeasured_physical_io_unknown:b26a4f35fea9e979",
+        "name": "PackedExpertPagerTests.test_receipt_keeps_unmeasured_physical_io_unknown",
         "kind": "method",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 162,
-        "end_line": 170,
-        "signature_hash": "4ff1aaa888a6bcb3",
-        "file_digest8": "673a5ad8de343df1"
+        "line": 200,
+        "end_line": 211,
+        "signature_hash": "84c3e0c2918e7ae8",
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_reference_equivalence_with_overlapping_routes:8eb93d1f12cf88e5",
         "name": "PackedExpertPagerTests.test_reference_equivalence_with_overlapping_routes",
         "kind": "method",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 91,
-        "end_line": 104,
+        "line": 129,
+        "end_line": 142,
         "signature_hash": "4d1abab62e87d9a7",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_same_expert_ids_across_layers_cannot_cross_read:bb04710b43db7992",
         "name": "PackedExpertPagerTests.test_same_expert_ids_across_layers_cannot_cross_read",
         "kind": "method",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 113,
-        "end_line": 123,
+        "line": 151,
+        "end_line": 161,
         "signature_hash": "86e559ad48d07230",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_scale_companions_are_expert_aligned:ea6aae8dedb8f0e4",
         "name": "PackedExpertPagerTests.test_scale_companions_are_expert_aligned",
         "kind": "method",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 106,
-        "end_line": 111,
+        "line": 144,
+        "end_line": 149,
         "signature_hash": "0c68bc2f006c87e0",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_source_binding_copies_and_freezes_input_mappings:ddda1f90ddf256ce",
+        "name": "PackedExpertPagerTests.test_source_binding_copies_and_freezes_input_mappings",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_packed_expert_pager.py",
+        "line": 235,
+        "end_line": 254,
+        "signature_hash": "b16f7db53ceb5cd9",
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#method:PackedExpertPagerTests.test_stale_revision_or_index_stops_before_read:47ab064f71968891",
         "name": "PackedExpertPagerTests.test_stale_revision_or_index_stops_before_read",
         "kind": "method",
         "file": "tools/awj032/test_glm53_packed_expert_pager.py",
-        "line": 125,
-        "end_line": 133,
+        "line": 163,
+        "end_line": 171,
         "signature_hash": "507c81fe5df488da",
-        "file_digest8": "673a5ad8de343df1"
+        "file_digest8": "980c68845ed923ab"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#class:FakeBackend:bf8ef4712d835197",
@@ -452806,7 +453084,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "ecc4499ea01ec004c909efa70fe977ea",
-    "payload_hash": "13fc2e954de83b8f9ca83daa04af3c12"
+    "record_fingerprint": "51f99784d5788f623a714c84cd9912df",
+    "payload_hash": "c0df7b508593226296b55829545a188f"
   }
 }
