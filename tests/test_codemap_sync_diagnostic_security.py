@@ -32,7 +32,9 @@ def test_credential_diagnostics_are_nonpersistent() -> None:
     assert "set -x" not in src
     assert "codemap-push.log" not in src
     assert "| tee" not in src
-    upload = src.split("Upload generated maps and generation attestation", 1)[1]
+    upload = src.split("Upload generated maps and generation attestation", 1)[1].split(
+        "Require generated-map materialization before PR review", 1
+    )[0]
     assert "AUTH_HEADER" not in upload
     assert "GH_TOKEN" not in upload
 
