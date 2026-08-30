@@ -276,6 +276,15 @@ class LocalArtifactOutbox:
         rows = self._db.execute("SELECT event_id FROM local_artifact_outbox ORDER BY event_id").fetchall()
         return tuple(row[0] for row in rows)
 
+    @staticmethod
+    def _artifact_sid(envelope: LocalArtifactEnvelope) -> str | None:
+        return envelope.identity.artifact_sid if envelope.identity is not None else None
+
+    @staticmethod
+    def _same_consequence(existing: tuple[object, object], envelope: LocalArtifactEnvelope) -> bool:
+        artifact_sid, disposition = existing
+        return artifact_sid == LocalArtifactOutbox._artifact_sid(envelope) and disposition == envelope.disposition
+
     def stage(
         self,
         root: Path | str,
@@ -289,6 +298,9 @@ class LocalArtifactOutbox:
         atomic_publish_evidence: bool = False,
         inbound_lineage: MirrorLineage | None = None,
     ) -> LocalStageResult:
+        # Do not pre-classify by event_id alone. Artifact bytes are deliberately
+        # outside AS-02 event identity, so a reused origin/generation with changed
+        # bytes must fail as a collision rather than disappear as an idempotent replay.
         envelope = build_local_envelope(
             root,
             intent,
@@ -299,15 +311,21 @@ class LocalArtifactOutbox:
             closed_evidence=closed_evidence,
             atomic_publish_evidence=atomic_publish_evidence,
             inbound_lineage=inbound_lineage,
-            seen_event_ids=self.seen_event_ids(),
+            seen_event_ids=(),
         )
         event_id = envelope.event.event_id
         if envelope.disposition == "REBASE":
             return LocalStageResult("REBASE", event_id, False, envelope)
-        if envelope.disposition == "IDEMPOTENT_REPLAY":
-            return LocalStageResult("IDEMPOTENT_REPLAY", event_id, False, envelope)
         if envelope.disposition not in {"INGEST", "TOMBSTONE"}:
             raise LocalArtifactRefusal("UNSUPPORTED_OUTBOX_DISPOSITION", envelope.disposition)
+
+        existing = self._db.execute(
+            "SELECT artifact_sid, disposition FROM local_artifact_outbox WHERE event_id = ?", (event_id,)
+        ).fetchone()
+        if existing is not None:
+            if not self._same_consequence(existing, envelope):
+                raise LocalArtifactRefusal("OUTBOX_EVENT_ID_COLLISION", event_id)
+            return LocalStageResult("IDEMPOTENT_REPLAY", event_id, False, envelope)
 
         payload_json = json.dumps(
             envelope.to_dict(),
@@ -316,7 +334,7 @@ class LocalArtifactOutbox:
             ensure_ascii=False,
             allow_nan=False,
         )
-        artifact_sid = envelope.identity.artifact_sid if envelope.identity is not None else None
+        artifact_sid = self._artifact_sid(envelope)
         try:
             with self._db:
                 self._db.execute(
@@ -328,10 +346,12 @@ class LocalArtifactOutbox:
                     (event_id, LOCAL_OUTBOX_SCHEMA, payload_json, artifact_sid, envelope.disposition),
                 )
         except sqlite3.IntegrityError:
+            # Another local process may have won the same event-id insert race.
+            # Compare consequence identity, not observation-time metadata.
             existing = self._db.execute(
-                "SELECT payload_json FROM local_artifact_outbox WHERE event_id = ?", (event_id,)
+                "SELECT artifact_sid, disposition FROM local_artifact_outbox WHERE event_id = ?", (event_id,)
             ).fetchone()
-            if existing is None or existing[0] != payload_json:
+            if existing is None or not self._same_consequence(existing, envelope):
                 raise LocalArtifactRefusal("OUTBOX_EVENT_ID_COLLISION", event_id)
             return LocalStageResult("IDEMPOTENT_REPLAY", event_id, False, envelope)
         return LocalStageResult(envelope.disposition, event_id, True, envelope)
@@ -351,18 +371,10 @@ class LocalArtifactOutbox:
     def mark_delivered(self, event_id: str, delivery_receipt_ref: str) -> None:
         event = _text("event_id", event_id)
         receipt = _text("delivery_receipt_ref", delivery_receipt_ref)
-        row = self._db.execute(
-            "SELECT state, delivery_receipt_ref FROM local_artifact_outbox WHERE event_id = ?", (event,)
-        ).fetchone()
-        if row is None:
-            raise LocalArtifactRefusal("OUTBOX_EVENT_NOT_FOUND", event)
-        state, prior_receipt = row
-        if state == "DELIVERED":
-            if prior_receipt != receipt:
-                raise LocalArtifactRefusal("DELIVERY_RECEIPT_BINDING_MISMATCH", event)
-            return
+        # The conditional UPDATE is the arbitration point. If another consumer
+        # wins first, re-read its exact receipt and accept only an identical replay.
         with self._db:
-            self._db.execute(
+            cursor = self._db.execute(
                 """
                 UPDATE local_artifact_outbox
                 SET state = 'DELIVERED', delivery_receipt_ref = ?
@@ -370,6 +382,19 @@ class LocalArtifactOutbox:
                 """,
                 (receipt, event),
             )
+            if cursor.rowcount == 1:
+                return
+            row = self._db.execute(
+                "SELECT state, delivery_receipt_ref FROM local_artifact_outbox WHERE event_id = ?", (event,)
+            ).fetchone()
+            if row is None:
+                raise LocalArtifactRefusal("OUTBOX_EVENT_NOT_FOUND", event)
+            state, prior_receipt = row
+            if state == "DELIVERED" and prior_receipt == receipt:
+                return
+            if state == "DELIVERED":
+                raise LocalArtifactRefusal("DELIVERY_RECEIPT_BINDING_MISMATCH", event)
+            raise LocalArtifactRefusal("OUTBOX_DELIVERY_STATE_CONFLICT", event)
 
     def count(self) -> int:
         return int(self._db.execute("SELECT COUNT(*) FROM local_artifact_outbox").fetchone()[0])
