@@ -47,6 +47,8 @@ jobs:
             tools/awj032/glm53_w4_owner_host_measurement_admission.py \
             tools/awj032/test_glm53_w4_owner_host_measurement_admission.py
       - name: Run inherited W4 contracts and owner-host membrane regressions
+        env:
+          PYTHONPATH: ${{ github.workspace }}/tools/awj032
         run: |
           python -m unittest -v \
             tools.awj032.test_glm53_w4_host_preflight \
