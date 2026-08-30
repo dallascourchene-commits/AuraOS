@@ -76,6 +76,31 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
         self.assertIn("SYNTHETIC_TECHNICAL", receipt.accepted_value.verifier)
         self.assertEqual(afr.StageStatus.UNKNOWN, self.stage(receipt, "VERIFY_ACCEPT").status)
 
+    def test_caller_explicit_accept_is_structural_unknown_not_authenticated(self):
+        receipt = compile_receipt(observation(
+            acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT,
+            acceptance_evidence_ref="evidence:accept-01",
+        ))
+        self.assertIsNone(receipt.accepted_value.result)
+        verify = self.stage(receipt, "VERIFY_ACCEPT")
+        self.assertEqual(afr.StageStatus.UNKNOWN, verify.status)
+        self.assertIn("TRUSTED_USER_EVENT_RESOLVER", verify.reason)
+        self.assertTrue(receipt.accepted_value.verifier.startswith("EVIDENCE_COMMITMENT:"))
+        self.assertNotIn("evidence:accept-01", receipt.accepted_value.verifier)
+
+    def test_caller_explicit_reject_is_also_structural_unknown(self):
+        receipt = compile_receipt(observation(
+            acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_REJECT,
+            acceptance_evidence_ref="evidence:reject-01",
+        ))
+        self.assertIsNone(receipt.accepted_value.result)
+        self.assertEqual(afr.StageStatus.UNKNOWN, self.stage(receipt, "VERIFY_ACCEPT").status)
+
+    def test_user_acceptance_without_evidence_ref_fails_closed(self):
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            observation(acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT)
+        self.assertEqual("USER_ACCEPTANCE_EVIDENCE_REF_REQUIRED", ctx.exception.code)
+
     def test_download_initiated_never_proves_save_or_reopen(self):
         save = self.stage(compile_receipt(), "SAVE_REOPEN")
         self.assertEqual(afr.StageStatus.UNKNOWN, save.status)
@@ -143,34 +168,21 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
             )
         self.assertEqual("REOPEN_ARTIFACT_DIGEST_MISMATCH", ctx.exception.code)
 
+    def test_share_or_reuse_structural_assertion_remains_unknown(self):
+        receipt = compile_receipt(observation(
+            share_or_reuse_observed=True,
+            share_or_reuse_evidence_ref="evidence:share-01",
+        ))
+        stage = self.stage(receipt, "SHARE_OR_REUSE")
+        self.assertEqual(afr.StageStatus.UNKNOWN, stage.status)
+        self.assertIn("TRUSTED_SHARE_RESOLVER", stage.reason)
+        self.assertIn("EVIDENCE_COMMITMENT:", stage.reason)
+
     def test_rendered_output_requires_digest_source_generation_and_currentness(self):
         for field in ("output_artifact_sha256", "evidence_source_generation", "evidence_currentness_ref"):
             with self.subTest(field=field):
                 with self.assertRaises(afr.FrictionReceiptError):
                     observation(**{field: None})
-
-    def test_user_explicit_accept_uses_privacy_minimal_evidence_commitment(self):
-        receipt = compile_receipt(observation(
-            acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT,
-            acceptance_evidence_ref="evidence:accept-01",
-        ))
-        self.assertIs(receipt.accepted_value.result, True)
-        self.assertTrue(receipt.accepted_value.verifier.startswith("EVIDENCE_COMMITMENT:"))
-        self.assertNotIn("evidence:accept-01", receipt.accepted_value.verifier)
-        self.assertEqual(afr.StageStatus.COMPLETED, self.stage(receipt, "VERIFY_ACCEPT").status)
-
-    def test_user_explicit_reject_is_preserved_and_committed(self):
-        receipt = compile_receipt(observation(
-            acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_REJECT,
-            acceptance_evidence_ref="evidence:reject-01",
-        ))
-        self.assertIs(receipt.accepted_value.result, False)
-        self.assertTrue(receipt.accepted_value.verifier.startswith("EVIDENCE_COMMITMENT:"))
-
-    def test_user_acceptance_without_evidence_ref_fails_closed(self):
-        with self.assertRaises(afr.FrictionReceiptError) as ctx:
-            observation(acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT)
-        self.assertEqual("USER_ACCEPTANCE_EVIDENCE_REF_REQUIRED", ctx.exception.code)
 
     def test_consequence_evidence_never_pollutes_capability_refs(self):
         receipt = compile_receipt(
@@ -189,6 +201,9 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
         serialized = str(receipt.to_dict())
         for raw_ref in ("evidence:accept-01", "evidence:save-01", "evidence:reopen-01", "evidence:share-01"):
             self.assertNotIn(raw_ref, serialized)
+        self.assertEqual(afr.StageStatus.UNKNOWN, self.stage(receipt, "VERIFY_ACCEPT").status)
+        self.assertEqual(afr.StageStatus.UNKNOWN, self.stage(receipt, "SAVE_REOPEN").status)
+        self.assertEqual(afr.StageStatus.UNKNOWN, self.stage(receipt, "SHARE_OR_REUSE").status)
 
     def test_public_capability_refs_reject_non_capability_namespaces(self):
         for bad in ("evidence:save-01", "recipe:thing-01", "witness:reopen-01"):
@@ -218,6 +233,10 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
         with self.assertRaises(afr.FrictionReceiptError) as ctx:
             compile_receipt(recipe_ref="recipe:title-card-v1")
         self.assertEqual("RECIPE_REF_NAMESPACE_REQUIRED", ctx.exception.code)
+
+    def test_tokenizer_named_capability_is_not_false_positive_secret(self):
+        receipt = compile_receipt(capability_refs=("capability:tokenizer-v1",))
+        self.assertEqual(("capability:tokenizer-v1",), receipt.capability_refs)
 
     def test_evidence_commitment_changes_when_consequence_evidence_changes(self):
         first = compile_receipt(observation(
@@ -312,7 +331,7 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
         self.assertEqual("SHARE_REUSE_EVIDENCE_REF_REQUIRED", ctx.exception.code)
 
     def test_evidence_refs_reject_whitespace_and_secret_like_values(self):
-        for bad in ("user clicked yes", "sk-abc123", "token=abc", "evidence:alice@example.com"):
+        for bad in ("user clicked yes", "sk-abc123", "access-token:abc", "evidence:alice@example.com"):
             with self.subTest(bad=bad):
                 with self.assertRaises(afr.FrictionReceiptError):
                     observation(acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT,
@@ -323,7 +342,7 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
             compile_receipt(recipe_ref="raw user content here")
         self.assertEqual("RECIPE_REF_REQUIRED", ctx.exception.code)
         with self.assertRaises(afr.FrictionReceiptError) as ctx:
-            compile_receipt(capability_refs=("token=abc",))
+            compile_receipt(capability_refs=("access-token:abc",))
         self.assertEqual("CAPABILITY_REF_INVALID", ctx.exception.code)
 
     def test_unrendered_state_cannot_carry_artifact_provenance(self):
