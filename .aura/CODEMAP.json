@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788128630,
+  "generated_at_unix": 1788132197,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1682,
+    "repo_file_count": 1685,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -148,6 +148,7 @@
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
       ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
+      ".github/workflows/awj032-glm53-w3-canonical-owner-composite.yml",
       ".github/workflows/awj032-glm53-w3-official-producer-consumption.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
@@ -1664,6 +1665,7 @@
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
       "tools/awj032/glm53_source_bound_layout_bridge.py",
+      "tools/awj032/glm53_w3_canonical_owner_composite.py",
       "tools/awj032/glm53_w3_official_producer_admission.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
@@ -1673,6 +1675,7 @@
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
       "tools/awj032/test_glm53_source_bound_layout_bridge.py",
+      "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
       "tools/awj032/test_glm53_w3_official_producer_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -1798,16 +1801,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1682,
-      "bytes": 26622586,
-      "tokens_est": 6646047,
+      "files": 1685,
+      "bytes": 26646728,
+      "tokens_est": 6652083,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1027,
-        "schema_or_lexicon": 278,
+        "python_module": 1029,
+        "schema_or_lexicon": 279,
         "support_file": 49
       }
     },
@@ -4012,6 +4015,14 @@
         "signature_hash": "8d5bf5695239b859"
       },
       {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 74,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_canonical:f7512ee77017949c",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
         "file": "tools/awj032/glm53_w3_official_producer_admission.py",
         "kind": "function",
         "line": 40,
@@ -4491,6 +4502,14 @@
         "line": 60,
         "end_line": 61,
         "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:_digest:069b97de835db085",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 78,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_digest:af2c9ca17d0e85b2",
         "signature_hash": "514f786724465716"
       },
       {
@@ -158584,6 +158603,14 @@
         "end_line": 75,
         "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_exact_false:cf4d2eb50bb7e657",
         "signature_hash": "e088d9cc20555008"
+      },
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 94,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_exact_false:39d14176adfcf564",
+        "signature_hash": "e088d9cc20555008"
       }
     ],
     "OfficialW2BoundPagerPlan": [
@@ -159510,6 +159537,126 @@
         "end_line": 147,
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:compile_source_bound_pager_source_plan:2750b89147955d2d",
         "signature_hash": "2a6f22e307185174"
+      }
+    ],
+    "CanonicalOwnerCompositeError": [
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "class",
+        "line": 60,
+        "end_line": 64,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#class:CanonicalOwnerCompositeError:63eac05a7a04a3e6",
+        "signature_hash": "0ed4d896e6d63d0b"
+      }
+    ],
+    "CanonicalOwnerCompositeError.__init__": [
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 64,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#method:CanonicalOwnerCompositeError.__init__:1afba48ac22a68fe",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_as_mapping": [
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 81,
+        "end_line": 89,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_as_mapping:e36e1de9f7c043f9",
+        "signature_hash": "93fb40cd47053844"
+      }
+    ],
+    "PR421CanonicalOwnerReceipt": [
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "class",
+        "line": 98,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#class:PR421CanonicalOwnerReceipt:0faa6b90157fcce1",
+        "signature_hash": "cfddc1480973d777"
+      }
+    ],
+    "PR421CanonicalOwnerReceipt.receipt_digest": [
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#method:PR421CanonicalOwnerReceipt.receipt_digest:3aebd10d71b715d6",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "_validate_owner_receipt": [
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 138,
+        "end_line": 162,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_validate_owner_receipt:88dcb829d49d9188",
+        "signature_hash": "42cca171b1b9c036"
+      }
+    ],
+    "_validate_w3_receipt": [
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 165,
+        "end_line": 211,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_validate_w3_receipt:f02dda30e34db3d9",
+        "signature_hash": "ca350fc7457d2d61"
+      }
+    ],
+    "W3CanonicalOwnerCompositeReceipt": [
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "class",
+        "line": 215,
+        "end_line": 246,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#class:W3CanonicalOwnerCompositeReceipt:57903c62541b57b5",
+        "signature_hash": "c7e373593a4d13df"
+      }
+    ],
+    "W3CanonicalOwnerCompositeReceipt.to_dict": [
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "method",
+        "line": 241,
+        "end_line": 242,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#method:W3CanonicalOwnerCompositeReceipt.to_dict:0e712abeab811931",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "W3CanonicalOwnerCompositeReceipt.logical_id": [
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "method",
+        "line": 245,
+        "end_line": 246,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#method:W3CanonicalOwnerCompositeReceipt.logical_id:8517e8b964324cf9",
+        "signature_hash": "77512dea4c34aaf7"
+      }
+    ],
+    "_compose_verified_pr410_receipt": [
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 249,
+        "end_line": 258,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_compose_verified_pr410_receipt:f428d865da41d339",
+        "signature_hash": "86181612fad66f46"
+      }
+    ],
+    "compose_canonical_w3_admission": [
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 261,
+        "end_line": 278,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:compose_canonical_w3_admission:ceb3486ddd2bc9b9",
+        "signature_hash": "f92efcc942b63701"
       }
     ],
     "W3OfficialProducerAdmissionError": [
@@ -161112,6 +161259,166 @@
         "signature_hash": "63656146e120775e"
       }
     ],
+    "current_w3_receipt": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 20,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:current_w3_receipt:46eb50e22043ef7b",
+        "signature_hash": "cd270b27e01b5484"
+      }
+    ],
+    "compose_current": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 28,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:compose_current:24c79e55778e2b9c",
+        "signature_hash": "9430d1d4d57ddcb7"
+      }
+    ],
+    "test_exact_current_owners_open_only_native_synthetic_fixture_eligibility": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_exact_current_owners_open_only_native_synthetic_fixture_eligibility:466ad04e4a3fe7a8",
+        "signature_hash": "600b0f21e1073ab3"
+      }
+    ],
+    "test_canonical_public_api_accepts_live_pr410_inputs_only": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 62,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_canonical_public_api_accepts_live_pr410_inputs_only:d561f5c373f8fef0",
+        "signature_hash": "d3f5fc5997ddaf91"
+      }
+    ],
+    "test_direct_serialized_pr410_receipt_cannot_enter_public_boundary": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 69,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_direct_serialized_pr410_receipt_cannot_enter_public_boundary:eaa620c53797fbd9",
+        "signature_hash": "e5ef01aff6958357"
+      }
+    ],
+    "test_public_boundary_actually_invokes_pr410": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_public_boundary_actually_invokes_pr410:e31020d88a9018a1",
+        "signature_hash": "11f72383f646dd76"
+      }
+    ],
+    "test_public_boundary_actually_invokes_pr410.traced": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 78,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#method:test_public_boundary_actually_invokes_pr410.traced:e85fe80f1f1fcf4b",
+        "signature_hash": "11e1f7ccbed32667"
+      }
+    ],
+    "test_pr410_must_be_blocked_only_on_mtp_provenance": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 95,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_pr410_must_be_blocked_only_on_mtp_provenance:5f825061e2f32de7",
+        "signature_hash": "013861fea28491c0"
+      }
+    ],
+    "test_caller_provenance_widening_from_pr410_cannot_be_laundered": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 104,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_caller_provenance_widening_from_pr410_cannot_be_laundered:718b2a3a96ca1386",
+        "signature_hash": "a52f87fd981b6f33"
+      }
+    ],
+    "test_private_receipt_validator_still_rejects_missing_producer_proof": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 111,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_private_receipt_validator_still_rejects_missing_producer_proof:1b06648daa1c5b22",
+        "signature_hash": "fbd1a23be86bb89d"
+      }
+    ],
+    "test_private_receipt_validator_still_rejects_generation_substitution": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 118,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_private_receipt_validator_still_rejects_generation_substitution:b8a2985ad1f8cc87",
+        "signature_hash": "5a5be188d119755f"
+      }
+    ],
+    "test_private_receipt_validator_rejects_effect_widening": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 133,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_private_receipt_validator_rejects_effect_widening:67d8fcf8093dfd59",
+        "signature_hash": "df112737182a9786"
+      }
+    ],
+    "test_pr421_owner_is_exact_code_owned_receipt_not_shape_matching_input": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 136,
+        "end_line": 155,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_pr421_owner_is_exact_code_owned_receipt_not_shape_matching_input:76ae055884c64124",
+        "signature_hash": "b34e06714d680e09"
+      }
+    ],
+    "test_pr421_owner_effect_or_proof_widening_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 158,
+        "end_line": 176,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_pr421_owner_effect_or_proof_widening_fails_closed:e219abed6335a145",
+        "signature_hash": "2c84054187b20b65"
+      }
+    ],
+    "test_owner_receipt_binds_exact_independent_output_pin": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 179,
+        "end_line": 189,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_owner_receipt_binds_exact_independent_output_pin:73bd831b2ddfaea9",
+        "signature_hash": "f11495742f802375"
+      }
+    ],
+    "test_composite_is_deterministic_and_owner_receipt_is_content_addressed": [
+      {
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 192,
+        "end_line": 198,
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_composite_is_deterministic_and_owner_receipt_is_content_addressed:e1223ed12220cd89",
+        "signature_hash": "9fcd066424b86042"
+      }
+    ],
     "LowerPlan": [
       {
         "file": "tools/awj032/test_glm53_w3_official_producer_admission.py",
@@ -162401,6 +162708,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
+      ".github/workflows/awj032-glm53-w3-canonical-owner-composite.yml",
       ".github/workflows/awj032-glm53-w3-official-producer-consumption.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
@@ -162533,6 +162841,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-glm53-w3-canonical-owner-composite.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -172554,6 +172863,63 @@
         -0.263084,
         0.156325,
         -0.125823
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-w3-canonical-owner-composite.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3895,
+      "lines": 91,
+      "tokens_est": 974,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m pytest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          49
+        ],
+        "python -m pytest": [
+          53
+        ]
+      },
+      "topology": {},
+      "digest8": "638a2ea956775610",
+      "vector": [
+        -0.293667,
+        0.151443,
+        -0.127739,
+        -0.127739,
+        0.317371,
+        0.275231,
+        -0.204118,
+        0.333174,
+        0.259428,
+        -0.109302,
+        -0.175147,
+        0.098767,
+        -0.098767,
+        -0.077697,
+        0.088232,
+        -0.306836,
+        -0.027655,
+        0.133006,
+        -0.022387,
+        -0.009218,
+        0.33054,
+        0.061894,
+        -0.101401,
+        0.188316,
+        0.209386,
+        -0.130372,
+        -0.032922,
+        0.067162,
+        -0.159344,
+        0.13564,
+        0.025021,
+        0.053993
       ]
     },
     {
@@ -268380,6 +268746,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12271,
+      "lines": 279,
+      "tokens_est": 3068,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d81c55dcd827dc90",
+      "vector": [
+        -0.241517,
+        0.206849,
+        0.054312,
+        -0.112091,
+        -0.186049,
+        -0.105158,
+        -0.003467,
+        -0.100536,
+        -0.139825,
+        0.290051,
+        -0.165248,
+        0.172182,
+        0.054312,
+        -0.172182,
+        -0.105158,
+        0.162937,
+        -0.082046,
+        0.204538,
+        -0.229961,
+        -0.253073,
+        -0.283118,
+        0.197605,
+        -0.241517,
+        -0.114403,
+        -0.206849,
+        0.082046,
+        0.204538,
+        0.02889,
+        -0.283118,
+        -0.065868,
+        -0.105158,
+        0.229961
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_w3_official_producer_admission.py",
       "role": "python_module",
       "binary": false,
@@ -268800,6 +269213,53 @@
         0.288597,
         0.175013,
         0.265416
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7976,
+      "lines": 199,
+      "tokens_est": 1994,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "13ada6a2006e9619",
+      "vector": [
+        -0.064949,
+        0.204295,
+        0.260978,
+        0.149974,
+        -0.206657,
+        0.060226,
+        0.138165,
+        -0.26334,
+        0.239722,
+        -0.048417,
+        0.178315,
+        -0.062587,
+        -0.098014,
+        0.282234,
+        0.192486,
+        -0.164144,
+        -0.027161,
+        -0.291681,
+        0.289319,
+        0.07912,
+        -0.140527,
+        -0.135803,
+        -0.067311,
+        0.26334,
+        -0.26334,
+        -0.05314,
+        0.126356,
+        0.220827,
+        -0.074396,
+        -0.164144,
+        0.100376,
+        0.112185
       ]
     },
     {
@@ -292848,16 +293308,16 @@
     }
   },
   "summary": {
-    "file_count": 1682,
-    "total_bytes": 26622586,
-    "text_tokens_est": 6646047,
+    "file_count": 1685,
+    "total_bytes": 26646728,
+    "text_tokens_est": 6652083,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1027,
-      "schema_or_lexicon": 278,
+      "python_module": 1029,
+      "schema_or_lexicon": 279,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -293015,6 +293475,7 @@
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
       ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
+      ".github/workflows/awj032-glm53-w3-canonical-owner-composite.yml",
       ".github/workflows/awj032-glm53-w3-official-producer-consumption.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
@@ -294531,6 +294992,7 @@
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
       "tools/awj032/glm53_source_bound_layout_bridge.py",
+      "tools/awj032/glm53_w3_canonical_owner_composite.py",
       "tools/awj032/glm53_w3_official_producer_admission.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
@@ -294540,6 +295002,7 @@
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
       "tools/awj032/test_glm53_source_bound_layout_bridge.py",
+      "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
       "tools/awj032/test_glm53_w3_official_producer_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -454199,6 +454662,156 @@
         "file_digest8": "a9af3a9bf1c851ac"
       },
       {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#class:CanonicalOwnerCompositeError:63eac05a7a04a3e6",
+        "name": "CanonicalOwnerCompositeError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 60,
+        "end_line": 64,
+        "signature_hash": "0ed4d896e6d63d0b",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#class:PR421CanonicalOwnerReceipt:0faa6b90157fcce1",
+        "name": "PR421CanonicalOwnerReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 98,
+        "end_line": 132,
+        "signature_hash": "cfddc1480973d777",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#class:W3CanonicalOwnerCompositeReceipt:57903c62541b57b5",
+        "name": "W3CanonicalOwnerCompositeReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 215,
+        "end_line": 246,
+        "signature_hash": "c7e373593a4d13df",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_as_mapping:e36e1de9f7c043f9",
+        "name": "_as_mapping",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 81,
+        "end_line": 89,
+        "signature_hash": "93fb40cd47053844",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_canonical:f7512ee77017949c",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 67,
+        "end_line": 74,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_compose_verified_pr410_receipt:f428d865da41d339",
+        "name": "_compose_verified_pr410_receipt",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 249,
+        "end_line": 258,
+        "signature_hash": "86181612fad66f46",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_digest:af2c9ca17d0e85b2",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 77,
+        "end_line": 78,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_exact_false:39d14176adfcf564",
+        "name": "_exact_false",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 92,
+        "end_line": 94,
+        "signature_hash": "e088d9cc20555008",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_validate_owner_receipt:88dcb829d49d9188",
+        "name": "_validate_owner_receipt",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 138,
+        "end_line": 162,
+        "signature_hash": "42cca171b1b9c036",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_validate_w3_receipt:f02dda30e34db3d9",
+        "name": "_validate_w3_receipt",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 165,
+        "end_line": 211,
+        "signature_hash": "ca350fc7457d2d61",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:compose_canonical_w3_admission:ceb3486ddd2bc9b9",
+        "name": "compose_canonical_w3_admission",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 261,
+        "end_line": 278,
+        "signature_hash": "f92efcc942b63701",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#method:CanonicalOwnerCompositeError.__init__:1afba48ac22a68fe",
+        "name": "CanonicalOwnerCompositeError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 61,
+        "end_line": 64,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#method:PR421CanonicalOwnerReceipt.receipt_digest:3aebd10d71b715d6",
+        "name": "PR421CanonicalOwnerReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 131,
+        "end_line": 132,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#method:W3CanonicalOwnerCompositeReceipt.logical_id:8517e8b964324cf9",
+        "name": "W3CanonicalOwnerCompositeReceipt.logical_id",
+        "kind": "method",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 245,
+        "end_line": 246,
+        "signature_hash": "77512dea4c34aaf7",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#method:W3CanonicalOwnerCompositeReceipt.to_dict:0e712abeab811931",
+        "name": "W3CanonicalOwnerCompositeReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "line": 241,
+        "end_line": 242,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "d81c55dcd827dc90"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_w3_official_producer_admission.py#class:W3OfficialProducerAdmissionError:5336e023893c7d26",
         "name": "W3OfficialProducerAdmissionError",
         "kind": "class",
@@ -455829,6 +456442,166 @@
         "file_digest8": "d9ed21bf8a32f14d"
       },
       {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:compose_current:24c79e55778e2b9c",
+        "name": "compose_current",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 23,
+        "end_line": 28,
+        "signature_hash": "9430d1d4d57ddcb7",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:current_w3_receipt:46eb50e22043ef7b",
+        "name": "current_w3_receipt",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 15,
+        "end_line": 20,
+        "signature_hash": "cd270b27e01b5484",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_caller_provenance_widening_from_pr410_cannot_be_laundered:718b2a3a96ca1386",
+        "name": "test_caller_provenance_widening_from_pr410_cannot_be_laundered",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 98,
+        "end_line": 104,
+        "signature_hash": "a52f87fd981b6f33",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_canonical_public_api_accepts_live_pr410_inputs_only:d561f5c373f8fef0",
+        "name": "test_canonical_public_api_accepts_live_pr410_inputs_only",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 49,
+        "end_line": 62,
+        "signature_hash": "d3f5fc5997ddaf91",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_composite_is_deterministic_and_owner_receipt_is_content_addressed:e1223ed12220cd89",
+        "name": "test_composite_is_deterministic_and_owner_receipt_is_content_addressed",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 192,
+        "end_line": 198,
+        "signature_hash": "9fcd066424b86042",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_direct_serialized_pr410_receipt_cannot_enter_public_boundary:eaa620c53797fbd9",
+        "name": "test_direct_serialized_pr410_receipt_cannot_enter_public_boundary",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 65,
+        "end_line": 69,
+        "signature_hash": "e5ef01aff6958357",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_exact_current_owners_open_only_native_synthetic_fixture_eligibility:466ad04e4a3fe7a8",
+        "name": "test_exact_current_owners_open_only_native_synthetic_fixture_eligibility",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 31,
+        "end_line": 46,
+        "signature_hash": "600b0f21e1073ab3",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_owner_receipt_binds_exact_independent_output_pin:73bd831b2ddfaea9",
+        "name": "test_owner_receipt_binds_exact_independent_output_pin",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 179,
+        "end_line": 189,
+        "signature_hash": "f11495742f802375",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_pr410_must_be_blocked_only_on_mtp_provenance:5f825061e2f32de7",
+        "name": "test_pr410_must_be_blocked_only_on_mtp_provenance",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 87,
+        "end_line": 95,
+        "signature_hash": "013861fea28491c0",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_pr421_owner_effect_or_proof_widening_fails_closed:e219abed6335a145",
+        "name": "test_pr421_owner_effect_or_proof_widening_fails_closed",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 158,
+        "end_line": 176,
+        "signature_hash": "2c84054187b20b65",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_pr421_owner_is_exact_code_owned_receipt_not_shape_matching_input:76ae055884c64124",
+        "name": "test_pr421_owner_is_exact_code_owned_receipt_not_shape_matching_input",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 136,
+        "end_line": 155,
+        "signature_hash": "b34e06714d680e09",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_private_receipt_validator_rejects_effect_widening:67d8fcf8093dfd59",
+        "name": "test_private_receipt_validator_rejects_effect_widening",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 121,
+        "end_line": 133,
+        "signature_hash": "df112737182a9786",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_private_receipt_validator_still_rejects_generation_substitution:b8a2985ad1f8cc87",
+        "name": "test_private_receipt_validator_still_rejects_generation_substitution",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 114,
+        "end_line": 118,
+        "signature_hash": "5a5be188d119755f",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_private_receipt_validator_still_rejects_missing_producer_proof:1b06648daa1c5b22",
+        "name": "test_private_receipt_validator_still_rejects_missing_producer_proof",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 107,
+        "end_line": 111,
+        "signature_hash": "fbd1a23be86bb89d",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#function:test_public_boundary_actually_invokes_pr410:e31020d88a9018a1",
+        "name": "test_public_boundary_actually_invokes_pr410",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 72,
+        "end_line": 84,
+        "signature_hash": "11f72383f646dd76",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w3_canonical_owner_composite.py#method:test_public_boundary_actually_invokes_pr410.traced:e85fe80f1f1fcf4b",
+        "name": "test_public_boundary_actually_invokes_pr410.traced",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w3_canonical_owner_composite.py",
+        "line": 76,
+        "end_line": 78,
+        "signature_hash": "11e1f7ccbed32667",
+        "file_digest8": "13ada6a2006e9619"
+      },
+      {
         "semantic_id": "tools/awj032/test_glm53_w3_official_producer_admission.py#class:LowerPlan:3236c94a48543e3b",
         "name": "LowerPlan",
         "kind": "class",
@@ -457249,7 +458022,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "8ed1bba411240e0cb0f8626e50064e63",
-    "payload_hash": "b072fac6f39b69015b80c327be956fcf"
+    "record_fingerprint": "c6105909cac61e0072107760e19d984d",
+    "payload_hash": "0fd1ac922dea4541a57b3e802322862a"
   }
 }
