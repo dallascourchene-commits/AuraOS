@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1644
-- **total_bytes**: 26463196
-- **text_tokens_est**: 6606152
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1002, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1649
+- **total_bytes**: 26529170
+- **text_tokens_est**: 6622648
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1007, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1644,
+  "repo_file_count": 1649,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1277,6 +1277,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "start_codemap_watcher.sh",
     "symbolic_shield.py",
     "systems_check.py",
+    "test_000_creator_studio_harness_integration_gate.py",
     "test_aura_agent_ir.py",
     "test_aura_architect_loop.py",
     "test_aura_arena_st3gg_codec.py",
@@ -1652,9 +1653,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/project030/aura_arena_admission.py",
+    "tools/project030/aura_arena_workgraph.py",
+    "tools/project030/aura_creator_studio_harness_router.py",
     "tools/project030/creator_studio_continuation_harness.py",
+    "tools/project030/creator_studio_harness_integration.py",
     "tools/project030/creator_studio_wake_adapter.py",
     "tools/project030/test_creator_studio_continuation_harness.py",
+    "tools/project030/test_creator_studio_harness_integration.py",
     "tools/project030/test_creator_studio_wake_adapter.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
@@ -1722,6 +1727,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/install_refactor_quality_docs.py",
     "scripts/update_architect_benchmark_readme.py",
     "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+    "test_000_creator_studio_harness_integration_gate.py",
     "test_support/__init__.py",
     "test_support/aura_human_agent_arena_suite.py",
     "tests/conftest.py",
@@ -1769,8 +1775,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_blind_gate10_benchmark.py",
     "tests/test_aura_capability_connectome.py",
     "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py"
+    "tests/test_aura_capability_lane_registry.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1784,15 +1789,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1644,
-  "bytes": 26463196,
-  "tokens_est": 6606152,
+  "files": 1649,
+  "bytes": 26529170,
+  "tokens_est": 6622648,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1002,
+    "python_module": 1007,
     "schema_or_lexicon": 271,
     "support_file": 49
   }

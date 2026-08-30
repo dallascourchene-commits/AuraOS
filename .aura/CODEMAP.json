@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788100914,
+  "generated_at_unix": 1788101931,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1644,
+    "repo_file_count": 1649,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1259,6 +1259,7 @@
       "start_codemap_watcher.sh",
       "symbolic_shield.py",
       "systems_check.py",
+      "test_000_creator_studio_harness_integration_gate.py",
       "test_aura_agent_ir.py",
       "test_aura_architect_loop.py",
       "test_aura_arena_st3gg_codec.py",
@@ -1634,9 +1635,13 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project030/aura_arena_admission.py",
+      "tools/project030/aura_arena_workgraph.py",
+      "tools/project030/aura_creator_studio_harness_router.py",
       "tools/project030/creator_studio_continuation_harness.py",
+      "tools/project030/creator_studio_harness_integration.py",
       "tools/project030/creator_studio_wake_adapter.py",
       "tools/project030/test_creator_studio_continuation_harness.py",
+      "tools/project030/test_creator_studio_harness_integration.py",
       "tools/project030/test_creator_studio_wake_adapter.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -1704,6 +1709,7 @@
       "scripts/install_refactor_quality_docs.py",
       "scripts/update_architect_benchmark_readme.py",
       "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py",
+      "test_000_creator_studio_harness_integration_gate.py",
       "test_support/__init__.py",
       "test_support/aura_human_agent_arena_suite.py",
       "tests/conftest.py",
@@ -1751,8 +1757,7 @@
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_lane_registry.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1760,15 +1765,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1644,
-      "bytes": 26463196,
-      "tokens_est": 6606152,
+      "files": 1649,
+      "bytes": 26529170,
+      "tokens_est": 6622648,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1002,
+        "python_module": 1007,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -3900,6 +3905,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 64,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_canonical:7bbb722cfafdde3a",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4342,6 +4355,22 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 68,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_digest:229ed9f8e9498eb9",
+        "signature_hash": "9edcae7e502cc579"
+      },
+      {
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:_digest:42260d8bd63efc03",
+        "signature_hash": "b642531ca9d9232d"
       }
     ],
     "_token_proxy": [
@@ -14658,6 +14687,22 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 51,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_text:e2e42199760e2858",
+        "signature_hash": "0c308f086a889b49"
+      },
+      {
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_text:15c32f3c712649ea",
+        "signature_hash": "0cd3c0d3d227cce3"
       }
     ],
     "_bounded": [
@@ -23982,6 +24027,14 @@
         "end_line": 81,
         "semantic_id": "aura_civic_model_broker.py#function:_validate_request:9bf28f21e56b7b1c",
         "signature_hash": "d53a7b9cc10902a1"
+      },
+      {
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 81,
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_validate_request:e6c3888a03dfed98",
+        "signature_hash": "d24eb79cdd25ee5a"
       }
     ],
     "_redact_input": [
@@ -72544,6 +72597,14 @@
         "end_line": 12,
         "semantic_id": "tests/test_aura_coding_waboose_cli.py#function:_result:8d76435b170d3880",
         "signature_hash": "5cc11bd57c98564b"
+      },
+      {
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 65,
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:_result:a520305da8f5c91d",
+        "signature_hash": "e0ea465855f37742"
       }
     ],
     "compare_qdkt_dual_read": [
@@ -102932,6 +102993,16 @@
         "end_line": 565,
         "semantic_id": "systems_check.py#function:full_check:9c4ab20893f8a3b9",
         "signature_hash": "1afa2bc803866152"
+      }
+    ],
+    "test_h_i_cross_lane_exact_head_battery": [
+      {
+        "file": "test_000_creator_studio_harness_integration_gate.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 32,
+        "semantic_id": "test_000_creator_studio_harness_integration_gate.py#function:test_h_i_cross_lane_exact_head_battery:c038cbe1ca575db3",
+        "signature_hash": "d32c2ef8e19a76cc"
       }
     ],
     "test_morphology_to_ir_bridge_preserves_slots": [
@@ -157324,6 +157395,266 @@
         "signature_hash": "e8de555af2f1943e"
       }
     ],
+    "WorkGraphError": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 44,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#class:WorkGraphError:f212be5ccba73240",
+        "signature_hash": "ceb3f8048fa0c941"
+      }
+    ],
+    "WorkGraphError.__init__": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 44,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#method:WorkGraphError.__init__:a45cf0f0b432627b",
+        "signature_hash": "025780840ff5ba63"
+      }
+    ],
+    "_sorted_unique_text": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 79,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_sorted_unique_text:c5f5ce959505e621",
+        "signature_hash": "14dc97aebb371d73"
+      }
+    ],
+    "_normalize_worker": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 98,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_normalize_worker:a8495ca7bd292020",
+        "signature_hash": "ac0a5caad459f397"
+      }
+    ],
+    "_normalize_cell": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 145,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_normalize_cell:bddfc322ed8843d0",
+        "signature_hash": "fa908c5532364c85"
+      }
+    ],
+    "_normalize_claim": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 148,
+        "end_line": 173,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_normalize_claim:3f72fb3d59732a33",
+        "signature_hash": "d23a06cdddae24af"
+      }
+    ],
+    "normalize_state": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 176,
+        "end_line": 227,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:normalize_state:ed33534b01b1c334",
+        "signature_hash": "e2eeb31dfeb6dc02"
+      }
+    ],
+    "normalize_state._unique": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "method",
+        "line": 190,
+        "end_line": 193,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#method:normalize_state._unique:5164ea053338d74d",
+        "signature_hash": "b4bb5cdf0ecd10d0"
+      }
+    ],
+    "_assert_acyclic": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 230,
+        "end_line": 247,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_assert_acyclic:44937eab7f0130e9",
+        "signature_hash": "35a702c8646b7c7a"
+      }
+    ],
+    "_assert_acyclic.visit": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "method",
+        "line": 235,
+        "end_line": 244,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#method:_assert_acyclic.visit:2eda244a1df169a4",
+        "signature_hash": "3598aeaa33ceb9ca"
+      }
+    ],
+    "state_digest": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 250,
+        "end_line": 252,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:state_digest:4810c26f81640ed4",
+        "signature_hash": "da06fc824c420f4a"
+      }
+    ],
+    "project_workgraph": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 255,
+        "end_line": 348,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:project_workgraph:e6407c5d74a02126",
+        "signature_hash": "47af586a649b1988"
+      }
+    ],
+    "_worker": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 351,
+        "end_line": 355,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_worker:e9171d78222c3d3c",
+        "signature_hash": "58bcde54add79b17"
+      }
+    ],
+    "eligible_cells": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 358,
+        "end_line": 388,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:eligible_cells:6f44a901e9400b93",
+        "signature_hash": "c5eb644982ae705b"
+      }
+    ],
+    "continuity_tick": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 391,
+        "end_line": 442,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:continuity_tick:0d20c8f879a45446",
+        "signature_hash": "ab34dabe22efe260"
+      }
+    ],
+    "_wake_intent": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 445,
+        "end_line": 470,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_wake_intent:05ce1ab15e1dc76b",
+        "signature_hash": "add326726e8771b1"
+      }
+    ],
+    "apply_action": [
+      {
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "kind": "function",
+        "line": 473,
+        "end_line": 655,
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:apply_action:23f41b29c4e8999a",
+        "signature_hash": "f7859bf9a82f527c"
+      }
+    ],
+    "HarnessRoutePolicyError": [
+      {
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 54,
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#class:HarnessRoutePolicyError:b69176b113413ad1",
+        "signature_hash": "f548122f76c7375e"
+      }
+    ],
+    "HarnessRoutePolicyError.__init__": [
+      {
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 54,
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#method:HarnessRoutePolicyError.__init__:dbb23e82278c8116",
+        "signature_hash": "025780840ff5ba63"
+      }
+    ],
+    "_is_finite_number": [
+      {
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 66,
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_is_finite_number:32cd6d715492ba12",
+        "signature_hash": "afb3bc4f4f4e99b0"
+      }
+    ],
+    "_candidate_id": [
+      {
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 70,
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_candidate_id:e7d3672a1df245f2",
+        "signature_hash": "82f021ae5b299d50"
+      }
+    ],
+    "_route_attribute_rejection": [
+      {
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 110,
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_route_attribute_rejection:9920e558403a594d",
+        "signature_hash": "ff9a3ae8061231b2"
+      }
+    ],
+    "_candidate_rejection": [
+      {
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 113,
+        "end_line": 184,
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_candidate_rejection:701f4e595ec43b9f",
+        "signature_hash": "db2f9bb46cd9c20e"
+      }
+    ],
+    "_cost_key": [
+      {
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 187,
+        "end_line": 192,
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_cost_key:d6d59ce6566cdf82",
+        "signature_hash": "73eafa77919892b5"
+      }
+    ],
+    "select_creator_studio_route": [
+      {
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 195,
+        "end_line": 239,
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:select_creator_studio_route:37e39abc57e15125",
+        "signature_hash": "81e8b1439bf79931"
+      }
+    ],
+    "select_creator_studio_route.sort_key": [
+      {
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "kind": "method",
+        "line": 219,
+        "end_line": 221,
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#method:select_creator_studio_route.sort_key:500aafd65e720a0f",
+        "signature_hash": "f169442037d23e2a"
+      }
+    ],
     "HarnessRefusal": [
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
@@ -157542,6 +157873,26 @@
         "end_line": 438,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:continuation_snapshot:bbec937430e6e1ba",
         "signature_hash": "539a8ea0c99ffe91"
+      }
+    ],
+    "plan_idle_worker_wake": [
+      {
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 85,
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:plan_idle_worker_wake:2f7a921055bff14f",
+        "signature_hash": "b8fa937cd1e09ae7"
+      }
+    ],
+    "prepare_substantive_act": [
+      {
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 327,
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:prepare_substantive_act:d64890c7ec156a6d",
+        "signature_hash": "0be2b3d522d80ef9"
       }
     ],
     "WakeRefusal": [
@@ -157942,6 +158293,166 @@
         "end_line": 211,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_snapshot_declares_scheduler_zero_inference:7de24f14c7a41221",
         "signature_hash": "cc079d5b3cc53c1b"
+      }
+    ],
+    "base_state": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 68,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#function:base_state:399e8e246cf3a96c",
+        "signature_hash": "b7c28e2e57438b4f"
+      }
+    ],
+    "claim_state": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 85,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#function:claim_state:010fa92b554d80b6",
+        "signature_hash": "c370efe1df88d65e"
+      }
+    ],
+    "admission_for": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 112,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#function:admission_for:4f5cb7922f3eda10",
+        "signature_hash": "83910de570c58b47"
+      }
+    ],
+    "route_request": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 128,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#function:route_request:c13df37ce8a41685",
+        "signature_hash": "8ba1961acf33c902"
+      }
+    ],
+    "local_candidate": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "function",
+        "line": 131,
+        "end_line": 149,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#function:local_candidate:29d204c657fd34c0",
+        "signature_hash": "3ac14c66d83662a1"
+      }
+    ],
+    "CrossLaneHarnessIntegrationTests": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "class",
+        "line": 152,
+        "end_line": 345,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#class:CrossLaneHarnessIntegrationTests:f46d2e72bfa2fed0",
+        "signature_hash": "9cd956ab130a0b1e"
+      }
+    ],
+    "CrossLaneHarnessIntegrationTests.test_idle_worker_gets_exactly_one_nonexecution_wake_then_claim": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 181,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_idle_worker_gets_exactly_one_nonexecution_wake_then_claim:b9e5c225fdb03406",
+        "signature_hash": "38d6677783330270"
+      }
+    ],
+    "CrossLaneHarnessIntegrationTests.test_valid_claim_admission_and_route_produce_ready_not_execution": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 199,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_valid_claim_admission_and_route_produce_ready_not_execution:8e80201bef029d24",
+        "signature_hash": "9a2c9e8d6f4ebd79"
+      }
+    ],
+    "CrossLaneHarnessIntegrationTests.test_incomplete_admission_stops_before_workgraph_act": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "method",
+        "line": 201,
+        "end_line": 213,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_incomplete_admission_stops_before_workgraph_act:5c3ddd61316fb3a3",
+        "signature_hash": "1a55616bce0294a1"
+      }
+    ],
+    "CrossLaneHarnessIntegrationTests.test_graph_digest_or_board_revision_mismatch_requires_rebase": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "method",
+        "line": 215,
+        "end_line": 227,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_graph_digest_or_board_revision_mismatch_requires_rebase:dc4f22623b6a6f78",
+        "signature_hash": "66d60bef7aad1f74"
+      }
+    ],
+    "CrossLaneHarnessIntegrationTests.test_expired_not_started_claim_is_not_act_ready": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "method",
+        "line": 229,
+        "end_line": 241,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_expired_not_started_claim_is_not_act_ready:319d973aedaeef83",
+        "signature_hash": "684d132d2b467673"
+      }
+    ],
+    "CrossLaneHarnessIntegrationTests.test_expired_possible_effect_requires_reconciliation": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "method",
+        "line": 243,
+        "end_line": 256,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_expired_possible_effect_requires_reconciliation:94a7c718d5d35e57",
+        "signature_hash": "30ea167cef596b6e"
+      }
+    ],
+    "CrossLaneHarnessIntegrationTests.test_worker_with_two_active_claims_fails_closed": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "method",
+        "line": 258,
+        "end_line": 306,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_worker_with_two_active_claims_fails_closed:e5c648f64d1a2edc",
+        "signature_hash": "bcc5591653079431"
+      }
+    ],
+    "CrossLaneHarnessIntegrationTests.test_route_rejection_stops_before_act": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "method",
+        "line": 308,
+        "end_line": 319,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_route_rejection_stops_before_act:6cd84e77890ee9dc",
+        "signature_hash": "5a94516096c48598"
+      }
+    ],
+    "CrossLaneHarnessIntegrationTests.test_route_cost_ceiling_cannot_widen_cell_authority": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "method",
+        "line": 321,
+        "end_line": 332,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_route_cost_ceiling_cannot_widen_cell_authority:e320880c1c033949",
+        "signature_hash": "ef39720f2b9da723"
+      }
+    ],
+    "CrossLaneHarnessIntegrationTests.test_admission_route_tier_must_match_selected_route": [
+      {
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "kind": "method",
+        "line": 334,
+        "end_line": 345,
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_admission_route_tier_must_match_selected_route:fcbcdf0a76c14c85",
+        "signature_hash": "af31e3c005688270"
       }
     ],
     "WakeAdapterTests": [
@@ -244181,6 +244692,53 @@
       ]
     },
     {
+      "path": "test_000_creator_studio_harness_integration_gate.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1165,
+      "lines": 33,
+      "tokens_est": 292,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "eca487dbc60129f2",
+      "vector": [
+        0.171853,
+        -0.164933,
+        -0.16724,
+        0.215682,
+        -0.141866,
+        -0.213375,
+        0.107264,
+        0.125718,
+        -0.199535,
+        -0.123412,
+        0.125718,
+        0.139559,
+        0.091117,
+        -0.224909,
+        -0.257203,
+        -0.192614,
+        0.056516,
+        0.197228,
+        0.024221,
+        0.217989,
+        0.273351,
+        -0.247976,
+        -0.169547,
+        -0.100344,
+        0.00346,
+        -0.282578,
+        -0.176467,
+        -0.250283,
+        -0.16724,
+        0.183387,
+        -0.132639,
+        0.072663
+      ]
+    },
+    {
       "path": "test_aura_agent_ir.py",
       "role": "python_module",
       "binary": false,
@@ -263712,6 +264270,100 @@
       ]
     },
     {
+      "path": "tools/project030/aura_arena_workgraph.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 29109,
+      "lines": 656,
+      "tokens_est": 7278,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4519e599fc6fa9cb",
+      "vector": [
+        0.023697,
+        0.041159,
+        0.198309,
+        -0.14842,
+        -0.096037,
+        0.003742,
+        0.018708,
+        -0.208287,
+        -0.258176,
+        0.303076,
+        0.235726,
+        -0.135948,
+        0.073586,
+        -0.023697,
+        -0.01372,
+        0.153409,
+        -0.28811,
+        -0.018708,
+        -0.313054,
+        0.023697,
+        0.068598,
+        -0.268154,
+        0.08107,
+        0.113498,
+        0.213276,
+        -0.318043,
+        0.283121,
+        0.073586,
+        -0.303076,
+        0.011225,
+        0.123476,
+        -0.061114
+      ]
+    },
+    {
+      "path": "tools/project030/aura_creator_studio_harness_router.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10602,
+      "lines": 240,
+      "tokens_est": 2651,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e26f9c09b7b2e0d5",
+      "vector": [
+        -0.090452,
+        -0.226661,
+        -0.243688,
+        0.052143,
+        -0.230918,
+        0.260714,
+        -0.115991,
+        -0.056399,
+        -0.003192,
+        -0.107478,
+        -0.247944,
+        -0.226661,
+        0.230918,
+        -0.267099,
+        -0.233046,
+        -0.209635,
+        0.241559,
+        0.220277,
+        0.220277,
+        -0.077682,
+        0.039373,
+        0.081939,
+        -0.120248,
+        0.084067,
+        -0.190481,
+        0.039373,
+        0.205379,
+        -0.21602,
+        0.062784,
+        -0.039373,
+        -0.262842,
+        0.024475
+      ]
+    },
+    {
       "path": "tools/project030/creator_studio_continuation_harness.py",
       "role": "python_module",
       "binary": false,
@@ -263756,6 +264408,53 @@
         0.272156,
         0.122078,
         -0.057119
+      ]
+    },
+    {
+      "path": "tools/project030/creator_studio_harness_integration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12455,
+      "lines": 328,
+      "tokens_est": 3114,
+      "symbol_count": 4,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "795f15fa517e89a7",
+      "vector": [
+        -0.020612,
+        0.103059,
+        0.191003,
+        -0.30643,
+        -0.33666,
+        0.028857,
+        0.012367,
+        0.237723,
+        0.02336,
+        -0.331164,
+        -0.114052,
+        -0.166269,
+        0.273451,
+        0.08657,
+        0.004122,
+        -0.177262,
+        -0.254213,
+        -0.067332,
+        -0.02336,
+        -0.020612,
+        0.245968,
+        0.009619,
+        -0.317423,
+        0.237723,
+        0.081073,
+        -0.100311,
+        0.119549,
+        0.012367,
+        0.081073,
+        -0.061836,
+        0.174514,
+        0.251465
       ]
     },
     {
@@ -263850,6 +264549,53 @@
         -0.003452,
         -0.275046,
         0.182981
+      ]
+    },
+    {
+      "path": "tools/project030/test_creator_studio_harness_integration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12643,
+      "lines": 350,
+      "tokens_est": 3161,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c6c080e8d8b6f315",
+      "vector": [
+        -0.169664,
+        -0.158277,
+        0.288087,
+        0.2767,
+        -0.283532,
+        0.014803,
+        0.135503,
+        -0.007971,
+        -0.037577,
+        -0.19927,
+        0.244817,
+        0.094511,
+        0.272145,
+        -0.162832,
+        0.206102,
+        -0.133226,
+        0.288087,
+        0.231153,
+        0.178773,
+        -0.058073,
+        0.007971,
+        0.201547,
+        0.167386,
+        0.089956,
+        0.183328,
+        0.237985,
+        0.101343,
+        -0.067182,
+        0.126394,
+        0.215211,
+        -0.02619,
+        0.014803
       ]
     },
     {
@@ -287804,15 +288550,15 @@
     }
   },
   "summary": {
-    "file_count": 1644,
-    "total_bytes": 26463196,
-    "text_tokens_est": 6606152,
+    "file_count": 1649,
+    "total_bytes": 26529170,
+    "text_tokens_est": 6622648,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1002,
+      "python_module": 1007,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -289082,6 +289828,7 @@
       "start_codemap_watcher.sh",
       "symbolic_shield.py",
       "systems_check.py",
+      "test_000_creator_studio_harness_integration_gate.py",
       "test_aura_agent_ir.py",
       "test_aura_architect_loop.py",
       "test_aura_arena_st3gg_codec.py",
@@ -289457,9 +290204,13 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project030/aura_arena_admission.py",
+      "tools/project030/aura_arena_workgraph.py",
+      "tools/project030/aura_creator_studio_harness_router.py",
       "tools/project030/creator_studio_continuation_harness.py",
+      "tools/project030/creator_studio_harness_integration.py",
       "tools/project030/creator_studio_wake_adapter.py",
       "tools/project030/test_creator_studio_continuation_harness.py",
+      "tools/project030/test_creator_studio_harness_integration.py",
       "tools/project030/test_creator_studio_wake_adapter.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -390967,6 +391718,16 @@
         "file_digest8": "272d234c07274ca7"
       },
       {
+        "semantic_id": "test_000_creator_studio_harness_integration_gate.py#function:test_h_i_cross_lane_exact_head_battery:c038cbe1ca575db3",
+        "name": "test_h_i_cross_lane_exact_head_battery",
+        "kind": "function",
+        "file": "test_000_creator_studio_harness_integration_gate.py",
+        "line": 15,
+        "end_line": 32,
+        "signature_hash": "d32c2ef8e19a76cc",
+        "file_digest8": "eca487dbc60129f2"
+      },
+      {
         "semantic_id": "test_aura_agent_ir.py#function:test_ir_floor_does_not_overwrite_morphology_slot:4da5fe004ff073fc",
         "name": "test_ir_floor_does_not_overwrite_morphology_slot",
         "kind": "function",
@@ -446937,6 +447698,316 @@
         "file_digest8": "e0942d2bd2ada261"
       },
       {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#class:WorkGraphError:f212be5ccba73240",
+        "name": "WorkGraphError",
+        "kind": "class",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 41,
+        "end_line": 44,
+        "signature_hash": "ceb3f8048fa0c941",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_assert_acyclic:44937eab7f0130e9",
+        "name": "_assert_acyclic",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 230,
+        "end_line": 247,
+        "signature_hash": "35a702c8646b7c7a",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_canonical:7bbb722cfafdde3a",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 54,
+        "end_line": 64,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_digest:229ed9f8e9498eb9",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 67,
+        "end_line": 68,
+        "signature_hash": "9edcae7e502cc579",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_normalize_cell:bddfc322ed8843d0",
+        "name": "_normalize_cell",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 101,
+        "end_line": 145,
+        "signature_hash": "fa908c5532364c85",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_normalize_claim:3f72fb3d59732a33",
+        "name": "_normalize_claim",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 148,
+        "end_line": 173,
+        "signature_hash": "d23a06cdddae24af",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_normalize_worker:a8495ca7bd292020",
+        "name": "_normalize_worker",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 82,
+        "end_line": 98,
+        "signature_hash": "ac0a5caad459f397",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_sorted_unique_text:c5f5ce959505e621",
+        "name": "_sorted_unique_text",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 71,
+        "end_line": 79,
+        "signature_hash": "14dc97aebb371d73",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_text:e2e42199760e2858",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 47,
+        "end_line": 51,
+        "signature_hash": "0c308f086a889b49",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_wake_intent:05ce1ab15e1dc76b",
+        "name": "_wake_intent",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 445,
+        "end_line": 470,
+        "signature_hash": "add326726e8771b1",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:_worker:e9171d78222c3d3c",
+        "name": "_worker",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 351,
+        "end_line": 355,
+        "signature_hash": "58bcde54add79b17",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:apply_action:23f41b29c4e8999a",
+        "name": "apply_action",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 473,
+        "end_line": 655,
+        "signature_hash": "f7859bf9a82f527c",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:continuity_tick:0d20c8f879a45446",
+        "name": "continuity_tick",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 391,
+        "end_line": 442,
+        "signature_hash": "ab34dabe22efe260",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:eligible_cells:6f44a901e9400b93",
+        "name": "eligible_cells",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 358,
+        "end_line": 388,
+        "signature_hash": "c5eb644982ae705b",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:normalize_state:ed33534b01b1c334",
+        "name": "normalize_state",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 176,
+        "end_line": 227,
+        "signature_hash": "e2eeb31dfeb6dc02",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:project_workgraph:e6407c5d74a02126",
+        "name": "project_workgraph",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 255,
+        "end_line": 348,
+        "signature_hash": "47af586a649b1988",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#function:state_digest:4810c26f81640ed4",
+        "name": "state_digest",
+        "kind": "function",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 250,
+        "end_line": 252,
+        "signature_hash": "da06fc824c420f4a",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#method:WorkGraphError.__init__:a45cf0f0b432627b",
+        "name": "WorkGraphError.__init__",
+        "kind": "method",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 42,
+        "end_line": 44,
+        "signature_hash": "025780840ff5ba63",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#method:_assert_acyclic.visit:2eda244a1df169a4",
+        "name": "_assert_acyclic.visit",
+        "kind": "method",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 235,
+        "end_line": 244,
+        "signature_hash": "3598aeaa33ceb9ca",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_arena_workgraph.py#method:normalize_state._unique:5164ea053338d74d",
+        "name": "normalize_state._unique",
+        "kind": "method",
+        "file": "tools/project030/aura_arena_workgraph.py",
+        "line": 190,
+        "end_line": 193,
+        "signature_hash": "b4bb5cdf0ecd10d0",
+        "file_digest8": "4519e599fc6fa9cb"
+      },
+      {
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#class:HarnessRoutePolicyError:b69176b113413ad1",
+        "name": "HarnessRoutePolicyError",
+        "kind": "class",
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "line": 50,
+        "end_line": 54,
+        "signature_hash": "f548122f76c7375e",
+        "file_digest8": "e26f9c09b7b2e0d5"
+      },
+      {
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_candidate_id:e7d3672a1df245f2",
+        "name": "_candidate_id",
+        "kind": "function",
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "line": 69,
+        "end_line": 70,
+        "signature_hash": "82f021ae5b299d50",
+        "file_digest8": "e26f9c09b7b2e0d5"
+      },
+      {
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_candidate_rejection:701f4e595ec43b9f",
+        "name": "_candidate_rejection",
+        "kind": "function",
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "line": 113,
+        "end_line": 184,
+        "signature_hash": "db2f9bb46cd9c20e",
+        "file_digest8": "e26f9c09b7b2e0d5"
+      },
+      {
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_cost_key:d6d59ce6566cdf82",
+        "name": "_cost_key",
+        "kind": "function",
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "line": 187,
+        "end_line": 192,
+        "signature_hash": "73eafa77919892b5",
+        "file_digest8": "e26f9c09b7b2e0d5"
+      },
+      {
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_is_finite_number:32cd6d715492ba12",
+        "name": "_is_finite_number",
+        "kind": "function",
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "line": 61,
+        "end_line": 66,
+        "signature_hash": "afb3bc4f4f4e99b0",
+        "file_digest8": "e26f9c09b7b2e0d5"
+      },
+      {
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_route_attribute_rejection:9920e558403a594d",
+        "name": "_route_attribute_rejection",
+        "kind": "function",
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "line": 84,
+        "end_line": 110,
+        "signature_hash": "ff9a3ae8061231b2",
+        "file_digest8": "e26f9c09b7b2e0d5"
+      },
+      {
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_text:15c32f3c712649ea",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "0cd3c0d3d227cce3",
+        "file_digest8": "e26f9c09b7b2e0d5"
+      },
+      {
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:_validate_request:e6c3888a03dfed98",
+        "name": "_validate_request",
+        "kind": "function",
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "line": 73,
+        "end_line": 81,
+        "signature_hash": "d24eb79cdd25ee5a",
+        "file_digest8": "e26f9c09b7b2e0d5"
+      },
+      {
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#function:select_creator_studio_route:37e39abc57e15125",
+        "name": "select_creator_studio_route",
+        "kind": "function",
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "line": 195,
+        "end_line": 239,
+        "signature_hash": "81e8b1439bf79931",
+        "file_digest8": "e26f9c09b7b2e0d5"
+      },
+      {
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#method:HarnessRoutePolicyError.__init__:dbb23e82278c8116",
+        "name": "HarnessRoutePolicyError.__init__",
+        "kind": "method",
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "line": 52,
+        "end_line": 54,
+        "signature_hash": "025780840ff5ba63",
+        "file_digest8": "e26f9c09b7b2e0d5"
+      },
+      {
+        "semantic_id": "tools/project030/aura_creator_studio_harness_router.py#method:select_creator_studio_route.sort_key:500aafd65e720a0f",
+        "name": "select_creator_studio_route.sort_key",
+        "kind": "method",
+        "file": "tools/project030/aura_creator_studio_harness_router.py",
+        "line": 219,
+        "end_line": 221,
+        "signature_hash": "f169442037d23e2a",
+        "file_digest8": "e26f9c09b7b2e0d5"
+      },
+      {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:GateEvidence:8c72274fc9c30c97",
         "name": "GateEvidence",
         "kind": "class",
@@ -447155,6 +448226,46 @@
         "end_line": 93,
         "signature_hash": "175e4972e4d2d582",
         "file_digest8": "2259b1feb3d4055b"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:_digest:42260d8bd63efc03",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "b642531ca9d9232d",
+        "file_digest8": "795f15fa517e89a7"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:_result:a520305da8f5c91d",
+        "name": "_result",
+        "kind": "function",
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "line": 32,
+        "end_line": 65,
+        "signature_hash": "e0ea465855f37742",
+        "file_digest8": "795f15fa517e89a7"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:plan_idle_worker_wake:2f7a921055bff14f",
+        "name": "plan_idle_worker_wake",
+        "kind": "function",
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "line": 68,
+        "end_line": 85,
+        "signature_hash": "b8fa937cd1e09ae7",
+        "file_digest8": "795f15fa517e89a7"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_harness_integration.py#function:prepare_substantive_act:d64890c7ec156a6d",
+        "name": "prepare_substantive_act",
+        "kind": "function",
+        "file": "tools/project030/creator_studio_harness_integration.py",
+        "line": 88,
+        "end_line": 327,
+        "signature_hash": "0be2b3d522d80ef9",
+        "file_digest8": "795f15fa517e89a7"
       },
       {
         "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:ArenaWakeScheduler:cbdbe1176225fecb",
@@ -447555,6 +448666,166 @@
         "end_line": 110,
         "signature_hash": "5550dcb940993f45",
         "file_digest8": "b657e2e0a7511412"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#class:CrossLaneHarnessIntegrationTests:f46d2e72bfa2fed0",
+        "name": "CrossLaneHarnessIntegrationTests",
+        "kind": "class",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 152,
+        "end_line": 345,
+        "signature_hash": "9cd956ab130a0b1e",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#function:admission_for:4f5cb7922f3eda10",
+        "name": "admission_for",
+        "kind": "function",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 88,
+        "end_line": 112,
+        "signature_hash": "83910de570c58b47",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#function:base_state:399e8e246cf3a96c",
+        "name": "base_state",
+        "kind": "function",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 20,
+        "end_line": 68,
+        "signature_hash": "b7c28e2e57438b4f",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#function:claim_state:010fa92b554d80b6",
+        "name": "claim_state",
+        "kind": "function",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 71,
+        "end_line": 85,
+        "signature_hash": "c370efe1df88d65e",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#function:local_candidate:29d204c657fd34c0",
+        "name": "local_candidate",
+        "kind": "function",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 131,
+        "end_line": 149,
+        "signature_hash": "3ac14c66d83662a1",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#function:route_request:c13df37ce8a41685",
+        "name": "route_request",
+        "kind": "function",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 115,
+        "end_line": 128,
+        "signature_hash": "8ba1961acf33c902",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_admission_route_tier_must_match_selected_route:fcbcdf0a76c14c85",
+        "name": "CrossLaneHarnessIntegrationTests.test_admission_route_tier_must_match_selected_route",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 334,
+        "end_line": 345,
+        "signature_hash": "af31e3c005688270",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_expired_not_started_claim_is_not_act_ready:319d973aedaeef83",
+        "name": "CrossLaneHarnessIntegrationTests.test_expired_not_started_claim_is_not_act_ready",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 229,
+        "end_line": 241,
+        "signature_hash": "684d132d2b467673",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_expired_possible_effect_requires_reconciliation:94a7c718d5d35e57",
+        "name": "CrossLaneHarnessIntegrationTests.test_expired_possible_effect_requires_reconciliation",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 243,
+        "end_line": 256,
+        "signature_hash": "30ea167cef596b6e",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_graph_digest_or_board_revision_mismatch_requires_rebase:dc4f22623b6a6f78",
+        "name": "CrossLaneHarnessIntegrationTests.test_graph_digest_or_board_revision_mismatch_requires_rebase",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 215,
+        "end_line": 227,
+        "signature_hash": "66d60bef7aad1f74",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_idle_worker_gets_exactly_one_nonexecution_wake_then_claim:b9e5c225fdb03406",
+        "name": "CrossLaneHarnessIntegrationTests.test_idle_worker_gets_exactly_one_nonexecution_wake_then_claim",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 153,
+        "end_line": 181,
+        "signature_hash": "38d6677783330270",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_incomplete_admission_stops_before_workgraph_act:5c3ddd61316fb3a3",
+        "name": "CrossLaneHarnessIntegrationTests.test_incomplete_admission_stops_before_workgraph_act",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 201,
+        "end_line": 213,
+        "signature_hash": "1a55616bce0294a1",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_route_cost_ceiling_cannot_widen_cell_authority:e320880c1c033949",
+        "name": "CrossLaneHarnessIntegrationTests.test_route_cost_ceiling_cannot_widen_cell_authority",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 321,
+        "end_line": 332,
+        "signature_hash": "ef39720f2b9da723",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_route_rejection_stops_before_act:6cd84e77890ee9dc",
+        "name": "CrossLaneHarnessIntegrationTests.test_route_rejection_stops_before_act",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 308,
+        "end_line": 319,
+        "signature_hash": "5a94516096c48598",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_valid_claim_admission_and_route_produce_ready_not_execution:8e80201bef029d24",
+        "name": "CrossLaneHarnessIntegrationTests.test_valid_claim_admission_and_route_produce_ready_not_execution",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 183,
+        "end_line": 199,
+        "signature_hash": "9a2c9e8d6f4ebd79",
+        "file_digest8": "c6c080e8d8b6f315"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_harness_integration.py#method:CrossLaneHarnessIntegrationTests.test_worker_with_two_active_claims_fails_closed:e5c648f64d1a2edc",
+        "name": "CrossLaneHarnessIntegrationTests.test_worker_with_two_active_claims_fails_closed",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_harness_integration.py",
+        "line": 258,
+        "end_line": 306,
+        "signature_hash": "bcc5591653079431",
+        "file_digest8": "c6c080e8d8b6f315"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#class:WakeAdapterTests:8e87e2dff9146293",
@@ -448967,7 +450238,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "c240702840128f1e48c5a4ef1e86aeff",
-    "payload_hash": "457647a018925787d8e95833f6946fbd"
+    "record_fingerprint": "c96da617f555ba9d127ca30b759409e2",
+    "payload_hash": "b2458290cd5351084e3d4d0cbaf29511"
   }
 }
