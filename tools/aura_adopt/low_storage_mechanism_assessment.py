@@ -84,12 +84,7 @@ def _digest(domain: str, v: Any) -> str:
 
 @dataclass(frozen=True)
 class BenchmarkScenario:
-    """Common workload/environment binding for candidate and baseline.
-
-    The mechanism may change representation/algorithm, but the comparison target
-    must not silently change model, prompt/generation shape, batch, or execution
-    environment.
-    """
+    """Common workload/environment binding for candidate and baseline."""
 
     workload_id: str
     model_ref: str
@@ -206,6 +201,10 @@ class MechanismEvidence:
             raise AssessmentError("REQUIRED_METRIC_INVALID", ",".join(invalid_metrics))
         if len(set(self.required_metrics)) != len(self.required_metrics):
             raise AssessmentError("REQUIRED_METRIC_DUPLICATE")
+        if self.candidate.logical_payload_bytes is None or self.baseline.logical_payload_bytes is None:
+            raise AssessmentError("LOGICAL_PAYLOAD_SIZE_REQUIRED")
+        if self.candidate.logical_payload_bytes != self.baseline.logical_payload_bytes:
+            raise AssessmentError("LOGICAL_PAYLOAD_SIZE_MISMATCH")
         if not isinstance(self.invalidators, tuple) or not self.invalidators:
             raise AssessmentError("INVALIDATORS_REQUIRED")
         if self.fidelity in {FidelityClass.EXACT, FidelityClass.BOUNDED_ACCEPTED} and not self.fidelity_evidence_ref:
