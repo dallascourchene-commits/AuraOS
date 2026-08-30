@@ -118,6 +118,7 @@ class ReproductionRegistryIndependenceTests(unittest.TestCase):
     def test_valid_distinct_observer_still_admits_private_fixture(self):
         out = self.private_admit(self.record())
         self.assertTrue(out.independent_reproduction_registry_proven)
+        self.assertTrue(out.registry_digest)
         self.assertFalse(out.external_effect)
         self.assertFalse(out.submission_authorized)
 
@@ -177,10 +178,24 @@ class ReproductionRegistryIndependenceTests(unittest.TestCase):
         self.assertEqual(0, receipt.active_record_count)
 
     def test_active_count_requires_valid_distinct_observer_record(self):
-        receipt = self.with_canonical_records((self.record(),), gate.independent_reproduction_registry_receipt)
+        receipt = self.with_canonical_records(
+            (self.record(),), gate.independent_reproduction_registry_receipt
+        )
         self.assertEqual(1, receipt.active_record_count)
         self.assertFalse(receipt.authority)
         self.assertFalse(receipt.external_effect)
+
+    def test_ambiguous_records_remain_fail_closed_after_observer_hardening(self):
+        repro = self.repro()
+        a = self.record(repro)
+        b = replace(a, registry_receipt_ref="registry://receipt/second")
+        with self.assertRaisesRegex(ValueError, "INDEPENDENT_REPRODUCTION_REGISTRY_AMBIGUOUS"):
+            gate._resolve_from_records(
+                records=(a, b),
+                reproduction=repro,
+                candidate=self.candidate(),
+                mission_input=self.mission(),
+            )
 
 
 if __name__ == "__main__":
