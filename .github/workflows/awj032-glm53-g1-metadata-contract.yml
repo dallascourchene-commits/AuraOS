@@ -9,6 +9,7 @@ on:
       - "tools/awj032/test_glm53_checkpoint_layout_probe.py"
       - "tools/awj032/test_glm53_checkpoint_source_binding.py"
       - "tools/awj032/test_glm53_checkpoint_extra_layer_classification.py"
+      - "tools/awj032/test_glm53_checkpoint_extra_layer_currentness_type.py"
       - ".github/workflows/awj032-glm53-g1-metadata-contract.yml"
   push:
     branches:
@@ -20,6 +21,7 @@ on:
       - "tools/awj032/test_glm53_checkpoint_layout_probe.py"
       - "tools/awj032/test_glm53_checkpoint_source_binding.py"
       - "tools/awj032/test_glm53_checkpoint_extra_layer_classification.py"
+      - "tools/awj032/test_glm53_checkpoint_extra_layer_currentness_type.py"
       - ".github/workflows/awj032-glm53-g1-metadata-contract.yml"
   workflow_dispatch:
 
@@ -63,4 +65,5 @@ jobs:
           python -m pytest -q \
             tools/awj032/test_glm53_checkpoint_layout_probe.py \
             tools/awj032/test_glm53_checkpoint_source_binding.py \
-            tools/awj032/test_glm53_checkpoint_extra_layer_classification.py
+            tools/awj032/test_glm53_checkpoint_extra_layer_classification.py \
+            tools/awj032/test_glm53_checkpoint_extra_layer_currentness_type.py
