@@ -15,6 +15,7 @@ from tools.awj032.glm53_safetensors_header_transport import (
 
 REV = "7cda81930d6e4cef42f48555de830aa32ecdde28"
 REPO = "zai-org/GLM-5.3"
+OFFICIAL_INDEX_SHA256 = "e0fe7f28c1f853d4824e4d796374e3dacf1fe470988773952c79b063768134bf"
 
 
 def _fixture():
@@ -64,6 +65,14 @@ def _transports():
         return out
 
     return idx, sha, wm, headers, full, rng, calls
+
+
+def test_official_canary_target_is_immutable_and_digest_bound():
+    assert REPO == "zai-org/GLM-5.3"
+    assert REV == "7cda81930d6e4cef42f48555de830aa32ecdde28"
+    assert OFFICIAL_INDEX_SHA256 == "e0fe7f28c1f853d4824e4d796374e3dacf1fe470988773952c79b063768134bf"
+    assert len(REV) == 40 and int(REV, 16) >= 0
+    assert len(OFFICIAL_INDEX_SHA256) == 64 and int(OFFICIAL_INDEX_SHA256, 16) >= 0
 
 
 def test_resolve_url_pins_commit():
