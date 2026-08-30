@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788127701,
+  "generated_at_unix": 1788128449,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1646,
+    "repo_file_count": 1648,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1623,6 +1623,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_bughound_blind_discovery.py",
       "tests/test_bughound_envelope_lint.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_bughound_trust_boundary_seed.py",
@@ -1635,6 +1636,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/bughound/blind_discovery.py",
       "tools/bughound/envelope_lint.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/bughound/trust_boundary_seed.py",
@@ -1762,15 +1764,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1646,
-      "bytes": 26456795,
-      "tokens_est": 6604549,
+      "files": 1648,
+      "bytes": 26489446,
+      "tokens_est": 6612713,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1003,
+        "python_module": 1005,
         "schema_or_lexicon": 272,
         "support_file": 49
       }
@@ -3904,6 +3906,14 @@
         "signature_hash": "711cdedc61c63424"
       },
       {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 76,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_canonical:52d5fa36170e70b7",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
         "file": "tools/bughound/seedlab_benchmark.py",
         "kind": "function",
         "line": 48,
@@ -4352,6 +4362,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 80,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_digest:e5aecf961e5d32ed",
+        "signature_hash": "c978f5ef05fda5cb"
       },
       {
         "file": "tools/bughound/seedlab_benchmark.py",
@@ -14676,6 +14694,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 89,
+        "end_line": 92,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_text:6cf059358589bf2f",
+        "signature_hash": "a4ea29b9a7789fe0"
       }
     ],
     "_bounded": [
@@ -83472,6 +83498,14 @@
         "end_line": 156,
         "semantic_id": "aura_unified_memory_continuity_learning.py#function:_source_digest:6abd1d691e94fd2d",
         "signature_hash": "9380c67b5157678e"
+      },
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 86,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_source_digest:9e59545d2dd50247",
+        "signature_hash": "3b6d2c395b7388e0"
       }
     ],
     "_failure_dict": [
@@ -156904,6 +156938,336 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "BlindDiscoveryTests": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 373,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#class:BlindDiscoveryTests:f44104ab7c3c376c",
+        "signature_hash": "9da89c10e367fdbc"
+      }
+    ],
+    "BlindDiscoveryTests.setUp": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 30,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.setUp:30f040cc442eacb1",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "BlindDiscoveryTests.finding": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 39,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.finding:2d4c12d6784e136f",
+        "signature_hash": "47b8c0e2f315db45"
+      }
+    ],
+    "BlindDiscoveryTests.resolution": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 61,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.resolution:b7b58522c80ca1c7",
+        "signature_hash": "d4f28f3a5e576fb2"
+      }
+    ],
+    "BlindDiscoveryTests.test_candidate_packet_contains_no_forbidden_hidden_fields": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 70,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_candidate_packet_contains_no_forbidden_hidden_fields:83f7b118d5d8f20a",
+        "signature_hash": "d159683e542f27df"
+      }
+    ],
+    "BlindDiscoveryTests.test_hidden_binding_is_separate_from_candidate_packet": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 76,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_hidden_binding_is_separate_from_candidate_packet:6445a34e4727cbcc",
+        "signature_hash": "dbf9f58809df5737"
+      }
+    ],
+    "BlindDiscoveryTests.test_same_salt_and_case_are_deterministic": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 88,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_same_salt_and_case_are_deterministic:6bafaef05963d6c4",
+        "signature_hash": "7869530a206693fe"
+      }
+    ],
+    "BlindDiscoveryTests.test_different_salt_changes_opaque_target_not_source_semantics": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 98,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_different_salt_changes_opaque_target_not_source_semantics:086497797ca4d884",
+        "signature_hash": "c3d299ebaa41cef8"
+      }
+    ],
+    "BlindDiscoveryTests.test_candidate_case_id_injection_is_blindness_violation": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 111,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_candidate_case_id_injection_is_blindness_violation:151b64723ecf14e1",
+        "signature_hash": "bf20525917ef1857"
+      }
+    ],
+    "BlindDiscoveryTests.test_unknown_finding_field_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 124,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_unknown_finding_field_fails_closed:dd9a86b3ff8011ab",
+        "signature_hash": "13836de03467e5e7"
+      }
+    ],
+    "BlindDiscoveryTests.test_localization_alone_cannot_earn_seeded_tp": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 137,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_localization_alone_cannot_earn_seeded_tp:fa1e8eacc2f702ad",
+        "signature_hash": "5c01c4f284e7831b"
+      }
+    ],
+    "BlindDiscoveryTests.test_seeded_bug_localized_finding_with_independent_resolution_is_discovered": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 155,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_seeded_bug_localized_finding_with_independent_resolution_is_discovered:cca2e69a6092832e",
+        "signature_hash": "22b2b0ef1733d8fd"
+      }
+    ],
+    "BlindDiscoveryTests.test_seeded_bug_without_finding_is_missed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 165,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_seeded_bug_without_finding_is_missed:338bb76361630c5a",
+        "signature_hash": "b2a3b86673e9ff1e"
+      }
+    ],
+    "BlindDiscoveryTests.test_resolution_without_finding_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 176,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_resolution_without_finding_fails_closed:82e01f5b5beeab54",
+        "signature_hash": "1f0ffee844649fd2"
+      }
+    ],
+    "BlindDiscoveryTests.test_nonmatching_seeded_finding_is_novelty_unverified_even_if_resolution_claims_corroboration": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 192,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_nonmatching_seeded_finding_is_novelty_unverified_even_if_resolution_claims_corroboration:01d9d727639b20ec",
+        "signature_hash": "d327f0244acd5861"
+      }
+    ],
+    "BlindDiscoveryTests.test_negative_evaluator_resolution_does_not_credit_seeded_tp": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 194,
+        "end_line": 204,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_negative_evaluator_resolution_does_not_credit_seeded_tp:f0d4df2bea51c47e",
+        "signature_hash": "2fd76b4cbca0e573"
+      }
+    ],
+    "BlindDiscoveryTests.test_nonindependent_resolution_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 206,
+        "end_line": 216,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_nonindependent_resolution_fails_closed:3ed9318f8691c210",
+        "signature_hash": "d34304098c6fd29b"
+      }
+    ],
+    "BlindDiscoveryTests.test_wrong_oracle_resolution_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 228,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_wrong_oracle_resolution_fails_closed:76f248d7c1ae11f2",
+        "signature_hash": "164f3f878a96be20"
+      }
+    ],
+    "BlindDiscoveryTests.test_wrong_hidden_case_resolution_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 230,
+        "end_line": 240,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_wrong_hidden_case_resolution_fails_closed:8e5cc7bc52de566a",
+        "signature_hash": "14864f1475be2c06"
+      }
+    ],
+    "BlindDiscoveryTests.test_wrong_evaluator_generation_resolution_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 242,
+        "end_line": 252,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_wrong_evaluator_generation_resolution_fails_closed:bfcf35ed96def7eb",
+        "signature_hash": "5c50716d19d14170"
+      }
+    ],
+    "BlindDiscoveryTests.test_clean_control_without_finding_is_correct": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 254,
+        "end_line": 264,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_clean_control_without_finding_is_correct:f77c5690519966a9",
+        "signature_hash": "1c7139b7f7a960f6"
+      }
+    ],
+    "BlindDiscoveryTests.test_clean_control_positive_is_false_positive": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 266,
+        "end_line": 282,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_clean_control_positive_is_false_positive:07e556b76075774f",
+        "signature_hash": "95a25f9935696cd7"
+      }
+    ],
+    "BlindDiscoveryTests.test_target_binding_substitution_fails": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 284,
+        "end_line": 288,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_target_binding_substitution_fails:96bc2db67ec31f49",
+        "signature_hash": "f0ae5e3f6def9f9e"
+      }
+    ],
+    "BlindDiscoveryTests.test_hidden_case_substitution_fails": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 290,
+        "end_line": 294,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_hidden_case_substitution_fails:b21eec9ca29154b8",
+        "signature_hash": "c2b52832d3410ed5"
+      }
+    ],
+    "BlindDiscoveryTests.test_source_digest_drift_fails": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 296,
+        "end_line": 300,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_source_digest_drift_fails:d3e0121adf81ee3c",
+        "signature_hash": "fa7af325f5e2be77"
+      }
+    ],
+    "BlindDiscoveryTests.test_source_generation_drift_fails": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 302,
+        "end_line": 306,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_source_generation_drift_fails:78e66f3d7ce95f8d",
+        "signature_hash": "72768fed05c6904c"
+      }
+    ],
+    "BlindDiscoveryTests.test_evaluator_currentness_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 308,
+        "end_line": 312,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_evaluator_currentness_fails_closed:f9277ac47ecb0c28",
+        "signature_hash": "82f997509a4cfa83"
+      }
+    ],
+    "BlindDiscoveryTests.test_fixed_patch_leakage_invalidates_adjudication": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 314,
+        "end_line": 318,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_fixed_patch_leakage_invalidates_adjudication:525c57890eaf42bc",
+        "signature_hash": "3f7c266f112bfd5c"
+      }
+    ],
+    "BlindDiscoveryTests.test_label_leakage_invalidates_adjudication": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 320,
+        "end_line": 324,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_label_leakage_invalidates_adjudication:83deff26e9d2b58d",
+        "signature_hash": "03e7f19d22e3c4ee"
+      }
+    ],
+    "BlindDiscoveryTests.test_finding_for_another_opaque_target_fails": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 326,
+        "end_line": 335,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_finding_for_another_opaque_target_fails:38475adfbafaa13c",
+        "signature_hash": "9a820f9a52b42c48"
+      }
+    ],
+    "BlindDiscoveryTests.test_holdout_visibility_is_required": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 337,
+        "end_line": 345,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_holdout_visibility_is_required:1e280bebba086e4c",
+        "signature_hash": "c7d4d753873903f1"
+      }
+    ],
+    "BlindDiscoveryTests.test_neutral_instruction_cannot_be_replaced_with_issue_guidance": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 347,
+        "end_line": 353,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_neutral_instruction_cannot_be_replaced_with_issue_guidance:f7bbb0b063312bac",
+        "signature_hash": "5ed1648d03f767b0"
+      }
+    ],
+    "BlindDiscoveryTests.test_adjudication_identity_is_deterministic_with_resolution": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 355,
+        "end_line": 373,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_adjudication_identity_is_deterministic_with_resolution:a4c4845fac31ea1d",
+        "signature_hash": "626a87e64a55582f"
+      }
+    ],
     "BugHoundEnvelopeLintTests": [
       {
         "file": "tests/test_bughound_envelope_lint.py",
@@ -157572,6 +157936,226 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "BlindDiscoveryError": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "class",
+        "line": 59,
+        "end_line": 63,
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindDiscoveryError:eb0b639156067150",
+        "signature_hash": "23eb99924b21f8bb"
+      }
+    ],
+    "BlindDiscoveryError.__init__": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 63,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryError.__init__:d3949da4fd9419d2",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "BlindDiscoveryPacketV1": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "class",
+        "line": 96,
+        "end_line": 138,
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindDiscoveryPacketV1:d828f551dfa0803b",
+        "signature_hash": "0611fb4a38769269"
+      }
+    ],
+    "BlindDiscoveryPacketV1.__post_init__": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 127,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryPacketV1.__post_init__:d1351be38d08f975",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "BlindDiscoveryPacketV1.to_candidate_dict": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 134,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryPacketV1.to_candidate_dict:deff1db14f329d80",
+        "signature_hash": "fa6b4e0071fd48cc"
+      }
+    ],
+    "BlindDiscoveryPacketV1.packet_digest": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 138,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryPacketV1.packet_digest:80c334573613e833",
+        "signature_hash": "9bc5db86166c6b2f"
+      }
+    ],
+    "HiddenCaseBindingV1": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "class",
+        "line": 142,
+        "end_line": 169,
+        "semantic_id": "tools/bughound/blind_discovery.py#class:HiddenCaseBindingV1:bc34ce078fbc7e70",
+        "signature_hash": "328c095b436140fe"
+      }
+    ],
+    "HiddenCaseBindingV1.__post_init__": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 163,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:HiddenCaseBindingV1.__post_init__:4a4015bf2890be84",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "HiddenCaseBindingV1.binding_digest": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 169,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:HiddenCaseBindingV1.binding_digest:2415d9ed410eb986",
+        "signature_hash": "c0adb0ca7d3bbf04"
+      }
+    ],
+    "BlindFindingV1": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "class",
+        "line": 173,
+        "end_line": 194,
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindFindingV1:fc64258db41023f6",
+        "signature_hash": "941a234bc5f323d0"
+      }
+    ],
+    "BlindFindingV1.__post_init__": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 181,
+        "end_line": 190,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindFindingV1.__post_init__:a09b4711e2b93ad7",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "BlindFindingV1.finding_digest": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 194,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindFindingV1.finding_digest:72e61a91b8175758",
+        "signature_hash": "cb1c5a56431b0d67"
+      }
+    ],
+    "EvaluatorFindingResolutionV1": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "class",
+        "line": 198,
+        "end_line": 230,
+        "semantic_id": "tools/bughound/blind_discovery.py#class:EvaluatorFindingResolutionV1:0335de42a03a0290",
+        "signature_hash": "7136966c2323d540"
+      }
+    ],
+    "EvaluatorFindingResolutionV1.__post_init__": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 226,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:EvaluatorFindingResolutionV1.__post_init__:b693f593bc697ec4",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EvaluatorFindingResolutionV1.resolution_digest": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 229,
+        "end_line": 230,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:EvaluatorFindingResolutionV1.resolution_digest:53c6480f150956f9",
+        "signature_hash": "145995ae7659cb6c"
+      }
+    ],
+    "parse_blind_finding": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 233,
+        "end_line": 256,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:parse_blind_finding:fbf1d358683c35d2",
+        "signature_hash": "87f8b275f9472a1c"
+      }
+    ],
+    "compile_blind_case": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 259,
+        "end_line": 300,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:compile_blind_case:c75bc764ad6e9e49",
+        "signature_hash": "7bda519919ad61c6"
+      }
+    ],
+    "validate_packet_binding": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 303,
+        "end_line": 325,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:validate_packet_binding:c896fdc1678a0c92",
+        "signature_hash": "462c606838c54a7d"
+      }
+    ],
+    "validate_evaluator_resolution": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 328,
+        "end_line": 349,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:validate_evaluator_resolution:f65d8eec6dafc7c4",
+        "signature_hash": "4e6f0d7c581c8017"
+      }
+    ],
+    "BlindAdjudicationV1": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "class",
+        "line": 353,
+        "end_line": 368,
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindAdjudicationV1:cdfd4ea2d3dccc30",
+        "signature_hash": "2b0e3eff3b9baff0"
+      }
+    ],
+    "BlindAdjudicationV1.adjudication_digest": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 367,
+        "end_line": 368,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindAdjudicationV1.adjudication_digest:6ef49aee4467e25a",
+        "signature_hash": "211dfd30c56a6a43"
+      }
+    ],
+    "adjudicate_blind_finding": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 371,
+        "end_line": 455,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:adjudicate_blind_finding:e5f0e0bf62ac355e",
+        "signature_hash": "b63c1653833c86d5"
       }
     ],
     "LintDisposition": [
@@ -263067,6 +263651,53 @@
       ]
     },
     {
+      "path": "tests/test_bughound_blind_discovery.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15450,
+      "lines": 378,
+      "tokens_est": 3863,
+      "symbol_count": 33,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bb04a389acb11303",
+      "vector": [
+        0.063438,
+        -0.066138,
+        0.152522,
+        -0.085035,
+        -0.214611,
+        0.168719,
+        0.087734,
+        -0.228109,
+        -0.020246,
+        0.004049,
+        -0.079636,
+        0.174118,
+        -0.087734,
+        0.082335,
+        -0.047241,
+        0.217311,
+        -0.214611,
+        0.319892,
+        0.274,
+        -0.309094,
+        0.006749,
+        0.255104,
+        0.16602,
+        -0.263202,
+        0.174118,
+        0.193015,
+        0.16332,
+        0.033744,
+        -0.047241,
+        -0.287498,
+        0.117429,
+        0.225409
+      ]
+    },
+    {
       "path": "tests/test_bughound_envelope_lint.py",
       "role": "python_module",
       "binary": false,
@@ -263628,6 +264259,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/bughound/blind_discovery.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 17201,
+      "lines": 456,
+      "tokens_est": 4301,
+      "symbol_count": 26,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ddb8331e73dabc61",
+      "vector": [
+        -0.012298,
+        -0.118883,
+        -0.332052,
+        0.031429,
+        -0.255529,
+        0.184473,
+        0.233666,
+        0.091553,
+        -0.220001,
+        0.028696,
+        -0.118883,
+        0.121616,
+        -0.04236,
+        0.252796,
+        -0.206337,
+        0.025963,
+        0.211802,
+        0.342983,
+        0.192672,
+        0.132547,
+        -0.184473,
+        0.203604,
+        0.132547,
+        0.045093,
+        -0.056025,
+        0.118883,
+        -0.312921,
+        -0.034162,
+        -0.034162,
+        0.066957,
+        -0.291057,
+        0.077889
       ]
     },
     {
@@ -287770,15 +288448,15 @@
     }
   },
   "summary": {
-    "file_count": 1646,
-    "total_bytes": 26456795,
-    "text_tokens_est": 6604549,
+    "file_count": 1648,
+    "total_bytes": 26489446,
+    "text_tokens_est": 6612713,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1003,
+      "python_module": 1005,
       "schema_or_lexicon": 272,
       "support_file": 49
     },
@@ -289412,6 +290090,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_bughound_blind_discovery.py",
       "tests/test_bughound_envelope_lint.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_bughound_trust_boundary_seed.py",
@@ -289424,6 +290103,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/bughound/blind_discovery.py",
       "tools/bughound/envelope_lint.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/bughound/trust_boundary_seed.py",
@@ -446445,6 +447125,336 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#class:BlindDiscoveryTests:f44104ab7c3c376c",
+        "name": "BlindDiscoveryTests",
+        "kind": "class",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 20,
+        "end_line": 373,
+        "signature_hash": "9da89c10e367fdbc",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.finding:2d4c12d6784e136f",
+        "name": "BlindDiscoveryTests.finding",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 32,
+        "end_line": 39,
+        "signature_hash": "47b8c0e2f315db45",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.resolution:b7b58522c80ca1c7",
+        "name": "BlindDiscoveryTests.resolution",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 41,
+        "end_line": 61,
+        "signature_hash": "d4f28f3a5e576fb2",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.setUp:30f040cc442eacb1",
+        "name": "BlindDiscoveryTests.setUp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 21,
+        "end_line": 30,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_adjudication_identity_is_deterministic_with_resolution:a4c4845fac31ea1d",
+        "name": "BlindDiscoveryTests.test_adjudication_identity_is_deterministic_with_resolution",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 355,
+        "end_line": 373,
+        "signature_hash": "626a87e64a55582f",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_candidate_case_id_injection_is_blindness_violation:151b64723ecf14e1",
+        "name": "BlindDiscoveryTests.test_candidate_case_id_injection_is_blindness_violation",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 100,
+        "end_line": 111,
+        "signature_hash": "bf20525917ef1857",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_candidate_packet_contains_no_forbidden_hidden_fields:83f7b118d5d8f20a",
+        "name": "BlindDiscoveryTests.test_candidate_packet_contains_no_forbidden_hidden_fields",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 63,
+        "end_line": 70,
+        "signature_hash": "d159683e542f27df",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_clean_control_positive_is_false_positive:07e556b76075774f",
+        "name": "BlindDiscoveryTests.test_clean_control_positive_is_false_positive",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 266,
+        "end_line": 282,
+        "signature_hash": "95a25f9935696cd7",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_clean_control_without_finding_is_correct:f77c5690519966a9",
+        "name": "BlindDiscoveryTests.test_clean_control_without_finding_is_correct",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 254,
+        "end_line": 264,
+        "signature_hash": "1c7139b7f7a960f6",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_different_salt_changes_opaque_target_not_source_semantics:086497797ca4d884",
+        "name": "BlindDiscoveryTests.test_different_salt_changes_opaque_target_not_source_semantics",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 90,
+        "end_line": 98,
+        "signature_hash": "c3d299ebaa41cef8",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_evaluator_currentness_fails_closed:f9277ac47ecb0c28",
+        "name": "BlindDiscoveryTests.test_evaluator_currentness_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 308,
+        "end_line": 312,
+        "signature_hash": "82f997509a4cfa83",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_finding_for_another_opaque_target_fails:38475adfbafaa13c",
+        "name": "BlindDiscoveryTests.test_finding_for_another_opaque_target_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 326,
+        "end_line": 335,
+        "signature_hash": "9a820f9a52b42c48",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_fixed_patch_leakage_invalidates_adjudication:525c57890eaf42bc",
+        "name": "BlindDiscoveryTests.test_fixed_patch_leakage_invalidates_adjudication",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 314,
+        "end_line": 318,
+        "signature_hash": "3f7c266f112bfd5c",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_hidden_binding_is_separate_from_candidate_packet:6445a34e4727cbcc",
+        "name": "BlindDiscoveryTests.test_hidden_binding_is_separate_from_candidate_packet",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 72,
+        "end_line": 76,
+        "signature_hash": "dbf9f58809df5737",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_hidden_case_substitution_fails:b21eec9ca29154b8",
+        "name": "BlindDiscoveryTests.test_hidden_case_substitution_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 290,
+        "end_line": 294,
+        "signature_hash": "c2b52832d3410ed5",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_holdout_visibility_is_required:1e280bebba086e4c",
+        "name": "BlindDiscoveryTests.test_holdout_visibility_is_required",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 337,
+        "end_line": 345,
+        "signature_hash": "c7d4d753873903f1",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_label_leakage_invalidates_adjudication:83deff26e9d2b58d",
+        "name": "BlindDiscoveryTests.test_label_leakage_invalidates_adjudication",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 320,
+        "end_line": 324,
+        "signature_hash": "03e7f19d22e3c4ee",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_localization_alone_cannot_earn_seeded_tp:fa1e8eacc2f702ad",
+        "name": "BlindDiscoveryTests.test_localization_alone_cannot_earn_seeded_tp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 126,
+        "end_line": 137,
+        "signature_hash": "5c01c4f284e7831b",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_negative_evaluator_resolution_does_not_credit_seeded_tp:f0d4df2bea51c47e",
+        "name": "BlindDiscoveryTests.test_negative_evaluator_resolution_does_not_credit_seeded_tp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 194,
+        "end_line": 204,
+        "signature_hash": "2fd76b4cbca0e573",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_neutral_instruction_cannot_be_replaced_with_issue_guidance:f7bbb0b063312bac",
+        "name": "BlindDiscoveryTests.test_neutral_instruction_cannot_be_replaced_with_issue_guidance",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 347,
+        "end_line": 353,
+        "signature_hash": "5ed1648d03f767b0",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_nonindependent_resolution_fails_closed:3ed9318f8691c210",
+        "name": "BlindDiscoveryTests.test_nonindependent_resolution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 206,
+        "end_line": 216,
+        "signature_hash": "d34304098c6fd29b",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_nonmatching_seeded_finding_is_novelty_unverified_even_if_resolution_claims_corroboration:01d9d727639b20ec",
+        "name": "BlindDiscoveryTests.test_nonmatching_seeded_finding_is_novelty_unverified_even_if_resolution_claims_corroboration",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 178,
+        "end_line": 192,
+        "signature_hash": "d327f0244acd5861",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_resolution_without_finding_fails_closed:82e01f5b5beeab54",
+        "name": "BlindDiscoveryTests.test_resolution_without_finding_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 167,
+        "end_line": 176,
+        "signature_hash": "1f0ffee844649fd2",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_same_salt_and_case_are_deterministic:6bafaef05963d6c4",
+        "name": "BlindDiscoveryTests.test_same_salt_and_case_are_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 78,
+        "end_line": 88,
+        "signature_hash": "7869530a206693fe",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_seeded_bug_localized_finding_with_independent_resolution_is_discovered:cca2e69a6092832e",
+        "name": "BlindDiscoveryTests.test_seeded_bug_localized_finding_with_independent_resolution_is_discovered",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 139,
+        "end_line": 155,
+        "signature_hash": "22b2b0ef1733d8fd",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_seeded_bug_without_finding_is_missed:338bb76361630c5a",
+        "name": "BlindDiscoveryTests.test_seeded_bug_without_finding_is_missed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 157,
+        "end_line": 165,
+        "signature_hash": "b2a3b86673e9ff1e",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_source_digest_drift_fails:d3e0121adf81ee3c",
+        "name": "BlindDiscoveryTests.test_source_digest_drift_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 296,
+        "end_line": 300,
+        "signature_hash": "fa7af325f5e2be77",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_source_generation_drift_fails:78e66f3d7ce95f8d",
+        "name": "BlindDiscoveryTests.test_source_generation_drift_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 302,
+        "end_line": 306,
+        "signature_hash": "72768fed05c6904c",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_target_binding_substitution_fails:96bc2db67ec31f49",
+        "name": "BlindDiscoveryTests.test_target_binding_substitution_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 284,
+        "end_line": 288,
+        "signature_hash": "f0ae5e3f6def9f9e",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_unknown_finding_field_fails_closed:dd9a86b3ff8011ab",
+        "name": "BlindDiscoveryTests.test_unknown_finding_field_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 113,
+        "end_line": 124,
+        "signature_hash": "13836de03467e5e7",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_wrong_evaluator_generation_resolution_fails_closed:bfcf35ed96def7eb",
+        "name": "BlindDiscoveryTests.test_wrong_evaluator_generation_resolution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 242,
+        "end_line": 252,
+        "signature_hash": "5c50716d19d14170",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_wrong_hidden_case_resolution_fails_closed:8e5cc7bc52de566a",
+        "name": "BlindDiscoveryTests.test_wrong_hidden_case_resolution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 230,
+        "end_line": 240,
+        "signature_hash": "14864f1475be2c06",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_wrong_oracle_resolution_fails_closed:76f248d7c1ae11f2",
+        "name": "BlindDiscoveryTests.test_wrong_oracle_resolution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 218,
+        "end_line": 228,
+        "signature_hash": "164f3f878a96be20",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
         "semantic_id": "tests/test_bughound_envelope_lint.py#class:BugHoundEnvelopeLintTests:d3944653b480574b",
         "name": "BugHoundEnvelopeLintTests",
         "kind": "class",
@@ -447133,6 +448143,266 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindAdjudicationV1:cdfd4ea2d3dccc30",
+        "name": "BlindAdjudicationV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 353,
+        "end_line": 368,
+        "signature_hash": "2b0e3eff3b9baff0",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindDiscoveryError:eb0b639156067150",
+        "name": "BlindDiscoveryError",
+        "kind": "class",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 59,
+        "end_line": 63,
+        "signature_hash": "23eb99924b21f8bb",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindDiscoveryPacketV1:d828f551dfa0803b",
+        "name": "BlindDiscoveryPacketV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 96,
+        "end_line": 138,
+        "signature_hash": "0611fb4a38769269",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindFindingV1:fc64258db41023f6",
+        "name": "BlindFindingV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 173,
+        "end_line": 194,
+        "signature_hash": "941a234bc5f323d0",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#class:EvaluatorFindingResolutionV1:0335de42a03a0290",
+        "name": "EvaluatorFindingResolutionV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 198,
+        "end_line": 230,
+        "signature_hash": "7136966c2323d540",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#class:HiddenCaseBindingV1:bc34ce078fbc7e70",
+        "name": "HiddenCaseBindingV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 142,
+        "end_line": 169,
+        "signature_hash": "328c095b436140fe",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_canonical:52d5fa36170e70b7",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 66,
+        "end_line": 76,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_digest:e5aecf961e5d32ed",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 79,
+        "end_line": 80,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_source_digest:9e59545d2dd50247",
+        "name": "_source_digest",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 83,
+        "end_line": 86,
+        "signature_hash": "3b6d2c395b7388e0",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_text:6cf059358589bf2f",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 89,
+        "end_line": 92,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:adjudicate_blind_finding:e5f0e0bf62ac355e",
+        "name": "adjudicate_blind_finding",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 371,
+        "end_line": 455,
+        "signature_hash": "b63c1653833c86d5",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:compile_blind_case:c75bc764ad6e9e49",
+        "name": "compile_blind_case",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 259,
+        "end_line": 300,
+        "signature_hash": "7bda519919ad61c6",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:parse_blind_finding:fbf1d358683c35d2",
+        "name": "parse_blind_finding",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 233,
+        "end_line": 256,
+        "signature_hash": "87f8b275f9472a1c",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:validate_evaluator_resolution:f65d8eec6dafc7c4",
+        "name": "validate_evaluator_resolution",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 328,
+        "end_line": 349,
+        "signature_hash": "4e6f0d7c581c8017",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:validate_packet_binding:c896fdc1678a0c92",
+        "name": "validate_packet_binding",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 303,
+        "end_line": 325,
+        "signature_hash": "462c606838c54a7d",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindAdjudicationV1.adjudication_digest:6ef49aee4467e25a",
+        "name": "BlindAdjudicationV1.adjudication_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 367,
+        "end_line": 368,
+        "signature_hash": "211dfd30c56a6a43",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryError.__init__:d3949da4fd9419d2",
+        "name": "BlindDiscoveryError.__init__",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 60,
+        "end_line": 63,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryPacketV1.__post_init__:d1351be38d08f975",
+        "name": "BlindDiscoveryPacketV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 111,
+        "end_line": 127,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryPacketV1.packet_digest:80c334573613e833",
+        "name": "BlindDiscoveryPacketV1.packet_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 137,
+        "end_line": 138,
+        "signature_hash": "9bc5db86166c6b2f",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryPacketV1.to_candidate_dict:deff1db14f329d80",
+        "name": "BlindDiscoveryPacketV1.to_candidate_dict",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 129,
+        "end_line": 134,
+        "signature_hash": "fa6b4e0071fd48cc",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindFindingV1.__post_init__:a09b4711e2b93ad7",
+        "name": "BlindFindingV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 181,
+        "end_line": 190,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindFindingV1.finding_digest:72e61a91b8175758",
+        "name": "BlindFindingV1.finding_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 193,
+        "end_line": 194,
+        "signature_hash": "cb1c5a56431b0d67",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:EvaluatorFindingResolutionV1.__post_init__:b693f593bc697ec4",
+        "name": "EvaluatorFindingResolutionV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 213,
+        "end_line": 226,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:EvaluatorFindingResolutionV1.resolution_digest:53c6480f150956f9",
+        "name": "EvaluatorFindingResolutionV1.resolution_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 229,
+        "end_line": 230,
+        "signature_hash": "145995ae7659cb6c",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:HiddenCaseBindingV1.__post_init__:4a4015bf2890be84",
+        "name": "HiddenCaseBindingV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 154,
+        "end_line": 163,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:HiddenCaseBindingV1.binding_digest:2415d9ed410eb986",
+        "name": "HiddenCaseBindingV1.binding_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 166,
+        "end_line": 169,
+        "signature_hash": "c0adb0ca7d3bbf04",
+        "file_digest8": "ddb8331e73dabc61"
       },
       {
         "semantic_id": "tools/bughound/envelope_lint.py#class:EnvelopeLintReceiptV1:c85fe19b2b7b2cf4",
@@ -448795,7 +450065,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "2693a4c01959e47fad96983c4ea35cfb",
-    "payload_hash": "61348ec68ed9f362e14add5851d59f8f"
+    "record_fingerprint": "38b7727ce21eb31824b5106c5d987653",
+    "payload_hash": "dff86332382aa335aecd8ffc565bc937"
   }
 }
