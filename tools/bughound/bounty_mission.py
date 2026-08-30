@@ -1,9 +1,10 @@
 """Canonical cash-bounty mission gate for BugHound.
 
-BugHound exists to earn cash from authorized bug-bounty work inside the Arena.
-The SeedLab/foundry substrate may validate BugHound capabilities, and AuraOS may
-reuse those generic tools separately, but non-cash internal hardening is not a
-BugHound scheduler profile.
+BugHound may operate multiple isolated target profiles over one virtual-Arena
+engine. This module owns only the external cash-bounty compiler. AuraOS
+self-hardening remains a first-class BugHound target profile, but it is not
+cash-mission work and may not inherit payout, scope, credential, submission, or
+external-effect authority from this compiler.
 
 This module is deliberately pre-effect. Mission admission proves only that a
 work item is a current cash-bounty research candidate. It does not authorize
@@ -16,8 +17,10 @@ from dataclasses import asdict, dataclass
 import hashlib
 import json
 
+from tools.bughound.target_profile import CASH_BOUNTY_PROFILE_ID
+
 SCHEMA = "BugHoundCashMissionReceiptV1"
-CANONICAL_PROFILE_ID = "BUGHOUND_CASH_BOUNTY_V1"
+CANONICAL_PROFILE_ID = CASH_BOUNTY_PROFILE_ID
 CASH_REWARD_STATE = "VERIFIED_CURRENT_CASH_REWARD"
 PROGRAM_STATE = "ACTIVE"
 SCOPE_STATE = "CURRENT_SCOPE_BOUND"
@@ -89,14 +92,15 @@ class BugHoundCashMissionReceiptV1:
 def admit_cash_bounty_mission(
     item: BugHoundCashMissionInputV1,
 ) -> BugHoundCashMissionReceiptV1:
-    """Admit only current cash-bounty research into canonical BugHound work.
+    """Admit only current cash-bounty research into the cash mission lane.
 
-    Deliberately rejects internal/non-cash profiles and stale/unknown economic,
-    scope, or source state. A successful receipt remains pre-effect and cannot be
+    Other registered BugHound profiles fail this cash compiler by design. That
+    rejection is profile isolation, not a statement that those profiles are
+    outside BugHound. A successful cash receipt remains pre-effect and cannot be
     used as live-target, credential, submission, claim, or payment authority.
     """
     if item.profile_id != CANONICAL_PROFILE_ID:
-        raise ValueError("BUGHOUND_NON_CASH_PROFILE_REJECTED")
+        raise ValueError("BUGHOUND_CASH_COMPILER_PROFILE_MISMATCH")
     _require_text("PROGRAM_REF", item.program_ref)
     _require_text("TARGET_REF", item.target_ref)
     _require_text("TARGET_GENERATION", item.target_generation)
