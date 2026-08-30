@@ -17,6 +17,26 @@ def weight_map(layer="model.layers.3", experts=4, scales=True):
 class FakeBackend:
     def __init__(self):
         self.reads = []
+        self.whole_bank_reads = 0
+
+    def read_tensor(self, shard, key):
+        self.reads.append((shard, key))
+        return f"payload:{key}"
+
+    def io_attestation(self, binding_digest):
+        return {
+            "schema": p.BACKEND_IO_ATTESTATION_SCHEMA,
+            "binding_digest": binding_digest,
+            "attestation_id": "fake-per-expert-selected-only",
+            "physical_selected_only": True,
+            "whole_bank_reads": self.whole_bank_reads,
+            "whole_bank_materialized": False,
+        }
+
+
+class UnattestedBackend:
+    def __init__(self):
+        self.reads = []
 
     def read_tensor(self, shard, key):
         self.reads.append((shard, key))
@@ -40,7 +60,7 @@ class PerExpertIndexPagerTests(unittest.TestCase):
         self.assertEqual("PER_EXPERT_PHYSICAL_LAYOUT", b.representation)
         self.assertEqual(6, len(b.experts[0].shard_by_key))
 
-    def test_selected_experts_only_are_read_and_deduped(self):
+    def test_selected_experts_only_are_logically_requested_and_deduped(self):
         b = self.binding()
         backend = FakeBackend()
         page = p.PerExpertIndexPager(b, backend).load_selected(
@@ -52,6 +72,15 @@ class PerExpertIndexPagerTests(unittest.TestCase):
         keys = [key for _, key in backend.reads]
         self.assertTrue(all(".experts.1." in key or ".experts.3." in key for key in keys))
         self.assertFalse(any(".experts.0." in key or ".experts.2." in key for key in keys))
+
+    def test_single_call_all_experts_is_forbidden_before_read(self):
+        b = self.binding()
+        backend = FakeBackend()
+        pager = p.PerExpertIndexPager(b, backend)
+        with self.assertRaises(p.PerExpertReadError) as ctx:
+            pager.load_selected([0, 1, 2, 3], model_revision="glm53-rev", index_digest="index-sha")
+        self.assertEqual("WHOLE_EXPERT_BANK_SINGLE_CALL_FORBIDDEN", ctx.exception.code)
+        self.assertEqual([], backend.reads)
 
     def test_stale_source_fails_before_any_read(self):
         b = self.binding()
@@ -100,7 +129,7 @@ class PerExpertIndexPagerTests(unittest.TestCase):
         self.assertTrue(all(key.startswith("model.layers.4") for _, key in bb.reads))
         self.assertNotEqual(a.digest, b.digest)
 
-    def test_every_expert_remains_addressable(self):
+    def test_every_expert_remains_addressable_across_bounded_calls(self):
         b = self.binding()
         backend = FakeBackend()
         pager = p.PerExpertIndexPager(b, backend)
@@ -110,15 +139,47 @@ class PerExpertIndexPagerTests(unittest.TestCase):
         self.assertEqual(set(range(4)), seen)
         self.assertTrue(pager.receipt().all_experts_addressable)
 
-    def test_receipt_never_admits_g2_or_whole_bank(self):
+    def test_attested_receipt_never_admits_g2_or_claims_whole_bank(self):
         b = self.binding()
         pager = p.PerExpertIndexPager(b, FakeBackend())
         pager.load_selected([0, 2], model_revision="glm53-rev", index_digest="index-sha")
         receipt = pager.receipt()
         self.assertFalse(receipt.g2_admitted)
-        self.assertFalse(receipt.whole_expert_bank_materialized)
+        self.assertTrue(receipt.logical_selected_expert_key_requests_only)
+        self.assertTrue(receipt.physical_io_attested)
         self.assertTrue(receipt.selected_expert_tensor_reads_only)
+        self.assertEqual(0, receipt.whole_bank_reads)
+        self.assertFalse(receipt.whole_expert_bank_materialized)
+        self.assertEqual("fake-per-expert-selected-only", receipt.backend_attestation_id)
         self.assertIn("NO_FLAGSHIP_RUNTIME_OR_G2_PROOF", receipt.claim_ceiling)
+
+    def test_unattested_backend_keeps_physical_io_unknown(self):
+        b = self.binding()
+        pager = p.PerExpertIndexPager(b, UnattestedBackend())
+        pager.load_selected([0, 2], model_revision="glm53-rev", index_digest="index-sha")
+        receipt = pager.receipt()
+        self.assertTrue(receipt.logical_selected_expert_key_requests_only)
+        self.assertFalse(receipt.physical_io_attested)
+        self.assertIsNone(receipt.selected_expert_tensor_reads_only)
+        self.assertIsNone(receipt.whole_bank_reads)
+        self.assertIsNone(receipt.whole_expert_bank_materialized)
+        self.assertIsNone(receipt.backend_attestation_id)
+
+    def test_attestation_must_match_binding(self):
+        b = self.binding()
+        backend = FakeBackend()
+        backend.io_attestation = lambda _: {
+            "schema": p.BACKEND_IO_ATTESTATION_SCHEMA,
+            "binding_digest": "wrong",
+            "attestation_id": "bad",
+            "physical_selected_only": True,
+            "whole_bank_reads": 0,
+            "whole_bank_materialized": False,
+        }
+        pager = p.PerExpertIndexPager(b, backend)
+        with self.assertRaises(p.PerExpertSourceError) as ctx:
+            pager.load_selected([0, 2], model_revision="glm53-rev", index_digest="index-sha")
+        self.assertEqual("BACKEND_IO_ATTESTATION_BINDING_MISMATCH", ctx.exception.code)
 
     def test_bad_ids_fail_closed(self):
         b = self.binding()
