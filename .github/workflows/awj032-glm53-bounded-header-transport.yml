@@ -1,6 +1,13 @@
 name: AWJ032 GLM53 Bounded Header Transport
 
 on:
+  push:
+    branches:
+      - "awj032/glm53-bounded-header-transport-20260830"
+    paths:
+      - "tools/awj032/glm53_safetensors_header_transport.py"
+      - "tools/awj032/test_glm53_safetensors_header_transport.py"
+      - ".github/workflows/awj032-glm53-bounded-header-transport.yml"
   pull_request:
     paths:
       - "tools/awj032/glm53_safetensors_header_transport.py"
