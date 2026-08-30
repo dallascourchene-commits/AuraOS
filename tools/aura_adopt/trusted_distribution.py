@@ -254,6 +254,16 @@ def _validate_manifest_shape(manifest: TrustedDistributionManifestV1, reasons: l
         reasons.append("DUPLICATE_CAPABILITY_ID")
 
 
+def _requires_trusted_signature(kind: ArtifactKind) -> bool:
+    """Only canonical non-executable recipe data may omit binary signing evidence.
+
+    ZF-04 proves byte/source/currentness integrity. ZF-03 separately owns recipe
+    schema/semantic validation and must prove imported bytes are a valid
+    non-executable recipe before relying on this lower-friction path.
+    """
+    return kind is not ArtifactKind.ARENA_RECIPE
+
+
 def verify_distribution_manifest(
     manifest: TrustedDistributionManifestV1,
     *,
@@ -267,7 +277,9 @@ def verify_distribution_manifest(
 
     ADMISSIBLE only means the package/update may proceed to a separate effect
     authority gate. It never grants install, update, distribution, or execution
-    authority.
+    authority. ARENA_RECIPE may omit binary-signature evidence because ZF-03
+    separately proves recipe semantic safety; all other artifact kinds require
+    trusted verifier/signing evidence.
     """
     refused: list[str] = []
     rebase: list[str] = []
@@ -302,31 +314,34 @@ def verify_distribution_manifest(
     if observed_artifact_size_bytes != manifest.artifact.size_bytes:
         refused.append("ARTIFACT_SIZE_MISMATCH")
 
+    signature_required = _requires_trusted_signature(manifest.artifact.kind)
     if evidence is None:
-        refused.append("TRUST_EVIDENCE_REQUIRED")
+        if signature_required:
+            refused.append("TRUST_EVIDENCE_REQUIRED")
     else:
         if policy.trusted_verifier_refs and evidence.verification_source_ref not in set(policy.trusted_verifier_refs):
             refused.append("UNTRUSTED_VERIFICATION_SOURCE")
-        if not evidence.signature_verified:
-            refused.append("SIGNATURE_NOT_VERIFIED")
-        if evidence.key_revoked:
-            refused.append("SIGNING_KEY_REVOKED")
         if evidence.manifest_id != manifest.manifest_id:
             refused.append("TRUST_MANIFEST_ID_MISMATCH")
         if evidence.manifest_digest_sha256 != expected_digest:
             refused.append("TRUST_MANIFEST_DIGEST_MISMATCH")
         if evidence.artifact_sha256_hex != manifest.artifact.sha256_hex:
             refused.append("TRUST_ARTIFACT_DIGEST_MISMATCH")
-        if evidence.signer_id != manifest.signer.signer_id:
-            refused.append("TRUST_SIGNER_MISMATCH")
-        if evidence.key_id != manifest.signer.key_id:
-            refused.append("TRUST_KEY_ID_MISMATCH")
-        if evidence.key_generation != manifest.signer.key_generation:
-            refused.append("TRUST_KEY_GENERATION_MISMATCH")
         if evidence.trust_store_generation != policy.current_trust_store_generation:
             rebase.append("TRUST_STORE_GENERATION_STALE")
         if evidence.verification_currentness_ref != policy.current_trust_currentness_ref:
             rebase.append("TRUST_CURRENTNESS_STALE")
+        if signature_required:
+            if not evidence.signature_verified:
+                refused.append("SIGNATURE_NOT_VERIFIED")
+            if evidence.key_revoked:
+                refused.append("SIGNING_KEY_REVOKED")
+            if evidence.signer_id != manifest.signer.signer_id:
+                refused.append("TRUST_SIGNER_MISMATCH")
+            if evidence.key_id != manifest.signer.key_id:
+                refused.append("TRUST_KEY_ID_MISMATCH")
+            if evidence.key_generation != manifest.signer.key_generation:
+                refused.append("TRUST_KEY_GENERATION_MISMATCH")
 
     added: tuple[Permission, ...] = ()
     removed: tuple[Permission, ...] = ()
