@@ -1,0 +1,59 @@
+name: AWJ032 GLM53 W2 Header Byte-Geometry Different-J
+
+on:
+  push:
+    branches:
+      - awj032/glm53-w2-header-plan-bind-20260830
+    paths:
+      - "tools/awj032/glm53_w2_header_bound_plan.py"
+      - "tools/awj032/glm53_w2_strict_current_plan.py"
+      - "tools/awj032/test_glm53_w2_strict_current_plan.py"
+      - ".github/workflows/awj032-glm53-w2-header-plan-bind.yml"
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_w2_header_bound_plan.py"
+      - "tools/awj032/glm53_w2_strict_current_plan.py"
+      - "tools/awj032/test_glm53_w2_strict_current_plan.py"
+      - ".github/workflows/awj032-glm53-w2-header-plan-bind.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: awj032-glm53-w2-byte-geometry-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  different-j:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.12"
+      - name: Install focused test dependency
+        run: python -m pip install "pytest>=8.2,<9.0"
+      - name: Verify canonical owner plus byte-geometry Different-J
+        run: |
+          python -m py_compile \
+            tools/awj032/glm53_layout_binding_bridge.py \
+            tools/awj032/glm53_w2_header_bound_plan.py \
+            tools/awj032/glm53_w2_strict_current_plan.py
+          python -m pytest -q \
+            tools/awj032/test_glm53_layout_binding_bridge.py \
+            tools/awj032/test_glm53_source_bound_layout_bridge.py \
+            tools/awj032/test_glm53_w2_strict_current_plan.py
