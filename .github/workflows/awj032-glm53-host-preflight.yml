@@ -1,0 +1,25 @@
+name: AWJ032 GLM53 G3 host preflight reducer
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_host_preflight_reducer.py'
+      - 'tools/awj032/test_glm53_host_preflight_reducer.py'
+      - '.github/workflows/awj032-glm53-host-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reducer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile
+        run: python -m py_compile tools/awj032/glm53_host_preflight_reducer.py tools/awj032/test_glm53_host_preflight_reducer.py
+      - name: Run focused reducer regressions
+        run: python tools/awj032/test_glm53_host_preflight_reducer.py
