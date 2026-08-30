@@ -8,15 +8,18 @@ harness as a residual; this module never performs implicit fallback.
 CS-HARNESS-001 / H-D invariants:
 - R0..R6 are ordered free/reuse-first.
 - External routes bind exact provider + model, never a model-role alias.
-- Paid routes require explicit inherited authority and known cost within ceiling.
+- Paid routes require explicit inherited authority and known finite cost within ceiling.
 - Swarms are off by default. Owner-deployed swarm authority or one typed earned
   parallelism reason is required, plus separate effect authority.
-- DeepSeek physical swarms require the AWJ-033 integrity/currentness gate.
+- External DeepSeek swarms require the AWJ-033 integrity/currentness gate.
 - DeepSeek V4 Pro requires a typed earned escalation reference.
+- Route semantics, not caller-declared flags, determine whether effect authority
+  and route/provider/cost constraints apply.
 """
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+import math
 from typing import Any
 
 SCHEMA = "CreatorStudioHarnessRouteDecisionV1"
@@ -55,8 +58,12 @@ def _text(value: Any) -> str:
     return str(value or "").strip()
 
 
-def _is_number(value: Any) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool)
+def _is_finite_number(value: Any) -> bool:
+    return (
+        isinstance(value, (int, float))
+        and not isinstance(value, bool)
+        and math.isfinite(float(value))
+    )
 
 
 def _candidate_id(candidate: Mapping[str, Any], ordinal: int) -> str:
@@ -70,8 +77,37 @@ def _validate_request(request: Mapping[str, Any]) -> None:
         raise HarnessRoutePolicyError("TASK_ID_REQUIRED")
     if request.get("cost_ceiling_usd") is not None:
         ceiling = request.get("cost_ceiling_usd")
-        if not _is_number(ceiling) or ceiling < 0:
+        if not _is_finite_number(ceiling) or ceiling < 0:
             raise HarnessRoutePolicyError("INVALID_COST_CEILING")
+
+
+def _route_attribute_rejection(candidate: Mapping[str, Any]) -> str | None:
+    """Reject rank/semantics spoofing between route class and effect attributes."""
+    route_class = _text(candidate.get("route_class"))
+    external = candidate.get("external_provider") is True
+    paid = candidate.get("paid") is True
+
+    # R0-R3 are the free/reuse/local/native/current-ChatGPT substrate. They
+    # cannot be relabeled external or paid merely to acquire a cheaper rank.
+    if route_class in {
+        "R0_REUSE",
+        "R1_LOCAL_DETERMINISTIC",
+        "R2_AURA_NATIVE",
+        "R3_CHATGPT",
+    } and (external or paid):
+        return "ROUTE_ATTRIBUTE_MISMATCH"
+
+    # R4 may be local or an exact external specialist, but it is not the paid
+    # fallback class. A paid specialist must route as R6 so cost/authority
+    # semantics cannot hide behind a lower rank.
+    if route_class == "R4_LOW_MARGIN_SPECIALIST" and paid:
+        return "ROUTE_ATTRIBUTE_MISMATCH"
+
+    # R6 is definitionally an exact paid external route.
+    if route_class == "R6_PAID_EXTERNAL" and not (external and paid):
+        return "ROUTE_ATTRIBUTE_MISMATCH"
+
+    return None
 
 
 def _candidate_rejection(request: Mapping[str, Any], candidate: Mapping[str, Any]) -> str | None:
@@ -80,14 +116,31 @@ def _candidate_rejection(request: Mapping[str, Any], candidate: Mapping[str, Any
     route_class = _text(candidate.get("route_class"))
     if route_class not in ROUTE_RANK:
         return "UNKNOWN_ROUTE_CLASS"
+
+    mismatch = _route_attribute_rejection(candidate)
+    if mismatch is not None:
+        return mismatch
+
     if candidate.get("currentness") != "CURRENT":
         return "CANDIDATE_NOT_CURRENT"
     if candidate.get("capability_fit") is not True:
         return "CAPABILITY_MISMATCH"
     if candidate.get("adequacy") not in {"ADEQUATE", "ELIGIBLE"}:
         return "ADEQUACY_NOT_ESTABLISHED"
-    if candidate.get("requires_effect") is True and candidate.get("effect_authorized") is not True:
+
+    # Effect requirement is not caller-optional for external/paid/swarm routes.
+    effect_required = (
+        candidate.get("requires_effect") is True
+        or candidate.get("external_provider") is True
+        or candidate.get("paid") is True
+        or route_class in {"R5_SWARM", "R6_PAID_EXTERNAL"}
+    )
+    if effect_required and candidate.get("effect_authorized") is not True:
         return "EFFECT_AUTHORITY_REQUIRED"
+
+    cost = candidate.get("estimated_marginal_cost_usd")
+    if cost is not None and (not _is_finite_number(cost) or cost < 0):
+        return "PAID_COST_UNKNOWN_OR_INVALID" if candidate.get("paid") is True else "COST_INVALID"
 
     if candidate.get("external_provider") is True:
         provider = _text(candidate.get("provider_id"))
@@ -102,8 +155,7 @@ def _candidate_rejection(request: Mapping[str, Any], candidate: Mapping[str, Any
     if candidate.get("paid") is True:
         if request.get("paid_provider_authorized") is not True:
             return "PAID_PROVIDER_AUTHORITY_REQUIRED"
-        cost = candidate.get("estimated_marginal_cost_usd")
-        if not _is_number(cost) or cost < 0:
+        if cost is None or not _is_finite_number(cost) or cost < 0:
             return "PAID_COST_UNKNOWN_OR_INVALID"
         ceiling = request.get("cost_ceiling_usd")
         if ceiling is not None and cost > ceiling:
@@ -116,7 +168,14 @@ def _candidate_rejection(request: Mapping[str, Any], candidate: Mapping[str, Any
             return "SWARM_NOT_AUTHORIZED_OR_EARNED"
         if candidate.get("effect_authorized") is not True:
             return "SWARM_EFFECT_AUTHORITY_REQUIRED"
-        if candidate.get("deepseek_physical_swarm") is True and request.get("awj033_physical_swarm_ready") is not True:
+
+        # A candidate cannot opt itself out of the AWJ-033 gate with a false
+        # `deepseek_physical_swarm` flag. External DeepSeek R5 is derived here.
+        deepseek_physical = (
+            candidate.get("external_provider") is True
+            and _text(candidate.get("provider_id")).casefold() == "deepseek"
+        )
+        if deepseek_physical and request.get("awj033_physical_swarm_ready") is not True:
             return "AWJ033_PHYSICAL_SWARM_GATE_REQUIRED"
 
     if _text(candidate.get("model_id")).casefold() == "deepseek-v4-pro":
@@ -127,7 +186,7 @@ def _candidate_rejection(request: Mapping[str, Any], candidate: Mapping[str, Any
 
 def _cost_key(candidate: Mapping[str, Any]) -> float:
     cost = candidate.get("estimated_marginal_cost_usd")
-    if _is_number(cost):
+    if _is_finite_number(cost):
         return float(cost)
     # UNKNOWN remains UNKNOWN in the receipt; this only stabilizes same-rank order.
     return float("inf")
@@ -161,15 +220,20 @@ def select_creator_studio_route(request: Mapping[str, Any], candidates: Sequence
         ordinal, candidate = item
         return (ROUTE_RANK[_text(candidate.get("route_class"))], _cost_key(candidate), _candidate_id(candidate, ordinal))
 
-    _, selected = min(eligible, key=sort_key)
+    selected_ordinal, selected = min(eligible, key=sort_key)
+    derived_deepseek_physical = (
+        _text(selected.get("route_class")) == "R5_SWARM"
+        and selected.get("external_provider") is True
+        and _text(selected.get("provider_id")).casefold() == "deepseek"
+    )
     selected_route = {
-        "route_id": _text(selected.get("route_id")),
+        "route_id": _candidate_id(selected, selected_ordinal),
         "route_class": _text(selected.get("route_class")),
         "provider_id": _text(selected.get("provider_id")) or None,
         "model_id": _text(selected.get("model_id")) or None,
         "paid": selected.get("paid") is True,
         "estimated_marginal_cost_usd": selected.get("estimated_marginal_cost_usd"),
         "effect_authorized": selected.get("effect_authorized") is True,
-        "deepseek_physical_swarm": selected.get("deepseek_physical_swarm") is True,
+        "deepseek_physical_swarm": derived_deepseek_physical,
     }
     return {"schema": SCHEMA, "task_id": _text(request.get("task_id")), "decision": "ROUTE_SELECTED", "selected_route": selected_route, "reason_codes": ["FREE_FIRST_LOWEST_LAWFUL_ROUTE"], "fallback_allowed": False, "evaluated": evaluated}

@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788100190,
+  "generated_at_unix": 1788101316,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1644,
+    "repo_file_count": 1645,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1443,6 +1443,7 @@
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
       "tests/test_aura_creator_studio_harness_router.py",
+      "tests/test_aura_creator_studio_harness_router_c0.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
@@ -1760,15 +1761,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1644,
-      "bytes": 26458178,
-      "tokens_est": 6604897,
+      "files": 1645,
+      "bytes": 26465804,
+      "tokens_est": 6606804,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1002,
+        "python_module": 1003,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -14582,8 +14583,8 @@
       {
         "file": "aura_creator_studio_harness_router.py",
         "kind": "function",
-        "line": 54,
-        "end_line": 55,
+        "line": 57,
+        "end_line": 58,
         "semantic_id": "aura_creator_studio_harness_router.py#function:_text:2ca051f904b9701c",
         "signature_hash": "0cd3c0d3d227cce3"
       },
@@ -23994,8 +23995,8 @@
       {
         "file": "aura_creator_studio_harness_router.py",
         "kind": "function",
-        "line": 66,
-        "end_line": 74,
+        "line": 73,
+        "end_line": 81,
         "semantic_id": "aura_creator_studio_harness_router.py#function:_validate_request:faaba906e1a848ac",
         "signature_hash": "d24eb79cdd25ee5a"
       }
@@ -39440,8 +39441,8 @@
       {
         "file": "aura_creator_studio_harness_router.py",
         "kind": "class",
-        "line": 47,
-        "end_line": 51,
+        "line": 50,
+        "end_line": 54,
         "semantic_id": "aura_creator_studio_harness_router.py#class:HarnessRoutePolicyError:835ed30a40ecf4dd",
         "signature_hash": "f548122f76c7375e"
       }
@@ -39450,38 +39451,48 @@
       {
         "file": "aura_creator_studio_harness_router.py",
         "kind": "method",
-        "line": 49,
-        "end_line": 51,
+        "line": 52,
+        "end_line": 54,
         "semantic_id": "aura_creator_studio_harness_router.py#method:HarnessRoutePolicyError.__init__:27113765606ce76c",
         "signature_hash": "025780840ff5ba63"
       }
     ],
-    "_is_number": [
+    "_is_finite_number": [
       {
         "file": "aura_creator_studio_harness_router.py",
         "kind": "function",
-        "line": 58,
-        "end_line": 59,
-        "semantic_id": "aura_creator_studio_harness_router.py#function:_is_number:f8f19acb20198f01",
-        "signature_hash": "1aa5ac8e28648a7a"
+        "line": 61,
+        "end_line": 66,
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_is_finite_number:b5069829827b9d90",
+        "signature_hash": "afb3bc4f4f4e99b0"
       }
     ],
     "_candidate_id": [
       {
         "file": "aura_creator_studio_harness_router.py",
         "kind": "function",
-        "line": 62,
-        "end_line": 63,
+        "line": 69,
+        "end_line": 70,
         "semantic_id": "aura_creator_studio_harness_router.py#function:_candidate_id:7dc002ceb7b81761",
         "signature_hash": "82f021ae5b299d50"
+      }
+    ],
+    "_route_attribute_rejection": [
+      {
+        "file": "aura_creator_studio_harness_router.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 110,
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_route_attribute_rejection:9b85a9222a518c0d",
+        "signature_hash": "ff9a3ae8061231b2"
       }
     ],
     "_candidate_rejection": [
       {
         "file": "aura_creator_studio_harness_router.py",
         "kind": "function",
-        "line": 77,
-        "end_line": 125,
+        "line": 113,
+        "end_line": 184,
         "semantic_id": "aura_creator_studio_harness_router.py#function:_candidate_rejection:0a2ed800758d0d78",
         "signature_hash": "db2f9bb46cd9c20e"
       }
@@ -39490,8 +39501,8 @@
       {
         "file": "aura_creator_studio_harness_router.py",
         "kind": "function",
-        "line": 128,
-        "end_line": 133,
+        "line": 187,
+        "end_line": 192,
         "semantic_id": "aura_creator_studio_harness_router.py#function:_cost_key:8100696da0bd1520",
         "signature_hash": "73eafa77919892b5"
       }
@@ -39500,8 +39511,8 @@
       {
         "file": "aura_creator_studio_harness_router.py",
         "kind": "function",
-        "line": 136,
-        "end_line": 175,
+        "line": 195,
+        "end_line": 239,
         "semantic_id": "aura_creator_studio_harness_router.py#function:select_creator_studio_route:131ed3a7fbab1fdd",
         "signature_hash": "81e8b1439bf79931"
       }
@@ -39510,8 +39521,8 @@
       {
         "file": "aura_creator_studio_harness_router.py",
         "kind": "method",
-        "line": 160,
-        "end_line": 162,
+        "line": 219,
+        "end_line": 221,
         "semantic_id": "aura_creator_studio_harness_router.py#method:select_creator_studio_route.sort_key:92563aae4ce73842",
         "signature_hash": "f169442037d23e2a"
       }
@@ -113622,6 +113633,14 @@
         "signature_hash": "d69b698c037bba04"
       },
       {
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#function:candidate:b47db8bddd979953",
+        "signature_hash": "d69b698c037bba04"
+      },
+      {
         "file": "tests/test_aura_shadow_model_router.py",
         "kind": "function",
         "line": 42,
@@ -129814,6 +129833,14 @@
         "signature_hash": "aa30402c5be12ee6"
       },
       {
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 22,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#function:request:11fd79d09d960014",
+        "signature_hash": "aa30402c5be12ee6"
+      },
+      {
         "file": "tests/test_aura_forge.py",
         "kind": "function",
         "line": 149,
@@ -130028,6 +130055,106 @@
         "end_line": 122,
         "semantic_id": "tests/test_aura_creator_studio_harness_router.py#method:HarnessRouteTests.test_invalid_cost_ceiling_fails_input_validation:29e1c2452e23c724",
         "signature_hash": "381d83262eaae8c1"
+      }
+    ],
+    "HarnessRouteC0RepairTests": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 137,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#class:HarnessRouteC0RepairTests:d7cd8348c83dbf4f",
+        "signature_hash": "5c1a5f89d6f1c35f"
+      }
+    ],
+    "HarnessRouteC0RepairTests.test_external_paid_effect_cannot_opt_out_via_requires_effect_false": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 61,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_external_paid_effect_cannot_opt_out_via_requires_effect_false:40d2a37e9b0e7fb4",
+        "signature_hash": "de2bf2e23c9d6ae4"
+      }
+    ],
+    "HarnessRouteC0RepairTests.test_r0_external_paid_rank_spoof_is_rejected": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 76,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_r0_external_paid_rank_spoof_is_rejected:908af27aa8c0c992",
+        "signature_hash": "4665fc739150ca89"
+      }
+    ],
+    "HarnessRouteC0RepairTests.test_r6_requires_paid_external_semantics": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 83,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_r6_requires_paid_external_semantics:b2134d59a0cc0b1f",
+        "signature_hash": "4d1afb7910f35fad"
+      }
+    ],
+    "HarnessRouteC0RepairTests.test_nan_cost_ceiling_is_invalid": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_nan_cost_ceiling_is_invalid:ddefa8a0d2a57f08",
+        "signature_hash": "ae45d08680dae774"
+      }
+    ],
+    "HarnessRouteC0RepairTests.test_infinite_cost_ceiling_is_invalid": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 91,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_infinite_cost_ceiling_is_invalid:8baee5ee81e65f1c",
+        "signature_hash": "b24f02b9e12ea43a"
+      }
+    ],
+    "HarnessRouteC0RepairTests.test_paid_nan_cost_is_not_eligible": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 106,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_paid_nan_cost_is_not_eligible:a700397d4f0cec67",
+        "signature_hash": "c7f37168a918b36b"
+      }
+    ],
+    "HarnessRouteC0RepairTests.test_nonpaid_nan_cost_is_rejected_not_sorted": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_nonpaid_nan_cost_is_rejected_not_sorted:1a116379a3ce645f",
+        "signature_hash": "530de62fb8579e46"
+      }
+    ],
+    "HarnessRouteC0RepairTests.test_deepseek_swarm_gate_is_derived_even_when_flag_false": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 129,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_deepseek_swarm_gate_is_derived_even_when_flag_false:a86e3d942ea97ff8",
+        "signature_hash": "1377da1a467578f5"
+      }
+    ],
+    "HarnessRouteC0RepairTests.test_selected_route_uses_deterministic_fallback_id": [
+      {
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 137,
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_selected_route_uses_deterministic_fallback_id:b60597a0fd0a1399",
+        "signature_hash": "14338b870fc75429"
       }
     ],
     "_grammar": [
@@ -193915,47 +194042,47 @@
       "path": "aura_creator_studio_harness_router.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 8102,
-      "lines": 176,
-      "tokens_est": 2026,
-      "symbol_count": 10,
+      "bytes": 10602,
+      "lines": 240,
+      "tokens_est": 2651,
+      "symbol_count": 11,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "040b1d9831251c8c",
+      "digest8": "e26f9c09b7b2e0d5",
       "vector": [
-        -0.282106,
-        -0.125822,
-        0.136417,
-        0.051653,
-        0.041058,
-        0.215884,
-        -0.162906,
-        -0.165555,
-        0.160257,
-        -0.260915,
-        -0.027813,
-        -0.08344,
-        -0.308594,
-        0.178799,
-        -0.046355,
-        0.086089,
-        -0.215884,
-        -0.186746,
-        0.025164,
-        0.144364,
-        0.186746,
-        -0.030462,
-        0.221181,
-        -0.276808,
-        0.207937,
-        -0.260915,
-        -0.207937,
-        -0.054302,
-        0.030462,
-        -0.260915,
-        0.099333,
-        0.205288
+        0.208694,
+        -0.245307,
+        0.22578,
+        0.098855,
+        -0.291684,
+        0.02807,
+        -0.093973,
+        -0.272157,
+        -0.301447,
+        -0.006102,
+        0.006102,
+        0.086651,
+        0.118382,
+        -0.035393,
+        -0.086651,
+        -0.093973,
+        0.106178,
+        0.059801,
+        0.259953,
+        0.233103,
+        0.145232,
+        0.037833,
+        0.220899,
+        0.074447,
+        0.220899,
+        -0.147673,
+        -0.27948,
+        0.154995,
+        0.103737,
+        0.247748,
+        -0.142791,
+        -0.240426
       ]
     },
     {
@@ -254669,6 +254796,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_creator_studio_harness_router_c0.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5126,
+      "lines": 142,
+      "tokens_est": 1282,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "60b1218e34920b60",
+      "vector": [
+        -0.135671,
+        -0.083394,
+        0.158076,
+        0.048543,
+        0.217821,
+        -0.046054,
+        0.046054,
+        -0.307438,
+        -0.163054,
+        -0.2228,
+        0.237736,
+        0.175501,
+        0.14065,
+        0.073437,
+        0.275077,
+        0.115756,
+        -0.098331,
+        0.150608,
+        -0.073437,
+        0.133182,
+        0.312417,
+        0.026138,
+        -0.130692,
+        0.06099,
+        -0.173012,
+        0.255162,
+        0.240225,
+        -0.093352,
+        0.128203,
+        0.30246,
+        -0.195416,
+        0.202885
+      ]
+    },
+    {
       "path": "tests/test_aura_crucible_phase_b.py",
       "role": "python_module",
       "binary": false,
@@ -287738,15 +287912,15 @@
     }
   },
   "summary": {
-    "file_count": 1644,
-    "total_bytes": 26458178,
-    "text_tokens_est": 6604897,
+    "file_count": 1645,
+    "total_bytes": 26465804,
+    "text_tokens_est": 6606804,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1002,
+      "python_module": 1003,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -289200,6 +289374,7 @@
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
       "tests/test_aura_creator_studio_harness_router.py",
+      "tests/test_aura_creator_studio_harness_router_c0.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
@@ -322135,100 +322310,110 @@
         "name": "HarnessRoutePolicyError",
         "kind": "class",
         "file": "aura_creator_studio_harness_router.py",
-        "line": 47,
-        "end_line": 51,
+        "line": 50,
+        "end_line": 54,
         "signature_hash": "f548122f76c7375e",
-        "file_digest8": "040b1d9831251c8c"
+        "file_digest8": "e26f9c09b7b2e0d5"
       },
       {
         "semantic_id": "aura_creator_studio_harness_router.py#function:_candidate_id:7dc002ceb7b81761",
         "name": "_candidate_id",
         "kind": "function",
         "file": "aura_creator_studio_harness_router.py",
-        "line": 62,
-        "end_line": 63,
+        "line": 69,
+        "end_line": 70,
         "signature_hash": "82f021ae5b299d50",
-        "file_digest8": "040b1d9831251c8c"
+        "file_digest8": "e26f9c09b7b2e0d5"
       },
       {
         "semantic_id": "aura_creator_studio_harness_router.py#function:_candidate_rejection:0a2ed800758d0d78",
         "name": "_candidate_rejection",
         "kind": "function",
         "file": "aura_creator_studio_harness_router.py",
-        "line": 77,
-        "end_line": 125,
+        "line": 113,
+        "end_line": 184,
         "signature_hash": "db2f9bb46cd9c20e",
-        "file_digest8": "040b1d9831251c8c"
+        "file_digest8": "e26f9c09b7b2e0d5"
       },
       {
         "semantic_id": "aura_creator_studio_harness_router.py#function:_cost_key:8100696da0bd1520",
         "name": "_cost_key",
         "kind": "function",
         "file": "aura_creator_studio_harness_router.py",
-        "line": 128,
-        "end_line": 133,
+        "line": 187,
+        "end_line": 192,
         "signature_hash": "73eafa77919892b5",
-        "file_digest8": "040b1d9831251c8c"
+        "file_digest8": "e26f9c09b7b2e0d5"
       },
       {
-        "semantic_id": "aura_creator_studio_harness_router.py#function:_is_number:f8f19acb20198f01",
-        "name": "_is_number",
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_is_finite_number:b5069829827b9d90",
+        "name": "_is_finite_number",
         "kind": "function",
         "file": "aura_creator_studio_harness_router.py",
-        "line": 58,
-        "end_line": 59,
-        "signature_hash": "1aa5ac8e28648a7a",
-        "file_digest8": "040b1d9831251c8c"
+        "line": 61,
+        "end_line": 66,
+        "signature_hash": "afb3bc4f4f4e99b0",
+        "file_digest8": "e26f9c09b7b2e0d5"
+      },
+      {
+        "semantic_id": "aura_creator_studio_harness_router.py#function:_route_attribute_rejection:9b85a9222a518c0d",
+        "name": "_route_attribute_rejection",
+        "kind": "function",
+        "file": "aura_creator_studio_harness_router.py",
+        "line": 84,
+        "end_line": 110,
+        "signature_hash": "ff9a3ae8061231b2",
+        "file_digest8": "e26f9c09b7b2e0d5"
       },
       {
         "semantic_id": "aura_creator_studio_harness_router.py#function:_text:2ca051f904b9701c",
         "name": "_text",
         "kind": "function",
         "file": "aura_creator_studio_harness_router.py",
-        "line": 54,
-        "end_line": 55,
+        "line": 57,
+        "end_line": 58,
         "signature_hash": "0cd3c0d3d227cce3",
-        "file_digest8": "040b1d9831251c8c"
+        "file_digest8": "e26f9c09b7b2e0d5"
       },
       {
         "semantic_id": "aura_creator_studio_harness_router.py#function:_validate_request:faaba906e1a848ac",
         "name": "_validate_request",
         "kind": "function",
         "file": "aura_creator_studio_harness_router.py",
-        "line": 66,
-        "end_line": 74,
+        "line": 73,
+        "end_line": 81,
         "signature_hash": "d24eb79cdd25ee5a",
-        "file_digest8": "040b1d9831251c8c"
+        "file_digest8": "e26f9c09b7b2e0d5"
       },
       {
         "semantic_id": "aura_creator_studio_harness_router.py#function:select_creator_studio_route:131ed3a7fbab1fdd",
         "name": "select_creator_studio_route",
         "kind": "function",
         "file": "aura_creator_studio_harness_router.py",
-        "line": 136,
-        "end_line": 175,
+        "line": 195,
+        "end_line": 239,
         "signature_hash": "81e8b1439bf79931",
-        "file_digest8": "040b1d9831251c8c"
+        "file_digest8": "e26f9c09b7b2e0d5"
       },
       {
         "semantic_id": "aura_creator_studio_harness_router.py#method:HarnessRoutePolicyError.__init__:27113765606ce76c",
         "name": "HarnessRoutePolicyError.__init__",
         "kind": "method",
         "file": "aura_creator_studio_harness_router.py",
-        "line": 49,
-        "end_line": 51,
+        "line": 52,
+        "end_line": 54,
         "signature_hash": "025780840ff5ba63",
-        "file_digest8": "040b1d9831251c8c"
+        "file_digest8": "e26f9c09b7b2e0d5"
       },
       {
         "semantic_id": "aura_creator_studio_harness_router.py#method:select_creator_studio_route.sort_key:92563aae4ce73842",
         "name": "select_creator_studio_route.sort_key",
         "kind": "method",
         "file": "aura_creator_studio_harness_router.py",
-        "line": 160,
-        "end_line": 162,
+        "line": 219,
+        "end_line": 221,
         "signature_hash": "f169442037d23e2a",
-        "file_digest8": "040b1d9831251c8c"
+        "file_digest8": "e26f9c09b7b2e0d5"
       },
       {
         "semantic_id": "aura_crucible_cli.py#function:_json_object:3ac1d79bc68eed40",
@@ -418201,6 +418386,126 @@
         "file_digest8": "7277d4842b19e36d"
       },
       {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#class:HarnessRouteC0RepairTests:d7cd8348c83dbf4f",
+        "name": "HarnessRouteC0RepairTests",
+        "kind": "class",
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "line": 46,
+        "end_line": 137,
+        "signature_hash": "5c1a5f89d6f1c35f",
+        "file_digest8": "60b1218e34920b60"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#function:candidate:b47db8bddd979953",
+        "name": "candidate",
+        "kind": "function",
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "line": 25,
+        "end_line": 43,
+        "signature_hash": "d69b698c037bba04",
+        "file_digest8": "60b1218e34920b60"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#function:request:11fd79d09d960014",
+        "name": "request",
+        "kind": "function",
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "line": 9,
+        "end_line": 22,
+        "signature_hash": "aa30402c5be12ee6",
+        "file_digest8": "60b1218e34920b60"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_deepseek_swarm_gate_is_derived_even_when_flag_false:a86e3d942ea97ff8",
+        "name": "HarnessRouteC0RepairTests.test_deepseek_swarm_gate_is_derived_even_when_flag_false",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "line": 115,
+        "end_line": 129,
+        "signature_hash": "1377da1a467578f5",
+        "file_digest8": "60b1218e34920b60"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_external_paid_effect_cannot_opt_out_via_requires_effect_false:40d2a37e9b0e7fb4",
+        "name": "HarnessRouteC0RepairTests.test_external_paid_effect_cannot_opt_out_via_requires_effect_false",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "line": 47,
+        "end_line": 61,
+        "signature_hash": "de2bf2e23c9d6ae4",
+        "file_digest8": "60b1218e34920b60"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_infinite_cost_ceiling_is_invalid:8baee5ee81e65f1c",
+        "name": "HarnessRouteC0RepairTests.test_infinite_cost_ceiling_is_invalid",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "line": 89,
+        "end_line": 91,
+        "signature_hash": "b24f02b9e12ea43a",
+        "file_digest8": "60b1218e34920b60"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_nan_cost_ceiling_is_invalid:ddefa8a0d2a57f08",
+        "name": "HarnessRouteC0RepairTests.test_nan_cost_ceiling_is_invalid",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "line": 85,
+        "end_line": 87,
+        "signature_hash": "ae45d08680dae774",
+        "file_digest8": "60b1218e34920b60"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_nonpaid_nan_cost_is_rejected_not_sorted:1a116379a3ce645f",
+        "name": "HarnessRouteC0RepairTests.test_nonpaid_nan_cost_is_rejected_not_sorted",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "line": 108,
+        "end_line": 113,
+        "signature_hash": "530de62fb8579e46",
+        "file_digest8": "60b1218e34920b60"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_paid_nan_cost_is_not_eligible:a700397d4f0cec67",
+        "name": "HarnessRouteC0RepairTests.test_paid_nan_cost_is_not_eligible",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "line": 93,
+        "end_line": 106,
+        "signature_hash": "c7f37168a918b36b",
+        "file_digest8": "60b1218e34920b60"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_r0_external_paid_rank_spoof_is_rejected:908af27aa8c0c992",
+        "name": "HarnessRouteC0RepairTests.test_r0_external_paid_rank_spoof_is_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "line": 63,
+        "end_line": 76,
+        "signature_hash": "4665fc739150ca89",
+        "file_digest8": "60b1218e34920b60"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_r6_requires_paid_external_semantics:b2134d59a0cc0b1f",
+        "name": "HarnessRouteC0RepairTests.test_r6_requires_paid_external_semantics",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "line": 78,
+        "end_line": 83,
+        "signature_hash": "4d1afb7910f35fad",
+        "file_digest8": "60b1218e34920b60"
+      },
+      {
+        "semantic_id": "tests/test_aura_creator_studio_harness_router_c0.py#method:HarnessRouteC0RepairTests.test_selected_route_uses_deterministic_fallback_id:b60597a0fd0a1399",
+        "name": "HarnessRouteC0RepairTests.test_selected_route_uses_deterministic_fallback_id",
+        "kind": "method",
+        "file": "tests/test_aura_creator_studio_harness_router_c0.py",
+        "line": 131,
+        "end_line": 137,
+        "signature_hash": "14338b870fc75429",
+        "file_digest8": "60b1218e34920b60"
+      },
+      {
         "semantic_id": "tests/test_aura_crucible_phase_b.py#function:_experience:21ffd8555ec59a7b",
         "name": "_experience",
         "kind": "function",
@@ -448841,7 +449146,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "edbfe47236523e3af5852f441c923e2d",
-    "payload_hash": "58f2ad34e9846122549be4922ec6a31c"
+    "record_fingerprint": "e183b03cf4ae374346452b9bfb7af075",
+    "payload_hash": "73d1bcf282877c5da2fe841b9faa0b80"
   }
 }
