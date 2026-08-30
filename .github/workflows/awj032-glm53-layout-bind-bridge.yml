@@ -1,0 +1,28 @@
+name: AWJ032 GLM53 layout binding bridge
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_layout_binding_bridge.py'
+      - 'tools/awj032/test_glm53_layout_binding_bridge.py'
+      - 'tools/awj032/glm53_packed_expert_pager.py'
+      - '.github/workflows/awj032-glm53-layout-bind-bridge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile bridge and pager
+        run: python -m py_compile tools/awj032/glm53_packed_expert_pager.py tools/awj032/glm53_layout_binding_bridge.py tools/awj032/test_glm53_layout_binding_bridge.py
+      - name: Run bridge regressions
+        run: python -m unittest tools.awj032.test_glm53_layout_binding_bridge
+      - name: Re-run inherited pager regressions
+        run: python -m unittest tools.awj032.test_glm53_packed_expert_pager
