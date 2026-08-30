@@ -13,8 +13,8 @@ Evidence law:
   physical consequences. This adapter therefore never emits SAVE_REOPEN=COMPLETED;
   a trusted browser/storage witness resolver must earn that state downstream.
 - Consequence evidence is committed into stage/verifier digests; it is never
-  mislabeled as a capability reference. Public capability refs must use the
-  explicit `capability:` namespace.
+  mislabeled as a capability reference. Public capability refs use `capability:`;
+  recipe refs use `arena-recipe:`; serialized references/cohorts are privacy-minimal.
 - This adapter cannot complete TRUST; a trust-owner bridge must do that.
 - Causally impossible witness combinations fail closed.
 - UNKNOWN remains UNKNOWN.
@@ -41,10 +41,13 @@ from tools.aura_adopt.adoption_friction_receipt import (
 SCHEMA = "FirstValueWitnessObservationV1"
 ZERO_INSTALL_SURFACE = "ZERO_INSTALL_WEB_PWA"
 READY_DISPOSITION = "READY_BOUNDED"
-_REF_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/@#?=&%+-]{1,255}$")
+_REF_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/@#+-]{1,255}$")
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_EMAIL_RE = re.compile(r"(?i)[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}")
+_COHORT_VALUE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:+/-]{0,63}$")
 _SENSITIVE_REF_MARKERS = (
-    "api_key=", "apikey=", "token=", "secret=", "password=", "bearer ", "sk-",
+    "api_key", "apikey", "token", "secret", "password", "bearer", "sk-",
+    "mailto:", "user=", "email=", "phone=", "prompt=", "content=",
 )
 
 
@@ -62,12 +65,20 @@ class SaveEvidenceMode(str, Enum):
     REOPEN_OBSERVED = "REOPEN_OBSERVED"
 
 
+def _private_like(value: str) -> bool:
+    lowered = value.casefold()
+    return (
+        _EMAIL_RE.search(value) is not None
+        or "://" in lowered
+        or any(marker in lowered for marker in _SENSITIVE_REF_MARKERS)
+    )
+
+
 def _ref(value: str | None, code: str = "EVIDENCE_REF_INVALID") -> str:
     if not isinstance(value, str):
         raise FrictionReceiptError(code)
     clean = value.strip()
-    lowered = clean.casefold()
-    if not _REF_RE.fullmatch(clean) or any(marker in lowered for marker in _SENSITIVE_REF_MARKERS):
+    if not _REF_RE.fullmatch(clean) or _private_like(clean):
         raise FrictionReceiptError(code)
     return clean
 
@@ -76,6 +87,27 @@ def _capability_ref(value: str | None) -> str:
     clean = _ref(value, "CAPABILITY_REF_INVALID")
     if not clean.casefold().startswith("capability:"):
         raise FrictionReceiptError("CAPABILITY_REF_NAMESPACE_REQUIRED")
+    return clean
+
+
+def _recipe_ref(value: str | None) -> str:
+    clean = _ref(value, "RECIPE_REF_REQUIRED")
+    if not clean.casefold().startswith("arena-recipe:"):
+        raise FrictionReceiptError("RECIPE_REF_NAMESPACE_REQUIRED")
+    return clean
+
+
+def _privacy_minimal_cohort(cohort: Mapping[str, str]) -> dict[str, str]:
+    if not isinstance(cohort, Mapping) or not cohort:
+        raise FrictionReceiptError("COHORT_DESCRIPTOR_REQUIRED")
+    clean: dict[str, str] = {}
+    for key, value in cohort.items():
+        if not isinstance(key, str) or not isinstance(value, str):
+            raise FrictionReceiptError("COHORT_VALUE_NOT_PRIVACY_MINIMAL")
+        normalized = value.strip()
+        if not _COHORT_VALUE_RE.fullmatch(normalized) or _private_like(normalized):
+            raise FrictionReceiptError("COHORT_VALUE_NOT_PRIVACY_MINIMAL", key)
+        clean[key] = normalized
     return clean
 
 
@@ -340,8 +372,10 @@ def compile_first_value_receipt(
     if not isinstance(observation, FirstValueWitnessObservationV1):
         raise FrictionReceiptError("WITNESS_OBSERVATION_REQUIRED")
 
-    recipe = _ref(recipe_ref, "RECIPE_REF_REQUIRED")
+    recipe = _recipe_ref(recipe_ref)
     cap_refs = tuple(_capability_ref(value) for value in capability_refs)
+    cohort_clean = _privacy_minimal_cohort(cohort)
+    build_refs_clean = tuple(_ref(value, "BUILD_REF_INVALID") for value in build_refs)
     events: list[StageEvent] = [
         _binary_stage("DISCOVER", observation.opened,
                       blocked_code="WITNESS_NOT_OPENED",
@@ -400,8 +434,8 @@ def compile_first_value_receipt(
         })
 
     return build_friction_receipt(
-        decision, route_id=route_id, mission_head=mission_head, build_refs=build_refs,
-        cohort=cohort, starting_state=starting_state, stage_events=tuple(events),
+        decision, route_id=route_id, mission_head=mission_head, build_refs=build_refs_clean,
+        cohort=cohort_clean, starting_state=starting_state, stage_events=tuple(events),
         accepted_value=accepted_value, friction_vector=vector,
         weights={key: 1.0 for key in vector},
         weighting_method="UNWEIGHTED_UNTIL_OBSERVED_FRICTION_VALUES_EXIST",
@@ -417,6 +451,7 @@ def compile_first_value_receipt(
             "SAVE_REOPEN_ARTIFACT_CHAIN_MISMATCH",
             "STRUCTURAL_EVENT_ASSERTION_LAUNDERED_AS_AUTHENTICATED_CONSEQUENCE",
             "CONSEQUENCE_EVIDENCE_MISLABELED_AS_CAPABILITY",
+            "PRIVATE_CONTENT_LAUNDERED_AS_REFERENCE_OR_COHORT",
             "TRUST_POINTER_PRESENCE_LAUNDERED_AS_TRUST_COMPLETION",
             "WITNESS_CAUSALITY_CONTRADICTION",
         ),
