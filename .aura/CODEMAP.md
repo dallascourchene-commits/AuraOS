@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1658
-- **total_bytes**: 26418741
-- **text_tokens_est**: 6595075
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1661
+- **total_bytes**: 26437746
+- **text_tokens_est**: 6599827
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1658,
+  "repo_file_count": 1661,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1668,6 +1668,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/awj031e/README.md",
+    "tools/awj031e/c369_route_lifecycle_reference.py",
+    "tools/awj031e/test_c369_route_lifecycle_reference.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1798,15 +1801,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1658,
-  "bytes": 26418741,
-  "tokens_est": 6595075,
+  "files": 1661,
+  "bytes": 26437746,
+  "tokens_est": 6599827,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 242,
+    "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1008,
+    "python_module": 1010,
     "schema_or_lexicon": 274,
     "support_file": 49
   }
