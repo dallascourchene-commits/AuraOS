@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1657
-- **total_bytes**: 26544951
-- **text_tokens_est**: 6626662
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1014, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1658
+- **total_bytes**: 26546419
+- **text_tokens_est**: 6627029
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1014, 'schema_or_lexicon': 275, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1657,
+  "repo_file_count": 1658,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -194,6 +194,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/phase3-compass-bounded-projection-repair.yml",
     ".github/workflows/phase3-local-verification-bundle.yml",
     ".github/workflows/pr138-grounded-phase-integration.yml",
+    ".github/workflows/project006-higgsfield-media-source-tests.yml",
     ".github/workflows/project006-local-runtime-preflight.yml",
     ".github/workflows/project006-provider-handoff-integration.yml",
     ".github/workflows/publish-arena-connector.yml",
@@ -1797,16 +1798,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1657,
-  "bytes": 26544951,
-  "tokens_est": 6626662,
+  "files": 1658,
+  "bytes": 26546419,
+  "tokens_est": 6627029,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1014,
-    "schema_or_lexicon": 274,
+    "schema_or_lexicon": 275,
     "support_file": 49
   }
 }
