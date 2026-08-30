@@ -148,6 +148,10 @@ class RouterCurrentnessV1:
         ):
             object.__setattr__(self, name, _token(getattr(self, name), f"{name.upper()}_INVALID"))
 
+    @property
+    def digest(self) -> str:
+        return _digest("AURA_ADOPT_ROUTER_CURRENTNESS_V1", asdict(self))
+
 
 @dataclass(frozen=True)
 class CapabilityResidualV1:
@@ -198,6 +202,8 @@ class CandidateRouteEvidenceV1:
     source_generation: str
     model_currentness_ref: str
     context_window_tokens: int
+    evidence_ref: str
+    evidence_digest: str
     provider_ref: str = ""
     provider_currentness_ref: str = ""
     rate_currentness_ref: str = ""
@@ -232,6 +238,10 @@ class CandidateRouteEvidenceV1:
             _token(self.model_currentness_ref, "MODEL_CURRENTNESS_REF_INVALID"),
         )
         _nn_int(self.context_window_tokens, "CONTEXT_WINDOW_TOKENS_INVALID", allow_none=False)
+        object.__setattr__(self, "evidence_ref", _token(self.evidence_ref, "CANDIDATE_EVIDENCE_REF_INVALID"))
+        object.__setattr__(
+            self, "evidence_digest", _sha(self.evidence_digest, "CANDIDATE_EVIDENCE_DIGEST_INVALID")
+        )
         for name in (
             "provider_ref",
             "provider_currentness_ref",
@@ -282,6 +292,8 @@ class EscalationOptionV1:
     required_actions: tuple[str, ...]
     zero_effect_ready: bool
     download_bytes: int | None
+    candidate_evidence_ref: str
+    candidate_evidence_digest: str
     evidence_summary: tuple[str, ...]
 
     def logical(self) -> dict[str, Any]:
@@ -295,6 +307,10 @@ class EscalationOptionV1:
 class CapabilityEscalationDecisionV1:
     residual_id: str
     capability_ref: str
+    recipe_plan_digest: str
+    residual_source_generation: str
+    residual_source_currentness_ref: str
+    router_currentness_digest: str
     disposition: EscalationDisposition
     selected_route_id: str | None
     options: tuple[EscalationOptionV1, ...]
@@ -310,6 +326,7 @@ class CapabilityEscalationDecisionV1:
     payment_performed: bool = False
     effect_authorized: bool = False
     execution_proven: bool = False
+    catalog_evidence_authenticated: bool = False
 
 
 def _validate_plan(plan: Mapping[str, Any]) -> tuple[str, tuple[str, ...], str]:
@@ -328,6 +345,7 @@ def _validate_plan(plan: Mapping[str, Any]) -> tuple[str, tuple[str, ...], str]:
         "execution_proven",
         "publication_authorized",
         "payment_authorized",
+        "marketplace_listed",
     ):
         if plan.get(flag) is not False:
             raise RouterError("UPSTREAM_AUTHORITY_WIDENING", flag)
@@ -409,6 +427,8 @@ def _option(candidate: CandidateRouteEvidenceV1) -> EscalationOptionV1:
         required_actions=tuple(actions),
         zero_effect_ready=not actions,
         download_bytes=candidate.download_bytes,
+        candidate_evidence_ref=candidate.evidence_ref,
+        candidate_evidence_digest=candidate.evidence_digest,
         evidence_summary=tuple(evidence),
     )
 
@@ -422,6 +442,7 @@ def _decision(
     residual: CapabilityResidualV1,
     disposition: EscalationDisposition,
     *,
+    currentness: RouterCurrentnessV1,
     selected_route_id: str | None = None,
     options: Sequence[EscalationOptionV1] = (),
     blockers: Sequence[str] = (),
@@ -433,6 +454,10 @@ def _decision(
         "router_schema": ROUTER_SCHEMA,
         "residual_id": residual.residual_id,
         "capability_ref": residual.capability_ref,
+        "recipe_plan_digest": residual.recipe_plan_digest,
+        "residual_source_generation": residual.source_generation,
+        "residual_source_currentness_ref": residual.source_currentness_ref,
+        "router_currentness_digest": currentness.digest,
         "disposition": disposition.value,
         "selected_route_id": selected_route_id,
         "options": [option.logical() for option in opts],
@@ -445,11 +470,16 @@ def _decision(
         "payment_performed": False,
         "effect_authorized": False,
         "execution_proven": False,
+        "catalog_evidence_authenticated": False,
     }
     digest = _digest("AURA_ADOPT_CAPABILITY_ESCALATION_DECISION_V1", logical)
     return CapabilityEscalationDecisionV1(
         residual_id=residual.residual_id,
         capability_ref=residual.capability_ref,
+        recipe_plan_digest=residual.recipe_plan_digest,
+        residual_source_generation=residual.source_generation,
+        residual_source_currentness_ref=residual.source_currentness_ref,
+        router_currentness_digest=currentness.digest,
         disposition=disposition,
         selected_route_id=selected_route_id,
         options=opts,
@@ -494,6 +524,7 @@ def compile_capability_escalation(
         return _decision(
             residual,
             EscalationDisposition.UPSTREAM_BLOCKED,
+            currentness=currentness,
             blockers=tuple(f"UPSTREAM:{str(x)}" for x in upstream) or ("UPSTREAM_PLAN_NOT_READY",),
         )
 
@@ -501,11 +532,14 @@ def compile_capability_escalation(
         return _decision(
             residual,
             EscalationDisposition.EVIDENCE_REQUIRED,
+            currentness=currentness,
             blockers=("RESIDUAL_SOURCE_CURRENTNESS_STALE",),
         )
 
     if not residual.unresolved or residual.residual_kind is ResidualKind.NON_MODEL_RESIDUAL:
-        return _decision(residual, EscalationDisposition.NO_ESCALATION_REQUIRED)
+        return _decision(
+            residual, EscalationDisposition.NO_ESCALATION_REQUIRED, currentness=currentness
+        )
 
     eligible: list[EscalationOptionV1] = []
     rejected: list[str] = []
@@ -517,20 +551,30 @@ def compile_capability_escalation(
         eligible.append(_option(candidate))
 
     zero_effect = [option for option in eligible if option.zero_effect_ready]
-    if zero_effect:
-        selected = sorted(zero_effect, key=_option_sort_key)[0]
+    if len(zero_effect) == 1:
+        selected = zero_effect[0]
         return _decision(
             residual,
             EscalationDisposition.LOCAL_ROUTE_READY,
+            currentness=currentness,
             selected_route_id=selected.route_id,
             options=eligible,
             blockers=rejected,
+        )
+    if len(zero_effect) > 1:
+        return _decision(
+            residual,
+            EscalationDisposition.USER_CHOICE_REQUIRED,
+            currentness=currentness,
+            options=eligible,
+            blockers=tuple(rejected) + ("MULTIPLE_ZERO_EFFECT_ROUTES_NEED_POLICY_OR_USER_CHOICE",),
         )
 
     if eligible:
         return _decision(
             residual,
             EscalationDisposition.USER_CHOICE_REQUIRED,
+            currentness=currentness,
             options=eligible,
             blockers=rejected,
         )
@@ -538,5 +582,6 @@ def compile_capability_escalation(
     return _decision(
         residual,
         EscalationDisposition.EVIDENCE_REQUIRED,
+        currentness=currentness,
         blockers=rejected or ("NO_CURRENT_CAPABLE_ROUTE_EVIDENCE",),
     )
