@@ -1,12 +1,11 @@
 """Mission-owned completion evidence membrane for the Arena WorkGraph.
 
-This is a D0/reference composition layer. It does not interpret mission-specific
-acceptance semantics and it does not create a second scheduler or evidence owner.
-A production resolver must supply the owner policy/attestation from the mission
-evidence plane. The membrane proves exact structural binding and emits a terminal
-transition request for the canonical WorkGraph owner; it deliberately does NOT call
-raw WorkGraph COMPLETE because the current V1 owner conflates terminal completion
-with execution_state=VERIFIED_COMPLETE.
+D0/reference composition only. This module does not interpret mission-specific
+acceptance semantics and does not create a second scheduler/evidence owner.
+An external owner resolver must supply the mission policy and attestation. The
+membrane proves exact structural binding and emits a terminal transition request;
+it deliberately does NOT invoke raw WorkGraph COMPLETE because the current V1
+owner conflates terminal completion with execution_state=VERIFIED_COMPLETE.
 """
 from __future__ import annotations
 
@@ -70,7 +69,11 @@ def _strict_bool(value: object, code: str) -> bool:
 def _canonical(value: object) -> bytes:
     try:
         return json.dumps(
-            value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+            allow_nan=False,
         ).encode("utf-8")
     except (TypeError, ValueError) as exc:
         raise CompletionEvidenceError("NONCANONICAL_COMPLETION_EVIDENCE") from exc
@@ -103,7 +106,12 @@ class MissionCompletionPolicyBindingV1:
     policy_ref: str
     policy_generation: str
     policy_currentness_ref: str
+    project_id: str
     mission_ref: str
+    cell_id: str
+    workgraph_currentness_ref: str
+    candidate_ref: str
+    candidate_digest: str
     trusted_attestation_issuer_refs: tuple[str, ...]
     allows_not_required: bool = False
     requires_execution_verification: bool = False
@@ -112,8 +120,18 @@ class MissionCompletionPolicyBindingV1:
     def __post_init__(self) -> None:
         if self.schema != POLICY_SCHEMA:
             raise CompletionEvidenceError("COMPLETION_POLICY_SCHEMA_MISMATCH")
-        for field in ("policy_ref", "policy_generation", "policy_currentness_ref", "mission_ref"):
+        for field in (
+            "policy_ref",
+            "policy_generation",
+            "policy_currentness_ref",
+            "project_id",
+            "mission_ref",
+            "cell_id",
+            "workgraph_currentness_ref",
+            "candidate_ref",
+        ):
             object.__setattr__(self, field, _text(getattr(self, field), f"{field.upper()}_INVALID"))
+        object.__setattr__(self, "candidate_digest", _sha(self.candidate_digest, "POLICY_CANDIDATE_DIGEST_INVALID"))
         object.__setattr__(
             self,
             "trusted_attestation_issuer_refs",
@@ -161,9 +179,19 @@ class MissionCompletionAttestationV1:
         if self.schema != ATTESTATION_SCHEMA:
             raise CompletionEvidenceError("COMPLETION_ATTESTATION_SCHEMA_MISMATCH")
         for field in (
-            "issuer_ref", "issuer_generation", "policy_ref", "policy_generation",
-            "policy_currentness_ref", "project_id", "mission_ref", "cell_id", "claim_id",
-            "worker_id", "graph_digest", "currentness_ref", "candidate_ref",
+            "issuer_ref",
+            "issuer_generation",
+            "policy_ref",
+            "policy_generation",
+            "policy_currentness_ref",
+            "project_id",
+            "mission_ref",
+            "cell_id",
+            "claim_id",
+            "worker_id",
+            "graph_digest",
+            "currentness_ref",
+            "candidate_ref",
         ):
             object.__setattr__(self, field, _text(getattr(self, field), f"{field.upper()}_INVALID"))
         object.__setattr__(self, "candidate_digest", _sha(self.candidate_digest, "CANDIDATE_DIGEST_INVALID"))
@@ -197,7 +225,8 @@ def _exact_cell_and_claim(
     if cell.get("effective_state") != "CLAIMED":
         raise CompletionEvidenceError("COMPLETION_CELL_NOT_CLAIMED")
     claims = [
-        c for c in cell.get("active_claims", ())
+        c
+        for c in cell.get("active_claims", ())
         if c.get("worker_id") == worker_id and c.get("active", True) is True
     ]
     if len(claims) != 1:
@@ -228,16 +257,22 @@ def admit_mission_completion(
     submitted_outputs = _refs(output_refs, "COMPLETE_OUTPUT_REFS_REQUIRED")
     cell, claim = _exact_cell_and_claim(projection, cell_id=cell_id, worker_id=worker_id)
 
+    if policy.project_id != projection.get("project_id"):
+        raise CompletionEvidenceError("COMPLETION_POLICY_PROJECT_MISMATCH")
     if policy.mission_ref != projection.get("mission_ref"):
         raise CompletionEvidenceError("COMPLETION_POLICY_MISSION_MISMATCH")
+    if policy.cell_id != cell_id:
+        raise CompletionEvidenceError("COMPLETION_POLICY_CELL_MISMATCH")
+    if policy.workgraph_currentness_ref != projection.get("currentness_ref"):
+        raise CompletionEvidenceError("COMPLETION_POLICY_CURRENTNESS_STALE")
     if attestation.issuer_ref not in policy.trusted_attestation_issuer_refs:
         raise CompletionEvidenceError("COMPLETION_ATTESTATION_ISSUER_UNTRUSTED")
     for field in ("policy_ref", "policy_generation", "policy_currentness_ref"):
         if getattr(attestation, field) != getattr(policy, field):
             raise CompletionEvidenceError("COMPLETION_POLICY_BINDING_MISMATCH", field)
-    if attestation.project_id != projection.get("project_id"):
+    if attestation.project_id != policy.project_id:
         raise CompletionEvidenceError("COMPLETION_PROJECT_MISMATCH")
-    if attestation.mission_ref != projection.get("mission_ref"):
+    if attestation.mission_ref != policy.mission_ref:
         raise CompletionEvidenceError("COMPLETION_MISSION_MISMATCH")
     if attestation.cell_id != cell_id or attestation.worker_id != worker_id:
         raise CompletionEvidenceError("COMPLETION_SUBJECT_MISMATCH")
@@ -245,8 +280,12 @@ def admit_mission_completion(
         raise CompletionEvidenceError("COMPLETION_CLAIM_MISMATCH")
     if attestation.graph_digest != projection.get("graph_digest"):
         raise CompletionEvidenceError("COMPLETION_GRAPH_STALE")
-    if attestation.currentness_ref != projection.get("currentness_ref"):
+    if attestation.currentness_ref != policy.workgraph_currentness_ref:
         raise CompletionEvidenceError("COMPLETION_CURRENTNESS_STALE")
+    if attestation.candidate_ref != policy.candidate_ref:
+        raise CompletionEvidenceError("COMPLETION_CANDIDATE_REF_MISMATCH")
+    if attestation.candidate_digest != policy.candidate_digest:
+        raise CompletionEvidenceError("COMPLETION_CANDIDATE_DIGEST_MISMATCH")
     if attestation.acceptance_refs != submitted_acceptance:
         raise CompletionEvidenceError("COMPLETION_ACCEPTANCE_REFS_MISMATCH")
     if attestation.output_refs != submitted_outputs:
@@ -264,15 +303,15 @@ def admit_mission_completion(
         "schema": ADMISSION_SCHEMA,
         "policy_digest": policy.policy_digest,
         "attestation_digest": attestation.attestation_digest,
-        "project_id": attestation.project_id,
-        "mission_ref": attestation.mission_ref,
+        "project_id": policy.project_id,
+        "mission_ref": policy.mission_ref,
         "cell_id": cell_id,
         "claim_id": attestation.claim_id,
         "worker_id": worker_id,
         "graph_digest": attestation.graph_digest,
-        "currentness_ref": attestation.currentness_ref,
-        "candidate_ref": attestation.candidate_ref,
-        "candidate_digest": attestation.candidate_digest,
+        "currentness_ref": policy.workgraph_currentness_ref,
+        "candidate_ref": policy.candidate_ref,
+        "candidate_digest": policy.candidate_digest,
         "acceptance_refs": submitted_acceptance,
         "output_refs": submitted_outputs,
         "evidence_domain": EvidenceDomain.MISSION_COMPLETION.value,
@@ -310,8 +349,8 @@ def compile_terminal_completion_request(
 
     Current WorkGraph V1 raw COMPLETE still manufactures VERIFIED_COMPLETE from
     opaque refs. This module therefore stops before mutation. The canonical owner
-    must integrate this admission and independently repair execution verification
-    semantics before the request can be applied without bypass.
+    must integrate this admission and independently repair execution-verification
+    semantics before the request can become a non-bypassable production transition.
     """
     projection = project_workgraph(state, now_ms=now_ms)
     admission = admit_mission_completion(
@@ -326,11 +365,11 @@ def compile_terminal_completion_request(
     logical = {
         "schema": TRANSITION_REQUEST_SCHEMA,
         "action": "COMPLETE",
-        "basis_graph_digest": projection["graph_digest"],
-        "cell_id": cell_id,
-        "worker_id": worker_id,
-        "acceptance_refs": tuple(sorted(acceptance_refs)),
-        "output_refs": tuple(sorted(output_refs)),
+        "basis_graph_digest": admission["graph_digest"],
+        "cell_id": admission["cell_id"],
+        "worker_id": admission["worker_id"],
+        "acceptance_refs": admission["acceptance_refs"],
+        "output_refs": admission["output_refs"],
         "mission_completion_admission_digest": admission["admission_digest"],
         "mission_completion_attestation_digest": attestation.attestation_digest,
         "mission_completion_policy_ref": policy.policy_ref,
