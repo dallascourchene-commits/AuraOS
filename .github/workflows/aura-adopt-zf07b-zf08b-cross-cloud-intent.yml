@@ -1,0 +1,32 @@
+name: AURA ADOPT ZF-07B ZF-08B Cross-Cloud Intent
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/external_service_intent_bridge.py'
+      - 'tools/aura_adopt/test_external_service_intent_bridge.py'
+      - '.github/workflows/aura-adopt-zf07b-zf08b-cross-cloud-intent.yml'
+  push:
+    branches:
+      - 'aura-adopt-001/zf07b-zf08b-cross-cloud-intent-20260830'
+    paths:
+      - 'tools/aura_adopt/external_service_intent_bridge.py'
+      - 'tools/aura_adopt/test_external_service_intent_bridge.py'
+      - '.github/workflows/aura-adopt-zf07b-zf08b-cross-cloud-intent.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  cross-cloud-intent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile bridge
+        run: python -m py_compile tools/aura_adopt/external_service_intent_bridge.py tools/aura_adopt/test_external_service_intent_bridge.py
+      - name: Run focused bridge regressions
+        run: python -m unittest -v tools.aura_adopt.test_external_service_intent_bridge
