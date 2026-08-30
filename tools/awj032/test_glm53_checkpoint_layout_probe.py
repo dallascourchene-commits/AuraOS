@@ -25,6 +25,15 @@ def config():
     }
 
 
+def complete_per_expert_weight_map():
+    wm = {}
+    for e in range(256):
+        for p in ("gate_proj", "up_proj", "down_proj"):
+            wm[f"model.layers.3.mlp.experts.{e}.{p}.weight"] = "s1"
+    wm["model.layers.3.mlp.experts.0.gate_proj.weight_scale_inv"] = "s1"
+    return wm
+
+
 class GLM53CheckpointLayoutProbeTests(unittest.TestCase):
     def test_geometry_matches_flagship_shape_law(self):
         g = m.geometry_from_config(config())
@@ -56,12 +65,7 @@ class GLM53CheckpointLayoutProbeTests(unittest.TestCase):
         self.assertIn("PACKED_GATE_TENSOR_EXCEEDS_ASSIGNED_SHARD", r["reasons"])
 
     def test_complete_per_expert_layout_detected(self):
-        wm = {}
-        for e in range(256):
-            for p in ("gate_proj", "up_proj", "down_proj"):
-                wm[f"model.layers.3.mlp.experts.{e}.{p}.weight"] = "s1"
-        wm["model.layers.3.mlp.experts.0.gate_proj.weight_scale_inv"] = "s1"
-        r = m.classify_layer_layout(config(), wm, layer=3)
+        r = m.classify_layer_layout(config(), complete_per_expert_weight_map(), layer=3)
         self.assertEqual(r["layout"], "PER_EXPERT_PHYSICAL_LAYOUT")
         self.assertEqual(r["complete_per_expert_count"], 256)
 
@@ -83,12 +87,8 @@ class GLM53CheckpointLayoutProbeTests(unittest.TestCase):
         r = m.classify_layer_layout(config(), wm, layer=3)
         self.assertIn("FP8_SCALE_KEYS_UNRESOLVED", r["reasons"])
 
-    def test_mtp_extra_layer_is_explicit_blocker(self):
-        wm = {}
-        for e in range(256):
-            for p in ("gate_proj", "up_proj", "down_proj"):
-                wm[f"model.layers.3.mlp.experts.{e}.{p}.weight"] = "s1"
-        wm["model.layers.3.mlp.experts.0.gate_proj.weight_scale_inv"] = "s1"
+    def test_mtp_extra_layer_is_explicit_blocker_and_not_ready(self):
+        wm = complete_per_expert_weight_map()
         wm["model.layers.78.self_attn.q_a_proj.weight"] = "mtp"
         r = m.probe_checkpoint(
             config=config(),
@@ -101,7 +101,69 @@ class GLM53CheckpointLayoutProbeTests(unittest.TestCase):
         )
         self.assertTrue(r["mtp_index_present"])
         self.assertIn("GLM53_MTP_CHECKPOINT_CLASSIFICATION_REQUIRED", r["blockers"])
+        self.assertEqual(r["status"], "PARTIAL")
         self.assertFalse(r["g2_admitted"])
+
+    def test_chunked_vendor_layout_requires_mapping_before_ready(self):
+        wm = {
+            "model.layers.3.mlp.experts.vendor_chunk_0": "s1",
+            "model.layers.3.mlp.experts.vendor_chunk_0_scale": "s1",
+        }
+        r = m.probe_checkpoint(
+            config=config(),
+            weight_map=wm,
+            model_revision="modelrev",
+            config_sha256="c",
+            index_sha256="i",
+            airllm_revision="a",
+            security_hard_false_remote_code=True,
+        )
+        self.assertEqual(r["layer"]["layout"], "CHUNKED_OR_VENDOR_LAYOUT")
+        self.assertIn("GLM53_CHUNK_MAPPING_REQUIRED", r["blockers"])
+        self.assertEqual(r["status"], "PARTIAL")
+
+    def test_unexpected_extra_layer_requires_classification(self):
+        wm = complete_per_expert_weight_map()
+        wm["model.layers.79.self_attn.q_a_proj.weight"] = "unexpected"
+        r = m.probe_checkpoint(
+            config=config(),
+            weight_map=wm,
+            model_revision="modelrev",
+            config_sha256="c",
+            index_sha256="i",
+            airllm_revision="a",
+            security_hard_false_remote_code=True,
+        )
+        self.assertFalse(r["mtp_index_present"])
+        self.assertEqual(r["unexpected_extra_checkpoint_layer_indices"], [79])
+        self.assertIn("GLM53_UNEXPECTED_CHECKPOINT_LAYER_CLASSIFICATION_REQUIRED", r["blockers"])
+        self.assertEqual(r["status"], "PARTIAL")
+
+    def test_security_input_requires_actual_bool(self):
+        with self.assertRaises(m.ProbeError) as ctx:
+            m.probe_checkpoint(
+                config=config(),
+                weight_map={},
+                model_revision="m",
+                config_sha256="c",
+                index_sha256="i",
+                airllm_revision="a",
+                security_hard_false_remote_code="false",
+            )
+        self.assertEqual(ctx.exception.code, "SECURITY_HARD_FALSE_REMOTE_CODE_BOOL_REQUIRED")
+
+    def test_metadata_ready_has_no_required_blockers(self):
+        r = m.probe_checkpoint(
+            config=config(),
+            weight_map=complete_per_expert_weight_map(),
+            model_revision="modelrev",
+            config_sha256="c",
+            index_sha256="i",
+            airllm_revision="a",
+            security_hard_false_remote_code=True,
+        )
+        self.assertEqual(r["status"], "READY_FOR_HEADER_AND_TINY_FIXTURE")
+        self.assertEqual(r["blockers"], [])
 
     def test_security_block_has_priority(self):
         r = m.probe_checkpoint(
