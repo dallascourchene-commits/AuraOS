@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1673
-- **total_bytes**: 26556006
-- **text_tokens_est**: 6629397
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1020, 'schema_or_lexicon': 276, 'support_file': 49}
+- **file_count**: 1676
+- **total_bytes**: 26576955
+- **text_tokens_est**: 6634635
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1022, 'schema_or_lexicon': 277, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1673,
+  "repo_file_count": 1676,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -165,6 +165,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-spatial-s5-s6-construction.yml",
     ".github/workflows/awj032-glm53-01a-pager.yml",
     ".github/workflows/awj032-glm53-g1-probe.yml",
+    ".github/workflows/awj032-glm53-w4-cache-policy-decision.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1676,12 +1677,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/glm53_packed_expert_pager.py",
     "tools/awj032/glm53_pager_cache_telemetry.py",
     "tools/awj032/glm53_per_expert_index_pager.py",
+    "tools/awj032/glm53_w4_cache_policy_decision.py",
     "tools/awj032/glm53_w4_host_preflight.py",
     "tools/awj032/test_airllm_source_admission.py",
     "tools/awj032/test_glm53_compatibility_probe.py",
     "tools/awj032/test_glm53_packed_expert_pager.py",
     "tools/awj032/test_glm53_pager_cache_telemetry.py",
     "tools/awj032/test_glm53_per_expert_index_pager.py",
+    "tools/awj032/test_glm53_w4_cache_policy_decision.py",
     "tools/awj032/test_glm53_w4_host_preflight.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
@@ -1813,16 +1816,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1673,
-  "bytes": 26556006,
-  "tokens_est": 6629397,
+  "files": 1676,
+  "bytes": 26576955,
+  "tokens_est": 6634635,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1020,
-    "schema_or_lexicon": 276,
+    "python_module": 1022,
+    "schema_or_lexicon": 277,
     "support_file": 49
   }
 }

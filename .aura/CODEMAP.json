@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788128268,
+  "generated_at_unix": 1788130293,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1673,
+    "repo_file_count": 1676,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -147,6 +147,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
+      ".github/workflows/awj032-glm53-w4-cache-policy-decision.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1658,12 +1659,14 @@
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
+      "tools/awj032/glm53_w4_cache_policy_decision.py",
       "tools/awj032/glm53_w4_host_preflight.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
+      "tools/awj032/test_glm53_w4_cache_policy_decision.py",
       "tools/awj032/test_glm53_w4_host_preflight.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -1789,16 +1792,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1673,
-      "bytes": 26556006,
-      "tokens_est": 6629397,
+      "files": 1676,
+      "bytes": 26576955,
+      "tokens_est": 6634635,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1020,
-        "schema_or_lexicon": 276,
+        "python_module": 1022,
+        "schema_or_lexicon": 277,
         "support_file": 49
       }
     },
@@ -14753,6 +14756,14 @@
         "signature_hash": "a4ea29b9a7789fe0"
       },
       {
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 36,
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:_text:5a9827d797747f25",
+        "signature_hash": "7c66637900aa94dc"
+      },
+      {
         "file": "tools/awj032/glm53_w4_host_preflight.py",
         "kind": "function",
         "line": 31,
@@ -18621,6 +18632,14 @@
         "end_line": 31,
         "semantic_id": "aura_model_cognome_replay.py#function:_nonnegative:71b0ef67894c1097",
         "signature_hash": "e665849be5cbd205"
+      },
+      {
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:_nonnegative:188ca4e816c4d008",
+        "signature_hash": "a4d858eb5ed0764b"
       }
     ],
     "_optional_nonnegative": [
@@ -27295,6 +27314,14 @@
         "end_line": 327,
         "semantic_id": "aura_st3gg_contracts.py#function:_ratio:260062431e85bf37",
         "signature_hash": "87bbd30c6a8d8629"
+      },
+      {
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 64,
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:_ratio:cfac3d4a4dac65c2",
+        "signature_hash": "53df567dfad0475e"
       }
     ],
     "CodeMapFileHandler": [
@@ -159043,6 +159070,94 @@
         "signature_hash": "2ed156b615b1bfef"
       }
     ],
+    "W4CachePolicyDecisionError": [
+      {
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 30,
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#class:W4CachePolicyDecisionError:432c7c99b100bef0",
+        "signature_hash": "4f431e5206b93cb1"
+      }
+    ],
+    "W4CachePolicyDecisionError.__init__": [
+      {
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionError.__init__:036a4b33bd14aa09",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_exact_bool": [
+      {
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 42,
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:_exact_bool:3d31a210da705a21",
+        "signature_hash": "06408067987839c6"
+      }
+    ],
+    "_bytes": [
+      {
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 57,
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:_bytes:7d7fc129ee794368",
+        "signature_hash": "9328f302d8039b2a"
+      },
+      {
+        "file": "tools/awj032/glm53_w4_host_preflight.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 40,
+        "semantic_id": "tools/awj032/glm53_w4_host_preflight.py#function:_bytes:59a1224458e2e8e6",
+        "signature_hash": "874de5ecae637e48"
+      }
+    ],
+    "W4CachePolicyObservation": [
+      {
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "kind": "class",
+        "line": 68,
+        "end_line": 85,
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#class:W4CachePolicyObservation:3b204954ee91adf1",
+        "signature_hash": "ec3d8349070d4420"
+      }
+    ],
+    "W4CachePolicyDecisionReceipt": [
+      {
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "kind": "class",
+        "line": 89,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#class:W4CachePolicyDecisionReceipt:5bacd3c386983856",
+        "signature_hash": "293e3e944d738083"
+      }
+    ],
+    "_validate_observation": [
+      {
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "kind": "function",
+        "line": 132,
+        "end_line": 171,
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:_validate_observation:4547b3735e5fe2cb",
+        "signature_hash": "49f5e97f4649977c"
+      }
+    ],
+    "compare_cache_policy_to_baseline": [
+      {
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "kind": "function",
+        "line": 174,
+        "end_line": 227,
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:compare_cache_policy_to_baseline:a7845bf08b37c24c",
+        "signature_hash": "138708b5396ff0d4"
+      }
+    ],
     "W4PreflightError": [
       {
         "file": "tools/awj032/glm53_w4_host_preflight.py",
@@ -159061,16 +159176,6 @@
         "end_line": 28,
         "semantic_id": "tools/awj032/glm53_w4_host_preflight.py#method:W4PreflightError.__init__:850088220dd6b8e3",
         "signature_hash": "0b6534a3148e5c5d"
-      }
-    ],
-    "_bytes": [
-      {
-        "file": "tools/awj032/glm53_w4_host_preflight.py",
-        "kind": "function",
-        "line": 37,
-        "end_line": 40,
-        "semantic_id": "tools/awj032/glm53_w4_host_preflight.py#function:_bytes:59a1224458e2e8e6",
-        "signature_hash": "874de5ecae637e48"
       }
     ],
     "_seconds": [
@@ -160091,6 +160196,176 @@
         "end_line": 196,
         "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_gate_up_fusion_order_matches_runtime_contract:57d224d8b17cdab7",
         "signature_hash": "367b939ef8a336f6"
+      }
+    ],
+    "W4CachePolicyDecisionTests": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 175,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#class:W4CachePolicyDecisionTests:e3cc43f15e9310f4",
+        "signature_hash": "39cbe695942cc51b"
+      }
+    ],
+    "W4CachePolicyDecisionTests.preflight": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.preflight:b6d879dc6a328849",
+        "signature_hash": "7232d278b11c3295"
+      }
+    ],
+    "W4CachePolicyDecisionTests.obs": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.obs:99e2764d424db305",
+        "signature_hash": "c999ce613ac2ac90"
+      }
+    ],
+    "W4CachePolicyDecisionTests.assert_code": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.assert_code:cd68e62dc6660de8",
+        "signature_hash": "5c6083ad15be2405"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_candidate_must_pareto_dominate_before_replacing_baseline": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 82,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_candidate_must_pareto_dominate_before_replacing_baseline:ca1ee839c13c470a",
+        "signature_hash": "aad04c67bf30a66e"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_k27_higher_hit_rate_does_not_override_lifecycle_tradeoff": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 98,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_k27_higher_hit_rate_does_not_override_lifecycle_tradeoff:776d59d92807dee1",
+        "signature_hash": "30d64f9b1595ad2f"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_higher_hit_ratio_cannot_save_pareto_regression": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 110,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_higher_hit_ratio_cannot_save_pareto_regression:aae143c816aef23e",
+        "signature_hash": "5fc82742e11e6313"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_source_or_workload_substitution_fails": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 116,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_source_or_workload_substitution_fails:b2e04cc9f9f6a699",
+        "signature_hash": "9e38e0ff5d6d2c7f"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_measurement_campaign_substitution_fails": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 122,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_measurement_campaign_substitution_fails:ec7ebc832b6e58b7",
+        "signature_hash": "0cf84be6e59a31ab"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_unattested_lifecycle_metrics_fail": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 128,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_unattested_lifecycle_metrics_fail:222d0e99d22d0ec4",
+        "signature_hash": "59247568455cdd81"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_prefetch_bytes_cannot_receive_cache_policy_credit": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 135,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_prefetch_bytes_cannot_receive_cache_policy_credit:823fe2f45e13cc63",
+        "signature_hash": "7c410509627f5a39"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_latency_overlap_cannot_receive_cache_policy_credit": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 141,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_latency_overlap_cannot_receive_cache_policy_credit:871381b9e9a26827",
+        "signature_hash": "a733b9f8135058b5"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_stale_measurement_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 147,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_stale_measurement_fails_closed:e470ce76b769b0ac",
+        "signature_hash": "bd0ce884c61d9a52"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_truthy_integer_cannot_impersonate_currentness_boolean": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 153,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_truthy_integer_cannot_impersonate_currentness_boolean:052e4faa9090610a",
+        "signature_hash": "b690558e3139fcc7"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_truthy_integer_cannot_impersonate_lifecycle_attestation": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 159,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_truthy_integer_cannot_impersonate_lifecycle_attestation:e0aa59e663a55a1b",
+        "signature_hash": "a42121385bb42ad5"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_unattested_w4_receipt_fails": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 166,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_unattested_w4_receipt_fails:5b500182ae18970e",
+        "signature_hash": "b702a85b506d9d41"
+      }
+    ],
+    "W4CachePolicyDecisionTests.test_equal_candidate_retains_baseline_without_false_improvement": [
+      {
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 175,
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_equal_candidate_retains_baseline_without_false_improvement:18976124897d3905",
+        "signature_hash": "1adb90a8f7b57f87"
       }
     ],
     "_cache_receipt": [
@@ -161301,6 +161576,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
+      ".github/workflows/awj032-glm53-w4-cache-policy-decision.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -161611,6 +161887,7 @@
     ],
     "python -m unittest": [
       ".github/workflows/awj032-glm53-01a-pager.yml",
+      ".github/workflows/awj032-glm53-w4-cache-policy-decision.yml",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
       "tools/awj032/README.md"
     ],
@@ -171394,6 +171671,64 @@
         0.075468,
         0.236997,
         0.088708
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-w4-cache-policy-decision.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2295,
+      "lines": 59,
+      "tokens_est": 574,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          44
+        ],
+        "python -m unittest": [
+          53,
+          58
+        ]
+      },
+      "topology": {},
+      "digest8": "4080f1d71fd5d741",
+      "vector": [
+        0.073957,
+        -0.040467,
+        -0.199545,
+        -0.14931,
+        -0.01535,
+        -0.31676,
+        -0.071166,
+        -0.277688,
+        -0.174427,
+        0.032095,
+        0.110238,
+        0.277688,
+        -0.297224,
+        0.090702,
+        -0.177218,
+        -0.302806,
+        0.054421,
+        0.107447,
+        0.269316,
+        -0.071166,
+        0.046049,
+        -0.129774,
+        0.020931,
+        -0.191172,
+        -0.255362,
+        0.124192,
+        0.121401,
+        -0.224662,
+        -0.252571,
+        -0.174427,
+        -0.073957,
+        -0.118611
       ]
     },
     {
@@ -266979,6 +267314,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_w4_cache_policy_decision.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9648,
+      "lines": 228,
+      "tokens_est": 2412,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "411f133f2e6e2c37",
+      "vector": [
+        -0.281416,
+        0.018433,
+        0.207683,
+        0.264212,
+        -0.195394,
+        -0.217514,
+        0.153611,
+        -0.018433,
+        0.025807,
+        0.126576,
+        0.106913,
+        -0.308452,
+        0.195394,
+        0.070047,
+        0.1659,
+        -0.2765,
+        -0.124118,
+        -0.01106,
+        0.313367,
+        0.015976,
+        0.178189,
+        -0.291247,
+        -0.074962,
+        -0.020891,
+        -0.163442,
+        0.072505,
+        0.291247,
+        -0.03318,
+        0.158527,
+        -0.038096,
+        -0.215056,
+        -0.020891
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_w4_host_preflight.py",
       "role": "python_module",
       "binary": false,
@@ -267258,6 +267640,53 @@
         -0.003564,
         -0.267318,
         -0.253061
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9006,
+      "lines": 180,
+      "tokens_est": 2252,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "80abcf2753e3e823",
+      "vector": [
+        0.050897,
+        0.238649,
+        0.071255,
+        -0.200193,
+        0.062207,
+        -0.139117,
+        -0.026014,
+        -0.039586,
+        -0.216028,
+        -0.100662,
+        0.186621,
+        0.240911,
+        -0.14138,
+        0.154952,
+        -0.20698,
+        -0.240911,
+        0.227338,
+        -0.046372,
+        -0.263531,
+        0.014703,
+        -0.048635,
+        -0.236387,
+        0.263531,
+        0.173049,
+        -0.225076,
+        0.037324,
+        0.182097,
+        0.249959,
+        0.256745,
+        0.231862,
+        0.064469,
+        -0.150428
       ]
     },
     {
@@ -291306,16 +291735,16 @@
     }
   },
   "summary": {
-    "file_count": 1673,
-    "total_bytes": 26556006,
-    "text_tokens_est": 6629397,
+    "file_count": 1676,
+    "total_bytes": 26576955,
+    "text_tokens_est": 6634635,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1020,
-      "schema_or_lexicon": 276,
+      "python_module": 1022,
+      "schema_or_lexicon": 277,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -291472,6 +291901,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
+      ".github/workflows/awj032-glm53-w4-cache-policy-decision.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -292983,12 +293413,14 @@
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
+      "tools/awj032/glm53_w4_cache_policy_decision.py",
       "tools/awj032/glm53_w4_host_preflight.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
+      "tools/awj032/test_glm53_w4_cache_policy_decision.py",
       "tools/awj032/test_glm53_w4_host_preflight.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -452178,6 +452610,116 @@
         "file_digest8": "d0a2de3800965bca"
       },
       {
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#class:W4CachePolicyDecisionError:432c7c99b100bef0",
+        "name": "W4CachePolicyDecisionError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "line": 26,
+        "end_line": 30,
+        "signature_hash": "4f431e5206b93cb1",
+        "file_digest8": "411f133f2e6e2c37"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#class:W4CachePolicyDecisionReceipt:5bacd3c386983856",
+        "name": "W4CachePolicyDecisionReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "line": 89,
+        "end_line": 117,
+        "signature_hash": "293e3e944d738083",
+        "file_digest8": "411f133f2e6e2c37"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#class:W4CachePolicyObservation:3b204954ee91adf1",
+        "name": "W4CachePolicyObservation",
+        "kind": "class",
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "line": 68,
+        "end_line": 85,
+        "signature_hash": "ec3d8349070d4420",
+        "file_digest8": "411f133f2e6e2c37"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:_bytes:7d7fc129ee794368",
+        "name": "_bytes",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "line": 54,
+        "end_line": 57,
+        "signature_hash": "9328f302d8039b2a",
+        "file_digest8": "411f133f2e6e2c37"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:_exact_bool:3d31a210da705a21",
+        "name": "_exact_bool",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "line": 39,
+        "end_line": 42,
+        "signature_hash": "06408067987839c6",
+        "file_digest8": "411f133f2e6e2c37"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:_nonnegative:188ca4e816c4d008",
+        "name": "_nonnegative",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "line": 45,
+        "end_line": 51,
+        "signature_hash": "a4d858eb5ed0764b",
+        "file_digest8": "411f133f2e6e2c37"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:_ratio:cfac3d4a4dac65c2",
+        "name": "_ratio",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "line": 60,
+        "end_line": 64,
+        "signature_hash": "53df567dfad0475e",
+        "file_digest8": "411f133f2e6e2c37"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:_text:5a9827d797747f25",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "line": 33,
+        "end_line": 36,
+        "signature_hash": "7c66637900aa94dc",
+        "file_digest8": "411f133f2e6e2c37"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:_validate_observation:4547b3735e5fe2cb",
+        "name": "_validate_observation",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "line": 132,
+        "end_line": 171,
+        "signature_hash": "49f5e97f4649977c",
+        "file_digest8": "411f133f2e6e2c37"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#function:compare_cache_policy_to_baseline:a7845bf08b37c24c",
+        "name": "compare_cache_policy_to_baseline",
+        "kind": "function",
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "line": 174,
+        "end_line": 227,
+        "signature_hash": "138708b5396ff0d4",
+        "file_digest8": "411f133f2e6e2c37"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionError.__init__:036a4b33bd14aa09",
+        "name": "W4CachePolicyDecisionError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_w4_cache_policy_decision.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "411f133f2e6e2c37"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_w4_host_preflight.py#class:W4CounterSnapshot:8d4431642a903001",
         "name": "W4CounterSnapshot",
         "kind": "class",
@@ -453236,6 +453778,176 @@
         "end_line": 43,
         "signature_hash": "b5e86620f84079e9",
         "file_digest8": "e9bb5b42a937bc9d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#class:W4CachePolicyDecisionTests:e3cc43f15e9310f4",
+        "name": "W4CachePolicyDecisionTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 12,
+        "end_line": 175,
+        "signature_hash": "39cbe695942cc51b",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.assert_code:cd68e62dc6660de8",
+        "name": "W4CachePolicyDecisionTests.assert_code",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 60,
+        "end_line": 63,
+        "signature_hash": "5c6083ad15be2405",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.obs:99e2764d424db305",
+        "name": "W4CachePolicyDecisionTests.obs",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 36,
+        "end_line": 58,
+        "signature_hash": "c999ce613ac2ac90",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.preflight:b6d879dc6a328849",
+        "name": "W4CachePolicyDecisionTests.preflight",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 13,
+        "end_line": 34,
+        "signature_hash": "7232d278b11c3295",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_candidate_must_pareto_dominate_before_replacing_baseline:ca1ee839c13c470a",
+        "name": "W4CachePolicyDecisionTests.test_candidate_must_pareto_dominate_before_replacing_baseline",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 65,
+        "end_line": 82,
+        "signature_hash": "aad04c67bf30a66e",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_equal_candidate_retains_baseline_without_false_improvement:18976124897d3905",
+        "name": "W4CachePolicyDecisionTests.test_equal_candidate_retains_baseline_without_false_improvement",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 168,
+        "end_line": 175,
+        "signature_hash": "1adb90a8f7b57f87",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_higher_hit_ratio_cannot_save_pareto_regression:aae143c816aef23e",
+        "name": "W4CachePolicyDecisionTests.test_higher_hit_ratio_cannot_save_pareto_regression",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 100,
+        "end_line": 110,
+        "signature_hash": "5fc82742e11e6313",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_k27_higher_hit_rate_does_not_override_lifecycle_tradeoff:776d59d92807dee1",
+        "name": "W4CachePolicyDecisionTests.test_k27_higher_hit_rate_does_not_override_lifecycle_tradeoff",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 84,
+        "end_line": 98,
+        "signature_hash": "30d64f9b1595ad2f",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_latency_overlap_cannot_receive_cache_policy_credit:871381b9e9a26827",
+        "name": "W4CachePolicyDecisionTests.test_latency_overlap_cannot_receive_cache_policy_credit",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 137,
+        "end_line": 141,
+        "signature_hash": "a733b9f8135058b5",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_measurement_campaign_substitution_fails:ec7ebc832b6e58b7",
+        "name": "W4CachePolicyDecisionTests.test_measurement_campaign_substitution_fails",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 118,
+        "end_line": 122,
+        "signature_hash": "0cf84be6e59a31ab",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_prefetch_bytes_cannot_receive_cache_policy_credit:823fe2f45e13cc63",
+        "name": "W4CachePolicyDecisionTests.test_prefetch_bytes_cannot_receive_cache_policy_credit",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 130,
+        "end_line": 135,
+        "signature_hash": "7c410509627f5a39",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_source_or_workload_substitution_fails:b2e04cc9f9f6a699",
+        "name": "W4CachePolicyDecisionTests.test_source_or_workload_substitution_fails",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 112,
+        "end_line": 116,
+        "signature_hash": "9e38e0ff5d6d2c7f",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_stale_measurement_fails_closed:e470ce76b769b0ac",
+        "name": "W4CachePolicyDecisionTests.test_stale_measurement_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 143,
+        "end_line": 147,
+        "signature_hash": "bd0ce884c61d9a52",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_truthy_integer_cannot_impersonate_currentness_boolean:052e4faa9090610a",
+        "name": "W4CachePolicyDecisionTests.test_truthy_integer_cannot_impersonate_currentness_boolean",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 149,
+        "end_line": 153,
+        "signature_hash": "b690558e3139fcc7",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_truthy_integer_cannot_impersonate_lifecycle_attestation:e0aa59e663a55a1b",
+        "name": "W4CachePolicyDecisionTests.test_truthy_integer_cannot_impersonate_lifecycle_attestation",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 155,
+        "end_line": 159,
+        "signature_hash": "a42121385bb42ad5",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_unattested_lifecycle_metrics_fail:222d0e99d22d0ec4",
+        "name": "W4CachePolicyDecisionTests.test_unattested_lifecycle_metrics_fail",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 124,
+        "end_line": 128,
+        "signature_hash": "59247568455cdd81",
+        "file_digest8": "80abcf2753e3e823"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_w4_cache_policy_decision.py#method:W4CachePolicyDecisionTests.test_unattested_w4_receipt_fails:5b500182ae18970e",
+        "name": "W4CachePolicyDecisionTests.test_unattested_w4_receipt_fails",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_w4_cache_policy_decision.py",
+        "line": 161,
+        "end_line": 166,
+        "signature_hash": "b702a85b506d9d41",
+        "file_digest8": "80abcf2753e3e823"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_w4_host_preflight.py#class:W4HostPreflightTests:68fe6917decdd9a1",
@@ -454578,7 +455290,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1ded9ab53c937484735916f3152d0807",
-    "payload_hash": "ecd9934eee01354f971789657f3f9a33"
+    "record_fingerprint": "9643a8477f886368b34b78c000d583a9",
+    "payload_hash": "1c469a2474e265129d443340e02363ef"
   }
 }
