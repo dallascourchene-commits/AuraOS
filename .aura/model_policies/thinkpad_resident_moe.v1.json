@@ -1,6 +1,7 @@
 {
   "schema_version": "AURA_THINKPAD_RESIDENT_MOE_POLICY_V1",
   "status": "STAGED_NONPROMOTING",
+  "cost_policy_ref": ".aura/provider_policies/cost_first_cognitive_allocation.v1.json",
   "host_reference": {
     "cpu": "13th Gen Intel Core i5-1335U",
     "ram_gib": 15.68,
@@ -10,8 +11,12 @@
     "source": "HANDOFF__COORDINATE-MEMORY-PRIMARY-CONVERGENCE__2026-08-21"
   },
   "laws": [
+    "REUSE_CURRENT_COORDINATED_COGNITION_BEFORE_RECOMPUTE",
     "RESIDENT_CONTROL_PLANE_DOES_NOT_REQUIRE_A_MODEL",
     "DETERMINISTIC_FIRST",
+    "DEEPSEEK_DEFAULT_PAID_REMOTE_SWARM_PROVIDER",
+    "NO_IMPLICIT_PAID_PROVIDER_FALLBACK",
+    "EVERY_PAID_INFERENCE_MUST_AMORTIZE_TO_COORDINATED_COGNITION",
     "SEMANTIC_SCOPE_FIRST_PHYSICAL_SHARD_SECOND",
     "K27_IS_27_TRITS_NOT_27_BINARY_BITS",
     "K27_IS_NOT_MODEL_EXPERT_ID",
@@ -67,6 +72,10 @@
     },
     "T4_REMOTE_OR_SWARM": {
       "default": "BLOCKED_UNLESS_CURRENT_POLICY_AUTHORIZES",
+      "default_paid_provider_when_authorized": "deepseek",
+      "no_implicit_paid_fallback": true,
+      "expensive_provider_requires_explicit_owner_spend_authorization": true,
+      "paid_inference_requires_coordinate_memory_amortization": true,
       "preferred_shapes": [0, 1, 3, 9],
       "twenty_seven_calls_only_when": ["PREREGISTERED_MATCHED_BENCHMARK", "INDEPENDENT_FRONTIER_EARNS_27"],
       "same_model_same_context_is_not_independent": true
@@ -94,6 +103,6 @@
     "G10_READY_FOR_OWNER_PROMOTION_NO_AUTO_PROMOTION"
   ],
   "morning_successor_frame": [
-    "changed", "tests", "model_usage", "resource_usage", "gate10_ready", "blocked", "falsifiers", "unresolved_residuals", "source_reopen", "receipts"
+    "changed", "tests", "model_usage", "provider_cost_evidence", "amortized_cognition_refs", "resource_usage", "gate10_ready", "blocked", "falsifiers", "unresolved_residuals", "source_reopen", "receipts"
   ]
 }
