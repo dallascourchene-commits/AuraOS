@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788115686,
+  "generated_at_unix": 1788115809,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1765,8 +1765,8 @@
     {
       "ring": "repo",
       "files": 1648,
-      "bytes": 26509650,
-      "tokens_est": 6617768,
+      "bytes": 26513634,
+      "tokens_est": 6618764,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
@@ -3928,6 +3928,14 @@
         "end_line": 65,
         "semantic_id": "tools/aura_adopt/external_service_intent_bridge.py#function:_canonical:1ce23c54999ecef3",
         "signature_hash": "8e43409cca322220"
+      },
+      {
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 38,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:_canonical:b3d41a240e0de207",
+        "signature_hash": "a8714679390e5369"
       }
     ],
     "_digest": [
@@ -158428,22 +158436,62 @@
         "signature_hash": "bc668418b79c4126"
       }
     ],
+    "seal_storage": [
+      {
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 46,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:seal_storage:0df6d055c0dbc82b",
+        "signature_hash": "2cf26f3306713e9b"
+      }
+    ],
+    "seal_model": [
+      {
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 56,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:seal_model:b803a7a7239be91e",
+        "signature_hash": "0a5146b59688635d"
+      }
+    ],
     "storage": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "function",
-        "line": 32,
-        "end_line": 56,
+        "line": 59,
+        "end_line": 95,
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:storage:ab12510784979761",
         "signature_hash": "a605e5a8fc399810"
+      }
+    ],
+    "_local_option": [
+      {
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 111,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:_local_option:8833c0019a824f45",
+        "signature_hash": "1ee95ce5f6d9a206"
+      }
+    ],
+    "_choice_option": [
+      {
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 128,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:_choice_option:a1c053887f53dc42",
+        "signature_hash": "ca1c667ef92b2096"
       }
     ],
     "model": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "function",
-        "line": 59,
-        "end_line": 79,
+        "line": 131,
+        "end_line": 166,
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:model:291596055c564b63",
         "signature_hash": "46a3bbd8c4859258"
       }
@@ -158452,8 +158500,8 @@
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "class",
-        "line": 82,
-        "end_line": 362,
+        "line": 169,
+        "end_line": 441,
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#class:CrossCloudIntentTests:79cd173f7cb6c6d2",
         "signature_hash": "dfb07bae1eaf5657"
       }
@@ -158462,58 +158510,68 @@
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 83,
-        "end_line": 87,
+        "line": 170,
+        "end_line": 176,
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_local_local_has_no_external_actions:fe7fe0623eacaa3d",
         "signature_hash": "df7fd27cd9d18c6b"
       }
     ],
-    "CrossCloudIntentTests.test_cloud_storage_only_is_one_separate_scope": [
+    "CrossCloudIntentTests.test_cloud_storage_stops_at_owner_currentness_gate": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 89,
-        "end_line": 93,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_cloud_storage_only_is_one_separate_scope:e3b7667e4e33a873",
-        "signature_hash": "8c49d76cad0c319b"
+        "line": 178,
+        "end_line": 185,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_cloud_storage_stops_at_owner_currentness_gate:263a366953c4c9ce",
+        "signature_hash": "b843efdfe2069789"
       }
     ],
-    "CrossCloudIntentTests.test_remote_model_only_is_one_separate_scope": [
+    "CrossCloudIntentTests.test_remote_model_choice_stays_route_bound_and_nonpresentable": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 95,
-        "end_line": 105,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_remote_model_only_is_one_separate_scope:04c9635edcd5864d",
-        "signature_hash": "26a729e9849ec8a3"
+        "line": 187,
+        "end_line": 198,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_remote_model_choice_stays_route_bound_and_nonpresentable:fa0a68d1066fcb08",
+        "signature_hash": "8ad1398bf281adc2"
       }
     ],
-    "CrossCloudIntentTests.test_cloud_and_remote_model_stay_two_scopes": [
+    "CrossCloudIntentTests.test_cloud_and_remote_model_stay_two_candidate_scopes": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 107,
-        "end_line": 121,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_cloud_and_remote_model_stay_two_scopes:c6adaaa868cf743c",
-        "signature_hash": "6489ee47824bf25b"
+        "line": 200,
+        "end_line": 215,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_cloud_and_remote_model_stay_two_candidate_scopes:509557bb00157b5d",
+        "signature_hash": "bca06480baf15c43"
       }
     ],
     "CrossCloudIntentTests.test_storage_link_does_not_satisfy_model_account": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 123,
-        "end_line": 134,
+        "line": 217,
+        "end_line": 229,
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_storage_link_does_not_satisfy_model_account:a8730a343e6fe85a",
         "signature_hash": "984a7f572c947e48"
+      }
+    ],
+    "CrossCloudIntentTests.test_scope_evidence_is_explicitly_unverified_and_never_clears_gate": [
+      {
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "kind": "method",
+        "line": 231,
+        "end_line": 240,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_scope_evidence_is_explicitly_unverified_and_never_clears_gate:c178838f68eb98c5",
+        "signature_hash": "a26335bc7c1202e4"
       }
     ],
     "CrossCloudIntentTests.test_same_evidence_ref_cannot_cross_scopes": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 136,
-        "end_line": 140,
+        "line": 242,
+        "end_line": 246,
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_same_evidence_ref_cannot_cross_scopes:379f44799236f927",
         "signature_hash": "893e6b67b4da5a55"
       }
@@ -158522,78 +158580,108 @@
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 142,
-        "end_line": 146,
+        "line": 248,
+        "end_line": 252,
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_same_evidence_digest_cannot_cross_scopes:e8c7d86deaa02b75",
         "signature_hash": "d395a31895132fd9"
       }
     ],
-    "CrossCloudIntentTests.test_upstream_storage_authority_widening_rejected": [
+    "CrossCloudIntentTests.test_tampered_storage_payload_rejected_by_canonical_digest": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 148,
-        "end_line": 152,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_upstream_storage_authority_widening_rejected:1b8ef97053054337",
-        "signature_hash": "e31002467538c0a3"
+        "line": 254,
+        "end_line": 258,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_tampered_storage_payload_rejected_by_canonical_digest:5efc85d1deb58e26",
+        "signature_hash": "5ec34db965b82790"
       }
     ],
-    "CrossCloudIntentTests.test_upstream_model_effect_widening_rejected": [
+    "CrossCloudIntentTests.test_tampered_model_payload_rejected_by_canonical_digest": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 154,
-        "end_line": 158,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_upstream_model_effect_widening_rejected:48e832b6acf8944d",
-        "signature_hash": "85d49aac4b77ff7b"
+        "line": 260,
+        "end_line": 264,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_tampered_model_payload_rejected_by_canonical_digest:834a762bd7945c4a",
+        "signature_hash": "095e54c1da3c660d"
       }
     ],
-    "CrossCloudIntentTests.test_storage_action_without_cloud_is_rejected": [
+    "CrossCloudIntentTests.test_upstream_storage_authority_widening_rejected_after_valid_identity": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 160,
-        "end_line": 164,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_storage_action_without_cloud_is_rejected:4c7f26c7d705276e",
-        "signature_hash": "82e0af3eec091b50"
+        "line": 266,
+        "end_line": 271,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_upstream_storage_authority_widening_rejected_after_valid_identity:e40ff271cd473f3d",
+        "signature_hash": "576fa7f37c8a8aa9"
+      }
+    ],
+    "CrossCloudIntentTests.test_upstream_model_effect_widening_rejected_after_valid_identity": [
+      {
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "kind": "method",
+        "line": 273,
+        "end_line": 278,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_upstream_model_effect_widening_rejected_after_valid_identity:b207e6aa42f87e73",
+        "signature_hash": "5354625b4864517d"
+      }
+    ],
+    "CrossCloudIntentTests.test_storage_action_without_cloud_is_rejected_after_valid_identity": [
+      {
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "kind": "method",
+        "line": 280,
+        "end_line": 285,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_storage_action_without_cloud_is_rejected_after_valid_identity:3ff18dd5a2fc4f6a",
+        "signature_hash": "0bed409d4c7606ca"
+      }
+    ],
+    "CrossCloudIntentTests.test_storage_authority_gate_requires_an_action": [
+      {
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "kind": "method",
+        "line": 287,
+        "end_line": 293,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_storage_authority_gate_requires_an_action:a3d6b7315865356a",
+        "signature_hash": "dfca3212f9fe1018"
       }
     ],
     "CrossCloudIntentTests.test_model_action_without_escalation_is_rejected": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 166,
-        "end_line": 174,
+        "line": 295,
+        "end_line": 301,
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_model_action_without_escalation_is_rejected:52b9d03365e91edb",
         "signature_hash": "140cb3bf296878a2"
       }
     ],
-    "CrossCloudIntentTests.test_storage_evidence_required_suppresses_future_actions": [
+    "CrossCloudIntentTests.test_storage_evidence_required_suppresses_candidate_actions": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 176,
-        "end_line": 187,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_storage_evidence_required_suppresses_future_actions:95f342f2f1c69bb5",
-        "signature_hash": "39b0d318affbd829"
+        "line": 303,
+        "end_line": 315,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_storage_evidence_required_suppresses_candidate_actions:10f611a079d157b2",
+        "signature_hash": "6061993d2edf8973"
       }
     ],
-    "CrossCloudIntentTests.test_model_evidence_required_suppresses_future_actions": [
+    "CrossCloudIntentTests.test_model_evidence_required_suppresses_candidate_actions": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 189,
-        "end_line": 199,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_model_evidence_required_suppresses_future_actions:df204e0941b1f6fa",
-        "signature_hash": "bbd30f202c104a4b"
+        "line": 317,
+        "end_line": 324,
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_model_evidence_required_suppresses_candidate_actions:3347210fbacbacf1",
+        "signature_hash": "41c589370090a104"
       }
     ],
     "CrossCloudIntentTests.test_unknown_action_surface_fails_closed": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 201,
-        "end_line": 205,
+        "line": 326,
+        "end_line": 331,
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_unknown_action_surface_fails_closed:82070ee2233d7109",
         "signature_hash": "5b320f55406bdfc1"
       }
@@ -158602,68 +158690,18 @@
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 207,
-        "end_line": 214,
+        "line": 333,
+        "end_line": 341,
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_plan_digest_is_stable_and_binds_both_inputs:4e391600963c1616",
         "signature_hash": "fde2949d6ce198f1"
-      }
-    ],
-    "CrossCloudIntentTests.test_dataclass_model_projection_is_composable": [
-      {
-        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "kind": "method",
-        "line": 216,
-        "end_line": 241,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_dataclass_model_projection_is_composable:943c98e43cd48d99",
-        "signature_hash": "cc9aa51055fbed1b"
-      }
-    ],
-    "CrossCloudIntentTests.test_dataclass_model_projection_is_composable.D": [
-      {
-        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "kind": "class",
-        "line": 217,
-        "end_line": 218,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#class:CrossCloudIntentTests.test_dataclass_model_projection_is_composable.D:ea6b3b8a04074f8b",
-        "signature_hash": "b6405a0d0cbba06f"
-      }
-    ],
-    "CrossCloudIntentTests.test_dataclass_model_projection_is_composable.O": [
-      {
-        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "kind": "class",
-        "line": 221,
-        "end_line": 222,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#class:CrossCloudIntentTests.test_dataclass_model_projection_is_composable.O:5b9d411d3af9250d",
-        "signature_hash": "93ebf9e45a6e234e"
-      }
-    ],
-    "CrossCloudIntentTests.test_dataclass_model_projection_is_composable.Decision": [
-      {
-        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "kind": "class",
-        "line": 225,
-        "end_line": 238,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#class:CrossCloudIntentTests.test_dataclass_model_projection_is_composable.Decision:cb073a70608bf4bf",
-        "signature_hash": "fc4b98c490ac6e3c"
-      }
-    ],
-    "CrossCloudIntentTests.test_actual_zf07_decision_dataclass_is_composable": [
-      {
-        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "kind": "method",
-        "line": 243,
-        "end_line": 260,
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_actual_zf07_decision_dataclass_is_composable:c903072081f85af2",
-        "signature_hash": "48d60934437b0cf3"
       }
     ],
     "CrossCloudIntentTests.test_actual_zf07_producer_local_route_does_not_present_alternative_actions": [
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 262,
-        "end_line": 337,
+        "line": 343,
+        "end_line": 416,
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_actual_zf07_producer_local_route_does_not_present_alternative_actions:b5a553fa6ff0de80",
         "signature_hash": "79ca2394383ea1d0"
       }
@@ -158672,8 +158710,8 @@
       {
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
         "kind": "method",
-        "line": 339,
-        "end_line": 362,
+        "line": 418,
+        "end_line": 441,
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_every_effect_flag_remains_false:0da4f5fbb950663a",
         "signature_hash": "6fc99ea344bf447d"
       }
@@ -264531,47 +264569,47 @@
       "path": "tools/aura_adopt/test_external_service_intent_bridge.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 15441,
-      "lines": 367,
-      "tokens_est": 3861,
-      "symbol_count": 25,
+      "bytes": 19425,
+      "lines": 446,
+      "tokens_est": 4857,
+      "symbol_count": 29,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "aae3c6260592aef4",
+      "digest8": "dca21518c96f5833",
       "vector": [
-        -0.117591,
-        -0.167103,
-        -0.251273,
-        -0.276029,
-        -0.17453,
-        0.1572,
-        0.07303,
-        0.144822,
-        0.167103,
-        -0.006189,
-        -0.137396,
-        -0.028469,
-        -0.097786,
-        -0.016091,
-        0.248797,
-        -0.266127,
-        -0.139871,
-        0.273553,
-        -0.194334,
-        0.179481,
-        0.241371,
-        0.191859,
-        0.137396,
-        0.028469,
-        0.276029,
-        -0.221566,
-        0.087884,
-        0.070554,
-        0.310687,
-        -0.139871,
-        0.100262,
-        0.063128
+        -0.0853,
+        -0.073926,
+        -0.010236,
+        0.180835,
+        -0.237701,
+        0.269547,
+        0.058004,
+        0.014785,
+        0.0853,
+        -0.285469,
+        -0.244525,
+        0.092124,
+        0.276371,
+        0.283195,
+        -0.226328,
+        0.17856,
+        -0.137617,
+        -0.032982,
+        0.003412,
+        0.162638,
+        0.039806,
+        -0.060278,
+        -0.28092,
+        0.110321,
+        0.253624,
+        0.035257,
+        -0.267272,
+        0.260448,
+        -0.05118,
+        -0.060278,
+        0.169462,
+        0.205856
       ]
     },
     {
@@ -288574,8 +288612,8 @@
   },
   "summary": {
     "file_count": 1648,
-    "total_bytes": 26509650,
-    "text_tokens_est": 6617768,
+    "total_bytes": 26513634,
+    "text_tokens_est": 6618764,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
@@ -448840,254 +448878,294 @@
         "file_digest8": "bc3fb4b8cb01b623"
       },
       {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#class:CrossCloudIntentTests.test_dataclass_model_projection_is_composable.D:ea6b3b8a04074f8b",
-        "name": "CrossCloudIntentTests.test_dataclass_model_projection_is_composable.D",
-        "kind": "class",
-        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 217,
-        "end_line": 218,
-        "signature_hash": "b6405a0d0cbba06f",
-        "file_digest8": "aae3c6260592aef4"
-      },
-      {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#class:CrossCloudIntentTests.test_dataclass_model_projection_is_composable.Decision:cb073a70608bf4bf",
-        "name": "CrossCloudIntentTests.test_dataclass_model_projection_is_composable.Decision",
-        "kind": "class",
-        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 225,
-        "end_line": 238,
-        "signature_hash": "fc4b98c490ac6e3c",
-        "file_digest8": "aae3c6260592aef4"
-      },
-      {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#class:CrossCloudIntentTests.test_dataclass_model_projection_is_composable.O:5b9d411d3af9250d",
-        "name": "CrossCloudIntentTests.test_dataclass_model_projection_is_composable.O",
-        "kind": "class",
-        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 221,
-        "end_line": 222,
-        "signature_hash": "93ebf9e45a6e234e",
-        "file_digest8": "aae3c6260592aef4"
-      },
-      {
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#class:CrossCloudIntentTests:79cd173f7cb6c6d2",
         "name": "CrossCloudIntentTests",
         "kind": "class",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 82,
-        "end_line": 362,
+        "line": 169,
+        "end_line": 441,
         "signature_hash": "dfb07bae1eaf5657",
-        "file_digest8": "aae3c6260592aef4"
+        "file_digest8": "dca21518c96f5833"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:_canonical:b3d41a240e0de207",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "line": 31,
+        "end_line": 38,
+        "signature_hash": "a8714679390e5369",
+        "file_digest8": "dca21518c96f5833"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:_choice_option:a1c053887f53dc42",
+        "name": "_choice_option",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "line": 114,
+        "end_line": 128,
+        "signature_hash": "ca1c667ef92b2096",
+        "file_digest8": "dca21518c96f5833"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:_local_option:8833c0019a824f45",
+        "name": "_local_option",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "line": 98,
+        "end_line": 111,
+        "signature_hash": "1ee95ce5f6d9a206",
+        "file_digest8": "dca21518c96f5833"
       },
       {
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:model:291596055c564b63",
         "name": "model",
         "kind": "function",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 59,
-        "end_line": 79,
+        "line": 131,
+        "end_line": 166,
         "signature_hash": "46a3bbd8c4859258",
-        "file_digest8": "aae3c6260592aef4"
+        "file_digest8": "dca21518c96f5833"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:seal_model:b803a7a7239be91e",
+        "name": "seal_model",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "line": 49,
+        "end_line": 56,
+        "signature_hash": "0a5146b59688635d",
+        "file_digest8": "dca21518c96f5833"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:seal_storage:0df6d055c0dbc82b",
+        "name": "seal_storage",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "line": 41,
+        "end_line": 46,
+        "signature_hash": "2cf26f3306713e9b",
+        "file_digest8": "dca21518c96f5833"
       },
       {
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#function:storage:ab12510784979761",
         "name": "storage",
         "kind": "function",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 32,
-        "end_line": 56,
+        "line": 59,
+        "end_line": 95,
         "signature_hash": "a605e5a8fc399810",
-        "file_digest8": "aae3c6260592aef4"
-      },
-      {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_actual_zf07_decision_dataclass_is_composable:c903072081f85af2",
-        "name": "CrossCloudIntentTests.test_actual_zf07_decision_dataclass_is_composable",
-        "kind": "method",
-        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 243,
-        "end_line": 260,
-        "signature_hash": "48d60934437b0cf3",
-        "file_digest8": "aae3c6260592aef4"
+        "file_digest8": "dca21518c96f5833"
       },
       {
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_actual_zf07_producer_local_route_does_not_present_alternative_actions:b5a553fa6ff0de80",
         "name": "CrossCloudIntentTests.test_actual_zf07_producer_local_route_does_not_present_alternative_actions",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 262,
-        "end_line": 337,
+        "line": 343,
+        "end_line": 416,
         "signature_hash": "79ca2394383ea1d0",
-        "file_digest8": "aae3c6260592aef4"
+        "file_digest8": "dca21518c96f5833"
       },
       {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_cloud_and_remote_model_stay_two_scopes:c6adaaa868cf743c",
-        "name": "CrossCloudIntentTests.test_cloud_and_remote_model_stay_two_scopes",
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_cloud_and_remote_model_stay_two_candidate_scopes:509557bb00157b5d",
+        "name": "CrossCloudIntentTests.test_cloud_and_remote_model_stay_two_candidate_scopes",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 107,
-        "end_line": 121,
-        "signature_hash": "6489ee47824bf25b",
-        "file_digest8": "aae3c6260592aef4"
+        "line": 200,
+        "end_line": 215,
+        "signature_hash": "bca06480baf15c43",
+        "file_digest8": "dca21518c96f5833"
       },
       {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_cloud_storage_only_is_one_separate_scope:e3b7667e4e33a873",
-        "name": "CrossCloudIntentTests.test_cloud_storage_only_is_one_separate_scope",
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_cloud_storage_stops_at_owner_currentness_gate:263a366953c4c9ce",
+        "name": "CrossCloudIntentTests.test_cloud_storage_stops_at_owner_currentness_gate",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 89,
-        "end_line": 93,
-        "signature_hash": "8c49d76cad0c319b",
-        "file_digest8": "aae3c6260592aef4"
-      },
-      {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_dataclass_model_projection_is_composable:943c98e43cd48d99",
-        "name": "CrossCloudIntentTests.test_dataclass_model_projection_is_composable",
-        "kind": "method",
-        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 216,
-        "end_line": 241,
-        "signature_hash": "cc9aa51055fbed1b",
-        "file_digest8": "aae3c6260592aef4"
+        "line": 178,
+        "end_line": 185,
+        "signature_hash": "b843efdfe2069789",
+        "file_digest8": "dca21518c96f5833"
       },
       {
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_every_effect_flag_remains_false:0da4f5fbb950663a",
         "name": "CrossCloudIntentTests.test_every_effect_flag_remains_false",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 339,
-        "end_line": 362,
+        "line": 418,
+        "end_line": 441,
         "signature_hash": "6fc99ea344bf447d",
-        "file_digest8": "aae3c6260592aef4"
+        "file_digest8": "dca21518c96f5833"
       },
       {
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_local_local_has_no_external_actions:fe7fe0623eacaa3d",
         "name": "CrossCloudIntentTests.test_local_local_has_no_external_actions",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 83,
-        "end_line": 87,
+        "line": 170,
+        "end_line": 176,
         "signature_hash": "df7fd27cd9d18c6b",
-        "file_digest8": "aae3c6260592aef4"
+        "file_digest8": "dca21518c96f5833"
       },
       {
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_model_action_without_escalation_is_rejected:52b9d03365e91edb",
         "name": "CrossCloudIntentTests.test_model_action_without_escalation_is_rejected",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 166,
-        "end_line": 174,
+        "line": 295,
+        "end_line": 301,
         "signature_hash": "140cb3bf296878a2",
-        "file_digest8": "aae3c6260592aef4"
+        "file_digest8": "dca21518c96f5833"
       },
       {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_model_evidence_required_suppresses_future_actions:df204e0941b1f6fa",
-        "name": "CrossCloudIntentTests.test_model_evidence_required_suppresses_future_actions",
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_model_evidence_required_suppresses_candidate_actions:3347210fbacbacf1",
+        "name": "CrossCloudIntentTests.test_model_evidence_required_suppresses_candidate_actions",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 189,
-        "end_line": 199,
-        "signature_hash": "bbd30f202c104a4b",
-        "file_digest8": "aae3c6260592aef4"
+        "line": 317,
+        "end_line": 324,
+        "signature_hash": "41c589370090a104",
+        "file_digest8": "dca21518c96f5833"
       },
       {
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_plan_digest_is_stable_and_binds_both_inputs:4e391600963c1616",
         "name": "CrossCloudIntentTests.test_plan_digest_is_stable_and_binds_both_inputs",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 207,
-        "end_line": 214,
+        "line": 333,
+        "end_line": 341,
         "signature_hash": "fde2949d6ce198f1",
-        "file_digest8": "aae3c6260592aef4"
+        "file_digest8": "dca21518c96f5833"
       },
       {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_remote_model_only_is_one_separate_scope:04c9635edcd5864d",
-        "name": "CrossCloudIntentTests.test_remote_model_only_is_one_separate_scope",
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_remote_model_choice_stays_route_bound_and_nonpresentable:fa0a68d1066fcb08",
+        "name": "CrossCloudIntentTests.test_remote_model_choice_stays_route_bound_and_nonpresentable",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 95,
-        "end_line": 105,
-        "signature_hash": "26a729e9849ec8a3",
-        "file_digest8": "aae3c6260592aef4"
+        "line": 187,
+        "end_line": 198,
+        "signature_hash": "8ad1398bf281adc2",
+        "file_digest8": "dca21518c96f5833"
       },
       {
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_same_evidence_digest_cannot_cross_scopes:e8c7d86deaa02b75",
         "name": "CrossCloudIntentTests.test_same_evidence_digest_cannot_cross_scopes",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 142,
-        "end_line": 146,
+        "line": 248,
+        "end_line": 252,
         "signature_hash": "d395a31895132fd9",
-        "file_digest8": "aae3c6260592aef4"
+        "file_digest8": "dca21518c96f5833"
       },
       {
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_same_evidence_ref_cannot_cross_scopes:379f44799236f927",
         "name": "CrossCloudIntentTests.test_same_evidence_ref_cannot_cross_scopes",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 136,
-        "end_line": 140,
+        "line": 242,
+        "end_line": 246,
         "signature_hash": "893e6b67b4da5a55",
-        "file_digest8": "aae3c6260592aef4"
+        "file_digest8": "dca21518c96f5833"
       },
       {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_storage_action_without_cloud_is_rejected:4c7f26c7d705276e",
-        "name": "CrossCloudIntentTests.test_storage_action_without_cloud_is_rejected",
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_scope_evidence_is_explicitly_unverified_and_never_clears_gate:c178838f68eb98c5",
+        "name": "CrossCloudIntentTests.test_scope_evidence_is_explicitly_unverified_and_never_clears_gate",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 160,
-        "end_line": 164,
-        "signature_hash": "82e0af3eec091b50",
-        "file_digest8": "aae3c6260592aef4"
+        "line": 231,
+        "end_line": 240,
+        "signature_hash": "a26335bc7c1202e4",
+        "file_digest8": "dca21518c96f5833"
       },
       {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_storage_evidence_required_suppresses_future_actions:95f342f2f1c69bb5",
-        "name": "CrossCloudIntentTests.test_storage_evidence_required_suppresses_future_actions",
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_storage_action_without_cloud_is_rejected_after_valid_identity:3ff18dd5a2fc4f6a",
+        "name": "CrossCloudIntentTests.test_storage_action_without_cloud_is_rejected_after_valid_identity",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 176,
-        "end_line": 187,
-        "signature_hash": "39b0d318affbd829",
-        "file_digest8": "aae3c6260592aef4"
+        "line": 280,
+        "end_line": 285,
+        "signature_hash": "0bed409d4c7606ca",
+        "file_digest8": "dca21518c96f5833"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_storage_authority_gate_requires_an_action:a3d6b7315865356a",
+        "name": "CrossCloudIntentTests.test_storage_authority_gate_requires_an_action",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "line": 287,
+        "end_line": 293,
+        "signature_hash": "dfca3212f9fe1018",
+        "file_digest8": "dca21518c96f5833"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_storage_evidence_required_suppresses_candidate_actions:10f611a079d157b2",
+        "name": "CrossCloudIntentTests.test_storage_evidence_required_suppresses_candidate_actions",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "line": 303,
+        "end_line": 315,
+        "signature_hash": "6061993d2edf8973",
+        "file_digest8": "dca21518c96f5833"
       },
       {
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_storage_link_does_not_satisfy_model_account:a8730a343e6fe85a",
         "name": "CrossCloudIntentTests.test_storage_link_does_not_satisfy_model_account",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 123,
-        "end_line": 134,
+        "line": 217,
+        "end_line": 229,
         "signature_hash": "984a7f572c947e48",
-        "file_digest8": "aae3c6260592aef4"
+        "file_digest8": "dca21518c96f5833"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_tampered_model_payload_rejected_by_canonical_digest:834a762bd7945c4a",
+        "name": "CrossCloudIntentTests.test_tampered_model_payload_rejected_by_canonical_digest",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "line": 260,
+        "end_line": 264,
+        "signature_hash": "095e54c1da3c660d",
+        "file_digest8": "dca21518c96f5833"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_tampered_storage_payload_rejected_by_canonical_digest:5efc85d1deb58e26",
+        "name": "CrossCloudIntentTests.test_tampered_storage_payload_rejected_by_canonical_digest",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
+        "line": 254,
+        "end_line": 258,
+        "signature_hash": "5ec34db965b82790",
+        "file_digest8": "dca21518c96f5833"
       },
       {
         "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_unknown_action_surface_fails_closed:82070ee2233d7109",
         "name": "CrossCloudIntentTests.test_unknown_action_surface_fails_closed",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 201,
-        "end_line": 205,
+        "line": 326,
+        "end_line": 331,
         "signature_hash": "5b320f55406bdfc1",
-        "file_digest8": "aae3c6260592aef4"
+        "file_digest8": "dca21518c96f5833"
       },
       {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_upstream_model_effect_widening_rejected:48e832b6acf8944d",
-        "name": "CrossCloudIntentTests.test_upstream_model_effect_widening_rejected",
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_upstream_model_effect_widening_rejected_after_valid_identity:b207e6aa42f87e73",
+        "name": "CrossCloudIntentTests.test_upstream_model_effect_widening_rejected_after_valid_identity",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 154,
-        "end_line": 158,
-        "signature_hash": "85d49aac4b77ff7b",
-        "file_digest8": "aae3c6260592aef4"
+        "line": 273,
+        "end_line": 278,
+        "signature_hash": "5354625b4864517d",
+        "file_digest8": "dca21518c96f5833"
       },
       {
-        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_upstream_storage_authority_widening_rejected:1b8ef97053054337",
-        "name": "CrossCloudIntentTests.test_upstream_storage_authority_widening_rejected",
+        "semantic_id": "tools/aura_adopt/test_external_service_intent_bridge.py#method:CrossCloudIntentTests.test_upstream_storage_authority_widening_rejected_after_valid_identity:e40ff271cd473f3d",
+        "name": "CrossCloudIntentTests.test_upstream_storage_authority_widening_rejected_after_valid_identity",
         "kind": "method",
         "file": "tools/aura_adopt/test_external_service_intent_bridge.py",
-        "line": 148,
-        "end_line": 152,
-        "signature_hash": "e31002467538c0a3",
-        "file_digest8": "aae3c6260592aef4"
+        "line": 266,
+        "end_line": 271,
+        "signature_hash": "576fa7f37c8a8aa9",
+        "file_digest8": "dca21518c96f5833"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -450340,7 +450418,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "b3a0a4acdc6d5829e92b06c140b3fac3",
-    "payload_hash": "1913bc415e862224712425f5b7e2e1a6"
+    "record_fingerprint": "ae018c6197eb926076d51e0bf1456e9e",
+    "payload_hash": "8ce3847630d0b73e5e6bdcd8118739c4"
   }
 }
