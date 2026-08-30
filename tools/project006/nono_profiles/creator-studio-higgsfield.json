@@ -1,0 +1,83 @@
+{
+  "meta": {
+    "name": "creator-studio-higgsfield",
+    "version": "0.1.0",
+    "description": "Project006/NONO membrane for Aura Creator Studio Higgsfield media generation"
+  },
+  "groups": {
+    "include": []
+  },
+  "workdir": {
+    "access": "read"
+  },
+  "security": {
+    "wsl2_proxy_policy": "insecure_proxy"
+  },
+  "environment": {
+    "deny_vars": [
+      "HIGGSFIELD_API_CREDENTIAL"
+    ]
+  },
+  "network": {
+    "credentials": [
+      "higgsfield"
+    ],
+    "custom_credentials": {
+      "higgsfield": {
+        "upstream": "https://platform.higgsfield.ai",
+        "credential_key": "cmd://higgsfield-windows-user-env",
+        "env_var": "HIGGSFIELD_API_CREDENTIAL",
+        "inject_mode": "header",
+        "inject_header": "Authorization",
+        "credential_format": "Key {}",
+        "endpoint_rules": [
+          {
+            "method": "POST",
+            "path": "/alibaba/qwen-image-3/text-to-image"
+          },
+          {
+            "method": "POST",
+            "path": "/nano-banana-2/lite/text-to-image"
+          },
+          {
+            "method": "POST",
+            "path": "/openai/gpt-image-2"
+          },
+          {
+            "method": "POST",
+            "path": "/minimax/h3/text-to-video"
+          },
+          {
+            "method": "POST",
+            "path": "/lightricks/ltx-2.5/text-to-video/pro"
+          },
+          {
+            "method": "POST",
+            "path": "/kling-video/v3.0/std/text-to-video"
+          },
+          {
+            "method": "POST",
+            "path": "/veo3.1/fast/text-to-video"
+          },
+          {
+            "method": "GET",
+            "path": "/requests/**"
+          }
+        ]
+      }
+    }
+  },
+  "credential_capture": {
+    "higgsfield-windows-user-env": {
+      "command": [
+        "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+        "-NoProfile",
+        "-NonInteractive",
+        "-Command",
+        "$v=[Environment]::GetEnvironmentVariable('HIGGSFIELD_API_CREDENTIAL','User'); if([string]::IsNullOrWhiteSpace($v)){exit 7}; [Console]::Out.Write($v)"
+      ],
+      "timeout_secs": 5,
+      "cache_ttl_secs": 900
+    }
+  }
+}
