@@ -237,12 +237,16 @@ class GeminiWebchatEndpointTests(unittest.TestCase):
             ledger.accept_tool_request(request)
         self.assertEqual(ctx.exception.code, "DUPLICATE_TOOL_REQUEST")
 
-    def test_bootstrap_prompt_contains_arena_contract_not_credentials(self):
+    def test_bootstrap_prompt_contains_safety_contract_but_no_credential_material(self):
         prompt = compile_bootstrap_prompt(make_binding(), make_envelope())
+        lowered = prompt.lower()
         self.assertIn("AURA_ARENA_BOOTSTRAP_V1", prompt)
         self.assertIn("AuraToolRequestV1", prompt)
         self.assertIn("Do not expose or request credentials", prompt)
-        self.assertNotIn("cookie", prompt.lower())
+        self.assertIn("cookies", lowered)
+        self.assertNotIn("sessionid=", lowered)
+        self.assertNotIn("authorization: bearer", lowered)
+        self.assertNotIn("set-cookie:", lowered)
 
 
 if __name__ == "__main__":
