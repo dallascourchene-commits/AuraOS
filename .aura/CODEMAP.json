@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788113356,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -132,6 +132,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf06a-low-storage-assessment.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1631,6 +1632,9 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/ZF06A_SOURCE_INVENTORY.md",
+      "tools/aura_adopt/low_storage_mechanism_assessment.py",
+      "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1643,
+      "bytes": 26454562,
+      "tokens_est": 6603989,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3681,6 +3685,14 @@
         "end_line": 26,
         "semantic_id": "staging/02_verification_and_falsification/HARNESS_D0_MUTANTS.py#class:Disposition:b359736450ddaeff",
         "signature_hash": "9386d60514f2578d"
+      },
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 48,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:Disposition:fa19f85eb8ab3a20",
+        "signature_hash": "9386d60514f2578d"
       }
     ],
     "Check": [
@@ -3895,6 +3907,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 94,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_canonical:a326302d2a058e9b",
+        "signature_hash": "8e43409cca322220"
       }
     ],
     "_digest": [
@@ -4337,6 +4357,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 98,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_digest:2db88c81f5262f06",
+        "signature_hash": "3f6add8eced381b1"
       }
     ],
     "_token_proxy": [
@@ -8067,6 +8095,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 68,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_sha:8c218a6e2750614c",
+        "signature_hash": "4dac0f5a2687cb5c"
       }
     ],
     "_repo": [
@@ -14653,6 +14689,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 61,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_text:af3d2ba57891bb1d",
+        "signature_hash": "d08728dfabdce7f5"
       }
     ],
     "_bounded": [
@@ -26327,6 +26371,14 @@
         "end_line": 68,
         "semantic_id": "aura_spatial_importers/contracts.py#function:_positive_int:cb9f2b4384fccde6",
         "signature_hash": "5cca323f428421e2"
+      },
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 85,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_positive_int:be9ee177849d4f79",
+        "signature_hash": "fd68dcf31d7e3c3c"
       }
     ],
     "_span_line_bounds": [
@@ -27173,6 +27225,14 @@
         "end_line": 327,
         "semantic_id": "aura_st3gg_contracts.py#function:_ratio:260062431e85bf37",
         "signature_hash": "87bbd30c6a8d8629"
+      },
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 312,
+        "end_line": 315,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_ratio:8d8b9288692952de",
+        "signature_hash": "5be582c93be119de"
       }
     ],
     "CodeMapFileHandler": [
@@ -39873,6 +39933,14 @@
         "end_line": 178,
         "semantic_id": "aura_current_code_quality_assessment.py#function:assess:c7724e796b72e3cf",
         "signature_hash": "6dfd7031ac01bfea"
+      },
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 341,
+        "end_line": 474,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:assess:0078c22a4f46e78f",
+        "signature_hash": "6a2ff72505ddcb26"
       }
     ],
     "DIKWPStage": [
@@ -125759,6 +125827,14 @@
         "end_line": 12,
         "semantic_id": "tests/test_aura_construction_contracts.py#function:evidence:a7e99cea64606d49",
         "signature_hash": "4be851cb61f4aeb9"
+      },
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 90,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#function:evidence:07da71fea39b1d05",
+        "signature_hash": "3b0d367878cf7b10"
       }
     ],
     "claim": [
@@ -157181,6 +157257,526 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "AssessmentError": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 25,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:AssessmentError:5e2ed04fc8c4e387",
+        "signature_hash": "99ee47d6b83b2c5d"
+      }
+    ],
+    "AssessmentError.__init__": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#method:AssessmentError.__init__:ff94ab285b2b07ad",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "EvidenceClass": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 34,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:EvidenceClass:0b075dd0632bfa7e",
+        "signature_hash": "a7328338e91e9d09"
+      }
+    ],
+    "FidelityClass": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 41,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:FidelityClass:43230dbc00efea57",
+        "signature_hash": "1b22ce389786eb6a"
+      }
+    ],
+    "ResponsibilityClass": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 55,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:ResponsibilityClass:4ebeaba1752dfade",
+        "signature_hash": "898482c99ce509e5"
+      }
+    ],
+    "_num": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 79,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_num:cbe3da513b4577a8",
+        "signature_hash": "b17649f0bf9bba7d"
+      }
+    ],
+    "BenchmarkScenario": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "class",
+        "line": 102,
+        "end_line": 128,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:BenchmarkScenario:257a429cde85b460",
+        "signature_hash": "0b5d1aebe34d3630"
+      }
+    ],
+    "BenchmarkScenario.__post_init__": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 128,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#method:BenchmarkScenario.__post_init__:448e75911249c954",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "MetricSet": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "class",
+        "line": 132,
+        "end_line": 153,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:MetricSet:7744787302097dee",
+        "signature_hash": "372a358c6e487846"
+      }
+    ],
+    "MetricSet.__post_init__": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 153,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#method:MetricSet.__post_init__:3d480e24c55c50c4",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "MeasuredPathEvidenceV1": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "class",
+        "line": 188,
+        "end_line": 201,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:MeasuredPathEvidenceV1:748a839ef07614da",
+        "signature_hash": "1405d048e9a43307"
+      }
+    ],
+    "MeasuredPathEvidenceV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 195,
+        "end_line": 201,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#method:MeasuredPathEvidenceV1.__post_init__:8c409c0b836e9c7d",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "HostWitnessBindingV1": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "class",
+        "line": 205,
+        "end_line": 215,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:HostWitnessBindingV1:0a5caa7c2b8fb5f4",
+        "signature_hash": "a992c172952c8717"
+      }
+    ],
+    "HostWitnessBindingV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 215,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#method:HostWitnessBindingV1.__post_init__:958e2b5139e63d69",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "MechanismEvidence": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "class",
+        "line": 219,
+        "end_line": 309,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:MechanismEvidence:c51ee1af7ac1cde5",
+        "signature_hash": "55015b80bc28e868"
+      }
+    ],
+    "MechanismEvidence.__post_init__": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 246,
+        "end_line": 309,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#method:MechanismEvidence.__post_init__:e77842c8ccce8c1e",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "_zero_baseline_added_burdens": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 318,
+        "end_line": 338,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_zero_baseline_added_burdens:08123f12cdb53fe7",
+        "signature_hash": "741b2ab2fc4bdc96"
+      }
+    ],
+    "inventory_status": [
+      {
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 477,
+        "end_line": 494,
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:inventory_status:05ec337ea2de987f",
+        "signature_hash": "479860cf9688299e"
+      }
+    ],
+    "scenario": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 18,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#function:scenario:026f141c2906cb6a",
+        "signature_hash": "ce38e1d4bfd3aaf0"
+      }
+    ],
+    "metrics": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 28,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#function:metrics:dfa433bb3735fc50",
+        "signature_hash": "027a408412e14af4"
+      }
+    ],
+    "floor": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#function:floor:d76947707a221ac3",
+        "signature_hash": "f5652c4f8a6dbeb9"
+      }
+    ],
+    "path": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 44,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#function:path:6a137c61ff8cf1f2",
+        "signature_hash": "f06163c629ee0fff"
+      }
+    ],
+    "host": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 55,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#function:host:7f3e8bbb521197c5",
+        "signature_hash": "bed8bc26bd81831b"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "class",
+        "line": 93,
+        "end_line": 276,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#class:LowStorageEvidenceFirewallTests:e3266b4e3634b843",
+        "signature_hash": "bc67da3d0247c95f"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_artifact_storage_win_retained": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 95,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_artifact_storage_win_retained:fd1b7591e9f45338",
+        "signature_hash": "a3055fbdfb36efb1"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_no_storage_win_demoted": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 98,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_no_storage_win_demoted:43d8d57e05403498",
+        "signature_hash": "d11f6fb0ec3e721a"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_payload_size_mismatch_rejected": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 103,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_payload_size_mismatch_rejected:63fef02618b1be83",
+        "signature_hash": "b8fc915905147742"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_responsibility_must_be_typed": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 108,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_responsibility_must_be_typed:c7ac0a3153d7bf19",
+        "signature_hash": "ad392c6d395a2382"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_caller_cannot_remove_artifact_metric_floor": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 113,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_caller_cannot_remove_artifact_metric_floor:2d77818a5d04810d",
+        "signature_hash": "7518ea0c7e8c808d"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_caller_may_add_metrics_above_floor": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 120,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_caller_may_add_metrics_above_floor:fe4cdf9a10fd4bed",
+        "signature_hash": "4eff1da01a4da31d"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_kv_requires_kv_specific_metric_floor": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 129,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_kv_requires_kv_specific_metric_floor:5b458d0dbca3b55d",
+        "signature_hash": "d4d5723f2205409c"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_kv_measured_path_active_can_retain": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 136,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_kv_measured_path_active_can_retain:a5f2c73c611d84a4",
+        "signature_hash": "ba31d7518edd6893"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_kv_cache_disabled_cannot_retain": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 145,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_kv_cache_disabled_cannot_retain:8931c508f9206326",
+        "signature_hash": "c6fc2cde055836b8"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_kv_path_stale_generation_cannot_retain": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 153,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_kv_path_stale_generation_cannot_retain:fee515c08d68930a",
+        "signature_hash": "4a86020153e32264"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_coordinate_memory_does_not_require_kv_metrics": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 162,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_coordinate_memory_does_not_require_kv_metrics:23a7a1a36cb7f9b9",
+        "signature_hash": "b8de31f9400ed4a7"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_coordinate_memory_missing_lookup_is_unknown": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 170,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_coordinate_memory_missing_lookup_is_unknown:0cc7f00ff8983aa5",
+        "signature_hash": "98db7445ba057b92"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_zero_baseline_positive_download_is_explicit_burden": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 172,
+        "end_line": 176,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_zero_baseline_positive_download_is_explicit_burden:335b549e5ec02778",
+        "signature_hash": "bd62a802a449ecff"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_zero_to_zero_not_added_burden": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 180,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_zero_to_zero_not_added_burden:029c3409971bf97d",
+        "signature_hash": "8c5be75256afd230"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_unknown_is_not_zero_baseline_burden": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 187,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_unknown_is_not_zero_baseline_burden:69a927daf9941a60",
+        "signature_hash": "9d432590d847c021"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_gt2x_hidden_memory_cost_conditional": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 189,
+        "end_line": 192,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_gt2x_hidden_memory_cost_conditional:712cc4d0cd301a58",
+        "signature_hash": "41ca36ad3fb66f7f"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_required_metric_unknown_fails_unknown": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 194,
+        "end_line": 197,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_required_metric_unknown_fails_unknown:1d93897a9f5312b6",
+        "signature_hash": "4200fd329e72beb5"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_unknown_evidence_not_zero": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 199,
+        "end_line": 203,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_unknown_evidence_not_zero:4eee4b9bf2f77402",
+        "signature_hash": "03ebf22d3eaab86a"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_synthetic_cannot_prove_retain": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 205,
+        "end_line": 209,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_synthetic_cannot_prove_retain:549d28fce1297614",
+        "signature_hash": "2ddbd9f85ff0d1b0"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_literature_cannot_prove_local_retain": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 216,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_literature_cannot_prove_local_retain:ab88444b6667ee12",
+        "signature_hash": "58e6316ca0607316"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_android_measured_requires_typed_host_binding": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 224,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_android_measured_requires_typed_host_binding:e070d71b8cd0e90c",
+        "signature_hash": "4a01a627697dd614"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_android_host_binding_never_proves_device_viability": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 226,
+        "end_line": 232,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_android_host_binding_never_proves_device_viability:42ca8a3cc8bd415c",
+        "signature_hash": "ad753307a6daa5fb"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_stale_android_host_binding_makes_retain_conditional": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 234,
+        "end_line": 241,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_stale_android_host_binding_makes_retain_conditional:3e0ac2317b29fa7d",
+        "signature_hash": "6d801bd98341b37d"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_bounded_accepted_can_retain_with_threshold": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 243,
+        "end_line": 248,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_bounded_accepted_can_retain_with_threshold:371f88ba4721fa45",
+        "signature_hash": "894136ee900b608f"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_bounded_loss_never_plain_retain": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 250,
+        "end_line": 255,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_bounded_loss_never_plain_retain:4e911168a6dfef72",
+        "signature_hash": "882807df33d6db71"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_inventory_unmapped_explicit": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 257,
+        "end_line": 259,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_inventory_unmapped_explicit:7d9e9b7b48f64569",
+        "signature_hash": "b8887b8d1b1f34ab"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_identity_binds_responsibility": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 261,
+        "end_line": 266,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_identity_binds_responsibility:9f4ea08e9a1ed83d",
+        "signature_hash": "7a4d5e9ac7f760dd"
+      }
+    ],
+    "LowStorageEvidenceFirewallTests.test_identity_binds_path_evidence": [
+      {
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "kind": "method",
+        "line": 268,
+        "end_line": 276,
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_identity_binds_path_evidence:b8d483a20d609805",
+        "signature_hash": "539409694dbf6d06"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -167495,6 +168091,53 @@
         0.180531,
         0.255844,
         0.26249
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-adopt-zf06a-low-storage-assessment.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 903,
+      "lines": 27,
+      "tokens_est": 226,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f6c778bb2a2ae0d7",
+      "vector": [
+        -0.063644,
+        -0.271323,
+        0.155201,
+        0.235593,
+        0.155201,
+        0.271323,
+        -0.195397,
+        0.074809,
+        -0.074809,
+        0.007816,
+        0.094907,
+        -0.052478,
+        -0.03238,
+        0.144036,
+        -0.284722,
+        0.179765,
+        -0.001117,
+        0.164134,
+        -0.117238,
+        0.208796,
+        0.081509,
+        0.217728,
+        0.188698,
+        0.264624,
+        -0.202097,
+        0.061411,
+        0.222195,
+        0.222195,
+        -0.255691,
+        0.164134,
+        -0.13287,
+        0.226661
       ]
     },
     {
@@ -262648,6 +263291,147 @@
       ]
     },
     {
+      "path": "tools/aura_adopt/ZF06A_SOURCE_INVENTORY.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 7436,
+      "lines": 60,
+      "tokens_est": 1856,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "18826317f69f45f0",
+      "vector": [
+        0.240506,
+        0.245109,
+        0.005754,
+        -0.026467,
+        0.125432,
+        0.185271,
+        0.291139,
+        -0.247411,
+        0.003452,
+        0.118527,
+        0.120829,
+        -0.008055,
+        0.093211,
+        0.291139,
+        0.150748,
+        0.072497,
+        0.288838,
+        -0.238205,
+        -0.074799,
+        -0.252014,
+        -0.100115,
+        -0.182969,
+        0.017261,
+        -0.268124,
+        0.03107,
+        0.159954,
+        -0.201381,
+        -0.148447,
+        -0.187572,
+        0.024166,
+        -0.242808,
+        0.162256
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 19275,
+      "lines": 495,
+      "tokens_est": 4819,
+      "symbol_count": 26,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9c5a6a2f9541fc42",
+      "vector": [
+        -0.055952,
+        0.177802,
+        -0.135528,
+        -0.234998,
+        -0.190236,
+        0.130554,
+        -0.128067,
+        -0.063412,
+        -0.100713,
+        -0.200183,
+        -0.264839,
+        0.093253,
+        -0.259865,
+        0.018651,
+        0.192723,
+        -0.058439,
+        0.277272,
+        -0.177802,
+        -0.277272,
+        -0.304626,
+        0.175316,
+        -0.190236,
+        -0.006217,
+        -0.00373,
+        -0.197696,
+        0.093253,
+        -0.150448,
+        0.274786,
+        0.058439,
+        -0.187749,
+        0.197696,
+        0.108173
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11900,
+      "lines": 281,
+      "tokens_est": 2975,
+      "symbol_count": 35,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2bc8ba7fcf784a48",
+      "vector": [
+        -0.176589,
+        0.326109,
+        -0.28744,
+        -0.117296,
+        -0.099251,
+        0.264238,
+        0.065737,
+        -0.088939,
+        -0.047692,
+        -0.032224,
+        -0.130186,
+        -0.104406,
+        -0.220414,
+        -0.235881,
+        -0.305485,
+        -0.047692,
+        0.12503,
+        -0.202368,
+        -0.052848,
+        0.217836,
+        0.313219,
+        0.076049,
+        -0.063159,
+        0.241037,
+        -0.029646,
+        0.230725,
+        -0.029646,
+        0.155965,
+        0.163699,
+        -0.189478,
+        0.166277,
+        0.027068
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -286646,16 +287430,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1643,
+    "total_bytes": 26454562,
+    "text_tokens_est": 6603989,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286797,6 +287581,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf06a-low-storage-assessment.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -288296,6 +289081,9 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/ZF06A_SOURCE_INVENTORY.md",
+      "tools/aura_adopt/low_storage_mechanism_assessment.py",
+      "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445634,6 +446422,616 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:AssessmentError:5e2ed04fc8c4e387",
+        "name": "AssessmentError",
+        "kind": "class",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 21,
+        "end_line": 25,
+        "signature_hash": "99ee47d6b83b2c5d",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:BenchmarkScenario:257a429cde85b460",
+        "name": "BenchmarkScenario",
+        "kind": "class",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 102,
+        "end_line": 128,
+        "signature_hash": "0b5d1aebe34d3630",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:Disposition:fa19f85eb8ab3a20",
+        "name": "Disposition",
+        "kind": "class",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 44,
+        "end_line": 48,
+        "signature_hash": "9386d60514f2578d",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:EvidenceClass:0b075dd0632bfa7e",
+        "name": "EvidenceClass",
+        "kind": "class",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 28,
+        "end_line": 34,
+        "signature_hash": "a7328338e91e9d09",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:FidelityClass:43230dbc00efea57",
+        "name": "FidelityClass",
+        "kind": "class",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 37,
+        "end_line": 41,
+        "signature_hash": "1b22ce389786eb6a",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:HostWitnessBindingV1:0a5caa7c2b8fb5f4",
+        "name": "HostWitnessBindingV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 205,
+        "end_line": 215,
+        "signature_hash": "a992c172952c8717",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:MeasuredPathEvidenceV1:748a839ef07614da",
+        "name": "MeasuredPathEvidenceV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 188,
+        "end_line": 201,
+        "signature_hash": "1405d048e9a43307",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:MechanismEvidence:c51ee1af7ac1cde5",
+        "name": "MechanismEvidence",
+        "kind": "class",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 219,
+        "end_line": 309,
+        "signature_hash": "55015b80bc28e868",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:MetricSet:7744787302097dee",
+        "name": "MetricSet",
+        "kind": "class",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 132,
+        "end_line": 153,
+        "signature_hash": "372a358c6e487846",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#class:ResponsibilityClass:4ebeaba1752dfade",
+        "name": "ResponsibilityClass",
+        "kind": "class",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 51,
+        "end_line": 55,
+        "signature_hash": "898482c99ce509e5",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_canonical:a326302d2a058e9b",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 88,
+        "end_line": 94,
+        "signature_hash": "8e43409cca322220",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_digest:2db88c81f5262f06",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 97,
+        "end_line": 98,
+        "signature_hash": "3f6add8eced381b1",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_num:cbe3da513b4577a8",
+        "name": "_num",
+        "kind": "function",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 71,
+        "end_line": 79,
+        "signature_hash": "b17649f0bf9bba7d",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_positive_int:be9ee177849d4f79",
+        "name": "_positive_int",
+        "kind": "function",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 82,
+        "end_line": 85,
+        "signature_hash": "fd68dcf31d7e3c3c",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_ratio:8d8b9288692952de",
+        "name": "_ratio",
+        "kind": "function",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 312,
+        "end_line": 315,
+        "signature_hash": "5be582c93be119de",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_sha:8c218a6e2750614c",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 64,
+        "end_line": 68,
+        "signature_hash": "4dac0f5a2687cb5c",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_text:af3d2ba57891bb1d",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 58,
+        "end_line": 61,
+        "signature_hash": "d08728dfabdce7f5",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:_zero_baseline_added_burdens:08123f12cdb53fe7",
+        "name": "_zero_baseline_added_burdens",
+        "kind": "function",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 318,
+        "end_line": 338,
+        "signature_hash": "741b2ab2fc4bdc96",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:assess:0078c22a4f46e78f",
+        "name": "assess",
+        "kind": "function",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 341,
+        "end_line": 474,
+        "signature_hash": "6a2ff72505ddcb26",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#function:inventory_status:05ec337ea2de987f",
+        "name": "inventory_status",
+        "kind": "function",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 477,
+        "end_line": 494,
+        "signature_hash": "479860cf9688299e",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#method:AssessmentError.__init__:ff94ab285b2b07ad",
+        "name": "AssessmentError.__init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#method:BenchmarkScenario.__post_init__:448e75911249c954",
+        "name": "BenchmarkScenario.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 112,
+        "end_line": 128,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#method:HostWitnessBindingV1.__post_init__:958e2b5139e63d69",
+        "name": "HostWitnessBindingV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 211,
+        "end_line": 215,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#method:MeasuredPathEvidenceV1.__post_init__:8c409c0b836e9c7d",
+        "name": "MeasuredPathEvidenceV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 195,
+        "end_line": 201,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#method:MechanismEvidence.__post_init__:e77842c8ccce8c1e",
+        "name": "MechanismEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 246,
+        "end_line": 309,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/low_storage_mechanism_assessment.py#method:MetricSet.__post_init__:3d480e24c55c50c4",
+        "name": "MetricSet.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/low_storage_mechanism_assessment.py",
+        "line": 149,
+        "end_line": 153,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9c5a6a2f9541fc42"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#class:LowStorageEvidenceFirewallTests:e3266b4e3634b843",
+        "name": "LowStorageEvidenceFirewallTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 93,
+        "end_line": 276,
+        "signature_hash": "bc67da3d0247c95f",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#function:evidence:07da71fea39b1d05",
+        "name": "evidence",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 58,
+        "end_line": 90,
+        "signature_hash": "3b0d367878cf7b10",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#function:floor:d76947707a221ac3",
+        "name": "floor",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "f5652c4f8a6dbeb9",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#function:host:7f3e8bbb521197c5",
+        "name": "host",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 47,
+        "end_line": 55,
+        "signature_hash": "bed8bc26bd81831b",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#function:metrics:dfa433bb3735fc50",
+        "name": "metrics",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 21,
+        "end_line": 28,
+        "signature_hash": "027a408412e14af4",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#function:path:6a137c61ff8cf1f2",
+        "name": "path",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 35,
+        "end_line": 44,
+        "signature_hash": "f06163c629ee0fff",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#function:scenario:026f141c2906cb6a",
+        "name": "scenario",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 6,
+        "end_line": 18,
+        "signature_hash": "ce38e1d4bfd3aaf0",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_android_host_binding_never_proves_device_viability:42ca8a3cc8bd415c",
+        "name": "LowStorageEvidenceFirewallTests.test_android_host_binding_never_proves_device_viability",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 226,
+        "end_line": 232,
+        "signature_hash": "ad753307a6daa5fb",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_android_measured_requires_typed_host_binding:e070d71b8cd0e90c",
+        "name": "LowStorageEvidenceFirewallTests.test_android_measured_requires_typed_host_binding",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 218,
+        "end_line": 224,
+        "signature_hash": "4a01a627697dd614",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_artifact_storage_win_retained:fd1b7591e9f45338",
+        "name": "LowStorageEvidenceFirewallTests.test_artifact_storage_win_retained",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 94,
+        "end_line": 95,
+        "signature_hash": "a3055fbdfb36efb1",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_bounded_accepted_can_retain_with_threshold:371f88ba4721fa45",
+        "name": "LowStorageEvidenceFirewallTests.test_bounded_accepted_can_retain_with_threshold",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 243,
+        "end_line": 248,
+        "signature_hash": "894136ee900b608f",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_bounded_loss_never_plain_retain:4e911168a6dfef72",
+        "name": "LowStorageEvidenceFirewallTests.test_bounded_loss_never_plain_retain",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 250,
+        "end_line": 255,
+        "signature_hash": "882807df33d6db71",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_caller_cannot_remove_artifact_metric_floor:2d77818a5d04810d",
+        "name": "LowStorageEvidenceFirewallTests.test_caller_cannot_remove_artifact_metric_floor",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 110,
+        "end_line": 113,
+        "signature_hash": "7518ea0c7e8c808d",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_caller_may_add_metrics_above_floor:fe4cdf9a10fd4bed",
+        "name": "LowStorageEvidenceFirewallTests.test_caller_may_add_metrics_above_floor",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 115,
+        "end_line": 120,
+        "signature_hash": "4eff1da01a4da31d",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_coordinate_memory_does_not_require_kv_metrics:23a7a1a36cb7f9b9",
+        "name": "LowStorageEvidenceFirewallTests.test_coordinate_memory_does_not_require_kv_metrics",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 155,
+        "end_line": 162,
+        "signature_hash": "b8de31f9400ed4a7",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_coordinate_memory_missing_lookup_is_unknown:0cc7f00ff8983aa5",
+        "name": "LowStorageEvidenceFirewallTests.test_coordinate_memory_missing_lookup_is_unknown",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 164,
+        "end_line": 170,
+        "signature_hash": "98db7445ba057b92",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_gt2x_hidden_memory_cost_conditional:712cc4d0cd301a58",
+        "name": "LowStorageEvidenceFirewallTests.test_gt2x_hidden_memory_cost_conditional",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 189,
+        "end_line": 192,
+        "signature_hash": "41ca36ad3fb66f7f",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_identity_binds_path_evidence:b8d483a20d609805",
+        "name": "LowStorageEvidenceFirewallTests.test_identity_binds_path_evidence",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 268,
+        "end_line": 276,
+        "signature_hash": "539409694dbf6d06",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_identity_binds_responsibility:9f4ea08e9a1ed83d",
+        "name": "LowStorageEvidenceFirewallTests.test_identity_binds_responsibility",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 261,
+        "end_line": 266,
+        "signature_hash": "7a4d5e9ac7f760dd",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_inventory_unmapped_explicit:7d9e9b7b48f64569",
+        "name": "LowStorageEvidenceFirewallTests.test_inventory_unmapped_explicit",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 257,
+        "end_line": 259,
+        "signature_hash": "b8887b8d1b1f34ab",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_kv_cache_disabled_cannot_retain:8931c508f9206326",
+        "name": "LowStorageEvidenceFirewallTests.test_kv_cache_disabled_cannot_retain",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 138,
+        "end_line": 145,
+        "signature_hash": "c6fc2cde055836b8",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_kv_measured_path_active_can_retain:a5f2c73c611d84a4",
+        "name": "LowStorageEvidenceFirewallTests.test_kv_measured_path_active_can_retain",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 131,
+        "end_line": 136,
+        "signature_hash": "ba31d7518edd6893",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_kv_path_stale_generation_cannot_retain:fee515c08d68930a",
+        "name": "LowStorageEvidenceFirewallTests.test_kv_path_stale_generation_cannot_retain",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 147,
+        "end_line": 153,
+        "signature_hash": "4a86020153e32264",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_kv_requires_kv_specific_metric_floor:5b458d0dbca3b55d",
+        "name": "LowStorageEvidenceFirewallTests.test_kv_requires_kv_specific_metric_floor",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 122,
+        "end_line": 129,
+        "signature_hash": "d4d5723f2205409c",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_literature_cannot_prove_local_retain:ab88444b6667ee12",
+        "name": "LowStorageEvidenceFirewallTests.test_literature_cannot_prove_local_retain",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 211,
+        "end_line": 216,
+        "signature_hash": "58e6316ca0607316",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_no_storage_win_demoted:43d8d57e05403498",
+        "name": "LowStorageEvidenceFirewallTests.test_no_storage_win_demoted",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 97,
+        "end_line": 98,
+        "signature_hash": "d11f6fb0ec3e721a",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_payload_size_mismatch_rejected:63fef02618b1be83",
+        "name": "LowStorageEvidenceFirewallTests.test_payload_size_mismatch_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 100,
+        "end_line": 103,
+        "signature_hash": "b8fc915905147742",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_required_metric_unknown_fails_unknown:1d93897a9f5312b6",
+        "name": "LowStorageEvidenceFirewallTests.test_required_metric_unknown_fails_unknown",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 194,
+        "end_line": 197,
+        "signature_hash": "4200fd329e72beb5",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_responsibility_must_be_typed:c7ac0a3153d7bf19",
+        "name": "LowStorageEvidenceFirewallTests.test_responsibility_must_be_typed",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 105,
+        "end_line": 108,
+        "signature_hash": "ad392c6d395a2382",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_stale_android_host_binding_makes_retain_conditional:3e0ac2317b29fa7d",
+        "name": "LowStorageEvidenceFirewallTests.test_stale_android_host_binding_makes_retain_conditional",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 234,
+        "end_line": 241,
+        "signature_hash": "6d801bd98341b37d",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_synthetic_cannot_prove_retain:549d28fce1297614",
+        "name": "LowStorageEvidenceFirewallTests.test_synthetic_cannot_prove_retain",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 205,
+        "end_line": 209,
+        "signature_hash": "2ddbd9f85ff0d1b0",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_unknown_evidence_not_zero:4eee4b9bf2f77402",
+        "name": "LowStorageEvidenceFirewallTests.test_unknown_evidence_not_zero",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 199,
+        "end_line": 203,
+        "signature_hash": "03ebf22d3eaab86a",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_unknown_is_not_zero_baseline_burden:69a927daf9941a60",
+        "name": "LowStorageEvidenceFirewallTests.test_unknown_is_not_zero_baseline_burden",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 182,
+        "end_line": 187,
+        "signature_hash": "9d432590d847c021",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_zero_baseline_positive_download_is_explicit_burden:335b549e5ec02778",
+        "name": "LowStorageEvidenceFirewallTests.test_zero_baseline_positive_download_is_explicit_burden",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 172,
+        "end_line": 176,
+        "signature_hash": "bd62a802a449ecff",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_low_storage_mechanism_assessment.py#method:LowStorageEvidenceFirewallTests.test_zero_to_zero_not_added_burden:029c3409971bf97d",
+        "name": "LowStorageEvidenceFirewallTests.test_zero_to_zero_not_added_burden",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_low_storage_mechanism_assessment.py",
+        "line": 178,
+        "end_line": 180,
+        "signature_hash": "8c5be75256afd230",
+        "file_digest8": "2bc8ba7fcf784a48"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +448282,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "cbdbf7224a7cbcadcc844cbc1f2d077f",
+    "payload_hash": "73e2910cf30c1cb83ec15d8ee982eff5"
   }
 }
