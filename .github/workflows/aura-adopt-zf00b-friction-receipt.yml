@@ -1,0 +1,34 @@
+name: AURA-ADOPT ZF-00B friction receipt harness
+
+on:
+  pull_request:
+    paths:
+      - 'aura_adoption_bootstrap.py'
+      - 'tests/test_aura_adoption_bootstrap.py'
+      - 'tools/aura_adopt/adoption_friction_receipt.py'
+      - 'tools/aura_adopt/test_adoption_friction_receipt.py'
+      - '.github/workflows/aura-adopt-zf00b-friction-receipt.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  zf00b:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile compiler and friction harness
+        run: >-
+          python -m py_compile
+          aura_adoption_bootstrap.py
+          tests/test_aura_adoption_bootstrap.py
+          tools/aura_adopt/adoption_friction_receipt.py
+          tools/aura_adopt/test_adoption_friction_receipt.py
+      - name: Run consequence-complete receipt regressions
+        run: python -m unittest -v tools.aura_adopt.test_adoption_friction_receipt
+      - name: Re-run inherited Objective-1 compiler regressions
+        run: python -m unittest -v tests.test_aura_adoption_bootstrap
