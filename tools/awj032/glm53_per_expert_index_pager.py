@@ -4,8 +4,9 @@ D0 metadata/synthetic implementation only. The official checkpoint index is the
 source of truth: this module never guesses that a checkpoint is per-expert. The
 standard GLM key resolver succeeds only when the supplied weight map contains a
 complete set of per-expert gate/up/down keys (and FP8 scale companions when
-required). Selected experts are then read by exact tensor key; no packed expert
-bank is materialized and G2 is never admitted by this module.
+required). Selected experts are then requested by exact tensor key; physical I/O
+remains UNKNOWN unless the backend supplies binding-matched evidence. G2 is never
+admitted by this module.
 """
 from __future__ import annotations
 
@@ -18,6 +19,7 @@ from typing import Any, Mapping, Protocol, Sequence
 WEIGHT_ROLES = ("gate", "up", "down")
 SCALE_ROLES = ("gate_scale", "up_scale", "down_scale")
 _PROJECTION_BY_ROLE = {"gate": "gate_proj", "up": "up_proj", "down": "down_proj"}
+BACKEND_IO_ATTESTATION_SCHEMA = "AuraExpertPagerBackendIOAttestationV1"
 
 
 class PerExpertPagerError(RuntimeError):
@@ -159,7 +161,7 @@ def build_standard_glm_per_expert_binding(
     """Bind the standard per-expert GLM key family only when the index proves it.
 
     This is a detector, not an assumption. Any missing weight/scale key fails before
-    a pager/backend is created. `weight_map` values are exact shard filenames from
+    a pager/backend is created. ``weight_map`` values are exact shard filenames from
     model.safetensors.index.json.
     """
     _text(model_revision, "MODEL_REVISION_REQUIRED")
@@ -212,6 +214,8 @@ def build_standard_glm_per_expert_binding(
 
 
 class TensorKeyBackend(Protocol):
+    """Logical exact-key request contract; not itself physical-I/O evidence."""
+
     def read_tensor(self, shard: str, key: str) -> Any: ...
 
 
@@ -231,11 +235,47 @@ class PerExpertPagerReceipt:
     layer_id: str
     selected_experts: tuple[int, ...]
     tensor_reads: int
-    selected_expert_tensor_reads_only: bool
-    whole_expert_bank_materialized: bool
+    logical_selected_expert_key_requests_only: bool
+    physical_io_attested: bool
+    selected_expert_tensor_reads_only: bool | None
+    whole_bank_reads: int | None
+    whole_expert_bank_materialized: bool | None
+    backend_attestation_id: str | None
     all_experts_addressable: bool
     g2_admitted: bool = False
     claim_ceiling: str = "D0_PER_EXPERT_INDEX_PAGER_ONLY_NO_FLAGSHIP_RUNTIME_OR_G2_PROOF"
+
+
+def _backend_io_attestation(backend: Any, binding_digest: str) -> dict[str, Any] | None:
+    """Return validated source-bound physical-I/O evidence, or UNKNOWN when absent."""
+    attestor = getattr(backend, "io_attestation", None)
+    if not callable(attestor):
+        return None
+    raw = attestor(binding_digest)
+    if not isinstance(raw, Mapping):
+        raise PerExpertSourceError("BACKEND_IO_ATTESTATION_INVALID")
+    if raw.get("schema") != BACKEND_IO_ATTESTATION_SCHEMA:
+        raise PerExpertSourceError("BACKEND_IO_ATTESTATION_SCHEMA_MISMATCH")
+    if raw.get("binding_digest") != binding_digest:
+        raise PerExpertSourceError("BACKEND_IO_ATTESTATION_BINDING_MISMATCH")
+    attestation_id = raw.get("attestation_id")
+    selected_only = raw.get("physical_selected_only")
+    whole_bank_reads = raw.get("whole_bank_reads")
+    whole_bank_materialized = raw.get("whole_bank_materialized")
+    if not isinstance(attestation_id, str) or not attestation_id.strip():
+        raise PerExpertSourceError("BACKEND_IO_ATTESTATION_ID_REQUIRED")
+    if not isinstance(selected_only, bool):
+        raise PerExpertSourceError("BACKEND_PHYSICAL_SELECTED_ONLY_INVALID")
+    if isinstance(whole_bank_reads, bool) or not isinstance(whole_bank_reads, int) or whole_bank_reads < 0:
+        raise PerExpertSourceError("BACKEND_WHOLE_BANK_READS_INVALID")
+    if not isinstance(whole_bank_materialized, bool):
+        raise PerExpertSourceError("BACKEND_WHOLE_BANK_MATERIALIZED_INVALID")
+    return {
+        "attestation_id": attestation_id.strip(),
+        "physical_selected_only": selected_only,
+        "whole_bank_reads": whole_bank_reads,
+        "whole_bank_materialized": whole_bank_materialized,
+    }
 
 
 class PerExpertIndexPager:
@@ -259,6 +299,11 @@ class PerExpertIndexPager:
     ) -> PerExpertPage:
         self._assert_current(model_revision, index_digest)
         selected = canonical_expert_ids(expert_ids, self.binding.num_experts)
+        if len(selected) == self.binding.num_experts:
+            raise PerExpertReadError(
+                "WHOLE_EXPERT_BANK_SINGLE_CALL_FORBIDDEN",
+                "full reopenability must be exercised across bounded selections",
+            )
         weight_payloads: dict[int, dict[str, Any]] = {}
         scale_payloads: dict[int, dict[str, Any]] = {}
         reads = 0
@@ -296,14 +341,19 @@ class PerExpertIndexPager:
             binding_digest=self.binding.digest,
             tensor_reads=reads,
         )
+        physical = _backend_io_attestation(self.backend, self.binding.digest)
         self._last_receipt = PerExpertPagerReceipt(
             schema="AuraPerExpertIndexPagerReceiptV1",
             binding_digest=self.binding.digest,
             layer_id=self.binding.layer_id,
             selected_experts=selected,
             tensor_reads=reads,
-            selected_expert_tensor_reads_only=True,
-            whole_expert_bank_materialized=False,
+            logical_selected_expert_key_requests_only=True,
+            physical_io_attested=physical is not None,
+            selected_expert_tensor_reads_only=None if physical is None else physical["physical_selected_only"],
+            whole_bank_reads=None if physical is None else physical["whole_bank_reads"],
+            whole_expert_bank_materialized=None if physical is None else physical["whole_bank_materialized"],
+            backend_attestation_id=None if physical is None else physical["attestation_id"],
             all_experts_addressable=(set(self.binding.experts) == set(range(self.binding.num_experts))),
         )
         return page
