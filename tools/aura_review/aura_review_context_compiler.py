@@ -6,12 +6,14 @@ from collections import defaultdict, deque
 from dataclasses import asdict, dataclass
 from typing import Mapping, Sequence
 
-SCHEMA = "AffectedConeContextV1"
+SCHEMA = "AffectedConeContextV2"
+PRODUCTION = "PRODUCTION"
+NONAUTHORITATIVE_FIXTURE = "NONAUTHORITATIVE_FIXTURE"
 EDGE_TYPES = {
     "IMPORTS", "CALLS", "IMPLEMENTS", "READS", "WRITES", "DEPENDS_ON",
     "DEPENDED_BY", "MUST_NOT_AFFECT", "NEGATIVE_SPACE", "TEST_COVERS",
 }
-REQUIRED_EDGE_TYPES = {"DEPENDS_ON", "DEPENDED_BY", "MUST_NOT_AFFECT", "NEGATIVE_SPACE"}
+NEGATIVE_EDGE_TYPES = {"MUST_NOT_AFFECT", "NEGATIVE_SPACE"}
 
 
 class ContextCompileRefusal(ValueError):
@@ -92,14 +94,22 @@ class ContextNodeV1:
     coordinates: tuple[str, ...] = ()
 
 
-def _edge_reason(edge: GraphEdgeV1, changed: set[str]) -> tuple[str, str]:
-    if edge.relation in {"MUST_NOT_AFFECT", "NEGATIVE_SPACE"}:
-        return edge.target, edge.relation
+def _direct_edge_reason(edge: GraphEdgeV1, changed: set[str]) -> tuple[str, str] | None:
+    """Return the direct consequence of an edge touching the changed frontier.
+
+    Negative-space invariants are directional: only a changed source may make the
+    target mandatory. Ordinary graph relations are consequence-relevant in either
+    direction when directly incident to a changed path.
+    """
+    if edge.relation in NEGATIVE_EDGE_TYPES:
+        if edge.source in changed:
+            return edge.target, edge.relation
+        return None
     if edge.source in changed:
         return edge.target, f"OUTBOUND:{edge.relation}"
     if edge.target in changed:
         return edge.source, f"INBOUND:{edge.relation}"
-    return edge.target, f"TRANSITIVE:{edge.relation}"
+    return None
 
 
 def compile_affected_cone(
@@ -119,6 +129,7 @@ def compile_affected_cone(
     coordinate_locators: Sequence[CoordinateLocatorV1] = (),
     expected_codemap_generation_ref: str | None = None,
     expected_workgraph_generation_ref: str | None = None,
+    fixture_mode: bool = False,
     max_nodes: int = 64,
     optional_depth: int = 1,
 ) -> dict:
@@ -134,14 +145,30 @@ def compile_affected_cone(
         "route_policy_ref": route_policy_ref,
     }
     bindings = {k: _text(k, v) for k, v in bindings.items()}
+    if type(fixture_mode) is not bool:
+        raise ContextCompileRefusal("INVALID_FIXTURE_MODE")
+    mode = NONAUTHORITATIVE_FIXTURE if fixture_mode else PRODUCTION
     if isinstance(max_nodes, bool) or not isinstance(max_nodes, int) or max_nodes < 1:
         raise ContextCompileRefusal("INVALID_MAX_NODES")
     if isinstance(optional_depth, bool) or not isinstance(optional_depth, int) or optional_depth < 0:
         raise ContextCompileRefusal("INVALID_OPTIONAL_DEPTH")
-    if expected_codemap_generation_ref is not None and codemap_generation_ref != expected_codemap_generation_ref:
-        raise ContextCompileRefusal("CODEMAP_GENERATION_STALE")
-    if expected_workgraph_generation_ref is not None and workgraph_generation_ref != expected_workgraph_generation_ref:
-        raise ContextCompileRefusal("WORKGRAPH_GENERATION_STALE")
+
+    if not fixture_mode and (
+        expected_codemap_generation_ref is None or expected_workgraph_generation_ref is None
+    ):
+        raise ContextCompileRefusal("CURRENTNESS_EVIDENCE_REQUIRED")
+    if expected_codemap_generation_ref is not None:
+        expected_codemap_generation_ref = _text(
+            "expected_codemap_generation_ref", expected_codemap_generation_ref
+        )
+        if codemap_generation_ref != expected_codemap_generation_ref:
+            raise ContextCompileRefusal("CODEMAP_GENERATION_STALE")
+    if expected_workgraph_generation_ref is not None:
+        expected_workgraph_generation_ref = _text(
+            "expected_workgraph_generation_ref", expected_workgraph_generation_ref
+        )
+        if workgraph_generation_ref != expected_workgraph_generation_ref:
+            raise ContextCompileRefusal("WORKGRAPH_GENERATION_STALE")
 
     changed = {_norm_path(p) for p in changed_paths}
     if not changed:
@@ -172,21 +199,22 @@ def compile_affected_cone(
     for edge in all_edges:
         adjacency[edge.source].append((edge.target, edge))
         adjacency[edge.target].append((edge.source, edge))
-        if edge.source in changed or edge.target in changed or edge.relation in REQUIRED_EDGE_TYPES:
-            if edge.relation in {"MUST_NOT_AFFECT", "NEGATIVE_SPACE"}:
-                if edge.source in changed:
-                    node, why = edge.target, edge.relation
-                else:
-                    continue
-            else:
-                node, why = _edge_reason(edge, changed)
-            reasons.setdefault(node, set()).add(why)
-            distance[node] = min(distance.get(node, 999), 1)
-            required.add(node)
+        direct = _direct_edge_reason(edge, changed)
+        if direct is None:
+            continue
+        node, why = direct
+        reasons.setdefault(node, set()).add(why)
+        distance[node] = min(distance.get(node, 999), 1)
+        required.add(node)
 
     if len(required) > max_nodes:
-        raise ContextCompileRefusal("CONTEXT_BUDGET_INSUFFICIENT", f"required={len(required)} max_nodes={max_nodes}")
+        raise ContextCompileRefusal(
+            "CONTEXT_BUDGET_INSUFFICIENT", f"required={len(required)} max_nodes={max_nodes}"
+        )
 
+    # Optional expansion begins only from the reached mandatory frontier. A graph
+    # relation elsewhere in the repository can never become mandatory merely due
+    # to its relation label.
     if optional_depth:
         queue = deque((p, 0) for p in sorted(required))
         seen_depth = {p: 0 for p in required}
@@ -194,7 +222,9 @@ def compile_affected_cone(
             node, depth_now = queue.popleft()
             if depth_now >= optional_depth:
                 continue
-            for other, edge in sorted(adjacency.get(node, ()), key=lambda item: (item[0], item[1].relation)):
+            for other, edge in sorted(
+                adjacency.get(node, ()), key=lambda item: (item[0], item[1].relation)
+            ):
                 next_depth = depth_now + 1
                 if other in required:
                     continue
@@ -207,7 +237,9 @@ def compile_affected_cone(
                 queue.append((other, next_depth))
 
     required_sorted = sorted(required)
-    optional_sorted = sorted((p for p in reasons if p not in required), key=lambda p: (distance.get(p, 999), p))
+    optional_sorted = sorted(
+        (p for p in reasons if p not in required), key=lambda p: (distance.get(p, 999), p)
+    )
     room = max_nodes - len(required_sorted)
     selected = required_sorted + optional_sorted[:room]
     omitted_optional = optional_sorted[room:]
@@ -222,9 +254,16 @@ def compile_affected_cone(
         for p in selected
     ]
 
-    graph_refs = sorted({edge.source_ref for edge in all_edges if edge.source in selected or edge.target in selected})
+    graph_refs = sorted(
+        {
+            edge.source_ref
+            for edge in all_edges
+            if edge.source in selected or edge.target in selected
+        }
+    )
     body = {
         "schema": SCHEMA,
+        "mode": mode,
         **bindings,
         "changed_paths": sorted(changed),
         "nodes": [asdict(node) for node in nodes],
@@ -237,17 +276,24 @@ def compile_affected_cone(
         "coordinate_is_currentness": False,
         "coordinate_is_source_truth": False,
         "context_budget_exhausted": bool(omitted_optional),
-        "context_strategy": "MINIMUM_CONSEQUENCE_COMPLETE",
+        "context_strategy": "MINIMUM_CONSEQUENCE_COMPLETE_REACHED_FRONTIER_V2",
     }
     body["context_digest"] = _digest(body)
     return body
 
 
 def project_review_capsule_inputs(context: Mapping[str, object]) -> dict:
-    if context.get("schema") != SCHEMA or not context.get("context_digest"):
+    if not isinstance(context, Mapping) or context.get("schema") != SCHEMA:
         raise ContextCompileRefusal("INVALID_AFFECTED_CONE_CONTEXT")
+    if context.get("mode") != PRODUCTION:
+        raise ContextCompileRefusal("NONAUTHORITATIVE_FIXTURE_CONTEXT")
+    claimed_digest = _text("context_digest", context.get("context_digest"))
+    body = dict(context)
+    body.pop("context_digest", None)
+    if claimed_digest != _digest(body):
+        raise ContextCompileRefusal("AFFECTED_CONE_DIGEST_MISMATCH")
     return {
         "changed_paths": list(context.get("changed_paths") or ()),
         "code_graph_refs": list(context.get("code_graph_refs") or ()),
-        "deterministic_receipt_refs": [f"affected-cone:{context['context_digest']}"],
+        "deterministic_receipt_refs": [f"affected-cone:{claimed_digest}"],
     }
