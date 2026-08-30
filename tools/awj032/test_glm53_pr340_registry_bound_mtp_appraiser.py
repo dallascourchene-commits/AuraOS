@@ -142,7 +142,7 @@ class PR340RegistryBoundMTPAdmissionTests(unittest.TestCase):
             out = m.verify_and_admit_registry_bound_official_mtp_role(report)
 
         self.assertEqual(
-            m.PINNED_CLASSIFICATION_STAGE_LOGICAL_ID,
+            report["logical_id"],
             captured["expected_pr340_logical_id"],
         )
         self.assertEqual(
