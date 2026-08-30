@@ -11,7 +11,8 @@ Evidence law:
 - structural assertions are artifact/source/currentness-bound and committed, then
   remain UNKNOWN until the appropriate trusted resolver owner earns completion;
 - consequence evidence is never mislabeled as capability evidence;
-- serialized refs/cohorts are privacy-minimal opaque identifiers;
+- serialized refs/cohorts/scalar identifiers are privacy-minimal opaque identifiers;
+- privacy telemetry mode and evidence class are closed D0 vocabularies;
 - causally impossible combinations fail closed; UNKNOWN remains UNKNOWN.
 """
 from __future__ import annotations
@@ -43,6 +44,8 @@ _COHORT_VALUE_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:+/-]{0,63}$")
 _SENSITIVE_RE = re.compile(
     r"(?i)(?:^|[:/#._-])(?:api[_-]?key|access[_-]?token|refresh[_-]?token|secret|password|bearer)(?:$|[:/#._-])"
 )
+_ALLOWED_PRIVACY_TELEMETRY_MODES = frozenset({"LOCAL_NO_TELEMETRY"})
+_ALLOWED_EVIDENCE_CLASSES = frozenset({"LOCAL_TEST", "CONSENTED_STUDY", "SYNTHETIC"})
 
 
 class AcceptanceEvidenceMode(str, Enum):
@@ -76,6 +79,12 @@ def _ref(value: str | None, code: str = "EVIDENCE_REF_INVALID") -> str:
     if not _REF_RE.fullmatch(clean) or _private_like(clean):
         raise FrictionReceiptError(code)
     return clean
+
+
+def _closed_token(value: str | None, allowed: frozenset[str], code: str) -> str:
+    if not isinstance(value, str) or value not in allowed:
+        raise FrictionReceiptError(code)
+    return value
 
 
 def _capability_ref(value: str | None) -> str:
@@ -375,6 +384,18 @@ def compile_first_value_receipt(
     if not isinstance(observation, FirstValueWitnessObservationV1):
         raise FrictionReceiptError("WITNESS_OBSERVATION_REQUIRED")
 
+    route_id_clean = _ref(route_id, "ROUTE_ID_NOT_PRIVACY_MINIMAL")
+    mission_head_clean = _ref(mission_head, "MISSION_HEAD_NOT_PRIVACY_MINIMAL")
+    privacy_mode_clean = _closed_token(
+        privacy_telemetry_mode,
+        _ALLOWED_PRIVACY_TELEMETRY_MODES,
+        "PRIVACY_TELEMETRY_MODE_NOT_ALLOWED",
+    )
+    evidence_class_clean = _closed_token(
+        evidence_class,
+        _ALLOWED_EVIDENCE_CLASSES,
+        "EVIDENCE_CLASS_NOT_ALLOWED",
+    )
     recipe = _recipe_ref(recipe_ref)
     cap_refs = tuple(_capability_ref(value) for value in capability_refs)
     cohort_clean = _privacy_minimal_cohort(cohort)
@@ -437,7 +458,7 @@ def compile_first_value_receipt(
         })
 
     return build_friction_receipt(
-        decision, route_id=route_id, mission_head=mission_head, build_refs=build_refs_clean,
+        decision, route_id=route_id_clean, mission_head=mission_head_clean, build_refs=build_refs_clean,
         cohort=cohort_clean, starting_state=starting_state, stage_events=tuple(events),
         accepted_value=accepted_value, friction_vector=vector,
         weights={key: 1.0 for key in vector},
@@ -446,7 +467,7 @@ def compile_first_value_receipt(
         permissions=(), mandatory_account=False, mandatory_key=False,
         clarification_events=0, support_events=0, route_changes=(),
         capability_refs=cap_refs, recipe_refs=(recipe,),
-        privacy_telemetry_mode=privacy_telemetry_mode,
+        privacy_telemetry_mode=privacy_mode_clean,
         invalidators=(
             "SOURCE_CURRENTNESS_MISMATCH",
             "SYNTHETIC_ACCEPTANCE_LAUNDERED_AS_USER_ACCEPTANCE",
@@ -457,10 +478,12 @@ def compile_first_value_receipt(
             "STRUCTURAL_SHARE_REUSE_ASSERTION_LAUNDERED_AS_AUTHENTICATED_CONSEQUENCE",
             "CONSEQUENCE_EVIDENCE_MISLABELED_AS_CAPABILITY",
             "PRIVATE_CONTENT_LAUNDERED_AS_REFERENCE_OR_COHORT",
+            "PRIVATE_CONTENT_LAUNDERED_AS_SCALAR_RECEIPT_IDENTITY",
+            "TELEMETRY_OR_EVIDENCE_CLASS_WIDENED_OUTSIDE_D0_VOCABULARY",
             "TRUST_POINTER_PRESENCE_LAUNDERED_AS_TRUST_COMPLETION",
             "WITNESS_CAUSALITY_CONTRADICTION",
         ),
-        evidence_class=evidence_class,
+        evidence_class=evidence_class_clean,
     )
 
 
