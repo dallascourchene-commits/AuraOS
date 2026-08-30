@@ -1,6 +1,12 @@
 name: BugHound authority registry consumer
 
 on:
+  push:
+    paths:
+      - "tools/bughound/authority_registry.py"
+      - "tools/bughound/cash_effect_boundary.py"
+      - "tests/test_bughound_cash_effect_boundary.py"
+      - ".github/workflows/bughound-authority-registry-consumer.yml"
   pull_request:
     paths:
       - "tools/bughound/authority_registry.py"
@@ -11,7 +17,6 @@ on:
 
 permissions:
   contents: read
-  metadata: read
 
 concurrency:
   group: bughound-authority-registry-${{ github.event.pull_request.number || github.ref }}
