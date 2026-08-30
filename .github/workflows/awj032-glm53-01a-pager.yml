@@ -9,6 +9,8 @@ on:
       - 'tools/awj032/test_glm53_packed_expert_pager.py'
       - 'tools/awj032/glm53_per_expert_index_pager.py'
       - 'tools/awj032/test_glm53_per_expert_index_pager.py'
+      - 'tools/awj032/glm53_pager_cache_adapter.py'
+      - 'tools/awj032/test_glm53_pager_cache_adapter.py'
       - '.github/workflows/awj032-glm53-01a-pager.yml'
   workflow_dispatch:
 
@@ -32,6 +34,8 @@ jobs:
           tools/awj032/test_glm53_packed_expert_pager.py
           tools/awj032/glm53_per_expert_index_pager.py
           tools/awj032/test_glm53_per_expert_index_pager.py
+          tools/awj032/glm53_pager_cache_adapter.py
+          tools/awj032/test_glm53_pager_cache_adapter.py
       - name: G1 compatibility regressions
         working-directory: tools/awj032
         run: python -m unittest -v test_glm53_compatibility_probe.py
@@ -41,3 +45,4 @@ jobs:
           python -m unittest -v
           test_glm53_packed_expert_pager.py
           test_glm53_per_expert_index_pager.py
+          test_glm53_pager_cache_adapter.py
