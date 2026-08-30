@@ -19,7 +19,9 @@ from typing import Iterable
 SCHEMA = "AuraAirLLMSourceAdmissionV1"
 DEFAULT_EXPECTED_VERSION = "3.3.0"
 _VERSION_RE = re.compile(r"\bversion\s*=\s*['\"]([^'\"]+)['\"]")
-_PIP_MUTATION_RE = re.compile(r"(?:python(?:3)?\s+-m\s+pip|\bpip(?:3)?\s+install)\b", re.IGNORECASE)
+_PIP_MUTATION_RE = re.compile(
+    r"(?:python(?:3)?\s+-m\s+pip|\bpip(?:3)?\s+install)\b", re.IGNORECASE
+)
 
 
 @dataclass(frozen=True)
@@ -72,39 +74,187 @@ def _trust_value(node: ast.AST) -> str:
     return "DYNAMIC"
 
 
-def audit_airllm_source(root: str | Path, expected_version: str = DEFAULT_EXPECTED_VERSION) -> SourceAdmissionReceipt:
+def _trust_finding(state: str, rel: str, line: int, detail: str) -> Finding | None:
+    if state == "TRUE":
+        return Finding("REMOTE_CODE_TRUE", rel, line, detail)
+    if state == "DYNAMIC":
+        return Finding("REMOTE_CODE_DYNAMIC", rel, line, detail)
+    return None
+
+
+def _string_key(node: ast.AST) -> str | None:
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    return None
+
+
+def _scan_trust_remote_code(tree: ast.AST, rel: str) -> list[Finding]:
+    """Reject direct and mapping-mediated remote-code widening.
+
+    Direct keyword checks alone miss forms such as
+    ``loader(**{"trust_remote_code": True})`` or a dict later expanded with
+    ``**opts``. Scan literal mappings and subscript assignments too.
+    """
+    findings: list[Finding] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Call):
+            for kw in node.keywords:
+                if kw.arg != "trust_remote_code":
+                    continue
+                finding = _trust_finding(
+                    _trust_value(kw.value),
+                    rel,
+                    int(getattr(node, "lineno", 0)),
+                    "trust_remote_code keyword is not literal False",
+                )
+                if finding is not None:
+                    findings.append(finding)
+
+        if isinstance(node, ast.Dict):
+            for key, value in zip(node.keys, node.values):
+                if key is None or _string_key(key) != "trust_remote_code":
+                    continue
+                finding = _trust_finding(
+                    _trust_value(value),
+                    rel,
+                    int(getattr(node, "lineno", 0)),
+                    "trust_remote_code mapping value is not literal False",
+                )
+                if finding is not None:
+                    findings.append(finding)
+
+        value_node: ast.AST | None = None
+        target: ast.AST | None = None
+        if isinstance(node, ast.Assign) and len(node.targets) == 1:
+            target = node.targets[0]
+            value_node = node.value
+        elif isinstance(node, ast.AnnAssign):
+            target = node.target
+            value_node = node.value
+        if (
+            value_node is not None
+            and isinstance(target, ast.Subscript)
+            and _string_key(target.slice) == "trust_remote_code"
+        ):
+            finding = _trust_finding(
+                _trust_value(value_node),
+                rel,
+                int(getattr(node, "lineno", 0)),
+                "trust_remote_code subscript assignment is not literal False",
+            )
+            if finding is not None:
+                findings.append(finding)
+    return findings
+
+
+def _safe_source_file(path: Path, root: Path, findings: list[Finding]) -> bool:
+    """Keep the audited source set physically inside the pinned materialization."""
+    try:
+        rel_hint = _rel(path, root)
+    except ValueError:
+        rel_hint = path.as_posix()
+    if path.is_symlink():
+        findings.append(
+            Finding(
+                "SOURCE_SYMLINK_FORBIDDEN",
+                rel_hint,
+                0,
+                "audited AirLLM source must not be supplied through a symlink",
+            )
+        )
+        return False
+    try:
+        resolved = path.resolve(strict=True)
+        resolved.relative_to(root)
+    except (OSError, ValueError):
+        findings.append(
+            Finding(
+                "SOURCE_PATH_ESCAPE_OR_UNRESOLVED",
+                rel_hint,
+                0,
+                "source path does not resolve strictly inside the pinned root",
+            )
+        )
+        return False
+    return resolved.is_file()
+
+
+def audit_airllm_source(
+    root: str | Path, expected_version: str = DEFAULT_EXPECTED_VERSION
+) -> SourceAdmissionReceipt:
     root = Path(root).resolve()
     findings: list[Finding] = []
     if not root.is_dir():
-        return SourceAdmissionReceipt(SCHEMA, "BLOCKED", expected_version, None, "", (), (
-            Finding("SOURCE_ROOT_MISSING", ".", 0, "source root is not a directory"),
-        ))
+        return SourceAdmissionReceipt(
+            SCHEMA,
+            "BLOCKED",
+            expected_version,
+            None,
+            "",
+            (),
+            (Finding("SOURCE_ROOT_MISSING", ".", 0, "source root is not a directory"),),
+        )
 
     setup = root / "air_llm" / "setup.py"
     package = root / "air_llm" / "airllm"
     files: list[Path] = []
-    if setup.is_file():
-        files.append(setup)
+    if setup.exists():
+        if _safe_source_file(setup, root, findings):
+            files.append(setup)
     else:
-        findings.append(Finding("SETUP_MISSING", "air_llm/setup.py", 0, "pinned package metadata missing"))
+        findings.append(
+            Finding("SETUP_MISSING", "air_llm/setup.py", 0, "pinned package metadata missing")
+        )
     if package.is_dir():
-        files.extend(p for p in package.rglob("*.py") if p.is_file())
+        for path in package.rglob("*.py"):
+            if _safe_source_file(path, root, findings):
+                files.append(path)
     else:
-        findings.append(Finding("PACKAGE_MISSING", "air_llm/airllm", 0, "AirLLM package directory missing"))
+        findings.append(
+            Finding("PACKAGE_MISSING", "air_llm/airllm", 0, "AirLLM package directory missing")
+        )
 
     observed_version = None
-    if setup.is_file():
-        setup_text = setup.read_text(encoding="utf-8", errors="strict")
-        match = _VERSION_RE.search(setup_text)
-        if match:
-            observed_version = match.group(1)
+    if setup in files:
+        try:
+            setup_text = setup.read_text(encoding="utf-8", errors="strict")
+        except (OSError, UnicodeError) as exc:
+            findings.append(
+                Finding("SOURCE_READ_ERROR", _rel(setup, root), 0, type(exc).__name__)
+            )
         else:
-            findings.append(Finding("VERSION_UNRESOLVED", _rel(setup, root), 0, "literal package version not found"))
-        if observed_version != expected_version:
-            findings.append(Finding("VERSION_MISMATCH", _rel(setup, root), 0, f"expected {expected_version!r}, observed {observed_version!r}"))
+            match = _VERSION_RE.search(setup_text)
+            if match:
+                observed_version = match.group(1)
+            else:
+                findings.append(
+                    Finding(
+                        "VERSION_UNRESOLVED",
+                        _rel(setup, root),
+                        0,
+                        "literal package version not found",
+                    )
+                )
+            if observed_version != expected_version:
+                findings.append(
+                    Finding(
+                        "VERSION_MISMATCH",
+                        _rel(setup, root),
+                        0,
+                        f"expected {expected_version!r}, observed {observed_version!r}",
+                    )
+                )
 
+    readable_files: list[Path] = []
     for path in files:
-        text = path.read_text(encoding="utf-8", errors="strict")
+        try:
+            text = path.read_text(encoding="utf-8", errors="strict")
+        except (OSError, UnicodeError) as exc:
+            findings.append(
+                Finding("SOURCE_READ_ERROR", _rel(path, root), 0, type(exc).__name__)
+            )
+            continue
+        readable_files.append(path)
         rel = _rel(path, root)
         for match in _PIP_MUTATION_RE.finditer(text):
             line = text.count("\n", 0, match.start()) + 1
@@ -114,22 +264,14 @@ def audit_airllm_source(root: str | Path, expected_version: str = DEFAULT_EXPECT
         try:
             tree = ast.parse(text, filename=rel)
         except SyntaxError as exc:
-            findings.append(Finding("PYTHON_PARSE_ERROR", rel, int(exc.lineno or 0), str(exc.msg)))
+            findings.append(
+                Finding("PYTHON_PARSE_ERROR", rel, int(exc.lineno or 0), str(exc.msg))
+            )
             continue
-        for node in ast.walk(tree):
-            if not isinstance(node, ast.Call):
-                continue
-            for kw in node.keywords:
-                if kw.arg != "trust_remote_code":
-                    continue
-                state = _trust_value(kw.value)
-                if state == "TRUE":
-                    findings.append(Finding("REMOTE_CODE_TRUE", rel, int(getattr(node, "lineno", 0)), "trust_remote_code=True"))
-                elif state == "DYNAMIC":
-                    findings.append(Finding("REMOTE_CODE_DYNAMIC", rel, int(getattr(node, "lineno", 0)), "trust_remote_code is not literal False"))
+        findings.extend(_scan_trust_remote_code(tree, rel))
 
     inspected = tuple(sorted(_rel(p, root) for p in files))
-    digest = _file_digest(files, root) if files else ""
+    digest = _file_digest(readable_files, root) if readable_files else ""
     status = "PASS" if not findings else "BLOCKED"
     return SourceAdmissionReceipt(
         schema=SCHEMA,
@@ -142,7 +284,9 @@ def audit_airllm_source(root: str | Path, expected_version: str = DEFAULT_EXPECT
     )
 
 
-def require_admitted(root: str | Path, expected_version: str = DEFAULT_EXPECTED_VERSION) -> SourceAdmissionReceipt:
+def require_admitted(
+    root: str | Path, expected_version: str = DEFAULT_EXPECTED_VERSION
+) -> SourceAdmissionReceipt:
     receipt = audit_airllm_source(root, expected_version)
     if receipt.status != "PASS":
         codes = ",".join(sorted({f.code for f in receipt.findings}))
@@ -152,6 +296,7 @@ def require_admitted(root: str | Path, expected_version: str = DEFAULT_EXPECTED_
 
 def main() -> int:
     import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument("source_root")
     parser.add_argument("--expected-version", default=DEFAULT_EXPECTED_VERSION)
