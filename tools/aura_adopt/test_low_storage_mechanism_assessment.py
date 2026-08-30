@@ -20,10 +20,10 @@ def scenario(**kwargs):
 
 def metrics(
     retained, mem=100, startup=10, reopen=10, dl=0, net=0,
-    kv=50, ttft=20, prefill=15, decode_token=2, recompute=5,
+    kv=50, ttft=20, prefill=15, decode_token=2, recompute=5, payload=1000,
 ):
     return m.MetricSet(
-        1000, retained, mem, startup, 1, reopen, 1, dl, net, None,
+        payload, retained, mem, startup, 1, reopen, 1, dl, net, None,
         kv, ttft, prefill, decode_token, recompute,
     )
 
@@ -63,6 +63,11 @@ class LowStorageMechanismAssessmentTests(unittest.TestCase):
 
     def test_no_storage_win_demoted(self):
         self.assertEqual("DEMOTE", m.assess(evidence(metrics(110), metrics(100)))["disposition"])
+
+    def test_payload_size_mismatch_rejected(self):
+        with self.assertRaises(m.AssessmentError) as ctx:
+            evidence(metrics(50, payload=900), metrics(100, payload=1000))
+        self.assertEqual("LOGICAL_PAYLOAD_SIZE_MISMATCH", ctx.exception.code)
 
     def test_hidden_memory_cost_makes_conditional(self):
         result = m.assess(evidence(metrics(50, mem=250), metrics(100, mem=100)))
