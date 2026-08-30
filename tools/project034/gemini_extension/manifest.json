@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "Aura Arena Gemini Bridge",
+  "version": "0.1.0",
+  "description": "Assisted, Arena-governed bridge between a normal Gemini web chat and local AuraOS. Never reads Google cookies or credentials and never auto-sends in v0.1.",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://gemini.google.com/*",
+    "http://127.0.0.1:8765/*",
+    "http://localhost:8765/*"
+  ],
+  "action": {
+    "default_title": "Aura Arena Gemini Bridge",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://gemini.google.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
