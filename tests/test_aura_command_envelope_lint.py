@@ -20,7 +20,10 @@ def _good_envelope():
         },
         "effect_ceiling": "D0",
         "work_order_ref": f"Drive {WORK_ORDER_ID}",
-        "objective": {"requested_effect": "D0", "task": "validate source-bound D0 work"},
+        "objective": {
+            "requested_effect": "D0",
+            "text": "validate source-bound D0 work",
+        },
         "negative_intent": ["NO_PROVIDER_SPEND", "NO_MAIN_MERGE"],
     }
 
@@ -96,3 +99,19 @@ def test_objective_must_be_structured_for_current_d0_profile():
     env = _good_envelope()
     env["objective"] = "D0 prose objective"
     assert "OBJECTIVE_NOT_OBJECT" in validate_d0_envelope(env)["errors"]
+
+
+def test_dispatcher_compatible_objective_text_is_required():
+    env = _good_envelope()
+    del env["objective"]["text"]
+    env["objective"]["task"] = "legacy author-side field"
+    errors = validate_d0_envelope(env)["errors"]
+    assert "OBJECTIVE_TEXT_MISSING" in errors
+
+
+def test_objective_task_is_not_a_substitute_for_dispatcher_text():
+    env = _good_envelope()
+    env["objective"] = {"requested_effect": "D0", "task": "looks valid to old linter"}
+    receipt = validate_d0_envelope(env)
+    assert receipt["valid"] is False
+    assert receipt["errors"] == ["OBJECTIVE_TEXT_MISSING"]
