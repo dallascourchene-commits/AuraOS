@@ -167,8 +167,8 @@ class RegisteredIndependentReproductionGateTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "CALLER_REPRODUCTION_EXPECTATION_FORBIDDEN"):
             self.admit(expected_reproducer_ref="reproducer://caller")
 
-    def test_receipt_digest_substitution_fails(self):
-        with self.assertRaisesRegex(ValueError, "REPRODUCTION_RECEIPT_DIGEST_MISMATCH"):
+    def test_unbound_receipt_digest_is_not_selected_from_source_owned_registry(self):
+        with self.assertRaisesRegex(ValueError, "INDEPENDENT_REPRODUCTION_REGISTRY_REQUIRED"):
             self.admit(record=replace(self.record(), reproduction_receipt_digest="wrong"))
 
     def test_reproducer_identity_substitution_fails(self):
