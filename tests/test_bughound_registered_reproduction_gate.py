@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+from unittest import mock
 import inspect
 import unittest
 
@@ -9,9 +10,12 @@ from tools.bughound.bounty_candidate_admission import (
     IndependentBountyReproductionReceiptV1,
 )
 from tools.bughound.bounty_mission import BugHoundCashMissionInputV1
+import tools.bughound.registered_reproduction_gate as registry_mod
 from tools.bughound.registered_reproduction_gate import (
     BugHoundIndependentReproductionRegistryRecordV1,
+    REGISTRY_GENERATION,
     admit_with_registered_independent_reproduction,
+    independent_reproduction_registry_receipt,
 )
 
 
@@ -84,23 +88,25 @@ class RegisteredIndependentReproductionGateTests(unittest.TestCase):
     def admit(self, *, repro=None, record=None, **extra):
         repro = repro or self.repro()
         record = record or self.record(repro)
-        return admit_with_registered_independent_reproduction(
-            mission_input=self.mission(),
-            candidate=self.candidate(),
-            independent_reproduction=repro,
-            duplicate_pressure_state="LOW_OBSERVED_DUPLICATE_PRESSURE",
-            duplicate_check_currentness_ref="dup-current-1",
-            report_lint_state="REPORT_LINT_CLEAN",
-            report_digest="report-1",
-            program_admissibility_state="CURRENTLY_ADMISSIBLE",
-            program_admissibility_ref="program-current-1",
-            registry_lookup=lambda _: record,
-            **extra,
-        )
+        with mock.patch.object(registry_mod, "_CANONICAL_RECORDS", (record,)):
+            return admit_with_registered_independent_reproduction(
+                mission_input=self.mission(),
+                candidate=self.candidate(),
+                independent_reproduction=repro,
+                duplicate_pressure_state="LOW_OBSERVED_DUPLICATE_PRESSURE",
+                duplicate_check_currentness_ref="dup-current-1",
+                report_lint_state="REPORT_LINT_CLEAN",
+                report_digest="report-1",
+                program_admissibility_state="CURRENTLY_ADMISSIBLE",
+                program_admissibility_ref="program-current-1",
+                **extra,
+            )
 
     def test_registered_path_plumbs_to_candidate_without_effect_authority(self):
         out = self.admit()
         self.assertTrue(out.independent_reproduction_registry_proven)
+        self.assertEqual(REGISTRY_GENERATION, out.registry_generation)
+        self.assertTrue(out.registry_digest)
         self.assertFalse(out.duplicate_check_producer_proven)
         self.assertFalse(out.report_lint_producer_proven)
         self.assertFalse(out.program_admissibility_producer_proven)
@@ -108,7 +114,13 @@ class RegisteredIndependentReproductionGateTests(unittest.TestCase):
         self.assertFalse(out.submission_authorized)
         self.assertTrue(out.candidate_admission.ready_for_human_submission_review)
 
-    def test_default_production_lookup_fails_closed(self):
+    def test_default_production_registry_is_empty_hold(self):
+        registry = independent_reproduction_registry_receipt()
+        self.assertEqual(REGISTRY_GENERATION, registry.registry_generation)
+        self.assertEqual((), registry.record_digests)
+        self.assertEqual(0, registry.active_record_count)
+        self.assertFalse(registry.authority)
+        self.assertFalse(registry.external_effect)
         with self.assertRaisesRegex(ValueError, "INDEPENDENT_REPRODUCTION_REGISTRY_REQUIRED"):
             admit_with_registered_independent_reproduction(
                 mission_input=self.mission(), candidate=self.candidate(),
@@ -120,11 +132,32 @@ class RegisteredIndependentReproductionGateTests(unittest.TestCase):
                 program_admissibility_ref="program-current-1",
             )
 
-    def test_public_signature_has_no_expected_reproduction_parameters(self):
+    def test_public_signature_has_no_caller_trust_root_parameters(self):
         params = set(inspect.signature(admit_with_registered_independent_reproduction).parameters)
-        self.assertNotIn("expected_independent_reproduction_digest", params)
-        self.assertNotIn("expected_reproducer_ref", params)
-        self.assertNotIn("expected_reproducer_generation", params)
+        for forbidden in (
+            "expected_independent_reproduction_digest",
+            "expected_reproducer_ref",
+            "expected_reproducer_generation",
+            "registry_lookup",
+            "registry",
+            "registry_record",
+        ):
+            self.assertNotIn(forbidden, params)
+
+    def test_caller_registry_lookup_override_is_forbidden(self):
+        with self.assertRaisesRegex(ValueError, "CALLER_REPRODUCTION_REGISTRY_FORBIDDEN"):
+            admit_with_registered_independent_reproduction(
+                mission_input=self.mission(),
+                candidate=self.candidate(),
+                independent_reproduction=self.repro(),
+                duplicate_pressure_state="LOW_OBSERVED_DUPLICATE_PRESSURE",
+                duplicate_check_currentness_ref="dup-current-1",
+                report_lint_state="REPORT_LINT_CLEAN",
+                report_digest="report-1",
+                program_admissibility_state="CURRENTLY_ADMISSIBLE",
+                program_admissibility_ref="program-current-1",
+                registry_lookup=lambda _: self.record(),
+            )
 
     def test_caller_expected_digest_override_is_forbidden(self):
         with self.assertRaisesRegex(ValueError, "CALLER_REPRODUCTION_EXPECTATION_FORBIDDEN"):
@@ -186,6 +219,24 @@ class RegisteredIndependentReproductionGateTests(unittest.TestCase):
     def test_target_substitution_fails(self):
         with self.assertRaisesRegex(ValueError, "TARGET_REF_MISMATCH"):
             self.admit(record=replace(self.record(), target_ref="target://other"))
+
+    def test_ambiguous_exact_digest_registry_fails_closed(self):
+        repro = self.repro()
+        a = self.record(repro)
+        b = replace(a, registry_receipt_ref="registry://receipt/other")
+        with mock.patch.object(registry_mod, "_CANONICAL_RECORDS", (a, b)):
+            with self.assertRaisesRegex(ValueError, "INDEPENDENT_REPRODUCTION_REGISTRY_AMBIGUOUS"):
+                admit_with_registered_independent_reproduction(
+                    mission_input=self.mission(),
+                    candidate=self.candidate(),
+                    independent_reproduction=repro,
+                    duplicate_pressure_state="LOW_OBSERVED_DUPLICATE_PRESSURE",
+                    duplicate_check_currentness_ref="dup-current-1",
+                    report_lint_state="REPORT_LINT_CLEAN",
+                    report_digest="report-1",
+                    program_admissibility_state="CURRENTLY_ADMISSIBLE",
+                    program_admissibility_ref="program-current-1",
+                )
 
     def test_output_digest_is_deterministic(self):
         self.assertEqual(self.admit().receipt_digest, self.admit().receipt_digest)
