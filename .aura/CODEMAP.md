@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1649
-- **total_bytes**: 26529170
-- **text_tokens_est**: 6622648
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1007, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1652
+- **total_bytes**: 26555685
+- **text_tokens_est**: 6629278
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1649,
+  "repo_file_count": 1652,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -164,6 +164,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
     ".github/workflows/construction-demo-asset-foundation.yml",
+    ".github/workflows/cs-arena-sync-as07.yml",
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
@@ -1661,6 +1662,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project030/test_creator_studio_continuation_harness.py",
     "tools/project030/test_creator_studio_harness_integration.py",
     "tools/project030/test_creator_studio_wake_adapter.py",
+    "tools/project035/artifact_workgraph_wake_bridge.py",
+    "tools/project035/test_artifact_workgraph_wake_bridge.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1789,16 +1792,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1649,
-  "bytes": 26529170,
-  "tokens_est": 6622648,
+  "files": 1652,
+  "bytes": 26555685,
+  "tokens_est": 6629278,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1007,
-    "schema_or_lexicon": 271,
+    "python_module": 1009,
+    "schema_or_lexicon": 272,
     "support_file": 49
   }
 }
