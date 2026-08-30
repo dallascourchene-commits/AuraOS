@@ -19,6 +19,9 @@ jobs:
   bounded-header-contract:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    env:
+      PR340_BRANCH: awj032/glm53-checkpoint-layout-probe-20260830
+      REQUIRED_MTP_SHA: 746fe756d4af4bf78a2fc75e612a445e66e38e49
     steps:
       - name: Fetch exact head without persisted credentials
         env:
@@ -34,6 +37,21 @@ jobs:
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - name: Bind current PR340 MTP generation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=64 origin \
+            "refs/heads/$PR340_BRANCH:refs/remotes/origin/$PR340_BRANCH"
+          unset AUTH_HEADER
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          CONSUMER_BASE_SHA="$(git rev-parse "refs/remotes/origin/$PR340_BRANCH")"
+          git cat-file -e "$REQUIRED_MTP_SHA^{commit}"
+          git merge-base --is-ancestor "$REQUIRED_MTP_SHA" "$CONSUMER_BASE_SHA"
+          echo "CONSUMER_BASE_SHA=$CONSUMER_BASE_SHA" >> "$GITHUB_ENV"
+          echo "PR340_CURRENTNESS_RECEIPT=$CONSUMER_BASE_SHA contains $REQUIRED_MTP_SHA"
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: "3.12"
@@ -65,27 +83,42 @@ jobs:
               "selected_layer": 3,
               "selected_expert": 0,
           }
+          common = {
+              "consumer_pr340_generation": os.environ["CONSUMER_BASE_SHA"],
+              "required_mtp_repair_generation": os.environ["REQUIRED_MTP_SHA"],
+              "repo_id": target["repo_id"],
+              "model_revision": target["model_revision"],
+              "index_sha256": target["expected_index_sha256"],
+              "selected_layer": 3,
+              "selected_expert": 0,
+              "payload_bytes_read": 0,
+              "g2_admitted": False,
+              "runtime_executed": False,
+              "authority": False,
+          }
           try:
               receipt = collect_header_evidence(**target)
           except HeaderTransportError as exc:
               print("AURA_W2_OFFICIAL_HEADER_RESULT=" + json.dumps({
+                  **common,
                   "status": "BLOCKED_TRANSPORT_TYPED",
                   "error_code": exc.code,
                   "detail": exc.detail,
-                  "repo_id": target["repo_id"],
-                  "model_revision": target["model_revision"],
-                  "index_sha256": target["expected_index_sha256"],
-                  "selected_layer": 3,
-                  "selected_expert": 0,
-                  "payload_bytes_read": 0,
-                  "g2_admitted": False,
-                  "runtime_executed": False,
-                  "authority": False,
               }, sort_keys=True, separators=(",", ":")))
+              raise SystemExit(4)
           else:
               body = asdict(receipt)
-              body["status"] = "OFFICIAL_HEADER_OBSERVED"
-              body["receipt_digest"] = receipt.receipt_digest
+              body.update({
+                  "status": "OFFICIAL_HEADER_OBSERVED",
+                  "consumer_pr340_generation": os.environ["CONSUMER_BASE_SHA"],
+                  "required_mtp_repair_generation": os.environ["REQUIRED_MTP_SHA"],
+                  "receipt_digest": receipt.receipt_digest,
+              })
+              assert body["payload_bytes_read"] == 0
+              assert body["g2_admitted"] is False
+              assert body["runtime_executed"] is False
+              assert body["authority"] is False
+              assert len(body["entries"]) == 6
               print("AURA_W2_OFFICIAL_HEADER_RESULT=" + json.dumps(
                   body, sort_keys=True, separators=(",", ":")
               ))
