@@ -13,6 +13,7 @@ from tools.bughound.bounty_mission import BugHoundCashMissionInputV1
 from tools.bughound.cash_scheduler import CashBountyWorkStateV1, schedule_next_cash_bounty_step
 from tools.bughound.human_submission_review import (
     BugHoundCashHumanReviewPacketV1,
+    UPSTREAM_TRUST_BLOCKER,
     compile_cash_bounty_human_review_packet,
 )
 
@@ -97,10 +98,14 @@ class BugHoundHumanSubmissionReviewTests(unittest.TestCase):
             scheduler_decision=scheduler or self.scheduler(),
         )
 
-    def test_current_candidate_and_human_gate_compile_digest_only_packet(self):
+    def test_current_lower_plane_candidate_compiles_but_stays_producer_trust_blocked(self):
         packet = self.compile()
-        self.assertEqual(packet.status, "READY_FOR_HUMAN_REVIEW_PACKET")
+        self.assertEqual(packet.status, "HUMAN_REVIEW_PACKET_EVIDENCE_TRUST_REQUIRED")
         self.assertEqual(packet.candidate_id, "candidate-1")
+        self.assertEqual(packet.blockers, (UPSTREAM_TRUST_BLOCKER,))
+        self.assertFalse(packet.candidate_producer_trust_proven)
+        self.assertFalse(packet.human_authorization_verified)
+        self.assertFalse(packet.ready_for_human_review)
         self.assertTrue(packet.packet_digest)
         self.assertFalse(packet.live_target_testing_authorized)
         self.assertFalse(packet.credential_use_authorized)
@@ -108,9 +113,11 @@ class BugHoundHumanSubmissionReviewTests(unittest.TestCase):
         self.assertFalse(packet.claim_or_payment_authorized)
         self.assertFalse(packet.external_effect)
 
-    def test_closed_local_gaps_also_compile_human_gate_packet(self):
+    def test_closed_local_gaps_do_not_erase_producer_trust_blocker(self):
         packet = self.compile(scheduler=self.scheduler(()))
-        self.assertEqual(packet.status, "READY_FOR_HUMAN_REVIEW_PACKET")
+        self.assertEqual(packet.status, "HUMAN_REVIEW_PACKET_EVIDENCE_TRUST_REQUIRED")
+        self.assertIn(UPSTREAM_TRUST_BLOCKER, packet.blockers)
+        self.assertFalse(packet.ready_for_human_review)
 
     def test_non_human_scheduler_action_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "BUGHOUND_REVIEW_SCHEDULER_NOT_AT_HUMAN_GATE"):
@@ -123,7 +130,7 @@ class BugHoundHumanSubmissionReviewTests(unittest.TestCase):
             blockers=("MANUAL_DUPLICATE_REVIEW_REQUIRED",),
             ready_for_human_submission_review=False,
         )
-        with self.assertRaisesRegex(ValueError, "BUGHOUND_CANDIDATE_NOT_READY_FOR_HUMAN_REVIEW"):
+        with self.assertRaisesRegex(ValueError, "BUGHOUND_CANDIDATE_NOT_READY_FOR_LOWER_PLANE_PACKET"):
             self.compile(candidate=blocked)
 
     def test_candidate_authority_widening_is_rejected(self):
@@ -146,7 +153,7 @@ class BugHoundHumanSubmissionReviewTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "BUGHOUND_REVIEW_SCHEDULER_MISSION_MISMATCH"):
             self.compile(scheduler=bad)
 
-    def test_packet_schema_has_no_payload_or_submission_channel(self):
+    def test_packet_schema_has_no_payload_submission_channel_or_caller_trust_override(self):
         names = {f.name for f in fields(BugHoundCashHumanReviewPacketV1)}
         for forbidden in (
             "exploit_payload",
@@ -158,8 +165,14 @@ class BugHoundHumanSubmissionReviewTests(unittest.TestCase):
         ):
             self.assertNotIn(forbidden, names)
         api_names = set(inspect.signature(compile_cash_bounty_human_review_packet).parameters)
-        self.assertNotIn("benchmark_score", api_names)
-        self.assertNotIn("oracle", api_names)
+        for forbidden in (
+            "benchmark_score",
+            "oracle",
+            "producer_trust_proven",
+            "trusted",
+            "human_authorization_ref",
+        ):
+            self.assertNotIn(forbidden, api_names)
 
     def test_packet_digest_is_deterministic(self):
         self.assertEqual(self.compile().packet_digest, self.compile().packet_digest)
