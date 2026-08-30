@@ -35,8 +35,11 @@ jobs:
       - name: Run bridge regressions
         run: python -m unittest tools.awj032.test_glm53_layout_binding_bridge
       - name: Re-run inherited packed pager regressions
-        run: python -m unittest tools.awj032.test_glm53_packed_expert_pager
+        working-directory: tools/awj032
+        run: python -m unittest -v test_glm53_packed_expert_pager.py
       - name: Re-run inherited per-expert pager regressions
-        run: python -m unittest tools.awj032.test_glm53_per_expert_index_pager
+        working-directory: tools/awj032
+        run: python -m unittest -v test_glm53_per_expert_index_pager.py
       - name: Re-run canonical cache telemetry regressions
-        run: python -m unittest tools.awj032.test_glm53_pager_cache_telemetry
+        working-directory: tools/awj032
+        run: python -m unittest -v test_glm53_pager_cache_telemetry.py
