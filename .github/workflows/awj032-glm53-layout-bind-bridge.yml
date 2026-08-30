@@ -7,6 +7,9 @@ on:
       - 'tools/awj032/test_glm53_layout_binding_bridge.py'
       - 'tools/awj032/glm53_source_bound_layout_bridge.py'
       - 'tools/awj032/test_glm53_source_bound_layout_bridge.py'
+      - 'tools/awj032/glm53_official_w2_observation.py'
+      - 'tools/awj032/glm53_official_w2_plan_binding.py'
+      - 'tools/awj032/test_glm53_official_w2_plan_binding.py'
       - 'tools/awj032/glm53_packed_expert_pager.py'
       - 'tools/awj032/glm53_per_expert_index_pager.py'
       - 'tools/awj032/glm53_pager_cache_telemetry.py'
@@ -19,6 +22,9 @@ on:
       - 'tools/awj032/test_glm53_layout_binding_bridge.py'
       - 'tools/awj032/glm53_source_bound_layout_bridge.py'
       - 'tools/awj032/test_glm53_source_bound_layout_bridge.py'
+      - 'tools/awj032/glm53_official_w2_observation.py'
+      - 'tools/awj032/glm53_official_w2_plan_binding.py'
+      - 'tools/awj032/test_glm53_official_w2_plan_binding.py'
       - '.github/workflows/awj032-glm53-layout-bind-bridge.yml'
   workflow_dispatch:
 
@@ -55,13 +61,17 @@ jobs:
           tools/awj032/glm53_pager_cache_telemetry.py
           tools/awj032/glm53_layout_binding_bridge.py
           tools/awj032/glm53_source_bound_layout_bridge.py
+          tools/awj032/glm53_official_w2_observation.py
+          tools/awj032/glm53_official_w2_plan_binding.py
           tools/awj032/test_glm53_layout_binding_bridge.py
           tools/awj032/test_glm53_source_bound_layout_bridge.py
-      - name: Run bridge regressions
+          tools/awj032/test_glm53_official_w2_plan_binding.py
+      - name: Run bridge and official-producer regressions
         run: >-
           python -m unittest
           tools.awj032.test_glm53_layout_binding_bridge
           tools.awj032.test_glm53_source_bound_layout_bridge
+          tools.awj032.test_glm53_official_w2_plan_binding
       - name: Re-run current pager owner regressions
         working-directory: tools/awj032
         run: >-
