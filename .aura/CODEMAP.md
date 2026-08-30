@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1634
-- **total_bytes**: 26349449
-- **text_tokens_est**: 6577733
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1635
+- **total_bytes**: 26357413
+- **text_tokens_est**: 6579719
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1634,
+  "repo_file_count": 1635,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1103,6 +1103,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
     "docs/BENCHMARKS.md",
     "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
+    "docs/DEEPSEEK_COST_CACHE_BENCHMARK_2026-08-29.md",
     "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
     "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
     "docs/PR_KIT.md",
@@ -1774,12 +1775,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1634,
-  "bytes": 26349449,
-  "tokens_est": 6577733,
+  "files": 1635,
+  "bytes": 26357413,
+  "tokens_est": 6579719,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 234,
+    "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 995,
@@ -2068,7 +2069,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
     "docs/BENCHMARKS.md",
     "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
-    "docs/INDUSTRY_BENCHMARK_SCORECARD.md"
+    "docs/DEEPSEEK_COST_CACHE_BENCHMARK_2026-08-29.md"
   ]
 }
 ```
