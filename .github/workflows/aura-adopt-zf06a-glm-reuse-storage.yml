@@ -1,0 +1,36 @@
+name: AURA ADOPT ZF-06A GLM reuse versus retained storage
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/low_storage_mechanism_assessment.py'
+      - 'tools/aura_adopt/test_low_storage_mechanism_assessment.py'
+      - 'tools/aura_adopt/glm_reuse_low_storage_bridge.py'
+      - 'tools/aura_adopt/test_glm_reuse_low_storage_bridge.py'
+      - '.github/workflows/aura-adopt-zf06a-glm-reuse-storage.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  glm-reuse-low-storage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile ZF-06A and GLM bridge
+        run: >-
+          python -m py_compile
+          tools/aura_adopt/low_storage_mechanism_assessment.py
+          tools/aura_adopt/test_low_storage_mechanism_assessment.py
+          tools/aura_adopt/glm_reuse_low_storage_bridge.py
+          tools/aura_adopt/test_glm_reuse_low_storage_bridge.py
+      - name: Re-run ZF-06A low-storage assessment regressions
+        working-directory: tools/aura_adopt
+        run: python -m unittest -v test_low_storage_mechanism_assessment.py
+      - name: Run GLM reuse versus storage regressions
+        working-directory: tools/aura_adopt
+        run: python -m unittest -v test_glm_reuse_low_storage_bridge.py
