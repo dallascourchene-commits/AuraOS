@@ -24,8 +24,18 @@ WAKE_SCHEMA = "AuraArenaWorkGraphWakeIntentV1"
 
 CELL_STATES = frozenset({"OPEN", "CLAIMED", "BLOCKED", "COMPLETE", "SUPERSEDED"})
 PRIORITY_ORDER = {"P0": 0, "P1": 1, "P2": 2, "P3": 3, "P4": 4}
-ACTIONS = frozenset({"CLAIM", "RELEASE", "COMPLETE", "BLOCK", "REOPEN", "ADD_CELL"})
+ACTIONS = frozenset({"CLAIM", "RELEASE", "COMPLETE", "BLOCK", "REOPEN", "ADD_CELL", "RECORD_EXECUTION"})
 AUTONOMOUS_EFFECT_CEILING = "D0"
+EXECUTION_STATES = frozenset({"NOT_STARTED", "EFFECT_ADMITTED", "EFFECT_STARTED", "RESULT_PARTIAL", "VERIFIED_COMPLETE", "FAILED", "UNKNOWN"})
+EXECUTION_TRANSITIONS = {
+    "NOT_STARTED": frozenset({"EFFECT_ADMITTED", "FAILED"}),
+    "EFFECT_ADMITTED": frozenset({"EFFECT_STARTED", "FAILED"}),
+    "EFFECT_STARTED": frozenset({"RESULT_PARTIAL", "FAILED"}),
+    "RESULT_PARTIAL": frozenset({"FAILED"}),
+    "FAILED": frozenset(),
+    "VERIFIED_COMPLETE": frozenset(),
+    "UNKNOWN": frozenset(),
+}
 
 
 class WorkGraphError(ValueError):
@@ -73,11 +83,16 @@ def _normalize_worker(raw: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(raw, Mapping):
         raise WorkGraphError("WORKER_NOT_OBJECT")
     worker_id = _text(raw.get("worker_id"), code="WORKER_ID_REQUIRED")
+    worker_state = str(raw.get("state") or "IDLE").strip().upper()
+    if worker_state not in {"ORIENTING", "IDLE", "CLAIMING", "ACTIVE", "BLOCKED", "RELEASED", "DORMANT", "STALE"}:
+        raise WorkGraphError("WORKER_STATE_INVALID")
     return {
         "worker_id": worker_id,
+        "worker_class": str(raw.get("worker_class") or "CHATGPT").strip().upper(),
         "capabilities": _sorted_unique_text(raw.get("capabilities") or [], code="WORKER_CAPABILITIES_INVALID"),
         "currentness_ref": _text(raw.get("currentness_ref"), code="WORKER_CURRENTNESS_REQUIRED"),
         "joined": raw.get("joined") is True,
+        "state": worker_state,
         "effect_ceiling": str(raw.get("effect_ceiling") or AUTONOMOUS_EFFECT_CEILING).strip().upper(),
         "eligible": raw.get("eligible", True) is True,
     }
@@ -100,8 +115,15 @@ def _normalize_cell(raw: Mapping[str, Any]) -> dict[str, Any]:
         raise WorkGraphError("CELL_REUSE_VALUE_INVALID")
     if isinstance(estimated_effort, bool) or not isinstance(estimated_effort, int) or estimated_effort < 1:
         raise WorkGraphError("CELL_EFFORT_INVALID")
+    execution_state = str(raw.get("execution_state") or "").strip().upper()
+    if execution_state not in EXECUTION_STATES:
+        raise WorkGraphError("CELL_EXECUTION_STATE_INVALID")
+    cost_ceiling = raw.get("cost_ceiling_provider_usd", 0.0)
+    if isinstance(cost_ceiling, bool) or not isinstance(cost_ceiling, (int, float)) or cost_ceiling < 0:
+        raise WorkGraphError("CELL_COST_CEILING_INVALID")
     return {
         "cell_id": cell_id,
+        "parent_objective": _text(raw.get("parent_objective"), code="CELL_PARENT_OBJECTIVE_REQUIRED"),
         "state": state,
         "priority": priority,
         "dependencies": _sorted_unique_text(raw.get("dependencies") or [], code="CELL_DEPENDENCIES_INVALID"),
@@ -111,8 +133,15 @@ def _normalize_cell(raw: Mapping[str, Any]) -> dict[str, Any]:
         "effect_class": effect_class,
         "reuse_value": reuse_value,
         "estimated_effort": estimated_effort,
+        "cost_ceiling_provider_usd": float(cost_ceiling),
+        "free_first_route": _sorted_unique_text(raw.get("free_first_route") or [], code="CELL_FREE_ROUTE_INVALID"),
+        "expected_output": _text(raw.get("expected_output"), code="CELL_EXPECTED_OUTPUT_REQUIRED"),
+        "acceptance": _sorted_unique_text(raw.get("acceptance") or [], code="CELL_ACCEPTANCE_INVALID"),
         "currentness_ref": str(raw.get("currentness_ref") or "").strip(),
-        "reopen_trigger": str(raw.get("reopen_trigger") or "").strip(),
+        "reopen_conditions": _sorted_unique_text(raw.get("reopen_conditions") or [], code="CELL_REOPEN_INVALID"),
+        "execution_state": execution_state,
+        "execution_receipt_refs": _sorted_unique_text(raw.get("execution_receipt_refs") or [], code="CELL_EXECUTION_RECEIPTS_INVALID"),
+        "blocker_reason": str(raw.get("blocker_reason") or "").strip(),
     }
 
 
@@ -126,12 +155,19 @@ def _normalize_claim(raw: Mapping[str, Any]) -> dict[str, Any]:
             raise WorkGraphError("CLAIM_TIME_INVALID")
     if lease_expires_at_ms <= claimed_at_ms:
         raise WorkGraphError("CLAIM_LEASE_INVALID")
+    basis_graph_digest = _text(raw.get("basis_graph_digest"), code="CLAIM_BASIS_REQUIRED")
+    if len(basis_graph_digest) != 64:
+        raise WorkGraphError("CLAIM_BASIS_INVALID")
     return {
         "claim_id": _text(raw.get("claim_id"), code="CLAIM_ID_REQUIRED"),
         "cell_id": _text(raw.get("cell_id"), code="CLAIM_CELL_REQUIRED"),
         "worker_id": _text(raw.get("worker_id"), code="CLAIM_WORKER_REQUIRED"),
         "claimed_at_ms": claimed_at_ms,
         "lease_expires_at_ms": lease_expires_at_ms,
+        "basis_graph_digest": basis_graph_digest,
+        "currentness_ref": _text(raw.get("currentness_ref"), code="CLAIM_CURRENTNESS_REQUIRED"),
+        "dependency_snapshot": _sorted_unique_text(raw.get("dependency_snapshot") or [], code="CLAIM_DEPENDENCY_SNAPSHOT_INVALID"),
+        "capability_snapshot": _sorted_unique_text(raw.get("capability_snapshot") or [], code="CLAIM_CAPABILITY_SNAPSHOT_INVALID"),
         "active": raw.get("active", True) is True,
         "generation": int(raw.get("generation", 1)),
     }
@@ -142,6 +178,10 @@ def normalize_state(raw: Mapping[str, Any]) -> dict[str, Any]:
         raise WorkGraphError("WORKGRAPH_SCHEMA_MISMATCH")
     project_id = _text(raw.get("project_id"), code="PROJECT_ID_REQUIRED")
     mission_ref = _text(raw.get("mission_ref"), code="MISSION_REF_REQUIRED")
+    canonical_orientation_ref = _text(raw.get("canonical_orientation_ref"), code="CANONICAL_ORIENTATION_REF_REQUIRED")
+    board_ref = _text(raw.get("board_ref"), code="BOARD_REF_REQUIRED")
+    board_revision = _text(raw.get("board_revision"), code="BOARD_REVISION_REQUIRED")
+    route_policy_ref = _text(raw.get("route_policy_ref"), code="ROUTE_POLICY_REF_REQUIRED")
     currentness_ref = _text(raw.get("currentness_ref"), code="CURRENTNESS_REF_REQUIRED")
     workers = [_normalize_worker(item) for item in raw.get("workers", [])]
     cells = [_normalize_cell(item) for item in raw.get("cells", [])]
@@ -175,6 +215,11 @@ def normalize_state(raw: Mapping[str, Any]) -> dict[str, Any]:
         "schema": WORKGRAPH_SCHEMA,
         "project_id": project_id,
         "mission_ref": mission_ref,
+        "canonical_orientation_ref": canonical_orientation_ref,
+        "board_ref": board_ref,
+        "board_revision": board_revision,
+        "route_policy_ref": route_policy_ref,
+        "source_digests": _sorted_unique_text(raw.get("source_digests") or [], code="SOURCE_DIGESTS_INVALID"),
         "currentness_ref": currentness_ref,
         "workers": sorted(workers, key=lambda item: item["worker_id"]),
         "cells": sorted(cells, key=lambda item: item["cell_id"]),
@@ -216,11 +261,18 @@ def project_workgraph(state: Mapping[str, Any], *, now_ms: int) -> dict[str, Any
 
     active_claims: dict[str, list[dict[str, Any]]] = {}
     stale_claims: list[dict[str, Any]] = []
+    ambiguous_stale_by_cell: dict[str, list[dict[str, Any]]] = {}
     for claim in s["claims"]:
         if not claim["active"]:
             continue
         if now_ms >= claim["lease_expires_at_ms"]:
-            stale_claims.append({**claim, "recovery_code": "STALE_CLAIM_RECOVERED"})
+            cell = cells[claim["cell_id"]]
+            if cell["execution_state"] == "NOT_STARTED":
+                stale_claims.append({**claim, "recovery_code": "STALE_CLAIM_RECOVERED"})
+            else:
+                row = {**claim, "recovery_code": "RECONCILE_EFFECT_STATE_REQUIRED"}
+                stale_claims.append(row)
+                ambiguous_stale_by_cell.setdefault(claim["cell_id"], []).append(row)
             continue
         active_claims.setdefault(claim["cell_id"], []).append(claim)
 
@@ -238,7 +290,10 @@ def project_workgraph(state: Mapping[str, Any], *, now_ms: int) -> dict[str, Any
         reasons: list[str] = []
         effective_state = cell["state"]
 
-        if cell_id in collisions:
+        if cell_id in ambiguous_stale_by_cell:
+            effective_state = "BLOCKED"
+            reasons.append("RECONCILE_EFFECT_STATE_REQUIRED")
+        elif cell_id in collisions:
             effective_state = "BLOCKED"
             reasons.append("ACTIVE_CLAIM_COLLISION_FAIL_CLOSED")
         elif cell["state"] in {"COMPLETE", "SUPERSEDED"}:
@@ -259,6 +314,7 @@ def project_workgraph(state: Mapping[str, Any], *, now_ms: int) -> dict[str, Any
             "effective_state": effective_state,
             "unmet_dependencies": unmet,
             "active_claims": claims,
+            "ambiguous_stale_claims": sorted(ambiguous_stale_by_cell.get(cell_id, []), key=lambda item: item["claim_id"]),
             "eligible_for_selection": effective_state == "OPEN",
             "projection_reasons": reasons,
             "runtime_execution_proven": False,
@@ -267,6 +323,11 @@ def project_workgraph(state: Mapping[str, Any], *, now_ms: int) -> dict[str, Any
     stable_basis = {
         "project_id": s["project_id"],
         "mission_ref": s["mission_ref"],
+        "canonical_orientation_ref": s["canonical_orientation_ref"],
+        "board_ref": s["board_ref"],
+        "board_revision": s["board_revision"],
+        "route_policy_ref": s["route_policy_ref"],
+        "source_digests": s["source_digests"],
         "currentness_ref": s["currentness_ref"],
         "workers": s["workers"],
         "cells": rows,
@@ -296,7 +357,7 @@ def _worker(projection: Mapping[str, Any], worker_id: str) -> dict[str, Any]:
 
 def eligible_cells(projection: Mapping[str, Any], *, worker_id: str) -> list[dict[str, Any]]:
     worker = _worker(projection, worker_id)
-    if not worker["joined"] or not worker["eligible"]:
+    if not worker["joined"] or not worker["eligible"] or worker["state"] in {"ORIENTING", "DORMANT", "STALE"}:
         return []
     if worker["currentness_ref"] != projection.get("currentness_ref"):
         return []
@@ -308,6 +369,8 @@ def eligible_cells(projection: Mapping[str, Any], *, worker_id: str) -> list[dic
         if not cell.get("eligible_for_selection"):
             continue
         if cell.get("effect_class") != AUTONOMOUS_EFFECT_CEILING:
+            continue
+        if cell.get("execution_state") not in {"NOT_STARTED", "FAILED"}:
             continue
         if cell.get("currentness_ref") and cell["currentness_ref"] != projection.get("currentness_ref"):
             continue
@@ -392,11 +455,18 @@ def _wake_intent(
         "worker_id": worker_id,
         "basis_graph_digest": graph_digest,
         "disposition": disposition,
+        "decision": {
+            "SELECT_NEXT_WORK": "SELECT_WORK",
+            "NO_ELIGIBLE_WORK_AFTER_REVIEW": "IDLE",
+            "SUPERSEDED_CURRENTNESS": "REBASE",
+        }.get(disposition, disposition),
+        "reason_codes": [disposition],
         "selected_cell_id": selected_cell_id,
         "delivery_required": delivery_required,
         "requires_external_authorized_turn_delivery": delivery_required,
         "model_call_required_for_scheduler_tick": False,
         "runtime_execution_proven": False,
+        "effect_allowed": False,
     }
 
 
@@ -472,6 +542,10 @@ def apply_action(
                 "worker_id": worker_id,
                 "claimed_at_ms": now_ms,
                 "lease_expires_at_ms": now_ms + lease_ms,
+                "basis_graph_digest": basis,
+                "currentness_ref": projection["currentness_ref"],
+                "dependency_snapshot": list(current_cell["dependencies"]),
+                "capability_snapshot": list(acting_worker["capabilities"]),
                 "active": True,
                 "generation": 1,
             })
@@ -479,7 +553,7 @@ def apply_action(
                 if cell["cell_id"] == cell_id:
                     cell["state"] = "CLAIMED"
                     break
-        elif kind in {"RELEASE", "COMPLETE", "BLOCK"}:
+        elif kind in {"RELEASE", "COMPLETE", "BLOCK", "RECORD_EXECUTION"}:
             if current_cell["effective_state"] != "CLAIMED":
                 raise WorkGraphError("CELL_NOT_EXCLUSIVELY_CLAIMED")
             owned = [
@@ -489,22 +563,72 @@ def apply_action(
             ]
             if not owned:
                 raise WorkGraphError("ACTIVE_OWNED_CLAIM_REQUIRED")
-            for claim in next_state["claims"]:
-                if claim["active"] and claim["cell_id"] == cell_id and claim["worker_id"] == worker_id:
-                    claim["active"] = False
-            target = {"RELEASE": "OPEN", "COMPLETE": "COMPLETE", "BLOCK": "BLOCKED"}[kind]
-            for cell in next_state["cells"]:
-                if cell["cell_id"] == cell_id:
-                    cell["state"] = target
-                    if kind == "BLOCK":
-                        cell["reopen_trigger"] = str(action.get("reopen_trigger") or cell["reopen_trigger"]).strip()
-                    break
+
+            if kind == "RECORD_EXECUTION":
+                target_execution = str(action.get("execution_state") or "").strip().upper()
+                if target_execution not in EXECUTION_STATES:
+                    raise WorkGraphError("EXECUTION_STATE_INVALID")
+                if target_execution not in EXECUTION_TRANSITIONS[current_cell["execution_state"]]:
+                    raise WorkGraphError("EXECUTION_STATE_TRANSITION_INVALID")
+                receipt_refs = _sorted_unique_text(
+                    action.get("receipt_refs") or [], code="EXECUTION_RECEIPTS_INVALID"
+                )
+                if not receipt_refs:
+                    raise WorkGraphError("EXECUTION_RECEIPT_REQUIRED")
+                for cell in next_state["cells"]:
+                    if cell["cell_id"] == cell_id:
+                        cell["execution_state"] = target_execution
+                        cell["execution_receipt_refs"] = sorted(
+                            set(cell["execution_receipt_refs"]) | set(receipt_refs)
+                        )
+                        break
+            else:
+                if kind == "RELEASE" and current_cell["execution_state"] not in {"NOT_STARTED", "FAILED"}:
+                    raise WorkGraphError("RECONCILE_EFFECT_STATE_REQUIRED")
+                if kind == "COMPLETE":
+                    if current_cell["execution_state"] == "UNKNOWN":
+                        raise WorkGraphError("RECONCILE_EFFECT_STATE_REQUIRED")
+                    acceptance_refs = _sorted_unique_text(
+                        action.get("acceptance_refs") or [], code="COMPLETE_ACCEPTANCE_REFS_INVALID"
+                    )
+                    output_refs = _sorted_unique_text(
+                        action.get("output_refs") or [], code="COMPLETE_OUTPUT_REFS_INVALID"
+                    )
+                    if not acceptance_refs or not output_refs:
+                        raise WorkGraphError("COMPLETE_EVIDENCE_REQUIRED")
+                for claim in next_state["claims"]:
+                    if claim["active"] and claim["cell_id"] == cell_id and claim["worker_id"] == worker_id:
+                        claim["active"] = False
+                target = {"RELEASE": "OPEN", "COMPLETE": "COMPLETE", "BLOCK": "BLOCKED"}[kind]
+                for cell in next_state["cells"]:
+                    if cell["cell_id"] == cell_id:
+                        cell["state"] = target
+                        if kind == "COMPLETE":
+                            cell["execution_state"] = "VERIFIED_COMPLETE"
+                            cell["execution_receipt_refs"] = sorted(
+                                set(cell["execution_receipt_refs"]) | set(acceptance_refs) | set(output_refs)
+                            )
+                        elif kind == "BLOCK":
+                            cell["blocker_reason"] = _text(
+                                action.get("blocker_reason"), code="BLOCKER_REASON_REQUIRED"
+                            )
+                            reopen = str(action.get("reopen_condition") or "").strip()
+                            if reopen:
+                                cell["reopen_conditions"] = sorted(
+                                    set(cell["reopen_conditions"]) | {reopen}
+                                )
+                        break
         elif kind == "REOPEN":
+            if current_cell["state"] in {"COMPLETE", "SUPERSEDED"}:
+                raise WorkGraphError("HISTORICAL_COMPLETION_REQUIRES_SUCCESSOR")
+            if current_cell["state"] != "BLOCKED":
+                raise WorkGraphError("CELL_NOT_REOPENABLE")
+            if current_cell["execution_state"] not in {"NOT_STARTED", "FAILED"}:
+                raise WorkGraphError("RECONCILE_EFFECT_STATE_REQUIRED")
             for cell in next_state["cells"]:
                 if cell["cell_id"] == cell_id:
-                    if cell["state"] not in {"BLOCKED", "COMPLETE", "SUPERSEDED"}:
-                        raise WorkGraphError("CELL_NOT_REOPENABLE")
                     cell["state"] = "OPEN"
+                    cell["blocker_reason"] = ""
                     break
 
         next_state = normalize_state(next_state)
