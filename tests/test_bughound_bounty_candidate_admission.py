@@ -10,6 +10,7 @@ from tools.bughound.bounty_candidate_admission import (
     admit_cash_bounty_candidate_for_human_review,
 )
 from tools.bughound.bounty_mission import BugHoundCashMissionInputV1
+from tools.bughound.target_profile import AURAOS_HARDENING_PROFILE_ID
 
 
 class BugHoundCashCandidateAdmissionTests(unittest.TestCase):
@@ -94,9 +95,15 @@ class BugHoundCashCandidateAdmissionTests(unittest.TestCase):
         self.assertNotIn("adjudication", names)
         self.assertNotIn("oracle", names)
 
-    def test_internal_profile_cannot_enter_candidate_admission(self) -> None:
-        with self.assertRaisesRegex(ValueError, "BUGHOUND_NON_CASH_PROFILE_REJECTED"):
-            self.admit(mission_input=replace(self.mission(), profile_id="BUGHOUND_AURAOS_INTERNAL"))
+    def test_auraos_bughound_profile_cannot_enter_cash_candidate_admission(self) -> None:
+        with self.assertRaisesRegex(
+            ValueError, "BUGHOUND_CASH_COMPILER_PROFILE_MISMATCH"
+        ):
+            self.admit(
+                mission_input=replace(
+                    self.mission(), profile_id=AURAOS_HARDENING_PROFILE_ID
+                )
+            )
 
     def test_candidate_target_generation_must_match_cash_mission(self) -> None:
         with self.assertRaisesRegex(ValueError, "BOUNTY_CANDIDATE_GENERATION_MISMATCH"):
