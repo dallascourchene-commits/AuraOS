@@ -46,6 +46,7 @@ jobs:
             tools/awj032/test_glm53_w4_host_preflight.py \
             tools/awj032/glm53_w4_cache_policy_decision.py \
             tools/awj032/test_glm53_w4_cache_policy_decision.py
-          python -m unittest \
-            tools.awj032.test_glm53_w4_host_preflight \
-            tools.awj032.test_glm53_w4_cache_policy_decision -v
+          PYTHONPATH="$PWD/tools/awj032${PYTHONPATH:+:$PYTHONPATH}" \
+            python -m unittest \
+              tools.awj032.test_glm53_w4_host_preflight \
+              tools.awj032.test_glm53_w4_cache_policy_decision -v
