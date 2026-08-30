@@ -5,15 +5,16 @@ AWJ-033 repair target:
 - a parent swarm request must never reach the one-call hook directly;
 - only a role-distinct child produced by the fanout coordinator may carry physical
   swarm context into the single-call executor;
-- child context must carry the parent semantic payload digest used to derive its identity;
+- child context must match a host-owned expected-child record, not merely self-assert
+  a syntactically valid digest/identity;
 - transport success is never promoted directly to objective success;
 - refusal/provider/model identity contradictions are quarantined fail-closed.
 
 This module deliberately does not own durable replay, Drive I/O, provider routing,
 heartbeats, leases, or objective-specific verification. Those remain host/scheduler
 responsibilities. The host MUST reject caller-supplied reserved `_host_*` fields before
-fanout compilation; deterministic digests are integrity evidence, not an authentication
-substitute.
+fanout compilation and pass the persisted expected child separately at execution time.
+Deterministic digests are integrity evidence, not an authentication substitute.
 """
 from __future__ import annotations
 
@@ -49,24 +50,7 @@ def _sha256_hex(value: Any) -> bool:
     )
 
 
-def validate_single_call_route(raw: Mapping[str, Any]) -> dict[str, Any] | None:
-    """Fail closed on parent-swarm misuse and validate compiled child context."""
-    if not isinstance(raw, Mapping):
-        raise CommandHookError("COMMAND_NOT_OBJECT")
-
-    if raw.get("schema") == SWARM_SCHEMA:
-        raise CommandHookError("PHYSICAL_SWARM_PARENT_REQUIRES_FANOUT_COORDINATOR")
-
-    top_target = raw.get("target_size")
-    if top_target is not None:
-        if isinstance(top_target, bool) or not isinstance(top_target, int) or top_target < 1:
-            raise CommandHookError("INVALID_TARGET_SIZE")
-        if top_target > 1 and "_host_child_context" not in raw:
-            raise CommandHookError("PHYSICAL_SWARM_PARENT_REQUIRES_FANOUT_COORDINATOR")
-
-    ctx = raw.get("_host_child_context")
-    if ctx is None:
-        return None
+def _normalize_child_context(ctx: Any) -> dict[str, Any]:
     if not isinstance(ctx, Mapping) or ctx.get("schema") != CHILD_CONTEXT_SCHEMA:
         raise CommandHookError("PHYSICAL_CHILD_CONTEXT_INVALID")
 
@@ -97,13 +81,6 @@ def validate_single_call_route(raw: Mapping[str, Any]) -> dict[str, Any] | None:
     ):
         raise CommandHookError("PHYSICAL_CHILD_CONTEXT_INVALID")
 
-    if top_target is not None and top_target != target_size:
-        raise CommandHookError("PHYSICAL_CHILD_TARGET_SIZE_BINDING_MISMATCH")
-    if ctx["child_command_id"] != raw.get("command_id"):
-        raise CommandHookError("PHYSICAL_CHILD_COMMAND_BINDING_MISMATCH")
-    if ctx["child_idempotency_key"] != raw.get("idempotency_key"):
-        raise CommandHookError("PHYSICAL_CHILD_IDEMPOTENCY_BINDING_MISMATCH")
-
     return {
         "schema": CHILD_CONTEXT_SCHEMA,
         "parent_command_id": str(ctx["parent_command_id"]),
@@ -116,6 +93,54 @@ def validate_single_call_route(raw: Mapping[str, Any]) -> dict[str, Any] | None:
         "child_command_id": str(ctx["child_command_id"]),
         "child_idempotency_key": str(ctx["child_idempotency_key"]),
     }
+
+
+def validate_single_call_route(
+    raw: Mapping[str, Any],
+    *,
+    expected_child_context: Mapping[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    """Fail closed on parent-swarm misuse and authenticate compiled child context.
+
+    ``expected_child_context`` must come from the host-persisted fanout transaction.
+    Supplying a second copy taken from ``raw`` does not create authority; the installed
+    scheduler owns this trust boundary and must keep caller-authored reserved fields out.
+    """
+    if not isinstance(raw, Mapping):
+        raise CommandHookError("COMMAND_NOT_OBJECT")
+
+    if raw.get("schema") == SWARM_SCHEMA:
+        raise CommandHookError("PHYSICAL_SWARM_PARENT_REQUIRES_FANOUT_COORDINATOR")
+
+    top_target = raw.get("target_size")
+    if top_target is not None:
+        if isinstance(top_target, bool) or not isinstance(top_target, int) or top_target < 1:
+            raise CommandHookError("INVALID_TARGET_SIZE")
+        if top_target > 1 and "_host_child_context" not in raw:
+            raise CommandHookError("PHYSICAL_SWARM_PARENT_REQUIRES_FANOUT_COORDINATOR")
+
+    ctx = raw.get("_host_child_context")
+    if ctx is None:
+        if expected_child_context is not None:
+            raise CommandHookError("PHYSICAL_CHILD_CONTEXT_MISSING")
+        return None
+
+    if expected_child_context is None:
+        raise CommandHookError("PHYSICAL_CHILD_EXPECTATION_REQUIRED")
+
+    normalized = _normalize_child_context(ctx)
+    expected = _normalize_child_context(expected_child_context)
+    if normalized != expected:
+        raise CommandHookError("PHYSICAL_CHILD_EXPECTATION_MISMATCH")
+
+    if top_target is not None and top_target != normalized["target_size"]:
+        raise CommandHookError("PHYSICAL_CHILD_TARGET_SIZE_BINDING_MISMATCH")
+    if normalized["child_command_id"] != raw.get("command_id"):
+        raise CommandHookError("PHYSICAL_CHILD_COMMAND_BINDING_MISMATCH")
+    if normalized["child_idempotency_key"] != raw.get("idempotency_key"):
+        raise CommandHookError("PHYSICAL_CHILD_IDEMPOTENCY_BINDING_MISMATCH")
+
+    return normalized
 
 
 def integrity_gate_result(
@@ -165,12 +190,16 @@ def execute_integrity_checked_command(
     raw: Mapping[str, Any],
     *,
     executor: Callable[..., Mapping[str, Any]] = execute_admitted_command,
+    expected_child_context: Mapping[str, Any] | None = None,
     expected_provider: str = "deepseek",
     expected_model: str | None = None,
     **executor_kwargs: Any,
 ) -> dict[str, Any]:
     """Guard route shape, execute one admitted child/single command, gate result."""
-    child_context = validate_single_call_route(raw)
+    child_context = validate_single_call_route(
+        raw,
+        expected_child_context=expected_child_context,
+    )
     result = dict(executor(raw, **executor_kwargs))
     gated = integrity_gate_result(
         result,
@@ -181,11 +210,15 @@ def execute_integrity_checked_command(
     if child_context is not None:
         gated["physical_child_context"] = child_context
         gated["parent_command_id"] = child_context["parent_command_id"]
+        gated["parent_idempotency_key"] = child_context["parent_idempotency_key"]
         gated["parent_payload_digest"] = child_context["parent_payload_digest"]
+        gated["ordinal"] = child_context["ordinal"]
         gated["role_id"] = child_context["role_id"]
         gated["worker_id"] = child_context["worker_id"]
+        gated["child_command_id"] = child_context["child_command_id"]
+        gated["child_idempotency_key"] = child_context["child_idempotency_key"]
         # One child attempt is not a physical-swarm proof. The reducer must gather
-        # target_size distinct provider-attempt receipts before claiming fanout.
+        # the exact host-persisted expected child set before claiming fanout.
         gated["physical_swarm_proven"] = False
 
     return gated
