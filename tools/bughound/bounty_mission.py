@@ -10,6 +10,10 @@ This module is deliberately pre-effect. Mission admission proves only that a
 work item is a current cash-bounty research candidate. It does not authorize
 live-target testing, credentials, provider calls, disclosure, report submission,
 claiming, spend, merge, promotion, deployment, or any other external effect.
+
+The receipt deliberately retains the exact payout/scope/source bindings that
+were admitted. Downstream effect consumers must compare against these exact
+bindings rather than reconstructing or merely asserting currentness.
 """
 from __future__ import annotations
 
@@ -76,7 +80,14 @@ class BugHoundCashMissionReceiptV1:
     payout_current: bool
     scope_current: bool
     source_current: bool
+    payout_rules_digest: str
+    scope_rules_digest: str
+    source_currentness_ref: str
+    reward_currency: str
+    reward_floor_minor: int | None
+    reward_ceiling_minor: int | None
     research_effect_ceiling: str
+    duplicate_pressure_state: str
     live_target_testing_authorized: bool = False
     credential_use_authorized: bool = False
     submission_authorized: bool = False
@@ -113,7 +124,8 @@ def admit_cash_bounty_mission(
         raise ValueError("BUGHOUND_PROGRAM_NOT_ACTIVE")
     if item.cash_reward_state != CASH_REWARD_STATE:
         raise ValueError("BUGHOUND_CASH_REWARD_NOT_CURRENT")
-    if item.reward_currency.upper() not in {"USD", "CAD", "EUR", "GBP"}:
+    currency = item.reward_currency.upper()
+    if currency not in {"USD", "CAD", "EUR", "GBP"}:
         raise ValueError("BUGHOUND_CASH_CURRENCY_REQUIRED")
     if item.reward_floor_minor is not None and item.reward_floor_minor < 0:
         raise ValueError("BUGHOUND_REWARD_FLOOR_INVALID")
@@ -139,5 +151,12 @@ def admit_cash_bounty_mission(
         payout_current=True,
         scope_current=True,
         source_current=True,
+        payout_rules_digest=item.payout_rules_digest,
+        scope_rules_digest=item.scope_rules_digest,
+        source_currentness_ref=item.source_currentness_ref,
+        reward_currency=currency,
+        reward_floor_minor=item.reward_floor_minor,
+        reward_ceiling_minor=item.reward_ceiling_minor,
         research_effect_ceiling=item.testing_ceiling,
+        duplicate_pressure_state=item.duplicate_pressure_state,
     )
