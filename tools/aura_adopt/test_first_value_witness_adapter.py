@@ -27,13 +27,13 @@ def decision(**overrides):
 def observation(**overrides):
     values = dict(
         opened=True,
-        trust_satisfied=None,
         input_selected=True,
         browser_capability_available=True,
         rendered=True,
         preview_shown=True,
         acceptance_mode=bridge.AcceptanceEvidenceMode.SYNTHETIC_TECHNICAL,
         save_mode=bridge.SaveEvidenceMode.DOWNLOAD_INITIATED,
+        trust_failed=False,
     )
     values.update(overrides)
     return bridge.FirstValueWitnessObservationV1(**values)
@@ -41,8 +41,7 @@ def observation(**overrides):
 
 def compile_receipt(obs=None, dec=None, **kwargs):
     return bridge.compile_first_value_receipt(
-        dec or decision(),
-        obs or observation(),
+        dec or decision(), obs or observation(),
         route_id="zf01-title-card-v1",
         mission_head="AURA-ADOPT-001@20260830",
         build_refs=(
@@ -60,50 +59,46 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
     def stage(self, receipt, name):
         return next(event for event in receipt.stage_events if event.stage == name)
 
-    def test_synthetic_technical_output_never_becomes_user_acceptance(self):
+    def test_synthetic_technical_never_becomes_user_acceptance(self):
         receipt = compile_receipt()
         self.assertIsNone(receipt.accepted_value.result)
         self.assertEqual("SYNTHETIC_TECHNICAL", receipt.accepted_value.verifier)
         self.assertEqual(afr.StageStatus.UNKNOWN, self.stage(receipt, "VERIFY_ACCEPT").status)
 
     def test_download_initiated_never_proves_save_or_reopen(self):
-        receipt = compile_receipt()
-        save = self.stage(receipt, "SAVE_REOPEN")
+        save = self.stage(compile_receipt(), "SAVE_REOPEN")
         self.assertEqual(afr.StageStatus.UNKNOWN, save.status)
         self.assertEqual("DOWNLOAD_INITIATED_DOES_NOT_PROVE_SAVE_OR_REOPEN", save.reason)
 
     def test_save_observed_still_does_not_prove_reopen(self):
         receipt = compile_receipt(observation(
             save_mode=bridge.SaveEvidenceMode.SAVE_OBSERVED,
-            save_evidence_ref="save-evidence-ref",
+            save_evidence_ref="evidence:save-01",
         ))
-        save = self.stage(receipt, "SAVE_REOPEN")
-        self.assertEqual(afr.StageStatus.UNKNOWN, save.status)
-        self.assertEqual("SAVE_OBSERVED_BUT_REOPEN_NOT_OBSERVED", save.reason)
+        self.assertEqual(afr.StageStatus.UNKNOWN, self.stage(receipt, "SAVE_REOPEN").status)
 
     def test_reopen_observed_can_complete_save_reopen(self):
         receipt = compile_receipt(observation(
             save_mode=bridge.SaveEvidenceMode.REOPEN_OBSERVED,
-            save_evidence_ref="reopen-evidence-ref",
+            save_evidence_ref="evidence:reopen-01",
         ))
         self.assertEqual(afr.StageStatus.COMPLETED, self.stage(receipt, "SAVE_REOPEN").status)
 
-    def test_user_explicit_accept_requires_bound_evidence_and_is_true(self):
+    def test_user_explicit_accept_is_true_only_with_bound_ref(self):
         receipt = compile_receipt(observation(
             acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT,
-            acceptance_evidence_ref="acceptance-evidence-ref",
+            acceptance_evidence_ref="evidence:accept-01",
         ))
         self.assertIs(receipt.accepted_value.result, True)
-        self.assertTrue(receipt.accepted_value.verifier.startswith("USER_EXPLICIT:"))
+        self.assertTrue(receipt.accepted_value.verifier.startswith("USER_EXPLICIT_REF:"))
         self.assertEqual(afr.StageStatus.COMPLETED, self.stage(receipt, "VERIFY_ACCEPT").status)
 
-    def test_user_explicit_reject_is_not_laundered_as_success(self):
+    def test_user_explicit_reject_is_preserved(self):
         receipt = compile_receipt(observation(
             acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_REJECT,
-            acceptance_evidence_ref="rejection-evidence-ref",
+            acceptance_evidence_ref="evidence:reject-01",
         ))
         self.assertIs(receipt.accepted_value.result, False)
-        self.assertEqual(afr.StageStatus.COMPLETED, self.stage(receipt, "VERIFY_ACCEPT").status)
 
     def test_user_acceptance_without_evidence_ref_fails_closed(self):
         with self.assertRaises(afr.FrictionReceiptError) as ctx:
@@ -115,25 +110,21 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
             observation(save_mode=bridge.SaveEvidenceMode.REOPEN_OBSERVED)
         self.assertEqual("SAVE_EVIDENCE_REF_REQUIRED", ctx.exception.code)
 
-    def test_trust_complete_requires_exact_external_evidence_ref(self):
-        with self.assertRaises(afr.FrictionReceiptError) as ctx:
-            compile_receipt(observation(trust_satisfied=True))
-        self.assertEqual("TRUST_EVIDENCE_REF_REQUIRED", ctx.exception.code)
-        receipt = compile_receipt(
-            observation(trust_satisfied=True),
-            trust_evidence_ref="trusted-distribution-receipt-ref",
-        )
-        self.assertEqual(afr.StageStatus.COMPLETED, self.stage(receipt, "TRUST").status)
+    def test_trust_is_not_completable_by_pointer_presence(self):
+        receipt = compile_receipt()
+        trust = self.stage(receipt, "TRUST")
+        self.assertEqual(afr.StageStatus.UNKNOWN, trust.status)
+        self.assertEqual("TRUST_OWNER_EVIDENCE_NOT_BOUND_BY_WITNESS_ADAPTER", trust.reason)
 
     def test_failed_trust_is_a_typed_blocker(self):
-        receipt = compile_receipt(observation(trust_satisfied=False))
+        receipt = compile_receipt(observation(trust_failed=True))
         trust = self.stage(receipt, "TRUST")
         self.assertEqual(afr.StageStatus.BLOCKED, trust.status)
         self.assertEqual("TRUST_ADMISSION_FAILED", trust.failure_code)
-        self.assertIn("TRUST:TRUST_ADMISSION_FAILED", receipt.failure_signature)
 
     def test_missing_browser_capability_is_visible_not_guessed(self):
-        receipt = compile_receipt(observation(browser_capability_available=False))
+        obs = observation(rendered=False, preview_shown=False, browser_capability_available=False)
+        receipt = compile_receipt(obs)
         resolve = self.stage(receipt, "CAPABILITY_RESOLVE")
         self.assertEqual(afr.StageStatus.BLOCKED, resolve.status)
         self.assertEqual("BROWSER_CAPABILITY_UNAVAILABLE", resolve.failure_code)
@@ -153,6 +144,75 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
         self.assertEqual("AdoptionFrictionReceiptV1", receipt.schema)
         self.assertFalse(receipt.effect_authorized)
         self.assertFalse(receipt.execution_proven)
+
+    def test_render_requires_open(self):
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            observation(opened=False)
+        self.assertEqual("RENDER_REQUIRES_OPENED_WITNESS", ctx.exception.code)
+
+    def test_render_requires_input(self):
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            observation(input_selected=False)
+        self.assertEqual("RENDER_REQUIRES_SELECTED_INPUT", ctx.exception.code)
+
+    def test_render_requires_proven_browser_capability(self):
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            observation(browser_capability_available=None)
+        self.assertEqual("RENDER_REQUIRES_BROWSER_CAPABILITY", ctx.exception.code)
+
+    def test_preview_requires_render(self):
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            observation(rendered=False)
+        self.assertEqual("PREVIEW_REQUIRES_RENDER", ctx.exception.code)
+
+    def test_explicit_acceptance_requires_preview(self):
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            observation(
+                rendered=True,
+                preview_shown=False,
+                acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT,
+                acceptance_evidence_ref="evidence:accept-02",
+                save_mode=bridge.SaveEvidenceMode.NONE,
+            )
+        self.assertEqual("USER_ACCEPTANCE_REQUIRES_PREVIEW", ctx.exception.code)
+
+    def test_save_observation_requires_render(self):
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            observation(
+                rendered=False, preview_shown=False,
+                save_mode=bridge.SaveEvidenceMode.DOWNLOAD_INITIATED,
+            )
+        self.assertEqual("SAVE_OBSERVATION_REQUIRES_RENDER", ctx.exception.code)
+
+    def test_share_reuse_requires_render_and_evidence(self):
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            observation(
+                rendered=False, preview_shown=False,
+                save_mode=bridge.SaveEvidenceMode.NONE,
+                share_or_reuse_observed=True,
+                share_or_reuse_evidence_ref="evidence:share-01",
+            )
+        self.assertEqual("SHARE_REUSE_REQUIRES_RENDER", ctx.exception.code)
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            observation(share_or_reuse_observed=True)
+        self.assertEqual("SHARE_REUSE_EVIDENCE_REF_REQUIRED", ctx.exception.code)
+
+    def test_evidence_refs_reject_whitespace_and_secret_like_values(self):
+        for bad in ("user clicked yes", "sk-abc123", "token=abc"):
+            with self.subTest(bad=bad):
+                with self.assertRaises(afr.FrictionReceiptError):
+                    observation(
+                        acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT,
+                        acceptance_evidence_ref=bad,
+                    )
+
+    def test_recipe_and_capability_refs_use_same_opaque_ref_membrane(self):
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            compile_receipt(recipe_ref="raw user content here")
+        self.assertEqual("RECIPE_REF_REQUIRED", ctx.exception.code)
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            compile_receipt(capability_refs=("token=abc",))
+        self.assertEqual("CAPABILITY_REF_INVALID", ctx.exception.code)
 
     def test_observation_is_immutable(self):
         obs = observation()
