@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788092504,
+  "generated_at_unix": 1788104441,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1661,
+    "repo_file_count": 1664,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -145,6 +145,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-glm53-g1-probe.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1652,7 +1653,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
+      "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/test_airllm_source_admission.py",
+      "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1777,16 +1780,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1661,
-      "bytes": 26436751,
-      "tokens_est": 6599579,
+      "files": 1664,
+      "bytes": 26458117,
+      "tokens_est": 6604922,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1010,
-        "schema_or_lexicon": 274,
+        "python_module": 1012,
+        "schema_or_lexicon": 275,
         "support_file": 49
       }
     },
@@ -3496,6 +3499,14 @@
         "line": 297,
         "end_line": 306,
         "semantic_id": "tools/awj032/airllm_source_admission.py#function:main:5ff011d87b934cf0",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "function",
+        "line": 296,
+        "end_line": 316,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:main:4b0aa2974e3ade0a",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -27162,6 +27173,14 @@
         "line": 137,
         "end_line": 139,
         "semantic_id": "aura_construction_architect_refactor.py#function:_canonical_digest:be0ef5279214bc45",
+        "signature_hash": "0513d5eea6b714f2"
+      },
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 72,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_canonical_digest:74b7d1372506d9cb",
         "signature_hash": "0513d5eea6b714f2"
       }
     ],
@@ -157967,6 +157986,14 @@
         "end_line": 32,
         "semantic_id": "tools/awj032/airllm_source_admission.py#class:Finding:bf46a0e466c67b5f",
         "signature_hash": "dcd7516b5d2a8d5d"
+      },
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "class",
+        "line": 42,
+        "end_line": 44,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#class:Finding:689f412022d58f59",
+        "signature_hash": "dcd7516b5d2a8d5d"
       }
     ],
     "SourceAdmissionReceipt": [
@@ -158067,6 +158094,106 @@
         "end_line": 294,
         "semantic_id": "tools/awj032/airllm_source_admission.py#function:require_admitted:ba38ad2827581a4a",
         "signature_hash": "46b37ab1f36534cb"
+      }
+    ],
+    "CompatibilityReceipt": [
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#class:CompatibilityReceipt:cf47c7f40f630a26",
+        "signature_hash": "a24da0c3d6db9231"
+      }
+    ],
+    "CompatibilityReceipt.to_dict": [
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#method:CompatibilityReceipt.to_dict:f5563e27af5b9ba0",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "_text_digest": [
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 76,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_text_digest:fd52124469b7eac1",
+        "signature_hash": "dfd0f92417b2ca7c"
+      }
+    ],
+    "_find_remote_code_widening": [
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 86,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_find_remote_code_widening:cc647ad5b9a53101",
+        "signature_hash": "7e5f0bdc44a90906"
+      }
+    ],
+    "_config_findings": [
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "function",
+        "line": 89,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_config_findings:0813414a5c4a4b71",
+        "signature_hash": "ce8c351682923b61"
+      }
+    ],
+    "_ordinary_layer_topology": [
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "function",
+        "line": 120,
+        "end_line": 137,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_ordinary_layer_topology:3aa2893ea2ed900d",
+        "signature_hash": "9c8b037a61561ccf"
+      }
+    ],
+    "_grouped_expert_semantics": [
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "function",
+        "line": 140,
+        "end_line": 150,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_grouped_expert_semantics:b05e322d8d03a24b",
+        "signature_hash": "7066dfb510fbf66a"
+      }
+    ],
+    "_airllm_expert_assumptions": [
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "function",
+        "line": 153,
+        "end_line": 173,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_airllm_expert_assumptions:37e79b3655b35920",
+        "signature_hash": "7c8ea4ac0de0dbc6"
+      }
+    ],
+    "analyze": [
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "function",
+        "line": 176,
+        "end_line": 289,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:analyze:0bbb512d8a41afcb",
+        "signature_hash": "334308f8eb43a912"
+      }
+    ],
+    "_read": [
+      {
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "kind": "function",
+        "line": 292,
+        "end_line": 293,
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_read:8252b4d27465b795",
+        "signature_hash": "3313625eaf98b5c7"
       }
     ],
     "make_tree": [
@@ -158207,6 +158334,146 @@
         "end_line": 146,
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_missing_root_fails_closed:6e21701ad0ec8d47",
         "signature_hash": "378536f4432265cb"
+      }
+    ],
+    "GLM53CompatibilityProbeTests": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "class",
+        "line": 78,
+        "end_line": 159,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#class:GLM53CompatibilityProbeTests:9981eef41d375672",
+        "signature_hash": "2cfe07cc5af53ce6"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.analyze": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 86,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.analyze:17de4a226911d01d",
+        "signature_hash": "468ca7974d1cc38e"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.codes": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 89,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.codes:16f7cc1fec447476",
+        "signature_hash": "c75ad14e4d0d1af0"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.test_stock_v33_shape_is_partial_not_native_pass": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 97,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_stock_v33_shape_is_partial_not_native_pass:04f0dcac6765ab08",
+        "signature_hash": "b67b9af0cf1f2b78"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.test_stock_remote_code_true_is_security_finding": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_stock_remote_code_true_is_security_finding:2bf65e0bdb4d0f89",
+        "signature_hash": "3b10ad488b13f13f"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.test_safe_remote_code_source_does_not_remove_expert_gap": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 108,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_safe_remote_code_source_does_not_remove_expert_gap:e4f6c496708b0a2d",
+        "signature_hash": "ad0ff2f3f45a4e59"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.test_config_architecture_mismatch_blocks": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 115,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_config_architecture_mismatch_blocks:16791b56cf53eb9b",
+        "signature_hash": "db56837ba3f4cc3e"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.test_layer_count_mismatch_blocks": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 122,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_layer_count_mismatch_blocks:cae29b2eefc77fc5",
+        "signature_hash": "4bb51ab4409b231b"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.test_expert_count_mismatch_blocks": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 129,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_expert_count_mismatch_blocks:1bb9513d9c58ca53",
+        "signature_hash": "40a6d4e8c247ec28"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.test_fp8_mismatch_blocks": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 136,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_fp8_mismatch_blocks:ede5c64462d42c4c",
+        "signature_hash": "86e13ed2318f1cec"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.test_grouped_tensor_source_is_required": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 141,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_grouped_tensor_source_is_required:8f2a99f0228270eb",
+        "signature_hash": "49f8134f8cd50113"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.test_adapter_spec_preserves_native_router_and_all_experts": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 147,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_adapter_spec_preserves_native_router_and_all_experts:8108706bb87fcb99",
+        "signature_hash": "586ef98f1336ad58"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.test_receipt_is_deterministic": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 154,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_receipt_is_deterministic:93a066f1508cc10e",
+        "signature_hash": "4676c27ccb236b1c"
+      }
+    ],
+    "GLM53CompatibilityProbeTests.test_probe_never_admits_g2": [
+      {
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 159,
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_probe_never_admits_g2:f5368fa39d715758",
+        "signature_hash": "a6a2281c320c3c5b"
       }
     ],
     "_coordinates": [
@@ -169314,6 +169581,53 @@
         0.183493,
         0.241705,
         0.036699
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-g1-probe.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 771,
+      "lines": 27,
+      "tokens_est": 193,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7ca99220f5769747",
+      "vector": [
+        0.056932,
+        -0.327029,
+        0.117836,
+        -0.067524,
+        0.123132,
+        0.13902,
+        0.321733,
+        0.247589,
+        0.226404,
+        0.149612,
+        -0.027804,
+        -0.070172,
+        -0.1655,
+        0.149612,
+        0.035748,
+        -0.041044,
+        -0.041044,
+        -0.04634,
+        -0.067524,
+        0.287309,
+        0.295253,
+        -0.064876,
+        0.117836,
+        -0.13902,
+        -0.252885,
+        -0.011916,
+        0.199924,
+        -0.324381,
+        -0.213164,
+        0.075468,
+        0.236997,
+        0.088708
       ]
     },
     {
@@ -264711,6 +265025,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_compatibility_probe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14086,
+      "lines": 321,
+      "tokens_est": 3522,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e47f5028c4e7cc25",
+      "vector": [
+        0.111283,
+        0.13379,
+        0.123787,
+        -0.276333,
+        -0.196309,
+        0.263829,
+        0.193808,
+        0.126288,
+        0.138792,
+        0.008753,
+        0.036261,
+        -0.076273,
+        0.178804,
+        0.223817,
+        0.211313,
+        -0.19881,
+        0.238822,
+        -0.041262,
+        0.13379,
+        -0.036261,
+        -0.088777,
+        0.19881,
+        0.088777,
+        -0.026258,
+        -0.106282,
+        0.138792,
+        0.26633,
+        -0.031259,
+        0.313844,
+        -0.243823,
+        -0.1663,
+        0.318846
+      ]
+    },
+    {
       "path": "tools/awj032/test_airllm_source_admission.py",
       "role": "python_module",
       "binary": false,
@@ -264755,6 +265116,53 @@
         -0.067951,
         -0.024186,
         0.272957
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_compatibility_probe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6509,
+      "lines": 164,
+      "tokens_est": 1628,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8ea5e0d2c27b515d",
+      "vector": [
+        -0.093578,
+        0.153467,
+        0.270751,
+        -0.173431,
+        0.081101,
+        0.165944,
+        -0.153467,
+        -0.223339,
+        0.143486,
+        -0.131009,
+        0.163449,
+        -0.150972,
+        -0.210862,
+        0.081101,
+        -0.153467,
+        -0.160954,
+        -0.051156,
+        0.303192,
+        0.278237,
+        0.028697,
+        0.303192,
+        0.013725,
+        0.183412,
+        0.011229,
+        -0.135999,
+        0.240806,
+        -0.173431,
+        0.268256,
+        0.160954,
+        0.046165,
+        -0.170935,
+        -0.185908
       ]
     },
     {
@@ -288756,16 +289164,16 @@
     }
   },
   "summary": {
-    "file_count": 1661,
-    "total_bytes": 26436751,
-    "text_tokens_est": 6599579,
+    "file_count": 1664,
+    "total_bytes": 26458117,
+    "text_tokens_est": 6604922,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1010,
-      "schema_or_lexicon": 274,
+      "python_module": 1012,
+      "schema_or_lexicon": 275,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288920,6 +289328,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-glm53-g1-probe.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -290427,7 +290836,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
+      "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/test_airllm_source_admission.py",
+      "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -448646,6 +449057,136 @@
         "file_digest8": "cecff98d2a4fb9ba"
       },
       {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#class:CompatibilityReceipt:cf47c7f40f630a26",
+        "name": "CompatibilityReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 48,
+        "end_line": 67,
+        "signature_hash": "a24da0c3d6db9231",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#class:Finding:689f412022d58f59",
+        "name": "Finding",
+        "kind": "class",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 42,
+        "end_line": 44,
+        "signature_hash": "dcd7516b5d2a8d5d",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_airllm_expert_assumptions:37e79b3655b35920",
+        "name": "_airllm_expert_assumptions",
+        "kind": "function",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 153,
+        "end_line": 173,
+        "signature_hash": "7c8ea4ac0de0dbc6",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_canonical_digest:74b7d1372506d9cb",
+        "name": "_canonical_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 70,
+        "end_line": 72,
+        "signature_hash": "0513d5eea6b714f2",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_config_findings:0813414a5c4a4b71",
+        "name": "_config_findings",
+        "kind": "function",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 89,
+        "end_line": 117,
+        "signature_hash": "ce8c351682923b61",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_find_remote_code_widening:cc647ad5b9a53101",
+        "name": "_find_remote_code_widening",
+        "kind": "function",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 79,
+        "end_line": 86,
+        "signature_hash": "7e5f0bdc44a90906",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_grouped_expert_semantics:b05e322d8d03a24b",
+        "name": "_grouped_expert_semantics",
+        "kind": "function",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 140,
+        "end_line": 150,
+        "signature_hash": "7066dfb510fbf66a",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_ordinary_layer_topology:3aa2893ea2ed900d",
+        "name": "_ordinary_layer_topology",
+        "kind": "function",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 120,
+        "end_line": 137,
+        "signature_hash": "9c8b037a61561ccf",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_read:8252b4d27465b795",
+        "name": "_read",
+        "kind": "function",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 292,
+        "end_line": 293,
+        "signature_hash": "3313625eaf98b5c7",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:_text_digest:fd52124469b7eac1",
+        "name": "_text_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 75,
+        "end_line": 76,
+        "signature_hash": "dfd0f92417b2ca7c",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:analyze:0bbb512d8a41afcb",
+        "name": "analyze",
+        "kind": "function",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 176,
+        "end_line": 289,
+        "signature_hash": "334308f8eb43a912",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#function:main:4b0aa2974e3ade0a",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 296,
+        "end_line": 316,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_compatibility_probe.py#method:CompatibilityReceipt.to_dict:f5563e27af5b9ba0",
+        "name": "CompatibilityReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_compatibility_probe.py",
+        "line": 64,
+        "end_line": 67,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "e47f5028c4e7cc25"
+      },
+      {
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
         "name": "GateTests",
         "kind": "class",
@@ -448784,6 +449325,146 @@
         "end_line": 95,
         "signature_hash": "e53ec68793bba4bf",
         "file_digest8": "f3d37a2c9e5c244c"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#class:GLM53CompatibilityProbeTests:9981eef41d375672",
+        "name": "GLM53CompatibilityProbeTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 78,
+        "end_line": 159,
+        "signature_hash": "2cfe07cc5af53ce6",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.analyze:17de4a226911d01d",
+        "name": "GLM53CompatibilityProbeTests.analyze",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 79,
+        "end_line": 86,
+        "signature_hash": "468ca7974d1cc38e",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.codes:16f7cc1fec447476",
+        "name": "GLM53CompatibilityProbeTests.codes",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 88,
+        "end_line": 89,
+        "signature_hash": "c75ad14e4d0d1af0",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_adapter_spec_preserves_native_router_and_all_experts:8108706bb87fcb99",
+        "name": "GLM53CompatibilityProbeTests.test_adapter_spec_preserves_native_router_and_all_experts",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 143,
+        "end_line": 147,
+        "signature_hash": "586ef98f1336ad58",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_config_architecture_mismatch_blocks:16791b56cf53eb9b",
+        "name": "GLM53CompatibilityProbeTests.test_config_architecture_mismatch_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 110,
+        "end_line": 115,
+        "signature_hash": "db56837ba3f4cc3e",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_expert_count_mismatch_blocks:1bb9513d9c58ca53",
+        "name": "GLM53CompatibilityProbeTests.test_expert_count_mismatch_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 124,
+        "end_line": 129,
+        "signature_hash": "40a6d4e8c247ec28",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_fp8_mismatch_blocks:ede5c64462d42c4c",
+        "name": "GLM53CompatibilityProbeTests.test_fp8_mismatch_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 131,
+        "end_line": 136,
+        "signature_hash": "86e13ed2318f1cec",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_grouped_tensor_source_is_required:8f2a99f0228270eb",
+        "name": "GLM53CompatibilityProbeTests.test_grouped_tensor_source_is_required",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 138,
+        "end_line": 141,
+        "signature_hash": "49f8134f8cd50113",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_layer_count_mismatch_blocks:cae29b2eefc77fc5",
+        "name": "GLM53CompatibilityProbeTests.test_layer_count_mismatch_blocks",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 117,
+        "end_line": 122,
+        "signature_hash": "4bb51ab4409b231b",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_probe_never_admits_g2:f5368fa39d715758",
+        "name": "GLM53CompatibilityProbeTests.test_probe_never_admits_g2",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 156,
+        "end_line": 159,
+        "signature_hash": "a6a2281c320c3c5b",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_receipt_is_deterministic:93a066f1508cc10e",
+        "name": "GLM53CompatibilityProbeTests.test_receipt_is_deterministic",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 149,
+        "end_line": 154,
+        "signature_hash": "4676c27ccb236b1c",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_safe_remote_code_source_does_not_remove_expert_gap:e4f6c496708b0a2d",
+        "name": "GLM53CompatibilityProbeTests.test_safe_remote_code_source_does_not_remove_expert_gap",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 104,
+        "end_line": 108,
+        "signature_hash": "ad0ff2f3f45a4e59",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_stock_remote_code_true_is_security_finding:2bf65e0bdb4d0f89",
+        "name": "GLM53CompatibilityProbeTests.test_stock_remote_code_true_is_security_finding",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 99,
+        "end_line": 102,
+        "signature_hash": "3b10ad488b13f13f",
+        "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_stock_v33_shape_is_partial_not_native_pass:04f0dcac6765ab08",
+        "name": "GLM53CompatibilityProbeTests.test_stock_v33_shape_is_partial_not_native_pass",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_compatibility_probe.py",
+        "line": 91,
+        "end_line": 97,
+        "signature_hash": "b67b9af0cf1f2b78",
+        "file_digest8": "8ea5e0d2c27b515d"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -450036,7 +450717,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "6b6796e20f381c4dff8502ac5aac7bbe",
-    "payload_hash": "2f1488077b05e7d0803264ecf1883478"
+    "record_fingerprint": "a7b9730ec8b9513133690c932834238a",
+    "payload_hash": "dc3595f6ea980413822ff68b6ac64a8a"
   }
 }
