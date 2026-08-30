@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788126580,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -142,6 +142,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/bughound-seedlab.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1622,6 +1623,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -1631,6 +1633,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/bughound/seedlab_benchmark.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26436063,
+      "tokens_est": 6599369,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3895,6 +3898,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 54,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_canonical:eee86dc6f3f81ae2",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -4337,6 +4348,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_digest:f2a95c68ab11fbd1",
+        "signature_hash": "c978f5ef05fda5cb"
       }
     ],
     "_token_proxy": [
@@ -156881,6 +156900,166 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "BugHoundSeedLabTests": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 136,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#class:BugHoundSeedLabTests:6f8cb762fcb0d1d6",
+        "signature_hash": "fdec4b8ce5343a2c"
+      }
+    ],
+    "BugHoundSeedLabTests.setUp": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.setUp:4ec618dd3c002de6",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "BugHoundSeedLabTests.test_canonical_topology_registry_exact": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 34,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_canonical_topology_registry_exact:f3aa0add31259659",
+        "signature_hash": "ed57d59d8900cdd4"
+      }
+    ],
+    "BugHoundSeedLabTests.test_seed_case_digests_are_deterministic_and_unique": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 40,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_seed_case_digests_are_deterministic_and_unique:732632e36b215e7d",
+        "signature_hash": "5a5fd8e1d9ef1036"
+      }
+    ],
+    "BugHoundSeedLabTests.test_ground_truth_oracles_are_consistent": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 48,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_ground_truth_oracles_are_consistent:d2447bca4c59dbac",
+        "signature_hash": "873f3f542feb0e98"
+      }
+    ],
+    "BugHoundSeedLabTests.test_matched_basis_is_topology_neutral": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 55,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_matched_basis_is_topology_neutral:f53ba4114dc4b4fb",
+        "signature_hash": "b3c9b67e3a64b613"
+      }
+    ],
+    "BugHoundSeedLabTests.test_run_plan_identity_changes_with_topology": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 59,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_run_plan_identity_changes_with_topology:a0aae0279eae0978",
+        "signature_hash": "ae2be0b14ff9b0b4"
+      }
+    ],
+    "BugHoundSeedLabTests.test_oracle_self_test_scores_perfect_but_is_not_candidate_evidence": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 75,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_oracle_self_test_scores_perfect_but_is_not_candidate_evidence:a20f25ba1a6f832e",
+        "signature_hash": "983c96e6ed8492b1"
+      }
+    ],
+    "BugHoundSeedLabTests.test_empty_candidate_has_undefined_precision_not_fabricated_zero": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 82,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_empty_candidate_has_undefined_precision_not_fabricated_zero:fdb934bb2941e5d4",
+        "signature_hash": "46dbb0e002eb9550"
+      }
+    ],
+    "BugHoundSeedLabTests.test_false_positive_is_measured_on_clean_control": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 94,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_false_positive_is_measured_on_clean_control:a3c4fa59e3e1c242",
+        "signature_hash": "41edcf31653fd8e8"
+      }
+    ],
+    "BugHoundSeedLabTests.test_holdout_patch_exposure_invalidates_comparison": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 106,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_holdout_patch_exposure_invalidates_comparison:826d00d5b1f4a20f",
+        "signature_hash": "96a2804c5f334e88"
+      }
+    ],
+    "BugHoundSeedLabTests.test_global_patch_visibility_invalidates_comparison": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 112,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_global_patch_visibility_invalidates_comparison:9d3a8a9158cc22d8",
+        "signature_hash": "4932df1f86df075b"
+      }
+    ],
+    "BugHoundSeedLabTests.test_duplicate_findings_fail_closed": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 119,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_duplicate_findings_fail_closed:24296749799f93d1",
+        "signature_hash": "a1053a29d8dfaa20"
+      }
+    ],
+    "BugHoundSeedLabTests.test_unknown_finding_case_fails_closed": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 125,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_unknown_finding_case_fails_closed:9f48326e3740919c",
+        "signature_hash": "e5662ae4ce8030c1"
+      }
+    ],
+    "BugHoundSeedLabTests.test_plan_case_set_drift_fails_closed": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 131,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_plan_case_set_drift_fails_closed:c6eb899ff646eef1",
+        "signature_hash": "97f77ccfcb3ed188"
+      }
+    ],
+    "BugHoundSeedLabTests.test_unknown_topology_fails_closed": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 136,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_unknown_topology_fails_closed:fa3aa1a386074991",
+        "signature_hash": "ed317ac978b9091e"
+      }
+    ],
     "test_space_app_card_declares_public_docker_runtime": [
       {
         "file": "tests/test_huggingface_space_deployment.py",
@@ -157179,6 +157358,236 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "BenchmarkError": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 24,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:BenchmarkError:cac2d2d6778f17c5",
+        "signature_hash": "8ac306fda9601f0e"
+      }
+    ],
+    "BenchmarkError.__init__": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 24,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:BenchmarkError.__init__:ab56f240248ffae1",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "Visibility": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:Visibility:7c03873f6678fe1f",
+        "signature_hash": "f224481c5a6830e3"
+      }
+    ],
+    "SeedBugCaseV1": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 62,
+        "end_line": 93,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:SeedBugCaseV1:a68fc3f4cdcd8b55",
+        "signature_hash": "8a853589fabb46de"
+      }
+    ],
+    "SeedBugCaseV1.__post_init__": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 87,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:SeedBugCaseV1.__post_init__:94256d662892e1dd",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "SeedBugCaseV1.case_digest": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 93,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:SeedBugCaseV1.case_digest:c205ed1654f80972",
+        "signature_hash": "ad2e340dedb0a4a4"
+      }
+    ],
+    "seeded_cases": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 157,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:seeded_cases:6069361e6f00a4cb",
+        "signature_hash": "a53a7d6ef7371ce9"
+      }
+    ],
+    "_load_function": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 160,
+        "end_line": 169,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_load_function:93c78fbc9ad5d163",
+        "signature_hash": "6b4061ed741dfbd0"
+      }
+    ],
+    "_oracle_outcome": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 172,
+        "end_line": 183,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_oracle_outcome:5674122ab0afc74c",
+        "signature_hash": "954f3c669d19fb30"
+      }
+    ],
+    "HarnessOracleResultV1": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 187,
+        "end_line": 198,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:HarnessOracleResultV1:11aab24839d5d01b",
+        "signature_hash": "3adecb3cbda3d8ef"
+      }
+    ],
+    "HarnessOracleResultV1.digest": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 198,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:HarnessOracleResultV1.digest:3b36feaa15c34665",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "run_harness_oracle": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 201,
+        "end_line": 210,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:run_harness_oracle:9b0c0f2eecbb3a37",
+        "signature_hash": "56454200b123009d"
+      }
+    ],
+    "FindingV1": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 214,
+        "end_line": 223,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:FindingV1:42e705de67154d15",
+        "signature_hash": "ccd761045f4e1b63"
+      }
+    ],
+    "FindingV1.digest": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 222,
+        "end_line": 223,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:FindingV1.digest:713a75af31ca5e42",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "MatchedRunPlanV1": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 227,
+        "end_line": 267,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:MatchedRunPlanV1:32304bd4418e51a2",
+        "signature_hash": "4f463f544932948d"
+      }
+    ],
+    "MatchedRunPlanV1.__post_init__": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 236,
+        "end_line": 242,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:MatchedRunPlanV1.__post_init__:55b6e3e8f676e1bc",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "MatchedRunPlanV1.match_basis_digest": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 245,
+        "end_line": 255,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:MatchedRunPlanV1.match_basis_digest:aebd72cc2ac26532",
+        "signature_hash": "5ac5d8a179adeba3"
+      }
+    ],
+    "MatchedRunPlanV1.run_plan_digest": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 258,
+        "end_line": 267,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:MatchedRunPlanV1.run_plan_digest:39274d35c1dadc3c",
+        "signature_hash": "6cfdad17bbfcf4d4"
+      }
+    ],
+    "build_matched_plan": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 270,
+        "end_line": 286,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:build_matched_plan:efd7bbb8cfccf213",
+        "signature_hash": "9b0f7ef1a2c81b50"
+      }
+    ],
+    "BenchmarkScoreV1": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 290,
+        "end_line": 310,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:BenchmarkScoreV1:f6f077127accad18",
+        "signature_hash": "e8db501febdc8f0e"
+      }
+    ],
+    "BenchmarkScoreV1.digest": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 309,
+        "end_line": 310,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:BenchmarkScoreV1.digest:dfced6db23617c7b",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "score_findings": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 313,
+        "end_line": 376,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:score_findings:747216944fd7844b",
+        "signature_hash": "0f7d84bf0d356649"
+      }
+    ],
+    "oracle_self_test_findings": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 379,
+        "end_line": 395,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:oracle_self_test_findings:1e1529aa974befd0",
+        "signature_hash": "68f7c5a7dfd33eda"
       }
     ],
     "_coordinates": [
@@ -158298,6 +158707,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/bughound-seedlab.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -158605,6 +159015,10 @@
     ],
     "python scripts/aura_spatial_s5_s6_construction_architect_harness.py --repo-root . --base-ref \"origin/$BASE_REF\" --head-ref HEAD --observed-head \"$(git rev-parse HEAD)\" --receipt /tmp/aura-spatial-s5-s6-receipts/full.json": [
       ".github/workflows/aura-spatial-s5-s6-construction.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/bughound-seedlab.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
@@ -159293,9 +159707,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -168129,6 +168540,63 @@
         0.183493,
         0.241705,
         0.036699
+      ]
+    },
+    {
+      "path": ".github/workflows/bughound-seedlab.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1589,
+      "lines": 44,
+      "tokens_est": 398,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          42
+        ],
+        "python -m unittest": [
+          43
+        ]
+      },
+      "topology": {},
+      "digest8": "f9c24b66c3a66104",
+      "vector": [
+        0.108868,
+        0.319095,
+        -0.083841,
+        -0.22149,
+        0.28656,
+        -0.003754,
+        -0.103862,
+        0.148911,
+        0.003754,
+        0.131392,
+        0.126387,
+        -0.279052,
+        -0.163927,
+        0.153917,
+        -0.269041,
+        -0.136398,
+        0.071327,
+        -0.239009,
+        -0.201468,
+        0.1389,
+        -0.249019,
+        -0.223992,
+        -0.25903,
+        0.218987,
+        -0.076333,
+        0.033787,
+        0.008759,
+        -0.223992,
+        0.143906,
+        -0.136398,
+        0.001251,
+        0.128889
       ]
     },
     {
@@ -262225,6 +262693,53 @@
       ]
     },
     {
+      "path": "tests/test_bughound_seedlab_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5845,
+      "lines": 141,
+      "tokens_est": 1462,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "774559d22d411cd8",
+      "vector": [
+        0.117381,
+        -0.285069,
+        -0.310867,
+        0.122541,
+        -0.274749,
+        -0.168977,
+        -0.00645,
+        0.13028,
+        -0.029668,
+        -0.323766,
+        0.13544,
+        0.243792,
+        -0.050306,
+        -0.014189,
+        0.274749,
+        -0.220573,
+        -0.228313,
+        -0.083844,
+        -0.279909,
+        -0.101902,
+        0.174137,
+        0.220573,
+        -0.187036,
+        0.096743,
+        0.058046,
+        -0.086423,
+        0.217994,
+        0.029668,
+        -0.00645,
+        0.171557,
+        -0.039987,
+        -0.019349
+      ]
+    },
+    {
       "path": "tests/test_huggingface_space_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +263160,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/bughound/seedlab_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13581,
+      "lines": 396,
+      "tokens_est": 3396,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5198d115d83441f5",
+      "vector": [
+        0.187805,
+        -0.20008,
+        0.003682,
+        -0.104336,
+        -0.136251,
+        -0.286003,
+        -0.224629,
+        0.131341,
+        -0.313008,
+        0.266364,
+        -0.187805,
+        -0.096971,
+        -0.229539,
+        0.069967,
+        0.050327,
+        -0.033142,
+        0.266364,
+        0.261454,
+        -0.148525,
+        0.224629,
+        -0.025777,
+        0.15098,
+        0.261454,
+        0.042962,
+        0.19517,
+        0.163255,
+        -0.131341,
+        -0.060147,
+        -0.131341,
+        -0.006137,
+        -0.020867,
+        -0.249179
       ]
     },
     {
@@ -286646,16 +287208,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26436063,
+    "text_tokens_est": 6599369,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286807,6 +287369,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/bughound-seedlab.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -288287,6 +288850,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -288296,6 +288860,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/bughound/seedlab_benchmark.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445314,6 +445879,166 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#class:BugHoundSeedLabTests:6f8cb762fcb0d1d6",
+        "name": "BugHoundSeedLabTests",
+        "kind": "class",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 16,
+        "end_line": 136,
+        "signature_hash": "fdec4b8ce5343a2c",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.setUp:4ec618dd3c002de6",
+        "name": "BugHoundSeedLabTests.setUp",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_canonical_topology_registry_exact:f3aa0add31259659",
+        "name": "BugHoundSeedLabTests.test_canonical_topology_registry_exact",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 20,
+        "end_line": 34,
+        "signature_hash": "ed57d59d8900cdd4",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_duplicate_findings_fail_closed:24296749799f93d1",
+        "name": "BugHoundSeedLabTests.test_duplicate_findings_fail_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 114,
+        "end_line": 119,
+        "signature_hash": "a1053a29d8dfaa20",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_empty_candidate_has_undefined_precision_not_fabricated_zero:fdb934bb2941e5d4",
+        "name": "BugHoundSeedLabTests.test_empty_candidate_has_undefined_precision_not_fabricated_zero",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 77,
+        "end_line": 82,
+        "signature_hash": "46dbb0e002eb9550",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_false_positive_is_measured_on_clean_control:a3c4fa59e3e1c242",
+        "name": "BugHoundSeedLabTests.test_false_positive_is_measured_on_clean_control",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 84,
+        "end_line": 94,
+        "signature_hash": "41edcf31653fd8e8",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_global_patch_visibility_invalidates_comparison:9d3a8a9158cc22d8",
+        "name": "BugHoundSeedLabTests.test_global_patch_visibility_invalidates_comparison",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 108,
+        "end_line": 112,
+        "signature_hash": "4932df1f86df075b",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_ground_truth_oracles_are_consistent:d2447bca4c59dbac",
+        "name": "BugHoundSeedLabTests.test_ground_truth_oracles_are_consistent",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 42,
+        "end_line": 48,
+        "signature_hash": "873f3f542feb0e98",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_holdout_patch_exposure_invalidates_comparison:826d00d5b1f4a20f",
+        "name": "BugHoundSeedLabTests.test_holdout_patch_exposure_invalidates_comparison",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 96,
+        "end_line": 106,
+        "signature_hash": "96a2804c5f334e88",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_matched_basis_is_topology_neutral:f53ba4114dc4b4fb",
+        "name": "BugHoundSeedLabTests.test_matched_basis_is_topology_neutral",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 50,
+        "end_line": 55,
+        "signature_hash": "b3c9b67e3a64b613",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_oracle_self_test_scores_perfect_but_is_not_candidate_evidence:a20f25ba1a6f832e",
+        "name": "BugHoundSeedLabTests.test_oracle_self_test_scores_perfect_but_is_not_candidate_evidence",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 61,
+        "end_line": 75,
+        "signature_hash": "983c96e6ed8492b1",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_plan_case_set_drift_fails_closed:c6eb899ff646eef1",
+        "name": "BugHoundSeedLabTests.test_plan_case_set_drift_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 127,
+        "end_line": 131,
+        "signature_hash": "97f77ccfcb3ed188",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_run_plan_identity_changes_with_topology:a0aae0279eae0978",
+        "name": "BugHoundSeedLabTests.test_run_plan_identity_changes_with_topology",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 57,
+        "end_line": 59,
+        "signature_hash": "ae2be0b14ff9b0b4",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_seed_case_digests_are_deterministic_and_unique:732632e36b215e7d",
+        "name": "BugHoundSeedLabTests.test_seed_case_digests_are_deterministic_and_unique",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 36,
+        "end_line": 40,
+        "signature_hash": "5a5fd8e1d9ef1036",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_unknown_finding_case_fails_closed:9f48326e3740919c",
+        "name": "BugHoundSeedLabTests.test_unknown_finding_case_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 121,
+        "end_line": 125,
+        "signature_hash": "e5662ae4ce8030c1",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_unknown_topology_fails_closed:fa3aa1a386074991",
+        "name": "BugHoundSeedLabTests.test_unknown_topology_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 133,
+        "end_line": 136,
+        "signature_hash": "ed317ac978b9091e",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "name": "test_deployment_docs_have_submission_field_and_no_localhost_url_claim",
         "kind": "function",
@@ -445632,6 +446357,256 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:BenchmarkError:cac2d2d6778f17c5",
+        "name": "BenchmarkError",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 20,
+        "end_line": 24,
+        "signature_hash": "8ac306fda9601f0e",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:BenchmarkScoreV1:f6f077127accad18",
+        "name": "BenchmarkScoreV1",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 290,
+        "end_line": 310,
+        "signature_hash": "e8db501febdc8f0e",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:FindingV1:42e705de67154d15",
+        "name": "FindingV1",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 214,
+        "end_line": 223,
+        "signature_hash": "ccd761045f4e1b63",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:HarnessOracleResultV1:11aab24839d5d01b",
+        "name": "HarnessOracleResultV1",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 187,
+        "end_line": 198,
+        "signature_hash": "3adecb3cbda3d8ef",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:MatchedRunPlanV1:32304bd4418e51a2",
+        "name": "MatchedRunPlanV1",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 227,
+        "end_line": 267,
+        "signature_hash": "4f463f544932948d",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:SeedBugCaseV1:a68fc3f4cdcd8b55",
+        "name": "SeedBugCaseV1",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 62,
+        "end_line": 93,
+        "signature_hash": "8a853589fabb46de",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:Visibility:7c03873f6678fe1f",
+        "name": "Visibility",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "f224481c5a6830e3",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_canonical:eee86dc6f3f81ae2",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 48,
+        "end_line": 54,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_digest:f2a95c68ab11fbd1",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_load_function:93c78fbc9ad5d163",
+        "name": "_load_function",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 160,
+        "end_line": 169,
+        "signature_hash": "6b4061ed741dfbd0",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_oracle_outcome:5674122ab0afc74c",
+        "name": "_oracle_outcome",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 172,
+        "end_line": 183,
+        "signature_hash": "954f3c669d19fb30",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:build_matched_plan:efd7bbb8cfccf213",
+        "name": "build_matched_plan",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 270,
+        "end_line": 286,
+        "signature_hash": "9b0f7ef1a2c81b50",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:oracle_self_test_findings:1e1529aa974befd0",
+        "name": "oracle_self_test_findings",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 379,
+        "end_line": 395,
+        "signature_hash": "68f7c5a7dfd33eda",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:run_harness_oracle:9b0c0f2eecbb3a37",
+        "name": "run_harness_oracle",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 201,
+        "end_line": 210,
+        "signature_hash": "56454200b123009d",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:score_findings:747216944fd7844b",
+        "name": "score_findings",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 313,
+        "end_line": 376,
+        "signature_hash": "0f7d84bf0d356649",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:seeded_cases:6069361e6f00a4cb",
+        "name": "seeded_cases",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 96,
+        "end_line": 157,
+        "signature_hash": "a53a7d6ef7371ce9",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:BenchmarkError.__init__:ab56f240248ffae1",
+        "name": "BenchmarkError.__init__",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 21,
+        "end_line": 24,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:BenchmarkScoreV1.digest:dfced6db23617c7b",
+        "name": "BenchmarkScoreV1.digest",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 309,
+        "end_line": 310,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:FindingV1.digest:713a75af31ca5e42",
+        "name": "FindingV1.digest",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 222,
+        "end_line": 223,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:HarnessOracleResultV1.digest:3b36feaa15c34665",
+        "name": "HarnessOracleResultV1.digest",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 197,
+        "end_line": 198,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:MatchedRunPlanV1.__post_init__:55b6e3e8f676e1bc",
+        "name": "MatchedRunPlanV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 236,
+        "end_line": 242,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:MatchedRunPlanV1.match_basis_digest:aebd72cc2ac26532",
+        "name": "MatchedRunPlanV1.match_basis_digest",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 245,
+        "end_line": 255,
+        "signature_hash": "5ac5d8a179adeba3",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:MatchedRunPlanV1.run_plan_digest:39274d35c1dadc3c",
+        "name": "MatchedRunPlanV1.run_plan_digest",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 258,
+        "end_line": 267,
+        "signature_hash": "6cfdad17bbfcf4d4",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:SeedBugCaseV1.__post_init__:94256d662892e1dd",
+        "name": "SeedBugCaseV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 77,
+        "end_line": 87,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:SeedBugCaseV1.case_digest:c205ed1654f80972",
+        "name": "SeedBugCaseV1.case_digest",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 90,
+        "end_line": 93,
+        "signature_hash": "ad2e340dedb0a4a4",
+        "file_digest8": "5198d115d83441f5"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -446884,7 +447859,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "ccf2a9f9b9b39b190d1b613db31ad369",
+    "payload_hash": "cb1eaea095fe402d9f3a85800223c55a"
   }
 }
