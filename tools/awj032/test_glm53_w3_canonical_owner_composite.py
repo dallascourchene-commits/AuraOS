@@ -20,8 +20,16 @@ def current_w3_receipt():
     )
 
 
+def compose_current():
+    return c.compose_canonical_w3_admission(
+        pager_plan=LowerPlan(),
+        airllm_security_evidence=security(),
+        glm53_metadata_evidence=metadata(),
+    )
+
+
 def test_exact_current_owners_open_only_native_synthetic_fixture_eligibility():
-    out = c.compose_canonical_w3_admission(w3_receipt=current_w3_receipt())
+    out = compose_current()
     assert out.status == "ELIGIBLE_FOR_NATIVE_SYNTHETIC_W3_FIXTURE"
     assert out.blockers == ()
     assert out.official_w2_producer_proof_consumed is True
@@ -38,49 +46,79 @@ def test_exact_current_owners_open_only_native_synthetic_fixture_eligibility():
     assert out.pr421_report_logical_id == c.PR421_REPORT_LOGICAL_ID
 
 
-def test_canonical_api_has_no_caller_pr421_owner_argument():
+def test_canonical_public_api_accepts_live_pr410_inputs_only():
     params = set(inspect.signature(c.compose_canonical_w3_admission).parameters)
-    assert params == {"w3_receipt"}
+    assert params == {"pager_plan", "airllm_security_evidence", "glm53_metadata_evidence"}
+
+    with pytest.raises(TypeError):
+        c.compose_canonical_w3_admission(w3_receipt=current_w3_receipt())
+
     with pytest.raises(TypeError):
         c.compose_canonical_w3_admission(
-            w3_receipt=current_w3_receipt(),
+            pager_plan=LowerPlan(),
+            airllm_security_evidence=security(),
+            glm53_metadata_evidence=metadata(),
             pr421_owner_receipt={},
         )
 
 
-def test_pr410_must_be_blocked_only_on_mtp_provenance():
+def test_direct_serialized_pr410_receipt_cannot_enter_public_boundary():
     raw = current_w3_receipt().to_dict()
-    raw["blockers"].append("AIRLLM_SECURITY_GENERATION_STALE")
-    with pytest.raises(c.CanonicalOwnerCompositeError, match="PR410_W3_BLOCKER_SET_NOT_COMPOSABLE"):
+    assert raw["official_w2_producer_proof_consumed"] is True
+    with pytest.raises(TypeError):
         c.compose_canonical_w3_admission(w3_receipt=raw)
+
+
+def test_public_boundary_actually_invokes_pr410(monkeypatch):
+    calls = []
+    original = c.evaluate_w3_official_producer_admission
+
+    def traced(**kwargs):
+        calls.append(kwargs)
+        return original(**kwargs)
+
+    monkeypatch.setattr(c, "evaluate_w3_official_producer_admission", traced)
+    out = compose_current()
+    assert out.status == "ELIGIBLE_FOR_NATIVE_SYNTHETIC_W3_FIXTURE"
+    assert len(calls) == 1
+    assert isinstance(calls[0]["pager_plan"], LowerPlan)
+
+
+def test_pr410_must_be_blocked_only_on_mtp_provenance():
+    stale_security = security()
+    stale_security["semantic_head"] = "0" * 40
+    with pytest.raises(c.CanonicalOwnerCompositeError, match="PR410_W3_BLOCKER_SET_NOT_COMPOSABLE"):
+        c.compose_canonical_w3_admission(
+            pager_plan=LowerPlan(),
+            airllm_security_evidence=stale_security,
+            glm53_metadata_evidence=metadata(),
+        )
 
 
 def test_caller_provenance_widening_from_pr410_cannot_be_laundered():
-    widened = w3.evaluate_w3_official_producer_admission(
-        pager_plan=LowerPlan(),
-        airllm_security_evidence=security(),
-        glm53_metadata_evidence=metadata(resolver_provenance_proven=True),
-    )
-    assert "GLM53_MTP_CALLER_PROVENANCE_WIDENING_FORBIDDEN" in widened.blockers
     with pytest.raises(c.CanonicalOwnerCompositeError, match="PR410_W3_BLOCKER_SET_NOT_COMPOSABLE"):
-        c.compose_canonical_w3_admission(w3_receipt=widened)
+        c.compose_canonical_w3_admission(
+            pager_plan=LowerPlan(),
+            airllm_security_evidence=security(),
+            glm53_metadata_evidence=metadata(resolver_provenance_proven=True),
+        )
 
 
-def test_pr410_official_w2_producer_proof_is_required():
+def test_private_receipt_validator_still_rejects_missing_producer_proof():
     raw = current_w3_receipt().to_dict()
     raw["official_w2_producer_proof_consumed"] = False
     with pytest.raises(c.CanonicalOwnerCompositeError, match="PR410_W2_PRODUCER_PROOF_REQUIRED"):
-        c.compose_canonical_w3_admission(w3_receipt=raw)
+        c._compose_verified_pr410_receipt(raw)
 
 
-def test_pr410_generation_substitution_fails():
+def test_private_receipt_validator_still_rejects_generation_substitution():
     raw = current_w3_receipt().to_dict()
     raw["glm53_metadata_semantic_head"] = "0" * 40
     with pytest.raises(c.CanonicalOwnerCompositeError, match="PR410_RECEIPT_GENERATION_MISMATCH"):
-        c.compose_canonical_w3_admission(w3_receipt=raw)
+        c._compose_verified_pr410_receipt(raw)
 
 
-def test_pr410_effect_widening_fails():
+def test_private_receipt_validator_rejects_effect_widening():
     for field in (
         "synthetic_tiny_fixture_admitted",
         "g2_admitted",
@@ -92,7 +130,7 @@ def test_pr410_effect_widening_fails():
         raw = current_w3_receipt().to_dict()
         raw[field] = True
         with pytest.raises(c.CanonicalOwnerCompositeError, match="PR410_EFFECT_CEILING_WIDENED"):
-            c.compose_canonical_w3_admission(w3_receipt=raw)
+            c._compose_verified_pr410_receipt(raw)
 
 
 def test_pr421_owner_is_exact_code_owned_receipt_not_shape_matching_input():
@@ -112,7 +150,7 @@ def test_pr421_owner_is_exact_code_owned_receipt_not_shape_matching_input():
         for substituted in substitutions:
             c.CANONICAL_PR421_OWNER_RECEIPT = substituted
             with pytest.raises(c.CanonicalOwnerCompositeError, match="PR421_CANONICAL_OWNER_RECEIPT_MISMATCH"):
-                c.compose_canonical_w3_admission(w3_receipt=current_w3_receipt())
+                compose_current()
     finally:
         c.CANONICAL_PR421_OWNER_RECEIPT = original
 
@@ -133,7 +171,7 @@ def test_pr421_owner_effect_or_proof_widening_fails_closed():
         for substituted in substitutions:
             c.CANONICAL_PR421_OWNER_RECEIPT = substituted
             with pytest.raises(c.CanonicalOwnerCompositeError):
-                c.compose_canonical_w3_admission(w3_receipt=current_w3_receipt())
+                compose_current()
     finally:
         c.CANONICAL_PR421_OWNER_RECEIPT = original
 
@@ -152,8 +190,8 @@ def test_owner_receipt_binds_exact_independent_output_pin():
 
 
 def test_composite_is_deterministic_and_owner_receipt_is_content_addressed():
-    a = c.compose_canonical_w3_admission(w3_receipt=current_w3_receipt())
-    b = c.compose_canonical_w3_admission(w3_receipt=current_w3_receipt())
+    a = compose_current()
+    b = compose_current()
     assert a.logical_id == b.logical_id
     assert a.pr410_input_receipt_digest == b.pr410_input_receipt_digest
     assert a.pr421_owner_receipt_digest == b.pr421_owner_receipt_digest
