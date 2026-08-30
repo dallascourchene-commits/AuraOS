@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788016347,
+  "generated_at_unix": 1788052534,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1634,
+    "repo_file_count": 1658,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -43,9 +43,11 @@
       ".aura/intents/example.aura.md",
       ".aura/memory_apertures/coding_localize.v1.json",
       ".aura/model_policies/local_first.v1.json",
+      ".aura/model_policies/thinkpad_resident_moe.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
       ".aura/plan_revision_deltas/bilateral_intent_guardrail_foundry_final_revision_2.v1.json",
+      ".aura/provider_policies/cost_first_cognitive_allocation.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_final.v2.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
@@ -74,6 +76,7 @@
       ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
       ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
       ".aura/source_anchor_manifest.v1.json",
+      ".aura/storage_policies/aura_dual_persistence.v1.json",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/topology_baseline.json",
       ".aura/understand_graph.json",
@@ -925,6 +928,9 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_cost_first_orchestration.py",
+      "core/aura_dual_persistence.py",
+      "core/aura_resident_idle_policy.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
       "dag_executor.py",
@@ -947,6 +953,8 @@
       "docs/ADVANCED_BENCHMARKS.md",
       "docs/AMD_DEMO_RECORDING_SCRIPT.md",
       "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
+      "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+      "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
       "docs/AURA_AFFORDANCE_DIRECTORY.md",
       "docs/AURA_AGENT_ARENA_BRIDGE.md",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
@@ -1085,11 +1093,14 @@
       "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
       "docs/BENCHMARKS.md",
       "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
+      "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
+      "docs/CREATOR-STUDIO-GEMINI-DELTA-GATE10.md",
       "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
       "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
       "docs/PR_KIT.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
       "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
+      "docs/THINKPAD-RESIDENT-MOE-AUTONOMY.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
@@ -1137,7 +1148,17 @@
       "download_papers.py",
       "download_zenodo_papers.py",
       "english_lexicon.json",
+      "examples/arena_expert_fabric/README.md",
+      "examples/arena_expert_fabric/checks.py",
+      "examples/arena_expert_fabric/expert_fabric.py",
+      "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+      "examples/arena_navigation_domain_lens/README.md",
+      "examples/arena_navigation_domain_lens/domain_lens_reference.py",
       "examples/aura_gate_policy.json",
+      "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+      "examples/creator_studio_gemini_delta/test_creator_studio_gemini_delta_reference.py",
+      "examples/mini_aura_reference_arena/README.md",
+      "examples/mini_aura_reference_arena/mini_aura_reference.py",
       "extract_new_papers.py",
       "extract_pdf_text.py",
       "fix_db.py",
@@ -1436,8 +1457,10 @@
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
+      "tests/test_aura_cost_first_orchestration.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
+      "tests/test_aura_dual_persistence.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_agent_bridge.py",
       "tests/test_aura_emergent_agent_bridge_mcp.py",
@@ -1537,6 +1560,7 @@
       "tests/test_aura_relationship_compass_finalization.py",
       "tests/test_aura_relationship_contracts.py",
       "tests/test_aura_research_cockpit_adapter.py",
+      "tests/test_aura_resident_idle_policy.py",
       "tests/test_aura_review_arena.py",
       "tests/test_aura_review_arena_mcp.py",
       "tests/test_aura_review_learning_mcp_codex.py",
@@ -1662,8 +1686,18 @@
       "aura_spatial_importers/spz.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
+      "core/aura_cost_first_orchestration.py",
+      "core/aura_dual_persistence.py",
+      "core/aura_resident_idle_policy.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
+      "examples/arena_expert_fabric/checks.py",
+      "examples/arena_expert_fabric/expert_fabric.py",
+      "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+      "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+      "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+      "examples/creator_studio_gemini_delta/test_creator_studio_gemini_delta_reference.py",
+      "examples/mini_aura_reference_arena/mini_aura_reference.py",
       "scripts/aura_advanced_benchmark_runner.py",
       "scripts/aura_arch_v2_3_capsule_validator.py",
       "scripts/aura_architecture_harness.py",
@@ -1732,17 +1766,7 @@
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
       "tests/test_aura_arena_wfst_phase_a.py",
       "tests/test_aura_benchmark_four.py",
-      "tests/test_aura_benchmark_four_hardening.py",
-      "tests/test_aura_bilateral_gate_dialogue.py",
-      "tests/test_aura_bilateral_live_repair_foundry.py",
-      "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-      "tests/test_aura_bilateral_planning_enforcement.py",
-      "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py",
-      "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py"
+      "tests/test_aura_benchmark_four_hardening.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1750,16 +1774,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1634,
-      "bytes": 26349449,
-      "tokens_est": 6577733,
+      "files": 1658,
+      "bytes": 26418741,
+      "tokens_est": 6595075,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 234,
+        "knowledge_artifact": 242,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 995,
-        "schema_or_lexicon": 271,
+        "python_module": 1008,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -1896,6 +1920,8 @@
         "docs/ADVANCED_BENCHMARKS.md",
         "docs/AMD_DEMO_RECORDING_SCRIPT.md",
         "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
+        "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+        "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
         "docs/AURA_AFFORDANCE_DIRECTORY.md",
         "docs/AURA_AGENT_ARENA_BRIDGE.md",
         "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
@@ -2032,9 +2058,7 @@
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
         "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
         "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-        "docs/BENCHMARKS.md",
-        "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
-        "docs/INDUSTRY_BENCHMARK_SCORECARD.md"
+        "docs/BENCHMARKS.md"
       ]
     },
     {
@@ -3176,6 +3200,22 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "kind": "function",
+        "line": 120,
+        "end_line": 154,
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:main:32317dbcaff0af39",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 112,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:main:d01a5daa59a950c4",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "extract_pdf_text.py",
         "kind": "function",
         "line": 30,
@@ -3600,6 +3640,14 @@
         "end_line": 109,
         "semantic_id": "aura_persistence_cli.py#function:run:7f94baca3e3b884a",
         "signature_hash": "0a9464444ccb9a05"
+      },
+      {
+        "file": "examples/arena_expert_fabric/checks.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 42,
+        "semantic_id": "examples/arena_expert_fabric/checks.py#function:run:abc10591a9d15d9c",
+        "signature_hash": "26799ab4ad82cbfb"
       },
       {
         "file": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -20102,6 +20150,14 @@
         "end_line": 96,
         "semantic_id": "aura_refactor_state_identity.py#function:digest:344aa69d358de265",
         "signature_hash": "cb7986ce5e23d90c"
+      },
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 14,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:digest:5e1afc8ed4c10faa",
+        "signature_hash": "3c60ab9e6d97eef8"
       }
     ],
     "_runtime_binding_digest": [
@@ -21142,6 +21198,14 @@
         "end_line": 54,
         "semantic_id": "aura_blockchain/demo.py#function:ok:19258f32ac3c53be",
         "signature_hash": "cfdee8d8536334d2"
+      },
+      {
+        "file": "examples/arena_expert_fabric/checks.py",
+        "kind": "function",
+        "line": 3,
+        "end_line": 5,
+        "semantic_id": "examples/arena_expert_fabric/checks.py#function:ok:9c62605c42000f6f",
+        "signature_hash": "c661175925b26c89"
       }
     ],
     "info": [
@@ -45389,6 +45453,14 @@
         "line": 259,
         "end_line": 266,
         "semantic_id": "aura_relationship_contracts.py#function:canonical_json:6ff6ee0dde564a0d",
+        "signature_hash": "2af8a10abc3d606e"
+      },
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:canonical_json:953a70c35297eac6",
         "signature_hash": "2af8a10abc3d606e"
       },
       {
@@ -90182,6 +90254,14 @@
         "end_line": 47,
         "semantic_id": "aura_tcwaa.py#class:Task:80278b012b1d880e",
         "signature_hash": "e8124b632950c68c"
+      },
+      {
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 28,
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#class:Task:e08be0759318eaab",
+        "signature_hash": "e8124b632950c68c"
       }
     ],
     "ThermalCostWeightedAPIArbitration": [
@@ -92560,6 +92640,14 @@
         "end_line": 81,
         "semantic_id": "aura_topology_sync.py#class:SyncState:ba886a2f9d16a1dd",
         "signature_hash": "862cb1ef29f9fd3a"
+      },
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 16,
+        "semantic_id": "core/aura_dual_persistence.py#class:SyncState:8a5ba37b8325ca2f",
+        "signature_hash": "47e5a9e731ddb8c1"
       }
     ],
     "SyncState.to_dict": [
@@ -96672,6 +96760,136 @@
         "signature_hash": "d4d8a57e306c4b5e"
       }
     ],
+    "CognitionRequest": [
+      {
+        "file": "core/aura_cost_first_orchestration.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 40,
+        "semantic_id": "core/aura_cost_first_orchestration.py#class:CognitionRequest:f88b9300b6e59d32",
+        "signature_hash": "885e49c6647adf3a"
+      }
+    ],
+    "choose_cognition_route": [
+      {
+        "file": "core/aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 120,
+        "semantic_id": "core/aura_cost_first_orchestration.py#function:choose_cognition_route:66266f636f5029da",
+        "signature_hash": "1a7e47dda756dbc1"
+      }
+    ],
+    "paid_inference_amortization_contract": [
+      {
+        "file": "core/aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 125,
+        "semantic_id": "core/aura_cost_first_orchestration.py#function:paid_inference_amortization_contract:7b6ac98759db14b7",
+        "signature_hash": "a20206ebb6274f1b"
+      }
+    ],
+    "Replica": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 24,
+        "semantic_id": "core/aura_dual_persistence.py#class:Replica:cb1b6eb89f282603",
+        "signature_hash": "bec032fc1e6d77bc"
+      }
+    ],
+    "ArtifactReplicaRecord": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 35,
+        "semantic_id": "core/aura_dual_persistence.py#class:ArtifactReplicaRecord:3fc21357d89a0bda",
+        "signature_hash": "a624f7d2d766161a"
+      }
+    ],
+    "ReconcilePlan": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "class",
+        "line": 39,
+        "end_line": 44,
+        "semantic_id": "core/aura_dual_persistence.py#class:ReconcilePlan:96e15f0598fd7445",
+        "signature_hash": "e117573a423a08ed"
+      }
+    ],
+    "reconcile": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 140,
+        "semantic_id": "core/aura_dual_persistence.py#function:reconcile:2413b919eeacf0d0",
+        "signature_hash": "8b09f9314b2f31f7"
+      }
+    ],
+    "can_dispatch_work": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "function",
+        "line": 143,
+        "end_line": 145,
+        "semantic_id": "core/aura_dual_persistence.py#function:can_dispatch_work:cc951ba9bcbf3d11",
+        "signature_hash": "abac5fa386fb598a"
+      }
+    ],
+    "currentness_token": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "function",
+        "line": 148,
+        "end_line": 153,
+        "semantic_id": "core/aura_dual_persistence.py#function:currentness_token:285d1325afd26c4f",
+        "signature_hash": "289444470adda028"
+      }
+    ],
+    "native_cloud_digest": [
+      {
+        "file": "core/aura_dual_persistence.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 160,
+        "semantic_id": "core/aura_dual_persistence.py#function:native_cloud_digest:85a92d4865346bcf",
+        "signature_hash": "9f834669ab7a16c5"
+      }
+    ],
+    "HostState": [
+      {
+        "file": "core/aura_resident_idle_policy.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 20,
+        "semantic_id": "core/aura_resident_idle_policy.py#class:HostState:0cec7b7399df6587",
+        "signature_hash": "70c86d366d30245e"
+      }
+    ],
+    "MaintenanceWork": [
+      {
+        "file": "core/aura_resident_idle_policy.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 29,
+        "semantic_id": "core/aura_resident_idle_policy.py#class:MaintenanceWork:7f15a3576a9e09f7",
+        "signature_hash": "143828bbe594e83d"
+      }
+    ],
+    "choose_background_route": [
+      {
+        "file": "core/aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 75,
+        "semantic_id": "core/aura_resident_idle_policy.py#function:choose_background_route:0b2c9045c772f5ab",
+        "signature_hash": "82bf00e5c6413991"
+      }
+    ],
     "TaskDispatcher": [
       {
         "file": "core/aura_task_dispatcher.py",
@@ -96770,6 +96988,432 @@
         "end_line": 85,
         "semantic_id": "dag_executor.py#function:execute_dag_plan:9bd23b75d712eab2",
         "signature_hash": "9509d08361c59676"
+      }
+    ],
+    "h16": [
+      {
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:h16:e5e4c0592f171f78",
+        "signature_hash": "4c6394195175f3b5"
+      }
+    ],
+    "k27": [
+      {
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 17,
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:k27:5d4565b79d5f4c38",
+        "signature_hash": "822e70766cec9340"
+      }
+    ],
+    "Backend": [
+      {
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 33,
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#class:Backend:5e1c8b6fb1006f78",
+        "signature_hash": "a95bc105f69d7b78"
+      }
+    ],
+    "cache_key": [
+      {
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 54,
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:cache_key:ce15fb240cb21e1b",
+        "signature_hash": "397aa3aaf2ed9053"
+      }
+    ],
+    "choose": [
+      {
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 95,
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:choose:65e1a041f781dcb4",
+        "signature_hash": "d6c7719d29f3f83d"
+      }
+    ],
+    "closure": [
+      {
+        "file": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 31,
+        "semantic_id": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py#function:closure:45c97446fbdf25dd",
+        "signature_hash": "eed28545da76b977"
+      },
+      {
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 90,
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:closure:f8357a72cd107230",
+        "signature_hash": "eed28545da76b977"
+      }
+    ],
+    "total": [
+      {
+        "file": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 70,
+        "semantic_id": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py#function:total:094932bcd1042987",
+        "signature_hash": "9c3a87261661d2a5"
+      }
+    ],
+    "temp": [
+      {
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:temp:ece81d8c171b7d27",
+        "signature_hash": "2862686f2f88365e"
+      }
+    ],
+    "key27": [
+      {
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 63,
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:key27:d897350be015e150",
+        "signature_hash": "fdff7e754f144a1b"
+      }
+    ],
+    "decode3": [
+      {
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 69,
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:decode3:e7718a077778eaa2",
+        "signature_hash": "bf8a2a1df8d7e0bb"
+      }
+    ],
+    "lens": [
+      {
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 81,
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:lens:a14b5dbdf5a90a03",
+        "signature_hash": "48a711946df85ea3"
+      }
+    ],
+    "affected": [
+      {
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 102,
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:affected:f1aba1ca222bfa78",
+        "signature_hash": "ea1cb06750d30c39"
+      },
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 46,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:affected:524d3c53840664dd",
+        "signature_hash": "f61a3c1a25e6880c"
+      }
+    ],
+    "neighborhood": [
+      {
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "kind": "function",
+        "line": 105,
+        "end_line": 106,
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:neighborhood:fccd1597c1aefd06",
+        "signature_hash": "80651280b896f127"
+      }
+    ],
+    "cross_edges": [
+      {
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 117,
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:cross_edges:d573feb39c537fab",
+        "signature_hash": "d9cfd6a7122b21a4"
+      }
+    ],
+    "main.ok": [
+      {
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 124,
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#method:main.ok:d46b9874672f72be",
+        "signature_hash": "d358054c0af01207"
+      }
+    ],
+    "ass_escape": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 17,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:ass_escape:644b8aec9f86af86",
+        "signature_hash": "a7361c3cb1299425"
+      }
+    ],
+    "resolve_script": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 27,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:resolve_script:d0d4f655f56741e1",
+        "signature_hash": "e2307cc45974f201"
+      }
+    ],
+    "InputRef": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#class:InputRef:303562f0eed9a65c",
+        "signature_hash": "c47f19fc8a438d32"
+      }
+    ],
+    "InputAllocator": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 40,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#class:InputAllocator:3a3709bc9bc6a38a",
+        "signature_hash": "e729f516421b1714"
+      }
+    ],
+    "InputAllocator.__init__": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 36,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#method:InputAllocator.__init__:11cf9a179429bb19",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "InputAllocator.add": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#method:InputAllocator.add:f929d109f8f5028f",
+        "signature_hash": "d56a4774d378fd32"
+      }
+    ],
+    "InputAllocator.refs": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 40,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#method:InputAllocator.refs:644e42241f81f8a6",
+        "signature_hash": "c46e3f423b5ffb10"
+      }
+    ],
+    "build_audio_plan": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 53,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:build_audio_plan:efc35bc22362109c",
+        "signature_hash": "9af7f656f7f28dec"
+      }
+    ],
+    "research_source_record": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 63,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:research_source_record:f6ff8dc9ba183b00",
+        "signature_hash": "28fb5e2d777e7c10"
+      }
+    ],
+    "RightsState": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 71,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#class:RightsState:fa53bf350a5c01ee",
+        "signature_hash": "88301c2f476d5537"
+      }
+    ],
+    "admit_public_asset": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 74,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:admit_public_asset:3677f96ac0c34b9a",
+        "signature_hash": "defe55a7c7c60e3c"
+      }
+    ],
+    "EffectAuthorization": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "class",
+        "line": 77,
+        "end_line": 85,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#class:EffectAuthorization:32aa4b7cb95a4fc1",
+        "signature_hash": "53ad97b9b62c050e"
+      }
+    ],
+    "authorization_allows_publish": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 89,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:authorization_allows_publish:35e84691ef61b6b7",
+        "signature_hash": "b7225d00d25008db"
+      }
+    ],
+    "deterministic_template_id": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 92,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:deterministic_template_id:dde2d319ac9b369c",
+        "signature_hash": "31753c9a6e58a3d9"
+      }
+    ],
+    "commons_recipe": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 95,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:commons_recipe:a17d495ed691a5e9",
+        "signature_hash": "450c96e09443c16c"
+      }
+    ],
+    "canonical_batch_summary": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 97,
+        "end_line": 99,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:canonical_batch_summary:479eb77ae6b43952",
+        "signature_hash": "780b4bd48acf84ae"
+      }
+    ],
+    "claim_badge": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 102,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:claim_badge:19e05c391e0f410a",
+        "signature_hash": "fc7db65937101037"
+      }
+    ],
+    "trend_candidate": [
+      {
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 104,
+        "end_line": 108,
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:trend_candidate:379c212e55f14f08",
+        "signature_hash": "c52f7d536be86d9b"
+      }
+    ],
+    "check": [
+      {
+        "file": "examples/creator_studio_gemini_delta/test_creator_studio_gemini_delta_reference.py",
+        "kind": "function",
+        "line": 5,
+        "end_line": 5,
+        "semantic_id": "examples/creator_studio_gemini_delta/test_creator_studio_gemini_delta_reference.py#function:check:c9ee69b4e3fdf111",
+        "signature_hash": "2bfef13adee6e539"
+      }
+    ],
+    "omega": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 7,
+        "end_line": 12,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:omega:32cf494305e89d8b",
+        "signature_hash": "10a63c5704ace81e"
+      }
+    ],
+    "ds": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 14,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:ds:097f601fc16ec71c",
+        "signature_hash": "eb56edab62740c32"
+      }
+    ],
+    "hyperscale": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 30,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:hyperscale:3dca0cb5d4fa0144",
+        "signature_hash": "64ca9c961f742184"
+      }
+    ],
+    "affected.rebuild": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 39,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#method:affected.rebuild:b67c227e561d5df1",
+        "signature_hash": "330ca4eb78c04904"
+      }
+    ],
+    "amnf": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 54,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:amnf:f6936a2d8cbe33cd",
+        "signature_hash": "a0d39e7e8424d583"
+      }
+    ],
+    "action_cone": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 73,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:action_cone:33805bec5d23880c",
+        "signature_hash": "eb35820672eab145"
+      }
+    ],
+    "decision": [
+      {
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 96,
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:decision:4c082db2ca65d38c",
+        "signature_hash": "3f12de2cf5ff654f"
       }
     ],
     "extract_with_pypdf2": [
@@ -129440,6 +130084,126 @@
         "signature_hash": "0b3757b9a4f8f0fd"
       }
     ],
+    "test_reuse_beats_every_provider": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 19,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_reuse_beats_every_provider:625229b8723c3c72",
+        "signature_hash": "7acd5e6fc63d3a23"
+      }
+    ],
+    "test_auraos_deterministic_before_model": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_auraos_deterministic_before_model:b1bfc3150f995697",
+        "signature_hash": "e29595aab801a180"
+      }
+    ],
+    "test_interactive_chatgpt_control_plane_before_paid_api": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 35,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_interactive_chatgpt_control_plane_before_paid_api:6236d41f028df6fa",
+        "signature_hash": "08241166bce53bef"
+      }
+    ],
+    "test_local_model_before_paid_remote_when_sufficient": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 42,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_local_model_before_paid_remote_when_sufficient:fd6dd8075efa86d1",
+        "signature_hash": "3680ede7f9904df8"
+      }
+    ],
+    "test_deepseek_is_default_paid_remote_provider": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 49,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_deepseek_is_default_paid_remote_provider:928875df7576a50b",
+        "signature_hash": "336c6c77887fbccb"
+      }
+    ],
+    "test_no_implicit_paid_fallback_when_deepseek_unavailable": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 56,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_no_implicit_paid_fallback_when_deepseek_unavailable:22f8e2db509eda6f",
+        "signature_hash": "39a1850a98737070"
+      }
+    ],
+    "test_deepseek_unknown_cost_blocks_instead_of_assuming_free": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 63,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_deepseek_unknown_cost_blocks_instead_of_assuming_free:e04b1b27221dd267",
+        "signature_hash": "2359b203e9ccbe9e"
+      }
+    ],
+    "test_expensive_frontier_requires_explicit_owner_authorization": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 75,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_expensive_frontier_requires_explicit_owner_authorization:2cd979e22e0ebb52",
+        "signature_hash": "9a8aa165fc4c1477"
+      }
+    ],
+    "test_expensive_frontier_requires_cost_bound": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_expensive_frontier_requires_cost_bound:b8a1eb5cebb319f7",
+        "signature_hash": "4a226b165eb3ed0f"
+      }
+    ],
+    "test_expensive_frontier_only_when_earned_and_authorized": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 103,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_expensive_frontier_only_when_earned_and_authorized:f80943d50fea188f",
+        "signature_hash": "e957735292373ef9"
+      }
+    ],
+    "test_d1_never_becomes_cost_optimization_problem": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 108,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_d1_never_becomes_cost_optimization_problem:0c764b699f2ac49e",
+        "signature_hash": "3a805ef10418ae87"
+      }
+    ],
+    "test_background_cannot_cross_gate10": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 111,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_background_cannot_cross_gate10:c49bbb85f79d5fa9",
+        "signature_hash": "63483d6412041aa5"
+      }
+    ],
     "_grammar": [
       {
         "file": "tests/test_aura_crucible_phase_b.py",
@@ -129638,6 +130402,146 @@
         "end_line": 98,
         "semantic_id": "tests/test_aura_dikwp_router_pipeline.py#function:test_future_parent_and_non_proposal_wisdom_are_rejected:90a50235f2910564",
         "signature_hash": "94a018118917474f"
+      }
+    ],
+    "replica": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 15,
+        "semantic_id": "tests/test_aura_dual_persistence.py#function:replica:cceae1477a6a9fc5",
+        "signature_hash": "2a1c0fdbcd264c58"
+      }
+    ],
+    "AuraDualPersistenceTests": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_dual_persistence.py#class:AuraDualPersistenceTests:825f677c12ea362c",
+        "signature_hash": "b19fad9a2f011fe9"
+      }
+    ],
+    "AuraDualPersistenceTests.record": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 22,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.record:201cea6e85cce302",
+        "signature_hash": "c903133fe9b75f0a"
+      }
+    ],
+    "AuraDualPersistenceTests.test_synced_is_dispatchable": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 26,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_synced_is_dispatchable:3f11fef63edce533",
+        "signature_hash": "1fbca7a64557e722"
+      }
+    ],
+    "AuraDualPersistenceTests.test_local_only_materializes_cloud": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 31,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_local_only_materializes_cloud:744939c23c7415a7",
+        "signature_hash": "ecfc7b4bbf3469c3"
+      }
+    ],
+    "AuraDualPersistenceTests.test_cloud_only_materializes_local": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 36,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_cloud_only_materializes_local:39e2868815e6988f",
+        "signature_hash": "fd9dd30288ff6089"
+      }
+    ],
+    "AuraDualPersistenceTests.test_local_ahead_is_one_sided_safe_update": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_local_ahead_is_one_sided_safe_update:a5c6f58ff18e17f1",
+        "signature_hash": "dcbff402586542ad"
+      }
+    ],
+    "AuraDualPersistenceTests.test_cloud_ahead_is_one_sided_safe_update": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 50,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_cloud_ahead_is_one_sided_safe_update:e176b3a09354be31",
+        "signature_hash": "20d1eded60ad9dd7"
+      }
+    ],
+    "AuraDualPersistenceTests.test_two_sided_divergence_fails_closed": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 59,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_two_sided_divergence_fails_closed:bd0b2b404ff2a62a",
+        "signature_hash": "76284bca31c4720f"
+      }
+    ],
+    "AuraDualPersistenceTests.test_divergence_without_base_fails_closed": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 67,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_divergence_without_base_fails_closed:d38beb5c38ee81e2",
+        "signature_hash": "332e154c7dc3be3f"
+      }
+    ],
+    "AuraDualPersistenceTests.test_generation_mismatch_blocks_dispatch": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 72,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_generation_mismatch_blocks_dispatch:71fe72fb0405f378",
+        "signature_hash": "5822e7d2ba11e9f0"
+      }
+    ],
+    "AuraDualPersistenceTests.test_missing_digest_is_invalid": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 78,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_missing_digest_is_invalid:3004c68f30e1bcec",
+        "signature_hash": "044dda1038ae99c5"
+      }
+    ],
+    "AuraDualPersistenceTests.test_currentness_token_requires_synced_pair": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 83,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_currentness_token_requires_synced_pair:49bbea823967ecd8",
+        "signature_hash": "982877dda999b4ae"
+      }
+    ],
+    "AuraDualPersistenceTests.test_native_google_object_uses_canonical_export_digest": [
+      {
+        "file": "tests/test_aura_dual_persistence.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_native_google_object_uses_canonical_export_digest:c346fee212e8188e",
+        "signature_hash": "56d417ed21153d73"
       }
     ],
     "test_default_suite_loads": [
@@ -148698,6 +149602,116 @@
         "signature_hash": "f0e8313f70572fd4"
       }
     ],
+    "host": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 4,
+        "end_line": 8,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:host:80971ba390fc51e0",
+        "signature_hash": "3517bd88e7ac44a2"
+      }
+    ],
+    "test_deterministic_first": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 12,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_deterministic_first:29b4b340a8b8bd2a",
+        "signature_hash": "b8c81db1bb59fcf7"
+      }
+    ],
+    "test_primary_warm_model": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 17,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_primary_warm_model:18cdc52102618d34",
+        "signature_hash": "8f0914ee5a8a414d"
+      }
+    ],
+    "test_battery_defers": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_battery_defers:aab09562af53fdae",
+        "signature_hash": "436971a4b815610f"
+      }
+    ],
+    "test_thermal_defers": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_thermal_defers:96909f9ef798ef40",
+        "signature_hash": "2e8a717c260a4b81"
+      }
+    ],
+    "test_foreground_defers": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_foreground_defers:1eca2af9b28b3115",
+        "signature_hash": "2cfe76d33d1801a6"
+      }
+    ],
+    "test_d1_requires_human_gate": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_d1_requires_human_gate:00abada3cdf79fc3",
+        "signature_hash": "d20e94b9bc199098"
+      }
+    ],
+    "test_background_cannot_promote_beyond_gate10": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_background_cannot_promote_beyond_gate10:1e72e8ead52d47ce",
+        "signature_hash": "5a5b1836a2a2ef0f"
+      }
+    ],
+    "test_gptoss_near_fit_not_normal": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_gptoss_near_fit_not_normal:74020e1e85c82fb0",
+        "signature_hash": "080e289ceede1af3"
+      }
+    ],
+    "test_gptoss_requires_exact_available_ram": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 47,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_gptoss_requires_exact_available_ram:cfeab0991844f3eb",
+        "signature_hash": "d99280c8332e0ffe"
+      }
+    ],
+    "test_airllm_is_separate_admission": [
+      {
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 53,
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_airllm_is_separate_admission:cc9a4fd906d8a00f",
+        "signature_hash": "d7ffa0201a616200"
+      }
+    ],
     "_commit": [
       {
         "file": "tests/test_aura_review_arena.py",
@@ -158594,7 +159608,6 @@
     "python aura_node.py": [
       "AURA_FINAL_REPORT.md",
       "AURA_SYSTEM_ANALYSIS.md",
-      "README.md",
       "docs/staging/ready_review/README_STAGED.md"
     ],
     "python test_memory_guard_leak.py": [
@@ -158687,28 +159700,25 @@
       "ICM_WORKSPACE_README.md"
     ],
     "python -m venv": [
-      "README.md"
-    ],
-    "python aura_daemon.py": [
       "README.md",
-      "docs/staging/ready_review/README_STAGED.md"
+      "examples/arena_navigation_domain_lens/README.md",
+      "examples/mini_aura_reference_arena/README.md"
     ],
-    "python aura_swarm_runner.py": [
+    "python mini_aura_reference.py --out results_local.json": [
       "README.md",
-      "docs/staging/ready_review/README_STAGED.md"
+      "examples/mini_aura_reference_arena/README.md"
     ],
-    "python3 scripts/aura_industry_benchmark_validation.py": [
+    "python domain_lens_reference.py": [
       "README.md",
-      "docs/staging/ready_review/README_STAGED.md"
+      "examples/arena_navigation_domain_lens/README.md"
     ],
-    "python3 scripts/aura_advanced_benchmark_runner.py": [
+    "python checks.py": [
       "README.md",
-      "docs/ADVANCED_BENCHMARKS.md",
-      "docs/staging/ready_review/README_STAGED.md"
+      "examples/arena_expert_fabric/README.md"
     ],
-    "python3 scripts/aura_security_accuracy_harness.py": [
+    "python paired_rba_systems_benchmark.py": [
       "README.md",
-      "docs/staging/ready_review/README_STAGED.md"
+      "examples/arena_expert_fabric/README.md"
     ],
     "python test_syntax_fixes.py": [
       "SYNTAX_FIXES_APPLIED.md"
@@ -158874,6 +159884,10 @@
     ],
     "python scripts/aura_fetch_construction_demo_source.py \\": [
       "demo_assets/construction_tuwien/README.md"
+    ],
+    "python3 scripts/aura_advanced_benchmark_runner.py": [
+      "docs/ADVANCED_BENCHMARKS.md",
+      "docs/staging/ready_review/README_STAGED.md"
     ],
     "python aura_amd_track3_cli.py `": [
       "docs/AMD_TRACK3_CRUCIBLE_DEMO.md"
@@ -159041,6 +160055,18 @@
     ],
     "python -m unittest": [
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
+    "python aura_daemon.py": [
+      "docs/staging/ready_review/README_STAGED.md"
+    ],
+    "python aura_swarm_runner.py": [
+      "docs/staging/ready_review/README_STAGED.md"
+    ],
+    "python3 scripts/aura_industry_benchmark_validation.py": [
+      "docs/staging/ready_review/README_STAGED.md"
+    ],
+    "python3 scripts/aura_security_accuracy_harness.py": [
+      "docs/staging/ready_review/README_STAGED.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -162879,6 +163905,53 @@
       ]
     },
     {
+      "path": ".aura/model_policies/thinkpad_resident_moe.v1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4311,
+      "lines": 109,
+      "tokens_est": 1078,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "aee6304e07f59a03",
+      "vector": [
+        0.017724,
+        -0.138246,
+        -0.176057,
+        0.036629,
+        0.294215,
+        -0.199688,
+        0.010634,
+        -0.06735,
+        0.237499,
+        0.17842,
+        0.100435,
+        -0.012997,
+        -0.079166,
+        -0.079166,
+        0.142972,
+        0.131156,
+        0.086256,
+        -0.216231,
+        0.291852,
+        0.124067,
+        0.133519,
+        0.194962,
+        0.133519,
+        0.256404,
+        0.263494,
+        0.17133,
+        0.270584,
+        -0.157151,
+        0.254041,
+        -0.152425,
+        0.100435,
+        0.282399
+      ]
+    },
+    {
       "path": ".aura/morphology_profiles/six_slot.v1.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -163017,6 +164090,53 @@
         0.139611,
         -0.157772,
         -0.089669
+      ]
+    },
+    {
+      "path": ".aura/provider_policies/cost_first_cognitive_allocation.v1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3512,
+      "lines": 69,
+      "tokens_est": 878,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fb3928c4d45cf8a2",
+      "vector": [
+        -0.095043,
+        -0.215212,
+        -0.15622,
+        0.134371,
+        0.167145,
+        0.130001,
+        0.001092,
+        0.167145,
+        0.175884,
+        -0.136556,
+        -0.27202,
+        -0.25891,
+        -0.193363,
+        -0.112522,
+        0.154035,
+        0.088488,
+        0.007647,
+        0.206473,
+        -0.195548,
+        -0.213027,
+        -0.012017,
+        0.112522,
+        -0.228322,
+        0.265465,
+        -0.26328,
+        0.241431,
+        -0.068824,
+        0.269835,
+        0.095043,
+        0.256725,
+        0.012017,
+        -0.123447
       ]
     },
     {
@@ -164333,6 +165453,53 @@
         -0.242323,
         0.224374,
         0.080774
+      ]
+    },
+    {
+      "path": ".aura/storage_policies/aura_dual_persistence.v1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1621,
+      "lines": 57,
+      "tokens_est": 406,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5ae4aa40af5784ba",
+      "vector": [
+        0.064062,
+        -0.228446,
+        -0.267125,
+        0.109993,
+        -0.303386,
+        -0.291299,
+        -0.146254,
+        0.182515,
+        -0.117245,
+        -0.044722,
+        0.148671,
+        -0.134167,
+        0.226029,
+        -0.078566,
+        -0.158341,
+        -0.170428,
+        0.073731,
+        0.0278,
+        0.288882,
+        0.095488,
+        -0.126915,
+        0.015713,
+        -0.083401,
+        0.230864,
+        0.223611,
+        0.201855,
+        0.26229,
+        -0.151089,
+        0.226029,
+        -0.066479,
+        -0.206689,
+        -0.073731
       ]
     },
     {
@@ -174749,77 +175916,69 @@
       "path": "README.md",
       "role": "knowledge_artifact",
       "binary": false,
-      "bytes": 47880,
-      "lines": 939,
-      "tokens_est": 11905,
+      "bytes": 21787,
+      "lines": 608,
+      "tokens_est": 5413,
       "symbol_count": 0,
       "commands": [
         "python -m venv",
-        "python aura_node.py",
-        "python aura_daemon.py",
-        "python aura_swarm_runner.py",
-        "python3 scripts/aura_industry_benchmark_validation.py",
-        "python3 scripts/aura_advanced_benchmark_runner.py",
-        "python3 scripts/aura_security_accuracy_harness.py"
+        "python mini_aura_reference.py --out results_local.json",
+        "python domain_lens_reference.py",
+        "python checks.py",
+        "python paired_rba_systems_benchmark.py"
       ],
       "command_lines": {
         "python -m venv": [
-          324
+          384
         ],
-        "python aura_node.py": [
-          885
+        "python mini_aura_reference.py --out results_local.json": [
+          386
         ],
-        "python aura_daemon.py": [
-          886
+        "python domain_lens_reference.py": [
+          403
         ],
-        "python aura_swarm_runner.py": [
-          887
+        "python checks.py": [
+          410
         ],
-        "python3 scripts/aura_industry_benchmark_validation.py": [
-          895
-        ],
-        "python3 scripts/aura_advanced_benchmark_runner.py": [
-          896
-        ],
-        "python3 scripts/aura_security_accuracy_harness.py": [
-          897
+        "python paired_rba_systems_benchmark.py": [
+          411
         ]
       },
       "topology": {},
-      "digest8": "2ab90f6a6a735010",
+      "digest8": "ef2d7a779a81b58e",
       "vector": [
-        -0.005725,
-        -0.017175,
-        0.243881,
-        0.019465,
-        0.241592,
-        -0.163733,
-        -0.280521,
-        0.285101,
-        -0.207242,
-        0.227852,
-        0.065264,
-        -0.069844,
-        0.207242,
-        0.204952,
-        -0.042364,
-        0.232432,
-        0.028625,
-        0.083584,
-        0.232432,
-        0.101904,
-        -0.129383,
-        0.280521,
-        -0.269071,
-        -0.030915,
-        0.250751,
-        -0.044654,
-        -0.269071,
-        -0.152283,
-        -0.204952,
-        -0.005725,
-        -0.062974,
-        0.049234
+        0.217838,
+        0.290022,
+        0.248774,
+        -0.032225,
+        -0.186903,
+        0.083784,
+        -0.26682,
+        -0.207527,
+        -0.261664,
+        -0.12761,
+        -0.140499,
+        -0.259086,
+        0.246196,
+        0.08894,
+        0.027069,
+        -0.174013,
+        0.132765,
+        -0.009023,
+        -0.024491,
+        -0.094096,
+        0.305489,
+        0.222994,
+        0.184325,
+        -0.225572,
+        -0.137921,
+        0.199793,
+        0.055426,
+        -0.065738,
+        -0.137921,
+        0.163701,
+        0.003867,
+        0.104408
       ]
     },
     {
@@ -225696,6 +226855,147 @@
       ]
     },
     {
+      "path": "core/aura_cost_first_orchestration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4782,
+      "lines": 126,
+      "tokens_est": 1196,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "846cabe6ed35869e",
+      "vector": [
+        -0.165016,
+        0.152074,
+        0.113247,
+        0.169331,
+        0.203844,
+        0.102461,
+        -0.182273,
+        0.210315,
+        -0.275027,
+        -0.201687,
+        -0.117561,
+        -0.18443,
+        -0.149917,
+        0.050691,
+        0.100304,
+        -0.033435,
+        0.061477,
+        -0.270713,
+        0.212472,
+        0.244828,
+        0.231886,
+        0.244828,
+        0.091676,
+        0.255614,
+        0.195215,
+        -0.145603,
+        0.022649,
+        -0.218943,
+        0.2362,
+        0.177959,
+        -0.083047,
+        -0.08089
+      ]
+    },
+    {
+      "path": "core/aura_dual_persistence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4789,
+      "lines": 161,
+      "tokens_est": 1198,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fb69f626979333b7",
+      "vector": [
+        0.093586,
+        0.257064,
+        0.013031,
+        -0.171771,
+        0.169402,
+        -0.178879,
+        0.11017,
+        -0.183617,
+        0.247587,
+        -0.027246,
+        0.017769,
+        -0.081739,
+        0.17651,
+        -0.093586,
+        0.249956,
+        0.050939,
+        0.062785,
+        -0.0462,
+        -0.145709,
+        0.209679,
+        0.221525,
+        -0.07937,
+        -0.107801,
+        0.23811,
+        0.0462,
+        0.226264,
+        -0.280757,
+        0.27128,
+        0.273649,
+        -0.30208,
+        -0.126755,
+        -0.178879
+      ]
+    },
+    {
+      "path": "core/aura_resident_idle_policy.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2517,
+      "lines": 76,
+      "tokens_est": 630,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8d2755bf1c706d14",
+      "vector": [
+        0.114218,
+        0.032462,
+        0.1046,
+        -0.080554,
+        0.051699,
+        -0.183952,
+        -0.296968,
+        0.268113,
+        0.248876,
+        0.268113,
+        0.054103,
+        0.287349,
+        0.181547,
+        -0.22483,
+        -0.006011,
+        0.150287,
+        0.022844,
+        0.176738,
+        -0.080554,
+        0.107005,
+        -0.152692,
+        -0.025248,
+        -0.109409,
+        0.227234,
+        -0.054103,
+        -0.232044,
+        -0.006011,
+        0.232044,
+        0.270517,
+        0.037271,
+        0.272922,
+        0.222425
+      ]
+    },
+    {
       "path": "core/aura_task_dispatcher.py",
       "role": "python_module",
       "binary": false,
@@ -226799,6 +228099,100 @@
         0.22868,
         -0.102973,
         0.127044
+      ]
+    },
+    {
+      "path": "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4847,
+      "lines": 119,
+      "tokens_est": 1205,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e3443ac3a18f8972",
+      "vector": [
+        0.110902,
+        0.256221,
+        0.11855,
+        -0.105803,
+        -0.02422,
+        -0.090506,
+        0.207781,
+        0.034418,
+        0.116,
+        0.085407,
+        -0.172089,
+        0.240924,
+        0.25877,
+        -0.202682,
+        0.246023,
+        0.256221,
+        -0.077759,
+        -0.16444,
+        -0.121099,
+        0.067561,
+        -0.225627,
+        -0.304661,
+        0.169539,
+        0.02167,
+        -0.026769,
+        0.243474,
+        0.103253,
+        -0.279166,
+        -0.172089,
+        0.090506,
+        -0.289364,
+        -0.075209
+      ]
+    },
+    {
+      "path": "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4064,
+      "lines": 129,
+      "tokens_est": 1016,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "60e851bea11a354c",
+      "vector": [
+        -0.088722,
+        -0.058764,
+        -0.169379,
+        0.178597,
+        0.206251,
+        -0.063373,
+        -0.017284,
+        0.180902,
+        0.197033,
+        -0.150943,
+        -0.293821,
+        0.012675,
+        -0.169379,
+        -0.095636,
+        0.279994,
+        -0.192424,
+        -0.270776,
+        -0.2316,
+        -0.167075,
+        -0.245427,
+        0.047242,
+        -0.137116,
+        0.111767,
+        0.226991,
+        0.005761,
+        -0.199337,
+        0.217773,
+        -0.213164,
+        0.017284,
+        0.206251,
+        0.065678,
+        -0.259254
       ]
     },
     {
@@ -233936,6 +235330,100 @@
       ]
     },
     {
+      "path": "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 3977,
+      "lines": 60,
+      "tokens_est": 995,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "58952b1e9f10556f",
+      "vector": [
+        0.025356,
+        -0.095914,
+        -0.270102,
+        0.162061,
+        -0.038586,
+        -0.093709,
+        0.069455,
+        -0.256872,
+        0.173086,
+        0.203954,
+        0.073865,
+        -0.175291,
+        0.208364,
+        -0.226004,
+        -0.020947,
+        -0.148832,
+        0.186315,
+        -0.190725,
+        -0.19734,
+        -0.243643,
+        0.248053,
+        0.137807,
+        0.212774,
+        -0.007717,
+        -0.029766,
+        -0.250258,
+        0.18852,
+        -0.248053,
+        0.223799,
+        0.151036,
+        -0.113553,
+        0.208364
+      ]
+    },
+    {
+      "path": "docs/CREATOR-STUDIO-GEMINI-DELTA-GATE10.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4453,
+      "lines": 84,
+      "tokens_est": 1104,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b6f1b26805e2eabb",
+      "vector": [
+        0.233056,
+        -0.053782,
+        -0.005976,
+        -0.065734,
+        0.228276,
+        0.197201,
+        -0.001195,
+        -0.094418,
+        -0.084856,
+        -0.015537,
+        0.075295,
+        -0.063343,
+        0.194811,
+        0.11115,
+        -0.058563,
+        0.029879,
+        -0.192421,
+        -0.206763,
+        -0.170908,
+        0.292814,
+        0.218714,
+        -0.18525,
+        0.290424,
+        -0.276082,
+        -0.03944,
+        0.161347,
+        0.092027,
+        0.273692,
+        -0.299985,
+        -0.161347,
+        0.213934,
+        -0.237837
+      ]
+    },
+    {
       "path": "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -234233,6 +235721,53 @@
         -0.189079,
         -0.036163,
         -0.209744
+      ]
+    },
+    {
+      "path": "docs/THINKPAD-RESIDENT-MOE-AUTONOMY.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4267,
+      "lines": 67,
+      "tokens_est": 1064,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9ca9a64a844d709c",
+      "vector": [
+        -0.263436,
+        -0.104204,
+        -0.026929,
+        -0.279828,
+        0.115912,
+        -0.033954,
+        -0.036296,
+        0.29622,
+        0.193187,
+        -0.19787,
+        -0.125279,
+        -0.263436,
+        -0.101862,
+        0.008196,
+        0.256411,
+        -0.158062,
+        0.263436,
+        -0.18382,
+        0.132304,
+        0.24002,
+        -0.055029,
+        -0.108887,
+        0.14167,
+        -0.167428,
+        -0.214262,
+        -0.298561,
+        0.111229,
+        -0.043321,
+        0.022246,
+        0.090154,
+        -0.132304,
+        0.24002
       ]
     },
     {
@@ -236537,6 +238072,308 @@
       ]
     },
     {
+      "path": "examples/arena_expert_fabric/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1732,
+      "lines": 49,
+      "tokens_est": 433,
+      "symbol_count": 0,
+      "commands": [
+        "python checks.py",
+        "python paired_rba_systems_benchmark.py"
+      ],
+      "command_lines": {
+        "python checks.py": [
+          20
+        ],
+        "python paired_rba_systems_benchmark.py": [
+          21
+        ]
+      },
+      "topology": {},
+      "digest8": "057a209a057a1a3b",
+      "vector": [
+        -0.079571,
+        -0.21496,
+        0.160329,
+        -0.274341,
+        0.16508,
+        -0.001188,
+        0.16983,
+        0.155579,
+        -0.017814,
+        -0.236337,
+        0.136577,
+        0.112824,
+        0.131826,
+        -0.233962,
+        0.160329,
+        0.16508,
+        0.146078,
+        -0.001188,
+        -0.105699,
+        0.229212,
+        0.276717,
+        -0.274341,
+        -0.032066,
+        -0.252964,
+        -0.203084,
+        0.108074,
+        0.039192,
+        -0.283842,
+        0.11995,
+        -0.257715,
+        0.179331,
+        -0.060569
+      ]
+    },
+    {
+      "path": "examples/arena_expert_fabric/checks.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3428,
+      "lines": 46,
+      "tokens_est": 857,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3fbd2615f93f7048",
+      "vector": [
+        0.006133,
+        -0.008587,
+        0.138615,
+        0.04784,
+        0.224482,
+        -0.082187,
+        -0.165601,
+        -0.222029,
+        -0.015947,
+        0.266189,
+        0.114081,
+        0.239202,
+        0.089547,
+        0.072374,
+        -0.302989,
+        -0.148428,
+        -0.231842,
+        -0.158241,
+        0.133708,
+        -0.273549,
+        -0.180322,
+        0.020854,
+        0.312803,
+        -0.057654,
+        0.217122,
+        -0.072374,
+        0.175415,
+        -0.099361,
+        -0.271096,
+        -0.224482,
+        -0.199948,
+        0.116534
+      ]
+    },
+    {
+      "path": "examples/arena_expert_fabric/expert_fabric.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3940,
+      "lines": 96,
+      "tokens_est": 985,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b047f65f580303fe",
+      "vector": [
+        0.007589,
+        0.241751,
+        0.055288,
+        -0.263433,
+        -0.228742,
+        0.07697,
+        0.120334,
+        -0.096484,
+        0.009757,
+        0.118165,
+        -0.222238,
+        -0.256928,
+        0.265601,
+        0.170202,
+        0.055288,
+        0.152856,
+        0.016261,
+        -0.170202,
+        0.222238,
+        0.256928,
+        0.265601,
+        0.05312,
+        -0.272106,
+        0.202724,
+        -0.263433,
+        -0.102988,
+        0.081306,
+        0.272106,
+        -0.107325,
+        0.105156,
+        -0.118165,
+        0.035775
+      ]
+    },
+    {
+      "path": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5191,
+      "lines": 86,
+      "tokens_est": 1298,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fe1bfb127b599af5",
+      "vector": [
+        0.007601,
+        -0.135739,
+        -0.233471,
+        -0.185691,
+        -0.12488,
+        0.207409,
+        0.170488,
+        0.014117,
+        0.035835,
+        -0.153113,
+        0.26822,
+        -0.068412,
+        -0.185691,
+        -0.194378,
+        0.168316,
+        0.035835,
+        -0.237814,
+        0.235642,
+        -0.218268,
+        0.183519,
+        -0.272563,
+        0.263876,
+        -0.059725,
+        0.237814,
+        0.253017,
+        0.074928,
+        -0.237814,
+        -0.187862,
+        -0.120536,
+        -0.01846,
+        0.163972,
+        -0.027148
+      ]
+    },
+    {
+      "path": "examples/arena_navigation_domain_lens/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1107,
+      "lines": 27,
+      "tokens_est": 277,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv",
+        "python domain_lens_reference.py"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          15
+        ],
+        "python domain_lens_reference.py": [
+          17
+        ]
+      },
+      "topology": {},
+      "digest8": "39ddcfe7f6b912c5",
+      "vector": [
+        -0.050638,
+        0.029863,
+        -0.058428,
+        -0.151914,
+        -0.050638,
+        -0.273964,
+        0.206447,
+        -0.164898,
+        0.063622,
+        0.331094,
+        -0.284351,
+        0.019476,
+        -0.245399,
+        0.003895,
+        -0.040251,
+        0.286948,
+        -0.131139,
+        -0.136333,
+        0.006492,
+        0.014282,
+        0.029863,
+        0.019476,
+        0.266174,
+        0.175285,
+        0.209044,
+        -0.14672,
+        0.001298,
+        0.011686,
+        -0.209044,
+        -0.281755,
+        0.266174,
+        0.292142
+      ]
+    },
+    {
+      "path": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7286,
+      "lines": 157,
+      "tokens_est": 1822,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "10689a93048aba15",
+      "vector": [
+        0.065632,
+        0.047616,
+        -0.248373,
+        -0.281833,
+        0.003861,
+        0.009008,
+        -0.214914,
+        0.150568,
+        -0.268964,
+        0.253521,
+        -0.099092,
+        0.202045,
+        0.088797,
+        -0.009008,
+        -0.093944,
+        -0.060485,
+        0.132552,
+        -0.01673,
+        -0.279259,
+        0.191749,
+        0.32044,
+        0.127404,
+        -0.065632,
+        0.176306,
+        -0.196897,
+        0.238078,
+        -0.034747,
+        0.132552,
+        -0.26639,
+        0.10424,
+        0.065632,
+        0.297276
+      ]
+    },
+    {
       "path": "examples/aura_gate_policy.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -236581,6 +238418,204 @@
         0.248709,
         -0.035883,
         0.025985
+      ]
+    },
+    {
+      "path": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6906,
+      "lines": 109,
+      "tokens_est": 1727,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f44ce0bef8223943",
+      "vector": [
+        0.059627,
+        0.226134,
+        0.226134,
+        0.007875,
+        0.235134,
+        -0.061877,
+        0.228384,
+        -0.021376,
+        -0.057377,
+        -0.273385,
+        -0.093379,
+        0.14063,
+        -0.048377,
+        0.181132,
+        0.073128,
+        -0.007875,
+        0.010125,
+        0.244134,
+        -0.003375,
+        0.266635,
+        0.086628,
+        -0.169881,
+        -0.284636,
+        -0.12938,
+        -0.174382,
+        -0.277885,
+        0.165381,
+        -0.277885,
+        -0.028126,
+        -0.111379,
+        -0.282386,
+        0.255385
+      ]
+    },
+    {
+      "path": "examples/creator_studio_gemini_delta/test_creator_studio_gemini_delta_reference.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5357,
+      "lines": 71,
+      "tokens_est": 1340,
+      "symbol_count": 1,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0e8c09fd16ec97f7",
+      "vector": [
+        0.004322,
+        0.194495,
+        -0.059069,
+        0.275174,
+        0.145511,
+        0.133985,
+        0.200257,
+        0.332802,
+        -0.099408,
+        0.027373,
+        -0.180088,
+        -0.278055,
+        0.263648,
+        0.033136,
+        0.194495,
+        0.038899,
+        0.007204,
+        0.096527,
+        -0.105171,
+        -0.151274,
+        0.067713,
+        0.278055,
+        0.105171,
+        -0.010085,
+        -0.229071,
+        -0.263648,
+        0.32992,
+        0.136867,
+        0.059069,
+        0.044662,
+        -0.012966,
+        0.26653
+      ]
+    },
+    {
+      "path": "examples/mini_aura_reference_arena/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1718,
+      "lines": 33,
+      "tokens_est": 428,
+      "symbol_count": 0,
+      "commands": [
+        "python -m venv",
+        "python mini_aura_reference.py --out results_local.json"
+      ],
+      "command_lines": {
+        "python -m venv": [
+          8
+        ],
+        "python mini_aura_reference.py --out results_local.json": [
+          10
+        ]
+      },
+      "topology": {},
+      "digest8": "25380cc8cac34af9",
+      "vector": [
+        -0.053543,
+        -0.296445,
+        -0.009141,
+        -0.040484,
+        -0.171076,
+        0.108392,
+        -0.160629,
+        -0.158017,
+        -0.186747,
+        -0.124063,
+        0.009141,
+        0.228537,
+        -0.168464,
+        -0.079661,
+        0.011753,
+        0.048319,
+        0.158017,
+        0.20503,
+        0.066602,
+        0.23376,
+        0.066602,
+        0.150181,
+        0.314728,
+        -0.150181,
+        -0.312116,
+        -0.322563,
+        -0.160629,
+        0.131898,
+        -0.202418,
+        -0.079661,
+        0.043095,
+        0.327787
+      ]
+    },
+    {
+      "path": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6321,
+      "lines": 114,
+      "tokens_est": 1581,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "52621ba8f501b6fc",
+      "vector": [
+        -0.17336,
+        0.094451,
+        -0.249877,
+        0.182924,
+        -0.175751,
+        -0.168577,
+        0.23553,
+        -0.017934,
+        -0.2977,
+        0.27618,
+        0.185316,
+        0.013151,
+        0.204445,
+        0.106407,
+        0.084886,
+        0.254659,
+        -0.204445,
+        -0.080104,
+        0.166186,
+        0.077713,
+        0.269006,
+        -0.123145,
+        0.072931,
+        0.209227,
+        0.302483,
+        -0.118363,
+        -0.027498,
+        0.130319,
+        -0.015543,
+        0.063366,
+        -0.056192,
+        -0.27618
       ]
     },
     {
@@ -253228,6 +255263,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_cost_first_orchestration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3739,
+      "lines": 114,
+      "tokens_est": 935,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1c8276389c382ff3",
+      "vector": [
+        0.225181,
+        0.204355,
+        0.25642,
+        0.26423,
+        0.097622,
+        0.105432,
+        -0.092415,
+        0.074193,
+        -0.209562,
+        0.188736,
+        -0.04035,
+        0.082002,
+        0.141877,
+        -0.139274,
+        -0.061176,
+        0.251214,
+        -0.050763,
+        0.219975,
+        0.175719,
+        -0.011715,
+        -0.321501,
+        0.318898,
+        -0.253817,
+        0.082002,
+        -0.246007,
+        -0.009111,
+        -0.175719,
+        0.128861,
+        0.003905,
+        0.149687,
+        -0.121051,
+        0.199149
+      ]
+    },
+    {
       "path": "tests/test_aura_crucible_phase_b.py",
       "role": "python_module",
       "binary": false,
@@ -253319,6 +255401,53 @@
         0.103192,
         -0.152923,
         -0.27725
+      ]
+    },
+    {
+      "path": "tests/test_aura_dual_persistence.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3339,
+      "lines": 93,
+      "tokens_est": 835,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "65152496de2fcf64",
+      "vector": [
+        0.083175,
+        -0.17455,
+        -0.13472,
+        0.188608,
+        -0.226095,
+        0.21438,
+        -0.132377,
+        0.141749,
+        -0.101919,
+        0.263582,
+        -0.13472,
+        -0.298727,
+        -0.019915,
+        -0.242496,
+        0.09489,
+        0.09489,
+        -0.247182,
+        -0.113633,
+        0.167521,
+        -0.240153,
+        0.165178,
+        -0.146435,
+        0.087861,
+        -0.202666,
+        -0.233124,
+        -0.137063,
+        -0.219066,
+        -0.146435,
+        -0.202666,
+        -0.080832,
+        -0.005857,
+        -0.249525
       ]
     },
     {
@@ -257972,6 +260101,53 @@
         -0.185514,
         0.27884,
         -0.206
+      ]
+    },
+    {
+      "path": "tests/test_aura_resident_idle_policy.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2181,
+      "lines": 54,
+      "tokens_est": 546,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1e950449d77a37b3",
+      "vector": [
+        0.054982,
+        -0.295965,
+        0.015208,
+        -0.242153,
+        0.115812,
+        0.155586,
+        0.204719,
+        -0.293625,
+        0.031585,
+        0.099435,
+        -0.153247,
+        -0.101775,
+        0.022227,
+        -0.047963,
+        0.246832,
+        0.090076,
+        0.146228,
+        0.111133,
+        0.216417,
+        -0.071359,
+        0.267889,
+        -0.092416,
+        0.258531,
+        0.228115,
+        -0.209398,
+        -0.221096,
+        0.139209,
+        -0.230455,
+        -0.218757,
+        0.076038,
+        -0.237474,
+        -0.090076
       ]
     },
     {
@@ -286156,16 +288332,16 @@
     }
   },
   "summary": {
-    "file_count": 1634,
-    "total_bytes": 26349449,
-    "text_tokens_est": 6577733,
+    "file_count": 1658,
+    "total_bytes": 26418741,
+    "text_tokens_est": 6595075,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 234,
+      "knowledge_artifact": 242,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 995,
-      "schema_or_lexicon": 271,
+      "python_module": 1008,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286218,9 +288394,11 @@
       ".aura/intents/example.aura.md",
       ".aura/memory_apertures/coding_localize.v1.json",
       ".aura/model_policies/local_first.v1.json",
+      ".aura/model_policies/thinkpad_resident_moe.v1.json",
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
       ".aura/plan_revision_deltas/bilateral_intent_guardrail_foundry_final_revision_2.v1.json",
+      ".aura/provider_policies/cost_first_cognitive_allocation.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_final.v2.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
@@ -286249,6 +288427,7 @@
       ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
       ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
       ".aura/source_anchor_manifest.v1.json",
+      ".aura/storage_policies/aura_dual_persistence.v1.json",
       ".aura/tool_bundles/coding_localize.v1.json",
       ".aura/topology_baseline.json",
       ".aura/understand_graph.json",
@@ -287100,6 +289279,9 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_cost_first_orchestration.py",
+      "core/aura_dual_persistence.py",
+      "core/aura_resident_idle_policy.py",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
       "dag_executor.py",
@@ -287122,6 +289304,8 @@
       "docs/ADVANCED_BENCHMARKS.md",
       "docs/AMD_DEMO_RECORDING_SCRIPT.md",
       "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
+      "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+      "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
       "docs/AURA_AFFORDANCE_DIRECTORY.md",
       "docs/AURA_AGENT_ARENA_BRIDGE.md",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
@@ -287260,11 +289444,14 @@
       "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
       "docs/BENCHMARKS.md",
       "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
+      "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
+      "docs/CREATOR-STUDIO-GEMINI-DELTA-GATE10.md",
       "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
       "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
       "docs/PR_KIT.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
       "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
+      "docs/THINKPAD-RESIDENT-MOE-AUTONOMY.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
@@ -287312,7 +289499,17 @@
       "download_papers.py",
       "download_zenodo_papers.py",
       "english_lexicon.json",
+      "examples/arena_expert_fabric/README.md",
+      "examples/arena_expert_fabric/checks.py",
+      "examples/arena_expert_fabric/expert_fabric.py",
+      "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+      "examples/arena_navigation_domain_lens/README.md",
+      "examples/arena_navigation_domain_lens/domain_lens_reference.py",
       "examples/aura_gate_policy.json",
+      "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+      "examples/creator_studio_gemini_delta/test_creator_studio_gemini_delta_reference.py",
+      "examples/mini_aura_reference_arena/README.md",
+      "examples/mini_aura_reference_arena/mini_aura_reference.py",
       "extract_new_papers.py",
       "extract_pdf_text.py",
       "fix_db.py",
@@ -287611,8 +289808,10 @@
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
+      "tests/test_aura_cost_first_orchestration.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
+      "tests/test_aura_dual_persistence.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_agent_bridge.py",
       "tests/test_aura_emergent_agent_bridge_mcp.py",
@@ -287712,6 +289911,7 @@
       "tests/test_aura_relationship_compass_finalization.py",
       "tests/test_aura_relationship_contracts.py",
       "tests/test_aura_research_cockpit_adapter.py",
+      "tests/test_aura_resident_idle_policy.py",
       "tests/test_aura_review_arena.py",
       "tests/test_aura_review_arena_mcp.py",
       "tests/test_aura_review_learning_mcp_codex.py",
@@ -382159,6 +384359,146 @@
         "file_digest8": "31325b9af6403347"
       },
       {
+        "semantic_id": "core/aura_cost_first_orchestration.py#class:CognitionRequest:f88b9300b6e59d32",
+        "name": "CognitionRequest",
+        "kind": "class",
+        "file": "core/aura_cost_first_orchestration.py",
+        "line": 15,
+        "end_line": 40,
+        "signature_hash": "885e49c6647adf3a",
+        "file_digest8": "846cabe6ed35869e"
+      },
+      {
+        "semantic_id": "core/aura_cost_first_orchestration.py#function:choose_cognition_route:66266f636f5029da",
+        "name": "choose_cognition_route",
+        "kind": "function",
+        "file": "core/aura_cost_first_orchestration.py",
+        "line": 55,
+        "end_line": 120,
+        "signature_hash": "1a7e47dda756dbc1",
+        "file_digest8": "846cabe6ed35869e"
+      },
+      {
+        "semantic_id": "core/aura_cost_first_orchestration.py#function:paid_inference_amortization_contract:7b6ac98759db14b7",
+        "name": "paid_inference_amortization_contract",
+        "kind": "function",
+        "file": "core/aura_cost_first_orchestration.py",
+        "line": 123,
+        "end_line": 125,
+        "signature_hash": "a20206ebb6274f1b",
+        "file_digest8": "846cabe6ed35869e"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#class:ArtifactReplicaRecord:3fc21357d89a0bda",
+        "name": "ArtifactReplicaRecord",
+        "kind": "class",
+        "file": "core/aura_dual_persistence.py",
+        "line": 28,
+        "end_line": 35,
+        "signature_hash": "a624f7d2d766161a",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#class:ReconcilePlan:96e15f0598fd7445",
+        "name": "ReconcilePlan",
+        "kind": "class",
+        "file": "core/aura_dual_persistence.py",
+        "line": 39,
+        "end_line": 44,
+        "signature_hash": "e117573a423a08ed",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#class:Replica:cb1b6eb89f282603",
+        "name": "Replica",
+        "kind": "class",
+        "file": "core/aura_dual_persistence.py",
+        "line": 20,
+        "end_line": 24,
+        "signature_hash": "bec032fc1e6d77bc",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#class:SyncState:8a5ba37b8325ca2f",
+        "name": "SyncState",
+        "kind": "class",
+        "file": "core/aura_dual_persistence.py",
+        "line": 8,
+        "end_line": 16,
+        "signature_hash": "47e5a9e731ddb8c1",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#function:can_dispatch_work:cc951ba9bcbf3d11",
+        "name": "can_dispatch_work",
+        "kind": "function",
+        "file": "core/aura_dual_persistence.py",
+        "line": 143,
+        "end_line": 145,
+        "signature_hash": "abac5fa386fb598a",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#function:currentness_token:285d1325afd26c4f",
+        "name": "currentness_token",
+        "kind": "function",
+        "file": "core/aura_dual_persistence.py",
+        "line": 148,
+        "end_line": 153,
+        "signature_hash": "289444470adda028",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#function:native_cloud_digest:85a92d4865346bcf",
+        "name": "native_cloud_digest",
+        "kind": "function",
+        "file": "core/aura_dual_persistence.py",
+        "line": 156,
+        "end_line": 160,
+        "signature_hash": "9f834669ab7a16c5",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_dual_persistence.py#function:reconcile:2413b919eeacf0d0",
+        "name": "reconcile",
+        "kind": "function",
+        "file": "core/aura_dual_persistence.py",
+        "line": 47,
+        "end_line": 140,
+        "signature_hash": "8b09f9314b2f31f7",
+        "file_digest8": "fb69f626979333b7"
+      },
+      {
+        "semantic_id": "core/aura_resident_idle_policy.py#class:HostState:0cec7b7399df6587",
+        "name": "HostState",
+        "kind": "class",
+        "file": "core/aura_resident_idle_policy.py",
+        "line": 13,
+        "end_line": 20,
+        "signature_hash": "70c86d366d30245e",
+        "file_digest8": "8d2755bf1c706d14"
+      },
+      {
+        "semantic_id": "core/aura_resident_idle_policy.py#class:MaintenanceWork:7f15a3576a9e09f7",
+        "name": "MaintenanceWork",
+        "kind": "class",
+        "file": "core/aura_resident_idle_policy.py",
+        "line": 24,
+        "end_line": 29,
+        "signature_hash": "143828bbe594e83d",
+        "file_digest8": "8d2755bf1c706d14"
+      },
+      {
+        "semantic_id": "core/aura_resident_idle_policy.py#function:choose_background_route:0b2c9045c772f5ab",
+        "name": "choose_background_route",
+        "kind": "function",
+        "file": "core/aura_resident_idle_policy.py",
+        "line": 37,
+        "end_line": 75,
+        "signature_hash": "82bf00e5c6413991",
+        "file_digest8": "8d2755bf1c706d14"
+      },
+      {
         "semantic_id": "core/aura_task_dispatcher.py#class:TaskDispatcher:b74f4282485d2a2e",
         "name": "TaskDispatcher",
         "kind": "class",
@@ -382277,6 +384617,506 @@
         "end_line": 85,
         "signature_hash": "9509d08361c59676",
         "file_digest8": "30acae6183bec6ce"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/checks.py#function:ok:9c62605c42000f6f",
+        "name": "ok",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/checks.py",
+        "line": 3,
+        "end_line": 5,
+        "signature_hash": "c661175925b26c89",
+        "file_digest8": "3fbd2615f93f7048"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/checks.py#function:run:abc10591a9d15d9c",
+        "name": "run",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/checks.py",
+        "line": 7,
+        "end_line": 42,
+        "signature_hash": "26799ab4ad82cbfb",
+        "file_digest8": "3fbd2615f93f7048"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#class:Backend:5e1c8b6fb1006f78",
+        "name": "Backend",
+        "kind": "class",
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "line": 31,
+        "end_line": 33,
+        "signature_hash": "a95bc105f69d7b78",
+        "file_digest8": "b047f65f580303fe"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#class:Task:e08be0759318eaab",
+        "name": "Task",
+        "kind": "class",
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "line": 20,
+        "end_line": 28,
+        "signature_hash": "e8124b632950c68c",
+        "file_digest8": "b047f65f580303fe"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:cache_key:ce15fb240cb21e1b",
+        "name": "cache_key",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "line": 51,
+        "end_line": 54,
+        "signature_hash": "397aa3aaf2ed9053",
+        "file_digest8": "b047f65f580303fe"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:choose:65e1a041f781dcb4",
+        "name": "choose",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "line": 56,
+        "end_line": 95,
+        "signature_hash": "d6c7719d29f3f83d",
+        "file_digest8": "b047f65f580303fe"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:h16:e5e4c0592f171f78",
+        "name": "h16",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "4c6394195175f3b5",
+        "file_digest8": "b047f65f580303fe"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#function:k27:5d4565b79d5f4c38",
+        "name": "k27",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/expert_fabric.py",
+        "line": 12,
+        "end_line": 17,
+        "signature_hash": "822e70766cec9340",
+        "file_digest8": "b047f65f580303fe"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py#function:closure:45c97446fbdf25dd",
+        "name": "closure",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+        "line": 25,
+        "end_line": 31,
+        "signature_hash": "eed28545da76b977",
+        "file_digest8": "fe1bfb127b599af5"
+      },
+      {
+        "semantic_id": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py#function:total:094932bcd1042987",
+        "name": "total",
+        "kind": "function",
+        "file": "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+        "line": 70,
+        "end_line": 70,
+        "signature_hash": "9c3a87261661d2a5",
+        "file_digest8": "fe1bfb127b599af5"
+      },
+      {
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:affected:f1aba1ca222bfa78",
+        "name": "affected",
+        "kind": "function",
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "line": 93,
+        "end_line": 102,
+        "signature_hash": "ea1cb06750d30c39",
+        "file_digest8": "10689a93048aba15"
+      },
+      {
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:closure:f8357a72cd107230",
+        "name": "closure",
+        "kind": "function",
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "line": 84,
+        "end_line": 90,
+        "signature_hash": "eed28545da76b977",
+        "file_digest8": "10689a93048aba15"
+      },
+      {
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:cross_edges:d573feb39c537fab",
+        "name": "cross_edges",
+        "kind": "function",
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "line": 109,
+        "end_line": 117,
+        "signature_hash": "d9cfd6a7122b21a4",
+        "file_digest8": "10689a93048aba15"
+      },
+      {
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:decode3:e7718a077778eaa2",
+        "name": "decode3",
+        "kind": "function",
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "line": 66,
+        "end_line": 69,
+        "signature_hash": "bf8a2a1df8d7e0bb",
+        "file_digest8": "10689a93048aba15"
+      },
+      {
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:key27:d897350be015e150",
+        "name": "key27",
+        "kind": "function",
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "line": 58,
+        "end_line": 63,
+        "signature_hash": "fdff7e754f144a1b",
+        "file_digest8": "10689a93048aba15"
+      },
+      {
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:lens:a14b5dbdf5a90a03",
+        "name": "lens",
+        "kind": "function",
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "line": 72,
+        "end_line": 81,
+        "signature_hash": "48a711946df85ea3",
+        "file_digest8": "10689a93048aba15"
+      },
+      {
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:main:32317dbcaff0af39",
+        "name": "main",
+        "kind": "function",
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "line": 120,
+        "end_line": 154,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "10689a93048aba15"
+      },
+      {
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:neighborhood:fccd1597c1aefd06",
+        "name": "neighborhood",
+        "kind": "function",
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "line": 105,
+        "end_line": 106,
+        "signature_hash": "80651280b896f127",
+        "file_digest8": "10689a93048aba15"
+      },
+      {
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#function:temp:ece81d8c171b7d27",
+        "name": "temp",
+        "kind": "function",
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "2862686f2f88365e",
+        "file_digest8": "10689a93048aba15"
+      },
+      {
+        "semantic_id": "examples/arena_navigation_domain_lens/domain_lens_reference.py#method:main.ok:d46b9874672f72be",
+        "name": "main.ok",
+        "kind": "method",
+        "file": "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+        "line": 122,
+        "end_line": 124,
+        "signature_hash": "d358054c0af01207",
+        "file_digest8": "10689a93048aba15"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#class:EffectAuthorization:32aa4b7cb95a4fc1",
+        "name": "EffectAuthorization",
+        "kind": "class",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 77,
+        "end_line": 85,
+        "signature_hash": "53ad97b9b62c050e",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#class:InputAllocator:3a3709bc9bc6a38a",
+        "name": "InputAllocator",
+        "kind": "class",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 35,
+        "end_line": 40,
+        "signature_hash": "e729f516421b1714",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#class:InputRef:303562f0eed9a65c",
+        "name": "InputRef",
+        "kind": "class",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "c47f19fc8a438d32",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#class:RightsState:fa53bf350a5c01ee",
+        "name": "RightsState",
+        "kind": "class",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 66,
+        "end_line": 71,
+        "signature_hash": "88301c2f476d5537",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:admit_public_asset:3677f96ac0c34b9a",
+        "name": "admit_public_asset",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 73,
+        "end_line": 74,
+        "signature_hash": "defe55a7c7c60e3c",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:ass_escape:644b8aec9f86af86",
+        "name": "ass_escape",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 16,
+        "end_line": 17,
+        "signature_hash": "a7361c3cb1299425",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:authorization_allows_publish:35e84691ef61b6b7",
+        "name": "authorization_allows_publish",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 87,
+        "end_line": 89,
+        "signature_hash": "b7225d00d25008db",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:build_audio_plan:efc35bc22362109c",
+        "name": "build_audio_plan",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 42,
+        "end_line": 53,
+        "signature_hash": "9af7f656f7f28dec",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:canonical_batch_summary:479eb77ae6b43952",
+        "name": "canonical_batch_summary",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 97,
+        "end_line": 99,
+        "signature_hash": "780b4bd48acf84ae",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:canonical_json:953a70c35297eac6",
+        "name": "canonical_json",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "2af8a10abc3d606e",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:claim_badge:19e05c391e0f410a",
+        "name": "claim_badge",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 101,
+        "end_line": 102,
+        "signature_hash": "fc7db65937101037",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:commons_recipe:a17d495ed691a5e9",
+        "name": "commons_recipe",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 94,
+        "end_line": 95,
+        "signature_hash": "450c96e09443c16c",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:deterministic_template_id:dde2d319ac9b369c",
+        "name": "deterministic_template_id",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 91,
+        "end_line": 92,
+        "signature_hash": "31753c9a6e58a3d9",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:digest:5e1afc8ed4c10faa",
+        "name": "digest",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 12,
+        "end_line": 14,
+        "signature_hash": "3c60ab9e6d97eef8",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:research_source_record:f6ff8dc9ba183b00",
+        "name": "research_source_record",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 55,
+        "end_line": 63,
+        "signature_hash": "28fb5e2d777e7c10",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:resolve_script:d0d4f655f56741e1",
+        "name": "resolve_script",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 19,
+        "end_line": 27,
+        "signature_hash": "e2307cc45974f201",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#function:trend_candidate:379c212e55f14f08",
+        "name": "trend_candidate",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 104,
+        "end_line": 108,
+        "signature_hash": "c52f7d536be86d9b",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#method:InputAllocator.__init__:11cf9a179429bb19",
+        "name": "InputAllocator.__init__",
+        "kind": "method",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 36,
+        "end_line": 36,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#method:InputAllocator.add:f929d109f8f5028f",
+        "name": "InputAllocator.add",
+        "kind": "method",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "d56a4774d378fd32",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py#method:InputAllocator.refs:644e42241f81f8a6",
+        "name": "InputAllocator.refs",
+        "kind": "method",
+        "file": "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+        "line": 40,
+        "end_line": 40,
+        "signature_hash": "c46e3f423b5ffb10",
+        "file_digest8": "f44ce0bef8223943"
+      },
+      {
+        "semantic_id": "examples/creator_studio_gemini_delta/test_creator_studio_gemini_delta_reference.py#function:check:c9ee69b4e3fdf111",
+        "name": "check",
+        "kind": "function",
+        "file": "examples/creator_studio_gemini_delta/test_creator_studio_gemini_delta_reference.py",
+        "line": 5,
+        "end_line": 5,
+        "signature_hash": "2bfef13adee6e539",
+        "file_digest8": "0e8c09fd16ec97f7"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:action_cone:33805bec5d23880c",
+        "name": "action_cone",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 56,
+        "end_line": 73,
+        "signature_hash": "eb35820672eab145",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:affected:524d3c53840664dd",
+        "name": "affected",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 32,
+        "end_line": 46,
+        "signature_hash": "f61a3c1a25e6880c",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:amnf:f6936a2d8cbe33cd",
+        "name": "amnf",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 48,
+        "end_line": 54,
+        "signature_hash": "a0d39e7e8424d583",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:decision:4c082db2ca65d38c",
+        "name": "decision",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 75,
+        "end_line": 96,
+        "signature_hash": "3f12de2cf5ff654f",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:ds:097f601fc16ec71c",
+        "name": "ds",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 13,
+        "end_line": 14,
+        "signature_hash": "eb56edab62740c32",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:hyperscale:3dca0cb5d4fa0144",
+        "name": "hyperscale",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 16,
+        "end_line": 30,
+        "signature_hash": "64ca9c961f742184",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:main:d01a5daa59a950c4",
+        "name": "main",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 98,
+        "end_line": 112,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#function:omega:32cf494305e89d8b",
+        "name": "omega",
+        "kind": "function",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 7,
+        "end_line": 12,
+        "signature_hash": "10a63c5704ace81e",
+        "file_digest8": "52621ba8f501b6fc"
+      },
+      {
+        "semantic_id": "examples/mini_aura_reference_arena/mini_aura_reference.py#method:affected.rebuild:b67c227e561d5df1",
+        "name": "affected.rebuild",
+        "kind": "method",
+        "file": "examples/mini_aura_reference_arena/mini_aura_reference.py",
+        "line": 36,
+        "end_line": 39,
+        "signature_hash": "330ca4eb78c04904",
+        "file_digest8": "52621ba8f501b6fc"
       },
       {
         "semantic_id": "extract_pdf_text.py#function:extract_with_pdfplumber:142fef666c8970d8",
@@ -416029,6 +418869,126 @@
         "file_digest8": "c9a90818f5d9c7ab"
       },
       {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_auraos_deterministic_before_model:b1bfc3150f995697",
+        "name": "test_auraos_deterministic_before_model",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 22,
+        "end_line": 24,
+        "signature_hash": "e29595aab801a180",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_background_cannot_cross_gate10:c49bbb85f79d5fa9",
+        "name": "test_background_cannot_cross_gate10",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 111,
+        "end_line": 113,
+        "signature_hash": "63483d6412041aa5",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_d1_never_becomes_cost_optimization_problem:0c764b699f2ac49e",
+        "name": "test_d1_never_becomes_cost_optimization_problem",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 106,
+        "end_line": 108,
+        "signature_hash": "3a805ef10418ae87",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_deepseek_is_default_paid_remote_provider:928875df7576a50b",
+        "name": "test_deepseek_is_default_paid_remote_provider",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 45,
+        "end_line": 49,
+        "signature_hash": "336c6c77887fbccb",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_deepseek_unknown_cost_blocks_instead_of_assuming_free:e04b1b27221dd267",
+        "name": "test_deepseek_unknown_cost_blocks_instead_of_assuming_free",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 59,
+        "end_line": 63,
+        "signature_hash": "2359b203e9ccbe9e",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_expensive_frontier_only_when_earned_and_authorized:f80943d50fea188f",
+        "name": "test_expensive_frontier_only_when_earned_and_authorized",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 91,
+        "end_line": 103,
+        "signature_hash": "e957735292373ef9",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_expensive_frontier_requires_cost_bound:b8a1eb5cebb319f7",
+        "name": "test_expensive_frontier_requires_cost_bound",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 78,
+        "end_line": 88,
+        "signature_hash": "4a226b165eb3ed0f",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_expensive_frontier_requires_explicit_owner_authorization:2cd979e22e0ebb52",
+        "name": "test_expensive_frontier_requires_explicit_owner_authorization",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 66,
+        "end_line": 75,
+        "signature_hash": "9a8aa165fc4c1477",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_interactive_chatgpt_control_plane_before_paid_api:6236d41f028df6fa",
+        "name": "test_interactive_chatgpt_control_plane_before_paid_api",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 27,
+        "end_line": 35,
+        "signature_hash": "08241166bce53bef",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_local_model_before_paid_remote_when_sufficient:fd6dd8075efa86d1",
+        "name": "test_local_model_before_paid_remote_when_sufficient",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 38,
+        "end_line": 42,
+        "signature_hash": "3680ede7f9904df8",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_no_implicit_paid_fallback_when_deepseek_unavailable:22f8e2db509eda6f",
+        "name": "test_no_implicit_paid_fallback_when_deepseek_unavailable",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 52,
+        "end_line": 56,
+        "signature_hash": "39a1850a98737070",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_reuse_beats_every_provider:625229b8723c3c72",
+        "name": "test_reuse_beats_every_provider",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 8,
+        "end_line": 19,
+        "signature_hash": "7acd5e6fc63d3a23",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
         "semantic_id": "tests/test_aura_crucible_phase_b.py#function:_experience:21ffd8555ec59a7b",
         "name": "_experience",
         "kind": "function",
@@ -416267,6 +419227,146 @@
         "end_line": 55,
         "signature_hash": "f585b63a89cc256a",
         "file_digest8": "9555cd63aedd6df1"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#class:AuraDualPersistenceTests:825f677c12ea362c",
+        "name": "AuraDualPersistenceTests",
+        "kind": "class",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 18,
+        "end_line": 88,
+        "signature_hash": "b19fad9a2f011fe9",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#function:replica:cceae1477a6a9fc5",
+        "name": "replica",
+        "kind": "function",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 14,
+        "end_line": 15,
+        "signature_hash": "2a1c0fdbcd264c58",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.record:201cea6e85cce302",
+        "name": "AuraDualPersistenceTests.record",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 19,
+        "end_line": 22,
+        "signature_hash": "c903133fe9b75f0a",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_cloud_ahead_is_one_sided_safe_update:e176b3a09354be31",
+        "name": "AuraDualPersistenceTests.test_cloud_ahead_is_one_sided_safe_update",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 45,
+        "end_line": 50,
+        "signature_hash": "20d1eded60ad9dd7",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_cloud_only_materializes_local:39e2868815e6988f",
+        "name": "AuraDualPersistenceTests.test_cloud_only_materializes_local",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 33,
+        "end_line": 36,
+        "signature_hash": "fd9dd30288ff6089",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_currentness_token_requires_synced_pair:49bbea823967ecd8",
+        "name": "AuraDualPersistenceTests.test_currentness_token_requires_synced_pair",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 80,
+        "end_line": 83,
+        "signature_hash": "982877dda999b4ae",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_divergence_without_base_fails_closed:d38beb5c38ee81e2",
+        "name": "AuraDualPersistenceTests.test_divergence_without_base_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 61,
+        "end_line": 67,
+        "signature_hash": "332e154c7dc3be3f",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_generation_mismatch_blocks_dispatch:71fe72fb0405f378",
+        "name": "AuraDualPersistenceTests.test_generation_mismatch_blocks_dispatch",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 69,
+        "end_line": 72,
+        "signature_hash": "5822e7d2ba11e9f0",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_local_ahead_is_one_sided_safe_update:a5c6f58ff18e17f1",
+        "name": "AuraDualPersistenceTests.test_local_ahead_is_one_sided_safe_update",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 38,
+        "end_line": 43,
+        "signature_hash": "dcbff402586542ad",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_local_only_materializes_cloud:744939c23c7415a7",
+        "name": "AuraDualPersistenceTests.test_local_only_materializes_cloud",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 28,
+        "end_line": 31,
+        "signature_hash": "ecfc7b4bbf3469c3",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_missing_digest_is_invalid:3004c68f30e1bcec",
+        "name": "AuraDualPersistenceTests.test_missing_digest_is_invalid",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 74,
+        "end_line": 78,
+        "signature_hash": "044dda1038ae99c5",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_native_google_object_uses_canonical_export_digest:c346fee212e8188e",
+        "name": "AuraDualPersistenceTests.test_native_google_object_uses_canonical_export_digest",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 85,
+        "end_line": 88,
+        "signature_hash": "56d417ed21153d73",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_synced_is_dispatchable:3f11fef63edce533",
+        "name": "AuraDualPersistenceTests.test_synced_is_dispatchable",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 24,
+        "end_line": 26,
+        "signature_hash": "1fbca7a64557e722",
+        "file_digest8": "65152496de2fcf64"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_persistence.py#method:AuraDualPersistenceTests.test_two_sided_divergence_fails_closed:bd0b2b404ff2a62a",
+        "name": "AuraDualPersistenceTests.test_two_sided_divergence_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_dual_persistence.py",
+        "line": 52,
+        "end_line": 59,
+        "signature_hash": "76284bca31c4720f",
+        "file_digest8": "65152496de2fcf64"
       },
       {
         "semantic_id": "tests/test_aura_efficiency_benchmark.py#function:test_aura_full_mode_includes_grounding_metadata:36ad280e7568cec0",
@@ -435939,6 +439039,116 @@
         "file_digest8": "32dc9837c40012d5"
       },
       {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:host:80971ba390fc51e0",
+        "name": "host",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 4,
+        "end_line": 8,
+        "signature_hash": "3517bd88e7ac44a2",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_airllm_is_separate_admission:cc9a4fd906d8a00f",
+        "name": "test_airllm_is_separate_admission",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 50,
+        "end_line": 53,
+        "signature_hash": "d7ffa0201a616200",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_background_cannot_promote_beyond_gate10:1e72e8ead52d47ce",
+        "name": "test_background_cannot_promote_beyond_gate10",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "5a5b1836a2a2ef0f",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_battery_defers:aab09562af53fdae",
+        "name": "test_battery_defers",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "436971a4b815610f",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_d1_requires_human_gate:00abada3cdf79fc3",
+        "name": "test_d1_requires_human_gate",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "d20e94b9bc199098",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_deterministic_first:29b4b340a8b8bd2a",
+        "name": "test_deterministic_first",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 11,
+        "end_line": 12,
+        "signature_hash": "b8c81db1bb59fcf7",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_foreground_defers:1eca2af9b28b3115",
+        "name": "test_foreground_defers",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "2cfe76d33d1801a6",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_gptoss_near_fit_not_normal:74020e1e85c82fb0",
+        "name": "test_gptoss_near_fit_not_normal",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "080e289ceede1af3",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_gptoss_requires_exact_available_ram:cfeab0991844f3eb",
+        "name": "test_gptoss_requires_exact_available_ram",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 44,
+        "end_line": 47,
+        "signature_hash": "d99280c8332e0ffe",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_primary_warm_model:18cdc52102618d34",
+        "name": "test_primary_warm_model",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 15,
+        "end_line": 17,
+        "signature_hash": "8f0914ee5a8a414d",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
+        "semantic_id": "tests/test_aura_resident_idle_policy.py#function:test_thermal_defers:96909f9ef798ef40",
+        "name": "test_thermal_defers",
+        "kind": "function",
+        "file": "tests/test_aura_resident_idle_policy.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "2e8a717c260a4b81",
+        "file_digest8": "1e950449d77a37b3"
+      },
+      {
         "semantic_id": "tests/test_aura_review_arena.py#function:_commit:eaf51295dfeaa12c",
         "name": "_commit",
         "kind": "function",
@@ -446129,7 +449339,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f54ee2e4da0bb0db05767925275e2b15",
-    "payload_hash": "34bdcc84b0db6ecd879743f5f6b8d834"
+    "record_fingerprint": "3904fe51d6dad5e2ad8c2b727b3a0f74",
+    "payload_hash": "4fae0f7341633bd75ea6b066e0d124e2"
   }
 }

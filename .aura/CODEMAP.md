@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1634
-- **total_bytes**: 26349449
-- **text_tokens_est**: 6577733
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 234, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1658
+- **total_bytes**: 26418741
+- **text_tokens_est**: 6595075
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1634,
+  "repo_file_count": 1658,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -61,9 +61,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".aura/intents/example.aura.md",
     ".aura/memory_apertures/coding_localize.v1.json",
     ".aura/model_policies/local_first.v1.json",
+    ".aura/model_policies/thinkpad_resident_moe.v1.json",
     ".aura/morphology_profiles/six_slot.v1.json",
     ".aura/output_schemas/localization_packet.v1.json",
     ".aura/plan_revision_deltas/bilateral_intent_guardrail_foundry_final_revision_2.v1.json",
+    ".aura/provider_policies/cost_first_cognitive_allocation.v1.json",
     ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_final.v2.json",
     ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
     ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
@@ -92,6 +94,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".aura/runtime_profiles/construction_pascal_spatial_foundry.v1.json",
     ".aura/runtime_profiles/construction_pascal_spatial_foundry_bilateral.v2.json",
     ".aura/source_anchor_manifest.v1.json",
+    ".aura/storage_policies/aura_dual_persistence.v1.json",
     ".aura/tool_bundles/coding_localize.v1.json",
     ".aura/topology_baseline.json",
     ".aura/understand_graph.json",
@@ -943,6 +946,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "bus_init.cpp",
     "cognitive_router.py",
     "cognitive_search.rs",
+    "core/aura_cost_first_orchestration.py",
+    "core/aura_dual_persistence.py",
+    "core/aura_resident_idle_policy.py",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
     "dag_executor.py",
@@ -965,6 +971,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/ADVANCED_BENCHMARKS.md",
     "docs/AMD_DEMO_RECORDING_SCRIPT.md",
     "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
+    "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+    "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
     "docs/AURA_AFFORDANCE_DIRECTORY.md",
     "docs/AURA_AGENT_ARENA_BRIDGE.md",
     "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
@@ -1103,11 +1111,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
     "docs/BENCHMARKS.md",
     "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
+    "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
+    "docs/CREATOR-STUDIO-GEMINI-DELTA-GATE10.md",
     "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
     "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
     "docs/PR_KIT.md",
     "docs/README_PRE_ARCHITECT_BENCHMARK.md",
     "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
+    "docs/THINKPAD-RESIDENT-MOE-AUTONOMY.md",
     "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
@@ -1155,7 +1166,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "download_papers.py",
     "download_zenodo_papers.py",
     "english_lexicon.json",
+    "examples/arena_expert_fabric/README.md",
+    "examples/arena_expert_fabric/checks.py",
+    "examples/arena_expert_fabric/expert_fabric.py",
+    "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+    "examples/arena_navigation_domain_lens/README.md",
+    "examples/arena_navigation_domain_lens/domain_lens_reference.py",
     "examples/aura_gate_policy.json",
+    "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+    "examples/creator_studio_gemini_delta/test_creator_studio_gemini_delta_reference.py",
+    "examples/mini_aura_reference_arena/README.md",
+    "examples/mini_aura_reference_arena/mini_aura_reference.py",
     "extract_new_papers.py",
     "extract_pdf_text.py",
     "fix_db.py",
@@ -1454,8 +1475,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_continuity_packet.py",
     "tests/test_aura_continuity_packet_digest_hardening.py",
     "tests/test_aura_continuity_packet_merge_gate.py",
+    "tests/test_aura_cost_first_orchestration.py",
     "tests/test_aura_crucible_phase_b.py",
     "tests/test_aura_dikwp_router_pipeline.py",
+    "tests/test_aura_dual_persistence.py",
     "tests/test_aura_efficiency_benchmark.py",
     "tests/test_aura_emergent_agent_bridge.py",
     "tests/test_aura_emergent_agent_bridge_mcp.py",
@@ -1555,6 +1578,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_relationship_compass_finalization.py",
     "tests/test_aura_relationship_contracts.py",
     "tests/test_aura_research_cockpit_adapter.py",
+    "tests/test_aura_resident_idle_policy.py",
     "tests/test_aura_review_arena.py",
     "tests/test_aura_review_arena_mcp.py",
     "tests/test_aura_review_learning_mcp_codex.py",
@@ -1680,8 +1704,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_spatial_importers/spz.py",
     "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
     "benchmarks/refactor_code_quality/generate_fixture.py",
+    "core/aura_cost_first_orchestration.py",
+    "core/aura_dual_persistence.py",
+    "core/aura_resident_idle_policy.py",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
+    "examples/arena_expert_fabric/checks.py",
+    "examples/arena_expert_fabric/expert_fabric.py",
+    "examples/arena_expert_fabric/paired_rba_systems_benchmark.py",
+    "examples/arena_navigation_domain_lens/domain_lens_reference.py",
+    "examples/creator_studio_gemini_delta/creator_studio_gemini_delta_reference.py",
+    "examples/creator_studio_gemini_delta/test_creator_studio_gemini_delta_reference.py",
+    "examples/mini_aura_reference_arena/mini_aura_reference.py",
     "scripts/aura_advanced_benchmark_runner.py",
     "scripts/aura_arch_v2_3_capsule_validator.py",
     "scripts/aura_architecture_harness.py",
@@ -1750,17 +1784,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_st3gg_shadow_hardening.py",
     "tests/test_aura_arena_wfst_phase_a.py",
     "tests/test_aura_benchmark_four.py",
-    "tests/test_aura_benchmark_four_hardening.py",
-    "tests/test_aura_bilateral_gate_dialogue.py",
-    "tests/test_aura_bilateral_live_repair_foundry.py",
-    "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    "tests/test_aura_bilateral_planning_enforcement.py",
-    "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py",
-    "tests/test_aura_capability_resolver_connectome.py",
-    "tests/test_aura_change_graph.py"
+    "tests/test_aura_benchmark_four_hardening.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1774,16 +1798,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1634,
-  "bytes": 26349449,
-  "tokens_est": 6577733,
+  "files": 1658,
+  "bytes": 26418741,
+  "tokens_est": 6595075,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 234,
+    "knowledge_artifact": 242,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 995,
-    "schema_or_lexicon": 271,
+    "python_module": 1008,
+    "schema_or_lexicon": 274,
     "support_file": 49
   }
 }
@@ -1930,6 +1954,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/ADVANCED_BENCHMARKS.md",
     "docs/AMD_DEMO_RECORDING_SCRIPT.md",
     "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
+    "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+    "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
     "docs/AURA_AFFORDANCE_DIRECTORY.md",
     "docs/AURA_AGENT_ARENA_BRIDGE.md",
     "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md",
@@ -2066,9 +2092,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md",
-    "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
-    "docs/INDUSTRY_BENCHMARK_SCORECARD.md"
+    "docs/BENCHMARKS.md"
   ]
 }
 ```

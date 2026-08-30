@@ -1,0 +1,108 @@
+{
+  "schema_version": "AURA_THINKPAD_RESIDENT_MOE_POLICY_V1",
+  "status": "STAGED_NONPROMOTING",
+  "cost_policy_ref": ".aura/provider_policies/cost_first_cognitive_allocation.v1.json",
+  "host_reference": {
+    "cpu": "13th Gen Intel Core i5-1335U",
+    "ram_gib": 15.68,
+    "gpu": "Intel Iris Xe",
+    "reported_adapter_ram_gib": 2.0,
+    "wsl_dxg_observed": true,
+    "source": "HANDOFF__COORDINATE-MEMORY-PRIMARY-CONVERGENCE__2026-08-21"
+  },
+  "laws": [
+    "REUSE_CURRENT_COORDINATED_COGNITION_BEFORE_RECOMPUTE",
+    "RESIDENT_CONTROL_PLANE_DOES_NOT_REQUIRE_A_MODEL",
+    "DETERMINISTIC_FIRST",
+    "DEEPSEEK_DEFAULT_PAID_REMOTE_SWARM_PROVIDER",
+    "NO_IMPLICIT_PAID_PROVIDER_FALLBACK",
+    "EVERY_PAID_INFERENCE_MUST_AMORTIZE_TO_COORDINATED_COGNITION",
+    "SEMANTIC_SCOPE_FIRST_PHYSICAL_SHARD_SECOND",
+    "K27_IS_27_TRITS_NOT_27_BINARY_BITS",
+    "K27_IS_NOT_MODEL_EXPERT_ID",
+    "DOMAIN_LENS_IS_NOT_TRUTH",
+    "MODEL_OUTPUT_IS_PROPOSAL_UNTIL_VERIFIED",
+    "BACKGROUND_AUTONOMY_STOPS_AT_GATE10",
+    "D1_PLUS_REQUIRES_HUMAN_OR_PREEXISTING_EXPLICIT_AUTHORITY"
+  ],
+  "tiers": {
+    "T0_NO_MODEL": {
+      "always_available": true,
+      "tasks": ["currentness", "artifact_birth", "digest", "codemap", "duplicate_id", "stale_cone", "receipt", "queue"]
+    },
+    "T1_LOCAL_WARM_MOE": {
+      "model": "LiquidAI/LFM2.5-8B-A1B-GGUF:Q4_K_M",
+      "runtime_preference": ["llama.cpp-cpu", "llama.cpp-sycl-after-benchmark", "onnxruntime-openvino-after-benchmark"],
+      "weights_gb": 5.16,
+      "experts": 32,
+      "experts_per_token": 4,
+      "total_params_b": 8.3,
+      "active_params_b": 1.5,
+      "role": "PRIMARY_BACKGROUND_LOCAL_MODEL",
+      "load_policy": "ON_DEMAND_OR_IDLE_WARM",
+      "minimum_available_ram_gib": 7.0,
+      "minimum_free_disk_gib": 12.0,
+      "minimum_idle_minutes": 5,
+      "requires_ac_for_background": true
+    },
+    "T2_LOCAL_COLD_REASONER": {
+      "model": "openai/gpt-oss-20b",
+      "runtime_preference": ["llama.cpp", "OpenVINO-after-benchmark"],
+      "working_set_gib_at_8k_reference": 14.9,
+      "total_params_b": 21.0,
+      "active_params_b": 3.6,
+      "experts": 32,
+      "experts_per_token": 4,
+      "role": "NEAR_FIT_COLD_BENCHMARK_ONLY",
+      "load_policy": "MUTUALLY_EXCLUSIVE_WITH_WARM_MODEL",
+      "minimum_available_ram_gib": 15.0,
+      "minimum_free_disk_gib": 30.0,
+      "minimum_idle_minutes": 30,
+      "requires_ac": true
+    },
+    "T3_AIRLLM_COLD_EXPERIMENTAL": {
+      "candidate": "Qwen/Qwen3-30B-A3B",
+      "runtime": "AirLLM-v3.x",
+      "role": "SLOW_PRIVATE_DEEP_BATCH_EXPERIMENT",
+      "minimum_free_disk_gib": 80.0,
+      "minimum_idle_minutes": 60,
+      "requires_ac": true,
+      "requires_separate_adapter_and_io_benchmark": true,
+      "auto_download": false
+    },
+    "T4_REMOTE_OR_SWARM": {
+      "default": "BLOCKED_UNLESS_CURRENT_POLICY_AUTHORIZES",
+      "default_paid_provider_when_authorized": "deepseek",
+      "no_implicit_paid_fallback": true,
+      "expensive_provider_requires_explicit_owner_spend_authorization": true,
+      "paid_inference_requires_coordinate_memory_amortization": true,
+      "preferred_shapes": [0, 1, 3, 9],
+      "twenty_seven_calls_only_when": ["PREREGISTERED_MATCHED_BENCHMARK", "INDEPENDENT_FRONTIER_EARNS_27"],
+      "same_model_same_context_is_not_independent": true
+    }
+  },
+  "idle_scheduler": {
+    "on_battery": "T0_ONLY_UNLESS_USER_EXPLICITLY_REQUESTS",
+    "user_active": "T0_AND_SHORT_T1_ONLY",
+    "idle_5m_ac": "T0_PLUS_T1_IF_RESOURCE_GATES_PASS",
+    "idle_30m_ac": "T2_ONLY_IF_EXACT_PREFLIGHT_PASSES_AND_T1_UNLOADED",
+    "idle_60m_ac": "T3_EXPERIMENT_ONLY_IF_SEPARATELY_ADMITTED",
+    "foreground_heavy": "DEFER_MODEL_WORK",
+    "thermal_not_ok": "DEFER_MODEL_WORK"
+  },
+  "gate10_pipeline": [
+    "G1_SOURCE_BIND",
+    "G2_CURRENTNESS_BIND",
+    "G3_OBJECTIVE_AFFECTED_CONE",
+    "G4_DETERMINISTIC_CHECKS",
+    "G5_CONSTRUCT_PROPOSAL",
+    "G6_CHALLENGE_FALSIFY",
+    "G7_VERIFY_EVIDENCE",
+    "G8_REPRODUCE_RECEIPT",
+    "G9_INDEPENDENT_REVIEW_WHEN_EARNED",
+    "G10_READY_FOR_OWNER_PROMOTION_NO_AUTO_PROMOTION"
+  ],
+  "morning_successor_frame": [
+    "changed", "tests", "model_usage", "provider_cost_evidence", "amortized_cognition_refs", "resource_usage", "gate10_ready", "blocked", "falsifiers", "unresolved_residuals", "source_reopen", "receipts"
+  ]
+}
