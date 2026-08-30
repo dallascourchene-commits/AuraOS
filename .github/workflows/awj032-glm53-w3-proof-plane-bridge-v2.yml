@@ -1,0 +1,132 @@
+name: AWJ032 GLM53 W3 Proof Plane Bridge V2
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_w3_proof_plane_bridge_v2.py"
+      - "tools/awj032/test_glm53_w3_proof_plane_bridge_v2.py"
+      - ".github/workflows/awj032-glm53-w3-proof-plane-bridge-v2.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: awj032-glm53-w3-proof-plane-v2-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  proof-plane-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      EXPECTED_PR350_BASE_SHA: 433804f845be72e7b39075d903747cbb570392d6
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=2 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git rev-parse HEAD^)" = "$EXPECTED_PR350_BASE_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.12"
+
+      - name: Install focused test dependency
+        run: python -m pip install "pytest>=8.2,<9.0"
+
+      - name: Verify W3 proof-plane composition and inherited W2 producer binder
+        run: |
+          python -m py_compile tools/awj032/glm53_w3_proof_plane_bridge_v2.py
+          python -m pytest -q \
+            tools/awj032/test_glm53_w3_proof_plane_bridge_v2.py \
+            tools/awj032/test_glm53_official_w2_plan_binding.py \
+            tools/awj032/test_glm53_layout_binding_bridge.py \
+            tools/awj032/test_glm53_source_bound_layout_bridge.py
+
+      - name: Exercise actual PR350 outer wrapper through W3 bridge
+        run: |
+          python - <<'PY'
+          import json
+          from tools.awj032.glm53_official_w2_observation import OFFICIAL_W2_OBSERVATION
+          from tools.awj032.glm53_official_w2_plan_binding import OfficialW2BoundPagerPlan
+          from tools.awj032.glm53_w3_proof_plane_bridge_v2 import (
+              AIRLLM_SECURITY_SEMANTIC_HEAD,
+              OFFICIAL_CONFIG_PARSED_SHA256,
+              OFFICIAL_CONFIG_RAW_SHA256,
+              OFFICIAL_INDEX_PARSED_SHA256,
+              OFFICIAL_INDEX_SHA256,
+              OFFICIAL_MTP_EVIDENCE_ID,
+              OFFICIAL_REPO,
+              OFFICIAL_REVISION,
+              OFFICIAL_SOURCE_BUNDLE_ID,
+              OFFICIAL_WEIGHT_MAP_DIGEST,
+              evaluate_w3_proof_planes,
+          )
+
+          o = OFFICIAL_W2_OBSERVATION
+          w2 = OfficialW2BoundPagerPlan(
+              inner_source_plan_digest="a" * 64,
+              official_w2_observation_digest=o.observation_digest,
+              official_w2_receipt_digest=o.receipt_digest,
+              official_w2_producer_semantic_head=o.producer_semantic_head,
+              official_w2_producer_run_ref=o.producer_run_ref,
+              official_w2_drive_observation_ref=o.drive_observation_ref,
+              representative_layer=o.layer,
+              representative_expert=o.expert,
+          )
+          mtp = {
+              "owner_repo": OFFICIAL_REPO,
+              "immutable_model_revision": OFFICIAL_REVISION,
+              "config_raw_sha256": OFFICIAL_CONFIG_RAW_SHA256,
+              "config_parsed_sha256": OFFICIAL_CONFIG_PARSED_SHA256,
+              "index_sha256": OFFICIAL_INDEX_SHA256,
+              "index_parsed_sha256": OFFICIAL_INDEX_PARSED_SHA256,
+              "weight_map_digest": OFFICIAL_WEIGHT_MAP_DIGEST,
+              "source_bundle_id": OFFICIAL_SOURCE_BUNDLE_ID,
+              "num_hidden_layers": 78,
+              "num_nextn_predict_layers": 1,
+              "observed_extra_checkpoint_layer_indices": [78],
+              "mtp_marker_keys": ["model.layers.78.eh_proj.weight"],
+              "role_index": 78,
+              "role": "MTP_NON_DECODER",
+              "decoder_pager_membership": False,
+              "source_verified": True,
+              "payload_bytes_read": 0,
+              "g2_admitted": False,
+              "runtime_executed": False,
+              "authority": False,
+              "schema": "OfficialSourceMTPRoleEvidenceV1",
+              "evidence_id": OFFICIAL_MTP_EVIDENCE_ID,
+          }
+          security = {
+              "semantic_head": AIRLLM_SECURITY_SEMANTIC_HEAD,
+              "hosted_contract_pass": True,
+              "hard_false_remote_code_proven": True,
+              "static_source_security_only": True,
+          }
+          receipt = evaluate_w3_proof_planes(
+              official_w2_plan=w2,
+              official_mtp_role_evidence=mtp,
+              airllm_security_evidence=security,
+          )
+          assert receipt.status == "ELIGIBLE_FOR_NATIVE_SYNTHETIC_W3_FIXTURE"
+          assert receipt.native_synthetic_w3_fixture_admitted is True
+          assert receipt.official_tensor_payload_admitted is False
+          assert receipt.g2_admitted is False
+          assert receipt.runtime_execution_admitted is False
+          assert receipt.provider_effect_admitted is False
+          assert receipt.quality_proven is False
+          assert receipt.authority is False
+          print("AURA_W3_PROOF_PLANE_V2=" + json.dumps(receipt.to_dict(), sort_keys=True, separators=(",", ":")))
+          PY
