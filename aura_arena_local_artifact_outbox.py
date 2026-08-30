@@ -183,6 +183,11 @@ class LocalArtifactOutbox:
         stat = Path(path).stat()
         return FileObservation(stat.st_size, stat.st_mtime_ns, observed_monotonic_ns)
 
+    def _currentness_is_admitted(self, expected_currentness_ref: str, currentness: str) -> bool:
+        expected = _text("expected_currentness_ref", expected_currentness_ref)
+        qualitative = _text("currentness", currentness).upper()
+        return expected == self.config.source_currentness_ref and qualitative == "CURRENT"
+
     def _read_bound_bytes(self, path: Path, proof: QuiescenceProof) -> bytes:
         before = path.stat()
         if (before.st_size, before.st_mtime_ns) != (proof.byte_size, proof.mtime_ns):
@@ -215,7 +220,19 @@ class LocalArtifactOutbox:
             ack_ref=ack_ref,
         )
 
-    def _enqueue(self, *, event_type: str, resource_ref: str, local_path: str, identity: ArtifactIdentity | None, quiescence: QuiescenceProof | None, observed_at: str, prior_artifact_id: str = "", prior_resource_ref: str = "") -> LocalIngestResult:
+    def _enqueue(
+        self,
+        *,
+        event_type: str,
+        resource_ref: str,
+        local_path: str,
+        identity: ArtifactIdentity | None,
+        quiescence: QuiescenceProof | None,
+        observed_at: str,
+        prior_artifact_id: str = "",
+        prior_resource_ref: str = "",
+        inbound_mirror_lineage: MirrorLineage | None = None,
+    ) -> LocalIngestResult:
         mutation_payload = {
             "event_type": event_type.upper(),
             "resource_ref": resource_ref,
@@ -226,18 +243,41 @@ class LocalArtifactOutbox:
             "prior_resource_ref": prior_resource_ref,
             "project_id": self.config.project_id,
             "source_surface": self.config.source_surface,
+            "mirror_origin_id": "" if inbound_mirror_lineage is None else inbound_mirror_lineage.origin_id,
+            "mirror_generation": -1 if inbound_mirror_lineage is None else inbound_mirror_lineage.artifact_generation,
+            "mirror_surfaces": () if inbound_mirror_lineage is None else inbound_mirror_lineage.surfaces,
         }
         mutation_key = f"lmut-{_digest(mutation_payload)[:40]}"
         self._conn.execute("BEGIN IMMEDIATE")
         try:
-            row = self._conn.execute("SELECT record_json,status,ack_ref FROM outbox WHERE mutation_key=?", (mutation_key,)).fetchone()
+            row = self._conn.execute(
+                "SELECT record_json,status,ack_ref FROM outbox WHERE mutation_key=?", (mutation_key,)
+            ).fetchone()
             if row is not None:
                 self._conn.execute("COMMIT")
-                return LocalIngestResult("IDEMPOTENT_REPLAY", self._record_from_json(row["record_json"], row["status"], row["ack_ref"]))
-            row = self._conn.execute("SELECT generation FROM resource_generation WHERE resource_ref=?", (resource_ref,)).fetchone()
-            generation = 1 if row is None else int(row["generation"]) + 1
-            origin_id = f"local-origin-{mutation_key[5:37]}"
-            lineage = MirrorLineage.start(origin_id, self.config.source_surface, artifact_generation=generation)
+                return LocalIngestResult(
+                    "IDEMPOTENT_REPLAY",
+                    self._record_from_json(row["record_json"], row["status"], row["ack_ref"]),
+                )
+
+            advances_local_generation = inbound_mirror_lineage is None
+            if advances_local_generation:
+                row = self._conn.execute(
+                    "SELECT generation FROM resource_generation WHERE resource_ref=?", (resource_ref,)
+                ).fetchone()
+                generation = 1 if row is None else int(row["generation"]) + 1
+                origin_id = f"local-origin-{mutation_key[5:37]}"
+                lineage = MirrorLineage.start(
+                    origin_id, self.config.source_surface, artifact_generation=generation
+                )
+            else:
+                if self.config.source_surface in inbound_mirror_lineage.surfaces:
+                    self._conn.execute("ROLLBACK")
+                    return LocalIngestResult("SELF_LOOP_SUPPRESSED", None)
+                lineage = inbound_mirror_lineage.next_hop(self.config.source_surface)
+                generation = lineage.artifact_generation
+                origin_id = lineage.origin_id
+
             event = ArtifactMutationEvent(
                 origin_id=origin_id,
                 provider=self.config.provider,
@@ -255,45 +295,159 @@ class LocalArtifactOutbox:
                 prior_artifact_id=prior_artifact_id,
                 prior_resource_ref=prior_resource_ref,
             )
-            record = LocalArtifactOutboxRecord(mutation_key, event, identity, quiescence, local_path, resource_ref)
+            record = LocalArtifactOutboxRecord(
+                mutation_key, event, identity, quiescence, local_path, resource_ref
+            )
             encoded = json.dumps(record.to_dict(), sort_keys=True, separators=(",", ":"))
-            self._conn.execute("INSERT INTO outbox(mutation_key,event_id,resource_ref,generation,record_json,status,ack_ref) VALUES(?,?,?,?,?,'PENDING','')", (mutation_key, event.event_id, resource_ref, generation, encoded))
-            self._conn.execute("INSERT INTO resource_generation(resource_ref,generation) VALUES(?,?) ON CONFLICT(resource_ref) DO UPDATE SET generation=excluded.generation", (resource_ref, generation))
+            self._conn.execute(
+                "INSERT INTO outbox(mutation_key,event_id,resource_ref,generation,record_json,status,ack_ref) VALUES(?,?,?,?,?,'PENDING','')",
+                (mutation_key, event.event_id, resource_ref, generation, encoded),
+            )
+            if advances_local_generation:
+                self._conn.execute(
+                    "INSERT INTO resource_generation(resource_ref,generation) VALUES(?,?) ON CONFLICT(resource_ref) DO UPDATE SET generation=excluded.generation",
+                    (resource_ref, generation),
+                )
             self._conn.execute("COMMIT")
             return LocalIngestResult("ENQUEUED", record)
         except Exception:
             self._conn.execute("ROLLBACK")
             raise
 
-    def ingest_file_notification(self, path: os.PathLike[str] | str, *, event_type: str, observations: Sequence[FileObservation], observed_at: str, closed_evidence: bool = False, atomic_publish_evidence: bool = False, prior_artifact_id: str = "", prior_resource_ref: str = "", inbound_mirror_lineage: MirrorLineage | None = None) -> LocalIngestResult:
+    def ingest_file_notification(
+        self,
+        path: os.PathLike[str] | str,
+        *,
+        event_type: str,
+        observations: Sequence[FileObservation],
+        observed_at: str,
+        expected_currentness_ref: str,
+        currentness: str = "CURRENT",
+        closed_evidence: bool = False,
+        atomic_publish_evidence: bool = False,
+        prior_artifact_id: str = "",
+        prior_resource_ref: str = "",
+        inbound_mirror_lineage: MirrorLineage | None = None,
+        expected_mirror_origin_id: str | None = None,
+        expected_mirror_generation: int | None = None,
+    ) -> LocalIngestResult:
+        if not self._currentness_is_admitted(expected_currentness_ref, currentness):
+            return LocalIngestResult("REBASE", None)
         path_obj, resource_ref = self._resource_for_path(path)
-        if inbound_mirror_lineage is not None and self.config.source_surface in inbound_mirror_lineage.surfaces:
-            return LocalIngestResult("SELF_LOOP_SUPPRESSED", None)
-        proof = prove_quiescence(observations, min_stable_samples=self.config.min_stable_samples, min_stable_ns=self.config.min_stable_ns, closed_evidence=closed_evidence, atomic_publish_evidence=atomic_publish_evidence)
+        if inbound_mirror_lineage is not None:
+            if self.config.source_surface in inbound_mirror_lineage.surfaces:
+                return LocalIngestResult("SELF_LOOP_SUPPRESSED", None)
+            if expected_mirror_origin_id is None or expected_mirror_generation is None:
+                raise LocalOutboxRefusal("MIRROR_EXPECTATION_REQUIRED")
+            expected_origin = _text("expected_mirror_origin_id", expected_mirror_origin_id)
+            if inbound_mirror_lineage.origin_id != expected_origin:
+                raise LocalOutboxRefusal("MIRROR_ORIGIN_BINDING_MISMATCH")
+            if (
+                not isinstance(expected_mirror_generation, int)
+                or isinstance(expected_mirror_generation, bool)
+                or expected_mirror_generation < 0
+            ):
+                raise LocalOutboxRefusal("INVALID_EXPECTED_MIRROR_GENERATION")
+            if inbound_mirror_lineage.artifact_generation != expected_mirror_generation:
+                raise LocalOutboxRefusal("MIRROR_GENERATION_BINDING_MISMATCH")
+        proof = prove_quiescence(
+            observations,
+            min_stable_samples=self.config.min_stable_samples,
+            min_stable_ns=self.config.min_stable_ns,
+            closed_evidence=closed_evidence,
+            atomic_publish_evidence=atomic_publish_evidence,
+        )
         body = self._read_bound_bytes(path_obj, proof)
-        identity = ArtifactIdentity.from_bytes(body, mime_type=mimetypes.guess_type(path_obj.name)[0] or "application/octet-stream", extension=path_obj.suffix, parent_refs=(resource_ref,))
-        return self._enqueue(event_type=event_type, resource_ref=resource_ref, local_path=str(path_obj), identity=identity, quiescence=proof, observed_at=observed_at, prior_artifact_id=prior_artifact_id, prior_resource_ref=prior_resource_ref)
+        identity = ArtifactIdentity.from_bytes(
+            body,
+            mime_type=mimetypes.guess_type(path_obj.name)[0] or "application/octet-stream",
+            extension=path_obj.suffix,
+            parent_refs=(resource_ref,),
+        )
+        return self._enqueue(
+            event_type=event_type,
+            resource_ref=resource_ref,
+            local_path=str(path_obj),
+            identity=identity,
+            quiescence=proof,
+            observed_at=observed_at,
+            prior_artifact_id=prior_artifact_id,
+            prior_resource_ref=prior_resource_ref,
+            inbound_mirror_lineage=inbound_mirror_lineage,
+        )
 
-    def ingest_tombstone(self, path: os.PathLike[str] | str, *, observed_at: str, prior_artifact_id: str = "", prior_resource_ref: str = "") -> LocalIngestResult:
+    def ingest_tombstone(
+        self,
+        path: os.PathLike[str] | str,
+        *,
+        observed_at: str,
+        expected_currentness_ref: str,
+        currentness: str = "CURRENT",
+        prior_artifact_id: str = "",
+        prior_resource_ref: str = "",
+    ) -> LocalIngestResult:
+        if not self._currentness_is_admitted(expected_currentness_ref, currentness):
+            return LocalIngestResult("REBASE", None)
         path_obj, resource_ref = self._resource_for_path(path)
         if not (prior_artifact_id.strip() or prior_resource_ref.strip()):
             raise LocalOutboxRefusal("PRIOR_LINEAGE_REQUIRED", resource_ref)
-        return self._enqueue(event_type="TOMBSTONE", resource_ref=resource_ref, local_path=str(path_obj), identity=None, quiescence=None, observed_at=observed_at, prior_artifact_id=prior_artifact_id, prior_resource_ref=prior_resource_ref)
+        return self._enqueue(
+            event_type="TOMBSTONE",
+            resource_ref=resource_ref,
+            local_path=str(path_obj),
+            identity=None,
+            quiescence=None,
+            observed_at=observed_at,
+            prior_artifact_id=prior_artifact_id,
+            prior_resource_ref=prior_resource_ref,
+        )
 
-    def ingest_rename(self, old_path: os.PathLike[str] | str, new_path: os.PathLike[str] | str, *, observations: Sequence[FileObservation], observed_at: str, prior_artifact_id: str = "", closed_evidence: bool = False, atomic_publish_evidence: bool = False) -> LocalIngestResult:
+    def ingest_rename(
+        self,
+        old_path: os.PathLike[str] | str,
+        new_path: os.PathLike[str] | str,
+        *,
+        observations: Sequence[FileObservation],
+        observed_at: str,
+        expected_currentness_ref: str,
+        currentness: str = "CURRENT",
+        prior_artifact_id: str = "",
+        closed_evidence: bool = False,
+        atomic_publish_evidence: bool = False,
+    ) -> LocalIngestResult:
+        if not self._currentness_is_admitted(expected_currentness_ref, currentness):
+            return LocalIngestResult("REBASE", None)
         _, old_resource = self._resource_for_path(old_path)
-        return self.ingest_file_notification(new_path, event_type="RENAME", observations=observations, observed_at=observed_at, closed_evidence=closed_evidence, atomic_publish_evidence=atomic_publish_evidence, prior_artifact_id=prior_artifact_id, prior_resource_ref=old_resource)
+        return self.ingest_file_notification(
+            new_path,
+            event_type="RENAME",
+            observations=observations,
+            observed_at=observed_at,
+            expected_currentness_ref=expected_currentness_ref,
+            currentness=currentness,
+            closed_evidence=closed_evidence,
+            atomic_publish_evidence=atomic_publish_evidence,
+            prior_artifact_id=prior_artifact_id,
+            prior_resource_ref=old_resource,
+        )
 
     def pending(self) -> list[LocalArtifactOutboxRecord]:
-        rows = self._conn.execute("SELECT record_json,status,ack_ref FROM outbox WHERE status='PENDING' ORDER BY event_id").fetchall()
-        return [self._record_from_json(row["record_json"], row["status"], row["ack_ref"]) for row in rows]
+        rows = self._conn.execute(
+            "SELECT record_json,status,ack_ref FROM outbox WHERE status='PENDING' ORDER BY event_id"
+        ).fetchall()
+        return [
+            self._record_from_json(row["record_json"], row["status"], row["ack_ref"])
+            for row in rows
+        ]
 
     def ack(self, event_id: str, *, persistence_receipt_ref: str) -> str:
         event_id = _text("event_id", event_id)
         receipt = _text("persistence_receipt_ref", persistence_receipt_ref)
         self._conn.execute("BEGIN IMMEDIATE")
         try:
-            row = self._conn.execute("SELECT status,ack_ref FROM outbox WHERE event_id=?", (event_id,)).fetchone()
+            row = self._conn.execute(
+                "SELECT status,ack_ref FROM outbox WHERE event_id=?", (event_id,)
+            ).fetchone()
             if row is None:
                 raise LocalOutboxRefusal("UNKNOWN_EVENT_ID", event_id)
             if row["status"] == "ACKED":
@@ -301,7 +455,9 @@ class LocalArtifactOutbox:
                     raise LocalOutboxRefusal("ACK_RECEIPT_CONFLICT", event_id)
                 self._conn.execute("COMMIT")
                 return "IDEMPOTENT_ACK"
-            self._conn.execute("UPDATE outbox SET status='ACKED',ack_ref=? WHERE event_id=?", (receipt, event_id))
+            self._conn.execute(
+                "UPDATE outbox SET status='ACKED',ack_ref=? WHERE event_id=?", (receipt, event_id)
+            )
             self._conn.execute("COMMIT")
             return "ACKED"
         except Exception:
@@ -310,5 +466,7 @@ class LocalArtifactOutbox:
 
     def generation_for(self, path: os.PathLike[str] | str) -> int:
         _, resource_ref = self._resource_for_path(path)
-        row = self._conn.execute("SELECT generation FROM resource_generation WHERE resource_ref=?", (resource_ref,)).fetchone()
+        row = self._conn.execute(
+            "SELECT generation FROM resource_generation WHERE resource_ref=?", (resource_ref,)
+        ).fetchone()
         return 0 if row is None else int(row["generation"])
