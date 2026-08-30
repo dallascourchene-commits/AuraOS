@@ -10,6 +10,13 @@ on:
     paths:
       - '.github/workflows/project006-local-runtime-preflight.yml'
       - 'tools/project006/local_runner_preflight.py'
+      - 'tools/project006/creator_media_handoff.py'
+      - 'tools/project006/creator_media_nono_runner.py'
+      - 'tools/project006/creator_media_arena_adapter.py'
+      - 'tools/project006/nono_profiles/creator-studio-higgsfield.json'
+      - 'tools/project006/test_creator_media_handoff.py'
+      - 'tools/project006/test_creator_media_nono_runner.py'
+      - 'tools/project006/test_creator_media_arena_adapter.py'
   workflow_dispatch:
 
 permissions:
@@ -53,4 +60,101 @@ jobs:
           name: wp10-local-runtime-preflight
           path: wp10-local-runtime-preflight.json
           if-no-files-found: warn
+          retention-days: 7
+
+  awj019-higgsfield-host-probe:
+    runs-on: self-hosted
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile focused Creator Studio media files
+        shell: bash
+        run: |
+          python3 -m py_compile \
+            tools/project006/creator_media_handoff.py \
+            tools/project006/creator_media_nono_runner.py \
+            tools/project006/creator_media_arena_adapter.py
+          python3 -m pytest -q \
+            tools/project006/test_creator_media_handoff.py \
+            tools/project006/test_creator_media_nono_runner.py \
+            tools/project006/test_creator_media_arena_adapter.py
+      - name: Probe host membrane without provider effect
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, os, pathlib, shutil, subprocess
+          from urllib.parse import urlparse
+
+          consumer = pathlib.Path.home()/'.config/aura-drive/bin/aura_drive_swarm_consumer_v1.py'
+          profile = pathlib.Path(os.environ['GITHUB_WORKSPACE'])/'tools/project006/nono_profiles/creator-studio-higgsfield.json'
+          nono = shutil.which('nono')
+          if nono is None:
+              for candidate in [pathlib.Path.home()/'.cargo/bin/nono', pathlib.Path.home()/'.local/bin/nono']:
+                  if candidate.exists():
+                      nono = str(candidate)
+                      break
+
+          ps = '/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe'
+          ps_present = pathlib.Path(ps).exists()
+          credential_present = False
+          if ps_present:
+              probe = subprocess.run([
+                  ps, '-NoProfile', '-NonInteractive', '-Command',
+                  "$v=[Environment]::GetEnvironmentVariable('HIGGSFIELD_API_CREDENTIAL','User'); if([string]::IsNullOrWhiteSpace($v)){exit 7}else{exit 0}"
+              ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False, timeout=10)
+              credential_present = probe.returncode == 0
+
+          receipt = {
+              'schema': 'AWJ019_HIGGSFIELD_HOST_PROBE_V1',
+              'consumer_present': consumer.is_file(),
+              'consumer_sha256': hashlib.sha256(consumer.read_bytes()).hexdigest() if consumer.is_file() else None,
+              'nono_present': bool(nono),
+              'nono_path': nono,
+              'profile_present': profile.is_file(),
+              'powershell_capture_executable_present': ps_present,
+              'windows_user_credential_present': credential_present,
+              'provider_attempt_count': 0,
+              'provider_spend': 0,
+          }
+
+          if nono and credential_present and profile.is_file():
+              child_code = (
+                  "import json,os; from urllib.parse import urlparse; "
+                  "v=os.environ.get('HIGGSFIELD_API_CREDENTIAL',''); "
+                  "p=os.environ.get('HTTPS_PROXY') or os.environ.get('https_proxy') or ''; "
+                  "h=(urlparse(p).hostname or '').lower() if p else ''; "
+                  "print(json.dumps({'phantom_present':bool(v),'raw_shape_visible':':' in v,'proxy_loopback':h in {'127.0.0.1','localhost','::1'}}))"
+              )
+              proc = subprocess.run(
+                  [nono, 'run', '--profile', str(profile), '--', 'python3', '-c', child_code],
+                  stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=False, timeout=30,
+              )
+              receipt['nono_profile_launch_rc'] = proc.returncode
+              try:
+                  last = [line for line in proc.stdout.splitlines() if line.strip()][-1]
+                  child = json.loads(last)
+              except Exception:
+                  child = {}
+              receipt['child_receives_phantom'] = child.get('phantom_present') is True and child.get('raw_shape_visible') is False
+              receipt['child_proxy_loopback'] = child.get('proxy_loopback') is True
+          else:
+              receipt['nono_profile_launch_rc'] = None
+              receipt['child_receives_phantom'] = False
+              receipt['child_proxy_loopback'] = False
+
+          receipt['ready_for_install'] = all([
+              receipt['consumer_present'], receipt['nono_present'], receipt['profile_present'],
+              receipt['powershell_capture_executable_present'], receipt['windows_user_credential_present'],
+              receipt['nono_profile_launch_rc'] == 0, receipt['child_receives_phantom'], receipt['child_proxy_loopback'],
+          ])
+          pathlib.Path('awj019-higgsfield-host-probe.json').write_text(json.dumps(receipt, sort_keys=True, indent=2), encoding='utf-8')
+          print(json.dumps(receipt, sort_keys=True))
+          PY
+      - name: Upload AWJ019 host probe receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: awj019-higgsfield-host-probe
+          path: awj019-higgsfield-host-probe.json
+          if-no-files-found: error
           retention-days: 7
