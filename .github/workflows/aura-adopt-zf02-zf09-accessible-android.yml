@@ -1,0 +1,36 @@
+name: AURA ADOPT ZF-02 ZF-09 accessible Android provisioning
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/accessible_onboarding.py'
+      - 'tools/aura_adopt/test_accessible_onboarding.py'
+      - 'tools/aura_adopt/accessible_android_provisioning_bridge.py'
+      - 'tools/aura_adopt/test_accessible_android_provisioning_bridge.py'
+      - '.github/workflows/aura-adopt-zf02-zf09-accessible-android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  accessible-android-provisioning:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile onboarding and bridge
+        run: >-
+          python -m py_compile
+          tools/aura_adopt/accessible_onboarding.py
+          tools/aura_adopt/test_accessible_onboarding.py
+          tools/aura_adopt/accessible_android_provisioning_bridge.py
+          tools/aura_adopt/test_accessible_android_provisioning_bridge.py
+      - name: Re-run ZF-09 accessible onboarding regressions
+        working-directory: tools/aura_adopt
+        run: python -m unittest -v test_accessible_onboarding.py
+      - name: Run accessibility-preserving provisioning regressions
+        working-directory: tools/aura_adopt
+        run: python -m unittest -v test_accessible_android_provisioning_bridge.py
