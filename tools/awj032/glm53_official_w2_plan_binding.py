@@ -79,6 +79,7 @@ def _exact_false(value: Any, code: str) -> None:
 class OfficialW2BoundPagerPlan:
     inner_source_plan_digest: str
     official_w2_observation_digest: str
+    official_w2_receipt_digest: str
     official_w2_producer_semantic_head: str
     official_w2_producer_run_ref: str
     official_w2_drive_observation_ref: str
@@ -101,6 +102,7 @@ class OfficialW2BoundPagerPlan:
             "schema": self.schema,
             "inner_source_plan_digest": self.inner_source_plan_digest,
             "official_w2_observation_digest": self.official_w2_observation_digest,
+            "official_w2_receipt_digest": self.official_w2_receipt_digest,
             "official_w2_producer_semantic_head": self.official_w2_producer_semantic_head,
             "official_w2_producer_run_ref": self.official_w2_producer_run_ref,
             "official_w2_drive_observation_ref": self.official_w2_drive_observation_ref,
@@ -153,6 +155,7 @@ def bind_official_w2_pager_plan(plan: Any) -> OfficialW2BoundPagerPlan:
     return OfficialW2BoundPagerPlan(
         inner_source_plan_digest=inner_digest,
         official_w2_observation_digest=o.observation_digest,
+        official_w2_receipt_digest=o.receipt_digest,
         official_w2_producer_semantic_head=o.producer_semantic_head,
         official_w2_producer_run_ref=o.producer_run_ref,
         official_w2_drive_observation_ref=o.drive_observation_ref,
