@@ -1,20 +1,20 @@
 """Producer-bound independent-reproduction gate for BugHound cash candidates.
 
-This layer removes caller control over the three PR420 expectation fields. A
-registry lookup owned outside the discoverer/candidate boundary must return a
-current, independently observed record for the exact reproduction receipt.
+This layer removes caller control over both PR420's expected reproduction fields
+and the registry resolver itself. The canonical consequence API resolves only
+against a repository-owned tuple of independently observed reproduction records.
 
-The default path fails closed because no canonical production registry is yet
-wired. Passing the software contract does not prove that a real bounty
-reproduction registry exists, does not authorize live testing or submission,
-and does not clear PR425's remaining duplicate/lint/program producer-trust debt.
+The canonical tuple is intentionally empty until a real, independently observed
+reproduction producer is pinned by source change. Passing this software contract
+does not prove a real bounty reproduction registry exists and grants no live
+ testing, submission, payment, deployment, or other external-effect authority.
 """
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import hashlib
+import inspect
 import json
-from typing import Callable
 
 from tools.bughound.bounty_candidate_admission import (
     BountyCandidateEvidenceV1,
@@ -26,6 +26,7 @@ from tools.bughound.bounty_mission import BugHoundCashMissionInputV1
 
 SCHEMA = "BugHoundRegisteredIndependentReproductionAdmissionV1"
 REGISTRY_SCHEMA = "BugHoundIndependentReproductionRegistryRecordV1"
+REGISTRY_GENERATION = "BUGHOUND_INDEPENDENT_REPRODUCTION_REGISTRY_HOLD_V2"
 
 
 def _canonical(value: object) -> bytes:
@@ -72,6 +73,27 @@ class BugHoundIndependentReproductionRegistryRecordV1:
         return _digest("AURA_BUGHOUND_INDEPENDENT_REPRO_REGISTRY_V1", asdict(self))
 
 
+# Production trust root. Deliberately empty until an independently observed
+# reproduction producer is pinned by a repository-owned source change.
+_CANONICAL_REPRODUCTION_RECORDS: tuple[
+    BugHoundIndependentReproductionRegistryRecordV1, ...
+] = ()
+
+
+@dataclass(frozen=True)
+class BugHoundIndependentReproductionRegistryReceiptV2:
+    registry_generation: str
+    record_digests: tuple[str, ...]
+    active_record_count: int
+    authority: bool = False
+    external_effect: bool = False
+    schema: str = "BugHoundIndependentReproductionRegistryReceiptV2"
+
+    @property
+    def registry_digest(self) -> str:
+        return _digest("AURA_BUGHOUND_INDEPENDENT_REPRO_REGISTRY_RECEIPT_V2", asdict(self))
+
+
 @dataclass(frozen=True)
 class BugHoundRegisteredIndependentReproductionAdmissionV1:
     candidate_admission: BugHoundCashCandidateAdmissionReceiptV1
@@ -98,16 +120,22 @@ class BugHoundRegisteredIndependentReproductionAdmissionV1:
         )
 
 
-RegistryLookup = Callable[
-    [IndependentBountyReproductionReceiptV1],
-    BugHoundIndependentReproductionRegistryRecordV1,
-]
-
-
-def _production_registry_unavailable(
-    _reproduction: IndependentBountyReproductionReceiptV1,
-) -> BugHoundIndependentReproductionRegistryRecordV1:
-    raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_REQUIRED")
+def independent_reproduction_registry_receipt() -> BugHoundIndependentReproductionRegistryReceiptV2:
+    records = tuple(
+        sorted(_CANONICAL_REPRODUCTION_RECORDS, key=lambda record: record.record_digest)
+    )
+    return BugHoundIndependentReproductionRegistryReceiptV2(
+        registry_generation=REGISTRY_GENERATION,
+        record_digests=tuple(record.record_digest for record in records),
+        active_record_count=sum(
+            1
+            for record in records
+            if record.registry_current
+            and record.independently_observed
+            and not record.revoked
+            and not record.external_effect
+        ),
+    )
 
 
 def _require_false(record: object, field: str, code: str) -> None:
@@ -122,6 +150,8 @@ def _verify_registry_record(
     mission_input: BugHoundCashMissionInputV1,
     record: BugHoundIndependentReproductionRegistryRecordV1,
 ) -> None:
+    if not isinstance(record, BugHoundIndependentReproductionRegistryRecordV1):
+        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_RECORD_REQUIRED")
     if record.schema != REGISTRY_SCHEMA:
         raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_SCHEMA_MISMATCH")
     if not record.registry_receipt_ref.strip():
@@ -170,7 +200,29 @@ def _verify_registry_record(
             raise ValueError(f"INDEPENDENT_REPRODUCTION_REGISTRY_{field.upper()}_MISMATCH")
 
 
-def admit_with_registered_independent_reproduction(
+def _resolve_from_records(
+    *,
+    records: tuple[BugHoundIndependentReproductionRegistryRecordV1, ...],
+    reproduction: IndependentBountyReproductionReceiptV1,
+    candidate: BountyCandidateEvidenceV1,
+    mission_input: BugHoundCashMissionInputV1,
+) -> BugHoundIndependentReproductionRegistryRecordV1:
+    """Private resolver used by production source ownership and adversarial tests."""
+    for record in records:
+        try:
+            _verify_registry_record(
+                reproduction=reproduction,
+                candidate=candidate,
+                mission_input=mission_input,
+                record=record,
+            )
+        except ValueError:
+            continue
+        return record
+    raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_REQUIRED")
+
+
+def _compose_registered_independent_reproduction(
     *,
     mission_input: BugHoundCashMissionInputV1,
     candidate: BountyCandidateEvidenceV1,
@@ -181,41 +233,15 @@ def admit_with_registered_independent_reproduction(
     report_digest: str,
     program_admissibility_state: str,
     program_admissibility_ref: str,
-    registry_lookup: RegistryLookup = _production_registry_unavailable,
-    **forbidden_expectation_fields: object,
+    record: BugHoundIndependentReproductionRegistryRecordV1,
 ) -> BugHoundRegisteredIndependentReproductionAdmissionV1:
-    """Admit PR420 through an independently owned reproduction-registry boundary.
-
-    Callers cannot provide the three `expected_*` reproduction fields. A trusted
-    registry lookup is the only source for them. The default production path
-    fails closed until a canonical registry is wired.
-    """
-    if forbidden_expectation_fields:
-        forbidden = {
-            "expected_independent_reproduction_digest",
-            "expected_reproducer_ref",
-            "expected_reproducer_generation",
-        }
-        if forbidden.intersection(forbidden_expectation_fields):
-            raise ValueError("CALLER_REPRODUCTION_EXPECTATION_FORBIDDEN")
-        raise TypeError(
-            "UNEXPECTED_REGISTERED_REPRODUCTION_ARGUMENTS: "
-            + ",".join(sorted(forbidden_expectation_fields))
-        )
-
-    if independent_reproduction.external_effect:
-        raise ValueError("BOUNTY_REPRODUCTION_EXTERNAL_EFFECT_FORBIDDEN")
-
-    record = registry_lookup(independent_reproduction)
-    if not isinstance(record, BugHoundIndependentReproductionRegistryRecordV1):
-        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_RECORD_REQUIRED")
+    """Private consequence reducer after an externally owned record is resolved."""
     _verify_registry_record(
         reproduction=independent_reproduction,
         candidate=candidate,
         mission_input=mission_input,
         record=record,
     )
-
     admitted = admit_cash_bounty_candidate_for_human_review(
         mission_input=mission_input,
         candidate=candidate,
@@ -248,3 +274,48 @@ def admit_with_registered_independent_reproduction(
         registry_observer_ref=record.registry_observer_ref,
         registry_observer_generation=record.registry_observer_generation,
     )
+
+
+def admit_with_registered_independent_reproduction(
+    *,
+    mission_input: BugHoundCashMissionInputV1,
+    candidate: BountyCandidateEvidenceV1,
+    independent_reproduction: IndependentBountyReproductionReceiptV1,
+    duplicate_pressure_state: str,
+    duplicate_check_currentness_ref: str,
+    report_lint_state: str,
+    report_digest: str,
+    program_admissibility_state: str,
+    program_admissibility_ref: str,
+) -> BugHoundRegisteredIndependentReproductionAdmissionV1:
+    """Resolve reproduction provenance only from the source-owned registry.
+
+    No caller may provide expected reproduction identities, a registry, a lookup
+    callback, a trusted record, or a precomputed admission receipt. Production is
+    intentionally held while the canonical registry is empty.
+    """
+    if independent_reproduction.external_effect:
+        raise ValueError("BOUNTY_REPRODUCTION_EXTERNAL_EFFECT_FORBIDDEN")
+    record = _resolve_from_records(
+        records=_CANONICAL_REPRODUCTION_RECORDS,
+        reproduction=independent_reproduction,
+        candidate=candidate,
+        mission_input=mission_input,
+    )
+    return _compose_registered_independent_reproduction(
+        mission_input=mission_input,
+        candidate=candidate,
+        independent_reproduction=independent_reproduction,
+        duplicate_pressure_state=duplicate_pressure_state,
+        duplicate_check_currentness_ref=duplicate_check_currentness_ref,
+        report_lint_state=report_lint_state,
+        report_digest=report_digest,
+        program_admissibility_state=program_admissibility_state,
+        program_admissibility_ref=program_admissibility_ref,
+        record=record,
+    )
+
+
+def registered_reproduction_parameter_names() -> tuple[str, ...]:
+    """Expose the canonical public ABI for anti-bypass regression tests."""
+    return tuple(inspect.signature(admit_with_registered_independent_reproduction).parameters)

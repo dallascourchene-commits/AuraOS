@@ -1,0 +1,78 @@
+name: BugHound source-owned reproduction registry
+
+on:
+  pull_request:
+    paths:
+      - "tools/bughound/registered_reproduction_gate.py"
+      - "tests/test_bughound_registered_reproduction_gate.py"
+      - ".github/workflows/bughound-source-owned-reproduction-registry.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bughound-source-owned-repro-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-owned-reproduction:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+
+      - name: Compile boundary
+        run: |
+          python -m py_compile \
+            tools/bughound/registered_reproduction_gate.py \
+            tests/test_bughound_registered_reproduction_gate.py
+
+      - name: Run full BugHound contracts
+        run: python -m unittest discover -s tests -p "test_bughound_*.py" -v
+
+      - name: Emit public ABI and production hold
+        run: |
+          python - <<'PY'
+          from tools.bughound.registered_reproduction_gate import (
+              independent_reproduction_registry_receipt,
+              registered_reproduction_parameter_names,
+          )
+          params = registered_reproduction_parameter_names()
+          forbidden = {
+              "registry_lookup", "registry", "records", "record",
+              "expected_independent_reproduction_digest",
+              "expected_reproducer_ref", "expected_reproducer_generation",
+              "trusted",
+          }
+          assert forbidden.isdisjoint(params)
+          receipt = independent_reproduction_registry_receipt()
+          assert receipt.record_digests == ()
+          assert receipt.active_record_count == 0
+          assert receipt.authority is False
+          assert receipt.external_effect is False
+          print("BUGHOUND_REPRODUCTION_PUBLIC_ABI=" + ",".join(params))
+          print("CALLER_REGISTRY_LOOKUP_ACCEPTED=false")
+          print("PRODUCTION_REPRODUCTION_REGISTRY_ACTIVE_RECORDS=0")
+          print("REAL_INDEPENDENT_REPRODUCTION_PROVEN=false")
+          print("LIVE_TARGET_TESTING_AUTHORIZED=false")
+          print("SUBMISSION_AUTHORIZED=false")
+          print("CLAIM_OR_PAYMENT_AUTHORIZED=false")
+          PY
