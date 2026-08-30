@@ -9,8 +9,10 @@ from tools.bughound.bounty_candidate_admission import (
 )
 from tools.bughound.bounty_mission import BugHoundCashMissionInputV1
 from tools.bughound.registered_reproduction_gate import (
+    REGISTRY_GENERATION,
     BugHoundIndependentReproductionRegistryRecordV1,
     _compose_registered_independent_reproduction,
+    _resolve_from_records,
     admit_with_registered_independent_reproduction,
     independent_reproduction_registry_receipt,
     registered_reproduction_parameter_names,
@@ -115,6 +117,8 @@ class RegisteredIndependentReproductionGateTests(unittest.TestCase):
     def test_private_exact_record_plumbs_without_effect_authority(self):
         out = self.private_admit()
         self.assertTrue(out.independent_reproduction_registry_proven)
+        self.assertEqual(REGISTRY_GENERATION, out.registry_generation)
+        self.assertTrue(out.registry_digest)
         self.assertFalse(out.duplicate_check_producer_proven)
         self.assertFalse(out.report_lint_producer_proven)
         self.assertFalse(out.program_admissibility_producer_proven)
@@ -124,7 +128,7 @@ class RegisteredIndependentReproductionGateTests(unittest.TestCase):
 
     def test_production_registry_is_source_owned_empty_hold(self):
         receipt = independent_reproduction_registry_receipt()
-        self.assertEqual("BUGHOUND_INDEPENDENT_REPRODUCTION_REGISTRY_HOLD_V2", receipt.registry_generation)
+        self.assertEqual(REGISTRY_GENERATION, receipt.registry_generation)
         self.assertEqual((), receipt.record_digests)
         self.assertEqual(0, receipt.active_record_count)
         self.assertFalse(receipt.authority)
@@ -169,6 +173,51 @@ class RegisteredIndependentReproductionGateTests(unittest.TestCase):
                     admit_with_registered_independent_reproduction(
                         **self.public_kwargs(), **{field: "forged"}
                     )
+
+    def test_ambiguous_valid_source_owned_records_fail_closed(self):
+        repro = self.repro()
+        a = self.record(repro)
+        b = replace(a, registry_receipt_ref="registry://receipt/second")
+        with self.assertRaisesRegex(ValueError, "INDEPENDENT_REPRODUCTION_REGISTRY_AMBIGUOUS"):
+            _resolve_from_records(
+                records=(a, b),
+                reproduction=repro,
+                candidate=self.candidate(),
+                mission_input=self.mission(),
+            )
+
+    def test_registry_generation_and_digest_change_with_registry_content(self):
+        a = self.record()
+        one = _compose_registered_independent_reproduction(
+            mission_input=self.mission(),
+            candidate=self.candidate(),
+            independent_reproduction=self.repro(),
+            duplicate_pressure_state="LOW_OBSERVED_DUPLICATE_PRESSURE",
+            duplicate_check_currentness_ref="dup-current-1",
+            report_lint_state="REPORT_LINT_CLEAN",
+            report_digest="report-1",
+            program_admissibility_state="CURRENTLY_ADMISSIBLE",
+            program_admissibility_ref="program-current-1",
+            record=a,
+            registry_records=(a,),
+        )
+        b = replace(a, registry_receipt_ref="registry://receipt/second")
+        two = _compose_registered_independent_reproduction(
+            mission_input=self.mission(),
+            candidate=self.candidate(),
+            independent_reproduction=self.repro(),
+            duplicate_pressure_state="LOW_OBSERVED_DUPLICATE_PRESSURE",
+            duplicate_check_currentness_ref="dup-current-1",
+            report_lint_state="REPORT_LINT_CLEAN",
+            report_digest="report-1",
+            program_admissibility_state="CURRENTLY_ADMISSIBLE",
+            program_admissibility_ref="program-current-1",
+            record=a,
+            registry_records=(a, b),
+        )
+        self.assertEqual(REGISTRY_GENERATION, one.registry_generation)
+        self.assertEqual(REGISTRY_GENERATION, two.registry_generation)
+        self.assertNotEqual(one.registry_digest, two.registry_digest)
 
     def test_receipt_digest_substitution_fails_privately(self):
         with self.assertRaisesRegex(ValueError, "REPRODUCTION_RECEIPT_DIGEST_MISMATCH"):
