@@ -1,0 +1,28 @@
+name: AURA-ADOPT ZF-00C Browser Friction Adapter
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/browser_friction_adapter.py'
+      - 'tools/aura_adopt/test_browser_friction_adapter.py'
+      - 'tools/aura_adopt/adoption_friction_receipt.py'
+      - '.github/workflows/aura-adopt-zf00c-browser-adapter.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  browser-friction-adapter:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile adapter and canonical owner
+        run: python -m py_compile tools/aura_adopt/adoption_friction_receipt.py tools/aura_adopt/browser_friction_adapter.py tools/aura_adopt/test_browser_friction_adapter.py
+      - name: Run adapter regressions
+        run: python -m unittest tools.aura_adopt.test_browser_friction_adapter
+      - name: Replay canonical ZF-00 receipt regressions
+        run: python -m unittest tools.aura_adopt.test_adoption_friction_receipt
