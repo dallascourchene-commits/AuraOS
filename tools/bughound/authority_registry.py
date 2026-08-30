@@ -1,10 +1,11 @@
 """Source-owned trust registry for BugHound authority-bearing proof planes.
 
 This is intentionally a *hold* registry. The canonical source generation exists,
-but no live-effect or sanitizer producer is currently registered. A caller
-cannot create trust by passing an expected digest/ref/generation alongside the
-artifact it also created. Promotion requires a repository-owned registry update
-on this proof plane followed by exact-current verification.
+but no live-effect or sanitizer artifact is currently registered. A caller
+cannot create trust by supplying an expected digest/ref/generation alongside an
+artifact it also created. Promotion requires a repository-owned record for the
+exact artifact digest plus producer/currentness (and reviewer, when required),
+followed by exact-current verification.
 
 The registry is D0 metadata only and grants no external effect by itself.
 """
@@ -14,8 +15,8 @@ from dataclasses import asdict, dataclass
 import hashlib
 import json
 
-SCHEMA = "BugHoundAuthorityRegistryV1"
-REGISTRY_GENERATION = "BUGHOUND_AUTHORITY_REGISTRY_HOLD_V1"
+SCHEMA = "BugHoundAuthorityRegistryV2"
+REGISTRY_GENERATION = "BUGHOUND_AUTHORITY_REGISTRY_HOLD_V2"
 LIVE_EFFECT_PLANE = "LIVE_EFFECT_GRANT"
 SANITIZER_PLANE = "SANITIZED_PATTERN"
 
@@ -42,8 +43,9 @@ class AuthorityRegistryError(ValueError):
 
 
 @dataclass(frozen=True)
-class AuthorityProducerRecordV1:
+class AuthorityProducerRecordV2:
     proof_plane: str
+    artifact_digest: str
     producer_ref: str
     producer_generation: str
     producer_currentness_ref: str
@@ -52,22 +54,27 @@ class AuthorityProducerRecordV1:
     reviewer_currentness_ref: str | None = None
     enabled: bool = True
     authority: bool = False
-    schema: str = "AuthorityProducerRecordV1"
+    schema: str = "AuthorityProducerRecordV2"
 
     @property
     def record_digest(self) -> str:
-        return _digest("AURA_BUGHOUND_AUTHORITY_PRODUCER_RECORD_V1", asdict(self))
+        return _digest("AURA_BUGHOUND_AUTHORITY_PRODUCER_RECORD_V2", asdict(self))
+
+
+# Backward import compatibility only. Semantics are V2: exact artifact digest is
+# mandatory for every source-owned trust record.
+AuthorityProducerRecordV1 = AuthorityProducerRecordV2
 
 
 # Canonical source-owned records. Deliberately empty until an independently
-# owned producer/currentness lane is explicitly registered in repository source.
-# Tests may verify the hold, but canonical admission never accepts a caller-
-# supplied registry object or caller-supplied expected producer identity.
-_CANONICAL_RECORDS: tuple[AuthorityProducerRecordV1, ...] = ()
+# owned producer/currentness lane explicitly registers one exact artifact.
+# Tests may patch this private tuple to exercise the consumer, but production
+# APIs never accept a caller-supplied registry or expected producer identity.
+_CANONICAL_RECORDS: tuple[AuthorityProducerRecordV2, ...] = ()
 
 
 @dataclass(frozen=True)
-class AuthorityRegistryReceiptV1:
+class AuthorityRegistryReceiptV2:
     registry_generation: str
     record_digests: tuple[str, ...]
     live_effect_producer_count: int
@@ -78,12 +85,15 @@ class AuthorityRegistryReceiptV1:
 
     @property
     def registry_digest(self) -> str:
-        return _digest("AURA_BUGHOUND_AUTHORITY_REGISTRY_V1", asdict(self))
+        return _digest("AURA_BUGHOUND_AUTHORITY_REGISTRY_V2", asdict(self))
 
 
-def authority_registry_receipt() -> AuthorityRegistryReceiptV1:
+AuthorityRegistryReceiptV1 = AuthorityRegistryReceiptV2
+
+
+def authority_registry_receipt() -> AuthorityRegistryReceiptV2:
     records = tuple(sorted(_CANONICAL_RECORDS, key=lambda record: record.record_digest))
-    return AuthorityRegistryReceiptV1(
+    return AuthorityRegistryReceiptV2(
         registry_generation=REGISTRY_GENERATION,
         record_digests=tuple(record.record_digest for record in records),
         live_effect_producer_count=sum(
@@ -98,23 +108,26 @@ def authority_registry_receipt() -> AuthorityRegistryReceiptV1:
 def resolve_authority_producer(
     *,
     proof_plane: str,
+    artifact_digest: str,
     producer_ref: str,
     producer_generation: str,
     producer_currentness_ref: str,
     reviewer_ref: str | None = None,
     reviewer_generation: str | None = None,
     reviewer_currentness_ref: str | None = None,
-) -> AuthorityProducerRecordV1:
-    """Resolve only against the repository-owned canonical registry.
+) -> AuthorityProducerRecordV2:
+    """Resolve an exact consequence artifact against repository-owned state.
 
-    No registry, expected digest, producer ref, or reviewer identity is accepted
-    from a caller as an alternate trust root.
+    Producer identity by itself is insufficient because those identifiers are
+    public and copyable. The source-owned record must bind the exact artifact
+    digest consumed at the consequence boundary.
     """
     for record in _CANONICAL_RECORDS:
         if not record.enabled or record.proof_plane != proof_plane:
             continue
         if (
-            record.producer_ref == producer_ref
+            record.artifact_digest == artifact_digest
+            and record.producer_ref == producer_ref
             and record.producer_generation == producer_generation
             and record.producer_currentness_ref == producer_currentness_ref
             and record.reviewer_ref == reviewer_ref
