@@ -1,142 +1,19 @@
-name: Synchronize CODEMAP topology and source anchors
+name: Synchronize CODEMAP topology and source anchors — STACK SAFETY HOLD
 
+# This nonpromoting Different-J child is stacked on PR350, whose base predates
+# the credential-safe/head-stable CODEMAP V2 owner. Automated CODEMAP sync is
+# disabled on this child. Before integration, rebase the canonical owner lane
+# onto PR393 (or its landed successor) rather than merging this hold as policy.
 on:
-  pull_request:
-  push:
-    branches:
-      - "**"
-    paths-ignore:
-      - ".aura/CODEMAP.json"
-      - ".aura/CODEMAP.md"
-      - ".aura/SOURCE_ANCHORS.md"
-      - "topology_map.json"
-      - "Aura_Memory/live_topology_ast.json"
+  workflow_dispatch:
 
 permissions:
-  contents: write
-
-concurrency:
-  group: sync-architecture-codemap-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: false
+  contents: read
 
 jobs:
-  sync-codemap:
-    if: github.actor != 'github-actions[bot]'
-    runs-on: ubuntu-latest
-    timeout-minutes: 45
+  safety-hold:
+    runs-on: ubuntu-24.04
     steps:
-      - name: Fetch exact head without persisted credentials
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
-        run: |
-          git init .
-          git remote add origin "https://github.com/${{ github.repository }}.git"
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin "$TARGET_SHA"
-          unset AUTH_HEADER
-          git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-          cache: pip
-      - name: Install declared dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-      - name: Regenerate and validate navigation
-        run: |
-          cp .aura/CODEMAP.json /tmp/aura-codemap-reference.json
-          python scripts/aura_navigation_refresh.py --root .
-          python scripts/aura_source_anchor_map.py --root . --check
-          set +e
-          python -m aura_codemap_verify \
-            --compare-json /tmp/aura-codemap-reference.json \
-            > /tmp/aura-codemap-comparison.json
-          comparison_status=$?
-          set -e
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          import subprocess
-
-          result = json.loads(
-              Path('/tmp/aura-codemap-comparison.json').read_text(encoding='utf-8')
-          )
-          if result.get('stable_comparison', {}).get('ok') is True:
-              subprocess.run(
-                  [
-                      'git', 'checkout', 'HEAD', '--',
-                      '.aura/CODEMAP.json',
-                      '.aura/CODEMAP.md',
-                      'topology_map.json',
-                      'Aura_Memory/live_topology_ast.json',
-                  ],
-                  check=True,
-              )
-              Path('/tmp/aura-codemap-change-class.txt').write_text(
-                  'VOLATILE_ONLY\n', encoding='utf-8'
-              )
-          else:
-              Path('/tmp/aura-codemap-change-class.txt').write_text(
-                  'MEANINGFUL\n', encoding='utf-8'
-              )
-          PY
-          if [ "$(cat /tmp/aura-codemap-change-class.txt)" = "MEANINGFUL" ]; then
-            python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
-          else
-            test "$comparison_status" -eq 0
-          fi
-          python scripts/aura_source_anchor_map.py --root . --check
-          test -s .aura/CODEMAP.json
-          test -s .aura/CODEMAP.md
-          test -s .aura/SOURCE_ANCHORS.md
-          test -s topology_map.json
-          test -s Aura_Memory/live_topology_ast.json
-          git diff --check
-      - name: Commit synchronized navigation artifacts
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
-        run: |
-          set -o pipefail
-          {
-            set -x
-            git config user.name "AuraOS CODEMAP Bot"
-            git config user.email "actions@users.noreply.github.com"
-            git status --short
-            git add \
-              .aura/CODEMAP.json \
-              .aura/CODEMAP.md \
-              .aura/SOURCE_ANCHORS.md \
-              topology_map.json
-            git add -f Aura_Memory/live_topology_ast.json
-            git diff --cached --stat
-            if git diff --cached --quiet; then
-              exit 0
-            fi
-            git commit -m "docs: synchronize CODEMAP topology and source anchors"
-            AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-            git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-              push origin HEAD:"${TARGET_BRANCH}"
-            unset AUTH_HEADER
-          } 2>&1 | tee codemap-push.log
-      - name: Upload synchronized maps and push diagnostics
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: synchronized-codemap-${{ github.event.pull_request.head.sha || github.sha }}
-          path: |
-            .aura/CODEMAP.json
-            .aura/CODEMAP.md
-            .aura/SOURCE_ANCHORS.md
-            topology_map.json
-            Aura_Memory/live_topology_ast.json
-            codemap-push.log
-            /tmp/aura-codemap-comparison.json
-            /tmp/aura-codemap-change-class.txt
-          if-no-files-found: error
-          retention-days: 14
+      - run: |
+          echo "STACK_SAFETY_HOLD: automated CODEMAP mutation disabled"
+          echo "Rebase canonical owner onto hardened CODEMAP V2 before integration."
