@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import sys
 from pathlib import Path
 
 
@@ -9,6 +10,7 @@ MODULE_PATH = Path(__file__).resolve().parents[1] / "scripts" / "aura_blind_gate
 _spec = importlib.util.spec_from_file_location("aura_blind_gate10_benchmark", MODULE_PATH)
 assert _spec and _spec.loader
 bench = importlib.util.module_from_spec(_spec)
+sys.modules[_spec.name] = bench
 _spec.loader.exec_module(bench)
 
 
