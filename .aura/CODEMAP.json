@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788109141,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -132,6 +132,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf00.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1631,6 +1632,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/aura_adoption_bootstrap.py",
+      "tools/aura_adopt/test_aura_adoption_bootstrap.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26431721,
+      "tokens_est": 6598282,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3895,6 +3898,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 108,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#function:_canonical:126d3e6d59bb6abd",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -4337,6 +4348,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "function",
+        "line": 111,
+        "end_line": 112,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#function:_digest:8c1d981f1b514959",
+        "signature_hash": "d4a8cba568e54ac5"
       }
     ],
     "_token_proxy": [
@@ -27449,6 +27468,14 @@
         "end_line": 363,
         "semantic_id": "aura_model_cognome.py#class:RouteDecision:d26c6cc738041af5",
         "signature_hash": "2f7b1f26be2473f0"
+      },
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "class",
+        "line": 88,
+        "end_line": 104,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#class:RouteDecision:7fba85a78315b16d",
+        "signature_hash": "2f7b1f26be2473f0"
       }
     ],
     "RouteDecision.to_dict": [
@@ -27474,6 +27501,14 @@
         "line": 362,
         "end_line": 363,
         "semantic_id": "aura_model_cognome.py#method:RouteDecision.to_dict:2a631e4c90560c36",
+        "signature_hash": "5c1a69a9659e2089"
+      },
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 104,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#method:RouteDecision.to_dict:42019348efd3f434",
         "signature_hash": "5c1a69a9659e2089"
       }
     ],
@@ -157181,6 +157216,226 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "AdoptionRoute": [
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 29,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#class:AdoptionRoute:8a877e02120679cc",
+        "signature_hash": "3900c30affdadcd9"
+      }
+    ],
+    "CompileError": [
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#class:CompileError:489f0163ec277fb5",
+        "signature_hash": "9b78667f8da90a12"
+      }
+    ],
+    "HostWitness": [
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 57,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#class:HostWitness:7008707340b5feea",
+        "signature_hash": "c202972f4e2c78f8"
+      }
+    ],
+    "HostWitness.__post_init__": [
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 57,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#method:HostWitness.__post_init__:cf18da93cb144cbb",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "FirstTask": [
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 76,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#class:FirstTask:1147d67d36e6bcb9",
+        "signature_hash": "b0db0f1054277c67"
+      }
+    ],
+    "FirstTask.__post_init__": [
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 76,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#method:FirstTask.__post_init__:8cb7ea86c32129f2",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EntryPreference": [
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 84,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#class:EntryPreference:7e9a80fd9aaba79c",
+        "signature_hash": "a333212d0baecc55"
+      }
+    ],
+    "_storage_sufficient": [
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 118,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#function:_storage_sufficient:6d35c67b5c81d2da",
+        "signature_hash": "1327a04b64f6b5be"
+      }
+    ],
+    "_missing_permissions": [
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 122,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#function:_missing_permissions:0e68a8ca7ca86131",
+        "signature_hash": "6737e34bba78b1f9"
+      }
+    ],
+    "compile_entry_route": [
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "function",
+        "line": 125,
+        "end_line": 229,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#function:compile_entry_route:8d68670f648b76d6",
+        "signature_hash": "cf9d4487ce42b5c1"
+      }
+    ],
+    "friction_receipt": [
+      {
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "kind": "function",
+        "line": 232,
+        "end_line": 261,
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#function:friction_receipt:85d01672c4e60b5d",
+        "signature_hash": "5c760e342a873ce2"
+      }
+    ],
+    "AdoptionBootstrapTests": [
+      {
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 178,
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#class:AdoptionBootstrapTests:25a7ef480337712b",
+        "signature_hash": "9b9c51744b675c43"
+      }
+    ],
+    "AdoptionBootstrapTests.creator_task": [
+      {
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 22,
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.creator_task:520912838bd009a2",
+        "signature_hash": "8962711a87cce50f"
+      }
+    ],
+    "AdoptionBootstrapTests.test_low_storage_phone_gets_zero_install_web_without_key": [
+      {
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 38,
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_low_storage_phone_gets_zero_install_web_without_key:5c1d417b92c9e6bc",
+        "signature_hash": "70c944dd7870db35"
+      }
+    ],
+    "AdoptionBootstrapTests.test_native_required_android_requests_install_and_only_needed_permission": [
+      {
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 62,
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_native_required_android_requests_install_and_only_needed_permission:4a9d3cbee89b89a0",
+        "signature_hash": "eae5a8b8f17f6596"
+      }
+    ],
+    "AdoptionBootstrapTests.test_developer_explicitly_gets_github_cli": [
+      {
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 76,
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_developer_explicitly_gets_github_cli:4ff8942e68fe8f79",
+        "signature_hash": "5e5d61e296342e9c"
+      }
+    ],
+    "AdoptionBootstrapTests.test_local_model_avoids_key_when_browser_cannot_satisfy": [
+      {
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 97,
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_local_model_avoids_key_when_browser_cannot_satisfy:86fbecd277f45e9b",
+        "signature_hash": "df0b530614b6b881"
+      }
+    ],
+    "AdoptionBootstrapTests.test_offline_missing_model_fails_degraded_not_fake_ready": [
+      {
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 118,
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_offline_missing_model_fails_degraded_not_fake_ready:f4e26ab196d0a78c",
+        "signature_hash": "4417d89af2161b34"
+      }
+    ],
+    "AdoptionBootstrapTests.test_permission_is_not_requested_for_browser_route": [
+      {
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 137,
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_permission_is_not_requested_for_browser_route:f4f6c5566ea26bc0",
+        "signature_hash": "ab169abf5cff4c4f"
+      }
+    ],
+    "AdoptionBootstrapTests.test_unknown_metrics_remain_unknown": [
+      {
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 151,
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_unknown_metrics_remain_unknown:0fce80536663c2e7",
+        "signature_hash": "be8e1a34c1df1345"
+      }
+    ],
+    "AdoptionBootstrapTests.test_receipt_rejects_secret_values": [
+      {
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 164,
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_receipt_rejects_secret_values:6629dbdfcf9ab9fd",
+        "signature_hash": "2332d77cbccce38e"
+      }
+    ],
+    "AdoptionBootstrapTests.test_receipt_is_nonexecuting": [
+      {
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 178,
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_receipt_is_nonexecuting:2f889e77046047c7",
+        "signature_hash": "8cafa6ca2e752604"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -167495,6 +167750,53 @@
         0.180531,
         0.255844,
         0.26249
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-adopt-zf00.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 732,
+      "lines": 26,
+      "tokens_est": 183,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a815e495ab076c08",
+      "vector": [
+        -0.251932,
+        -0.027412,
+        0.217993,
+        -0.139672,
+        -0.217993,
+        -0.032634,
+        -0.032634,
+        -0.152725,
+        -0.129229,
+        -0.285871,
+        -0.003916,
+        0.139672,
+        0.097901,
+        0.16839,
+        -0.32242,
+        -0.061351,
+        -0.293703,
+        -0.113565,
+        -0.074405,
+        0.097901,
+        -0.31981,
+        0.139672,
+        -0.278039,
+        -0.084847,
+        -0.184054,
+        0.110954,
+        0.16839,
+        0.058741,
+        0.113565,
+        0.301535,
+        0.16839,
+        0.037855
       ]
     },
     {
@@ -262648,6 +262950,100 @@
       ]
     },
     {
+      "path": "tools/aura_adopt/aura_adoption_bootstrap.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9587,
+      "lines": 262,
+      "tokens_est": 2397,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "71fae68cc9ea429b",
+      "vector": [
+        0.045822,
+        -0.037967,
+        0.278859,
+        0.137466,
+        0.009164,
+        0.04844,
+        0.297188,
+        -0.126992,
+        0.121755,
+        -0.291951,
+        -0.092953,
+        -0.077243,
+        0.030112,
+        0.181978,
+        -0.318135,
+        -0.056295,
+        0.040585,
+        -0.305043,
+        -0.197689,
+        0.100808,
+        -0.278859,
+        0.024875,
+        -0.011783,
+        -0.045822,
+        -0.027493,
+        -0.223873,
+        0.17936,
+        -0.299806,
+        -0.051059,
+        -0.231728,
+        0.26053,
+        -0.134847
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6354,
+      "lines": 183,
+      "tokens_est": 1589,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "04ba8c2d0de3e646",
+      "vector": [
+        -0.157017,
+        -0.074376,
+        0.128683,
+        -0.055487,
+        -0.050765,
+        -0.038959,
+        0.213685,
+        0.180629,
+        -0.109794,
+        -0.159378,
+        0.267991,
+        -0.02007,
+        -0.272714,
+        -0.057848,
+        0.272714,
+        0.012986,
+        0.253825,
+        -0.201879,
+        0.199518,
+        -0.062571,
+        -0.301048,
+        0.043681,
+        -0.069654,
+        0.279797,
+        -0.239658,
+        -0.157017,
+        -0.003542,
+        0.289242,
+        0.076738,
+        0.001181,
+        -0.220768,
+        0.246741
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -286646,16 +287042,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26431721,
+    "text_tokens_est": 6598282,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286797,6 +287193,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf00.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -288296,6 +288693,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/aura_adoption_bootstrap.py",
+      "tools/aura_adopt/test_aura_adoption_bootstrap.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445634,6 +446033,266 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#class:AdoptionRoute:8a877e02120679cc",
+        "name": "AdoptionRoute",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 21,
+        "end_line": 29,
+        "signature_hash": "3900c30affdadcd9",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#class:CompileError:489f0163ec277fb5",
+        "name": "CompileError",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "9b78667f8da90a12",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#class:EntryPreference:7e9a80fd9aaba79c",
+        "name": "EntryPreference",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 80,
+        "end_line": 84,
+        "signature_hash": "a333212d0baecc55",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#class:FirstTask:1147d67d36e6bcb9",
+        "name": "FirstTask",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 61,
+        "end_line": 76,
+        "signature_hash": "b0db0f1054277c67",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#class:HostWitness:7008707340b5feea",
+        "name": "HostWitness",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 37,
+        "end_line": 57,
+        "signature_hash": "c202972f4e2c78f8",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#class:RouteDecision:7fba85a78315b16d",
+        "name": "RouteDecision",
+        "kind": "class",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 88,
+        "end_line": 104,
+        "signature_hash": "2f7b1f26be2473f0",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#function:_canonical:126d3e6d59bb6abd",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 107,
+        "end_line": 108,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#function:_digest:8c1d981f1b514959",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 111,
+        "end_line": 112,
+        "signature_hash": "d4a8cba568e54ac5",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#function:_missing_permissions:0e68a8ca7ca86131",
+        "name": "_missing_permissions",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 121,
+        "end_line": 122,
+        "signature_hash": "6737e34bba78b1f9",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#function:_storage_sufficient:6d35c67b5c81d2da",
+        "name": "_storage_sufficient",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 115,
+        "end_line": 118,
+        "signature_hash": "1327a04b64f6b5be",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#function:compile_entry_route:8d68670f648b76d6",
+        "name": "compile_entry_route",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 125,
+        "end_line": 229,
+        "signature_hash": "cf9d4487ce42b5c1",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#function:friction_receipt:85d01672c4e60b5d",
+        "name": "friction_receipt",
+        "kind": "function",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 232,
+        "end_line": 261,
+        "signature_hash": "5c760e342a873ce2",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#method:FirstTask.__post_init__:8cb7ea86c32129f2",
+        "name": "FirstTask.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 72,
+        "end_line": 76,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#method:HostWitness.__post_init__:cf18da93cb144cbb",
+        "name": "HostWitness.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 53,
+        "end_line": 57,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/aura_adoption_bootstrap.py#method:RouteDecision.to_dict:42019348efd3f434",
+        "name": "RouteDecision.to_dict",
+        "kind": "method",
+        "file": "tools/aura_adopt/aura_adoption_bootstrap.py",
+        "line": 101,
+        "end_line": 104,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "71fae68cc9ea429b"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#class:AdoptionBootstrapTests:25a7ef480337712b",
+        "name": "AdoptionBootstrapTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "line": 14,
+        "end_line": 178,
+        "signature_hash": "9b9c51744b675c43",
+        "file_digest8": "04ba8c2d0de3e646"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.creator_task:520912838bd009a2",
+        "name": "AdoptionBootstrapTests.creator_task",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "line": 15,
+        "end_line": 22,
+        "signature_hash": "8962711a87cce50f",
+        "file_digest8": "04ba8c2d0de3e646"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_developer_explicitly_gets_github_cli:4ff8942e68fe8f79",
+        "name": "AdoptionBootstrapTests.test_developer_explicitly_gets_github_cli",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "line": 64,
+        "end_line": 76,
+        "signature_hash": "5e5d61e296342e9c",
+        "file_digest8": "04ba8c2d0de3e646"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_local_model_avoids_key_when_browser_cannot_satisfy:86fbecd277f45e9b",
+        "name": "AdoptionBootstrapTests.test_local_model_avoids_key_when_browser_cannot_satisfy",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "line": 78,
+        "end_line": 97,
+        "signature_hash": "df0b530614b6b881",
+        "file_digest8": "04ba8c2d0de3e646"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_low_storage_phone_gets_zero_install_web_without_key:5c1d417b92c9e6bc",
+        "name": "AdoptionBootstrapTests.test_low_storage_phone_gets_zero_install_web_without_key",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "line": 24,
+        "end_line": 38,
+        "signature_hash": "70c944dd7870db35",
+        "file_digest8": "04ba8c2d0de3e646"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_native_required_android_requests_install_and_only_needed_permission:4a9d3cbee89b89a0",
+        "name": "AdoptionBootstrapTests.test_native_required_android_requests_install_and_only_needed_permission",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "line": 40,
+        "end_line": 62,
+        "signature_hash": "eae5a8b8f17f6596",
+        "file_digest8": "04ba8c2d0de3e646"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_offline_missing_model_fails_degraded_not_fake_ready:f4e26ab196d0a78c",
+        "name": "AdoptionBootstrapTests.test_offline_missing_model_fails_degraded_not_fake_ready",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "line": 99,
+        "end_line": 118,
+        "signature_hash": "4417d89af2161b34",
+        "file_digest8": "04ba8c2d0de3e646"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_permission_is_not_requested_for_browser_route:f4f6c5566ea26bc0",
+        "name": "AdoptionBootstrapTests.test_permission_is_not_requested_for_browser_route",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "line": 120,
+        "end_line": 137,
+        "signature_hash": "ab169abf5cff4c4f",
+        "file_digest8": "04ba8c2d0de3e646"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_receipt_is_nonexecuting:2f889e77046047c7",
+        "name": "AdoptionBootstrapTests.test_receipt_is_nonexecuting",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "line": 166,
+        "end_line": 178,
+        "signature_hash": "8cafa6ca2e752604",
+        "file_digest8": "04ba8c2d0de3e646"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_receipt_rejects_secret_values:6629dbdfcf9ab9fd",
+        "name": "AdoptionBootstrapTests.test_receipt_rejects_secret_values",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "line": 153,
+        "end_line": 164,
+        "signature_hash": "2332d77cbccce38e",
+        "file_digest8": "04ba8c2d0de3e646"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_aura_adoption_bootstrap.py#method:AdoptionBootstrapTests.test_unknown_metrics_remain_unknown:0fce80536663c2e7",
+        "name": "AdoptionBootstrapTests.test_unknown_metrics_remain_unknown",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_aura_adoption_bootstrap.py",
+        "line": 139,
+        "end_line": 151,
+        "signature_hash": "be8e1a34c1df1345",
+        "file_digest8": "04ba8c2d0de3e646"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447543,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "62340ddad74441dd12aa1c62dfa5df15",
+    "payload_hash": "265e1aec7bc3b8a5ccc86c788989931e"
   }
 }
