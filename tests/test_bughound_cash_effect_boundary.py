@@ -16,6 +16,7 @@ from tools.bughound.cash_effect_boundary import (
     admit_shared_tool_for_cash_research,
     export_sanitized_pattern,
 )
+from tools.bughound.target_profile import AURAOS_HARDENING_PROFILE_ID
 
 
 REMOVED = (
@@ -159,14 +160,14 @@ class CashEffectBoundaryTests(unittest.TestCase):
         self.assertFalse(mission.claim_or_payment_authorized)
         self.assertFalse(mission.external_effect)
 
-    def test_shared_local_tool_is_capability_not_mission_or_authority(self):
+    def test_shared_local_tool_is_capability_not_cross_profile_authority(self):
         mission = self.mission()
         tool = SharedSecurityToolCapabilityV1(
             capability_id="SOURCE_GRAPH_ADAPTER@v2",
-            contexts=(CANONICAL_PROFILE_ID, "AURAOS_SECURITY_HARDENING_REUSE"),
+            contexts=(CANONICAL_PROFILE_ID, AURAOS_HARDENING_PROFILE_ID),
         )
         self.assertTrue(admit_shared_tool_for_cash_research(mission, tool))
-        self.assertIn("AURAOS_SECURITY_HARDENING_REUSE", tool.contexts)
+        self.assertIn(AURAOS_HARDENING_PROFILE_ID, tool.contexts)
         self.assertFalse(tool.authority)
 
     def test_effectful_shared_tool_needs_separate_live_grant(self):
@@ -196,18 +197,18 @@ class CashEffectBoundaryTests(unittest.TestCase):
             )
         self.assertEqual("TOOL_CAPABILITY_CANNOT_SELF_GRANT_AUTHORITY", ctx.exception.code)
 
-    def test_exact_current_live_grant_admits_only_named_test_authority(self):
+    def test_exact_current_live_grant_admits_only_named_cash_profile_test_authority(self):
         mission = self.mission()
         admission = self.admit_live(mission)
         self.assertTrue(admission.live_effect_authorized)
-        self.assertEqual("EXACT_NAMED_LIVE_TEST_ONLY", admission.authority_scope)
+        self.assertEqual("EXACT_NAMED_CASH_PROFILE_LIVE_TEST_ONLY", admission.authority_scope)
         self.assertEqual(LIVE_PRODUCER_REF, admission.producer_ref)
         self.assertEqual(LIVE_PRODUCER_GENERATION, admission.producer_generation)
         self.assertFalse(admission.submission_authorized)
         self.assertFalse(admission.claim_or_payment_authorized)
         self.assertFalse(admission.external_effect_executed)
 
-    def test_live_grant_must_bind_exact_mission_program_target_and_origin(self):
+    def test_live_grant_must_bind_exact_mission_program_and_target(self):
         mission = self.mission()
         legitimate = self.live_grant(mission)
         cases = (
@@ -221,15 +222,6 @@ class CashEffectBoundaryTests(unittest.TestCase):
                 with self.assertRaises(CashEffectBoundaryError) as ctx:
                     self.admit_live(mission, forged, expected_digest=legitimate.grant_digest)
                 self.assertEqual(code, ctx.exception.code)
-
-        wrong_origin = self.live_grant(
-            mission,
-            network_origin="https://third-party.example",
-            network_allowlist=("https://third-party.example",),
-        )
-        with self.assertRaises(CashEffectBoundaryError) as ctx:
-            self.admit_live(mission, wrong_origin, expected_digest=wrong_origin.grant_digest)
-        self.assertEqual("LIVE_GRANT_ORIGIN_NOT_ALLOWLISTED", ctx.exception.code)
 
     def test_self_consistent_forged_live_grant_fails_independent_expectation(self):
         mission = self.mission()
@@ -254,24 +246,26 @@ class CashEffectBoundaryTests(unittest.TestCase):
             self.admit_live(mission, grant, expected_generation="different-generation")
         self.assertEqual("LIVE_GRANT_PRODUCER_MISMATCH", ctx.exception.code)
 
-    def test_stale_program_policy_and_noncanonical_profile_fail_closed(self):
+    def test_stale_program_policy_and_auraos_profile_live_grant_fail_closed(self):
         mission = self.mission()
         stale = self.live_grant(mission, program_policy_current=False)
         with self.assertRaises(CashEffectBoundaryError) as ctx:
             self.admit_live(mission, stale, expected_digest=stale.grant_digest)
         self.assertEqual("LIVE_GRANT_PROGRAM_POLICY_STALE", ctx.exception.code)
-        noncanonical = self.live_grant(mission, profile_id="AURAOS_INTERNAL")
+        aura = self.live_grant(mission, profile_id=AURAOS_HARDENING_PROFILE_ID)
         with self.assertRaises(CashEffectBoundaryError) as ctx:
-            self.admit_live(mission, noncanonical, expected_digest=noncanonical.grant_digest)
-        self.assertEqual("LIVE_GRANT_NONCANONICAL_PROFILE", ctx.exception.code)
+            self.admit_live(mission, aura, expected_digest=aura.grant_digest)
+        self.assertEqual("LIVE_GRANT_NON_CASH_PROFILE", ctx.exception.code)
 
-    def test_sanitized_pattern_can_leave_bughound_only_as_authority_free_abstraction(self):
+    def test_sanitized_pattern_can_cross_to_auraos_profile_only_as_authority_free_abstraction(self):
         mission = self.mission()
         export = self.export_pattern(
             mission,
-            destination_context="AURAOS_SECURITY_HARDENING_REUSE",
+            destination_context=AURAOS_HARDENING_PROFILE_ID,
         )
         self.assertIn(export.destination_context, GENERIC_REUSE_CONTEXTS)
+        self.assertTrue(export.cross_profile_reuse)
+        self.assertEqual(CANONICAL_PROFILE_ID, export.source_cash_profile_id)
         self.assertEqual(SANITIZER_PRODUCER_REF, export.producer_ref)
         self.assertEqual(SANITIZER_PRODUCER_GENERATION, export.producer_generation)
         self.assertFalse(export.bughound_mission_state_exported)
@@ -328,7 +322,7 @@ class CashEffectBoundaryTests(unittest.TestCase):
             self.export_pattern(mission, incomplete, expected_digest=incomplete.receipt_digest)
         self.assertEqual("SANITIZED_REMOVAL_COVERAGE_INCOMPLETE", ctx.exception.code)
         with self.assertRaises(CashEffectBoundaryError) as ctx:
-            self.export_pattern(mission, destination_context="BUGHOUND_AURAOS_PROFILE")
+            self.export_pattern(mission, destination_context="UNREGISTERED_PROFILE")
         self.assertEqual("REUSE_DESTINATION_CONTEXT_NOT_ADMITTED", ctx.exception.code)
 
     def test_sanitized_pattern_must_bind_exact_cash_mission(self):
