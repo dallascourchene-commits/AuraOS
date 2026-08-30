@@ -197,6 +197,28 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
                     compile_receipt(capability_refs=(bad,))
                 self.assertEqual("CAPABILITY_REF_NAMESPACE_REQUIRED", ctx.exception.code)
 
+    def test_private_content_rejected_from_serialized_refs_and_cohort_values(self):
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            compile_receipt(capability_refs=("capability:alice@example.com",))
+        self.assertEqual("CAPABILITY_REF_INVALID", ctx.exception.code)
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            compile_receipt(recipe_ref="arena-recipe:alice@example.com")
+        self.assertEqual("RECIPE_REF_REQUIRED", ctx.exception.code)
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            compile_receipt(cohort={"device_class": "alice@example.com"})
+        self.assertEqual("COHORT_VALUE_NOT_PRIVACY_MINIMAL", ctx.exception.code)
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            compile_receipt(cohort={"device_class": "https://example.test/?user=alice"})
+        self.assertEqual("COHORT_VALUE_NOT_PRIVACY_MINIMAL", ctx.exception.code)
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            compile_receipt(build_refs=("https://example.test/?user=alice",))
+        self.assertEqual("BUILD_REF_INVALID", ctx.exception.code)
+
+    def test_recipe_ref_requires_typed_namespace(self):
+        with self.assertRaises(afr.FrictionReceiptError) as ctx:
+            compile_receipt(recipe_ref="recipe:title-card-v1")
+        self.assertEqual("RECIPE_REF_NAMESPACE_REQUIRED", ctx.exception.code)
+
     def test_evidence_commitment_changes_when_consequence_evidence_changes(self):
         first = compile_receipt(observation(
             save_mode=bridge.SaveEvidenceMode.REOPEN_OBSERVED,
@@ -290,7 +312,7 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
         self.assertEqual("SHARE_REUSE_EVIDENCE_REF_REQUIRED", ctx.exception.code)
 
     def test_evidence_refs_reject_whitespace_and_secret_like_values(self):
-        for bad in ("user clicked yes", "sk-abc123", "token=abc"):
+        for bad in ("user clicked yes", "sk-abc123", "token=abc", "evidence:alice@example.com"):
             with self.subTest(bad=bad):
                 with self.assertRaises(afr.FrictionReceiptError):
                     observation(acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT,
