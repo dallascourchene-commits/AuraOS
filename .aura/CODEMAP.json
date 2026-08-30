@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788132108,
+  "generated_at_unix": 1788133551,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1662,
+    "repo_file_count": 1663,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -143,6 +143,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/bughound-seedlab.yml",
+      ".github/workflows/bughound-source-owned-reproduction-registry.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1778,16 +1779,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1662,
-      "bytes": 26592496,
-      "tokens_est": 6638481,
+      "files": 1663,
+      "bytes": 26599926,
+      "tokens_est": 6640339,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1019,
-        "schema_or_lexicon": 272,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -3978,8 +3979,8 @@
       {
         "file": "tools/bughound/registered_reproduction_gate.py",
         "kind": "function",
-        "line": 31,
-        "end_line": 38,
+        "line": 32,
+        "end_line": 39,
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_canonical:b7b5a49e285a9d0f",
         "signature_hash": "707d518dafca1a42"
       },
@@ -4492,8 +4493,8 @@
       {
         "file": "tools/bughound/registered_reproduction_gate.py",
         "kind": "function",
-        "line": 41,
-        "end_line": 42,
+        "line": 42,
+        "end_line": 43,
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_digest:de2555c388bb7d44",
         "signature_hash": "c978f5ef05fda5cb"
       },
@@ -158512,8 +158513,8 @@
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "class",
-        "line": 18,
-        "end_line": 191,
+        "line": 20,
+        "end_line": 234,
         "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#class:RegisteredIndependentReproductionGateTests:e12e135f43671377",
         "signature_hash": "1bde88ff841884da"
       }
@@ -158522,8 +158523,8 @@
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
-        "line": 19,
-        "end_line": 36,
+        "line": 21,
+        "end_line": 38,
         "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.mission:925953bf03b59034",
         "signature_hash": "603f2c16cba2e3b2"
       }
@@ -158532,8 +158533,8 @@
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
-        "line": 38,
-        "end_line": 48,
+        "line": 40,
+        "end_line": 50,
         "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.candidate:3ca5d2de249ce45c",
         "signature_hash": "d9b856f3b0c24fcb"
       }
@@ -158542,8 +158543,8 @@
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
-        "line": 50,
-        "end_line": 62,
+        "line": 52,
+        "end_line": 64,
         "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.repro:56263034b1bec6c8",
         "signature_hash": "bdef2d9a4212ce63"
       }
@@ -158552,210 +158553,190 @@
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
-        "line": 64,
-        "end_line": 82,
+        "line": 66,
+        "end_line": 84,
         "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.record:d6a5c05516e9b2ac",
         "signature_hash": "8942b53db41058c0"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.admit": [
+    "RegisteredIndependentReproductionGateTests.private_admit": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
-        "line": 84,
-        "end_line": 99,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.admit:72479ceeca9a0b53",
-        "signature_hash": "88bc4301a0f2766b"
+        "line": 86,
+        "end_line": 100,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.private_admit:72dd88e597f71e3c",
+        "signature_hash": "0945dba2c46b3569"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.test_registered_path_plumbs_to_candidate_without_effect_authority": [
+    "RegisteredIndependentReproductionGateTests.public_kwargs": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
-        "line": 101,
-        "end_line": 109,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_registered_path_plumbs_to_candidate_without_effect_authority:59fc2288edd3fcc3",
-        "signature_hash": "ca3a77f034138824"
+        "line": 102,
+        "end_line": 113,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.public_kwargs:eeb3397bfe7e762e",
+        "signature_hash": "42d467c345529695"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.test_default_production_lookup_fails_closed": [
+    "RegisteredIndependentReproductionGateTests.test_private_exact_record_plumbs_without_effect_authority": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
-        "line": 111,
-        "end_line": 121,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_default_production_lookup_fails_closed:69b6d4e33fa946bb",
-        "signature_hash": "20ed537f1e8f9a00"
+        "line": 115,
+        "end_line": 123,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_private_exact_record_plumbs_without_effect_authority:9010a68a89a9986d",
+        "signature_hash": "8d03003a84b21b49"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.test_public_signature_has_no_expected_reproduction_parameters": [
+    "RegisteredIndependentReproductionGateTests.test_production_registry_is_source_owned_empty_hold": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
-        "line": 123,
-        "end_line": 127,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_public_signature_has_no_expected_reproduction_parameters:9777ce614ff8b0fd",
-        "signature_hash": "71df8bd7fe360d50"
+        "line": 125,
+        "end_line": 133,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_production_registry_is_source_owned_empty_hold:0947bb513eb43c64",
+        "signature_hash": "09b1674a523f5963"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.test_caller_expected_digest_override_is_forbidden": [
+    "RegisteredIndependentReproductionGateTests.test_public_signature_has_no_caller_trust_root": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
-        "line": 129,
-        "end_line": 131,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_caller_expected_digest_override_is_forbidden:3d7029ed4c2e57aa",
-        "signature_hash": "894ac9634b64b1bb"
-      }
-    ],
-    "RegisteredIndependentReproductionGateTests.test_caller_expected_reproducer_override_is_forbidden": [
-      {
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "kind": "method",
-        "line": 133,
-        "end_line": 135,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_caller_expected_reproducer_override_is_forbidden:a0b6a863817ee42b",
-        "signature_hash": "52f3a6b2275702b4"
-      }
-    ],
-    "RegisteredIndependentReproductionGateTests.test_receipt_digest_substitution_fails": [
-      {
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "kind": "method",
-        "line": 137,
-        "end_line": 139,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_receipt_digest_substitution_fails:d56d124b3a6caeda",
-        "signature_hash": "4f5f46bf4d6d873b"
-      }
-    ],
-    "RegisteredIndependentReproductionGateTests.test_reproducer_identity_substitution_fails": [
-      {
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "kind": "method",
-        "line": 141,
-        "end_line": 143,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_reproducer_identity_substitution_fails:7a0b41cc230d786f",
-        "signature_hash": "4f0d765d2d97de92"
-      }
-    ],
-    "RegisteredIndependentReproductionGateTests.test_reproducer_generation_substitution_fails": [
-      {
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "kind": "method",
-        "line": 145,
+        "line": 135,
         "end_line": 147,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_reproducer_generation_substitution_fails:d466822a210e45c9",
-        "signature_hash": "9acc1e60550b1dbb"
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_public_signature_has_no_caller_trust_root:0f54247aed67ba49",
+        "signature_hash": "faca44ab7983342f"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.test_witness_substitution_fails": [
+    "RegisteredIndependentReproductionGateTests.test_caller_registry_lookup_override_is_not_an_api": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
         "line": 149,
-        "end_line": 151,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_witness_substitution_fails:d96ab134645355c7",
-        "signature_hash": "eec97b7134c6f5ad"
+        "end_line": 153,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_caller_registry_lookup_override_is_not_an_api:d605f8b7bd68c71f",
+        "signature_hash": "7a214c64796f7fdb"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.test_environment_substitution_fails": [
+    "RegisteredIndependentReproductionGateTests.test_caller_record_override_is_not_an_api": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
-        "line": 153,
-        "end_line": 155,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_environment_substitution_fails:56eb8d35547eff55",
-        "signature_hash": "b390c23f33ff47d0"
-      }
-    ],
-    "RegisteredIndependentReproductionGateTests.test_scope_substitution_fails": [
-      {
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "kind": "method",
-        "line": 157,
+        "line": 155,
         "end_line": 159,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_scope_substitution_fails:1c7f080a11b0b908",
-        "signature_hash": "36bdad72cedc5540"
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_caller_record_override_is_not_an_api:974003bc67288fb3",
+        "signature_hash": "da0216b9f5c7ae05"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.test_source_currentness_substitution_fails": [
+    "RegisteredIndependentReproductionGateTests.test_caller_expected_fields_are_not_an_api": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
         "line": 161,
-        "end_line": 163,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_source_currentness_substitution_fails:58bdc8d77851bafb",
-        "signature_hash": "3f5b475e6a0c2aa6"
-      }
-    ],
-    "RegisteredIndependentReproductionGateTests.test_stale_registry_fails": [
-      {
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "kind": "method",
-        "line": 165,
-        "end_line": 167,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_stale_registry_fails:3b2f4cb9d155e63c",
-        "signature_hash": "58db66996dc1cd25"
-      }
-    ],
-    "RegisteredIndependentReproductionGateTests.test_nonindependent_observer_fails": [
-      {
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "kind": "method",
-        "line": 169,
         "end_line": 171,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_nonindependent_observer_fails:b1b22a905621b46f",
-        "signature_hash": "2005d560012ea67a"
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_caller_expected_fields_are_not_an_api:77c6ed598a3fa039",
+        "signature_hash": "4080c4cbae8b37ea"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.test_revoked_record_fails": [
+    "RegisteredIndependentReproductionGateTests.test_receipt_digest_substitution_fails_privately": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
         "line": 173,
         "end_line": 175,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_revoked_record_fails:a97949c447be9996",
-        "signature_hash": "14b5067ccb197079"
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_receipt_digest_substitution_fails_privately:2f27ccf4de8deb09",
+        "signature_hash": "e55780001af85377"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.test_registry_external_effect_widening_fails": [
+    "RegisteredIndependentReproductionGateTests.test_reproducer_identity_substitution_fails_privately": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
         "line": 177,
         "end_line": 179,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_registry_external_effect_widening_fails:50f3c4ab816fa7a1",
-        "signature_hash": "a80db628f9e9520a"
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_reproducer_identity_substitution_fails_privately:ea37ee0e11ee38c7",
+        "signature_hash": "1f102e910b1fbf42"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.test_reproduction_external_effect_fails_before_registry": [
+    "RegisteredIndependentReproductionGateTests.test_reproducer_generation_substitution_fails_privately": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
         "line": 181,
-        "end_line": 184,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_reproduction_external_effect_fails_before_registry:1d013d36422d2693",
-        "signature_hash": "ccad8da7a36a7f5c"
+        "end_line": 183,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_reproducer_generation_substitution_fails_privately:ff17ecf885e7ec08",
+        "signature_hash": "1ebc13bb965521b6"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.test_target_substitution_fails": [
+    "RegisteredIndependentReproductionGateTests.test_witness_and_environment_substitution_fail_privately": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
-        "line": 186,
-        "end_line": 188,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_target_substitution_fails:15a079d5667abfbd",
-        "signature_hash": "beb5b36087128905"
+        "line": 185,
+        "end_line": 189,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_witness_and_environment_substitution_fail_privately:51190f59c7db9137",
+        "signature_hash": "49a61f2c30d1dc78"
       }
     ],
-    "RegisteredIndependentReproductionGateTests.test_output_digest_is_deterministic": [
+    "RegisteredIndependentReproductionGateTests.test_scope_and_source_currentness_substitution_fail_privately": [
       {
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "kind": "method",
-        "line": 190,
-        "end_line": 191,
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_output_digest_is_deterministic:55b4a5aae76eaade",
-        "signature_hash": "7faba9b98ee27654"
+        "line": 191,
+        "end_line": 195,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_scope_and_source_currentness_substitution_fail_privately:1e052ef953b8be99",
+        "signature_hash": "4b211a346d197fe5"
+      }
+    ],
+    "RegisteredIndependentReproductionGateTests.test_stale_nonindependent_or_revoked_record_fails_privately": [
+      {
+        "file": "tests/test_bughound_registered_reproduction_gate.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 206,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_stale_nonindependent_or_revoked_record_fails_privately:db92035daed4f0c7",
+        "signature_hash": "2aced43729fd042e"
+      }
+    ],
+    "RegisteredIndependentReproductionGateTests.test_registry_effect_or_authority_widening_fails_privately": [
+      {
+        "file": "tests/test_bughound_registered_reproduction_gate.py",
+        "kind": "method",
+        "line": 208,
+        "end_line": 218,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_registry_effect_or_authority_widening_fails_privately:1f21c21324584432",
+        "signature_hash": "311b761160c953f9"
+      }
+    ],
+    "RegisteredIndependentReproductionGateTests.test_reproduction_external_effect_fails_public_before_registry": [
+      {
+        "file": "tests/test_bughound_registered_reproduction_gate.py",
+        "kind": "method",
+        "line": 220,
+        "end_line": 224,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_reproduction_external_effect_fails_public_before_registry:f86024a1ea5213ab",
+        "signature_hash": "69f1887e4c7c1cdf"
+      }
+    ],
+    "RegisteredIndependentReproductionGateTests.test_target_substitution_fails_privately": [
+      {
+        "file": "tests/test_bughound_registered_reproduction_gate.py",
+        "kind": "method",
+        "line": 226,
+        "end_line": 228,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_target_substitution_fails_privately:0cff2cf899c4cebe",
+        "signature_hash": "6643f6b85a2d5c6f"
+      }
+    ],
+    "RegisteredIndependentReproductionGateTests.test_private_fixture_output_digest_is_deterministic": [
+      {
+        "file": "tests/test_bughound_registered_reproduction_gate.py",
+        "kind": "method",
+        "line": 230,
+        "end_line": 234,
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_private_fixture_output_digest_is_deterministic:b056812232f9b260",
+        "signature_hash": "e29afea4faea1e32"
       }
     ],
     "BugHoundSeedLabTests": [
@@ -159882,8 +159863,8 @@
       {
         "file": "tools/bughound/registered_reproduction_gate.py",
         "kind": "class",
-        "line": 46,
-        "end_line": 72,
+        "line": 47,
+        "end_line": 73,
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#class:BugHoundIndependentReproductionRegistryRecordV1:76a6d1cbe871e4b6",
         "signature_hash": "8c84c2cf440e3e1b"
       }
@@ -159892,18 +159873,38 @@
       {
         "file": "tools/bughound/registered_reproduction_gate.py",
         "kind": "method",
-        "line": 71,
-        "end_line": 72,
+        "line": 72,
+        "end_line": 73,
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#method:BugHoundIndependentReproductionRegistryRecordV1.record_digest:ba31a58f492f763f",
         "signature_hash": "1e6da455d09b03f6"
+      }
+    ],
+    "BugHoundIndependentReproductionRegistryReceiptV2": [
+      {
+        "file": "tools/bughound/registered_reproduction_gate.py",
+        "kind": "class",
+        "line": 84,
+        "end_line": 94,
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#class:BugHoundIndependentReproductionRegistryReceiptV2:25b3d4b90d8975c9",
+        "signature_hash": "e44a7cbd24a9964f"
+      }
+    ],
+    "BugHoundIndependentReproductionRegistryReceiptV2.registry_digest": [
+      {
+        "file": "tools/bughound/registered_reproduction_gate.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 94,
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#method:BugHoundIndependentReproductionRegistryReceiptV2.registry_digest:89d38401b2048a9a",
+        "signature_hash": "c4b77aeb00b00c2c"
       }
     ],
     "BugHoundRegisteredIndependentReproductionAdmissionV1": [
       {
         "file": "tools/bughound/registered_reproduction_gate.py",
         "kind": "class",
-        "line": 76,
-        "end_line": 98,
+        "line": 98,
+        "end_line": 120,
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#class:BugHoundRegisteredIndependentReproductionAdmissionV1:d7bd4b1dcfc5004d",
         "signature_hash": "eb14e251c1211f95"
       }
@@ -159912,28 +159913,28 @@
       {
         "file": "tools/bughound/registered_reproduction_gate.py",
         "kind": "method",
-        "line": 94,
-        "end_line": 98,
+        "line": 116,
+        "end_line": 120,
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#method:BugHoundRegisteredIndependentReproductionAdmissionV1.receipt_digest:59631070bf540593",
         "signature_hash": "1a6a05eb2610184a"
       }
     ],
-    "_production_registry_unavailable": [
+    "independent_reproduction_registry_receipt": [
       {
         "file": "tools/bughound/registered_reproduction_gate.py",
         "kind": "function",
-        "line": 107,
-        "end_line": 110,
-        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_production_registry_unavailable:eed671834a17128d",
-        "signature_hash": "c5e2714af55060a6"
+        "line": 123,
+        "end_line": 138,
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:independent_reproduction_registry_receipt:f2f10cef0397353c",
+        "signature_hash": "992a2d9730ab5127"
       }
     ],
     "_require_false": [
       {
         "file": "tools/bughound/registered_reproduction_gate.py",
         "kind": "function",
-        "line": 113,
-        "end_line": 115,
+        "line": 141,
+        "end_line": 143,
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_require_false:b0caa04378fd2b5a",
         "signature_hash": "59ab18e2db866f15"
       }
@@ -159942,20 +159943,50 @@
       {
         "file": "tools/bughound/registered_reproduction_gate.py",
         "kind": "function",
-        "line": 118,
-        "end_line": 170,
+        "line": 146,
+        "end_line": 200,
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_verify_registry_record:bcc788ab79eb3d72",
         "signature_hash": "217bdc5a7ec651fd"
+      }
+    ],
+    "_resolve_from_records": [
+      {
+        "file": "tools/bughound/registered_reproduction_gate.py",
+        "kind": "function",
+        "line": 203,
+        "end_line": 222,
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_resolve_from_records:e2ad11adf95e6bac",
+        "signature_hash": "cc3a721240df2612"
+      }
+    ],
+    "_compose_registered_independent_reproduction": [
+      {
+        "file": "tools/bughound/registered_reproduction_gate.py",
+        "kind": "function",
+        "line": 225,
+        "end_line": 276,
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_compose_registered_independent_reproduction:b957d7f28887cc50",
+        "signature_hash": "9ab37df7c6311eb7"
       }
     ],
     "admit_with_registered_independent_reproduction": [
       {
         "file": "tools/bughound/registered_reproduction_gate.py",
         "kind": "function",
-        "line": 173,
-        "end_line": 250,
-        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:admit_with_registered_independent_reproduction:234341a869a36cec",
-        "signature_hash": "730e2d61c41efdca"
+        "line": 279,
+        "end_line": 316,
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:admit_with_registered_independent_reproduction:7a57d88212a42308",
+        "signature_hash": "45412c68ade7ca68"
+      }
+    ],
+    "registered_reproduction_parameter_names": [
+      {
+        "file": "tools/bughound/registered_reproduction_gate.py",
+        "kind": "function",
+        "line": 319,
+        "end_line": 321,
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:registered_reproduction_parameter_names:6e115e18efc718aa",
+        "signature_hash": "7efa30f69d18c5cb"
       }
     ],
     "BenchmarkError": [
@@ -161396,6 +161427,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/bughound-seedlab.yml",
+      ".github/workflows/bughound-source-owned-reproduction-registry.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -171285,6 +171317,59 @@
         0.072812,
         0.247085,
         0.182628
+      ]
+    },
+    {
+      "path": ".github/workflows/bughound-source-owned-reproduction-registry.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3104,
+      "lines": 79,
+      "tokens_est": 776,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          44
+        ]
+      },
+      "topology": {},
+      "digest8": "838b9eb7a2f99938",
+      "vector": [
+        -0.097806,
+        -0.097806,
+        0.007869,
+        -0.048341,
+        -0.1068,
+        0.145023,
+        -0.136029,
+        -0.142774,
+        0.20573,
+        -0.183246,
+        0.225965,
+        0.277679,
+        -0.268685,
+        -0.118042,
+        0.21922,
+        -0.221469,
+        0.178749,
+        0.037099,
+        0.151768,
+        0.273182,
+        -0.073073,
+        -0.26194,
+        -0.142774,
+        -0.07757,
+        -0.030354,
+        0.212475,
+        -0.223717,
+        -0.165258,
+        0.284424,
+        -0.073073,
+        -0.041596,
+        0.277679
       ]
     },
     {
@@ -265760,47 +265845,47 @@
       "path": "tests/test_bughound_registered_reproduction_gate.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 9159,
-      "lines": 196,
-      "tokens_est": 2290,
-      "symbol_count": 25,
+      "bytes": 10657,
+      "lines": 239,
+      "tokens_est": 2665,
+      "symbol_count": 23,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "4130e392868a7964",
+      "digest8": "3a63adde0e4b7ea8",
       "vector": [
-        -0.124105,
-        0.001098,
-        0.187805,
-        -0.26688,
-        0.277863,
-        0.247111,
-        0.264684,
-        -0.198787,
-        0.121908,
-        -0.012081,
-        0.183412,
-        0.053815,
-        0.016474,
-        -0.034046,
-        0.194394,
-        0.262487,
-        0.060405,
-        -0.176822,
-        0.14607,
-        -0.231736,
-        -0.080174,
-        0.020867,
-        0.047226,
-        0.249308,
-        0.240522,
-        0.113122,
-        0.26688,
-        -0.168036,
-        0.040636,
-        0.077977,
-        0.231736,
-        -0.240522
+        -0.086679,
+        0.1174,
+        0.058152,
+        0.069124,
+        -0.038402,
+        -0.150316,
+        -0.143733,
+        -0.216148,
+        -0.113011,
+        -0.077901,
+        0.231509,
+        0.273202,
+        -0.181038,
+        0.077901,
+        0.025236,
+        0.268814,
+        -0.165677,
+        0.271008,
+        0.139344,
+        -0.170066,
+        0.277591,
+        0.275397,
+        0.084484,
+        -0.075707,
+        0.156899,
+        -0.268814,
+        -0.069124,
+        -0.242481,
+        -0.268814,
+        0.176649,
+        -0.148122,
+        0.139344
       ]
     },
     {
@@ -266700,47 +266785,47 @@
       "path": "tools/bughound/registered_reproduction_gate.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 9930,
-      "lines": 251,
-      "tokens_est": 2483,
-      "symbol_count": 10,
+      "bytes": 12758,
+      "lines": 322,
+      "tokens_est": 3190,
+      "symbol_count": 15,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "ff3dfed964838471",
+      "digest8": "0ad2e6e5f7d48295",
       "vector": [
-        0.286655,
-        -0.223985,
-        0.061509,
-        -0.154353,
-        0.230949,
-        -0.073114,
-        0.198453,
-        -0.25416,
-        -0.140426,
-        -0.026693,
-        -0.015087,
-        0.015087,
-        0.100967,
-        -0.263444,
-        0.098646,
-        -0.223985,
-        -0.293618,
-        -0.265765,
-        0.10561,
-        0.217022,
-        0.033656,
-        -0.237912,
-        0.177564,
-        0.19149,
-        -0.196132,
-        0.073114,
-        -0.040619,
-        -0.261123,
-        0.047582,
-        -0.029014,
-        0.161316,
-        -0.182206
+        -0.280349,
+        -0.227161,
+        0.052081,
+        -0.21608,
+        0.187269,
+        0.056513,
+        -0.200566,
+        -0.118567,
+        -0.007757,
+        -0.227161,
+        -0.255971,
+        0.165107,
+        0.078675,
+        0.10527,
+        -0.247106,
+        -0.142945,
+        -0.149594,
+        -0.204999,
+        0.012189,
+        -0.047648,
+        -0.260404,
+        0.267052,
+        0.096405,
+        -0.052081,
+        -0.191701,
+        -0.229377,
+        0.049865,
+        0.103053,
+        0.231593,
+        0.187269,
+        0.140729,
+        0.236025
       ]
     },
     {
@@ -290836,16 +290921,16 @@
     }
   },
   "summary": {
-    "file_count": 1662,
-    "total_bytes": 26592496,
-    "text_tokens_est": 6638481,
+    "file_count": 1663,
+    "total_bytes": 26599926,
+    "text_tokens_est": 6640339,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1019,
-      "schema_or_lexicon": 272,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -290998,6 +291083,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/bughound-seedlab.yml",
+      ".github/workflows/bughound-source-owned-reproduction-registry.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -450951,250 +451037,230 @@
         "name": "RegisteredIndependentReproductionGateTests",
         "kind": "class",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 18,
-        "end_line": 191,
+        "line": 20,
+        "end_line": 234,
         "signature_hash": "1bde88ff841884da",
-        "file_digest8": "4130e392868a7964"
-      },
-      {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.admit:72479ceeca9a0b53",
-        "name": "RegisteredIndependentReproductionGateTests.admit",
-        "kind": "method",
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 84,
-        "end_line": 99,
-        "signature_hash": "88bc4301a0f2766b",
-        "file_digest8": "4130e392868a7964"
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
         "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.candidate:3ca5d2de249ce45c",
         "name": "RegisteredIndependentReproductionGateTests.candidate",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 38,
-        "end_line": 48,
+        "line": 40,
+        "end_line": 50,
         "signature_hash": "d9b856f3b0c24fcb",
-        "file_digest8": "4130e392868a7964"
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
         "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.mission:925953bf03b59034",
         "name": "RegisteredIndependentReproductionGateTests.mission",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 19,
-        "end_line": 36,
+        "line": 21,
+        "end_line": 38,
         "signature_hash": "603f2c16cba2e3b2",
-        "file_digest8": "4130e392868a7964"
+        "file_digest8": "3a63adde0e4b7ea8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.private_admit:72dd88e597f71e3c",
+        "name": "RegisteredIndependentReproductionGateTests.private_admit",
+        "kind": "method",
+        "file": "tests/test_bughound_registered_reproduction_gate.py",
+        "line": 86,
+        "end_line": 100,
+        "signature_hash": "0945dba2c46b3569",
+        "file_digest8": "3a63adde0e4b7ea8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.public_kwargs:eeb3397bfe7e762e",
+        "name": "RegisteredIndependentReproductionGateTests.public_kwargs",
+        "kind": "method",
+        "file": "tests/test_bughound_registered_reproduction_gate.py",
+        "line": 102,
+        "end_line": 113,
+        "signature_hash": "42d467c345529695",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
         "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.record:d6a5c05516e9b2ac",
         "name": "RegisteredIndependentReproductionGateTests.record",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 64,
-        "end_line": 82,
+        "line": 66,
+        "end_line": 84,
         "signature_hash": "8942b53db41058c0",
-        "file_digest8": "4130e392868a7964"
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
         "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.repro:56263034b1bec6c8",
         "name": "RegisteredIndependentReproductionGateTests.repro",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 50,
-        "end_line": 62,
+        "line": 52,
+        "end_line": 64,
         "signature_hash": "bdef2d9a4212ce63",
-        "file_digest8": "4130e392868a7964"
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_caller_expected_digest_override_is_forbidden:3d7029ed4c2e57aa",
-        "name": "RegisteredIndependentReproductionGateTests.test_caller_expected_digest_override_is_forbidden",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_caller_expected_fields_are_not_an_api:77c6ed598a3fa039",
+        "name": "RegisteredIndependentReproductionGateTests.test_caller_expected_fields_are_not_an_api",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 129,
-        "end_line": 131,
-        "signature_hash": "894ac9634b64b1bb",
-        "file_digest8": "4130e392868a7964"
-      },
-      {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_caller_expected_reproducer_override_is_forbidden:a0b6a863817ee42b",
-        "name": "RegisteredIndependentReproductionGateTests.test_caller_expected_reproducer_override_is_forbidden",
-        "kind": "method",
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 133,
-        "end_line": 135,
-        "signature_hash": "52f3a6b2275702b4",
-        "file_digest8": "4130e392868a7964"
-      },
-      {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_default_production_lookup_fails_closed:69b6d4e33fa946bb",
-        "name": "RegisteredIndependentReproductionGateTests.test_default_production_lookup_fails_closed",
-        "kind": "method",
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 111,
-        "end_line": 121,
-        "signature_hash": "20ed537f1e8f9a00",
-        "file_digest8": "4130e392868a7964"
-      },
-      {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_environment_substitution_fails:56eb8d35547eff55",
-        "name": "RegisteredIndependentReproductionGateTests.test_environment_substitution_fails",
-        "kind": "method",
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 153,
-        "end_line": 155,
-        "signature_hash": "b390c23f33ff47d0",
-        "file_digest8": "4130e392868a7964"
-      },
-      {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_nonindependent_observer_fails:b1b22a905621b46f",
-        "name": "RegisteredIndependentReproductionGateTests.test_nonindependent_observer_fails",
-        "kind": "method",
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 169,
+        "line": 161,
         "end_line": 171,
-        "signature_hash": "2005d560012ea67a",
-        "file_digest8": "4130e392868a7964"
+        "signature_hash": "4080c4cbae8b37ea",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_output_digest_is_deterministic:55b4a5aae76eaade",
-        "name": "RegisteredIndependentReproductionGateTests.test_output_digest_is_deterministic",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_caller_record_override_is_not_an_api:974003bc67288fb3",
+        "name": "RegisteredIndependentReproductionGateTests.test_caller_record_override_is_not_an_api",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 190,
-        "end_line": 191,
-        "signature_hash": "7faba9b98ee27654",
-        "file_digest8": "4130e392868a7964"
+        "line": 155,
+        "end_line": 159,
+        "signature_hash": "da0216b9f5c7ae05",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_public_signature_has_no_expected_reproduction_parameters:9777ce614ff8b0fd",
-        "name": "RegisteredIndependentReproductionGateTests.test_public_signature_has_no_expected_reproduction_parameters",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_caller_registry_lookup_override_is_not_an_api:d605f8b7bd68c71f",
+        "name": "RegisteredIndependentReproductionGateTests.test_caller_registry_lookup_override_is_not_an_api",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 123,
-        "end_line": 127,
-        "signature_hash": "71df8bd7fe360d50",
-        "file_digest8": "4130e392868a7964"
+        "line": 149,
+        "end_line": 153,
+        "signature_hash": "7a214c64796f7fdb",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_receipt_digest_substitution_fails:d56d124b3a6caeda",
-        "name": "RegisteredIndependentReproductionGateTests.test_receipt_digest_substitution_fails",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_private_exact_record_plumbs_without_effect_authority:9010a68a89a9986d",
+        "name": "RegisteredIndependentReproductionGateTests.test_private_exact_record_plumbs_without_effect_authority",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 137,
-        "end_line": 139,
-        "signature_hash": "4f5f46bf4d6d873b",
-        "file_digest8": "4130e392868a7964"
+        "line": 115,
+        "end_line": 123,
+        "signature_hash": "8d03003a84b21b49",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_registered_path_plumbs_to_candidate_without_effect_authority:59fc2288edd3fcc3",
-        "name": "RegisteredIndependentReproductionGateTests.test_registered_path_plumbs_to_candidate_without_effect_authority",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_private_fixture_output_digest_is_deterministic:b056812232f9b260",
+        "name": "RegisteredIndependentReproductionGateTests.test_private_fixture_output_digest_is_deterministic",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 101,
-        "end_line": 109,
-        "signature_hash": "ca3a77f034138824",
-        "file_digest8": "4130e392868a7964"
+        "line": 230,
+        "end_line": 234,
+        "signature_hash": "e29afea4faea1e32",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_registry_external_effect_widening_fails:50f3c4ab816fa7a1",
-        "name": "RegisteredIndependentReproductionGateTests.test_registry_external_effect_widening_fails",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_production_registry_is_source_owned_empty_hold:0947bb513eb43c64",
+        "name": "RegisteredIndependentReproductionGateTests.test_production_registry_is_source_owned_empty_hold",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 177,
-        "end_line": 179,
-        "signature_hash": "a80db628f9e9520a",
-        "file_digest8": "4130e392868a7964"
+        "line": 125,
+        "end_line": 133,
+        "signature_hash": "09b1674a523f5963",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_reproducer_generation_substitution_fails:d466822a210e45c9",
-        "name": "RegisteredIndependentReproductionGateTests.test_reproducer_generation_substitution_fails",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_public_signature_has_no_caller_trust_root:0f54247aed67ba49",
+        "name": "RegisteredIndependentReproductionGateTests.test_public_signature_has_no_caller_trust_root",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 145,
+        "line": 135,
         "end_line": 147,
-        "signature_hash": "9acc1e60550b1dbb",
-        "file_digest8": "4130e392868a7964"
+        "signature_hash": "faca44ab7983342f",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_reproducer_identity_substitution_fails:7a0b41cc230d786f",
-        "name": "RegisteredIndependentReproductionGateTests.test_reproducer_identity_substitution_fails",
-        "kind": "method",
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 141,
-        "end_line": 143,
-        "signature_hash": "4f0d765d2d97de92",
-        "file_digest8": "4130e392868a7964"
-      },
-      {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_reproduction_external_effect_fails_before_registry:1d013d36422d2693",
-        "name": "RegisteredIndependentReproductionGateTests.test_reproduction_external_effect_fails_before_registry",
-        "kind": "method",
-        "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 181,
-        "end_line": 184,
-        "signature_hash": "ccad8da7a36a7f5c",
-        "file_digest8": "4130e392868a7964"
-      },
-      {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_revoked_record_fails:a97949c447be9996",
-        "name": "RegisteredIndependentReproductionGateTests.test_revoked_record_fails",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_receipt_digest_substitution_fails_privately:2f27ccf4de8deb09",
+        "name": "RegisteredIndependentReproductionGateTests.test_receipt_digest_substitution_fails_privately",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
         "line": 173,
         "end_line": 175,
-        "signature_hash": "14b5067ccb197079",
-        "file_digest8": "4130e392868a7964"
+        "signature_hash": "e55780001af85377",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_scope_substitution_fails:1c7f080a11b0b908",
-        "name": "RegisteredIndependentReproductionGateTests.test_scope_substitution_fails",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_registry_effect_or_authority_widening_fails_privately:1f21c21324584432",
+        "name": "RegisteredIndependentReproductionGateTests.test_registry_effect_or_authority_widening_fails_privately",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 157,
-        "end_line": 159,
-        "signature_hash": "36bdad72cedc5540",
-        "file_digest8": "4130e392868a7964"
+        "line": 208,
+        "end_line": 218,
+        "signature_hash": "311b761160c953f9",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_source_currentness_substitution_fails:58bdc8d77851bafb",
-        "name": "RegisteredIndependentReproductionGateTests.test_source_currentness_substitution_fails",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_reproducer_generation_substitution_fails_privately:ff17ecf885e7ec08",
+        "name": "RegisteredIndependentReproductionGateTests.test_reproducer_generation_substitution_fails_privately",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 161,
-        "end_line": 163,
-        "signature_hash": "3f5b475e6a0c2aa6",
-        "file_digest8": "4130e392868a7964"
+        "line": 181,
+        "end_line": 183,
+        "signature_hash": "1ebc13bb965521b6",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_stale_registry_fails:3b2f4cb9d155e63c",
-        "name": "RegisteredIndependentReproductionGateTests.test_stale_registry_fails",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_reproducer_identity_substitution_fails_privately:ea37ee0e11ee38c7",
+        "name": "RegisteredIndependentReproductionGateTests.test_reproducer_identity_substitution_fails_privately",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 165,
-        "end_line": 167,
-        "signature_hash": "58db66996dc1cd25",
-        "file_digest8": "4130e392868a7964"
+        "line": 177,
+        "end_line": 179,
+        "signature_hash": "1f102e910b1fbf42",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_target_substitution_fails:15a079d5667abfbd",
-        "name": "RegisteredIndependentReproductionGateTests.test_target_substitution_fails",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_reproduction_external_effect_fails_public_before_registry:f86024a1ea5213ab",
+        "name": "RegisteredIndependentReproductionGateTests.test_reproduction_external_effect_fails_public_before_registry",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 186,
-        "end_line": 188,
-        "signature_hash": "beb5b36087128905",
-        "file_digest8": "4130e392868a7964"
+        "line": 220,
+        "end_line": 224,
+        "signature_hash": "69f1887e4c7c1cdf",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
-        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_witness_substitution_fails:d96ab134645355c7",
-        "name": "RegisteredIndependentReproductionGateTests.test_witness_substitution_fails",
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_scope_and_source_currentness_substitution_fail_privately:1e052ef953b8be99",
+        "name": "RegisteredIndependentReproductionGateTests.test_scope_and_source_currentness_substitution_fail_privately",
         "kind": "method",
         "file": "tests/test_bughound_registered_reproduction_gate.py",
-        "line": 149,
-        "end_line": 151,
-        "signature_hash": "eec97b7134c6f5ad",
-        "file_digest8": "4130e392868a7964"
+        "line": 191,
+        "end_line": 195,
+        "signature_hash": "4b211a346d197fe5",
+        "file_digest8": "3a63adde0e4b7ea8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_stale_nonindependent_or_revoked_record_fails_privately:db92035daed4f0c7",
+        "name": "RegisteredIndependentReproductionGateTests.test_stale_nonindependent_or_revoked_record_fails_privately",
+        "kind": "method",
+        "file": "tests/test_bughound_registered_reproduction_gate.py",
+        "line": 197,
+        "end_line": 206,
+        "signature_hash": "2aced43729fd042e",
+        "file_digest8": "3a63adde0e4b7ea8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_target_substitution_fails_privately:0cff2cf899c4cebe",
+        "name": "RegisteredIndependentReproductionGateTests.test_target_substitution_fails_privately",
+        "kind": "method",
+        "file": "tests/test_bughound_registered_reproduction_gate.py",
+        "line": 226,
+        "end_line": 228,
+        "signature_hash": "6643f6b85a2d5c6f",
+        "file_digest8": "3a63adde0e4b7ea8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_registered_reproduction_gate.py#method:RegisteredIndependentReproductionGateTests.test_witness_and_environment_substitution_fail_privately:51190f59c7db9137",
+        "name": "RegisteredIndependentReproductionGateTests.test_witness_and_environment_substitution_fail_privately",
+        "kind": "method",
+        "file": "tests/test_bughound_registered_reproduction_gate.py",
+        "line": 185,
+        "end_line": 189,
+        "signature_hash": "49a61f2c30d1dc78",
+        "file_digest8": "3a63adde0e4b7ea8"
       },
       {
         "semantic_id": "tests/test_bughound_seedlab_benchmark.py#class:BugHoundSeedLabTests:6f8cb762fcb0d1d6",
@@ -452527,104 +452593,154 @@
         "file_digest8": "0fed4385736f1457"
       },
       {
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#class:BugHoundIndependentReproductionRegistryReceiptV2:25b3d4b90d8975c9",
+        "name": "BugHoundIndependentReproductionRegistryReceiptV2",
+        "kind": "class",
+        "file": "tools/bughound/registered_reproduction_gate.py",
+        "line": 84,
+        "end_line": 94,
+        "signature_hash": "e44a7cbd24a9964f",
+        "file_digest8": "0ad2e6e5f7d48295"
+      },
+      {
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#class:BugHoundIndependentReproductionRegistryRecordV1:76a6d1cbe871e4b6",
         "name": "BugHoundIndependentReproductionRegistryRecordV1",
         "kind": "class",
         "file": "tools/bughound/registered_reproduction_gate.py",
-        "line": 46,
-        "end_line": 72,
+        "line": 47,
+        "end_line": 73,
         "signature_hash": "8c84c2cf440e3e1b",
-        "file_digest8": "ff3dfed964838471"
+        "file_digest8": "0ad2e6e5f7d48295"
       },
       {
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#class:BugHoundRegisteredIndependentReproductionAdmissionV1:d7bd4b1dcfc5004d",
         "name": "BugHoundRegisteredIndependentReproductionAdmissionV1",
         "kind": "class",
         "file": "tools/bughound/registered_reproduction_gate.py",
-        "line": 76,
-        "end_line": 98,
+        "line": 98,
+        "end_line": 120,
         "signature_hash": "eb14e251c1211f95",
-        "file_digest8": "ff3dfed964838471"
+        "file_digest8": "0ad2e6e5f7d48295"
       },
       {
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_canonical:b7b5a49e285a9d0f",
         "name": "_canonical",
         "kind": "function",
         "file": "tools/bughound/registered_reproduction_gate.py",
-        "line": 31,
-        "end_line": 38,
+        "line": 32,
+        "end_line": 39,
         "signature_hash": "707d518dafca1a42",
-        "file_digest8": "ff3dfed964838471"
+        "file_digest8": "0ad2e6e5f7d48295"
+      },
+      {
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_compose_registered_independent_reproduction:b957d7f28887cc50",
+        "name": "_compose_registered_independent_reproduction",
+        "kind": "function",
+        "file": "tools/bughound/registered_reproduction_gate.py",
+        "line": 225,
+        "end_line": 276,
+        "signature_hash": "9ab37df7c6311eb7",
+        "file_digest8": "0ad2e6e5f7d48295"
       },
       {
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_digest:de2555c388bb7d44",
         "name": "_digest",
         "kind": "function",
         "file": "tools/bughound/registered_reproduction_gate.py",
-        "line": 41,
-        "end_line": 42,
+        "line": 42,
+        "end_line": 43,
         "signature_hash": "c978f5ef05fda5cb",
-        "file_digest8": "ff3dfed964838471"
-      },
-      {
-        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_production_registry_unavailable:eed671834a17128d",
-        "name": "_production_registry_unavailable",
-        "kind": "function",
-        "file": "tools/bughound/registered_reproduction_gate.py",
-        "line": 107,
-        "end_line": 110,
-        "signature_hash": "c5e2714af55060a6",
-        "file_digest8": "ff3dfed964838471"
+        "file_digest8": "0ad2e6e5f7d48295"
       },
       {
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_require_false:b0caa04378fd2b5a",
         "name": "_require_false",
         "kind": "function",
         "file": "tools/bughound/registered_reproduction_gate.py",
-        "line": 113,
-        "end_line": 115,
+        "line": 141,
+        "end_line": 143,
         "signature_hash": "59ab18e2db866f15",
-        "file_digest8": "ff3dfed964838471"
+        "file_digest8": "0ad2e6e5f7d48295"
+      },
+      {
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_resolve_from_records:e2ad11adf95e6bac",
+        "name": "_resolve_from_records",
+        "kind": "function",
+        "file": "tools/bughound/registered_reproduction_gate.py",
+        "line": 203,
+        "end_line": 222,
+        "signature_hash": "cc3a721240df2612",
+        "file_digest8": "0ad2e6e5f7d48295"
       },
       {
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:_verify_registry_record:bcc788ab79eb3d72",
         "name": "_verify_registry_record",
         "kind": "function",
         "file": "tools/bughound/registered_reproduction_gate.py",
-        "line": 118,
-        "end_line": 170,
+        "line": 146,
+        "end_line": 200,
         "signature_hash": "217bdc5a7ec651fd",
-        "file_digest8": "ff3dfed964838471"
+        "file_digest8": "0ad2e6e5f7d48295"
       },
       {
-        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:admit_with_registered_independent_reproduction:234341a869a36cec",
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:admit_with_registered_independent_reproduction:7a57d88212a42308",
         "name": "admit_with_registered_independent_reproduction",
         "kind": "function",
         "file": "tools/bughound/registered_reproduction_gate.py",
-        "line": 173,
-        "end_line": 250,
-        "signature_hash": "730e2d61c41efdca",
-        "file_digest8": "ff3dfed964838471"
+        "line": 279,
+        "end_line": 316,
+        "signature_hash": "45412c68ade7ca68",
+        "file_digest8": "0ad2e6e5f7d48295"
+      },
+      {
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:independent_reproduction_registry_receipt:f2f10cef0397353c",
+        "name": "independent_reproduction_registry_receipt",
+        "kind": "function",
+        "file": "tools/bughound/registered_reproduction_gate.py",
+        "line": 123,
+        "end_line": 138,
+        "signature_hash": "992a2d9730ab5127",
+        "file_digest8": "0ad2e6e5f7d48295"
+      },
+      {
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#function:registered_reproduction_parameter_names:6e115e18efc718aa",
+        "name": "registered_reproduction_parameter_names",
+        "kind": "function",
+        "file": "tools/bughound/registered_reproduction_gate.py",
+        "line": 319,
+        "end_line": 321,
+        "signature_hash": "7efa30f69d18c5cb",
+        "file_digest8": "0ad2e6e5f7d48295"
+      },
+      {
+        "semantic_id": "tools/bughound/registered_reproduction_gate.py#method:BugHoundIndependentReproductionRegistryReceiptV2.registry_digest:89d38401b2048a9a",
+        "name": "BugHoundIndependentReproductionRegistryReceiptV2.registry_digest",
+        "kind": "method",
+        "file": "tools/bughound/registered_reproduction_gate.py",
+        "line": 93,
+        "end_line": 94,
+        "signature_hash": "c4b77aeb00b00c2c",
+        "file_digest8": "0ad2e6e5f7d48295"
       },
       {
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#method:BugHoundIndependentReproductionRegistryRecordV1.record_digest:ba31a58f492f763f",
         "name": "BugHoundIndependentReproductionRegistryRecordV1.record_digest",
         "kind": "method",
         "file": "tools/bughound/registered_reproduction_gate.py",
-        "line": 71,
-        "end_line": 72,
+        "line": 72,
+        "end_line": 73,
         "signature_hash": "1e6da455d09b03f6",
-        "file_digest8": "ff3dfed964838471"
+        "file_digest8": "0ad2e6e5f7d48295"
       },
       {
         "semantic_id": "tools/bughound/registered_reproduction_gate.py#method:BugHoundRegisteredIndependentReproductionAdmissionV1.receipt_digest:59631070bf540593",
         "name": "BugHoundRegisteredIndependentReproductionAdmissionV1.receipt_digest",
         "kind": "method",
         "file": "tools/bughound/registered_reproduction_gate.py",
-        "line": 94,
-        "end_line": 98,
+        "line": 116,
+        "end_line": 120,
         "signature_hash": "1a6a05eb2610184a",
-        "file_digest8": "ff3dfed964838471"
+        "file_digest8": "0ad2e6e5f7d48295"
       },
       {
         "semantic_id": "tools/bughound/seedlab_benchmark.py#class:BenchmarkError:cac2d2d6778f17c5",
@@ -454217,7 +454333,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "8d9439315c496922a8655a1c44089fc7",
-    "payload_hash": "91254a9e8cc2ae5db833b2465bd410ff"
+    "record_fingerprint": "a9e6b31a68cf41f317eccb6dc5bdec5c",
+    "payload_hash": "a64d52b9461cc2557676b2b6d83decb5"
   }
 }
