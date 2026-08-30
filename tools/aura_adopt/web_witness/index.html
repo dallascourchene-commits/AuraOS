@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" data-build-ref="aura-adopt-zf01a-static-v1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' blob: data:; script-src 'self'; style-src 'self'; img-src 'self' blob: data:; connect-src 'none'; media-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Aura — Make a title card</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="shell" aria-labelledby="page-title">
+    <header>
+      <p class="eyebrow">Aura Creator · zero-install witness</p>
+      <h1 id="page-title">Turn one image into a finished title card.</h1>
+      <p class="lede">Your image stays in this browser. No account, API key, upload, model, or install is required.</p>
+    </header>
+
+    <section class="card" aria-labelledby="create-title">
+      <h2 id="create-title">Create</h2>
+      <label for="image-input">Choose an image (max 8 MB)</label>
+      <input id="image-input" type="file" accept="image/*">
+
+      <label for="title-input">Title</label>
+      <input id="title-input" type="text" maxlength="80" value="My Aura creation" autocomplete="off">
+
+      <div class="actions">
+        <button id="render-button" type="button">Make title card</button>
+        <button id="download-button" type="button" disabled>Download PNG</button>
+      </div>
+      <p id="status" class="status" role="status" aria-live="polite">Checking browser capabilities…</p>
+    </section>
+
+    <section class="card preview" aria-labelledby="preview-title">
+      <div class="preview-head">
+        <h2 id="preview-title">Preview</h2>
+        <span id="capability-badge" class="badge">CHECKING</span>
+      </div>
+      <canvas id="output-canvas" width="1280" height="720" aria-label="Rendered title card preview"></canvas>
+      <label class="accept-row">
+        <input id="accept-output" type="checkbox" disabled>
+        This output is useful to me.
+      </label>
+      <button id="receipt-button" type="button" disabled>Download route receipt</button>
+    </section>
+
+    <details class="card trust">
+      <summary>What this page uses</summary>
+      <p>Local File API + Canvas 2D + browser download. Network calls and telemetry are blocked by policy.</p>
+      <dl>
+        <dt>Route</dt><dd>ZERO_INSTALL_WEB_PWA</dd>
+        <dt>Build</dt><dd>aura-adopt-zf01a-static-v1</dd>
+        <dt>Recipe</dt><dd>aura-adopt-zf01-title-card-v1</dd>
+        <dt>Recipe SHA-256</dt><dd>a95b233ff6019fa6a32cc72715c2ba528b80d7d97258e8e6087948d426d3449d</dd>
+      </dl>
+    </details>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

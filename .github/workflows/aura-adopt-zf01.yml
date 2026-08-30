@@ -1,0 +1,44 @@
+name: Aura Adopt ZF-01 Zero-Install Witness
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/web_witness/**'
+      - '.github/workflows/aura-adopt-zf01.yml'
+  push:
+    branches:
+      - 'aura-adopt-001/zf01a-zero-install-static-witness-20260830'
+    paths:
+      - 'tools/aura_adopt/web_witness/**'
+      - '.github/workflows/aura-adopt-zf01.yml'
+
+jobs:
+  focused-zf01:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Validate static witness contracts
+        working-directory: tools/aura_adopt/web_witness
+        run: |
+          python -m py_compile test_static_witness.py
+          python -m unittest -v test_static_witness.py
+      - name: Run actual headless browser self-test
+        shell: bash
+        run: |
+          set -euo pipefail
+          CHROME="$(command -v google-chrome || command -v chromium || command -v chromium-browser || true)"
+          if [ -z "$CHROME" ]; then
+            echo 'BROWSER_CAPABILITY_UNAVAILABLE: no Chrome/Chromium binary on runner'
+            exit 1
+          fi
+          "$CHROME" --version
+          python -m http.server 8765 --directory tools/aura_adopt/web_witness >/tmp/zf01-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" 2>/dev/null || true' EXIT
+          sleep 1
+          "$CHROME" --headless --no-sandbox --disable-gpu --virtual-time-budget=3000 --dump-dom 'http://127.0.0.1:8765/index.html?selftest=1' >/tmp/zf01-dom.html
+          grep -q 'data-selftest="PASS"' /tmp/zf01-dom.html
+          grep -q 'data-selftest-receipt="zf01-fnv1a-' /tmp/zf01-dom.html

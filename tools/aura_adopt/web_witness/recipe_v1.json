@@ -1,0 +1,34 @@
+{
+  "schema": "ArenaRecipeV1",
+  "recipe_id": "aura-adopt-zf01-title-card-v1",
+  "version": 1,
+  "operation": "LOCAL_IMAGE_TITLE_CARD",
+  "input": {
+    "media_type": "image/*",
+    "max_bytes": 8388608,
+    "title_max_chars": 80
+  },
+  "output": {
+    "mime_type": "image/png",
+    "width": 1280,
+    "height": 720
+  },
+  "layout": {
+    "fit": "cover",
+    "overlay": {
+      "position": "bottom",
+      "height_px": 176,
+      "title_font": "700 54px system-ui",
+      "brand_font": "600 24px system-ui",
+      "padding_px": 48
+    },
+    "brand_text": "Made with Aura"
+  },
+  "authority": {
+    "network_required": false,
+    "upload_required": false,
+    "account_required": false,
+    "api_key_required": false,
+    "provider_call_required": false
+  }
+}
