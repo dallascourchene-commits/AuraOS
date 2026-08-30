@@ -1,11 +1,11 @@
 """Registered isolation-backend admission for BugHound Arena R1.
 
-R0 deliberately models only a logical local capsule.  This module adds the
+R0 deliberately models only a logical local capsule. This module adds the
 *admission* membrane for a stronger R1 isolation backend without implementing or
-pretending to execute one.  A backend attestation is useful only after an
+pretending to execute one. A backend attestation is useful only after an
 independent, source-owned registry pins the exact attestation generation.
 
-Production intentionally starts with an empty immutable registry.  Therefore a
+Production intentionally starts with an empty immutable registry. Therefore a
 caller cannot manufacture ``os_network_isolation_proven`` (or any sibling
 containment claim) by passing booleans, a registry, or a self-chosen trust root.
 Even a registered backend proves backend-policy admission only; a later runtime
@@ -17,6 +17,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import hashlib
 import json
+import re
 from types import MappingProxyType
 from typing import Mapping
 
@@ -35,6 +36,7 @@ NO_SECRETS = "NO_CREDENTIALS_AVAILABLE"
 NO_HOST_WRITABLE_MOUNTS = "NO_HOST_WRITABLE_MOUNTS"
 NO_HOST_PRIVILEGE = "NO_HOST_PRIVILEGE"
 DENY_BY_DEFAULT = "DENY_BY_DEFAULT"
+_SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _canonical(value: object) -> bytes:
@@ -54,6 +56,17 @@ def _digest(domain: str, value: object) -> str:
 def _require_text(name: str, value: str) -> None:
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{name}_REQUIRED")
+
+
+def _require_sha256(name: str, value: str) -> None:
+    if not isinstance(value, str) or _SHA256.fullmatch(value) is None:
+        raise ValueError(f"{name}_SHA256_REQUIRED")
+
+
+def _require_exact_bool(name: str, value: object, expected: bool) -> None:
+    if type(value) is not bool or value is not expected:
+        suffix = "REQUIRED" if expected else "FORBIDDEN"
+        raise ValueError(f"{name}_{suffix}")
 
 
 @dataclass(frozen=True)
@@ -140,7 +153,7 @@ class BugHoundRegisteredIsolationBackendV1:
         return _digest("AURA_BUGHOUND_REGISTERED_R1_ISOLATION_BACKEND_V1", asdict(self))
 
 
-# Production trust root.  It is deliberately code-owned, immutable, and empty
+# Production trust root. It is deliberately code-owned, immutable, and empty
 # until an independently observed backend attestation is intentionally pinned.
 TRUSTED_ISOLATION_BACKEND_REGISTRY: Mapping[
     str,
@@ -158,25 +171,27 @@ def _validate_r0_spec(spec: BugHoundArenaRuntimeR0SpecV1):
 
 
 def _validate_attestation(att: BugHoundIsolationBackendAttestationV1) -> None:
+    if not isinstance(att, BugHoundIsolationBackendAttestationV1) or att.schema != ATTESTATION_SCHEMA:
+        raise ValueError("BUGHOUND_R1_ATTESTATION_SCHEMA_MISMATCH")
     for name, value in (
         ("BACKEND_ID", att.backend_id),
         ("BACKEND_GENERATION", att.backend_generation),
         ("BACKEND_KIND", att.backend_kind),
-        ("IMPLEMENTATION_DIGEST", att.implementation_digest),
-        ("POLICY_DIGEST", att.policy_digest),
         ("PLATFORM_REF", att.platform_ref),
-        ("AUDIT_LOG_DIGEST", att.audit_log_digest),
         ("SOURCE_CURRENTNESS_REF", att.source_currentness_ref),
         ("ATTESTER_REF", att.attester_ref),
         ("ATTESTER_GENERATION", att.attester_generation),
     ):
         _require_text(name, value)
-    if att.external_effect:
-        raise ValueError("BUGHOUND_R1_ATTESTATION_EXTERNAL_EFFECT_FORBIDDEN")
-    if att.current is not True:
-        raise ValueError("BUGHOUND_R1_ATTESTATION_NOT_CURRENT")
-    if att.backend_policy_observed is not True:
-        raise ValueError("BUGHOUND_R1_BACKEND_POLICY_NOT_OBSERVED")
+    for name, value in (
+        ("IMPLEMENTATION_DIGEST", att.implementation_digest),
+        ("POLICY_DIGEST", att.policy_digest),
+        ("AUDIT_LOG_DIGEST", att.audit_log_digest),
+    ):
+        _require_sha256(name, value)
+    _require_exact_bool("BUGHOUND_R1_ATTESTATION_CURRENT", att.current, True)
+    _require_exact_bool("BUGHOUND_R1_BACKEND_POLICY_OBSERVED", att.backend_policy_observed, True)
+    _require_exact_bool("BUGHOUND_R1_ATTESTATION_EXTERNAL_EFFECT", att.external_effect, False)
     for name, value in (
         ("FILESYSTEM", att.filesystem_confinement),
         ("NETWORK", att.network_confinement),
@@ -199,20 +214,23 @@ def _validate_registry_record(
     att: BugHoundIsolationBackendAttestationV1,
     record: BugHoundIsolationBackendRegistryRecordV1,
 ) -> None:
+    if not isinstance(record, BugHoundIsolationBackendRegistryRecordV1) or record.schema != REGISTRY_SCHEMA:
+        raise ValueError("BUGHOUND_R1_REGISTRY_SCHEMA_MISMATCH")
     for name, value in (
         ("REGISTRY_RECEIPT_REF", record.registry_receipt_ref),
         ("REGISTRY_OBSERVER_REF", record.observer_ref),
         ("REGISTRY_OBSERVER_GENERATION", record.observer_generation),
     ):
         _require_text(name, value)
-    if record.external_effect:
-        raise ValueError("BUGHOUND_R1_REGISTRY_EXTERNAL_EFFECT_FORBIDDEN")
-    if record.current is not True:
-        raise ValueError("BUGHOUND_R1_REGISTRY_NOT_CURRENT")
-    if record.independently_observed is not True:
-        raise ValueError("BUGHOUND_R1_REGISTRY_INDEPENDENT_OBSERVATION_REQUIRED")
-    if record.revoked:
-        raise ValueError("BUGHOUND_R1_BACKEND_REVOKED")
+    _require_sha256("REGISTRY_ATTESTATION_DIGEST", record.attestation_digest)
+    _require_exact_bool("BUGHOUND_R1_REGISTRY_CURRENT", record.current, True)
+    _require_exact_bool(
+        "BUGHOUND_R1_REGISTRY_INDEPENDENT_OBSERVATION",
+        record.independently_observed,
+        True,
+    )
+    _require_exact_bool("BUGHOUND_R1_BACKEND_REVOKED", record.revoked, False)
+    _require_exact_bool("BUGHOUND_R1_REGISTRY_EXTERNAL_EFFECT", record.external_effect, False)
     if record.backend_id != att.backend_id:
         raise ValueError("BUGHOUND_R1_REGISTRY_BACKEND_ID_MISMATCH")
     if record.backend_generation != att.backend_generation:
@@ -276,7 +294,7 @@ def admit_registered_isolation_backend_for_r0(
 
     The public consequence-bearing API intentionally exposes no registry,
     attestation, isolation booleans, trust flag, verifier secret, or expected
-    producer metadata.  Production therefore fails closed until a canonical
+    producer metadata. Production therefore fails closed until a canonical
     independently observed backend generation is pinned in source.
     """
     return _admit_registered_isolation_backend_with_registry(
