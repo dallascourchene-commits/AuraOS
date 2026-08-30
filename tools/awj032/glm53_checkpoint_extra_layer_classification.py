@@ -1,10 +1,15 @@
-"""Resolver-bound discharge for GLM-5.3 checkpoint layers outside decoder range.
+"""Currentness-bound discharge for GLM-5.3 checkpoint layers outside decoder range.
 
 D0 metadata-only. Extra-layer presence, role intent, evidence currentness, and
 checkpoint identity are separate planes. A classification cannot clear a blocker
 by carrying an arbitrary provenance string: it must be paired with a separate
-resolver observation bound to the same evidence object, generation, exact model
-revision, index digest, decoder count, and roles.
+resolver-shaped observation bound to the same evidence object, generation, exact
+model revision, index digest, decoder count, and roles.
+
+Important: a matching Python observation object does not prove that a canonical
+resolver produced it. Until an external verifiable resolver trust root exists,
+MTP classification may discharge the role-intent blocker but must retain the
+typed GLM53_MTP_RESOLVER_PROVENANCE_REQUIRED blocker.
 """
 from __future__ import annotations
 
@@ -16,6 +21,7 @@ from typing import Any, Mapping
 
 SCHEMA = "CheckpointExtraLayerClassificationV1"
 EVIDENCE_SCHEMA = "CheckpointExtraLayerEvidenceObservationV1"
+RESOLVER_PROVENANCE_BLOCKER = "GLM53_MTP_RESOLVER_PROVENANCE_REQUIRED"
 _ALLOWED_ROLES = {"MTP_NON_DECODER"}
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 _COMMIT_RE = re.compile(r"^[0-9a-f]{40}$")
@@ -304,7 +310,7 @@ def apply_extra_layer_classification(
     classification: CheckpointExtraLayerClassification,
     evidence: CheckpointExtraLayerEvidenceObservation,
 ) -> dict[str, Any]:
-    """Discharge only role blockers with matching current resolver evidence."""
+    """Discharge role intent with matching current evidence, not resolver provenance."""
     if report.get("schema") != "GLM53CheckpointLayoutProbeV1":
         raise ExtraLayerClassificationError("GLM53_LAYOUT_PROBE_REPORT_REQUIRED")
     roles = _validate_binding(report, classification, evidence)
@@ -322,8 +328,10 @@ def apply_extra_layer_classification(
     ):
         raise ExtraLayerClassificationError("EXTRA_LAYER_REPORT_INVALID")
 
-    if hidden_layers in actual_extra and roles.get(hidden_layers) == "MTP_NON_DECODER":
+    mtp_role_classified = hidden_layers in actual_extra and roles.get(hidden_layers) == "MTP_NON_DECODER"
+    if mtp_role_classified:
         blockers = [b for b in blockers if b != "GLM53_MTP_CHECKPOINT_CLASSIFICATION_REQUIRED"]
+        blockers.append(RESOLVER_PROVENANCE_BLOCKER)
 
     if unexpected and all(idx in roles for idx in unexpected):
         blockers = [
@@ -351,6 +359,7 @@ def apply_extra_layer_classification(
             "extra_layer_classification_id": classification.classification_id,
             "extra_layer_evidence_observation": evidence.to_dict(),
             "extra_layer_evidence_observation_id": evidence.observation_id,
+            "extra_layer_resolver_provenance_proven": False,
         }
     )
     return {
