@@ -9,6 +9,7 @@ from typing import Mapping, Sequence
 SCHEMA = "AffectedConeContextV2"
 PRODUCTION = "PRODUCTION"
 NONAUTHORITATIVE_FIXTURE = "NONAUTHORITATIVE_FIXTURE"
+COORDINATE_BINDING_SCHEMA = "CoordinateLocatorBindingV2"
 EDGE_TYPES = {
     "IMPORTS", "CALLS", "IMPLEMENTS", "READS", "WRITES", "DEPENDS_ON",
     "DEPENDED_BY", "MUST_NOT_AFFECT", "NEGATIVE_SPACE", "TEST_COVERS",
@@ -92,15 +93,11 @@ class ContextNodeV1:
     distance: int
     reasons: tuple[str, ...]
     coordinates: tuple[str, ...] = ()
+    coordinate_bindings: tuple[tuple[str, str], ...] = ()
 
 
 def _direct_edge_reason(edge: GraphEdgeV1, changed: set[str]) -> tuple[str, str] | None:
-    """Return the direct consequence of an edge touching the changed frontier.
-
-    Negative-space invariants are directional: only a changed source may make the
-    target mandatory. Ordinary graph relations are consequence-relevant in either
-    direction when directly incident to a changed path.
-    """
+    """Return the direct consequence of an edge touching the changed frontier."""
     if edge.relation in NEGATIVE_EDGE_TYPES:
         if edge.source in changed:
             return edge.target, edge.relation
@@ -110,6 +107,67 @@ def _direct_edge_reason(edge: GraphEdgeV1, changed: set[str]) -> tuple[str, str]
     if edge.target in changed:
         return edge.source, f"INBOUND:{edge.relation}"
     return None
+
+
+def _coordinate_provenance_rows(nodes: Sequence[Mapping[str, object]]) -> list[dict[str, str]]:
+    rows: list[dict[str, str]] = []
+    seen: dict[tuple[str, str], str] = {}
+    for node in nodes:
+        if not isinstance(node, Mapping):
+            raise ContextCompileRefusal("INVALID_CONTEXT_NODE")
+        path = _norm_path(node.get("path"))
+        coordinates_raw = node.get("coordinates") or ()
+        bindings_raw = node.get("coordinate_bindings") or ()
+        if isinstance(coordinates_raw, str) or not isinstance(coordinates_raw, Sequence):
+            raise ContextCompileRefusal("INVALID_COORDINATE_BINDINGS")
+        if isinstance(bindings_raw, str) or not isinstance(bindings_raw, Sequence):
+            raise ContextCompileRefusal("INVALID_COORDINATE_BINDINGS")
+        coordinates = {_text("coordinate", value) for value in coordinates_raw}
+        bound_coordinates: set[str] = set()
+        for binding in bindings_raw:
+            if (
+                isinstance(binding, str)
+                or not isinstance(binding, Sequence)
+                or len(binding) != 2
+            ):
+                raise ContextCompileRefusal("INVALID_COORDINATE_BINDINGS")
+            coordinate = _text("coordinate", binding[0])
+            generation = _text("coordinate_generation", binding[1])
+            key = (path, coordinate)
+            if key in seen:
+                if seen[key] != generation:
+                    raise ContextCompileRefusal("COORDINATE_GENERATION_CONFLICT", f"{path}:{coordinate}")
+                raise ContextCompileRefusal("COORDINATE_BINDING_DUPLICATE", f"{path}:{coordinate}")
+            seen[key] = generation
+            bound_coordinates.add(coordinate)
+            rows.append(
+                {
+                    "path": path,
+                    "coordinate": coordinate,
+                    "coordinate_generation": generation,
+                }
+            )
+        if coordinates != bound_coordinates:
+            raise ContextCompileRefusal("COORDINATE_BINDING_COVERAGE_MISMATCH", path)
+    return sorted(rows, key=lambda row: (row["path"], row["coordinate"], row["coordinate_generation"]))
+
+
+def _validate_coordinate_provenance(context: Mapping[str, object]) -> None:
+    if context.get("coordinate_locator_binding_schema") != COORDINATE_BINDING_SCHEMA:
+        raise ContextCompileRefusal("COORDINATE_BINDING_SCHEMA_MISMATCH")
+    nodes = context.get("nodes") or ()
+    if isinstance(nodes, str) or not isinstance(nodes, Sequence):
+        raise ContextCompileRefusal("INVALID_CONTEXT_NODES")
+    rows = _coordinate_provenance_rows(nodes)
+    count = context.get("coordinate_locator_count")
+    if isinstance(count, bool) or not isinstance(count, int) or count != len(rows):
+        raise ContextCompileRefusal("COORDINATE_LOCATOR_COUNT_MISMATCH")
+    claimed = _text(
+        "coordinate_locator_generation_digest",
+        context.get("coordinate_locator_generation_digest"),
+    )
+    if claimed != _digest(rows):
+        raise ContextCompileRefusal("COORDINATE_GENERATION_DIGEST_MISMATCH")
 
 
 def compile_affected_cone(
@@ -185,11 +243,17 @@ def compile_affected_cone(
         if edge.generation_ref != workgraph_generation_ref:
             raise ContextCompileRefusal("WORKGRAPH_EDGE_GENERATION_MISMATCH", edge.source_ref)
 
-    locators: dict[str, set[str]] = defaultdict(set)
+    locators: dict[str, dict[str, str]] = defaultdict(dict)
     for locator in coordinate_locators:
         if not isinstance(locator, CoordinateLocatorV1):
             raise ContextCompileRefusal("INVALID_COORDINATE_LOCATOR")
-        locators[locator.path].add(locator.coordinate)
+        existing = locators[locator.path].get(locator.coordinate)
+        if existing is not None and existing != locator.coordinate_generation:
+            raise ContextCompileRefusal(
+                "COORDINATE_GENERATION_CONFLICT",
+                f"{locator.path}:{locator.coordinate}",
+            )
+        locators[locator.path][locator.coordinate] = locator.coordinate_generation
 
     reasons: dict[str, set[str]] = {p: {"CHANGED_PATH"} for p in changed}
     distance: dict[str, int] = {p: 0 for p in changed}
@@ -212,9 +276,6 @@ def compile_affected_cone(
             "CONTEXT_BUDGET_INSUFFICIENT", f"required={len(required)} max_nodes={max_nodes}"
         )
 
-    # Optional expansion begins only from the reached mandatory frontier. A graph
-    # relation elsewhere in the repository can never become mandatory merely due
-    # to its relation label.
     if optional_depth:
         queue = deque((p, 0) for p in sorted(required))
         seen_depth = {p: 0 for p in required}
@@ -249,7 +310,10 @@ def compile_affected_cone(
             required=p in required,
             distance=distance.get(p, 0),
             reasons=tuple(sorted(reasons[p])),
-            coordinates=tuple(sorted(locators.get(p, ()))),
+            coordinates=tuple(sorted(locators.get(p, {}))),
+            coordinate_bindings=tuple(
+                sorted((coordinate, generation) for coordinate, generation in locators.get(p, {}).items())
+            ),
         )
         for p in selected
     ]
@@ -261,22 +325,26 @@ def compile_affected_cone(
             if edge.source in selected or edge.target in selected
         }
     )
+    node_dicts = [asdict(node) for node in nodes]
+    coordinate_rows = _coordinate_provenance_rows(node_dicts)
     body = {
         "schema": SCHEMA,
         "mode": mode,
         **bindings,
         "changed_paths": sorted(changed),
-        "nodes": [asdict(node) for node in nodes],
+        "nodes": node_dicts,
         "required_node_count": len(required_sorted),
         "selected_node_count": len(nodes),
         "omitted_optional_paths": omitted_optional,
         "code_graph_refs": graph_refs,
-        "coordinate_locator_count": sum(len(locators[p]) for p in locators if p in selected),
+        "coordinate_locator_binding_schema": COORDINATE_BINDING_SCHEMA,
+        "coordinate_locator_count": len(coordinate_rows),
+        "coordinate_locator_generation_digest": _digest(coordinate_rows),
         "coordinate_is_authority": False,
         "coordinate_is_currentness": False,
         "coordinate_is_source_truth": False,
         "context_budget_exhausted": bool(omitted_optional),
-        "context_strategy": "MINIMUM_CONSEQUENCE_COMPLETE_REACHED_FRONTIER_V2",
+        "context_strategy": "MINIMUM_CONSEQUENCE_COMPLETE_REACHED_FRONTIER_V2_COORDGEN",
     }
     body["context_digest"] = _digest(body)
     return body
@@ -287,6 +355,7 @@ def project_review_capsule_inputs(context: Mapping[str, object]) -> dict:
         raise ContextCompileRefusal("INVALID_AFFECTED_CONE_CONTEXT")
     if context.get("mode") != PRODUCTION:
         raise ContextCompileRefusal("NONAUTHORITATIVE_FIXTURE_CONTEXT")
+    _validate_coordinate_provenance(context)
     claimed_digest = _text("context_digest", context.get("context_digest"))
     body = dict(context)
     body.pop("context_digest", None)
