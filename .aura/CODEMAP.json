@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788109216,
+  "generated_at_unix": 1788111715,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1642,
+    "repo_file_count": 1649,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -132,6 +132,8 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf00b-friction-receipt.yml",
+      ".github/workflows/aura-adopt-zf00c-browser-adapter.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1177,6 +1179,7 @@
       "requirements-amd-track3.txt",
       "requirements-spatial-s4b.txt",
       "requirements.txt",
+      "schemas/adoption_friction_receipt_v1.schema.json",
       "schemas/aura_coding_relationship_compass.schema.json",
       "schemas/aura_coding_waboose_contract.schema.json",
       "schemas/aura_compass_act_capsule.schema.json",
@@ -1634,6 +1637,10 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/adoption_friction_receipt.py",
+      "tools/aura_adopt/browser_friction_adapter.py",
+      "tools/aura_adopt/test_adoption_friction_receipt.py",
+      "tools/aura_adopt/test_browser_friction_adapter.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1758,16 +1765,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1642,
-      "bytes": 26441797,
-      "tokens_est": 6600801,
+      "files": 1649,
+      "bytes": 26526246,
+      "tokens_est": 6621915,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
-        "schema_or_lexicon": 272,
+        "python_module": 1003,
+        "schema_or_lexicon": 275,
         "support_file": 49
       }
     },
@@ -3898,6 +3905,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 68,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_canonical:163c95a1557083b5",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -3912,8 +3927,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "function",
-        "line": 95,
-        "end_line": 96,
+        "line": 107,
+        "end_line": 108,
         "semantic_id": "aura_adoption_bootstrap.py#function:_digest:98d4de4fa75825d3",
         "signature_hash": "9edcae7e502cc579"
       },
@@ -4348,6 +4363,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 72,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_digest:54f39c0f37ceb40a",
+        "signature_hash": "9edcae7e502cc579"
       }
     ],
     "_token_proxy": [
@@ -6216,12 +6239,22 @@
         "signature_hash": "e308fa09bdaaef11"
       }
     ],
-    "EntrySurface": [
+    "RemoteExecutionAdmission": [
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "class",
         "line": 61,
-        "end_line": 65,
+        "end_line": 64,
+        "semantic_id": "aura_adoption_bootstrap.py#class:RemoteExecutionAdmission:069bbe302c8f8ed2",
+        "signature_hash": "abbe1493ae3a3fdc"
+      }
+    ],
+    "EntrySurface": [
+      {
+        "file": "aura_adoption_bootstrap.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 71,
         "semantic_id": "aura_adoption_bootstrap.py#class:EntrySurface:e47a5d59b8fa8e1f",
         "signature_hash": "ca3f068093935465"
       }
@@ -6230,18 +6263,28 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "class",
-        "line": 68,
-        "end_line": 73,
+        "line": 74,
+        "end_line": 79,
         "semantic_id": "aura_adoption_bootstrap.py#class:ComputeProfile:d651fa1bf72fd0e2",
         "signature_hash": "275d05eacdcccb8f"
+      }
+    ],
+    "RouteDisposition": [
+      {
+        "file": "aura_adoption_bootstrap.py",
+        "kind": "class",
+        "line": 82,
+        "end_line": 85,
+        "semantic_id": "aura_adoption_bootstrap.py#class:RouteDisposition:b2e6fd4d2592ce56",
+        "signature_hash": "a490286d97742a57"
       }
     ],
     "_nonempty_text": [
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "function",
-        "line": 76,
-        "end_line": 79,
+        "line": 88,
+        "end_line": 91,
         "semantic_id": "aura_adoption_bootstrap.py#function:_nonempty_text:adaf4f97950e1b2f",
         "signature_hash": "415e349c9d1e900a"
       }
@@ -6250,8 +6293,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "function",
-        "line": 82,
-        "end_line": 92,
+        "line": 94,
+        "end_line": 104,
         "semantic_id": "aura_adoption_bootstrap.py#function:_canonical_json:7ebb3ee63390acf1",
         "signature_hash": "caa6df7371712507"
       },
@@ -6340,8 +6383,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "class",
-        "line": 100,
-        "end_line": 139,
+        "line": 112,
+        "end_line": 155,
         "semantic_id": "aura_adoption_bootstrap.py#class:SourceBindingV1:f0d98ad2a3352409",
         "signature_hash": "68f8f58076ecef7a"
       }
@@ -6350,8 +6393,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 116,
-        "end_line": 132,
+        "line": 128,
+        "end_line": 148,
         "semantic_id": "aura_adoption_bootstrap.py#method:SourceBindingV1.__post_init__:5245b1f81cd6e852",
         "signature_hash": "175e4972e4d2d582"
       }
@@ -6360,8 +6403,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 134,
-        "end_line": 135,
+        "line": 150,
+        "end_line": 151,
         "semantic_id": "aura_adoption_bootstrap.py#method:SourceBindingV1.logical:c43d617c76011f6a",
         "signature_hash": "c2240ab695f360e8"
       }
@@ -6370,8 +6413,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 138,
-        "end_line": 139,
+        "line": 154,
+        "end_line": 155,
         "semantic_id": "aura_adoption_bootstrap.py#method:SourceBindingV1.digest:4151ea8852f2756f",
         "signature_hash": "78cc05eff2137397"
       }
@@ -6380,8 +6423,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "class",
-        "line": 143,
-        "end_line": 194,
+        "line": 159,
+        "end_line": 231,
         "semantic_id": "aura_adoption_bootstrap.py#class:BootstrapProjectionV1:3506413842ad3696",
         "signature_hash": "4957b0ab143cfbca"
       }
@@ -6390,8 +6433,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 167,
-        "end_line": 181,
+        "line": 184,
+        "end_line": 217,
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapProjectionV1.__post_init__:cb2f7ffa3234920f",
         "signature_hash": "175e4972e4d2d582"
       }
@@ -6400,8 +6443,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 183,
-        "end_line": 190,
+        "line": 219,
+        "end_line": 227,
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapProjectionV1.logical:79fa87489c204344",
         "signature_hash": "c2240ab695f360e8"
       }
@@ -6410,8 +6453,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 193,
-        "end_line": 194,
+        "line": 230,
+        "end_line": 231,
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapProjectionV1.digest:430417c76994850b",
         "signature_hash": "78cc05eff2137397"
       }
@@ -6420,8 +6463,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "class",
-        "line": 198,
-        "end_line": 219,
+        "line": 235,
+        "end_line": 253,
         "semantic_id": "aura_adoption_bootstrap.py#class:FrictionReceiptV1:b3d18ecd5281caeb",
         "signature_hash": "2fbcf323ff14a806"
       }
@@ -6430,8 +6473,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 207,
-        "end_line": 210,
+        "line": 245,
+        "end_line": 248,
         "semantic_id": "aura_adoption_bootstrap.py#method:FrictionReceiptV1.__post_init__:a32a178bd23d4b0f",
         "signature_hash": "175e4972e4d2d582"
       }
@@ -6440,8 +6483,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 213,
-        "end_line": 219,
+        "line": 251,
+        "end_line": 253,
         "semantic_id": "aura_adoption_bootstrap.py#method:FrictionReceiptV1.total_required_actions:d3f3a334defb110f",
         "signature_hash": "f4f810d581ebc569"
       }
@@ -6450,8 +6493,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "class",
-        "line": 223,
-        "end_line": 271,
+        "line": 257,
+        "end_line": 316,
         "semantic_id": "aura_adoption_bootstrap.py#class:BootstrapReceiptV1:262b071cf4d1b54b",
         "signature_hash": "d85240d1153e5e96"
       }
@@ -6460,8 +6503,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 242,
-        "end_line": 261,
+        "line": 278,
+        "end_line": 305,
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapReceiptV1.__post_init__:aa9082df9ebad364",
         "signature_hash": "175e4972e4d2d582"
       }
@@ -6470,8 +6513,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 263,
-        "end_line": 267,
+        "line": 307,
+        "end_line": 312,
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapReceiptV1.logical:57f613c6e6f8405b",
         "signature_hash": "c2240ab695f360e8"
       }
@@ -6480,8 +6523,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 270,
-        "end_line": 271,
+        "line": 315,
+        "end_line": 316,
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapReceiptV1.digest:c827130db65e3d7d",
         "signature_hash": "78cc05eff2137397"
       }
@@ -6490,18 +6533,38 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "function",
-        "line": 274,
-        "end_line": 325,
+        "line": 319,
+        "end_line": 362,
         "semantic_id": "aura_adoption_bootstrap.py#function:_select_surface:20de0c3120b68e1e",
         "signature_hash": "d6d40a809b74f887"
+      }
+    ],
+    "_remote_admitted": [
+      {
+        "file": "aura_adoption_bootstrap.py",
+        "kind": "function",
+        "line": 365,
+        "end_line": 369,
+        "semantic_id": "aura_adoption_bootstrap.py#function:_remote_admitted:4b0b0d6942b23661",
+        "signature_hash": "6267b3bba52afe4e"
+      }
+    ],
+    "_remote_blocker": [
+      {
+        "file": "aura_adoption_bootstrap.py",
+        "kind": "function",
+        "line": 372,
+        "end_line": 375,
+        "semantic_id": "aura_adoption_bootstrap.py#function:_remote_blocker:f3c5771c544b9a99",
+        "signature_hash": "0514dc5288157742"
       }
     ],
     "_select_compute": [
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "function",
-        "line": 328,
-        "end_line": 400,
+        "line": 378,
+        "end_line": 476,
         "semantic_id": "aura_adoption_bootstrap.py#function:_select_compute:c135d3a50c1ab87f",
         "signature_hash": "fd7348929e17e450"
       }
@@ -6510,8 +6573,8 @@
       {
         "file": "aura_adoption_bootstrap.py",
         "kind": "function",
-        "line": 403,
-        "end_line": 440,
+        "line": 479,
+        "end_line": 517,
         "semantic_id": "aura_adoption_bootstrap.py#function:compile_entry_route:e42307d67b42085d",
         "signature_hash": "6760a86412d590fe"
       }
@@ -14952,6 +15015,22 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 78,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_text:8765bf094cd2376b",
+        "signature_hash": "a4ea29b9a7789fe0"
+      },
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 62,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_text:d9275ecef30669d3",
+        "signature_hash": "ef40803fdf7cca70"
       }
     ],
     "_bounded": [
@@ -33778,6 +33857,14 @@
         "end_line": 84,
         "semantic_id": "aura_substrate_contracts.py#function:_tuple_text:3e096c1c6f46fa98",
         "signature_hash": "85a223c600653a0d"
+      },
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 81,
+        "end_line": 84,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_tuple_text:b52b97ec08b7495d",
+        "signature_hash": "759c4a72128ccf16"
       }
     ],
     "_finite_vector": [
@@ -114207,17 +114294,17 @@
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "function",
         "line": 7,
-        "end_line": 13,
-        "semantic_id": "tests/test_aura_adoption_bootstrap.py#function:source_binding:0641115a126c12fb",
-        "signature_hash": "39784c271bd7d218"
+        "end_line": 19,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#function:source_binding:9dac265fde70c6fc",
+        "signature_hash": "c5dcb1c94a04a4b8"
       }
     ],
     "projection": [
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "function",
-        "line": 16,
-        "end_line": 34,
+        "line": 22,
+        "end_line": 46,
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#function:projection:d0bace705e2315e8",
         "signature_hash": "48ba81f4eadc6096"
       }
@@ -114226,38 +114313,88 @@
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "class",
-        "line": 37,
-        "end_line": 199,
+        "line": 49,
+        "end_line": 328,
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#class:AuraAdoptionBootstrapTests:b710d8375e553689",
         "signature_hash": "6bf26aeabbff1729"
       }
     ],
-    "AuraAdoptionBootstrapTests.test_low_storage_ordinary_phone_prefers_zero_install_free_first": [
+    "AuraAdoptionBootstrapTests.test_low_storage_ordinary_phone_prefers_zero_install_free_first_when_admitted": [
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 38,
-        "end_line": 48,
-        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_low_storage_ordinary_phone_prefers_zero_install_free_first:25b0d4d5c4d5af2e",
-        "signature_hash": "4daf06e1d9bc211e"
+        "line": 50,
+        "end_line": 64,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_low_storage_ordinary_phone_prefers_zero_install_free_first_when_admitted:c440146413903c99",
+        "signature_hash": "3ac4b7e2faf4bc15"
+      }
+    ],
+    "AuraAdoptionBootstrapTests.test_free_route_availability_without_remote_admission_cannot_select_remote_profile": [
+      {
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 72,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_free_route_availability_without_remote_admission_cannot_select_remote_profile:1227a4e502b1ee48",
+        "signature_hash": "d705574b20c497c7"
+      }
+    ],
+    "AuraAdoptionBootstrapTests.test_credential_presence_without_remote_admission_does_not_create_hybrid_authority": [
+      {
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_credential_presence_without_remote_admission_does_not_create_hybrid_authority:6295390a13a4b778",
+        "signature_hash": "9734fd9da622f71c"
+      }
+    ],
+    "AuraAdoptionBootstrapTests.test_admitted_remote_state_requires_source_bound_admission_artifact": [
+      {
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 108,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_admitted_remote_state_requires_source_bound_admission_artifact:c55583cf320afee2",
+        "signature_hash": "4d5ee3e2ccb63a59"
       }
     ],
     "AuraAdoptionBootstrapTests.test_capable_android_offline_background_prefers_apk_and_local": [
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 50,
-        "end_line": 69,
+        "line": 110,
+        "end_line": 131,
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_capable_android_offline_background_prefers_apk_and_local:9478f87b02a04b62",
         "signature_hash": "25486dd83dd6edba"
+      }
+    ],
+    "AuraAdoptionBootstrapTests.test_offline_critical_storage_is_degraded_and_blocked_by_storage_fit": [
+      {
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 146,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_offline_critical_storage_is_degraded_and_blocked_by_storage_fit:f918af111c46de39",
+        "signature_hash": "287faf36154f1028"
+      }
+    ],
+    "AuraAdoptionBootstrapTests.test_constrained_with_unknown_storage_exposes_blocker": [
+      {
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 160,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_constrained_with_unknown_storage_exposes_blocker:511b65bd05f8ee6e",
+        "signature_hash": "d3fdfcedf66f301a"
       }
     ],
     "AuraAdoptionBootstrapTests.test_developer_desktop_prefers_cli_without_creator_lock_in": [
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 71,
-        "end_line": 86,
+        "line": 162,
+        "end_line": 179,
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_developer_desktop_prefers_cli_without_creator_lock_in:a80efb3521218a2b",
         "signature_hash": "bc416bb28770347a"
       }
@@ -114266,8 +114403,8 @@
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 88,
-        "end_line": 106,
+        "line": 181,
+        "end_line": 201,
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_unsupported_unknown_surface_fails_closed:1556aae76848d942",
         "signature_hash": "2efcea3e49ff2e59"
       }
@@ -114276,38 +114413,38 @@
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 108,
-        "end_line": 118,
+        "line": 203,
+        "end_line": 215,
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_constrained_local_does_not_ask_for_key_when_none_is_present:b92e05ae4fe19821",
         "signature_hash": "ed55b327ec470428"
       }
     ],
-    "AuraAdoptionBootstrapTests.test_existing_credential_can_enable_hybrid_without_storing_it": [
+    "AuraAdoptionBootstrapTests.test_existing_credential_can_enable_hybrid_only_with_remote_admission": [
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 120,
-        "end_line": 133,
-        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_existing_credential_can_enable_hybrid_without_storing_it:191776f40e3a9856",
-        "signature_hash": "c4f6589d49355518"
+        "line": 217,
+        "end_line": 229,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_existing_credential_can_enable_hybrid_only_with_remote_admission:e30360488bf400e8",
+        "signature_hash": "77b6e6ccb7922a2c"
       }
     ],
-    "AuraAdoptionBootstrapTests.test_all_effect_flags_remain_false": [
+    "AuraAdoptionBootstrapTests.test_all_effect_and_authentication_flags_remain_false": [
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 135,
-        "end_line": 143,
-        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_all_effect_flags_remain_false:4a4251a1559acfe7",
-        "signature_hash": "6b20385d2b97a817"
+        "line": 231,
+        "end_line": 240,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_all_effect_and_authentication_flags_remain_false:4d77812d28b153a9",
+        "signature_hash": "1ca5bfd4d14dc137"
       }
     ],
     "AuraAdoptionBootstrapTests.test_projection_and_receipt_identity_bind_upstream_source": [
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 145,
-        "end_line": 152,
+        "line": 242,
+        "end_line": 249,
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_projection_and_receipt_identity_bind_upstream_source:e17778d9d5bc49c2",
         "signature_hash": "888418f6f139f8c3"
       }
@@ -114316,50 +114453,70 @@
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 154,
-        "end_line": 159,
+        "line": 251,
+        "end_line": 257,
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_receipt_is_deterministic_for_same_projection:90689a4989516573",
         "signature_hash": "7f84ad31f37e57aa"
       }
     ],
-    "AuraAdoptionBootstrapTests.test_capability_binding_must_be_complete_pair": [
+    "AuraAdoptionBootstrapTests.test_capability_and_remote_bindings_must_be_complete_pairs": [
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 161,
-        "end_line": 171,
-        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_capability_binding_must_be_complete_pair:fb2536da4367506a",
-        "signature_hash": "44838950973b1617"
+        "line": 259,
+        "end_line": 279,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_capability_and_remote_bindings_must_be_complete_pairs:9df4f3f8728668c5",
+        "signature_hash": "8d95d137f54b9d35"
       }
     ],
     "AuraAdoptionBootstrapTests.test_bool_inputs_are_type_strict": [
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 173,
-        "end_line": 176,
+        "line": 281,
+        "end_line": 284,
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_bool_inputs_are_type_strict:6d3c27431e264e12",
         "signature_hash": "25c199bfd238b20c"
+      }
+    ],
+    "AuraAdoptionBootstrapTests.test_enum_inputs_are_type_strict": [
+      {
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 286,
+        "end_line": 298,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_enum_inputs_are_type_strict:e12792fd4848b188",
+        "signature_hash": "8a8ea4d136e1e2ec"
+      }
+    ],
+    "AuraAdoptionBootstrapTests.test_source_binding_type_is_strict": [
+      {
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "kind": "method",
+        "line": 300,
+        "end_line": 303,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_source_binding_type_is_strict:e8187003bcbb78cb",
+        "signature_hash": "9e889d3aaec6ec34"
       }
     ],
     "AuraAdoptionBootstrapTests.test_frozen_projection_rejects_direct_mutation": [
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 178,
-        "end_line": 181,
+        "line": 305,
+        "end_line": 308,
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_frozen_projection_rejects_direct_mutation:eb0c56bc21c09438",
         "signature_hash": "212dc47c9bc2d7e3"
       }
     ],
-    "AuraAdoptionBootstrapTests.test_web_fallback_exposes_requirement_mismatch_instead_of_hiding_it": [
+    "AuraAdoptionBootstrapTests.test_web_fallback_exposes_requirement_mismatch_as_partial": [
       {
         "file": "tests/test_aura_adoption_bootstrap.py",
         "kind": "method",
-        "line": 183,
-        "end_line": 199,
-        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_web_fallback_exposes_requirement_mismatch_instead_of_hiding_it:56a866d016356293",
-        "signature_hash": "36f160484e8ab6b1"
+        "line": 310,
+        "end_line": 328,
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_web_fallback_exposes_requirement_mismatch_as_partial:9872b73ad4c461b7",
+        "signature_hash": "fd4fdfa4b55822e1"
       }
     ],
     "TestLoadAffordanceDirectory": [
@@ -129396,6 +129553,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_construction_state.py#function:event:1b154c011b0d5e53",
         "signature_hash": "17aefef5728da1b4"
+      },
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#function:event:8e6bfeb6888fb540",
+        "signature_hash": "74f92a52866be808"
       }
     ],
     "basic_state": [
@@ -133986,6 +134151,14 @@
         "end_line": 29,
         "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:observation:231f671c5509f472",
         "signature_hash": "b6d2f925be861055"
+      },
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 56,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#function:observation:eb0a4f4d5b053afb",
+        "signature_hash": "300c0045d64cf75a"
       }
     ],
     "expected_project_refs": [
@@ -157640,6 +157813,882 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "FrictionReceiptError": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 27,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:FrictionReceiptError:b6721c256dff675c",
+        "signature_hash": "302216ad1bcbe823"
+      }
+    ],
+    "FrictionReceiptError.__init__": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 27,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#method:FrictionReceiptError.__init__:529b38ecd9cdab56",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "StageStatus": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:StageStatus:880d29550d19b7a2",
+        "signature_hash": "18ea8a89c6c94070"
+      }
+    ],
+    "_reject_private": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 95,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_reject_private:1c3e744c23bc07e3",
+        "signature_hash": "c88195781a5f402d"
+      }
+    ],
+    "_nn": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 103,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_nn:8f7322c7b69a8ddf",
+        "signature_hash": "bf7567a332c725c1"
+      }
+    ],
+    "RouteDecisionBinding": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "class",
+        "line": 107,
+        "end_line": 135,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:RouteDecisionBinding:8903c0d42192b014",
+        "signature_hash": "ec67df3ca674f076"
+      }
+    ],
+    "RouteDecisionBinding.__post_init__": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 135,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#method:RouteDecisionBinding.__post_init__:5118bd455687f4d1",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "bind_route_decision": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 138,
+        "end_line": 173,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:bind_route_decision:161f1871c4b7f292",
+        "signature_hash": "917703c72a2c1328"
+      }
+    ],
+    "StageEvent": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "class",
+        "line": 177,
+        "end_line": 208,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:StageEvent:55a9af8d31438296",
+        "signature_hash": "46c0f54f1e886616"
+      }
+    ],
+    "StageEvent.__post_init__": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 190,
+        "end_line": 202,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#method:StageEvent.__post_init__:44cf84cb44957651",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "StageEvent.logical_dict": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 208,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#method:StageEvent.logical_dict:6d9475c7658ec20d",
+        "signature_hash": "f3f5b4a386da5962"
+      }
+    ],
+    "AcceptedValue": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "class",
+        "line": 212,
+        "end_line": 221,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:AcceptedValue:d467adfb3dfd2c36",
+        "signature_hash": "8040eccad0a24b82"
+      }
+    ],
+    "AcceptedValue.__post_init__": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 217,
+        "end_line": 221,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#method:AcceptedValue.__post_init__:4308a5b87086c04a",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "FrictionReceipt": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "class",
+        "line": 225,
+        "end_line": 261,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:FrictionReceipt:f7cf57eff9436621",
+        "signature_hash": "2ea4d6f3378640a0"
+      }
+    ],
+    "RouteComparison": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "class",
+        "line": 265,
+        "end_line": 276,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:RouteComparison:4c2d6523702efa75",
+        "signature_hash": "77d523d17207ff1b"
+      }
+    ],
+    "_validate_events": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 279,
+        "end_line": 285,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_validate_events:4fbffcabb0713928",
+        "signature_hash": "1eb30513e98a04b6"
+      }
+    ],
+    "_validate_cohort": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 288,
+        "end_line": 294,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_validate_cohort:5f0e392c3a9d3088",
+        "signature_hash": "3b78ecc6f3892565"
+      }
+    ],
+    "_validate_vector": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 297,
+        "end_line": 300,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_validate_vector:6474fbc9d9576e1f",
+        "signature_hash": "fb348c180292ad47"
+      }
+    ],
+    "_validate_weights": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 303,
+        "end_line": 314,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_validate_weights:34ef1b8d4b8da291",
+        "signature_hash": "ca8fbe33d6176a54"
+      }
+    ],
+    "_sum": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 317,
+        "end_line": 326,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_sum:49556d2f0b1d370c",
+        "signature_hash": "9bca8e79fb9ff261"
+      }
+    ],
+    "_peak": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 329,
+        "end_line": 337,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_peak:007e237b25061129",
+        "signature_hash": "69ae42d6357e634a"
+      }
+    ],
+    "_failure_signature": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 340,
+        "end_line": 347,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_failure_signature:24748497db0516fb",
+        "signature_hash": "14d2b96dd463dc40"
+      }
+    ],
+    "_required_action_burdens": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 350,
+        "end_line": 362,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_required_action_burdens:2a62df773aee72e9",
+        "signature_hash": "f918e7457e637ccf"
+      }
+    ],
+    "_receipt_burdens": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 365,
+        "end_line": 376,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_receipt_burdens:2d2205f983056f28",
+        "signature_hash": "d115cadd4736e4be"
+      }
+    ],
+    "build_friction_receipt": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 379,
+        "end_line": 482,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:build_friction_receipt:8f66056343af62b2",
+        "signature_hash": "4f6097ac7878fe55"
+      }
+    ],
+    "compare_receipts": [
+      {
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 485,
+        "end_line": 505,
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:compare_receipts:90b75033c0547135",
+        "signature_hash": "a9a7fbaa3289acc1"
+      }
+    ],
+    "BrowserAdapterError": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 38,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#class:BrowserAdapterError:94474a1c74c2b25f",
+        "signature_hash": "6f31b301a7433ec8"
+      }
+    ],
+    "BrowserAdapterError.__init__": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 38,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#method:BrowserAdapterError.__init__:40dd518962d3aa0d",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "AcceptanceEvidenceMode": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 45,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#class:AcceptanceEvidenceMode:8e5a9dae35fe2833",
+        "signature_hash": "07d5a97e6b6645d8"
+      }
+    ],
+    "PersistenceEvidenceMode": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 53,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#class:PersistenceEvidenceMode:f155304cd2ae6910",
+        "signature_hash": "461a6b2d380cae1c"
+      }
+    ],
+    "_evidence_ref": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 71,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_evidence_ref:05244b66c54b540e",
+        "signature_hash": "121ad342cdc7b1a8"
+      }
+    ],
+    "_tri_bool": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 77,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_tri_bool:3ad1fe64bef8c449",
+        "signature_hash": "0f14e9a695b92843"
+      }
+    ],
+    "_nn_int": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 85,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_nn_int:9a8a4fa6edb0ae0d",
+        "signature_hash": "405171d82c01d674"
+      }
+    ],
+    "BrowserWitnessObservationV1": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "class",
+        "line": 89,
+        "end_line": 174,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#class:BrowserWitnessObservationV1:9846c7437c85afab",
+        "signature_hash": "3374ec5e9b615b52"
+      }
+    ],
+    "BrowserWitnessObservationV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 174,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#method:BrowserWitnessObservationV1.__post_init__:bca94456d41fbf88",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "BrowserFrictionProjectionV1": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "class",
+        "line": 178,
+        "end_line": 188,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#class:BrowserFrictionProjectionV1:2c071e67659584a9",
+        "signature_hash": "ec15f882ab02c8e8"
+      }
+    ],
+    "_status_from_observation": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "function",
+        "line": 191,
+        "end_line": 203,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_status_from_observation:43af5a0f07e96168",
+        "signature_hash": "9458b47339fbe74c"
+      }
+    ],
+    "_acceptance": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "function",
+        "line": 206,
+        "end_line": 255,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_acceptance:a296f5de48aca675",
+        "signature_hash": "e03fb1a0c6eedb2c"
+      }
+    ],
+    "_persistence": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "function",
+        "line": 258,
+        "end_line": 284,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_persistence:0f208ca1292547ce",
+        "signature_hash": "ac79019e5131cfef"
+      }
+    ],
+    "project_browser_observation": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "function",
+        "line": 287,
+        "end_line": 376,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:project_browser_observation:dfc6f4d5b9f2b024",
+        "signature_hash": "8cae117c840c8e84"
+      }
+    ],
+    "build_browser_friction_receipt": [
+      {
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "kind": "function",
+        "line": 379,
+        "end_line": 432,
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:build_browser_friction_receipt:552accd6736edaf6",
+        "signature_hash": "6a5d2fece07a18aa"
+      }
+    ],
+    "source": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 24,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:source:474db9ab8d0e8e38",
+        "signature_hash": "8649cda199fb4854"
+      }
+    ],
+    "compiler_receipt": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 45,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:compiler_receipt:0c1e1b68e1a236e1",
+        "signature_hash": "70202d658bd1af15"
+      }
+    ],
+    "native_compiler_receipt": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 66,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:native_compiler_receipt:bf716b4fb1a197b5",
+        "signature_hash": "5b0e2f38f72958a2"
+      }
+    ],
+    "decision": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 70,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:decision:6190eabd4a20a69c",
+        "signature_hash": "6c16610f66d08db9"
+      },
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 36,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#function:decision:0032d724962b1c3f",
+        "signature_hash": "6a71dd6e542eac82"
+      }
+    ],
+    "complete_events": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 107,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:complete_events:0ca3fd90be538d72",
+        "signature_hash": "398619d3b7fcabcc"
+      }
+    ],
+    "vector": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 111,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:vector:2fe16d77897f04c0",
+        "signature_hash": "d841edb0374bfa88"
+      }
+    ],
+    "weights": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 115,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:weights:0c91323c706073aa",
+        "signature_hash": "fa6ab225da5512e0"
+      },
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 68,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#function:weights:6951a7f9c684178b",
+        "signature_hash": "fa6ab225da5512e0"
+      }
+    ],
+    "make_receipt": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "function",
+        "line": 118,
+        "end_line": 135,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:make_receipt:e4a2fc3a0e7a6476",
+        "signature_hash": "aa0f233594c64755"
+      }
+    ],
+    "AdoptionFrictionReceiptTests": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "class",
+        "line": 138,
+        "end_line": 266,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#class:AdoptionFrictionReceiptTests:78f19facdea9d5e6",
+        "signature_hash": "318a158aae879241"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_compiler_receipt_binding_recomputes_exact_integrity_digest": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 145,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_compiler_receipt_binding_recomputes_exact_integrity_digest:a259731e5b7f2efd",
+        "signature_hash": "1c7d5809b21f2fab"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_compiler_authority_widening_fails_closed": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 152,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_compiler_authority_widening_fails_closed:f83436b0136585e3",
+        "signature_hash": "976418b6ca4a8bb5"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_compiler_required_action_count_must_match_declared_actions": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 159,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_compiler_required_action_count_must_match_declared_actions:5607532481cf39d8",
+        "signature_hash": "96403bc203fb82a2"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_complete_fixture_emits_stable_consequence_receipt": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 169,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_complete_fixture_emits_stable_consequence_receipt:45459ff227a08b1f",
+        "signature_hash": "065e057a1c5b2e96"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_observation_clock_does_not_churn_logical_identity": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 171,
+        "end_line": 174,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_observation_clock_does_not_churn_logical_identity:9e91f32599a34eb5",
+        "signature_hash": "b5576fbb63b6d333"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_compiler_source_generation_is_identity_bearing": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 180,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_compiler_source_generation_is_identity_bearing:04edad2b9561881c",
+        "signature_hash": "279a963d80242a2f"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_missing_or_reordered_stage_fails": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 190,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_missing_or_reordered_stage_fails:e47bc0bc089826b9",
+        "signature_hash": "c1b490c32302cba4"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_noncompleted_stage_requires_reason": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 192,
+        "end_line": 195,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_noncompleted_stage_requires_reason:d1728ebdc3081c5f",
+        "signature_hash": "534ecdebf7342b0c"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_mandatory_account_and_key_cannot_be_hidden_as_na": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 203,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_mandatory_account_and_key_cannot_be_hidden_as_na:812352208c2c828e",
+        "signature_hash": "6b2003e9112bc01d"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_compiler_install_and_permission_actions_cannot_be_hidden": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 205,
+        "end_line": 214,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_compiler_install_and_permission_actions_cannot_be_hidden:3a473001442793e2",
+        "signature_hash": "6987e7388c031128"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_unknown_friction_and_stage_metrics_never_become_zero": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 216,
+        "end_line": 221,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_unknown_friction_and_stage_metrics_never_become_zero:bd72163d0ef49703",
+        "signature_hash": "b3d724bd1d5bf60b"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_private_starting_state_and_direct_identity_cohort_rejected": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 223,
+        "end_line": 236,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_private_starting_state_and_direct_identity_cohort_rejected:05ca3f5b06c726bb",
+        "signature_hash": "2421053753d7be67"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_comparison_preserves_failure_reasons_unknowns_and_burdens": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 238,
+        "end_line": 248,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_comparison_preserves_failure_reasons_unknowns_and_burdens:d1b33155846d5003",
+        "signature_hash": "f1c4a62098d8c9f1"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_comparison_exposes_added_account_key_install_burdens": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 250,
+        "end_line": 259,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_comparison_exposes_added_account_key_install_burdens:f9a13c2839fd20d3",
+        "signature_hash": "e5d07edac57bd401"
+      }
+    ],
+    "AdoptionFrictionReceiptTests.test_consented_study_requires_explicit_consent_mode": [
+      {
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "kind": "method",
+        "line": 261,
+        "end_line": 266,
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_consented_study_requires_explicit_consent_mode:03ccbc24289e69cf",
+        "signature_hash": "858391719a1ee416"
+      }
+    ],
+    "unknown_vector": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#function:unknown_vector:877e34e1ffd8ac0e",
+        "signature_hash": "9a9a3bc467cc549e"
+      }
+    ],
+    "build": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 83,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#function:build:c85a0f3cf764c888",
+        "signature_hash": "c0724423e4a9512b"
+      }
+    ],
+    "BrowserFrictionAdapterTests": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "class",
+        "line": 86,
+        "end_line": 244,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#class:BrowserFrictionAdapterTests:4460a1393e0e4181",
+        "signature_hash": "f451351d7986c469"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_user_explicit_acceptance_and_reopen_observed_complete_exact_stages": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 94,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_user_explicit_acceptance_and_reopen_observed_complete_exact_stages:4a91229421a1114f",
+        "signature_hash": "d05135d938c4988f"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_synthetic_technical_success_cannot_become_user_acceptance": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 105,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_synthetic_technical_success_cannot_become_user_acceptance:494301a338d913c0",
+        "signature_hash": "e1f288255dece44b"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_download_initiated_is_not_reopen_proof": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 116,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_download_initiated_is_not_reopen_proof:a4cb7cf816e92d4e",
+        "signature_hash": "26bcaef595d13d93"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_simulated_save_is_unknown_not_complete": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 126,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_simulated_save_is_unknown_not_complete:1645a126483799f3",
+        "signature_hash": "5987bfefccfe00d8"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_user_rejection_is_blocked_and_false": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 138,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_user_rejection_is_blocked_and_false:6ebfe3395e0e14e9",
+        "signature_hash": "f31d60f3bbffba18"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_user_acceptance_requires_typed_evidence_ref": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 142,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_user_acceptance_requires_typed_evidence_ref:1ec7ccac59bf7704",
+        "signature_hash": "84c4c3fce8ebda51"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_evidence_refs_must_be_opaque_compact_refs_not_prose": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 146,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_evidence_refs_must_be_opaque_compact_refs_not_prose:2bbf76c26d426583",
+        "signature_hash": "ea116845452f9070"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_observed_persistence_requires_evidence_ref": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 150,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_observed_persistence_requires_evidence_ref:fe411fb2e151eebb",
+        "signature_hash": "131450a5b596d2cc"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_render_success_requires_output_size_evidence": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 154,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_render_success_requires_output_size_evidence:3d551c129ce864b6",
+        "signature_hash": "4d03ed7996a8f38c"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_output_bytes_without_render_are_refused": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 165,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_output_bytes_without_render_are_refused:da9fd9e4bc18eefb",
+        "signature_hash": "53b7b56651616f45"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_acceptance_cannot_exist_without_render": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 175,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_acceptance_cannot_exist_without_render:3fc2bb07fe569546",
+        "signature_hash": "bcd1798b1115a166"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_persistence_cannot_exist_without_render": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 186,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_persistence_cannot_exist_without_render:9bdf8677393e4d16",
+        "signature_hash": "4c964a4d0dd43d67"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_render_requires_browser_capability_and_input_causal_chain": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 190,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_render_requires_browser_capability_and_input_causal_chain:1a43865f9b9d91b6",
+        "signature_hash": "4f4fe629668c0d97"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_missing_capability_becomes_canonical_blocked_stage": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 192,
+        "end_line": 207,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_missing_capability_becomes_canonical_blocked_stage:4a1809cbb2a37f76",
+        "signature_hash": "7c0aa1cbca1e1ca1"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_adapter_delegates_final_identity_to_canonical_zf00_builder": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 209,
+        "end_line": 216,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_adapter_delegates_final_identity_to_canonical_zf00_builder:a8e5237440fbd42b",
+        "signature_hash": "5d2832fc69e4234f"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_creation_value_component_must_remain_unknown_without_user_acceptance": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 228,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_creation_value_component_must_remain_unknown_without_user_acceptance:ef44872d9bf468fd",
+        "signature_hash": "fc6abe8906775fdb"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_reuse_recovery_component_must_remain_unknown_without_reopen": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 230,
+        "end_line": 240,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_reuse_recovery_component_must_remain_unknown_without_reopen:acf6599706963e0c",
+        "signature_hash": "b8d2a1b1be9dbd6d"
+      }
+    ],
+    "BrowserFrictionAdapterTests.test_non_browser_route_cannot_use_browser_adapter": [
+      {
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "kind": "method",
+        "line": 242,
+        "end_line": 244,
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_non_browser_route_cannot_use_browser_adapter:4cfe910fcc48d559",
+        "signature_hash": "4083453386fc6f04"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158747,6 +159796,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf00b-friction-receipt.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -167957,6 +169007,106 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-adopt-zf00b-friction-receipt.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1383,
+      "lines": 39,
+      "tokens_est": 346,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          28
+        ]
+      },
+      "topology": {},
+      "digest8": "74e3d89a82886707",
+      "vector": [
+        -0.100238,
+        -0.276481,
+        0.131081,
+        0.254451,
+        -0.042959,
+        0.214796,
+        0.164126,
+        0.234624,
+        -0.280887,
+        0.100238,
+        -0.15972,
+        -0.080411,
+        -0.269872,
+        0.025335,
+        -0.131081,
+        0.10905,
+        -0.230218,
+        0.216999,
+        0.219202,
+        0.040756,
+        0.230218,
+        -0.078208,
+        -0.10905,
+        -0.001102,
+        0.08702,
+        0.245639,
+        -0.234624,
+        0.265466,
+        -0.18836,
+        -0.023132,
+        0.148705,
+        0.076005
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-adopt-zf00c-browser-adapter.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1040,
+      "lines": 29,
+      "tokens_est": 260,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6b80378dae2ba37f",
+      "vector": [
+        0.299251,
+        0.07695,
+        -0.037864,
+        0.050079,
+        0.238179,
+        -0.289479,
+        0.054964,
+        0.00855,
+        -0.069622,
+        0.140465,
+        -0.155122,
+        0.184436,
+        0.218636,
+        -0.125807,
+        0.108707,
+        -0.233294,
+        -0.287037,
+        0.028093,
+        -0.098936,
+        0.245508,
+        -0.013436,
+        0.157565,
+        -0.211308,
+        -0.057407,
+        0.196651,
+        0.106265,
+        0.238179,
+        -0.189322,
+        0.120922,
+        -0.037864,
+        -0.267494,
+        -0.296808
+      ]
+    },
+    {
       "path": ".github/workflows/aura-architecture-harness-export.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -177079,47 +178229,47 @@
       "path": "aura_adoption_bootstrap.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 16964,
-      "lines": 458,
-      "tokens_est": 4241,
-      "symbol_count": 30,
+      "bytes": 21116,
+      "lines": 537,
+      "tokens_est": 5279,
+      "symbol_count": 34,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "98c6e48dfe63541f",
+      "digest8": "086e2eca1764ab17",
       "vector": [
-        0.170526,
-        0.048877,
-        0.274796,
-        -0.224833,
-        -0.233522,
-        0.016292,
-        0.137941,
-        -0.031498,
-        0.255245,
-        0.14663,
-        0.09884,
-        0.168353,
-        0.159664,
-        0.131424,
-        -0.227006,
-        -0.077117,
-        0.101012,
-        0.01412,
-        0.046704,
-        0.240039,
-        -0.257418,
-        0.092323,
-        -0.120563,
-        0.18356,
-        0.181387,
-        -0.272624,
-        0.198766,
-        -0.192249,
-        0.18356,
-        -0.024981,
-        0.257418,
-        -0.255245
+        0.285632,
+        -0.17586,
+        -0.133295,
+        -0.135535,
+        0.00336,
+        0.079529,
+        0.113133,
+        -0.263229,
+        -0.041445,
+        -0.016802,
+        -0.26547,
+        0.160178,
+        0.036964,
+        -0.032484,
+        -0.249788,
+        0.218424,
+        -0.131055,
+        0.238587,
+        -0.137775,
+        -0.108652,
+        0.278911,
+        0.218424,
+        -0.184821,
+        0.252028,
+        0.218424,
+        0.057126,
+        -0.285632,
+        -0.014562,
+        0.133295,
+        -0.061607,
+        -0.166899,
+        0.204983
       ]
     },
     {
@@ -239728,6 +240878,53 @@
       ]
     },
     {
+      "path": "schemas/adoption_friction_receipt_v1.schema.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 9394,
+      "lines": 164,
+      "tokens_est": 2349,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2862aec450a3c5d7",
+      "vector": [
+        -0.245188,
+        0.124406,
+        -0.124406,
+        0.093002,
+        -0.218616,
+        0.109912,
+        0.08334,
+        0.252435,
+        0.163056,
+        0.204122,
+        -0.102665,
+        0.2162,
+        -0.213784,
+        0.225863,
+        0.044689,
+        -0.187212,
+        0.119574,
+        -0.008455,
+        0.163056,
+        -0.233109,
+        -0.059183,
+        -0.237941,
+        0.165471,
+        -0.189628,
+        -0.225863,
+        0.274175,
+        -0.196875,
+        -0.235525,
+        -0.240356,
+        -0.114743,
+        -0.001208,
+        -0.018117
+      ]
+    },
+    {
       "path": "schemas/aura_coding_relationship_compass.schema.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -249245,47 +250442,47 @@
       "path": "tests/test_aura_adoption_bootstrap.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 9066,
-      "lines": 204,
-      "tokens_est": 2267,
-      "symbol_count": 16,
+      "bytes": 15843,
+      "lines": 333,
+      "tokens_est": 3961,
+      "symbol_count": 23,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "ad5c8114a01702ee",
+      "digest8": "de87bef098ce52ff",
       "vector": [
-        0.276393,
-        0.127269,
-        -0.19926,
-        -0.17612,
-        -0.019283,
-        -0.214686,
-        -0.116985,
-        0.201831,
-        -0.098987,
-        -0.17612,
-        0.260966,
-        0.281535,
-        0.240397,
-        -0.03471,
-        0.191546,
-        -0.163264,
-        -0.188975,
-        -0.325243,
-        -0.001286,
-        0.212115,
-        0.078418,
-        0.163264,
-        -0.109271,
-        -0.062992,
-        -0.209544,
-        -0.245539,
-        -0.091274,
-        -0.186404,
-        -0.060421,
-        0.029568,
-        -0.191546,
-        0.039852
+        0.144656,
+        -0.03252,
+        -0.021306,
+        0.122229,
+        -0.097559,
+        -0.173811,
+        0.070646,
+        -0.14017,
+        -0.196239,
+        0.151384,
+        -0.227637,
+        0.256792,
+        0.241093,
+        -0.111015,
+        0.243336,
+        -0.223151,
+        -0.146899,
+        -0.146899,
+        0.176054,
+        -0.243336,
+        0.034762,
+        -0.21418,
+        -0.144656,
+        0.063918,
+        0.117743,
+        0.167083,
+        0.18951,
+        -0.119986,
+        -0.283705,
+        -0.227637,
+        -0.27922,
+        -0.178297
       ]
     },
     {
@@ -263245,6 +264442,194 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/adoption_friction_receipt.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 21956,
+      "lines": 506,
+      "tokens_est": 5489,
+      "symbol_count": 30,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9eee1e0f48d1b51d",
+      "vector": [
+        -0.127722,
+        0.265616,
+        0.245271,
+        0.089292,
+        0.08025,
+        0.030518,
+        -0.166151,
+        0.089292,
+        0.066686,
+        -0.281439,
+        0.062165,
+        0.073468,
+        -0.186496,
+        -0.139024,
+        -0.211362,
+        -0.252052,
+        -0.159369,
+        -0.224926,
+        0.048602,
+        0.2837,
+        0.019215,
+        -0.227186,
+        -0.136764,
+        -0.204581,
+        0.209102,
+        0.048602,
+        0.062165,
+        -0.279179,
+        -0.252052,
+        0.044081,
+        0.224926,
+        -0.177454
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/browser_friction_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 16667,
+      "lines": 433,
+      "tokens_est": 4167,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "51edbc217ae3d6e9",
+      "vector": [
+        -0.075297,
+        -0.17113,
+        0.288867,
+        0.086249,
+        -0.078035,
+        0.179344,
+        -0.083511,
+        0.209463,
+        0.272438,
+        -0.261486,
+        -0.149225,
+        -0.308033,
+        0.047916,
+        -0.190296,
+        -0.017797,
+        -0.280652,
+        -0.039702,
+        0.083511,
+        -0.097202,
+        0.299819,
+        0.020536,
+        -0.097202,
+        -0.135535,
+        -0.132796,
+        -0.165653,
+        -0.212201,
+        0.121844,
+        0.242319,
+        0.072559,
+        0.203986,
+        -0.031488,
+        -0.245057
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_adoption_friction_receipt.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12907,
+      "lines": 271,
+      "tokens_est": 3227,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "79235123a5b6cea3",
+      "vector": [
+        0.215782,
+        -0.187692,
+        -0.044689,
+        -0.054903,
+        0.287283,
+        -0.218335,
+        0.128958,
+        -0.085547,
+        -0.31282,
+        -0.261747,
+        0.008938,
+        0.128958,
+        0.192799,
+        -0.248979,
+        -0.159602,
+        -0.185138,
+        0.03192,
+        -0.077886,
+        0.077886,
+        -0.310266,
+        0.149387,
+        -0.070225,
+        -0.195353,
+        -0.208121,
+        -0.029367,
+        0.139173,
+        0.11619,
+        0.17237,
+        0.159602,
+        -0.044689,
+        0.300052,
+        0.134066
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_browser_friction_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10173,
+      "lines": 249,
+      "tokens_est": 2544,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6a5a2d9ef4fe4f32",
+      "vector": [
+        -0.073026,
+        0.290943,
+        -0.054479,
+        0.128664,
+        -0.054479,
+        0.293261,
+        0.126346,
+        -0.149528,
+        0.251532,
+        -0.003477,
+        -0.070707,
+        -0.075344,
+        0.022024,
+        -0.126346,
+        -0.028978,
+        -0.100845,
+        0.096208,
+        -0.283988,
+        -0.20053,
+        -0.137937,
+        -0.270079,
+        -0.059116,
+        -0.263124,
+        -0.265442,
+        -0.288625,
+        -0.01275,
+        -0.077662,
+        0.07998,
+        -0.219077,
+        -0.272397,
+        0.151847,
+        -0.235304
       ]
     },
     {
@@ -287246,16 +288631,16 @@
     }
   },
   "summary": {
-    "file_count": 1642,
-    "total_bytes": 26441797,
-    "text_tokens_est": 6600801,
+    "file_count": 1649,
+    "total_bytes": 26526246,
+    "text_tokens_est": 6621915,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
-      "schema_or_lexicon": 272,
+      "python_module": 1003,
+      "schema_or_lexicon": 275,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287397,6 +288782,8 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf00b-friction-receipt.yml",
+      ".github/workflows/aura-adopt-zf00c-browser-adapter.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -288442,6 +289829,7 @@
       "requirements-amd-track3.txt",
       "requirements-spatial-s4b.txt",
       "requirements.txt",
+      "schemas/adoption_friction_receipt_v1.schema.json",
       "schemas/aura_coding_relationship_compass.schema.json",
       "schemas/aura_coding_waboose_contract.schema.json",
       "schemas/aura_compass_act_capsule.schema.json",
@@ -288899,6 +290287,10 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/adoption_friction_receipt.py",
+      "tools/aura_adopt/browser_friction_adapter.py",
+      "tools/aura_adopt/test_adoption_friction_receipt.py",
+      "tools/aura_adopt/test_browser_friction_adapter.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -290844,57 +292236,57 @@
         "line": 22,
         "end_line": 26,
         "signature_hash": "d929216866b2fa1d",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#class:BootstrapProjectionV1:3506413842ad3696",
         "name": "BootstrapProjectionV1",
         "kind": "class",
         "file": "aura_adoption_bootstrap.py",
-        "line": 143,
-        "end_line": 194,
+        "line": 159,
+        "end_line": 231,
         "signature_hash": "4957b0ab143cfbca",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#class:BootstrapReceiptV1:262b071cf4d1b54b",
         "name": "BootstrapReceiptV1",
         "kind": "class",
         "file": "aura_adoption_bootstrap.py",
-        "line": 223,
-        "end_line": 271,
+        "line": 257,
+        "end_line": 316,
         "signature_hash": "d85240d1153e5e96",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#class:ComputeProfile:d651fa1bf72fd0e2",
         "name": "ComputeProfile",
         "kind": "class",
         "file": "aura_adoption_bootstrap.py",
-        "line": 68,
-        "end_line": 73,
+        "line": 74,
+        "end_line": 79,
         "signature_hash": "275d05eacdcccb8f",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#class:EntrySurface:e47a5d59b8fa8e1f",
         "name": "EntrySurface",
         "kind": "class",
         "file": "aura_adoption_bootstrap.py",
-        "line": 61,
-        "end_line": 65,
+        "line": 67,
+        "end_line": 71,
         "signature_hash": "ca3f068093935465",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#class:FrictionReceiptV1:b3d18ecd5281caeb",
         "name": "FrictionReceiptV1",
         "kind": "class",
         "file": "aura_adoption_bootstrap.py",
-        "line": 198,
-        "end_line": 219,
+        "line": 235,
+        "end_line": 253,
         "signature_hash": "2fbcf323ff14a806",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#class:LocalComputeClass:71162da7b1e7e69f",
@@ -290904,7 +292296,7 @@
         "line": 41,
         "end_line": 45,
         "signature_hash": "424d6e87dada0409",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#class:NetworkState:44b34b557892306e",
@@ -290914,7 +292306,7 @@
         "line": 55,
         "end_line": 58,
         "signature_hash": "e308fa09bdaaef11",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#class:PlatformClass:92e06201a8e2aaff",
@@ -290924,17 +292316,37 @@
         "line": 34,
         "end_line": 38,
         "signature_hash": "f6691df20e81fe74",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
+      },
+      {
+        "semantic_id": "aura_adoption_bootstrap.py#class:RemoteExecutionAdmission:069bbe302c8f8ed2",
+        "name": "RemoteExecutionAdmission",
+        "kind": "class",
+        "file": "aura_adoption_bootstrap.py",
+        "line": 61,
+        "end_line": 64,
+        "signature_hash": "abbe1493ae3a3fdc",
+        "file_digest8": "086e2eca1764ab17"
+      },
+      {
+        "semantic_id": "aura_adoption_bootstrap.py#class:RouteDisposition:b2e6fd4d2592ce56",
+        "name": "RouteDisposition",
+        "kind": "class",
+        "file": "aura_adoption_bootstrap.py",
+        "line": 82,
+        "end_line": 85,
+        "signature_hash": "a490286d97742a57",
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#class:SourceBindingV1:f0d98ad2a3352409",
         "name": "SourceBindingV1",
         "kind": "class",
         "file": "aura_adoption_bootstrap.py",
-        "line": 100,
-        "end_line": 139,
+        "line": 112,
+        "end_line": 155,
         "signature_hash": "68f8f58076ecef7a",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#class:StorageClass:635d9a1a4c71cd17",
@@ -290944,7 +292356,7 @@
         "line": 48,
         "end_line": 52,
         "signature_hash": "eadc13bab5477a06",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#class:UserMode:dac32e30fcd38a24",
@@ -290954,67 +292366,87 @@
         "line": 29,
         "end_line": 31,
         "signature_hash": "c2646b95ed954892",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#function:_canonical_json:7ebb3ee63390acf1",
         "name": "_canonical_json",
         "kind": "function",
         "file": "aura_adoption_bootstrap.py",
-        "line": 82,
-        "end_line": 92,
+        "line": 94,
+        "end_line": 104,
         "signature_hash": "caa6df7371712507",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#function:_digest:98d4de4fa75825d3",
         "name": "_digest",
         "kind": "function",
         "file": "aura_adoption_bootstrap.py",
-        "line": 95,
-        "end_line": 96,
+        "line": 107,
+        "end_line": 108,
         "signature_hash": "9edcae7e502cc579",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#function:_nonempty_text:adaf4f97950e1b2f",
         "name": "_nonempty_text",
         "kind": "function",
         "file": "aura_adoption_bootstrap.py",
-        "line": 76,
-        "end_line": 79,
+        "line": 88,
+        "end_line": 91,
         "signature_hash": "415e349c9d1e900a",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
+      },
+      {
+        "semantic_id": "aura_adoption_bootstrap.py#function:_remote_admitted:4b0b0d6942b23661",
+        "name": "_remote_admitted",
+        "kind": "function",
+        "file": "aura_adoption_bootstrap.py",
+        "line": 365,
+        "end_line": 369,
+        "signature_hash": "6267b3bba52afe4e",
+        "file_digest8": "086e2eca1764ab17"
+      },
+      {
+        "semantic_id": "aura_adoption_bootstrap.py#function:_remote_blocker:f3c5771c544b9a99",
+        "name": "_remote_blocker",
+        "kind": "function",
+        "file": "aura_adoption_bootstrap.py",
+        "line": 372,
+        "end_line": 375,
+        "signature_hash": "0514dc5288157742",
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#function:_select_compute:c135d3a50c1ab87f",
         "name": "_select_compute",
         "kind": "function",
         "file": "aura_adoption_bootstrap.py",
-        "line": 328,
-        "end_line": 400,
+        "line": 378,
+        "end_line": 476,
         "signature_hash": "fd7348929e17e450",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#function:_select_surface:20de0c3120b68e1e",
         "name": "_select_surface",
         "kind": "function",
         "file": "aura_adoption_bootstrap.py",
-        "line": 274,
-        "end_line": 325,
+        "line": 319,
+        "end_line": 362,
         "signature_hash": "d6d40a809b74f887",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#function:compile_entry_route:e42307d67b42085d",
         "name": "compile_entry_route",
         "kind": "function",
         "file": "aura_adoption_bootstrap.py",
-        "line": 403,
-        "end_line": 440,
+        "line": 479,
+        "end_line": 517,
         "signature_hash": "6760a86412d590fe",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapError.__init__:84b33a2ee2a3c344",
@@ -291024,117 +292456,117 @@
         "line": 23,
         "end_line": 26,
         "signature_hash": "0b6534a3148e5c5d",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapProjectionV1.__post_init__:cb2f7ffa3234920f",
         "name": "BootstrapProjectionV1.__post_init__",
         "kind": "method",
         "file": "aura_adoption_bootstrap.py",
-        "line": 167,
-        "end_line": 181,
+        "line": 184,
+        "end_line": 217,
         "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapProjectionV1.digest:430417c76994850b",
         "name": "BootstrapProjectionV1.digest",
         "kind": "method",
         "file": "aura_adoption_bootstrap.py",
-        "line": 193,
-        "end_line": 194,
+        "line": 230,
+        "end_line": 231,
         "signature_hash": "78cc05eff2137397",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapProjectionV1.logical:79fa87489c204344",
         "name": "BootstrapProjectionV1.logical",
         "kind": "method",
         "file": "aura_adoption_bootstrap.py",
-        "line": 183,
-        "end_line": 190,
+        "line": 219,
+        "end_line": 227,
         "signature_hash": "c2240ab695f360e8",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapReceiptV1.__post_init__:aa9082df9ebad364",
         "name": "BootstrapReceiptV1.__post_init__",
         "kind": "method",
         "file": "aura_adoption_bootstrap.py",
-        "line": 242,
-        "end_line": 261,
+        "line": 278,
+        "end_line": 305,
         "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapReceiptV1.digest:c827130db65e3d7d",
         "name": "BootstrapReceiptV1.digest",
         "kind": "method",
         "file": "aura_adoption_bootstrap.py",
-        "line": 270,
-        "end_line": 271,
+        "line": 315,
+        "end_line": 316,
         "signature_hash": "78cc05eff2137397",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#method:BootstrapReceiptV1.logical:57f613c6e6f8405b",
         "name": "BootstrapReceiptV1.logical",
         "kind": "method",
         "file": "aura_adoption_bootstrap.py",
-        "line": 263,
-        "end_line": 267,
+        "line": 307,
+        "end_line": 312,
         "signature_hash": "c2240ab695f360e8",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#method:FrictionReceiptV1.__post_init__:a32a178bd23d4b0f",
         "name": "FrictionReceiptV1.__post_init__",
         "kind": "method",
         "file": "aura_adoption_bootstrap.py",
-        "line": 207,
-        "end_line": 210,
+        "line": 245,
+        "end_line": 248,
         "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#method:FrictionReceiptV1.total_required_actions:d3f3a334defb110f",
         "name": "FrictionReceiptV1.total_required_actions",
         "kind": "method",
         "file": "aura_adoption_bootstrap.py",
-        "line": 213,
-        "end_line": 219,
+        "line": 251,
+        "end_line": 253,
         "signature_hash": "f4f810d581ebc569",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#method:SourceBindingV1.__post_init__:5245b1f81cd6e852",
         "name": "SourceBindingV1.__post_init__",
         "kind": "method",
         "file": "aura_adoption_bootstrap.py",
-        "line": 116,
-        "end_line": 132,
+        "line": 128,
+        "end_line": 148,
         "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#method:SourceBindingV1.digest:4151ea8852f2756f",
         "name": "SourceBindingV1.digest",
         "kind": "method",
         "file": "aura_adoption_bootstrap.py",
-        "line": 138,
-        "end_line": 139,
+        "line": 154,
+        "end_line": 155,
         "signature_hash": "78cc05eff2137397",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_adoption_bootstrap.py#method:SourceBindingV1.logical:c43d617c76011f6a",
         "name": "SourceBindingV1.logical",
         "kind": "method",
         "file": "aura_adoption_bootstrap.py",
-        "line": 134,
-        "end_line": 135,
+        "line": 150,
+        "end_line": 151,
         "signature_hash": "c2240ab695f360e8",
-        "file_digest8": "98c6e48dfe63541f"
+        "file_digest8": "086e2eca1764ab17"
       },
       {
         "semantic_id": "aura_affordance_directory.py#class:AuraAffordance:223f6eac3604e069",
@@ -401711,160 +403143,230 @@
         "name": "AuraAdoptionBootstrapTests",
         "kind": "class",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 37,
-        "end_line": 199,
+        "line": 49,
+        "end_line": 328,
         "signature_hash": "6bf26aeabbff1729",
-        "file_digest8": "ad5c8114a01702ee"
+        "file_digest8": "de87bef098ce52ff"
       },
       {
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#function:projection:d0bace705e2315e8",
         "name": "projection",
         "kind": "function",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 16,
-        "end_line": 34,
+        "line": 22,
+        "end_line": 46,
         "signature_hash": "48ba81f4eadc6096",
-        "file_digest8": "ad5c8114a01702ee"
+        "file_digest8": "de87bef098ce52ff"
       },
       {
-        "semantic_id": "tests/test_aura_adoption_bootstrap.py#function:source_binding:0641115a126c12fb",
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#function:source_binding:9dac265fde70c6fc",
         "name": "source_binding",
         "kind": "function",
         "file": "tests/test_aura_adoption_bootstrap.py",
         "line": 7,
-        "end_line": 13,
-        "signature_hash": "39784c271bd7d218",
-        "file_digest8": "ad5c8114a01702ee"
+        "end_line": 19,
+        "signature_hash": "c5dcb1c94a04a4b8",
+        "file_digest8": "de87bef098ce52ff"
       },
       {
-        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_all_effect_flags_remain_false:4a4251a1559acfe7",
-        "name": "AuraAdoptionBootstrapTests.test_all_effect_flags_remain_false",
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_admitted_remote_state_requires_source_bound_admission_artifact:c55583cf320afee2",
+        "name": "AuraAdoptionBootstrapTests.test_admitted_remote_state_requires_source_bound_admission_artifact",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 135,
-        "end_line": 143,
-        "signature_hash": "6b20385d2b97a817",
-        "file_digest8": "ad5c8114a01702ee"
+        "line": 89,
+        "end_line": 108,
+        "signature_hash": "4d5ee3e2ccb63a59",
+        "file_digest8": "de87bef098ce52ff"
+      },
+      {
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_all_effect_and_authentication_flags_remain_false:4d77812d28b153a9",
+        "name": "AuraAdoptionBootstrapTests.test_all_effect_and_authentication_flags_remain_false",
+        "kind": "method",
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "line": 231,
+        "end_line": 240,
+        "signature_hash": "1ca5bfd4d14dc137",
+        "file_digest8": "de87bef098ce52ff"
       },
       {
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_bool_inputs_are_type_strict:6d3c27431e264e12",
         "name": "AuraAdoptionBootstrapTests.test_bool_inputs_are_type_strict",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 173,
-        "end_line": 176,
+        "line": 281,
+        "end_line": 284,
         "signature_hash": "25c199bfd238b20c",
-        "file_digest8": "ad5c8114a01702ee"
+        "file_digest8": "de87bef098ce52ff"
       },
       {
-        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_capability_binding_must_be_complete_pair:fb2536da4367506a",
-        "name": "AuraAdoptionBootstrapTests.test_capability_binding_must_be_complete_pair",
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_capability_and_remote_bindings_must_be_complete_pairs:9df4f3f8728668c5",
+        "name": "AuraAdoptionBootstrapTests.test_capability_and_remote_bindings_must_be_complete_pairs",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 161,
-        "end_line": 171,
-        "signature_hash": "44838950973b1617",
-        "file_digest8": "ad5c8114a01702ee"
+        "line": 259,
+        "end_line": 279,
+        "signature_hash": "8d95d137f54b9d35",
+        "file_digest8": "de87bef098ce52ff"
       },
       {
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_capable_android_offline_background_prefers_apk_and_local:9478f87b02a04b62",
         "name": "AuraAdoptionBootstrapTests.test_capable_android_offline_background_prefers_apk_and_local",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 50,
-        "end_line": 69,
+        "line": 110,
+        "end_line": 131,
         "signature_hash": "25486dd83dd6edba",
-        "file_digest8": "ad5c8114a01702ee"
+        "file_digest8": "de87bef098ce52ff"
       },
       {
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_constrained_local_does_not_ask_for_key_when_none_is_present:b92e05ae4fe19821",
         "name": "AuraAdoptionBootstrapTests.test_constrained_local_does_not_ask_for_key_when_none_is_present",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 108,
-        "end_line": 118,
+        "line": 203,
+        "end_line": 215,
         "signature_hash": "ed55b327ec470428",
-        "file_digest8": "ad5c8114a01702ee"
+        "file_digest8": "de87bef098ce52ff"
+      },
+      {
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_constrained_with_unknown_storage_exposes_blocker:511b65bd05f8ee6e",
+        "name": "AuraAdoptionBootstrapTests.test_constrained_with_unknown_storage_exposes_blocker",
+        "kind": "method",
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "line": 148,
+        "end_line": 160,
+        "signature_hash": "d3fdfcedf66f301a",
+        "file_digest8": "de87bef098ce52ff"
+      },
+      {
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_credential_presence_without_remote_admission_does_not_create_hybrid_authority:6295390a13a4b778",
+        "name": "AuraAdoptionBootstrapTests.test_credential_presence_without_remote_admission_does_not_create_hybrid_authority",
+        "kind": "method",
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "line": 74,
+        "end_line": 87,
+        "signature_hash": "9734fd9da622f71c",
+        "file_digest8": "de87bef098ce52ff"
       },
       {
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_developer_desktop_prefers_cli_without_creator_lock_in:a80efb3521218a2b",
         "name": "AuraAdoptionBootstrapTests.test_developer_desktop_prefers_cli_without_creator_lock_in",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 71,
-        "end_line": 86,
+        "line": 162,
+        "end_line": 179,
         "signature_hash": "bc416bb28770347a",
-        "file_digest8": "ad5c8114a01702ee"
+        "file_digest8": "de87bef098ce52ff"
       },
       {
-        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_existing_credential_can_enable_hybrid_without_storing_it:191776f40e3a9856",
-        "name": "AuraAdoptionBootstrapTests.test_existing_credential_can_enable_hybrid_without_storing_it",
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_enum_inputs_are_type_strict:e12792fd4848b188",
+        "name": "AuraAdoptionBootstrapTests.test_enum_inputs_are_type_strict",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 120,
-        "end_line": 133,
-        "signature_hash": "c4f6589d49355518",
-        "file_digest8": "ad5c8114a01702ee"
+        "line": 286,
+        "end_line": 298,
+        "signature_hash": "8a8ea4d136e1e2ec",
+        "file_digest8": "de87bef098ce52ff"
+      },
+      {
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_existing_credential_can_enable_hybrid_only_with_remote_admission:e30360488bf400e8",
+        "name": "AuraAdoptionBootstrapTests.test_existing_credential_can_enable_hybrid_only_with_remote_admission",
+        "kind": "method",
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "line": 217,
+        "end_line": 229,
+        "signature_hash": "77b6e6ccb7922a2c",
+        "file_digest8": "de87bef098ce52ff"
+      },
+      {
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_free_route_availability_without_remote_admission_cannot_select_remote_profile:1227a4e502b1ee48",
+        "name": "AuraAdoptionBootstrapTests.test_free_route_availability_without_remote_admission_cannot_select_remote_profile",
+        "kind": "method",
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "line": 66,
+        "end_line": 72,
+        "signature_hash": "d705574b20c497c7",
+        "file_digest8": "de87bef098ce52ff"
       },
       {
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_frozen_projection_rejects_direct_mutation:eb0c56bc21c09438",
         "name": "AuraAdoptionBootstrapTests.test_frozen_projection_rejects_direct_mutation",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 178,
-        "end_line": 181,
+        "line": 305,
+        "end_line": 308,
         "signature_hash": "212dc47c9bc2d7e3",
-        "file_digest8": "ad5c8114a01702ee"
+        "file_digest8": "de87bef098ce52ff"
       },
       {
-        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_low_storage_ordinary_phone_prefers_zero_install_free_first:25b0d4d5c4d5af2e",
-        "name": "AuraAdoptionBootstrapTests.test_low_storage_ordinary_phone_prefers_zero_install_free_first",
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_low_storage_ordinary_phone_prefers_zero_install_free_first_when_admitted:c440146413903c99",
+        "name": "AuraAdoptionBootstrapTests.test_low_storage_ordinary_phone_prefers_zero_install_free_first_when_admitted",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 38,
-        "end_line": 48,
-        "signature_hash": "4daf06e1d9bc211e",
-        "file_digest8": "ad5c8114a01702ee"
+        "line": 50,
+        "end_line": 64,
+        "signature_hash": "3ac4b7e2faf4bc15",
+        "file_digest8": "de87bef098ce52ff"
+      },
+      {
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_offline_critical_storage_is_degraded_and_blocked_by_storage_fit:f918af111c46de39",
+        "name": "AuraAdoptionBootstrapTests.test_offline_critical_storage_is_degraded_and_blocked_by_storage_fit",
+        "kind": "method",
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "line": 133,
+        "end_line": 146,
+        "signature_hash": "287faf36154f1028",
+        "file_digest8": "de87bef098ce52ff"
       },
       {
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_projection_and_receipt_identity_bind_upstream_source:e17778d9d5bc49c2",
         "name": "AuraAdoptionBootstrapTests.test_projection_and_receipt_identity_bind_upstream_source",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 145,
-        "end_line": 152,
+        "line": 242,
+        "end_line": 249,
         "signature_hash": "888418f6f139f8c3",
-        "file_digest8": "ad5c8114a01702ee"
+        "file_digest8": "de87bef098ce52ff"
       },
       {
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_receipt_is_deterministic_for_same_projection:90689a4989516573",
         "name": "AuraAdoptionBootstrapTests.test_receipt_is_deterministic_for_same_projection",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 154,
-        "end_line": 159,
+        "line": 251,
+        "end_line": 257,
         "signature_hash": "7f84ad31f37e57aa",
-        "file_digest8": "ad5c8114a01702ee"
+        "file_digest8": "de87bef098ce52ff"
+      },
+      {
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_source_binding_type_is_strict:e8187003bcbb78cb",
+        "name": "AuraAdoptionBootstrapTests.test_source_binding_type_is_strict",
+        "kind": "method",
+        "file": "tests/test_aura_adoption_bootstrap.py",
+        "line": 300,
+        "end_line": 303,
+        "signature_hash": "9e889d3aaec6ec34",
+        "file_digest8": "de87bef098ce52ff"
       },
       {
         "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_unsupported_unknown_surface_fails_closed:1556aae76848d942",
         "name": "AuraAdoptionBootstrapTests.test_unsupported_unknown_surface_fails_closed",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 88,
-        "end_line": 106,
+        "line": 181,
+        "end_line": 201,
         "signature_hash": "2efcea3e49ff2e59",
-        "file_digest8": "ad5c8114a01702ee"
+        "file_digest8": "de87bef098ce52ff"
       },
       {
-        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_web_fallback_exposes_requirement_mismatch_instead_of_hiding_it:56a866d016356293",
-        "name": "AuraAdoptionBootstrapTests.test_web_fallback_exposes_requirement_mismatch_instead_of_hiding_it",
+        "semantic_id": "tests/test_aura_adoption_bootstrap.py#method:AuraAdoptionBootstrapTests.test_web_fallback_exposes_requirement_mismatch_as_partial:9872b73ad4c461b7",
+        "name": "AuraAdoptionBootstrapTests.test_web_fallback_exposes_requirement_mismatch_as_partial",
         "kind": "method",
         "file": "tests/test_aura_adoption_bootstrap.py",
-        "line": 183,
-        "end_line": 199,
-        "signature_hash": "36f160484e8ab6b1",
-        "file_digest8": "ad5c8114a01702ee"
+        "line": 310,
+        "end_line": 328,
+        "signature_hash": "fd4fdfa4b55822e1",
+        "file_digest8": "de87bef098ce52ff"
       },
       {
         "semantic_id": "tests/test_aura_affordance_directory.py#class:TestBridgeIntegration:ad1877fe002d943d",
@@ -446697,6 +448199,956 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:AcceptedValue:d467adfb3dfd2c36",
+        "name": "AcceptedValue",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 212,
+        "end_line": 221,
+        "signature_hash": "8040eccad0a24b82",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:FrictionReceipt:f7cf57eff9436621",
+        "name": "FrictionReceipt",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 225,
+        "end_line": 261,
+        "signature_hash": "2ea4d6f3378640a0",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:FrictionReceiptError:b6721c256dff675c",
+        "name": "FrictionReceiptError",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 23,
+        "end_line": 27,
+        "signature_hash": "302216ad1bcbe823",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:RouteComparison:4c2d6523702efa75",
+        "name": "RouteComparison",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 265,
+        "end_line": 276,
+        "signature_hash": "77d523d17207ff1b",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:RouteDecisionBinding:8903c0d42192b014",
+        "name": "RouteDecisionBinding",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 107,
+        "end_line": 135,
+        "signature_hash": "ec67df3ca674f076",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:StageEvent:55a9af8d31438296",
+        "name": "StageEvent",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 177,
+        "end_line": 208,
+        "signature_hash": "46c0f54f1e886616",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#class:StageStatus:880d29550d19b7a2",
+        "name": "StageStatus",
+        "kind": "class",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "18ea8a89c6c94070",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_canonical:163c95a1557083b5",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 64,
+        "end_line": 68,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_digest:54f39c0f37ceb40a",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 71,
+        "end_line": 72,
+        "signature_hash": "9edcae7e502cc579",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_failure_signature:24748497db0516fb",
+        "name": "_failure_signature",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 340,
+        "end_line": 347,
+        "signature_hash": "14d2b96dd463dc40",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_nn:8f7322c7b69a8ddf",
+        "name": "_nn",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 98,
+        "end_line": 103,
+        "signature_hash": "bf7567a332c725c1",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_peak:007e237b25061129",
+        "name": "_peak",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 329,
+        "end_line": 337,
+        "signature_hash": "69ae42d6357e634a",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_receipt_burdens:2d2205f983056f28",
+        "name": "_receipt_burdens",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 365,
+        "end_line": 376,
+        "signature_hash": "d115cadd4736e4be",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_reject_private:1c3e744c23bc07e3",
+        "name": "_reject_private",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 87,
+        "end_line": 95,
+        "signature_hash": "c88195781a5f402d",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_required_action_burdens:2a62df773aee72e9",
+        "name": "_required_action_burdens",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 350,
+        "end_line": 362,
+        "signature_hash": "f918e7457e637ccf",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_sum:49556d2f0b1d370c",
+        "name": "_sum",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 317,
+        "end_line": 326,
+        "signature_hash": "9bca8e79fb9ff261",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_text:8765bf094cd2376b",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 75,
+        "end_line": 78,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_tuple_text:b52b97ec08b7495d",
+        "name": "_tuple_text",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 81,
+        "end_line": 84,
+        "signature_hash": "759c4a72128ccf16",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_validate_cohort:5f0e392c3a9d3088",
+        "name": "_validate_cohort",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 288,
+        "end_line": 294,
+        "signature_hash": "3b78ecc6f3892565",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_validate_events:4fbffcabb0713928",
+        "name": "_validate_events",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 279,
+        "end_line": 285,
+        "signature_hash": "1eb30513e98a04b6",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_validate_vector:6474fbc9d9576e1f",
+        "name": "_validate_vector",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 297,
+        "end_line": 300,
+        "signature_hash": "fb348c180292ad47",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:_validate_weights:34ef1b8d4b8da291",
+        "name": "_validate_weights",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 303,
+        "end_line": 314,
+        "signature_hash": "ca8fbe33d6176a54",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:bind_route_decision:161f1871c4b7f292",
+        "name": "bind_route_decision",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 138,
+        "end_line": 173,
+        "signature_hash": "917703c72a2c1328",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:build_friction_receipt:8f66056343af62b2",
+        "name": "build_friction_receipt",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 379,
+        "end_line": 482,
+        "signature_hash": "4f6097ac7878fe55",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#function:compare_receipts:90b75033c0547135",
+        "name": "compare_receipts",
+        "kind": "function",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 485,
+        "end_line": 505,
+        "signature_hash": "a9a7fbaa3289acc1",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#method:AcceptedValue.__post_init__:4308a5b87086c04a",
+        "name": "AcceptedValue.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 217,
+        "end_line": 221,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#method:FrictionReceiptError.__init__:529b38ecd9cdab56",
+        "name": "FrictionReceiptError.__init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 24,
+        "end_line": 27,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#method:RouteDecisionBinding.__post_init__:5118bd455687f4d1",
+        "name": "RouteDecisionBinding.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 121,
+        "end_line": 135,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#method:StageEvent.__post_init__:44cf84cb44957651",
+        "name": "StageEvent.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 190,
+        "end_line": 202,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/adoption_friction_receipt.py#method:StageEvent.logical_dict:6d9475c7658ec20d",
+        "name": "StageEvent.logical_dict",
+        "kind": "method",
+        "file": "tools/aura_adopt/adoption_friction_receipt.py",
+        "line": 204,
+        "end_line": 208,
+        "signature_hash": "f3f5b4a386da5962",
+        "file_digest8": "9eee1e0f48d1b51d"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#class:AcceptanceEvidenceMode:8e5a9dae35fe2833",
+        "name": "AcceptanceEvidenceMode",
+        "kind": "class",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 41,
+        "end_line": 45,
+        "signature_hash": "07d5a97e6b6645d8",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#class:BrowserAdapterError:94474a1c74c2b25f",
+        "name": "BrowserAdapterError",
+        "kind": "class",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 34,
+        "end_line": 38,
+        "signature_hash": "6f31b301a7433ec8",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#class:BrowserFrictionProjectionV1:2c071e67659584a9",
+        "name": "BrowserFrictionProjectionV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 178,
+        "end_line": 188,
+        "signature_hash": "ec15f882ab02c8e8",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#class:BrowserWitnessObservationV1:9846c7437c85afab",
+        "name": "BrowserWitnessObservationV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 89,
+        "end_line": 174,
+        "signature_hash": "3374ec5e9b615b52",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#class:PersistenceEvidenceMode:f155304cd2ae6910",
+        "name": "PersistenceEvidenceMode",
+        "kind": "class",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 48,
+        "end_line": 53,
+        "signature_hash": "461a6b2d380cae1c",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_acceptance:a296f5de48aca675",
+        "name": "_acceptance",
+        "kind": "function",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 206,
+        "end_line": 255,
+        "signature_hash": "e03fb1a0c6eedb2c",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_evidence_ref:05244b66c54b540e",
+        "name": "_evidence_ref",
+        "kind": "function",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 65,
+        "end_line": 71,
+        "signature_hash": "121ad342cdc7b1a8",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_nn_int:9a8a4fa6edb0ae0d",
+        "name": "_nn_int",
+        "kind": "function",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 80,
+        "end_line": 85,
+        "signature_hash": "405171d82c01d674",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_persistence:0f208ca1292547ce",
+        "name": "_persistence",
+        "kind": "function",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 258,
+        "end_line": 284,
+        "signature_hash": "ac79019e5131cfef",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_status_from_observation:43af5a0f07e96168",
+        "name": "_status_from_observation",
+        "kind": "function",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 191,
+        "end_line": 203,
+        "signature_hash": "9458b47339fbe74c",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_text:d9275ecef30669d3",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 56,
+        "end_line": 62,
+        "signature_hash": "ef40803fdf7cca70",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:_tri_bool:3ad1fe64bef8c449",
+        "name": "_tri_bool",
+        "kind": "function",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 74,
+        "end_line": 77,
+        "signature_hash": "0f14e9a695b92843",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:build_browser_friction_receipt:552accd6736edaf6",
+        "name": "build_browser_friction_receipt",
+        "kind": "function",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 379,
+        "end_line": 432,
+        "signature_hash": "6a5d2fece07a18aa",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#function:project_browser_observation:dfc6f4d5b9f2b024",
+        "name": "project_browser_observation",
+        "kind": "function",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 287,
+        "end_line": 376,
+        "signature_hash": "8cae117c840c8e84",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#method:BrowserAdapterError.__init__:40dd518962d3aa0d",
+        "name": "BrowserAdapterError.__init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 35,
+        "end_line": 38,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/browser_friction_adapter.py#method:BrowserWitnessObservationV1.__post_init__:bca94456d41fbf88",
+        "name": "BrowserWitnessObservationV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/browser_friction_adapter.py",
+        "line": 106,
+        "end_line": 174,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "51edbc217ae3d6e9"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#class:AdoptionFrictionReceiptTests:78f19facdea9d5e6",
+        "name": "AdoptionFrictionReceiptTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 138,
+        "end_line": 266,
+        "signature_hash": "318a158aae879241",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:compiler_receipt:0c1e1b68e1a236e1",
+        "name": "compiler_receipt",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 27,
+        "end_line": 45,
+        "signature_hash": "70202d658bd1af15",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:complete_events:0ca3fd90be538d72",
+        "name": "complete_events",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 73,
+        "end_line": 107,
+        "signature_hash": "398619d3b7fcabcc",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:decision:6190eabd4a20a69c",
+        "name": "decision",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 69,
+        "end_line": 70,
+        "signature_hash": "6c16610f66d08db9",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:make_receipt:e4a2fc3a0e7a6476",
+        "name": "make_receipt",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 118,
+        "end_line": 135,
+        "signature_hash": "aa0f233594c64755",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:native_compiler_receipt:bf716b4fb1a197b5",
+        "name": "native_compiler_receipt",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 48,
+        "end_line": 66,
+        "signature_hash": "5b0e2f38f72958a2",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:source:474db9ab8d0e8e38",
+        "name": "source",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 18,
+        "end_line": 24,
+        "signature_hash": "8649cda199fb4854",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:vector:2fe16d77897f04c0",
+        "name": "vector",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 110,
+        "end_line": 111,
+        "signature_hash": "d841edb0374bfa88",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:weights:0c91323c706073aa",
+        "name": "weights",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 114,
+        "end_line": 115,
+        "signature_hash": "fa6ab225da5512e0",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_comparison_exposes_added_account_key_install_burdens:f9a13c2839fd20d3",
+        "name": "AdoptionFrictionReceiptTests.test_comparison_exposes_added_account_key_install_burdens",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 250,
+        "end_line": 259,
+        "signature_hash": "e5d07edac57bd401",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_comparison_preserves_failure_reasons_unknowns_and_burdens:d1b33155846d5003",
+        "name": "AdoptionFrictionReceiptTests.test_comparison_preserves_failure_reasons_unknowns_and_burdens",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 238,
+        "end_line": 248,
+        "signature_hash": "f1c4a62098d8c9f1",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_compiler_authority_widening_fails_closed:f83436b0136585e3",
+        "name": "AdoptionFrictionReceiptTests.test_compiler_authority_widening_fails_closed",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 147,
+        "end_line": 152,
+        "signature_hash": "976418b6ca4a8bb5",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_compiler_install_and_permission_actions_cannot_be_hidden:3a473001442793e2",
+        "name": "AdoptionFrictionReceiptTests.test_compiler_install_and_permission_actions_cannot_be_hidden",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 205,
+        "end_line": 214,
+        "signature_hash": "6987e7388c031128",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_compiler_receipt_binding_recomputes_exact_integrity_digest:a259731e5b7f2efd",
+        "name": "AdoptionFrictionReceiptTests.test_compiler_receipt_binding_recomputes_exact_integrity_digest",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 139,
+        "end_line": 145,
+        "signature_hash": "1c7d5809b21f2fab",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_compiler_required_action_count_must_match_declared_actions:5607532481cf39d8",
+        "name": "AdoptionFrictionReceiptTests.test_compiler_required_action_count_must_match_declared_actions",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 154,
+        "end_line": 159,
+        "signature_hash": "96403bc203fb82a2",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_compiler_source_generation_is_identity_bearing:04edad2b9561881c",
+        "name": "AdoptionFrictionReceiptTests.test_compiler_source_generation_is_identity_bearing",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 176,
+        "end_line": 180,
+        "signature_hash": "279a963d80242a2f",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_complete_fixture_emits_stable_consequence_receipt:45459ff227a08b1f",
+        "name": "AdoptionFrictionReceiptTests.test_complete_fixture_emits_stable_consequence_receipt",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 161,
+        "end_line": 169,
+        "signature_hash": "065e057a1c5b2e96",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_consented_study_requires_explicit_consent_mode:03ccbc24289e69cf",
+        "name": "AdoptionFrictionReceiptTests.test_consented_study_requires_explicit_consent_mode",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 261,
+        "end_line": 266,
+        "signature_hash": "858391719a1ee416",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_mandatory_account_and_key_cannot_be_hidden_as_na:812352208c2c828e",
+        "name": "AdoptionFrictionReceiptTests.test_mandatory_account_and_key_cannot_be_hidden_as_na",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 197,
+        "end_line": 203,
+        "signature_hash": "6b2003e9112bc01d",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_missing_or_reordered_stage_fails:e47bc0bc089826b9",
+        "name": "AdoptionFrictionReceiptTests.test_missing_or_reordered_stage_fails",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 182,
+        "end_line": 190,
+        "signature_hash": "c1b490c32302cba4",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_noncompleted_stage_requires_reason:d1728ebdc3081c5f",
+        "name": "AdoptionFrictionReceiptTests.test_noncompleted_stage_requires_reason",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 192,
+        "end_line": 195,
+        "signature_hash": "534ecdebf7342b0c",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_observation_clock_does_not_churn_logical_identity:9e91f32599a34eb5",
+        "name": "AdoptionFrictionReceiptTests.test_observation_clock_does_not_churn_logical_identity",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 171,
+        "end_line": 174,
+        "signature_hash": "b5576fbb63b6d333",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_private_starting_state_and_direct_identity_cohort_rejected:05ca3f5b06c726bb",
+        "name": "AdoptionFrictionReceiptTests.test_private_starting_state_and_direct_identity_cohort_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 223,
+        "end_line": 236,
+        "signature_hash": "2421053753d7be67",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_unknown_friction_and_stage_metrics_never_become_zero:bd72163d0ef49703",
+        "name": "AdoptionFrictionReceiptTests.test_unknown_friction_and_stage_metrics_never_become_zero",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
+        "line": 216,
+        "end_line": 221,
+        "signature_hash": "b3d724bd1d5bf60b",
+        "file_digest8": "79235123a5b6cea3"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#class:BrowserFrictionAdapterTests:4460a1393e0e4181",
+        "name": "BrowserFrictionAdapterTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 86,
+        "end_line": 244,
+        "signature_hash": "f451351d7986c469",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#function:build:c85a0f3cf764c888",
+        "name": "build",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 71,
+        "end_line": 83,
+        "signature_hash": "c0724423e4a9512b",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#function:decision:0032d724962b1c3f",
+        "name": "decision",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 22,
+        "end_line": 36,
+        "signature_hash": "6a71dd6e542eac82",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#function:event:8e6bfeb6888fb540",
+        "name": "event",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "74f92a52866be808",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#function:observation:eb0a4f4d5b053afb",
+        "name": "observation",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 39,
+        "end_line": 56,
+        "signature_hash": "300c0045d64cf75a",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#function:unknown_vector:877e34e1ffd8ac0e",
+        "name": "unknown_vector",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "9a9a3bc467cc549e",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#function:weights:6951a7f9c684178b",
+        "name": "weights",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 67,
+        "end_line": 68,
+        "signature_hash": "fa6ab225da5512e0",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_acceptance_cannot_exist_without_render:3fc2bb07fe569546",
+        "name": "BrowserFrictionAdapterTests.test_acceptance_cannot_exist_without_render",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 167,
+        "end_line": 175,
+        "signature_hash": "bcd1798b1115a166",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_adapter_delegates_final_identity_to_canonical_zf00_builder:a8e5237440fbd42b",
+        "name": "BrowserFrictionAdapterTests.test_adapter_delegates_final_identity_to_canonical_zf00_builder",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 209,
+        "end_line": 216,
+        "signature_hash": "5d2832fc69e4234f",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_creation_value_component_must_remain_unknown_without_user_acceptance:ef44872d9bf468fd",
+        "name": "BrowserFrictionAdapterTests.test_creation_value_component_must_remain_unknown_without_user_acceptance",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 218,
+        "end_line": 228,
+        "signature_hash": "fc6abe8906775fdb",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_download_initiated_is_not_reopen_proof:a4cb7cf816e92d4e",
+        "name": "BrowserFrictionAdapterTests.test_download_initiated_is_not_reopen_proof",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 107,
+        "end_line": 116,
+        "signature_hash": "26bcaef595d13d93",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_evidence_refs_must_be_opaque_compact_refs_not_prose:2bbf76c26d426583",
+        "name": "BrowserFrictionAdapterTests.test_evidence_refs_must_be_opaque_compact_refs_not_prose",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 144,
+        "end_line": 146,
+        "signature_hash": "ea116845452f9070",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_missing_capability_becomes_canonical_blocked_stage:4a1809cbb2a37f76",
+        "name": "BrowserFrictionAdapterTests.test_missing_capability_becomes_canonical_blocked_stage",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 192,
+        "end_line": 207,
+        "signature_hash": "7c0aa1cbca1e1ca1",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_non_browser_route_cannot_use_browser_adapter:4cfe910fcc48d559",
+        "name": "BrowserFrictionAdapterTests.test_non_browser_route_cannot_use_browser_adapter",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 242,
+        "end_line": 244,
+        "signature_hash": "4083453386fc6f04",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_observed_persistence_requires_evidence_ref:fe411fb2e151eebb",
+        "name": "BrowserFrictionAdapterTests.test_observed_persistence_requires_evidence_ref",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 148,
+        "end_line": 150,
+        "signature_hash": "131450a5b596d2cc",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_output_bytes_without_render_are_refused:da9fd9e4bc18eefb",
+        "name": "BrowserFrictionAdapterTests.test_output_bytes_without_render_are_refused",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 156,
+        "end_line": 165,
+        "signature_hash": "53b7b56651616f45",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_persistence_cannot_exist_without_render:9bdf8677393e4d16",
+        "name": "BrowserFrictionAdapterTests.test_persistence_cannot_exist_without_render",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 177,
+        "end_line": 186,
+        "signature_hash": "4c964a4d0dd43d67",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_render_requires_browser_capability_and_input_causal_chain:1a43865f9b9d91b6",
+        "name": "BrowserFrictionAdapterTests.test_render_requires_browser_capability_and_input_causal_chain",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 188,
+        "end_line": 190,
+        "signature_hash": "4f4fe629668c0d97",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_render_success_requires_output_size_evidence:3d551c129ce864b6",
+        "name": "BrowserFrictionAdapterTests.test_render_success_requires_output_size_evidence",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 152,
+        "end_line": 154,
+        "signature_hash": "4d03ed7996a8f38c",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_reuse_recovery_component_must_remain_unknown_without_reopen:acf6599706963e0c",
+        "name": "BrowserFrictionAdapterTests.test_reuse_recovery_component_must_remain_unknown_without_reopen",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 230,
+        "end_line": 240,
+        "signature_hash": "b8d2a1b1be9dbd6d",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_simulated_save_is_unknown_not_complete:1645a126483799f3",
+        "name": "BrowserFrictionAdapterTests.test_simulated_save_is_unknown_not_complete",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 118,
+        "end_line": 126,
+        "signature_hash": "5987bfefccfe00d8",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_synthetic_technical_success_cannot_become_user_acceptance:494301a338d913c0",
+        "name": "BrowserFrictionAdapterTests.test_synthetic_technical_success_cannot_become_user_acceptance",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 96,
+        "end_line": 105,
+        "signature_hash": "e1f288255dece44b",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_user_acceptance_requires_typed_evidence_ref:1ec7ccac59bf7704",
+        "name": "BrowserFrictionAdapterTests.test_user_acceptance_requires_typed_evidence_ref",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 140,
+        "end_line": 142,
+        "signature_hash": "84c4c3fce8ebda51",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_user_explicit_acceptance_and_reopen_observed_complete_exact_stages:4a91229421a1114f",
+        "name": "BrowserFrictionAdapterTests.test_user_explicit_acceptance_and_reopen_observed_complete_exact_stages",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 87,
+        "end_line": 94,
+        "signature_hash": "d05135d938c4988f",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_browser_friction_adapter.py#method:BrowserFrictionAdapterTests.test_user_rejection_is_blocked_and_false:6ebfe3395e0e14e9",
+        "name": "BrowserFrictionAdapterTests.test_user_rejection_is_blocked_and_false",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_browser_friction_adapter.py",
+        "line": 128,
+        "end_line": 138,
+        "signature_hash": "f31d60f3bbffba18",
+        "file_digest8": "6a5a2d9ef4fe4f32"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -447947,7 +450399,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "28c5a920749582937d69ce5dda01d130",
-    "payload_hash": "0d6afdffc7279eb2851314be405c7bcc"
+    "record_fingerprint": "17acebd806fa68af69433124070bbcb1",
+    "payload_hash": "6908bd7f17acdf5ae359a2186f267f5e"
   }
 }
