@@ -1,0 +1,34 @@
+name: AURA ADOPT ZF-05A ZF-04 canonical share trust
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/share_capsule.py'
+      - 'tools/aura_adopt/test_share_capsule.py'
+      - 'tools/aura_adopt/share_distribution_trust_bridge.py'
+      - 'tools/aura_adopt/test_share_distribution_trust_bridge.py'
+      - '.github/workflows/aura-adopt-zf05a-zf04-canonical-share-trust.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canonical-share-trust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile ShareCapsule and canonical trust bridge
+        run: >-
+          python -m py_compile
+          tools/aura_adopt/share_capsule.py
+          tools/aura_adopt/test_share_capsule.py
+          tools/aura_adopt/share_distribution_trust_bridge.py
+          tools/aura_adopt/test_share_distribution_trust_bridge.py
+      - name: Re-run ZF-05A ShareCapsule regressions
+        run: python -m unittest tools.aura_adopt.test_share_capsule
+      - name: Run canonical distribution trust bridge regressions
+        run: python -m unittest tools.aura_adopt.test_share_distribution_trust_bridge
