@@ -111,13 +111,16 @@ class BridgeTests(unittest.TestCase):
         r["blockers"] = ["GLM53_MTP_CHECKPOINT_CLASSIFICATION_REQUIRED"]
         self.code("PROBE_BLOCKED", lambda: compile_packed(report=r))
 
-    def test_packed_requires_header_axis_and_shard_binding(self):
+    def test_packed_requires_header_axis_shard_and_fp8_dtype(self):
         _, _, hs = packed_fixture()
         hs[GATE]["shape"][0] = 255
         self.code("EXPERT_AXIS_HEADER_MISMATCH", lambda: compile_packed(hs=hs))
         _, _, hs = packed_fixture()
         hs[GATE]["shard"] = "wrong"
         self.code("HEADER_SHARD_BINDING_MISMATCH", lambda: compile_packed(hs=hs))
+        _, _, hs = packed_fixture()
+        hs[GATE]["dtype"] = "BF16"
+        self.code("PACKED_WEIGHT_DTYPE_MISMATCH", lambda: compile_packed(hs=hs))
 
     def test_vendor_and_partial_layouts_are_typed_residuals(self):
         r, _, _ = packed_fixture()
