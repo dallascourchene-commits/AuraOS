@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788048931,
+  "generated_at_unix": 1788052388,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1654,
+    "repo_file_count": 1658,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -47,6 +47,7 @@
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
       ".aura/plan_revision_deltas/bilateral_intent_guardrail_foundry_final_revision_2.v1.json",
+      ".aura/provider_policies/cost_first_cognitive_allocation.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_final.v2.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
@@ -927,6 +928,7 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_cost_first_orchestration.py",
       "core/aura_dual_persistence.py",
       "core/aura_resident_idle_policy.py",
       "core/aura_task_dispatcher.py",
@@ -1091,6 +1093,7 @@
       "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
       "docs/BENCHMARKS.md",
       "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
+      "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
       "docs/CREATOR-STUDIO-GEMINI-DELTA-GATE10.md",
       "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
       "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
@@ -1454,6 +1457,7 @@
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
+      "tests/test_aura_cost_first_orchestration.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_dual_persistence.py",
@@ -1682,6 +1686,7 @@
       "aura_spatial_importers/spz.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
+      "core/aura_cost_first_orchestration.py",
       "core/aura_dual_persistence.py",
       "core/aura_resident_idle_policy.py",
       "core/aura_task_dispatcher.py",
@@ -1761,8 +1766,7 @@
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
       "tests/test_aura_arena_wfst_phase_a.py",
       "tests/test_aura_benchmark_four.py",
-      "tests/test_aura_benchmark_four_hardening.py",
-      "tests/test_aura_bilateral_gate_dialogue.py"
+      "tests/test_aura_benchmark_four_hardening.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1770,16 +1774,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1654,
-      "bytes": 26402120,
-      "tokens_est": 6590918,
+      "files": 1658,
+      "bytes": 26418130,
+      "tokens_est": 6594922,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 241,
+        "knowledge_artifact": 242,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1006,
-        "schema_or_lexicon": 273,
+        "python_module": 1008,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -96756,6 +96760,36 @@
         "signature_hash": "d4d8a57e306c4b5e"
       }
     ],
+    "CognitionRequest": [
+      {
+        "file": "core/aura_cost_first_orchestration.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 40,
+        "semantic_id": "core/aura_cost_first_orchestration.py#class:CognitionRequest:f88b9300b6e59d32",
+        "signature_hash": "885e49c6647adf3a"
+      }
+    ],
+    "choose_cognition_route": [
+      {
+        "file": "core/aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 120,
+        "semantic_id": "core/aura_cost_first_orchestration.py#function:choose_cognition_route:66266f636f5029da",
+        "signature_hash": "1a7e47dda756dbc1"
+      }
+    ],
+    "paid_inference_amortization_contract": [
+      {
+        "file": "core/aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 125,
+        "semantic_id": "core/aura_cost_first_orchestration.py#function:paid_inference_amortization_contract:7b6ac98759db14b7",
+        "signature_hash": "a20206ebb6274f1b"
+      }
+    ],
     "Replica": [
       {
         "file": "core/aura_dual_persistence.py",
@@ -130048,6 +130082,126 @@
         "end_line": 162,
         "semantic_id": "tests/test_aura_continuity_packet_merge_gate.py#function:test_j1_adapter_accepts_canonical_authority_constants:df59a4595e57124e",
         "signature_hash": "0b3757b9a4f8f0fd"
+      }
+    ],
+    "test_reuse_beats_every_provider": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 8,
+        "end_line": 19,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_reuse_beats_every_provider:625229b8723c3c72",
+        "signature_hash": "7acd5e6fc63d3a23"
+      }
+    ],
+    "test_auraos_deterministic_before_model": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_auraos_deterministic_before_model:b1bfc3150f995697",
+        "signature_hash": "e29595aab801a180"
+      }
+    ],
+    "test_interactive_chatgpt_control_plane_before_paid_api": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 35,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_interactive_chatgpt_control_plane_before_paid_api:6236d41f028df6fa",
+        "signature_hash": "08241166bce53bef"
+      }
+    ],
+    "test_local_model_before_paid_remote_when_sufficient": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 42,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_local_model_before_paid_remote_when_sufficient:fd6dd8075efa86d1",
+        "signature_hash": "3680ede7f9904df8"
+      }
+    ],
+    "test_deepseek_is_default_paid_remote_provider": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 49,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_deepseek_is_default_paid_remote_provider:928875df7576a50b",
+        "signature_hash": "336c6c77887fbccb"
+      }
+    ],
+    "test_no_implicit_paid_fallback_when_deepseek_unavailable": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 56,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_no_implicit_paid_fallback_when_deepseek_unavailable:22f8e2db509eda6f",
+        "signature_hash": "39a1850a98737070"
+      }
+    ],
+    "test_deepseek_unknown_cost_blocks_instead_of_assuming_free": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 63,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_deepseek_unknown_cost_blocks_instead_of_assuming_free:e04b1b27221dd267",
+        "signature_hash": "2359b203e9ccbe9e"
+      }
+    ],
+    "test_expensive_frontier_requires_explicit_owner_authorization": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 75,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_expensive_frontier_requires_explicit_owner_authorization:2cd979e22e0ebb52",
+        "signature_hash": "9a8aa165fc4c1477"
+      }
+    ],
+    "test_expensive_frontier_requires_cost_bound": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_expensive_frontier_requires_cost_bound:b8a1eb5cebb319f7",
+        "signature_hash": "4a226b165eb3ed0f"
+      }
+    ],
+    "test_expensive_frontier_only_when_earned_and_authorized": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 103,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_expensive_frontier_only_when_earned_and_authorized:f80943d50fea188f",
+        "signature_hash": "e957735292373ef9"
+      }
+    ],
+    "test_d1_never_becomes_cost_optimization_problem": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 108,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_d1_never_becomes_cost_optimization_problem:0c764b699f2ac49e",
+        "signature_hash": "3a805ef10418ae87"
+      }
+    ],
+    "test_background_cannot_cross_gate10": [
+      {
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "kind": "function",
+        "line": 111,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_background_cannot_cross_gate10:c49bbb85f79d5fa9",
+        "signature_hash": "63483d6412041aa5"
       }
     ],
     "_grammar": [
@@ -163936,6 +164090,53 @@
         0.139611,
         -0.157772,
         -0.089669
+      ]
+    },
+    {
+      "path": ".aura/provider_policies/cost_first_cognitive_allocation.v1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3512,
+      "lines": 69,
+      "tokens_est": 878,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fb3928c4d45cf8a2",
+      "vector": [
+        -0.095043,
+        -0.215212,
+        -0.15622,
+        0.134371,
+        0.167145,
+        0.130001,
+        0.001092,
+        0.167145,
+        0.175884,
+        -0.136556,
+        -0.27202,
+        -0.25891,
+        -0.193363,
+        -0.112522,
+        0.154035,
+        0.088488,
+        0.007647,
+        0.206473,
+        -0.195548,
+        -0.213027,
+        -0.012017,
+        0.112522,
+        -0.228322,
+        0.265465,
+        -0.26328,
+        0.241431,
+        -0.068824,
+        0.269835,
+        0.095043,
+        0.256725,
+        0.012017,
+        -0.123447
       ]
     },
     {
@@ -226654,6 +226855,53 @@
       ]
     },
     {
+      "path": "core/aura_cost_first_orchestration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4782,
+      "lines": 126,
+      "tokens_est": 1196,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "846cabe6ed35869e",
+      "vector": [
+        -0.165016,
+        0.152074,
+        0.113247,
+        0.169331,
+        0.203844,
+        0.102461,
+        -0.182273,
+        0.210315,
+        -0.275027,
+        -0.201687,
+        -0.117561,
+        -0.18443,
+        -0.149917,
+        0.050691,
+        0.100304,
+        -0.033435,
+        0.061477,
+        -0.270713,
+        0.212472,
+        0.244828,
+        0.231886,
+        0.244828,
+        0.091676,
+        0.255614,
+        0.195215,
+        -0.145603,
+        0.022649,
+        -0.218943,
+        0.2362,
+        0.177959,
+        -0.083047,
+        -0.08089
+      ]
+    },
+    {
       "path": "core/aura_dual_persistence.py",
       "role": "python_module",
       "binary": false,
@@ -235079,6 +235327,53 @@
         -0.04002,
         0.078827,
         -0.083678
+      ]
+    },
+    {
+      "path": "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 3977,
+      "lines": 60,
+      "tokens_est": 995,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "58952b1e9f10556f",
+      "vector": [
+        0.025356,
+        -0.095914,
+        -0.270102,
+        0.162061,
+        -0.038586,
+        -0.093709,
+        0.069455,
+        -0.256872,
+        0.173086,
+        0.203954,
+        0.073865,
+        -0.175291,
+        0.208364,
+        -0.226004,
+        -0.020947,
+        -0.148832,
+        0.186315,
+        -0.190725,
+        -0.19734,
+        -0.243643,
+        0.248053,
+        0.137807,
+        0.212774,
+        -0.007717,
+        -0.029766,
+        -0.250258,
+        0.18852,
+        -0.248053,
+        0.223799,
+        0.151036,
+        -0.113553,
+        0.208364
       ]
     },
     {
@@ -254965,6 +255260,53 @@
         -0.26254,
         -0.282448,
         -0.145579
+      ]
+    },
+    {
+      "path": "tests/test_aura_cost_first_orchestration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3739,
+      "lines": 114,
+      "tokens_est": 935,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1c8276389c382ff3",
+      "vector": [
+        0.225181,
+        0.204355,
+        0.25642,
+        0.26423,
+        0.097622,
+        0.105432,
+        -0.092415,
+        0.074193,
+        -0.209562,
+        0.188736,
+        -0.04035,
+        0.082002,
+        0.141877,
+        -0.139274,
+        -0.061176,
+        0.251214,
+        -0.050763,
+        0.219975,
+        0.175719,
+        -0.011715,
+        -0.321501,
+        0.318898,
+        -0.253817,
+        0.082002,
+        -0.246007,
+        -0.009111,
+        -0.175719,
+        0.128861,
+        0.003905,
+        0.149687,
+        -0.121051,
+        0.199149
       ]
     },
     {
@@ -287990,16 +288332,16 @@
     }
   },
   "summary": {
-    "file_count": 1654,
-    "total_bytes": 26402120,
-    "text_tokens_est": 6590918,
+    "file_count": 1658,
+    "total_bytes": 26418130,
+    "text_tokens_est": 6594922,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 241,
+      "knowledge_artifact": 242,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1006,
-      "schema_or_lexicon": 273,
+      "python_module": 1008,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288056,6 +288398,7 @@
       ".aura/morphology_profiles/six_slot.v1.json",
       ".aura/output_schemas/localization_packet.v1.json",
       ".aura/plan_revision_deltas/bilateral_intent_guardrail_foundry_final_revision_2.v1.json",
+      ".aura/provider_policies/cost_first_cognitive_allocation.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_final.v2.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
       ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
@@ -288936,6 +289279,7 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_cost_first_orchestration.py",
       "core/aura_dual_persistence.py",
       "core/aura_resident_idle_policy.py",
       "core/aura_task_dispatcher.py",
@@ -289100,6 +289444,7 @@
       "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
       "docs/BENCHMARKS.md",
       "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
+      "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
       "docs/CREATOR-STUDIO-GEMINI-DELTA-GATE10.md",
       "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
       "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
@@ -289463,6 +289808,7 @@
       "tests/test_aura_continuity_packet.py",
       "tests/test_aura_continuity_packet_digest_hardening.py",
       "tests/test_aura_continuity_packet_merge_gate.py",
+      "tests/test_aura_cost_first_orchestration.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_dual_persistence.py",
@@ -384013,6 +384359,36 @@
         "file_digest8": "31325b9af6403347"
       },
       {
+        "semantic_id": "core/aura_cost_first_orchestration.py#class:CognitionRequest:f88b9300b6e59d32",
+        "name": "CognitionRequest",
+        "kind": "class",
+        "file": "core/aura_cost_first_orchestration.py",
+        "line": 15,
+        "end_line": 40,
+        "signature_hash": "885e49c6647adf3a",
+        "file_digest8": "846cabe6ed35869e"
+      },
+      {
+        "semantic_id": "core/aura_cost_first_orchestration.py#function:choose_cognition_route:66266f636f5029da",
+        "name": "choose_cognition_route",
+        "kind": "function",
+        "file": "core/aura_cost_first_orchestration.py",
+        "line": 55,
+        "end_line": 120,
+        "signature_hash": "1a7e47dda756dbc1",
+        "file_digest8": "846cabe6ed35869e"
+      },
+      {
+        "semantic_id": "core/aura_cost_first_orchestration.py#function:paid_inference_amortization_contract:7b6ac98759db14b7",
+        "name": "paid_inference_amortization_contract",
+        "kind": "function",
+        "file": "core/aura_cost_first_orchestration.py",
+        "line": 123,
+        "end_line": 125,
+        "signature_hash": "a20206ebb6274f1b",
+        "file_digest8": "846cabe6ed35869e"
+      },
+      {
         "semantic_id": "core/aura_dual_persistence.py#class:ArtifactReplicaRecord:3fc21357d89a0bda",
         "name": "ArtifactReplicaRecord",
         "kind": "class",
@@ -418493,6 +418869,126 @@
         "file_digest8": "c9a90818f5d9c7ab"
       },
       {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_auraos_deterministic_before_model:b1bfc3150f995697",
+        "name": "test_auraos_deterministic_before_model",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 22,
+        "end_line": 24,
+        "signature_hash": "e29595aab801a180",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_background_cannot_cross_gate10:c49bbb85f79d5fa9",
+        "name": "test_background_cannot_cross_gate10",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 111,
+        "end_line": 113,
+        "signature_hash": "63483d6412041aa5",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_d1_never_becomes_cost_optimization_problem:0c764b699f2ac49e",
+        "name": "test_d1_never_becomes_cost_optimization_problem",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 106,
+        "end_line": 108,
+        "signature_hash": "3a805ef10418ae87",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_deepseek_is_default_paid_remote_provider:928875df7576a50b",
+        "name": "test_deepseek_is_default_paid_remote_provider",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 45,
+        "end_line": 49,
+        "signature_hash": "336c6c77887fbccb",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_deepseek_unknown_cost_blocks_instead_of_assuming_free:e04b1b27221dd267",
+        "name": "test_deepseek_unknown_cost_blocks_instead_of_assuming_free",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 59,
+        "end_line": 63,
+        "signature_hash": "2359b203e9ccbe9e",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_expensive_frontier_only_when_earned_and_authorized:f80943d50fea188f",
+        "name": "test_expensive_frontier_only_when_earned_and_authorized",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 91,
+        "end_line": 103,
+        "signature_hash": "e957735292373ef9",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_expensive_frontier_requires_cost_bound:b8a1eb5cebb319f7",
+        "name": "test_expensive_frontier_requires_cost_bound",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 78,
+        "end_line": 88,
+        "signature_hash": "4a226b165eb3ed0f",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_expensive_frontier_requires_explicit_owner_authorization:2cd979e22e0ebb52",
+        "name": "test_expensive_frontier_requires_explicit_owner_authorization",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 66,
+        "end_line": 75,
+        "signature_hash": "9a8aa165fc4c1477",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_interactive_chatgpt_control_plane_before_paid_api:6236d41f028df6fa",
+        "name": "test_interactive_chatgpt_control_plane_before_paid_api",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 27,
+        "end_line": 35,
+        "signature_hash": "08241166bce53bef",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_local_model_before_paid_remote_when_sufficient:fd6dd8075efa86d1",
+        "name": "test_local_model_before_paid_remote_when_sufficient",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 38,
+        "end_line": 42,
+        "signature_hash": "3680ede7f9904df8",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_no_implicit_paid_fallback_when_deepseek_unavailable:22f8e2db509eda6f",
+        "name": "test_no_implicit_paid_fallback_when_deepseek_unavailable",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 52,
+        "end_line": 56,
+        "signature_hash": "39a1850a98737070",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
+        "semantic_id": "tests/test_aura_cost_first_orchestration.py#function:test_reuse_beats_every_provider:625229b8723c3c72",
+        "name": "test_reuse_beats_every_provider",
+        "kind": "function",
+        "file": "tests/test_aura_cost_first_orchestration.py",
+        "line": 8,
+        "end_line": 19,
+        "signature_hash": "7acd5e6fc63d3a23",
+        "file_digest8": "1c8276389c382ff3"
+      },
+      {
         "semantic_id": "tests/test_aura_crucible_phase_b.py#function:_experience:21ffd8555ec59a7b",
         "name": "_experience",
         "kind": "function",
@@ -448843,7 +449339,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "fb34dea4c9480c1c15102c17a4aedd85",
-    "payload_hash": "23b39670fcef77cf7bf0ac8b502bfc84"
+    "record_fingerprint": "3904fe51d6dad5e2ad8c2b727b3a0f74",
+    "payload_hash": "85da0b9b1c6b3fc2e0682dc88344ac45"
   }
 }

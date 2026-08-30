@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1654
-- **total_bytes**: 26402120
-- **text_tokens_est**: 6590918
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1006, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1658
+- **total_bytes**: 26418130
+- **text_tokens_est**: 6594922
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1654,
+  "repo_file_count": 1658,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -65,6 +65,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".aura/morphology_profiles/six_slot.v1.json",
     ".aura/output_schemas/localization_packet.v1.json",
     ".aura/plan_revision_deltas/bilateral_intent_guardrail_foundry_final_revision_2.v1.json",
+    ".aura/provider_policies/cost_first_cognitive_allocation.v1.json",
     ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_final.v2.json",
     ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1.v1.json",
     ".aura/refactor_objectives/bilateral_intent_guardrail_foundry_pr1_revision.v1.json",
@@ -945,6 +946,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "bus_init.cpp",
     "cognitive_router.py",
     "cognitive_search.rs",
+    "core/aura_cost_first_orchestration.py",
     "core/aura_dual_persistence.py",
     "core/aura_resident_idle_policy.py",
     "core/aura_task_dispatcher.py",
@@ -1109,6 +1111,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
     "docs/BENCHMARKS.md",
     "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
+    "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
     "docs/CREATOR-STUDIO-GEMINI-DELTA-GATE10.md",
     "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
     "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
@@ -1472,6 +1475,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_continuity_packet.py",
     "tests/test_aura_continuity_packet_digest_hardening.py",
     "tests/test_aura_continuity_packet_merge_gate.py",
+    "tests/test_aura_cost_first_orchestration.py",
     "tests/test_aura_crucible_phase_b.py",
     "tests/test_aura_dikwp_router_pipeline.py",
     "tests/test_aura_dual_persistence.py",
@@ -1700,6 +1704,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_spatial_importers/spz.py",
     "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
     "benchmarks/refactor_code_quality/generate_fixture.py",
+    "core/aura_cost_first_orchestration.py",
     "core/aura_dual_persistence.py",
     "core/aura_resident_idle_policy.py",
     "core/aura_task_dispatcher.py",
@@ -1779,8 +1784,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_st3gg_shadow_hardening.py",
     "tests/test_aura_arena_wfst_phase_a.py",
     "tests/test_aura_benchmark_four.py",
-    "tests/test_aura_benchmark_four_hardening.py",
-    "tests/test_aura_bilateral_gate_dialogue.py"
+    "tests/test_aura_benchmark_four_hardening.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1794,16 +1798,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1654,
-  "bytes": 26402120,
-  "tokens_est": 6590918,
+  "files": 1658,
+  "bytes": 26418130,
+  "tokens_est": 6594922,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 241,
+    "knowledge_artifact": 242,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1006,
-    "schema_or_lexicon": 273,
+    "python_module": 1008,
+    "schema_or_lexicon": 274,
     "support_file": 49
   }
 }
