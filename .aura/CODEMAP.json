@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788126356,
+  "generated_at_unix": 1788127111,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1669,
+    "repo_file_count": 1672,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -146,6 +146,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-g1-metadata-contract.yml",
+      ".github/workflows/awj032-glm53-mtp-external-appraiser.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1656,11 +1657,13 @@
       "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
       "tools/awj032/glm53_checkpoint_layout_probe.py",
       "tools/awj032/glm53_checkpoint_source_binding.py",
+      "tools/awj032/mtp_resolver_trust_adapter.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_checkpoint_extra_layer_classification.py",
       "tools/awj032/test_glm53_checkpoint_extra_layer_currentness_type.py",
       "tools/awj032/test_glm53_checkpoint_layout_probe.py",
       "tools/awj032/test_glm53_checkpoint_source_binding.py",
+      "tools/awj032/test_mtp_resolver_trust_adapter.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1785,16 +1788,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1669,
-      "bytes": 26501410,
-      "tokens_est": 6615746,
+      "files": 1672,
+      "bytes": 26518421,
+      "tokens_est": 6620000,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1017,
-        "schema_or_lexicon": 275,
+        "python_module": 1019,
+        "schema_or_lexicon": 276,
         "support_file": 49
       }
     },
@@ -3973,6 +3976,14 @@
         "end_line": 42,
         "semantic_id": "tools/awj032/glm53_checkpoint_source_binding.py#function:_canonical:e60c8017bb0c9dc5",
         "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_canonical:9018c3a2bed35cab",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4415,6 +4426,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_digest:2eacfd85ad6feac0",
+        "signature_hash": "514f786724465716"
       }
     ],
     "_token_proxy": [
@@ -24403,6 +24422,14 @@
         "end_line": 481,
         "semantic_id": "aura_ephemeral_workspace_contracts.py#function:_bool:bd9cd6160906e7bf",
         "signature_hash": "44cc9609a5c19f78"
+      },
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 78,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_bool:fdb5214627683766",
+        "signature_hash": "51d7bccf79b71c62"
       }
     ],
     "_snapshot": [
@@ -134307,6 +134334,14 @@
         "end_line": 33,
         "semantic_id": "tools/awj032/test_glm53_checkpoint_extra_layer_currentness_type.py#function:observation:f10e9739ed60bcec",
         "signature_hash": "cb779ced51996dfa"
+      },
+      {
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 44,
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#function:observation:47ed008c1d7d6d1e",
+        "signature_hash": "b6e0fc5d441f8acd"
       }
     ],
     "expected_project_refs": [
@@ -136931,6 +136966,14 @@
         "end_line": 223,
         "semantic_id": "tests/test_aura_gate.py#function:request:7c151532eef8bfd3",
         "signature_hash": "9045b73142116e1c"
+      },
+      {
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 26,
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#function:request:423d191fb56cf606",
+        "signature_hash": "aa30402c5be12ee6"
       }
     ],
     "test_prepare_compiles_exact_evidence_contract": [
@@ -138821,6 +138864,14 @@
         "end_line": 58,
         "semantic_id": "tools/awj032/glm53_checkpoint_extra_layer_classification.py#function:_token:a4d81a07a6e7c014",
         "signature_hash": "3f76f5429ebcf8ae"
+      },
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_token:c19b98018be400fb",
+        "signature_hash": "f55ced72f607e038"
       }
     ],
     "key_one": [
@@ -158637,6 +158688,156 @@
         "signature_hash": "2f88fcc554340afa"
       }
     ],
+    "MTPResolverTrustError": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#class:MTPResolverTrustError:776e55b0a47e67f2",
+        "signature_hash": "13969f8412838e53"
+      }
+    ],
+    "MTPResolverTrustError.__init__": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:MTPResolverTrustError.__init__:2b87ae170d4e9178",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_sha40": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 65,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_sha40:bc8220954159809d",
+        "signature_hash": "26703d793ed2601a"
+      }
+    ],
+    "_sha64": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 72,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_sha64:b827ab41caac8b50",
+        "signature_hash": "9d84ad74f1b08e75"
+      }
+    ],
+    "_roles": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "function",
+        "line": 81,
+        "end_line": 104,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_roles:84586334b4708f2e",
+        "signature_hash": "9d2099e170391f92"
+      }
+    ],
+    "GLM53MTPResolverTrustRequest": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "class",
+        "line": 108,
+        "end_line": 159,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#class:GLM53MTPResolverTrustRequest:523738af6e0187b1",
+        "signature_hash": "9e5c54bcbb1afcb3"
+      }
+    ],
+    "GLM53MTPResolverTrustRequest.normalized": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 155,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:GLM53MTPResolverTrustRequest.normalized:ea5b1789460f4a87",
+        "signature_hash": "3e30758942a7bf1b"
+      }
+    ],
+    "GLM53MTPResolverTrustRequest.request_digest": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 159,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:GLM53MTPResolverTrustRequest.request_digest:999f01bd792086e7",
+        "signature_hash": "6fa9305943538fcf"
+      }
+    ],
+    "ExternalAppraiserObservation": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "class",
+        "line": 163,
+        "end_line": 197,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#class:ExternalAppraiserObservation:00c113ea8ebbec1a",
+        "signature_hash": "42f105aaa32c768c"
+      }
+    ],
+    "ExternalAppraiserObservation.normalized": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 193,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:ExternalAppraiserObservation.normalized:ed0d3d70d43806cf",
+        "signature_hash": "3e30758942a7bf1b"
+      }
+    ],
+    "ExternalAppraiserObservation.observation_digest": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 196,
+        "end_line": 197,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:ExternalAppraiserObservation.observation_digest:8596f27ad7a99166",
+        "signature_hash": "28f677c5b8842bca"
+      }
+    ],
+    "ResolverTrustAdmission": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "class",
+        "line": 201,
+        "end_line": 216,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#class:ResolverTrustAdmission:318fa7a46d9aeb37",
+        "signature_hash": "9d1970967fc554aa"
+      }
+    ],
+    "ResolverTrustAdmission.to_dict": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 212,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:ResolverTrustAdmission.to_dict:659d494558d55da1",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "ResolverTrustAdmission.logical_id": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 215,
+        "end_line": 216,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:ResolverTrustAdmission.logical_id:83c8dce41e224a40",
+        "signature_hash": "77512dea4c34aaf7"
+      }
+    ],
+    "admit_external_appraiser": [
+      {
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "kind": "function",
+        "line": 219,
+        "end_line": 251,
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:admit_external_appraiser:a3f81cc5c1dbaa5a",
+        "signature_hash": "e1cc6ed77077a30e"
+      }
+    ],
     "make_tree": [
       {
         "file": "tools/awj032/test_airllm_source_admission.py",
@@ -159223,6 +159424,106 @@
         "end_line": 89,
         "semantic_id": "tools/awj032/test_glm53_checkpoint_source_binding.py#method:SourceBindingTests.test_probe_receives_only_bound_parsed_sources.fake_probe:eece51bc838ec2d9",
         "signature_hash": "e326352b503b9926"
+      }
+    ],
+    "MTPResolverTrustAdapterTests": [
+      {
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 119,
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#class:MTPResolverTrustAdapterTests:fdc2629f7249726a",
+        "signature_hash": "d7777858b4063529"
+      }
+    ],
+    "MTPResolverTrustAdapterTests.test_no_appraiser_retains_provenance_blocker": [
+      {
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 54,
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_no_appraiser_retains_provenance_blocker:d6869c357bb53364",
+        "signature_hash": "2dd70e5db92073e6"
+      }
+    ],
+    "MTPResolverTrustAdapterTests.test_fully_matching_appraiser_is_never_self_authenticated": [
+      {
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 64,
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_fully_matching_appraiser_is_never_self_authenticated:d814a66b4cb0e46f",
+        "signature_hash": "ca9b4ca800a66eb6"
+      }
+    ],
+    "MTPResolverTrustAdapterTests.test_request_digest_binds_model_and_index_source_generation": [
+      {
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 69,
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_request_digest_binds_model_and_index_source_generation:f90f6f1769431593",
+        "signature_hash": "178745b0906f6c8f"
+      }
+    ],
+    "MTPResolverTrustAdapterTests.test_request_digest_binds_policy_issuer_and_resolver_generations": [
+      {
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_request_digest_binds_policy_issuer_and_resolver_generations:425db8eed38cdbe4",
+        "signature_hash": "c8af24fe47df3bc5"
+      }
+    ],
+    "MTPResolverTrustAdapterTests.test_cross_domain_authority_cast_is_rejected": [
+      {
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 81,
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_cross_domain_authority_cast_is_rejected:3dda5050dfa951ca",
+        "signature_hash": "5e7e4d3799c0ed05"
+      }
+    ],
+    "MTPResolverTrustAdapterTests.test_appraiser_request_digest_mismatch_is_rejected": [
+      {
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 88,
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_appraiser_request_digest_mismatch_is_rejected:2469af0c9b545e92",
+        "signature_hash": "17f9f6d16f50a4a5"
+      }
+    ],
+    "MTPResolverTrustAdapterTests.test_stale_policy_or_revoked_attestation_is_unsatisfied": [
+      {
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 103,
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_stale_policy_or_revoked_attestation_is_unsatisfied:a0df959087c1c96a",
+        "signature_hash": "dcd7cdb03834905c"
+      }
+    ],
+    "MTPResolverTrustAdapterTests.test_truthy_integer_is_not_a_trust_boolean": [
+      {
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 110,
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_truthy_integer_is_not_a_trust_boolean:f7e768db962a137d",
+        "signature_hash": "4665141319a2574e"
+      }
+    ],
+    "MTPResolverTrustAdapterTests.test_effect_ceiling_remains_hard_false_for_every_disposition": [
+      {
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 119,
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_effect_ceiling_remains_hard_false_for_every_disposition:4be5f35f5234fae4",
+        "signature_hash": "2c780e811fb84e32"
       }
     ],
     "_coordinates": [
@@ -160343,6 +160644,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-g1-metadata-contract.yml",
+      ".github/workflows/awj032-glm53-mtp-external-appraiser.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -160651,6 +160953,11 @@
     ],
     "python scripts/aura_spatial_s5_s6_construction_architect_harness.py --repo-root . --base-ref \"origin/$BASE_REF\" --head-ref HEAD --observed-head \"$(git rev-parse HEAD)\" --receipt /tmp/aura-spatial-s5-s6-receipts/full.json": [
       ".github/workflows/aura-spatial-s5-s6-construction.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/awj032-glm53-mtp-external-appraiser.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
+      "tools/awj032/README.md"
     ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
@@ -161339,10 +161646,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
-      "tools/awj032/README.md"
     ],
     "python aura_daemon.py": [
       "docs/staging/ready_review/README_STAGED.md"
@@ -170389,6 +170692,63 @@
         -0.014254,
         -0.132674,
         -0.167761
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-mtp-external-appraiser.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1769,
+      "lines": 47,
+      "tokens_est": 443,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          45
+        ],
+        "python -m unittest": [
+          46
+        ]
+      },
+      "topology": {},
+      "digest8": "dbddd9596d2d06e6",
+      "vector": [
+        -0.326656,
+        -0.016785,
+        -0.055519,
+        -0.132987,
+        -0.233695,
+        -0.109746,
+        0.078759,
+        -0.050354,
+        -0.192379,
+        0.050354,
+        -0.244024,
+        0.120075,
+        -0.223366,
+        -0.12524,
+        -0.169138,
+        0.326656,
+        0.305998,
+        -0.233695,
+        -0.078759,
+        -0.215619,
+        -0.218201,
+        -0.290505,
+        -0.112328,
+        0.099417,
+        -0.138151,
+        -0.171721,
+        -0.197543,
+        -0.040025,
+        0.135569,
+        0.014202,
+        -0.073595,
+        -0.117493
       ]
     },
     {
@@ -265927,6 +266287,53 @@
       ]
     },
     {
+      "path": "tools/awj032/mtp_resolver_trust_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9811,
+      "lines": 252,
+      "tokens_est": 2453,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7d69b4724f8d84b6",
+      "vector": [
+        0.096662,
+        0.107523,
+        0.220477,
+        -0.198755,
+        0.194411,
+        0.270438,
+        0.146623,
+        -0.120556,
+        0.13359,
+        0.224822,
+        -0.261749,
+        0.083629,
+        -0.196583,
+        0.213961,
+        -0.140106,
+        0.164,
+        0.09449,
+        -0.209616,
+        -0.242199,
+        0.242199,
+        0.222649,
+        0.040185,
+        0.109696,
+        0.107523,
+        -0.218305,
+        -0.190067,
+        -0.174861,
+        0.242199,
+        -0.122729,
+        0.096662,
+        0.09449,
+        -0.13359
+      ]
+    },
+    {
       "path": "tools/awj032/test_airllm_source_admission.py",
       "role": "python_module",
       "binary": false,
@@ -266159,6 +266566,53 @@
         -0.095897,
         -0.154163,
         0.207574
+      ]
+    },
+    {
+      "path": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5431,
+      "lines": 124,
+      "tokens_est": 1358,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0eff2911fb149dc5",
+      "vector": [
+        0.134893,
+        -0.062168,
+        -0.226386,
+        0.001173,
+        -0.083282,
+        -0.144277,
+        0.132547,
+        -0.228732,
+        -0.221694,
+        0.083282,
+        -0.123163,
+        -0.036363,
+        0.144277,
+        -0.252192,
+        -0.231078,
+        0.22404,
+        -0.148969,
+        -0.261576,
+        -0.207618,
+        0.27096,
+        0.242808,
+        0.238116,
+        0.0434,
+        -0.252192,
+        -0.165391,
+        -0.242808,
+        0.158353,
+        0.024633,
+        0.038709,
+        0.146623,
+        0.045746,
+        -0.207618
       ]
     },
     {
@@ -290160,16 +290614,16 @@
     }
   },
   "summary": {
-    "file_count": 1669,
-    "total_bytes": 26501410,
-    "text_tokens_est": 6615746,
+    "file_count": 1672,
+    "total_bytes": 26518421,
+    "text_tokens_est": 6620000,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1017,
-      "schema_or_lexicon": 275,
+      "python_module": 1019,
+      "schema_or_lexicon": 276,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -290325,6 +290779,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-g1-metadata-contract.yml",
+      ".github/workflows/awj032-glm53-mtp-external-appraiser.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -291835,11 +292290,13 @@
       "tools/awj032/glm53_checkpoint_extra_layer_classification.py",
       "tools/awj032/glm53_checkpoint_layout_probe.py",
       "tools/awj032/glm53_checkpoint_source_binding.py",
+      "tools/awj032/mtp_resolver_trust_adapter.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_checkpoint_extra_layer_classification.py",
       "tools/awj032/test_glm53_checkpoint_extra_layer_currentness_type.py",
       "tools/awj032/test_glm53_checkpoint_layout_probe.py",
       "tools/awj032/test_glm53_checkpoint_source_binding.py",
+      "tools/awj032/test_mtp_resolver_trust_adapter.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -450598,6 +451055,196 @@
         "file_digest8": "d65427be6382795d"
       },
       {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#class:ExternalAppraiserObservation:00c113ea8ebbec1a",
+        "name": "ExternalAppraiserObservation",
+        "kind": "class",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 163,
+        "end_line": 197,
+        "signature_hash": "42f105aaa32c768c",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#class:GLM53MTPResolverTrustRequest:523738af6e0187b1",
+        "name": "GLM53MTPResolverTrustRequest",
+        "kind": "class",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 108,
+        "end_line": 159,
+        "signature_hash": "9e5c54bcbb1afcb3",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#class:MTPResolverTrustError:776e55b0a47e67f2",
+        "name": "MTPResolverTrustError",
+        "kind": "class",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 31,
+        "end_line": 35,
+        "signature_hash": "13969f8412838e53",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#class:ResolverTrustAdmission:318fa7a46d9aeb37",
+        "name": "ResolverTrustAdmission",
+        "kind": "class",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 201,
+        "end_line": 216,
+        "signature_hash": "9d1970967fc554aa",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_bool:fdb5214627683766",
+        "name": "_bool",
+        "kind": "function",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 75,
+        "end_line": 78,
+        "signature_hash": "51d7bccf79b71c62",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_canonical:9018c3a2bed35cab",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 38,
+        "end_line": 45,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_digest:2eacfd85ad6feac0",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_roles:84586334b4708f2e",
+        "name": "_roles",
+        "kind": "function",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 81,
+        "end_line": 104,
+        "signature_hash": "9d2099e170391f92",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_sha40:bc8220954159809d",
+        "name": "_sha40",
+        "kind": "function",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 61,
+        "end_line": 65,
+        "signature_hash": "26703d793ed2601a",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_sha64:b827ab41caac8b50",
+        "name": "_sha64",
+        "kind": "function",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 68,
+        "end_line": 72,
+        "signature_hash": "9d84ad74f1b08e75",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:_token:c19b98018be400fb",
+        "name": "_token",
+        "kind": "function",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 52,
+        "end_line": 58,
+        "signature_hash": "f55ced72f607e038",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#function:admit_external_appraiser:a3f81cc5c1dbaa5a",
+        "name": "admit_external_appraiser",
+        "kind": "function",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 219,
+        "end_line": 251,
+        "signature_hash": "e1cc6ed77077a30e",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:ExternalAppraiserObservation.normalized:ed0d3d70d43806cf",
+        "name": "ExternalAppraiserObservation.normalized",
+        "kind": "method",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 176,
+        "end_line": 193,
+        "signature_hash": "3e30758942a7bf1b",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:ExternalAppraiserObservation.observation_digest:8596f27ad7a99166",
+        "name": "ExternalAppraiserObservation.observation_digest",
+        "kind": "method",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 196,
+        "end_line": 197,
+        "signature_hash": "28f677c5b8842bca",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:GLM53MTPResolverTrustRequest.normalized:ea5b1789460f4a87",
+        "name": "GLM53MTPResolverTrustRequest.normalized",
+        "kind": "method",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 128,
+        "end_line": 155,
+        "signature_hash": "3e30758942a7bf1b",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:GLM53MTPResolverTrustRequest.request_digest:999f01bd792086e7",
+        "name": "GLM53MTPResolverTrustRequest.request_digest",
+        "kind": "method",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 158,
+        "end_line": 159,
+        "signature_hash": "6fa9305943538fcf",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:MTPResolverTrustError.__init__:2b87ae170d4e9178",
+        "name": "MTPResolverTrustError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 32,
+        "end_line": 35,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:ResolverTrustAdmission.logical_id:83c8dce41e224a40",
+        "name": "ResolverTrustAdmission.logical_id",
+        "kind": "method",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 215,
+        "end_line": 216,
+        "signature_hash": "77512dea4c34aaf7",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
+        "semantic_id": "tools/awj032/mtp_resolver_trust_adapter.py#method:ResolverTrustAdmission.to_dict:659d494558d55da1",
+        "name": "ResolverTrustAdmission.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/mtp_resolver_trust_adapter.py",
+        "line": 211,
+        "end_line": 212,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "7d69b4724f8d84b6"
+      },
+      {
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
         "name": "GateTests",
         "kind": "class",
@@ -451236,6 +451883,126 @@
         "end_line": 68,
         "signature_hash": "8903bce39863704d",
         "file_digest8": "ec34d4ade3bb5c4c"
+      },
+      {
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#class:MTPResolverTrustAdapterTests:fdc2629f7249726a",
+        "name": "MTPResolverTrustAdapterTests",
+        "kind": "class",
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "line": 47,
+        "end_line": 119,
+        "signature_hash": "d7777858b4063529",
+        "file_digest8": "0eff2911fb149dc5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#function:observation:47ed008c1d7d6d1e",
+        "name": "observation",
+        "kind": "function",
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "line": 29,
+        "end_line": 44,
+        "signature_hash": "b6e0fc5d441f8acd",
+        "file_digest8": "0eff2911fb149dc5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#function:request:423d191fb56cf606",
+        "name": "request",
+        "kind": "function",
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "line": 6,
+        "end_line": 26,
+        "signature_hash": "aa30402c5be12ee6",
+        "file_digest8": "0eff2911fb149dc5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_appraiser_request_digest_mismatch_is_rejected:2469af0c9b545e92",
+        "name": "MTPResolverTrustAdapterTests.test_appraiser_request_digest_mismatch_is_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "line": 83,
+        "end_line": 88,
+        "signature_hash": "17f9f6d16f50a4a5",
+        "file_digest8": "0eff2911fb149dc5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_cross_domain_authority_cast_is_rejected:3dda5050dfa951ca",
+        "name": "MTPResolverTrustAdapterTests.test_cross_domain_authority_cast_is_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "line": 77,
+        "end_line": 81,
+        "signature_hash": "5e7e4d3799c0ed05",
+        "file_digest8": "0eff2911fb149dc5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_effect_ceiling_remains_hard_false_for_every_disposition:4be5f35f5234fae4",
+        "name": "MTPResolverTrustAdapterTests.test_effect_ceiling_remains_hard_false_for_every_disposition",
+        "kind": "method",
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "line": 112,
+        "end_line": 119,
+        "signature_hash": "2c780e811fb84e32",
+        "file_digest8": "0eff2911fb149dc5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_fully_matching_appraiser_is_never_self_authenticated:d814a66b4cb0e46f",
+        "name": "MTPResolverTrustAdapterTests.test_fully_matching_appraiser_is_never_self_authenticated",
+        "kind": "method",
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "line": 56,
+        "end_line": 64,
+        "signature_hash": "ca9b4ca800a66eb6",
+        "file_digest8": "0eff2911fb149dc5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_no_appraiser_retains_provenance_blocker:d6869c357bb53364",
+        "name": "MTPResolverTrustAdapterTests.test_no_appraiser_retains_provenance_blocker",
+        "kind": "method",
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "line": 48,
+        "end_line": 54,
+        "signature_hash": "2dd70e5db92073e6",
+        "file_digest8": "0eff2911fb149dc5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_request_digest_binds_model_and_index_source_generation:f90f6f1769431593",
+        "name": "MTPResolverTrustAdapterTests.test_request_digest_binds_model_and_index_source_generation",
+        "kind": "method",
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "line": 66,
+        "end_line": 69,
+        "signature_hash": "178745b0906f6c8f",
+        "file_digest8": "0eff2911fb149dc5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_request_digest_binds_policy_issuer_and_resolver_generations:425db8eed38cdbe4",
+        "name": "MTPResolverTrustAdapterTests.test_request_digest_binds_policy_issuer_and_resolver_generations",
+        "kind": "method",
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "line": 71,
+        "end_line": 75,
+        "signature_hash": "c8af24fe47df3bc5",
+        "file_digest8": "0eff2911fb149dc5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_stale_policy_or_revoked_attestation_is_unsatisfied:a0df959087c1c96a",
+        "name": "MTPResolverTrustAdapterTests.test_stale_policy_or_revoked_attestation_is_unsatisfied",
+        "kind": "method",
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "line": 90,
+        "end_line": 103,
+        "signature_hash": "dcd7cdb03834905c",
+        "file_digest8": "0eff2911fb149dc5"
+      },
+      {
+        "semantic_id": "tools/awj032/test_mtp_resolver_trust_adapter.py#method:MTPResolverTrustAdapterTests.test_truthy_integer_is_not_a_trust_boolean:f7e768db962a137d",
+        "name": "MTPResolverTrustAdapterTests.test_truthy_integer_is_not_a_trust_boolean",
+        "kind": "method",
+        "file": "tools/awj032/test_mtp_resolver_trust_adapter.py",
+        "line": 105,
+        "end_line": 110,
+        "signature_hash": "4665141319a2574e",
+        "file_digest8": "0eff2911fb149dc5"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -452488,7 +453255,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "429460b84befd15c09bb11a08c62755e",
-    "payload_hash": "512b1d3931e817b805d16e1f550fc246"
+    "record_fingerprint": "58801c0ae6631ff4bbe1b8a6b08ef223",
+    "payload_hash": "32e6b4b92c8ac349666ccf437fb79711"
   }
 }
