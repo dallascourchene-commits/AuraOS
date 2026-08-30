@@ -21,6 +21,10 @@ def load(name):
 c = load("glm53_checkpoint_extra_layer_classification")
 s = load("glm53_checkpoint_source_binding")
 
+MODEL = "a" * 40
+INDEX = "d" * 64
+EVIDENCE_DIGEST = "e" * 64
+
 
 def report(*, extra=(78,), unexpected=(), blockers=None):
     if blockers is None:
@@ -29,9 +33,9 @@ def report(*, extra=(78,), unexpected=(), blockers=None):
             blockers.append("GLM53_UNEXPECTED_CHECKPOINT_LAYER_CLASSIFICATION_REQUIRED")
     return {
         "schema": "GLM53CheckpointLayoutProbeV1",
-        "model_revision": "a" * 40,
+        "model_revision": MODEL,
         "config_sha256": "c" * 64,
-        "index_sha256": "i" * 64,
+        "index_sha256": INDEX,
         "airllm_revision": "b" * 40,
         "security_hard_false_remote_code": True,
         "representative_sparse_layer": 3,
@@ -53,13 +57,40 @@ def report(*, extra=(78,), unexpected=(), blockers=None):
     }
 
 
-def classification(*, roles=((78, "MTP_NON_DECODER"),), index_sha=None):
+def classification(*, roles=((78, "MTP_NON_DECODER"),), index_sha=None, evidence_digest=None):
     return c.CheckpointExtraLayerClassification(
-        model_revision="a" * 40,
-        index_sha256=index_sha or "i" * 64,
+        model_revision=MODEL,
+        index_sha256=index_sha or INDEX,
         num_hidden_layers=78,
         roles=roles,
-        provenance_ref="drive://mtp-role/current",
+        evidence_ref="drive:glm53-mtp-role",
+        evidence_digest=evidence_digest or EVIDENCE_DIGEST,
+        evidence_generation="gen:20260830-1",
+        resolver_ref="aura:source-evidence-resolver",
+        resolver_generation="resolver:1",
+    )
+
+
+def evidence(
+    *,
+    roles=((78, "MTP_NON_DECODER"),),
+    index_sha=None,
+    evidence_digest=None,
+    resolver_generation="resolver:1",
+    current=True,
+):
+    return c.CheckpointExtraLayerEvidenceObservation(
+        evidence_ref="drive:glm53-mtp-role",
+        evidence_digest=evidence_digest or EVIDENCE_DIGEST,
+        evidence_generation="gen:20260830-1",
+        resolver_ref="aura:source-evidence-resolver",
+        resolver_generation=resolver_generation,
+        resolution_receipt_ref="drive:glm53-mtp-role-resolution",
+        model_revision=MODEL,
+        index_sha256=index_sha or INDEX,
+        num_hidden_layers=78,
+        roles=roles,
+        evidence_current=current,
     )
 
 
@@ -72,44 +103,80 @@ def sha(value):
 
 
 class ExtraLayerClassificationTests(unittest.TestCase):
-    def test_exact_mtp_classification_discharges_only_mtp_blocker(self):
-        r = c.apply_extra_layer_classification(report(), classification())
-        self.assertEqual([], r["blockers"])
-        self.assertEqual("READY_FOR_HEADER_AND_TINY_FIXTURE", r["status"])
+    def test_exact_current_evidence_discharges_only_mtp_blocker(self):
+        out = c.apply_extra_layer_classification(report(), classification(), evidence())
+        self.assertEqual([], out["blockers"])
+        self.assertEqual("READY_FOR_HEADER_AND_TINY_FIXTURE", out["status"])
         self.assertEqual(
             [{"index": 78, "role": "MTP_NON_DECODER", "decoder_pager_membership": False}],
-            r["classified_extra_checkpoint_layers"],
+            out["classified_extra_checkpoint_layers"],
         )
-        self.assertEqual([], r["unclassified_extra_checkpoint_layer_indices"])
-        self.assertNotEqual("old", r["logical_id"])
+        self.assertTrue(out["extra_layer_evidence_observation"]["evidence_current"])
+        self.assertNotEqual("old", out["logical_id"])
 
-    def test_wrong_index_generation_fails_closed(self):
+    def test_classification_without_resolver_observation_cannot_clear_blocker(self):
+        with self.assertRaises(c.ExtraLayerClassificationError) as ctx:
+            c.apply_extra_layer_classification(report(), classification(), None)
+        self.assertEqual("EXTRA_LAYER_EVIDENCE_REQUIRED", ctx.exception.code)
+
+    def test_arbitrary_evidence_digest_mismatch_fails_closed(self):
         with self.assertRaises(c.ExtraLayerClassificationError) as ctx:
             c.apply_extra_layer_classification(
-                report(), classification(index_sha="x" * 64)
+                report(),
+                classification(),
+                evidence(evidence_digest="f" * 64),
+            )
+        self.assertEqual("EXTRA_LAYER_EVIDENCE_MISMATCH", ctx.exception.code)
+        self.assertIn("evidence_digest", ctx.exception.detail)
+
+    def test_stale_evidence_cannot_clear_blocker(self):
+        with self.assertRaises(c.ExtraLayerClassificationError) as ctx:
+            c.apply_extra_layer_classification(
+                report(), classification(), evidence(current=False)
+            )
+        self.assertEqual("EXTRA_LAYER_EVIDENCE_CURRENTNESS_REQUIRED", ctx.exception.code)
+
+    def test_resolver_generation_mismatch_fails_closed(self):
+        with self.assertRaises(c.ExtraLayerClassificationError) as ctx:
+            c.apply_extra_layer_classification(
+                report(),
+                classification(),
+                evidence(resolver_generation="resolver:2"),
+            )
+        self.assertEqual("EXTRA_LAYER_EVIDENCE_MISMATCH", ctx.exception.code)
+        self.assertIn("resolver_generation", ctx.exception.detail)
+
+    def test_wrong_index_generation_fails_closed_even_when_evidence_agrees(self):
+        wrong = "f" * 64
+        with self.assertRaises(c.ExtraLayerClassificationError) as ctx:
+            c.apply_extra_layer_classification(
+                report(),
+                classification(index_sha=wrong),
+                evidence(index_sha=wrong),
             )
         self.assertEqual("EXTRA_LAYER_CLASSIFICATION_SOURCE_MISMATCH", ctx.exception.code)
 
     def test_decoder_layer_cannot_be_relabelled_mtp(self):
+        roles = ((77, "MTP_NON_DECODER"),)
         with self.assertRaises(c.ExtraLayerClassificationError) as ctx:
             c.apply_extra_layer_classification(
-                report(), classification(roles=((77, "MTP_NON_DECODER"),))
+                report(), classification(roles=roles), evidence(roles=roles)
             )
         self.assertEqual("DECODER_LAYER_CLASSIFICATION_FORBIDDEN", ctx.exception.code)
 
     def test_unclassified_layer79_keeps_unexpected_blocker(self):
-        r = c.apply_extra_layer_classification(
-            report(extra=(78, 79), unexpected=(79,)), classification()
+        out = c.apply_extra_layer_classification(
+            report(extra=(78, 79), unexpected=(79,)), classification(), evidence()
         )
-        self.assertNotIn("GLM53_MTP_CHECKPOINT_CLASSIFICATION_REQUIRED", r["blockers"])
+        self.assertNotIn("GLM53_MTP_CHECKPOINT_CLASSIFICATION_REQUIRED", out["blockers"])
         self.assertIn(
-            "GLM53_UNEXPECTED_CHECKPOINT_LAYER_CLASSIFICATION_REQUIRED", r["blockers"]
+            "GLM53_UNEXPECTED_CHECKPOINT_LAYER_CLASSIFICATION_REQUIRED", out["blockers"]
         )
-        self.assertEqual([79], r["unclassified_extra_checkpoint_layer_indices"])
-        self.assertEqual("PARTIAL", r["status"])
+        self.assertEqual([79], out["unclassified_extra_checkpoint_layer_indices"])
+        self.assertEqual("PARTIAL", out["status"])
 
     def test_classification_cannot_clear_unrelated_blockers(self):
-        r = c.apply_extra_layer_classification(
+        out = c.apply_extra_layer_classification(
             report(
                 blockers=[
                     "GLM53_MTP_CHECKPOINT_CLASSIFICATION_REQUIRED",
@@ -117,22 +184,23 @@ class ExtraLayerClassificationTests(unittest.TestCase):
                 ]
             ),
             classification(),
+            evidence(),
         )
-        self.assertEqual(["GLM53_FP8_SCALE_LAYOUT_UNRESOLVED"], r["blockers"])
-        self.assertEqual("PARTIAL", r["status"])
+        self.assertEqual(["GLM53_FP8_SCALE_LAYOUT_UNRESOLVED"], out["blockers"])
+        self.assertEqual("PARTIAL", out["status"])
 
     def test_effect_ceiling_remains_hard_false(self):
-        r = c.apply_extra_layer_classification(report(), classification())
-        self.assertFalse(r["large_checkpoint_admitted"])
-        self.assertFalse(r["g2_admitted"])
-        self.assertFalse(r["runtime_execution_proven"])
-        self.assertEqual(0, r["provider_calls"])
+        out = c.apply_extra_layer_classification(report(), classification(), evidence())
+        self.assertFalse(out["large_checkpoint_admitted"])
+        self.assertFalse(out["g2_admitted"])
+        self.assertFalse(out["runtime_execution_proven"])
+        self.assertEqual(0, out["provider_calls"])
 
-    def test_source_bound_probe_is_the_discharge_channel(self):
+    def test_source_bound_probe_requires_separate_resolver_observation(self):
         cfg = raw({"hidden_size": 6144, "num_hidden_layers": 78})
         idx = raw({"weight_map": {"model.layers.78.mtp.weight": "s1"}})
         sources = s.bind_checkpoint_sources(
-            model_revision="a" * 40,
+            model_revision=MODEL,
             config_raw_bytes=cfg,
             expected_config_sha256=sha(cfg),
             index_raw_bytes=idx,
@@ -143,7 +211,24 @@ class ExtraLayerClassificationTests(unittest.TestCase):
             index_sha256=sources.index.raw_sha256,
             num_hidden_layers=78,
             roles=((78, "MTP_NON_DECODER"),),
-            provenance_ref="drive://mtp-role/current",
+            evidence_ref="drive:glm53-mtp-role",
+            evidence_digest=EVIDENCE_DIGEST,
+            evidence_generation="gen:20260830-1",
+            resolver_ref="aura:source-evidence-resolver",
+            resolver_generation="resolver:1",
+        )
+        obs = c.CheckpointExtraLayerEvidenceObservation(
+            evidence_ref=cls.evidence_ref,
+            evidence_digest=cls.evidence_digest,
+            evidence_generation=cls.evidence_generation,
+            resolver_ref=cls.resolver_ref,
+            resolver_generation=cls.resolver_generation,
+            resolution_receipt_ref="drive:glm53-mtp-role-resolution",
+            model_revision=sources.model_revision,
+            index_sha256=sources.index.raw_sha256,
+            num_hidden_layers=78,
+            roles=cls.roles,
+            evidence_current=True,
         )
 
         def fake_probe(**kwargs):
@@ -172,11 +257,22 @@ class ExtraLayerClassificationTests(unittest.TestCase):
                 "claim_ceiling": "METADATA_ONLY_NO_MODEL_WEIGHT_EFFECT",
             }
 
+        with self.assertRaises(c.ExtraLayerClassificationError) as ctx:
+            s.source_bound_probe(
+                sources=sources,
+                airllm_revision="b" * 40,
+                security_hard_false_remote_code=True,
+                extra_layer_classification=cls,
+                probe_fn=fake_probe,
+            )
+        self.assertEqual("EXTRA_LAYER_EVIDENCE_REQUIRED", ctx.exception.code)
+
         out = s.source_bound_probe(
             sources=sources,
             airllm_revision="b" * 40,
             security_hard_false_remote_code=True,
             extra_layer_classification=cls,
+            extra_layer_evidence_observation=obs,
             probe_fn=fake_probe,
         )
         self.assertEqual("READY_FOR_HEADER_AND_TINY_FIXTURE", out["status"])
