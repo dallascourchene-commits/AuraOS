@@ -98,6 +98,12 @@ class BridgeTests(unittest.TestCase):
         self.assertTrue(plan.binding.require_fp8_scales)
         self.assertFalse(plan.to_dict()["g2_admitted"])
 
+    def test_source_plan_serialization_is_always_nonpromoting(self):
+        payload = compile_packed().to_dict()
+        self.assertFalse(payload["g2_admitted"])
+        self.assertFalse(payload["large_checkpoint_admitted"])
+        self.assertFalse(payload["runtime_execution_proven"])
+
     def test_per_expert_missing_scale_fails_in_sibling_abi(self):
         report, wm = per_expert_fixture()
         del wm["model.layers.3.mlp.experts.7.down_proj.weight_scale_inv"]
