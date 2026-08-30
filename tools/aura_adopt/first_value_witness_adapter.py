@@ -6,9 +6,12 @@ It converts already-observed witness facts into canonical AdoptionFrictionReceip
 
 Evidence law:
 - SYNTHETIC_TECHNICAL never satisfies USER_EXPLICIT acceptance.
-- SAVE_REOPEN completion requires a source/currentness-bound output artifact,
-  a distinct save predecessor receipt, and a distinct reopen receipt whose
+- SAVE_REOPEN observations require a source/currentness-bound output artifact,
+  a distinct save predecessor reference, and a distinct reopen reference whose
   observed artifact digests all match the rendered output.
+- Caller-authored D0 observations are structural assertions, not authenticated
+  physical consequences. This adapter therefore never emits SAVE_REOPEN=COMPLETED;
+  a trusted browser/storage witness resolver must earn that state downstream.
 - Consequence evidence is committed into stage/verifier digests; it is never
   mislabeled as a capability reference.
 - This adapter cannot complete TRUST; a trust-owner bridge must do that.
@@ -260,7 +263,7 @@ def _acceptance(obs: FirstValueWitnessObservationV1) -> tuple[StageEvent, Accept
 def _save_reopen(obs: FirstValueWitnessObservationV1) -> StageEvent:
     if obs.save_mode is SaveEvidenceMode.REOPEN_OBSERVED:
         commitment = _evidence_commitment(
-            "SAVE_REOPEN_CHAIN",
+            "SAVE_REOPEN_STRUCTURAL_ASSERTION",
             {
                 **obs.common_evidence_binding(),
                 "save_evidence_ref": _ref(obs.save_evidence_ref, "SAVE_EVIDENCE_REF_REQUIRED"),
@@ -269,11 +272,18 @@ def _save_reopen(obs: FirstValueWitnessObservationV1) -> StageEvent:
                 "reopen_artifact_sha256": str(obs.reopen_artifact_sha256),
             },
         )
-        return _event("SAVE_REOPEN", StageStatus.COMPLETED,
-                      reason=f"EVIDENCE_COMMITMENT:{commitment}", steps=2)
+        return _event(
+            "SAVE_REOPEN",
+            StageStatus.UNKNOWN,
+            reason=(
+                "STRUCTURALLY_BOUND_REOPEN_REQUIRES_TRUSTED_WITNESS_RESOLVER"
+                f"@EVIDENCE_COMMITMENT:{commitment}"
+            ),
+            steps=2,
+        )
     if obs.save_mode is SaveEvidenceMode.SAVE_OBSERVED:
         commitment = _evidence_commitment(
-            "SAVE_ONLY",
+            "SAVE_ONLY_STRUCTURAL_ASSERTION",
             {
                 **obs.common_evidence_binding(),
                 "save_evidence_ref": _ref(obs.save_evidence_ref, "SAVE_EVIDENCE_REF_REQUIRED"),
@@ -397,6 +407,7 @@ def compile_first_value_receipt(
             "SYNTHETIC_ACCEPTANCE_LAUNDERED_AS_USER_ACCEPTANCE",
             "SIMULATED_SAVE_LAUNDERED_AS_REOPEN",
             "SAVE_REOPEN_ARTIFACT_CHAIN_MISMATCH",
+            "STRUCTURAL_EVENT_ASSERTION_LAUNDERED_AS_AUTHENTICATED_CONSEQUENCE",
             "CONSEQUENCE_EVIDENCE_MISLABELED_AS_CAPABILITY",
             "TRUST_POINTER_PRESENCE_LAUNDERED_AS_TRUST_COMPLETION",
             "WITNESS_CAUSALITY_CONTRADICTION",
