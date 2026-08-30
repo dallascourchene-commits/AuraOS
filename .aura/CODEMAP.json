@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788128449,
+  "generated_at_unix": 1788130011,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1648,
+    "repo_file_count": 1654,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1624,6 +1624,9 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_bughound_blind_discovery.py",
+      "tests/test_bughound_blind_oracle_provenance.py",
+      "tests/test_bughound_blind_score_admission.py",
+      "tests/test_bughound_bounty_mission.py",
       "tests/test_bughound_envelope_lint.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_bughound_trust_boundary_seed.py",
@@ -1637,6 +1640,9 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/bughound/blind_discovery.py",
+      "tools/bughound/blind_oracle_provenance.py",
+      "tools/bughound/blind_score_admission.py",
+      "tools/bughound/bounty_mission.py",
       "tools/bughound/envelope_lint.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/bughound/trust_boundary_seed.py",
@@ -1764,15 +1770,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1648,
-      "bytes": 26489446,
-      "tokens_est": 6612713,
+      "files": 1654,
+      "bytes": 26527283,
+      "tokens_est": 6622175,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1005,
+        "python_module": 1011,
         "schema_or_lexicon": 272,
         "support_file": 49
       }
@@ -3914,6 +3920,30 @@
         "signature_hash": "707d518dafca1a42"
       },
       {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 47,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_canonical:b539437596a7bc63",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
+        "file": "tools/bughound/blind_score_admission.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 42,
+        "semantic_id": "tools/bughound/blind_score_admission.py#function:_canonical:a6179085d8f28ba7",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
+        "file": "tools/bughound/bounty_mission.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 34,
+        "semantic_id": "tools/bughound/bounty_mission.py#function:_canonical:f4c86ba5c65f3bf7",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
         "file": "tools/bughound/seedlab_benchmark.py",
         "kind": "function",
         "line": 48,
@@ -4369,6 +4399,30 @@
         "line": 79,
         "end_line": 80,
         "semantic_id": "tools/bughound/blind_discovery.py#function:_digest:e5aecf961e5d32ed",
+        "signature_hash": "c978f5ef05fda5cb"
+      },
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_digest:1c24d7372bae1963",
+        "signature_hash": "c978f5ef05fda5cb"
+      },
+      {
+        "file": "tools/bughound/blind_score_admission.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "tools/bughound/blind_score_admission.py#function:_digest:7fef87314c452ec0",
+        "signature_hash": "c978f5ef05fda5cb"
+      },
+      {
+        "file": "tools/bughound/bounty_mission.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/bughound/bounty_mission.py#function:_digest:52364a65a1ad482d",
         "signature_hash": "c978f5ef05fda5cb"
       },
       {
@@ -14701,6 +14755,14 @@
         "line": 89,
         "end_line": 92,
         "semantic_id": "tools/bughound/blind_discovery.py#function:_text:6cf059358589bf2f",
+        "signature_hash": "a4ea29b9a7789fe0"
+      },
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 65,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_text:e37446d8012b64f5",
         "signature_hash": "a4ea29b9a7789fe0"
       }
     ],
@@ -52020,6 +52082,14 @@
         "end_line": 63,
         "semantic_id": "aura_gate_oidc.py#function:_require_text:78662a81d2bc47ed",
         "signature_hash": "5a34bc621c690ee0"
+      },
+      {
+        "file": "tools/bughound/bounty_mission.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tools/bughound/bounty_mission.py#function:_require_text:aae2235624fac238",
+        "signature_hash": "43aee94117e62815"
       }
     ],
     "_decode_base64url": [
@@ -157268,6 +157338,406 @@
         "signature_hash": "626a87e64a55582f"
       }
     ],
+    "BlindOracleProvenanceTests": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 211,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#class:BlindOracleProvenanceTests:c43c4108d6a9f978",
+        "signature_hash": "0f0f5b2ce63f1074"
+      }
+    ],
+    "BlindOracleProvenanceTests.setUp": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 49,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.setUp:2849638912b34b11",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "BlindOracleProvenanceTests.envelope": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 57,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.envelope:4db873baae374ef9",
+        "signature_hash": "9b4e1c61b056e30d"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_exact_producer_bound_resolution_can_earn_seeded_tp": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 76,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_exact_producer_bound_resolution_can_earn_seeded_tp:91eeabb7e36ec941",
+        "signature_hash": "ab227771e2fd4d87"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_resolution_boolean_without_producer_envelope_cannot_earn_tp": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 89,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_resolution_boolean_without_producer_envelope_cannot_earn_tp:cc02e66ee664c591",
+        "signature_hash": "fa4846ec00a6a0bb"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_forged_mac_fails": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 100,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_forged_mac_fails:ec741d49219a46aa",
+        "signature_hash": "241bd8e1318bbc1a"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_wrong_secret_fails": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 110,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_wrong_secret_fails:28f3d8026bb4eb48",
+        "signature_hash": "9d0d0795d4c35b82"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_producer_ref_substitution_fails": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 121,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_producer_ref_substitution_fails:1b2560290554ed9a",
+        "signature_hash": "8732bbe799052956"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_producer_generation_substitution_fails": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 131,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_producer_generation_substitution_fails:27ee609892197ef9",
+        "signature_hash": "46d51d79c6b71a9e"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_resolution_mutation_fails_binding": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 142,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_resolution_mutation_fails_binding:37f7ff6e9b8bc77d",
+        "signature_hash": "e7481b86129d6b8f"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_nonindependent_resolution_cannot_be_issued": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 152,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_nonindependent_resolution_cannot_be_issued:2fa6471ec87f0813",
+        "signature_hash": "6ef5555c62b90a30"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_short_or_missing_secret_fails": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 161,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_short_or_missing_secret_fails:c3ac422f73e5761b",
+        "signature_hash": "29aa2dc7e409e480"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_same_resolution_and_secret_are_deterministic": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 167,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_same_resolution_and_secret_are_deterministic:0e5a415515c43de9",
+        "signature_hash": "7ed860eacd692f56"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_different_secret_changes_mac": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 176,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_different_secret_changes_mac:19bf416f06423f6a",
+        "signature_hash": "1c7ce8a2412de0fc"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_no_resolution_remains_novelty_without_producer_proof": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 191,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_no_resolution_remains_novelty_without_producer_proof:be440f384e6e3e89",
+        "signature_hash": "6d6d0f28199e9233"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_clean_abstention_needs_no_oracle_envelope": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 211,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_clean_abstention_needs_no_oracle_envelope:a323b9b22ab82faa",
+        "signature_hash": "55885d573a1cbe07"
+      }
+    ],
+    "BlindScoreAdmissionTests": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 158,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#class:BlindScoreAdmissionTests:4f484a7f4ff839b7",
+        "signature_hash": "0815ad50f51d9a68"
+      }
+    ],
+    "BlindScoreAdmissionTests.setUp": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 50,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.setUp:792e227cc4fcf1bb",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "BlindScoreAdmissionTests.envelope": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 57,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.envelope:d344020aa919818b",
+        "signature_hash": "9b4e1c61b056e30d"
+      }
+    ],
+    "BlindScoreAdmissionTests.score": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 71,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.score:68068b7a8abceb20",
+        "signature_hash": "a8568a3b03a15663"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_canonical_score_api_accepts_no_precomputed_adjudication": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 78,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_canonical_score_api_accepts_no_precomputed_adjudication:780e3622a108c50c",
+        "signature_hash": "74a5d8b9610347f0"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_legacy_shape_only_tp_cannot_be_laundered_into_canonical_score": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 103,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_legacy_shape_only_tp_cannot_be_laundered_into_canonical_score:26614ee41b959e04",
+        "signature_hash": "6d776a0883ef22b0"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_exact_producer_bound_path_emits_score_receipt": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 113,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_exact_producer_bound_path_emits_score_receipt:ecc838b393a369d8",
+        "signature_hash": "19a30c21d04f27a1"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_wrong_secret_cannot_score_seeded_tp": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 118,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_wrong_secret_cannot_score_seeded_tp:9f4d90f8f1a9d1f4",
+        "signature_hash": "d57d94b7c9628ff0"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_wrong_expected_producer_generation_cannot_score": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 123,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_wrong_expected_producer_generation_cannot_score:285c4334863827e3",
+        "signature_hash": "3037167e0c4853a9"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_no_resolution_novelty_remains_uncredited": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 131,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_no_resolution_novelty_remains_uncredited:e66c983d393bc327",
+        "signature_hash": "92ce74ed034a9b56"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_clean_abstention_is_scoreable_without_oracle_envelope": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 152,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_clean_abstention_is_scoreable_without_oracle_envelope:6ed36c43e511a833",
+        "signature_hash": "3065ac2590efa338"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_score_receipt_is_deterministic_for_same_bound_inputs": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 158,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_score_receipt_is_deterministic_for_same_bound_inputs:036ce386b65caa1a",
+        "signature_hash": "165eff4d3f7abf22"
+      }
+    ],
+    "BugHoundCashMissionTests": [
+      {
+        "file": "tests/test_bughound_bounty_mission.py",
+        "kind": "class",
+        "line": 12,
+        "end_line": 82,
+        "semantic_id": "tests/test_bughound_bounty_mission.py#class:BugHoundCashMissionTests:030b7f3255f20abd",
+        "signature_hash": "94dc33a06f5c296e"
+      }
+    ],
+    "BugHoundCashMissionTests.clean": [
+      {
+        "file": "tests/test_bughound_bounty_mission.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 31,
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.clean:df54a78bdfed9566",
+        "signature_hash": "f5b5017004ca5839"
+      }
+    ],
+    "BugHoundCashMissionTests.test_current_cash_bounty_research_is_admitted_pre_effect": [
+      {
+        "file": "tests/test_bughound_bounty_mission.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 43,
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_current_cash_bounty_research_is_admitted_pre_effect:e68bca619f23b3e2",
+        "signature_hash": "e9da4f5456508d1a"
+      }
+    ],
+    "BugHoundCashMissionTests.test_auraos_internal_profile_is_not_bughound_work": [
+      {
+        "file": "tests/test_bughound_bounty_mission.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 47,
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_auraos_internal_profile_is_not_bughound_work:b295a58b534e4085",
+        "signature_hash": "0d13aebf2677a0bf"
+      }
+    ],
+    "BugHoundCashMissionTests.test_noncash_vdp_is_rejected": [
+      {
+        "file": "tests/test_bughound_bounty_mission.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_noncash_vdp_is_rejected:d3454392ae29b9e4",
+        "signature_hash": "7320d82d01cc3a6a"
+      }
+    ],
+    "BugHoundCashMissionTests.test_archived_or_historical_reward_is_rejected": [
+      {
+        "file": "tests/test_bughound_bounty_mission.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 55,
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_archived_or_historical_reward_is_rejected:8236baec3fabc39c",
+        "signature_hash": "7729a8da41258aef"
+      }
+    ],
+    "BugHoundCashMissionTests.test_unknown_or_stale_scope_is_rejected": [
+      {
+        "file": "tests/test_bughound_bounty_mission.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 59,
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_unknown_or_stale_scope_is_rejected:cd9af946f18de2b3",
+        "signature_hash": "d3fc316c259f8cab"
+      }
+    ],
+    "BugHoundCashMissionTests.test_stale_source_currentness_is_rejected": [
+      {
+        "file": "tests/test_bughound_bounty_mission.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 63,
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_stale_source_currentness_is_rejected:cd9820257425a4c5",
+        "signature_hash": "fbf0f6670a2c147e"
+      }
+    ],
+    "BugHoundCashMissionTests.test_missing_scope_digest_is_rejected": [
+      {
+        "file": "tests/test_bughound_bounty_mission.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 67,
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_missing_scope_digest_is_rejected:ca640ebe19259091",
+        "signature_hash": "698cfe4bf69e5597"
+      }
+    ],
+    "BugHoundCashMissionTests.test_reward_range_must_be_coherent": [
+      {
+        "file": "tests/test_bughound_bounty_mission.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 73,
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_reward_range_must_be_coherent:137424977b4d265e",
+        "signature_hash": "4ecf1ae8a61c2941"
+      }
+    ],
+    "BugHoundCashMissionTests.test_non_cash_currency_marker_is_rejected": [
+      {
+        "file": "tests/test_bughound_bounty_mission.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 77,
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_non_cash_currency_marker_is_rejected:cae9b070cf613809",
+        "signature_hash": "c5db58be1a06b406"
+      }
+    ],
+    "BugHoundCashMissionTests.test_receipt_digest_is_deterministic": [
+      {
+        "file": "tests/test_bughound_bounty_mission.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 82,
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_receipt_digest_is_deterministic:8f3762c690b15012",
+        "signature_hash": "49954c66936facb3"
+      }
+    ],
     "BugHoundEnvelopeLintTests": [
       {
         "file": "tests/test_bughound_envelope_lint.py",
@@ -158156,6 +158626,166 @@
         "end_line": 455,
         "semantic_id": "tools/bughound/blind_discovery.py#function:adjudicate_blind_finding:e5f0e0bf62ac355e",
         "signature_hash": "b63c1653833c86d5"
+      }
+    ],
+    "_secret_bytes": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 59,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_secret_bytes:0003965224a4a4bd",
+        "signature_hash": "2987109ef4911880"
+      }
+    ],
+    "_resolution_payload": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 96,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_resolution_payload:09cb24704b9514ac",
+        "signature_hash": "58e6ae59f2795a6a"
+      }
+    ],
+    "EvaluatorResolutionEnvelopeV1": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "class",
+        "line": 100,
+        "end_line": 117,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#class:EvaluatorResolutionEnvelopeV1:e8f4bc121aba9f64",
+        "signature_hash": "2f10bfdc5abca35a"
+      }
+    ],
+    "EvaluatorResolutionEnvelopeV1.envelope_digest": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 117,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#method:EvaluatorResolutionEnvelopeV1.envelope_digest:1551a3820d801e45",
+        "signature_hash": "beacbb57b980cab6"
+      }
+    ],
+    "issue_evaluator_resolution_envelope": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 120,
+        "end_line": 149,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:issue_evaluator_resolution_envelope:9846ce1a84d396df",
+        "signature_hash": "350b185a0cc15b8b"
+      }
+    ],
+    "verify_evaluator_resolution_envelope": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 191,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:verify_evaluator_resolution_envelope:95f0dc60f22a2da6",
+        "signature_hash": "f4efa96d2d4d4c10"
+      }
+    ],
+    "ProducerBoundBlindAdjudicationV1": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "class",
+        "line": 195,
+        "end_line": 215,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#class:ProducerBoundBlindAdjudicationV1:58114bcfc65f1487",
+        "signature_hash": "2c2239b835587cde"
+      }
+    ],
+    "ProducerBoundBlindAdjudicationV1.adjudication_digest": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 215,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#method:ProducerBoundBlindAdjudicationV1.adjudication_digest:924115c17e5f16da",
+        "signature_hash": "211dfd30c56a6a43"
+      }
+    ],
+    "adjudicate_producer_bound_blind_finding": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 218,
+        "end_line": 262,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:adjudicate_producer_bound_blind_finding:4575c45535be5eaf",
+        "signature_hash": "3c4105baa83e722c"
+      }
+    ],
+    "ProducerBoundBlindScoreReceiptV1": [
+      {
+        "file": "tools/bughound/blind_score_admission.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 65,
+        "semantic_id": "tools/bughound/blind_score_admission.py#class:ProducerBoundBlindScoreReceiptV1:da985579229ee4a5",
+        "signature_hash": "1416004ace260bbe"
+      }
+    ],
+    "ProducerBoundBlindScoreReceiptV1.score_receipt_digest": [
+      {
+        "file": "tools/bughound/blind_score_admission.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 65,
+        "semantic_id": "tools/bughound/blind_score_admission.py#method:ProducerBoundBlindScoreReceiptV1.score_receipt_digest:8a6a5f4f3a6aad58",
+        "signature_hash": "abf64ef935250496"
+      }
+    ],
+    "score_producer_bound_blind_finding": [
+      {
+        "file": "tools/bughound/blind_score_admission.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 112,
+        "semantic_id": "tools/bughound/blind_score_admission.py#function:score_producer_bound_blind_finding:f61c6ceaecfc8340",
+        "signature_hash": "d7db1b3f2c1d989c"
+      }
+    ],
+    "BugHoundCashMissionInputV1": [
+      {
+        "file": "tools/bughound/bounty_mission.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 63,
+        "semantic_id": "tools/bughound/bounty_mission.py#class:BugHoundCashMissionInputV1:5fd1a4af54286c22",
+        "signature_hash": "fad7766f40bb11d2"
+      }
+    ],
+    "BugHoundCashMissionReceiptV1": [
+      {
+        "file": "tools/bughound/bounty_mission.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 86,
+        "semantic_id": "tools/bughound/bounty_mission.py#class:BugHoundCashMissionReceiptV1:1918fac2d269e76f",
+        "signature_hash": "e40585b431306961"
+      }
+    ],
+    "BugHoundCashMissionReceiptV1.receipt_digest": [
+      {
+        "file": "tools/bughound/bounty_mission.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 86,
+        "semantic_id": "tools/bughound/bounty_mission.py#method:BugHoundCashMissionReceiptV1.receipt_digest:91fe7f7d991a1d8c",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "admit_cash_bounty_mission": [
+      {
+        "file": "tools/bughound/bounty_mission.py",
+        "kind": "function",
+        "line": 89,
+        "end_line": 139,
+        "semantic_id": "tools/bughound/bounty_mission.py#function:admit_cash_bounty_mission:a7febcc0b0b3852f",
+        "signature_hash": "1bed2029085c0f9e"
       }
     ],
     "LintDisposition": [
@@ -263698,6 +264328,147 @@
       ]
     },
     {
+      "path": "tests/test_bughound_blind_oracle_provenance.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8828,
+      "lines": 216,
+      "tokens_est": 2207,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cea58190fc0c57fe",
+      "vector": [
+        -0.272965,
+        0.113424,
+        -0.280443,
+        -0.210644,
+        -0.038639,
+        -0.243051,
+        0.185716,
+        0.120902,
+        -0.011218,
+        -0.265486,
+        0.21563,
+        0.04861,
+        -0.081017,
+        0.272965,
+        0.238065,
+        0.095974,
+        0.18073,
+        0.240558,
+        0.150816,
+        -0.16328,
+        0.108438,
+        0.31285,
+        0.16328,
+        -0.043624,
+        -0.003739,
+        -0.133366,
+        0.113424,
+        -0.028668,
+        -0.188209,
+        -0.18073,
+        0.036146,
+        -0.185716
+      ]
+    },
+    {
+      "path": "tests/test_bughound_blind_score_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6479,
+      "lines": 163,
+      "tokens_est": 1620,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c98f5ca4a8c58d82",
+      "vector": [
+        -0.02368,
+        0.100953,
+        -0.23805,
+        -0.170748,
+        -0.066056,
+        0.203153,
+        0.220602,
+        -0.317816,
+        0.160777,
+        -0.165763,
+        -0.145821,
+        0.021188,
+        0.145821,
+        -0.095968,
+        0.12588,
+        0.297874,
+        0.315323,
+        -0.115909,
+        -0.076027,
+        -0.071041,
+        0.098461,
+        -0.016202,
+        0.317816,
+        -0.115909,
+        0.006232,
+        -0.068549,
+        0.028666,
+        0.300367,
+        -0.180719,
+        -0.170748,
+        0.300367,
+        0.046114
+      ]
+    },
+    {
+      "path": "tests/test_bughound_bounty_mission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3998,
+      "lines": 87,
+      "tokens_est": 1000,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f658ff83b4a5c17a",
+      "vector": [
+        0.090737,
+        0.185309,
+        -0.016614,
+        0.246652,
+        0.054954,
+        0.116297,
+        0.200645,
+        -0.149525,
+        -0.277324,
+        -0.29266,
+        0.149525,
+        0.307996,
+        0.001278,
+        -0.223648,
+        -0.172529,
+        -0.00639,
+        -0.111185,
+        -0.04473,
+        0.2671,
+        -0.185309,
+        -0.320776,
+        -0.098405,
+        0.106073,
+        0.108629,
+        0.085625,
+        -0.180197,
+        -0.208313,
+        -0.129077,
+        -0.284992,
+        0.088181,
+        0.075401,
+        -0.085625
+      ]
+    },
+    {
       "path": "tests/test_bughound_envelope_lint.py",
       "role": "python_module",
       "binary": false,
@@ -264306,6 +265077,147 @@
         0.066957,
         -0.291057,
         0.077889
+      ]
+    },
+    {
+      "path": "tools/bughound/blind_oracle_provenance.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9298,
+      "lines": 263,
+      "tokens_est": 2325,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fd2f781fc2ecac95",
+      "vector": [
+        -0.079247,
+        0.029311,
+        -0.120499,
+        -0.120499,
+        0.187805,
+        -0.113986,
+        0.274651,
+        -0.007599,
+        -0.255111,
+        -0.096616,
+        0.131355,
+        -0.248597,
+        0.265966,
+        0.203003,
+        -0.255111,
+        -0.261624,
+        -0.183463,
+        0.220372,
+        -0.224715,
+        -0.040166,
+        -0.118328,
+        0.083589,
+        -0.00977,
+        0.276822,
+        -0.172607,
+        0.001086,
+        -0.246426,
+        0.131355,
+        -0.064049,
+        -0.205174,
+        -0.189976,
+        0.137868
+      ]
+    },
+    {
+      "path": "tools/bughound/blind_score_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4189,
+      "lines": 113,
+      "tokens_est": 1048,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "87cad47957cf4532",
+      "vector": [
+        -0.153684,
+        -0.27863,
+        -0.123697,
+        -0.088712,
+        -0.108703,
+        -0.066221,
+        -0.133692,
+        -0.02374,
+        -0.128695,
+        0.083714,
+        -0.25614,
+        0.061224,
+        0.061224,
+        0.033735,
+        -0.213658,
+        -0.111202,
+        0.20866,
+        0.171176,
+        -0.286127,
+        -0.316114,
+        0.171176,
+        -0.23115,
+        -0.063723,
+        0.313615,
+        -0.213658,
+        -0.006247,
+        0.02374,
+        -0.201163,
+        0.238647,
+        0.096209,
+        0.163679,
+        -0.25614
+      ]
+    },
+    {
+      "path": "tools/bughound/bounty_mission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5045,
+      "lines": 140,
+      "tokens_est": 1262,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a4134444643cb0be",
+      "vector": [
+        0.250896,
+        0.238657,
+        0.302299,
+        -0.121164,
+        0.194597,
+        0.211731,
+        0.199493,
+        -0.253343,
+        0.175015,
+        0.111373,
+        -0.106478,
+        -0.011015,
+        -0.150537,
+        0.175015,
+        -0.096687,
+        0.079552,
+        -0.255791,
+        0.045284,
+        0.006119,
+        -0.025702,
+        0.160328,
+        -0.258239,
+        0.150537,
+        0.22397,
+        -0.020806,
+        0.238657,
+        0.067313,
+        -0.072209,
+        0.282717,
+        0.028149,
+        -0.121164,
+        -0.260687
       ]
     },
     {
@@ -288448,15 +289360,15 @@
     }
   },
   "summary": {
-    "file_count": 1648,
-    "total_bytes": 26489446,
-    "text_tokens_est": 6612713,
+    "file_count": 1654,
+    "total_bytes": 26527283,
+    "text_tokens_est": 6622175,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1005,
+      "python_module": 1011,
       "schema_or_lexicon": 272,
       "support_file": 49
     },
@@ -290091,6 +291003,9 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_bughound_blind_discovery.py",
+      "tests/test_bughound_blind_oracle_provenance.py",
+      "tests/test_bughound_blind_score_admission.py",
+      "tests/test_bughound_bounty_mission.py",
       "tests/test_bughound_envelope_lint.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_bughound_trust_boundary_seed.py",
@@ -290104,6 +291019,9 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/bughound/blind_discovery.py",
+      "tools/bughound/blind_oracle_provenance.py",
+      "tools/bughound/blind_score_admission.py",
+      "tools/bughound/bounty_mission.py",
       "tools/bughound/envelope_lint.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/bughound/trust_boundary_seed.py",
@@ -447455,6 +448373,406 @@
         "file_digest8": "bb04a389acb11303"
       },
       {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#class:BlindOracleProvenanceTests:c43c4108d6a9f978",
+        "name": "BlindOracleProvenanceTests",
+        "kind": "class",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 20,
+        "end_line": 211,
+        "signature_hash": "0f0f5b2ce63f1074",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.envelope:4db873baae374ef9",
+        "name": "BlindOracleProvenanceTests.envelope",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 51,
+        "end_line": 57,
+        "signature_hash": "9b4e1c61b056e30d",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.setUp:2849638912b34b11",
+        "name": "BlindOracleProvenanceTests.setUp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 21,
+        "end_line": 49,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_clean_abstention_needs_no_oracle_envelope:a323b9b22ab82faa",
+        "name": "BlindOracleProvenanceTests.test_clean_abstention_needs_no_oracle_envelope",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 193,
+        "end_line": 211,
+        "signature_hash": "55885d573a1cbe07",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_different_secret_changes_mac:19bf416f06423f6a",
+        "name": "BlindOracleProvenanceTests.test_different_secret_changes_mac",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 169,
+        "end_line": 176,
+        "signature_hash": "1c7ce8a2412de0fc",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_exact_producer_bound_resolution_can_earn_seeded_tp:91eeabb7e36ec941",
+        "name": "BlindOracleProvenanceTests.test_exact_producer_bound_resolution_can_earn_seeded_tp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 59,
+        "end_line": 76,
+        "signature_hash": "ab227771e2fd4d87",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_forged_mac_fails:ec741d49219a46aa",
+        "name": "BlindOracleProvenanceTests.test_forged_mac_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 91,
+        "end_line": 100,
+        "signature_hash": "241bd8e1318bbc1a",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_no_resolution_remains_novelty_without_producer_proof:be440f384e6e3e89",
+        "name": "BlindOracleProvenanceTests.test_no_resolution_remains_novelty_without_producer_proof",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 178,
+        "end_line": 191,
+        "signature_hash": "6d6d0f28199e9233",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_nonindependent_resolution_cannot_be_issued:2fa6471ec87f0813",
+        "name": "BlindOracleProvenanceTests.test_nonindependent_resolution_cannot_be_issued",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 144,
+        "end_line": 152,
+        "signature_hash": "6ef5555c62b90a30",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_producer_generation_substitution_fails:27ee609892197ef9",
+        "name": "BlindOracleProvenanceTests.test_producer_generation_substitution_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 123,
+        "end_line": 131,
+        "signature_hash": "46d51d79c6b71a9e",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_producer_ref_substitution_fails:1b2560290554ed9a",
+        "name": "BlindOracleProvenanceTests.test_producer_ref_substitution_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 112,
+        "end_line": 121,
+        "signature_hash": "8732bbe799052956",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_resolution_boolean_without_producer_envelope_cannot_earn_tp:cc02e66ee664c591",
+        "name": "BlindOracleProvenanceTests.test_resolution_boolean_without_producer_envelope_cannot_earn_tp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 78,
+        "end_line": 89,
+        "signature_hash": "fa4846ec00a6a0bb",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_resolution_mutation_fails_binding:37f7ff6e9b8bc77d",
+        "name": "BlindOracleProvenanceTests.test_resolution_mutation_fails_binding",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 133,
+        "end_line": 142,
+        "signature_hash": "e7481b86129d6b8f",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_same_resolution_and_secret_are_deterministic:0e5a415515c43de9",
+        "name": "BlindOracleProvenanceTests.test_same_resolution_and_secret_are_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 163,
+        "end_line": 167,
+        "signature_hash": "7ed860eacd692f56",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_short_or_missing_secret_fails:c3ac422f73e5761b",
+        "name": "BlindOracleProvenanceTests.test_short_or_missing_secret_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 154,
+        "end_line": 161,
+        "signature_hash": "29aa2dc7e409e480",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_wrong_secret_fails:28f3d8026bb4eb48",
+        "name": "BlindOracleProvenanceTests.test_wrong_secret_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 102,
+        "end_line": 110,
+        "signature_hash": "9d0d0795d4c35b82",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#class:BlindScoreAdmissionTests:4f484a7f4ff839b7",
+        "name": "BlindScoreAdmissionTests",
+        "kind": "class",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 21,
+        "end_line": 158,
+        "signature_hash": "0815ad50f51d9a68",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.envelope:d344020aa919818b",
+        "name": "BlindScoreAdmissionTests.envelope",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 52,
+        "end_line": 57,
+        "signature_hash": "9b4e1c61b056e30d",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.score:68068b7a8abceb20",
+        "name": "BlindScoreAdmissionTests.score",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 59,
+        "end_line": 71,
+        "signature_hash": "a8568a3b03a15663",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.setUp:792e227cc4fcf1bb",
+        "name": "BlindScoreAdmissionTests.setUp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 22,
+        "end_line": 50,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_canonical_score_api_accepts_no_precomputed_adjudication:780e3622a108c50c",
+        "name": "BlindScoreAdmissionTests.test_canonical_score_api_accepts_no_precomputed_adjudication",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 73,
+        "end_line": 78,
+        "signature_hash": "74a5d8b9610347f0",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_clean_abstention_is_scoreable_without_oracle_envelope:6ed36c43e511a833",
+        "name": "BlindScoreAdmissionTests.test_clean_abstention_is_scoreable_without_oracle_envelope",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 133,
+        "end_line": 152,
+        "signature_hash": "3065ac2590efa338",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_exact_producer_bound_path_emits_score_receipt:ecc838b393a369d8",
+        "name": "BlindScoreAdmissionTests.test_exact_producer_bound_path_emits_score_receipt",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 105,
+        "end_line": 113,
+        "signature_hash": "19a30c21d04f27a1",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_legacy_shape_only_tp_cannot_be_laundered_into_canonical_score:26614ee41b959e04",
+        "name": "BlindScoreAdmissionTests.test_legacy_shape_only_tp_cannot_be_laundered_into_canonical_score",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 80,
+        "end_line": 103,
+        "signature_hash": "6d776a0883ef22b0",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_no_resolution_novelty_remains_uncredited:e66c983d393bc327",
+        "name": "BlindScoreAdmissionTests.test_no_resolution_novelty_remains_uncredited",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 125,
+        "end_line": 131,
+        "signature_hash": "92ce74ed034a9b56",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_score_receipt_is_deterministic_for_same_bound_inputs:036ce386b65caa1a",
+        "name": "BlindScoreAdmissionTests.test_score_receipt_is_deterministic_for_same_bound_inputs",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 154,
+        "end_line": 158,
+        "signature_hash": "165eff4d3f7abf22",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_wrong_expected_producer_generation_cannot_score:285c4334863827e3",
+        "name": "BlindScoreAdmissionTests.test_wrong_expected_producer_generation_cannot_score",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 120,
+        "end_line": 123,
+        "signature_hash": "3037167e0c4853a9",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_wrong_secret_cannot_score_seeded_tp:9f4d90f8f1a9d1f4",
+        "name": "BlindScoreAdmissionTests.test_wrong_secret_cannot_score_seeded_tp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 115,
+        "end_line": 118,
+        "signature_hash": "d57d94b7c9628ff0",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bounty_mission.py#class:BugHoundCashMissionTests:030b7f3255f20abd",
+        "name": "BugHoundCashMissionTests",
+        "kind": "class",
+        "file": "tests/test_bughound_bounty_mission.py",
+        "line": 12,
+        "end_line": 82,
+        "signature_hash": "94dc33a06f5c296e",
+        "file_digest8": "f658ff83b4a5c17a"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.clean:df54a78bdfed9566",
+        "name": "BugHoundCashMissionTests.clean",
+        "kind": "method",
+        "file": "tests/test_bughound_bounty_mission.py",
+        "line": 13,
+        "end_line": 31,
+        "signature_hash": "f5b5017004ca5839",
+        "file_digest8": "f658ff83b4a5c17a"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_archived_or_historical_reward_is_rejected:8236baec3fabc39c",
+        "name": "BugHoundCashMissionTests.test_archived_or_historical_reward_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_bounty_mission.py",
+        "line": 53,
+        "end_line": 55,
+        "signature_hash": "7729a8da41258aef",
+        "file_digest8": "f658ff83b4a5c17a"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_auraos_internal_profile_is_not_bughound_work:b295a58b534e4085",
+        "name": "BugHoundCashMissionTests.test_auraos_internal_profile_is_not_bughound_work",
+        "kind": "method",
+        "file": "tests/test_bughound_bounty_mission.py",
+        "line": 45,
+        "end_line": 47,
+        "signature_hash": "0d13aebf2677a0bf",
+        "file_digest8": "f658ff83b4a5c17a"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_current_cash_bounty_research_is_admitted_pre_effect:e68bca619f23b3e2",
+        "name": "BugHoundCashMissionTests.test_current_cash_bounty_research_is_admitted_pre_effect",
+        "kind": "method",
+        "file": "tests/test_bughound_bounty_mission.py",
+        "line": 33,
+        "end_line": 43,
+        "signature_hash": "e9da4f5456508d1a",
+        "file_digest8": "f658ff83b4a5c17a"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_missing_scope_digest_is_rejected:ca640ebe19259091",
+        "name": "BugHoundCashMissionTests.test_missing_scope_digest_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_bounty_mission.py",
+        "line": 65,
+        "end_line": 67,
+        "signature_hash": "698cfe4bf69e5597",
+        "file_digest8": "f658ff83b4a5c17a"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_non_cash_currency_marker_is_rejected:cae9b070cf613809",
+        "name": "BugHoundCashMissionTests.test_non_cash_currency_marker_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_bounty_mission.py",
+        "line": 75,
+        "end_line": 77,
+        "signature_hash": "c5db58be1a06b406",
+        "file_digest8": "f658ff83b4a5c17a"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_noncash_vdp_is_rejected:d3454392ae29b9e4",
+        "name": "BugHoundCashMissionTests.test_noncash_vdp_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_bounty_mission.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "7320d82d01cc3a6a",
+        "file_digest8": "f658ff83b4a5c17a"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_receipt_digest_is_deterministic:8f3762c690b15012",
+        "name": "BugHoundCashMissionTests.test_receipt_digest_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_bounty_mission.py",
+        "line": 79,
+        "end_line": 82,
+        "signature_hash": "49954c66936facb3",
+        "file_digest8": "f658ff83b4a5c17a"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_reward_range_must_be_coherent:137424977b4d265e",
+        "name": "BugHoundCashMissionTests.test_reward_range_must_be_coherent",
+        "kind": "method",
+        "file": "tests/test_bughound_bounty_mission.py",
+        "line": 69,
+        "end_line": 73,
+        "signature_hash": "4ecf1ae8a61c2941",
+        "file_digest8": "f658ff83b4a5c17a"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_stale_source_currentness_is_rejected:cd9820257425a4c5",
+        "name": "BugHoundCashMissionTests.test_stale_source_currentness_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_bounty_mission.py",
+        "line": 61,
+        "end_line": 63,
+        "signature_hash": "fbf0f6670a2c147e",
+        "file_digest8": "f658ff83b4a5c17a"
+      },
+      {
+        "semantic_id": "tests/test_bughound_bounty_mission.py#method:BugHoundCashMissionTests.test_unknown_or_stale_scope_is_rejected:cd9af946f18de2b3",
+        "name": "BugHoundCashMissionTests.test_unknown_or_stale_scope_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_bounty_mission.py",
+        "line": 57,
+        "end_line": 59,
+        "signature_hash": "d3fc316c259f8cab",
+        "file_digest8": "f658ff83b4a5c17a"
+      },
+      {
         "semantic_id": "tests/test_bughound_envelope_lint.py#class:BugHoundEnvelopeLintTests:d3944653b480574b",
         "name": "BugHoundEnvelopeLintTests",
         "kind": "class",
@@ -448403,6 +449721,246 @@
         "end_line": 169,
         "signature_hash": "c0adb0ca7d3bbf04",
         "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#class:EvaluatorResolutionEnvelopeV1:e8f4bc121aba9f64",
+        "name": "EvaluatorResolutionEnvelopeV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 100,
+        "end_line": 117,
+        "signature_hash": "2f10bfdc5abca35a",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#class:ProducerBoundBlindAdjudicationV1:58114bcfc65f1487",
+        "name": "ProducerBoundBlindAdjudicationV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 195,
+        "end_line": 215,
+        "signature_hash": "2c2239b835587cde",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_canonical:b539437596a7bc63",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 37,
+        "end_line": 47,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_digest:1c24d7372bae1963",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_resolution_payload:09cb24704b9514ac",
+        "name": "_resolution_payload",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 68,
+        "end_line": 96,
+        "signature_hash": "58e6ae59f2795a6a",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_secret_bytes:0003965224a4a4bd",
+        "name": "_secret_bytes",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 54,
+        "end_line": 59,
+        "signature_hash": "2987109ef4911880",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_text:e37446d8012b64f5",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 62,
+        "end_line": 65,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:adjudicate_producer_bound_blind_finding:4575c45535be5eaf",
+        "name": "adjudicate_producer_bound_blind_finding",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 218,
+        "end_line": 262,
+        "signature_hash": "3c4105baa83e722c",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:issue_evaluator_resolution_envelope:9846ce1a84d396df",
+        "name": "issue_evaluator_resolution_envelope",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 120,
+        "end_line": 149,
+        "signature_hash": "350b185a0cc15b8b",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:verify_evaluator_resolution_envelope:95f0dc60f22a2da6",
+        "name": "verify_evaluator_resolution_envelope",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 152,
+        "end_line": 191,
+        "signature_hash": "f4efa96d2d4d4c10",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#method:EvaluatorResolutionEnvelopeV1.envelope_digest:1551a3820d801e45",
+        "name": "EvaluatorResolutionEnvelopeV1.envelope_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 116,
+        "end_line": 117,
+        "signature_hash": "beacbb57b980cab6",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#method:ProducerBoundBlindAdjudicationV1.adjudication_digest:924115c17e5f16da",
+        "name": "ProducerBoundBlindAdjudicationV1.adjudication_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 204,
+        "end_line": 215,
+        "signature_hash": "211dfd30c56a6a43",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_score_admission.py#class:ProducerBoundBlindScoreReceiptV1:da985579229ee4a5",
+        "name": "ProducerBoundBlindScoreReceiptV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_score_admission.py",
+        "line": 50,
+        "end_line": 65,
+        "signature_hash": "1416004ace260bbe",
+        "file_digest8": "87cad47957cf4532"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_score_admission.py#function:_canonical:a6179085d8f28ba7",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/blind_score_admission.py",
+        "line": 35,
+        "end_line": 42,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "87cad47957cf4532"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_score_admission.py#function:_digest:7fef87314c452ec0",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/blind_score_admission.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "87cad47957cf4532"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_score_admission.py#function:score_producer_bound_blind_finding:f61c6ceaecfc8340",
+        "name": "score_producer_bound_blind_finding",
+        "kind": "function",
+        "file": "tools/bughound/blind_score_admission.py",
+        "line": 68,
+        "end_line": 112,
+        "signature_hash": "d7db1b3f2c1d989c",
+        "file_digest8": "87cad47957cf4532"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_score_admission.py#method:ProducerBoundBlindScoreReceiptV1.score_receipt_digest:8a6a5f4f3a6aad58",
+        "name": "ProducerBoundBlindScoreReceiptV1.score_receipt_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_score_admission.py",
+        "line": 64,
+        "end_line": 65,
+        "signature_hash": "abf64ef935250496",
+        "file_digest8": "87cad47957cf4532"
+      },
+      {
+        "semantic_id": "tools/bughound/bounty_mission.py#class:BugHoundCashMissionInputV1:5fd1a4af54286c22",
+        "name": "BugHoundCashMissionInputV1",
+        "kind": "class",
+        "file": "tools/bughound/bounty_mission.py",
+        "line": 47,
+        "end_line": 63,
+        "signature_hash": "fad7766f40bb11d2",
+        "file_digest8": "a4134444643cb0be"
+      },
+      {
+        "semantic_id": "tools/bughound/bounty_mission.py#class:BugHoundCashMissionReceiptV1:1918fac2d269e76f",
+        "name": "BugHoundCashMissionReceiptV1",
+        "kind": "class",
+        "file": "tools/bughound/bounty_mission.py",
+        "line": 67,
+        "end_line": 86,
+        "signature_hash": "e40585b431306961",
+        "file_digest8": "a4134444643cb0be"
+      },
+      {
+        "semantic_id": "tools/bughound/bounty_mission.py#function:_canonical:f4c86ba5c65f3bf7",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/bounty_mission.py",
+        "line": 27,
+        "end_line": 34,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "a4134444643cb0be"
+      },
+      {
+        "semantic_id": "tools/bughound/bounty_mission.py#function:_digest:52364a65a1ad482d",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/bounty_mission.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "a4134444643cb0be"
+      },
+      {
+        "semantic_id": "tools/bughound/bounty_mission.py#function:_require_text:aae2235624fac238",
+        "name": "_require_text",
+        "kind": "function",
+        "file": "tools/bughound/bounty_mission.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "43aee94117e62815",
+        "file_digest8": "a4134444643cb0be"
+      },
+      {
+        "semantic_id": "tools/bughound/bounty_mission.py#function:admit_cash_bounty_mission:a7febcc0b0b3852f",
+        "name": "admit_cash_bounty_mission",
+        "kind": "function",
+        "file": "tools/bughound/bounty_mission.py",
+        "line": 89,
+        "end_line": 139,
+        "signature_hash": "1bed2029085c0f9e",
+        "file_digest8": "a4134444643cb0be"
+      },
+      {
+        "semantic_id": "tools/bughound/bounty_mission.py#method:BugHoundCashMissionReceiptV1.receipt_digest:91fe7f7d991a1d8c",
+        "name": "BugHoundCashMissionReceiptV1.receipt_digest",
+        "kind": "method",
+        "file": "tools/bughound/bounty_mission.py",
+        "line": 85,
+        "end_line": 86,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "a4134444643cb0be"
       },
       {
         "semantic_id": "tools/bughound/envelope_lint.py#class:EnvelopeLintReceiptV1:c85fe19b2b7b2cf4",
@@ -450065,7 +451623,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "38b7727ce21eb31824b5106c5d987653",
-    "payload_hash": "dff86332382aa335aecd8ffc565bc937"
+    "record_fingerprint": "c961d0dde5c4206533080f94f9958224",
+    "payload_hash": "46818b58032db51e6abad7125d46b57d"
   }
 }
