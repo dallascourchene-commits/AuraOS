@@ -1,16 +1,18 @@
 """Cash-bounty effect and sanitized-memory boundary for BugHound.
 
-Canonical mission admission lives in :mod:`tools.bughound.bounty_mission`.
+BugHound is one virtual-Arena engine with separately admitted target profiles.
+Canonical cash-mission admission lives in :mod:`tools.bughound.bounty_mission`.
 This module starts strictly *after* a valid cash-mission receipt and preserves
 three separate planes:
 
-1. mission/research admission,
-2. exact live-effect authority,
-3. authority-free sanitized reusable memory.
+1. cash-mission/research admission,
+2. exact live-effect authority for the cash-bounty profile,
+3. authority-free sanitized reusable memory that may cross into another
+   registered profile such as AuraOS hardening.
 
-AuraOS security hardening may reuse generic tools or sanitized abstract patterns,
-but it is not a BugHound mission/profile and receives no BugHound payout, scope,
-testing, disclosure, or submission authority through this module.
+The cash and AuraOS-hardening profiles may reuse generic tools, but shared engine
+or tool capability never transfers payout, scope, credential, submission, live-
+testing, or disclosure authority between profiles.
 
 The live-effect grant and sanitizer receipt are producer-bound proof planes.
 Their own internal consistency is necessary but insufficient: the consumer must
@@ -30,12 +32,14 @@ from tools.bughound.bounty_mission import (
     CANONICAL_PROFILE_ID,
     BugHoundCashMissionReceiptV1,
 )
+from tools.bughound.target_profile import AURAOS_HARDENING_PROFILE_ID
 
 LIVE_EFFECT_CLASS = "BOUNTY_LIVE_NETWORK_TEST"
+GENERIC_SECURITY_TOOL_FOUNDRY = "GENERIC_SECURITY_TOOL_FOUNDRY"
 GENERIC_REUSE_CONTEXTS = frozenset(
     {
-        "GENERIC_SECURITY_TOOL_FOUNDRY",
-        "AURAOS_SECURITY_HARDENING_REUSE",
+        GENERIC_SECURITY_TOOL_FOUNDRY,
+        AURAOS_HARDENING_PROFILE_ID,
     }
 )
 _REQUIRED_SANITIZED_CLASSES = frozenset(
@@ -94,7 +98,7 @@ def _verify_mission_receipt(receipt: BugHoundCashMissionReceiptV1) -> None:
     if not isinstance(receipt, BugHoundCashMissionReceiptV1):
         raise CashEffectBoundaryError("CASH_MISSION_RECEIPT_REQUIRED")
     if receipt.profile_id != CANONICAL_PROFILE_ID:
-        raise CashEffectBoundaryError("NONCANONICAL_BUGHOUND_MISSION_REJECTED")
+        raise CashEffectBoundaryError("NONCANONICAL_CASH_MISSION_REJECTED")
     if not receipt.cash_bounty_mission_admitted:
         raise CashEffectBoundaryError("CASH_MISSION_NOT_ADMITTED")
     if not (receipt.payout_current and receipt.scope_current and receipt.source_current):
@@ -207,12 +211,14 @@ class SanitizedPatternReceiptV1:
 
 @dataclass(frozen=True)
 class ReusablePatternExportV1:
+    source_cash_profile_id: str
     source_mission_receipt_digest: str
     sanitized_pattern_receipt_digest: str
     producer_ref: str
     producer_generation: str
     retained_abstract_pattern_ref: str
     destination_context: str
+    cross_profile_reuse: bool
     bughound_mission_state_exported: bool = False
     payout_state_exported: bool = False
     scope_authority_exported: bool = False
@@ -232,11 +238,10 @@ def admit_shared_tool_for_cash_research(
     receipt: BugHoundCashMissionReceiptV1,
     capability: SharedSecurityToolCapabilityV1,
 ) -> str:
-    """Admit an authority-free local capability into cash-bounty research.
+    """Admit an authority-free local capability into the cash-bounty profile.
 
-    The same generic capability may also be used outside BugHound (for example
-    AuraOS hardening), but this admission never transfers BugHound mission state
-    into that other context.
+    The same generic capability may list the AuraOS-hardening profile as another
+    compatible context, but this admission transfers no cash/profile authority.
     """
     _verify_mission_receipt(receipt)
     _text(capability.capability_id, "TOOL_CAPABILITY_ID_REQUIRED")
@@ -264,7 +269,7 @@ def admit_live_effect(
     expected_producer_ref: str,
     expected_producer_generation: str,
 ) -> LiveEffectAdmissionReceiptV1:
-    """Admit exactly one independently expected live-testing authority plane.
+    """Admit exactly one independently expected cash-profile live-test grant.
 
     This returns an admission receipt only. It does not execute the network
     effect and grants no submission, payout, or payment authority. A caller may
@@ -272,7 +277,7 @@ def admit_live_effect(
     """
     _verify_mission_receipt(receipt)
     if grant.profile_id != CANONICAL_PROFILE_ID:
-        raise CashEffectBoundaryError("LIVE_GRANT_NONCANONICAL_PROFILE")
+        raise CashEffectBoundaryError("LIVE_GRANT_NON_CASH_PROFILE")
     if grant.mission_receipt_digest != receipt.receipt_digest:
         raise CashEffectBoundaryError("LIVE_GRANT_MISSION_RECEIPT_MISMATCH")
     if grant.program_ref != receipt.program_ref:
@@ -309,7 +314,6 @@ def admit_live_effect(
     allowlist = _strings(grant.network_allowlist, "LIVE_GRANT_ALLOWLIST_INVALID")
     if origin not in allowlist:
         raise CashEffectBoundaryError("LIVE_GRANT_ORIGIN_NOT_ALLOWLISTED")
-    # Aliases are names only; secret values never enter this contract.
     _strings(grant.credential_aliases, "LIVE_GRANT_CREDENTIAL_ALIASES_INVALID")
 
     return LiveEffectAdmissionReceiptV1(
@@ -323,7 +327,7 @@ def admit_live_effect(
         effect_class=grant.effect_class,
         network_origin=origin,
         live_effect_authorized=True,
-        authority_scope="EXACT_NAMED_LIVE_TEST_ONLY",
+        authority_scope="EXACT_NAMED_CASH_PROFILE_LIVE_TEST_ONLY",
     )
 
 
@@ -337,7 +341,12 @@ def export_sanitized_pattern(
     expected_producer_generation: str,
     expected_reviewer_ref: str,
 ) -> ReusablePatternExportV1:
-    """Export only independently expected, authority-free abstract knowledge."""
+    """Export only independently expected, authority-free abstract knowledge.
+
+    A sanitized abstraction may cross from the cash-bounty profile to the
+    AuraOS-hardening profile, but no cash mission or authority state accompanies
+    it. K27/locality is not an authorization mechanism for this crossing.
+    """
     _verify_mission_receipt(receipt)
     if sanitized.mission_receipt_digest != receipt.receipt_digest:
         raise CashEffectBoundaryError("SANITIZED_PATTERN_MISSION_MISMATCH")
@@ -386,10 +395,12 @@ def export_sanitized_pattern(
         raise CashEffectBoundaryError("SANITIZED_REMOVAL_COVERAGE_INCOMPLETE")
 
     return ReusablePatternExportV1(
+        source_cash_profile_id=CANONICAL_PROFILE_ID,
         source_mission_receipt_digest=receipt.receipt_digest,
         sanitized_pattern_receipt_digest=sanitized.receipt_digest,
         producer_ref=sanitized.producer_ref,
         producer_generation=sanitized.producer_generation,
         retained_abstract_pattern_ref=pattern_ref,
         destination_context=destination,
+        cross_profile_reuse=destination == AURAOS_HARDENING_PROFILE_ID,
     )
