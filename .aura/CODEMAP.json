@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788099548,
+  "generated_at_unix": 1788100824,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1641,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1634,7 +1634,9 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project030/creator_studio_continuation_harness.py",
+      "tools/project030/creator_studio_wake_adapter.py",
       "tools/project030/test_creator_studio_continuation_harness.py",
+      "tools/project030/test_creator_studio_wake_adapter.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1757,15 +1759,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1641,
-      "bytes": 26434791,
-      "tokens_est": 6599049,
+      "files": 1643,
+      "bytes": 26461397,
+      "tokens_est": 6605702,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
+        "python_module": 1001,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -157187,8 +157189,8 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "class",
-        "line": 9,
-        "end_line": 15,
+        "line": 10,
+        "end_line": 16,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:HarnessRefusal:2aed4890b4aa413a",
         "signature_hash": "64cbb8102983b0f6"
       }
@@ -157197,18 +157199,38 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 12,
-        "end_line": 15,
+        "line": 13,
+        "end_line": 16,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#method:HarnessRefusal.__init__:0c35bad31edb257c",
         "signature_hash": "42bd2d17d3dd6102"
+      }
+    ],
+    "GateEvidence": [
+      {
+        "file": "tools/project030/creator_studio_continuation_harness.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 67,
+        "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:GateEvidence:8c72274fc9c30c97",
+        "signature_hash": "901f2b665815a9fb"
+      }
+    ],
+    "GateEvidence.__post_init__": [
+      {
+        "file": "tools/project030/creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 67,
+        "semantic_id": "tools/project030/creator_studio_continuation_harness.py#method:GateEvidence.__post_init__:dd7bfdf19851fd43",
+        "signature_hash": "175e4972e4d2d582"
       }
     ],
     "WorkerContext": [
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "class",
-        "line": 34,
-        "end_line": 36,
+        "line": 71,
+        "end_line": 73,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:WorkerContext:952a8c1e58cc773c",
         "signature_hash": "396b5292e76dd103"
       }
@@ -157217,8 +157239,8 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "class",
-        "line": 40,
-        "end_line": 62,
+        "line": 77,
+        "end_line": 99,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:WorkItem:7b1937969a71801b",
         "signature_hash": "c3729f1ebfe7e6c2"
       }
@@ -157227,8 +157249,8 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 56,
-        "end_line": 62,
+        "line": 93,
+        "end_line": 99,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#method:WorkItem.__post_init__:a6255e9e99ae5bbc",
         "signature_hash": "175e4972e4d2d582"
       }
@@ -157237,8 +157259,8 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "class",
-        "line": 66,
-        "end_line": 88,
+        "line": 103,
+        "end_line": 125,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:Residual:0690ed0bd717574b",
         "signature_hash": "4c842a5da50b52e8"
       }
@@ -157247,8 +157269,8 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 80,
-        "end_line": 88,
+        "line": 117,
+        "end_line": 125,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#method:Residual.fingerprint:55293a8acfab779e",
         "signature_hash": "639c2b791ce0b655"
       }
@@ -157257,8 +157279,8 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "class",
-        "line": 92,
-        "end_line": 98,
+        "line": 129,
+        "end_line": 135,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:HarnessAction:514c4d2eaa18c080",
         "signature_hash": "ee60638845b854ea"
       }
@@ -157267,8 +157289,8 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "class",
-        "line": 102,
-        "end_line": 124,
+        "line": 139,
+        "end_line": 164,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:HarnessState:a373dfc61b97017b",
         "signature_hash": "ae0d920e7f0e4ae8"
       }
@@ -157277,8 +157299,8 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 116,
-        "end_line": 120,
+        "line": 156,
+        "end_line": 160,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#method:HarnessState.add_work:4bba6c123f47c829",
         "signature_hash": "e34c1b89fa6d7947"
       }
@@ -157287,8 +157309,8 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 122,
-        "end_line": 124,
+        "line": 162,
+        "end_line": 164,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#method:HarnessState._next_sequence:522ce7190210b61b",
         "signature_hash": "a2b5b0567a70cdcd"
       }
@@ -157297,18 +157319,28 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "function",
-        "line": 127,
-        "end_line": 136,
+        "line": 167,
+        "end_line": 176,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:_score:fb87f04052c7950c",
         "signature_hash": "8f42bb2a7dc3bfed"
+      }
+    ],
+    "_worker_claim_ids": [
+      {
+        "file": "tools/project030/creator_studio_continuation_harness.py",
+        "kind": "function",
+        "line": 179,
+        "end_line": 180,
+        "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:_worker_claim_ids:6be87df5e57f17cc",
+        "signature_hash": "419b6d36bc76c773"
       }
     ],
     "eligible_work": [
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "function",
-        "line": 139,
-        "end_line": 164,
+        "line": 183,
+        "end_line": 208,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:eligible_work:1d4755ee9f07569b",
         "signature_hash": "9a5c38c56b7754ff"
       }
@@ -157317,8 +157349,8 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "function",
-        "line": 167,
-        "end_line": 205,
+        "line": 211,
+        "end_line": 261,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:claim_best_available:3dbb177b8d2b5921",
         "signature_hash": "280c8a0e564e2d45"
       }
@@ -157327,8 +157359,8 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "function",
-        "line": 208,
-        "end_line": 256,
+        "line": 264,
+        "end_line": 312,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:compile_successor_work:e2ac6e6c62445344",
         "signature_hash": "f82477ea53977e25"
       }
@@ -157337,28 +157369,38 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "function",
-        "line": 259,
-        "end_line": 282,
+        "line": 315,
+        "end_line": 344,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:complete_and_continue:27be3b841d4fb5b2",
         "signature_hash": "320070d227057ca9"
+      }
+    ],
+    "_validated_gate_evidence": [
+      {
+        "file": "tools/project030/creator_studio_continuation_harness.py",
+        "kind": "function",
+        "line": 347,
+        "end_line": 372,
+        "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:_validated_gate_evidence:ab714739d38ca1e7",
+        "signature_hash": "27fdc54422aa3233"
       }
     ],
     "advance_gate": [
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "function",
-        "line": 285,
-        "end_line": 296,
-        "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:advance_gate:7e6dbb9872a45d8b",
-        "signature_hash": "0412b9d83540809b"
+        "line": 375,
+        "end_line": 398,
+        "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:advance_gate:785a9897486a2994",
+        "signature_hash": "daa0655466d2ca75"
       }
     ],
     "restore_canonical_mission": [
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "function",
-        "line": 299,
-        "end_line": 318,
+        "line": 401,
+        "end_line": 423,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:restore_canonical_mission:3a980fde2527a80b",
         "signature_hash": "f11269ef95fee6e9"
       }
@@ -157367,8 +157409,8 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "function",
-        "line": 321,
-        "end_line": 336,
+        "line": 426,
+        "end_line": 455,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:assert_terminal_allowed:2be92e0a0e90c422",
         "signature_hash": "63e7dad6b9143116"
       }
@@ -157377,28 +157419,198 @@
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
         "kind": "function",
-        "line": 339,
-        "end_line": 355,
+        "line": 458,
+        "end_line": 480,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:continuation_snapshot:bbec937430e6e1ba",
         "signature_hash": "539a8ea0c99ffe91"
+      }
+    ],
+    "WakeRefusal": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 24,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:WakeRefusal:0aafb6df299438b5",
+        "signature_hash": "5ae430d772fb691b"
+      }
+    ],
+    "WakeRefusal.__init__": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 24,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:WakeRefusal.__init__:43386a86be893156",
+        "signature_hash": "42bd2d17d3dd6102"
+      }
+    ],
+    "WakeIntent": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 43,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:WakeIntent:aa7122378e174607",
+        "signature_hash": "15352cf900d59e83"
+      }
+    ],
+    "WakeIntent.canonical_bytes": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:WakeIntent.canonical_bytes:4e6a1e558324c699",
+        "signature_hash": "2f07c43e7574fbf0"
+      }
+    ],
+    "FileWakeLedger": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 109,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:FileWakeLedger:ddb86f11cc7262aa",
+        "signature_hash": "e9425ba8559885c9"
+      }
+    ],
+    "FileWakeLedger.__init__": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.__init__:ba2d63e2291b33a4",
+        "signature_hash": "977a4d9126c48d60"
+      }
+    ],
+    "FileWakeLedger.path_for": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.path_for:8dc28fa6f9109414",
+        "signature_hash": "078dc3c45475194f"
+      }
+    ],
+    "FileWakeLedger._read_landed": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 64,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger._read_landed:a66d94f2b7a4d641",
+        "signature_hash": "97498012ca8a0675"
+      }
+    ],
+    "FileWakeLedger.append": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 103,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.append:c6d9233c4d402782",
+        "signature_hash": "4b01af1f5a5efbee"
+      }
+    ],
+    "FileWakeLedger.events": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 109,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.events:5fc1a3850db2fd38",
+        "signature_hash": "f313fb85cbb4b333"
+      }
+    ],
+    "ArenaWakeScheduler": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 112,
+        "end_line": 250,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:ArenaWakeScheduler:cbdbe1176225fecb",
+        "signature_hash": "37e53c944b82381b"
+      }
+    ],
+    "ArenaWakeScheduler.__init__": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 116,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.__init__:bac6205636337383",
+        "signature_hash": "188e0eaf70d47cbe"
+      }
+    ],
+    "ArenaWakeScheduler._event_id": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 123,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler._event_id:434cac3e74149235",
+        "signature_hash": "2e70e5ac54cff2c7"
+      }
+    ],
+    "ArenaWakeScheduler._best_worker": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 136,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler._best_worker:4fc35b70752f2276",
+        "signature_hash": "7f5ef351913906f7"
+      }
+    ],
+    "ArenaWakeScheduler.emit_recommission_required": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 164,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.emit_recommission_required:6b009e02400163d3",
+        "signature_hash": "68857bd4a7cb6700"
+      }
+    ],
+    "ArenaWakeScheduler.scan_and_emit": [
+      {
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 250,
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.scan_and_emit:d4fc18fd5188e4f3",
+        "signature_hash": "6f072d1f5b6814b5"
       }
     ],
     "state_with": [
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "function",
-        "line": 21,
-        "end_line": 25,
+        "line": 24,
+        "end_line": 28,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#function:state_with:dcf0166a10d987d9",
         "signature_hash": "8ae616372e6bbd93"
+      }
+    ],
+    "evidence_for": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 40,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#function:evidence_for:6d1ebd94aaa3ab48",
+        "signature_hash": "f04e70eacfbb8196"
       }
     ],
     "ContinuationHarnessTests": [
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "class",
-        "line": 28,
-        "end_line": 159,
+        "line": 43,
+        "end_line": 298,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#class:ContinuationHarnessTests:e40a4e8190d90aa7",
         "signature_hash": "51dc46befbae9cc7"
       }
@@ -157407,8 +157619,8 @@
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 29,
-        "end_line": 30,
+        "line": 44,
+        "end_line": 45,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.setUp:99fd5b09808fa755",
         "signature_hash": "706017b0e7dd7cef"
       }
@@ -157417,8 +157629,8 @@
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 32,
-        "end_line": 41,
+        "line": 47,
+        "end_line": 56,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_finish_release_scan_claims_next_without_reprompt:86aa1db6842ae45d",
         "signature_hash": "430c0708fa84fc65"
       }
@@ -157427,8 +157639,8 @@
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 43,
-        "end_line": 53,
+        "line": 58,
+        "end_line": 68,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_material_residual_compiles_successor_and_claims_it:ff4f3b87b30e54a7",
         "signature_hash": "a9f858b228265fb5"
       }
@@ -157437,8 +157649,8 @@
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 55,
-        "end_line": 61,
+        "line": 70,
+        "end_line": 76,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_duplicate_residual_is_deduplicated:9c6369594eddb067",
         "signature_hash": "4555fae5710de4d1"
       }
@@ -157447,18 +157659,28 @@
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 63,
-        "end_line": 76,
+        "line": 78,
+        "end_line": 91,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_nonmaterial_or_zero_consequence_residual_does_not_create_busywork:ce83bcc1a02b05e3",
         "signature_hash": "75a1dde076f531d4"
+      }
+    ],
+    "ContinuationHarnessTests.test_invalid_residual_is_transactional_and_leaves_state_unchanged": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 109,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_invalid_residual_is_transactional_and_leaves_state_unchanged:869463ca7439431b",
+        "signature_hash": "80ec63ab6e542110"
       }
     ],
     "ContinuationHarnessTests.test_dependencies_block_until_complete": [
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 78,
-        "end_line": 84,
+        "line": 111,
+        "end_line": 117,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_dependencies_block_until_complete:b376639f2d6e1a50",
         "signature_hash": "98cf16ea8a1cc3df"
       }
@@ -157467,18 +157689,38 @@
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 86,
-        "end_line": 90,
+        "line": 119,
+        "end_line": 123,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_claimed_work_is_not_duplicated:cc87421e101fe582",
         "signature_hash": "060ee6cbe988166a"
+      }
+    ],
+    "ContinuationHarnessTests.test_worker_cannot_take_second_claim": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 135,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_worker_cannot_take_second_claim:04f04c8ad641a91d",
+        "signature_hash": "9abe959d4c6acc66"
+      }
+    ],
+    "ContinuationHarnessTests.test_corrupt_multiple_claims_for_one_worker_fail_closed": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 146,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_corrupt_multiple_claims_for_one_worker_fail_closed:084e4cd6b9d7e95e",
+        "signature_hash": "6e6728648c4bc6c9"
       }
     ],
     "ContinuationHarnessTests.test_comparative_capability_filter": [
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 92,
-        "end_line": 97,
+        "line": 148,
+        "end_line": 153,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_comparative_capability_filter:2b72d43e32b101aa",
         "signature_hash": "188a19fe035f26c0"
       }
@@ -157487,8 +157729,8 @@
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 99,
-        "end_line": 107,
+        "line": 155,
+        "end_line": 163,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_priority_then_review_then_backburner:7888437cc4aed649",
         "signature_hash": "8e6e3464ede3fa2b"
       }
@@ -157497,8 +157739,8 @@
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 109,
-        "end_line": 111,
+        "line": 165,
+        "end_line": 167,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_wrong_mission_work_is_not_selected:707158b28d170cae",
         "signature_hash": "5550dcb940993f45"
       }
@@ -157507,8 +157749,8 @@
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 113,
-        "end_line": 118,
+        "line": 169,
+        "end_line": 174,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_currentness_forces_rebase:c6f1cbcf8d838655",
         "signature_hash": "f228fe1f3a6a51ee"
       }
@@ -157517,8 +157759,8 @@
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 120,
-        "end_line": 123,
+        "line": 176,
+        "end_line": 179,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_premature_chat_terminal_is_refused_while_work_remains:e926f88b0d35effa",
         "signature_hash": "fa718186cebe1074"
       }
@@ -157527,38 +157769,138 @@
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 125,
-        "end_line": 128,
+        "line": 181,
+        "end_line": 184,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_no_eligible_work_terminal_is_fail_closed_if_work_exists:ccc143fe397793fc",
         "signature_hash": "6782a62ef281d21c"
       }
     ],
-    "ContinuationHarnessTests.test_gate_requires_sequential_durable_evidence": [
+    "ContinuationHarnessTests.test_no_eligible_terminal_rejects_worker_with_active_claim": [
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 130,
-        "end_line": 136,
-        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate_requires_sequential_durable_evidence:9c36e39da000a730",
-        "signature_hash": "f164f009ce6d8d5f"
+        "line": 186,
+        "end_line": 190,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_no_eligible_terminal_rejects_worker_with_active_claim:6a90f4dc01239f94",
+        "signature_hash": "3003dba3a2ebfc60"
       }
     ],
-    "ContinuationHarnessTests.test_gate10_automatically_restores_canonical_mission": [
+    "ContinuationHarnessTests.test_gate_requires_typed_evidence_not_arbitrary_strings": [
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 138,
-        "end_line": 145,
-        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate10_automatically_restores_canonical_mission:ed0ba78563dec654",
-        "signature_hash": "dbefc03e63a96fff"
+        "line": 192,
+        "end_line": 195,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate_requires_typed_evidence_not_arbitrary_strings:92d122818276915c",
+        "signature_hash": "6e77fdcc33a370f7"
+      }
+    ],
+    "ContinuationHarnessTests.test_gate_requires_sequential_required_evidence_class": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 203,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate_requires_sequential_required_evidence_class:c7770b2805b88006",
+        "signature_hash": "3a87c5539a3222fc"
+      }
+    ],
+    "ContinuationHarnessTests.test_gate_rejects_missing_required_evidence_class": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 205,
+        "end_line": 209,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate_rejects_missing_required_evidence_class:0914997a83d9e3b1",
+        "signature_hash": "cb0cd7f5619f0e9c"
+      }
+    ],
+    "ContinuationHarnessTests.test_gate_rejects_unverified_or_stale_or_unbound_evidence": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 220,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate_rejects_unverified_or_stale_or_unbound_evidence:cef0e5a70a83301c",
+        "signature_hash": "67ce8ac2e1c19467"
+      }
+    ],
+    "ContinuationHarnessTests.test_gate10_requires_all_convergence_evidence_classes": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 222,
+        "end_line": 228,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate10_requires_all_convergence_evidence_classes:8b6c0aa894f3524d",
+        "signature_hash": "7ddbd4d8af59fabf"
+      }
+    ],
+    "ContinuationHarnessTests.test_gate10_automatically_restores_canonical_mission_once": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 230,
+        "end_line": 247,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate10_automatically_restores_canonical_mission_once:f877b0ae2e4f8b70",
+        "signature_hash": "9abd9841aa606135"
+      }
+    ],
+    "ContinuationHarnessTests.test_explicit_second_restore_is_refused": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 249,
+        "end_line": 256,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_explicit_second_restore_is_refused:7ddcccdf8aa5695d",
+        "signature_hash": "f439d47ed193ba7b"
+      }
+    ],
+    "ContinuationHarnessTests.test_owner_stop_terminal_requires_owner_stop_state": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 258,
+        "end_line": 263,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_owner_stop_terminal_requires_owner_stop_state:52b5df56b146e38c",
+        "signature_hash": "cadee1ed8ef03664"
+      }
+    ],
+    "ContinuationHarnessTests.test_external_boundary_terminal_requires_evidence": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 265,
+        "end_line": 270,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_external_boundary_terminal_requires_evidence:54b0766bfa91378e",
+        "signature_hash": "8b7caeec996d946a"
+      }
+    ],
+    "ContinuationHarnessTests.test_superseded_terminal_requires_noncurrent_state": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 272,
+        "end_line": 277,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_superseded_terminal_requires_noncurrent_state:16b9d3f52484713a",
+        "signature_hash": "df133dce23c7799a"
+      }
+    ],
+    "ContinuationHarnessTests.test_gate10_terminal_requires_typed_gate10_evidence": [
+      {
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "kind": "method",
+        "line": 279,
+        "end_line": 283,
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate10_terminal_requires_typed_gate10_evidence:6cae137ae353df86",
+        "signature_hash": "dd371acf2ad0700c"
       }
     ],
     "ContinuationHarnessTests.test_deterministic_value_first_cost_aware_ranking": [
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 147,
-        "end_line": 153,
+        "line": 285,
+        "end_line": 291,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_deterministic_value_first_cost_aware_ranking:44bad37fcabb7766",
         "signature_hash": "00c4441fa974ad9f"
       }
@@ -157567,10 +157909,170 @@
       {
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
         "kind": "method",
-        "line": 155,
-        "end_line": 159,
+        "line": 293,
+        "end_line": 298,
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_snapshot_declares_scheduler_zero_inference:7de24f14c7a41221",
         "signature_hash": "cc079d5b3cc53c1b"
+      }
+    ],
+    "WakeAdapterTests": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 141,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#class:WakeAdapterTests:8e87e2dff9146293",
+        "signature_hash": "5fbd35eb792d60f3"
+      }
+    ],
+    "WakeAdapterTests.setUp": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 20,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.setUp:99d6e0d2dfe47273",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "WakeAdapterTests.tearDown": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.tearDown:6a873c33e2775262",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "WakeAdapterTests.state": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.state:ad667dc0821d6f25",
+        "signature_hash": "f690bd7d3b182ac1"
+      }
+    ],
+    "WakeAdapterTests.test_newly_eligible_work_emits_one_targeted_wake": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 37,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_newly_eligible_work_emits_one_targeted_wake:20b8df478d065651",
+        "signature_hash": "d15d86311fb18654"
+      }
+    ],
+    "WakeAdapterTests.test_repeated_scan_is_idempotent_on_disk": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 44,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_repeated_scan_is_idempotent_on_disk:3a2c99579ce342d4",
+        "signature_hash": "5d55b8d8870b2a59"
+      }
+    ],
+    "WakeAdapterTests.test_dependency_completion_wakes_newly_eligible_work_version": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 55,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_dependency_completion_wakes_newly_eligible_work_version:8408c99e97b41a73",
+        "signature_hash": "192301ecc2368d36"
+      }
+    ],
+    "WakeAdapterTests.test_claimed_work_does_not_emit_wake": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 61,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_claimed_work_does_not_emit_wake:013c225fd5878f2c",
+        "signature_hash": "88b2d5a2578b199d"
+      }
+    ],
+    "WakeAdapterTests.test_capability_mismatch_does_not_emit": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 66,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_capability_mismatch_does_not_emit:ebba5b74694de691",
+        "signature_hash": "da623af4133f94d1"
+      }
+    ],
+    "WakeAdapterTests.test_stale_currentness_emits_rebase_not_work": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 75,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_stale_currentness_emits_rebase_not_work:c980b12b8542104f",
+        "signature_hash": "fce4b39647755046"
+      }
+    ],
+    "WakeAdapterTests.test_reopen_version_allows_new_wake_without_rewriting_old_event": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 82,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_reopen_version_allows_new_wake_without_rewriting_old_event:9c4f4597a8fd0ee7",
+        "signature_hash": "45d8ab1d528b1894"
+      }
+    ],
+    "WakeAdapterTests.test_restart_reuses_durable_ledger_idempotently": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 90,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_restart_reuses_durable_ledger_idempotently:f76ad5f451be8ca6",
+        "signature_hash": "54c78eba6d1baed7"
+      }
+    ],
+    "WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 122,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file:bf84d874c0b27747",
+        "signature_hash": "b9a15cfe21d72cfa"
+      }
+    ],
+    "WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file.writer": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 112,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file.writer:7230e84b194bea1c",
+        "signature_hash": "227f60c8356d95b3"
+      }
+    ],
+    "WakeAdapterTests.test_one_worker_receives_at_most_one_work_wake_per_scan": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 130,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_one_worker_receives_at_most_one_work_wake_per_scan:2f9e55c4c47e8c75",
+        "signature_hash": "7836cfba5f618873"
+      }
+    ],
+    "WakeAdapterTests.test_recommission_intent_is_coordination_only": [
+      {
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 141,
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_recommission_intent_is_coordination_only:d7f5a473caaa4ca6",
+        "signature_hash": "213662e123943d7e"
       }
     ],
     "_coordinates": [
@@ -263137,94 +263639,188 @@
       "path": "tools/project030/creator_studio_continuation_harness.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 12507,
-      "lines": 356,
-      "tokens_est": 3127,
-      "symbol_count": 20,
+      "bytes": 17410,
+      "lines": 481,
+      "tokens_est": 4353,
+      "symbol_count": 24,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "03e6ae09275639cb",
+      "digest8": "d95718c9f775f22a",
       "vector": [
-        0.200671,
-        -0.177953,
-        0.001262,
-        0.034076,
-        0.0366,
-        -0.018931,
-        -0.001262,
-        0.099704,
-        -0.071939,
-        0.283968,
-        -0.309209,
-        -0.256202,
-        0.008835,
-        0.06689,
-        0.263775,
-        -0.208243,
-        0.044173,
-        -0.299113,
-        0.112325,
-        -0.150187,
-        -0.306685,
-        0.160284,
-        0.124946,
-        -0.203195,
-        0.06689,
-        -0.258726,
-        -0.236009,
-        0.24863,
-        -0.124946,
-        -0.071939,
-        0.071939,
-        0.180477
+        0.190065,
+        -0.113529,
+        0.156899,
+        0.054851,
+        0.177309,
+        0.113529,
+        -0.03189,
+        -0.146694,
+        0.108426,
+        0.001276,
+        0.225781,
+        -0.230884,
+        0.304869,
+        0.235986,
+        0.246191,
+        -0.001276,
+        0.218128,
+        0.07526,
+        0.110977,
+        0.235986,
+        0.315074,
+        -0.149245,
+        0.019134,
+        -0.233435,
+        0.024236,
+        -0.167104,
+        -0.228333,
+        -0.065056,
+        -0.289562,
+        -0.215577,
+        0.090568,
+        0.100773
+      ]
+    },
+    {
+      "path": "tools/project030/creator_studio_wake_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8831,
+      "lines": 251,
+      "tokens_est": 2208,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "57bc91c22b74ec3a",
+      "vector": [
+        -0.196803,
+        0.086593,
+        -0.271025,
+        0.0686,
+        0.212547,
+        -0.163065,
+        0.165314,
+        -0.205799,
+        -0.221544,
+        -0.244035,
+        0.25978,
+        -0.010121,
+        0.061852,
+        0.028115,
+        0.010121,
+        0.244035,
+        -0.201301,
+        -0.156318,
+        -0.183308,
+        0.142823,
+        0.084344,
+        0.28677,
+        -0.14957,
+        0.210298,
+        -0.046108,
+        0.077596,
+        -0.28452,
+        -0.158567,
+        0.082095,
+        -0.129327,
+        -0.273275,
+        -0.079846
       ]
     },
     {
       "path": "tools/project030/test_creator_studio_continuation_harness.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 7236,
-      "lines": 164,
-      "tokens_est": 1809,
-      "symbol_count": 19,
+      "bytes": 13949,
+      "lines": 303,
+      "tokens_est": 3488,
+      "symbol_count": 33,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "b6e4fdc882d5b24c",
+      "digest8": "c174bafee0735c8e",
       "vector": [
-        0.200141,
-        -0.300892,
-        0.12662,
-        0.113005,
-        -0.276385,
-        0.088498,
-        -0.156573,
-        -0.055822,
-        -0.012254,
-        -0.07216,
-        -0.063991,
-        0.20831,
-        0.170188,
-        0.230094,
-        0.148404,
-        -0.036761,
-        0.020423,
-        -0.025869,
-        0.145681,
-        -0.268216,
-        0.330845,
-        -0.251878,
-        -0.23554,
-        0.145681,
-        0.115728,
-        -0.053099,
-        -0.29,
-        0.240986,
-        0.036761,
-        0.110282,
-        0.232817,
-        -0.025869
+        0.120809,
+        -0.001389,
+        -0.279111,
+        0.268002,
+        -0.143027,
+        0.143027,
+        -0.05971,
+        -0.043047,
+        -0.270779,
+        0.015275,
+        0.051379,
+        -0.051379,
+        0.034715,
+        0.268002,
+        0.273556,
+        -0.281888,
+        -0.020829,
+        -0.265225,
+        0.095814,
+        -0.329101,
+        -0.215235,
+        0.093037,
+        0.037492,
+        -0.084705,
+        -0.001389,
+        0.029161,
+        -0.043047,
+        -0.237452,
+        -0.204126,
+        0.006943,
+        0.215235,
+        0.29022
+      ]
+    },
+    {
+      "path": "tools/project030/test_creator_studio_wake_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6159,
+      "lines": 146,
+      "tokens_est": 1540,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ab7e3159946157b3",
+      "vector": [
+        0.014196,
+        -0.234781,
+        0.260989,
+        -0.265357,
+        -0.095004,
+        0.232597,
+        0.025116,
+        0.003276,
+        0.009828,
+        0.0273,
+        0.177997,
+        0.208573,
+        -0.145237,
+        0.186733,
+        -0.206389,
+        0.182365,
+        0.171445,
+        0.186733,
+        -0.036036,
+        -0.053508,
+        0.040404,
+        0.169261,
+        -0.153973,
+        0.206389,
+        0.267541,
+        0.188917,
+        -0.267541,
+        -0.160525,
+        0.250069,
+        -0.221677,
+        0.217309,
+        -0.077532
       ]
     },
     {
@@ -287132,15 +287728,15 @@
     }
   },
   "summary": {
-    "file_count": 1641,
-    "total_bytes": 26434791,
-    "text_tokens_est": 6599049,
+    "file_count": 1643,
+    "total_bytes": 26461397,
+    "text_tokens_est": 6605702,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
+      "python_module": 1001,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -288785,7 +289381,9 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project030/creator_studio_continuation_harness.py",
+      "tools/project030/creator_studio_wake_adapter.py",
       "tools/project030/test_creator_studio_continuation_harness.py",
+      "tools/project030/test_creator_studio_wake_adapter.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -446122,394 +446720,894 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:GateEvidence:8c72274fc9c30c97",
+        "name": "GateEvidence",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_continuation_harness.py",
+        "line": 54,
+        "end_line": 67,
+        "signature_hash": "901f2b665815a9fb",
+        "file_digest8": "d95718c9f775f22a"
+      },
+      {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:HarnessAction:514c4d2eaa18c080",
         "name": "HarnessAction",
         "kind": "class",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 92,
-        "end_line": 98,
+        "line": 129,
+        "end_line": 135,
         "signature_hash": "ee60638845b854ea",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:HarnessRefusal:2aed4890b4aa413a",
         "name": "HarnessRefusal",
         "kind": "class",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 9,
-        "end_line": 15,
+        "line": 10,
+        "end_line": 16,
         "signature_hash": "64cbb8102983b0f6",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:HarnessState:a373dfc61b97017b",
         "name": "HarnessState",
         "kind": "class",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 102,
-        "end_line": 124,
+        "line": 139,
+        "end_line": 164,
         "signature_hash": "ae0d920e7f0e4ae8",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:Residual:0690ed0bd717574b",
         "name": "Residual",
         "kind": "class",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 66,
-        "end_line": 88,
+        "line": 103,
+        "end_line": 125,
         "signature_hash": "4c842a5da50b52e8",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:WorkItem:7b1937969a71801b",
         "name": "WorkItem",
         "kind": "class",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 40,
-        "end_line": 62,
+        "line": 77,
+        "end_line": 99,
         "signature_hash": "c3729f1ebfe7e6c2",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:WorkerContext:952a8c1e58cc773c",
         "name": "WorkerContext",
         "kind": "class",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 34,
-        "end_line": 36,
+        "line": 71,
+        "end_line": 73,
         "signature_hash": "396b5292e76dd103",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:_score:fb87f04052c7950c",
         "name": "_score",
         "kind": "function",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 127,
-        "end_line": 136,
+        "line": 167,
+        "end_line": 176,
         "signature_hash": "8f42bb2a7dc3bfed",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
-        "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:advance_gate:7e6dbb9872a45d8b",
+        "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:_validated_gate_evidence:ab714739d38ca1e7",
+        "name": "_validated_gate_evidence",
+        "kind": "function",
+        "file": "tools/project030/creator_studio_continuation_harness.py",
+        "line": 347,
+        "end_line": 372,
+        "signature_hash": "27fdc54422aa3233",
+        "file_digest8": "d95718c9f775f22a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:_worker_claim_ids:6be87df5e57f17cc",
+        "name": "_worker_claim_ids",
+        "kind": "function",
+        "file": "tools/project030/creator_studio_continuation_harness.py",
+        "line": 179,
+        "end_line": 180,
+        "signature_hash": "419b6d36bc76c773",
+        "file_digest8": "d95718c9f775f22a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:advance_gate:785a9897486a2994",
         "name": "advance_gate",
         "kind": "function",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 285,
-        "end_line": 296,
-        "signature_hash": "0412b9d83540809b",
-        "file_digest8": "03e6ae09275639cb"
+        "line": 375,
+        "end_line": 398,
+        "signature_hash": "daa0655466d2ca75",
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:assert_terminal_allowed:2be92e0a0e90c422",
         "name": "assert_terminal_allowed",
         "kind": "function",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 321,
-        "end_line": 336,
+        "line": 426,
+        "end_line": 455,
         "signature_hash": "63e7dad6b9143116",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:claim_best_available:3dbb177b8d2b5921",
         "name": "claim_best_available",
         "kind": "function",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 167,
-        "end_line": 205,
+        "line": 211,
+        "end_line": 261,
         "signature_hash": "280c8a0e564e2d45",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:compile_successor_work:e2ac6e6c62445344",
         "name": "compile_successor_work",
         "kind": "function",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 208,
-        "end_line": 256,
+        "line": 264,
+        "end_line": 312,
         "signature_hash": "f82477ea53977e25",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:complete_and_continue:27be3b841d4fb5b2",
         "name": "complete_and_continue",
         "kind": "function",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 259,
-        "end_line": 282,
+        "line": 315,
+        "end_line": 344,
         "signature_hash": "320070d227057ca9",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:continuation_snapshot:bbec937430e6e1ba",
         "name": "continuation_snapshot",
         "kind": "function",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 339,
-        "end_line": 355,
+        "line": 458,
+        "end_line": 480,
         "signature_hash": "539a8ea0c99ffe91",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:eligible_work:1d4755ee9f07569b",
         "name": "eligible_work",
         "kind": "function",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 139,
-        "end_line": 164,
+        "line": 183,
+        "end_line": 208,
         "signature_hash": "9a5c38c56b7754ff",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:restore_canonical_mission:3a980fde2527a80b",
         "name": "restore_canonical_mission",
         "kind": "function",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 299,
-        "end_line": 318,
+        "line": 401,
+        "end_line": 423,
         "signature_hash": "f11269ef95fee6e9",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_continuation_harness.py#method:GateEvidence.__post_init__:dd7bfdf19851fd43",
+        "name": "GateEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_continuation_harness.py",
+        "line": 63,
+        "end_line": 67,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#method:HarnessRefusal.__init__:0c35bad31edb257c",
         "name": "HarnessRefusal.__init__",
         "kind": "method",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 12,
-        "end_line": 15,
+        "line": 13,
+        "end_line": 16,
         "signature_hash": "42bd2d17d3dd6102",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#method:HarnessState._next_sequence:522ce7190210b61b",
         "name": "HarnessState._next_sequence",
         "kind": "method",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 122,
-        "end_line": 124,
+        "line": 162,
+        "end_line": 164,
         "signature_hash": "a2b5b0567a70cdcd",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#method:HarnessState.add_work:4bba6c123f47c829",
         "name": "HarnessState.add_work",
         "kind": "method",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 116,
-        "end_line": 120,
+        "line": 156,
+        "end_line": 160,
         "signature_hash": "e34c1b89fa6d7947",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#method:Residual.fingerprint:55293a8acfab779e",
         "name": "Residual.fingerprint",
         "kind": "method",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 80,
-        "end_line": 88,
+        "line": 117,
+        "end_line": 125,
         "signature_hash": "639c2b791ce0b655",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
       },
       {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#method:WorkItem.__post_init__:a6255e9e99ae5bbc",
         "name": "WorkItem.__post_init__",
         "kind": "method",
         "file": "tools/project030/creator_studio_continuation_harness.py",
-        "line": 56,
-        "end_line": 62,
+        "line": 93,
+        "end_line": 99,
         "signature_hash": "175e4972e4d2d582",
-        "file_digest8": "03e6ae09275639cb"
+        "file_digest8": "d95718c9f775f22a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:ArenaWakeScheduler:cbdbe1176225fecb",
+        "name": "ArenaWakeScheduler",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 112,
+        "end_line": 250,
+        "signature_hash": "37e53c944b82381b",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:FileWakeLedger:ddb86f11cc7262aa",
+        "name": "FileWakeLedger",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 46,
+        "end_line": 109,
+        "signature_hash": "e9425ba8559885c9",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:WakeIntent:aa7122378e174607",
+        "name": "WakeIntent",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 28,
+        "end_line": 43,
+        "signature_hash": "15352cf900d59e83",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#class:WakeRefusal:0aafb6df299438b5",
+        "name": "WakeRefusal",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 20,
+        "end_line": 24,
+        "signature_hash": "5ae430d772fb691b",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.__init__:bac6205636337383",
+        "name": "ArenaWakeScheduler.__init__",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 115,
+        "end_line": 116,
+        "signature_hash": "188e0eaf70d47cbe",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler._best_worker:4fc35b70752f2276",
+        "name": "ArenaWakeScheduler._best_worker",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 126,
+        "end_line": 136,
+        "signature_hash": "7f5ef351913906f7",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler._event_id:434cac3e74149235",
+        "name": "ArenaWakeScheduler._event_id",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 119,
+        "end_line": 123,
+        "signature_hash": "2e70e5ac54cff2c7",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.emit_recommission_required:6b009e02400163d3",
+        "name": "ArenaWakeScheduler.emit_recommission_required",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 138,
+        "end_line": 164,
+        "signature_hash": "68857bd4a7cb6700",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:ArenaWakeScheduler.scan_and_emit:d4fc18fd5188e4f3",
+        "name": "ArenaWakeScheduler.scan_and_emit",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 166,
+        "end_line": 250,
+        "signature_hash": "6f072d1f5b6814b5",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.__init__:ba2d63e2291b33a4",
+        "name": "FileWakeLedger.__init__",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "977a4d9126c48d60",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger._read_landed:a66d94f2b7a4d641",
+        "name": "FileWakeLedger._read_landed",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 56,
+        "end_line": 64,
+        "signature_hash": "97498012ca8a0675",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.append:c6d9233c4d402782",
+        "name": "FileWakeLedger.append",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 66,
+        "end_line": 103,
+        "signature_hash": "4b01af1f5a5efbee",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.events:5fc1a3850db2fd38",
+        "name": "FileWakeLedger.events",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 105,
+        "end_line": 109,
+        "signature_hash": "f313fb85cbb4b333",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:FileWakeLedger.path_for:8dc28fa6f9109414",
+        "name": "FileWakeLedger.path_for",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "078dc3c45475194f",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:WakeIntent.canonical_bytes:4e6a1e558324c699",
+        "name": "WakeIntent.canonical_bytes",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "2f07c43e7574fbf0",
+        "file_digest8": "57bc91c22b74ec3a"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_wake_adapter.py#method:WakeRefusal.__init__:43386a86be893156",
+        "name": "WakeRefusal.__init__",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_wake_adapter.py",
+        "line": 21,
+        "end_line": 24,
+        "signature_hash": "42bd2d17d3dd6102",
+        "file_digest8": "57bc91c22b74ec3a"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#class:ContinuationHarnessTests:e40a4e8190d90aa7",
         "name": "ContinuationHarnessTests",
         "kind": "class",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 28,
-        "end_line": 159,
+        "line": 43,
+        "end_line": 298,
         "signature_hash": "51dc46befbae9cc7",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#function:evidence_for:6d1ebd94aaa3ab48",
+        "name": "evidence_for",
+        "kind": "function",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 31,
+        "end_line": 40,
+        "signature_hash": "f04e70eacfbb8196",
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#function:state_with:dcf0166a10d987d9",
         "name": "state_with",
         "kind": "function",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 21,
-        "end_line": 25,
+        "line": 24,
+        "end_line": 28,
         "signature_hash": "8ae616372e6bbd93",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.setUp:99fd5b09808fa755",
         "name": "ContinuationHarnessTests.setUp",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 29,
-        "end_line": 30,
+        "line": 44,
+        "end_line": 45,
         "signature_hash": "706017b0e7dd7cef",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_claimed_work_is_not_duplicated:cc87421e101fe582",
         "name": "ContinuationHarnessTests.test_claimed_work_is_not_duplicated",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 86,
-        "end_line": 90,
+        "line": 119,
+        "end_line": 123,
         "signature_hash": "060ee6cbe988166a",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_comparative_capability_filter:2b72d43e32b101aa",
         "name": "ContinuationHarnessTests.test_comparative_capability_filter",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 92,
-        "end_line": 97,
+        "line": 148,
+        "end_line": 153,
         "signature_hash": "188a19fe035f26c0",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_corrupt_multiple_claims_for_one_worker_fail_closed:084e4cd6b9d7e95e",
+        "name": "ContinuationHarnessTests.test_corrupt_multiple_claims_for_one_worker_fail_closed",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 137,
+        "end_line": 146,
+        "signature_hash": "6e6728648c4bc6c9",
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_currentness_forces_rebase:c6f1cbcf8d838655",
         "name": "ContinuationHarnessTests.test_currentness_forces_rebase",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 113,
-        "end_line": 118,
+        "line": 169,
+        "end_line": 174,
         "signature_hash": "f228fe1f3a6a51ee",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_dependencies_block_until_complete:b376639f2d6e1a50",
         "name": "ContinuationHarnessTests.test_dependencies_block_until_complete",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 78,
-        "end_line": 84,
+        "line": 111,
+        "end_line": 117,
         "signature_hash": "98cf16ea8a1cc3df",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_deterministic_value_first_cost_aware_ranking:44bad37fcabb7766",
         "name": "ContinuationHarnessTests.test_deterministic_value_first_cost_aware_ranking",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 147,
-        "end_line": 153,
+        "line": 285,
+        "end_line": 291,
         "signature_hash": "00c4441fa974ad9f",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_duplicate_residual_is_deduplicated:9c6369594eddb067",
         "name": "ContinuationHarnessTests.test_duplicate_residual_is_deduplicated",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 55,
-        "end_line": 61,
+        "line": 70,
+        "end_line": 76,
         "signature_hash": "4555fae5710de4d1",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_explicit_second_restore_is_refused:7ddcccdf8aa5695d",
+        "name": "ContinuationHarnessTests.test_explicit_second_restore_is_refused",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 249,
+        "end_line": 256,
+        "signature_hash": "f439d47ed193ba7b",
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_external_boundary_terminal_requires_evidence:54b0766bfa91378e",
+        "name": "ContinuationHarnessTests.test_external_boundary_terminal_requires_evidence",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 265,
+        "end_line": 270,
+        "signature_hash": "8b7caeec996d946a",
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_finish_release_scan_claims_next_without_reprompt:86aa1db6842ae45d",
         "name": "ContinuationHarnessTests.test_finish_release_scan_claims_next_without_reprompt",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 32,
-        "end_line": 41,
+        "line": 47,
+        "end_line": 56,
         "signature_hash": "430c0708fa84fc65",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
       },
       {
-        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate10_automatically_restores_canonical_mission:ed0ba78563dec654",
-        "name": "ContinuationHarnessTests.test_gate10_automatically_restores_canonical_mission",
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate10_automatically_restores_canonical_mission_once:f877b0ae2e4f8b70",
+        "name": "ContinuationHarnessTests.test_gate10_automatically_restores_canonical_mission_once",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 138,
-        "end_line": 145,
-        "signature_hash": "dbefc03e63a96fff",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "line": 230,
+        "end_line": 247,
+        "signature_hash": "9abd9841aa606135",
+        "file_digest8": "c174bafee0735c8e"
       },
       {
-        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate_requires_sequential_durable_evidence:9c36e39da000a730",
-        "name": "ContinuationHarnessTests.test_gate_requires_sequential_durable_evidence",
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate10_requires_all_convergence_evidence_classes:8b6c0aa894f3524d",
+        "name": "ContinuationHarnessTests.test_gate10_requires_all_convergence_evidence_classes",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 130,
-        "end_line": 136,
-        "signature_hash": "f164f009ce6d8d5f",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "line": 222,
+        "end_line": 228,
+        "signature_hash": "7ddbd4d8af59fabf",
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate10_terminal_requires_typed_gate10_evidence:6cae137ae353df86",
+        "name": "ContinuationHarnessTests.test_gate10_terminal_requires_typed_gate10_evidence",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 279,
+        "end_line": 283,
+        "signature_hash": "dd371acf2ad0700c",
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate_rejects_missing_required_evidence_class:0914997a83d9e3b1",
+        "name": "ContinuationHarnessTests.test_gate_rejects_missing_required_evidence_class",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 205,
+        "end_line": 209,
+        "signature_hash": "cb0cd7f5619f0e9c",
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate_rejects_unverified_or_stale_or_unbound_evidence:cef0e5a70a83301c",
+        "name": "ContinuationHarnessTests.test_gate_rejects_unverified_or_stale_or_unbound_evidence",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 211,
+        "end_line": 220,
+        "signature_hash": "67ce8ac2e1c19467",
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate_requires_sequential_required_evidence_class:c7770b2805b88006",
+        "name": "ContinuationHarnessTests.test_gate_requires_sequential_required_evidence_class",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 197,
+        "end_line": 203,
+        "signature_hash": "3a87c5539a3222fc",
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_gate_requires_typed_evidence_not_arbitrary_strings:92d122818276915c",
+        "name": "ContinuationHarnessTests.test_gate_requires_typed_evidence_not_arbitrary_strings",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 192,
+        "end_line": 195,
+        "signature_hash": "6e77fdcc33a370f7",
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_invalid_residual_is_transactional_and_leaves_state_unchanged:869463ca7439431b",
+        "name": "ContinuationHarnessTests.test_invalid_residual_is_transactional_and_leaves_state_unchanged",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 93,
+        "end_line": 109,
+        "signature_hash": "80ec63ab6e542110",
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_material_residual_compiles_successor_and_claims_it:ff4f3b87b30e54a7",
         "name": "ContinuationHarnessTests.test_material_residual_compiles_successor_and_claims_it",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 43,
-        "end_line": 53,
+        "line": 58,
+        "end_line": 68,
         "signature_hash": "a9f858b228265fb5",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_no_eligible_terminal_rejects_worker_with_active_claim:6a90f4dc01239f94",
+        "name": "ContinuationHarnessTests.test_no_eligible_terminal_rejects_worker_with_active_claim",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 186,
+        "end_line": 190,
+        "signature_hash": "3003dba3a2ebfc60",
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_no_eligible_work_terminal_is_fail_closed_if_work_exists:ccc143fe397793fc",
         "name": "ContinuationHarnessTests.test_no_eligible_work_terminal_is_fail_closed_if_work_exists",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 125,
-        "end_line": 128,
+        "line": 181,
+        "end_line": 184,
         "signature_hash": "6782a62ef281d21c",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_nonmaterial_or_zero_consequence_residual_does_not_create_busywork:ce83bcc1a02b05e3",
         "name": "ContinuationHarnessTests.test_nonmaterial_or_zero_consequence_residual_does_not_create_busywork",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 63,
-        "end_line": 76,
+        "line": 78,
+        "end_line": 91,
         "signature_hash": "75a1dde076f531d4",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_owner_stop_terminal_requires_owner_stop_state:52b5df56b146e38c",
+        "name": "ContinuationHarnessTests.test_owner_stop_terminal_requires_owner_stop_state",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 258,
+        "end_line": 263,
+        "signature_hash": "cadee1ed8ef03664",
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_premature_chat_terminal_is_refused_while_work_remains:e926f88b0d35effa",
         "name": "ContinuationHarnessTests.test_premature_chat_terminal_is_refused_while_work_remains",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 120,
-        "end_line": 123,
+        "line": 176,
+        "end_line": 179,
         "signature_hash": "fa718186cebe1074",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_priority_then_review_then_backburner:7888437cc4aed649",
         "name": "ContinuationHarnessTests.test_priority_then_review_then_backburner",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 99,
-        "end_line": 107,
+        "line": 155,
+        "end_line": 163,
         "signature_hash": "8e6e3464ede3fa2b",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_snapshot_declares_scheduler_zero_inference:7de24f14c7a41221",
         "name": "ContinuationHarnessTests.test_snapshot_declares_scheduler_zero_inference",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 155,
-        "end_line": 159,
+        "line": 293,
+        "end_line": 298,
         "signature_hash": "cc079d5b3cc53c1b",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_superseded_terminal_requires_noncurrent_state:16b9d3f52484713a",
+        "name": "ContinuationHarnessTests.test_superseded_terminal_requires_noncurrent_state",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 272,
+        "end_line": 277,
+        "signature_hash": "df133dce23c7799a",
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_worker_cannot_take_second_claim:04f04c8ad641a91d",
+        "name": "ContinuationHarnessTests.test_worker_cannot_take_second_claim",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_continuation_harness.py",
+        "line": 125,
+        "end_line": 135,
+        "signature_hash": "9abe959d4c6acc66",
+        "file_digest8": "c174bafee0735c8e"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#method:ContinuationHarnessTests.test_wrong_mission_work_is_not_selected:707158b28d170cae",
         "name": "ContinuationHarnessTests.test_wrong_mission_work_is_not_selected",
         "kind": "method",
         "file": "tools/project030/test_creator_studio_continuation_harness.py",
-        "line": 109,
-        "end_line": 111,
+        "line": 165,
+        "end_line": 167,
         "signature_hash": "5550dcb940993f45",
-        "file_digest8": "b6e4fdc882d5b24c"
+        "file_digest8": "c174bafee0735c8e"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#class:WakeAdapterTests:8e87e2dff9146293",
+        "name": "WakeAdapterTests",
+        "kind": "class",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 14,
+        "end_line": 141,
+        "signature_hash": "5fbd35eb792d60f3",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.setUp:99d6e0d2dfe47273",
+        "name": "WakeAdapterTests.setUp",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 15,
+        "end_line": 20,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.state:ad667dc0821d6f25",
+        "name": "WakeAdapterTests.state",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "f690bd7d3b182ac1",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.tearDown:6a873c33e2775262",
+        "name": "WakeAdapterTests.tearDown",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file.writer:7230e84b194bea1c",
+        "name": "WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file.writer",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 107,
+        "end_line": 112,
+        "signature_hash": "227f60c8356d95b3",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file:bf84d874c0b27747",
+        "name": "WakeAdapterTests.test_atomic_append_same_intent_concurrently_lands_one_file",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 92,
+        "end_line": 122,
+        "signature_hash": "b9a15cfe21d72cfa",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_capability_mismatch_does_not_emit:ebba5b74694de691",
+        "name": "WakeAdapterTests.test_capability_mismatch_does_not_emit",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 63,
+        "end_line": 66,
+        "signature_hash": "da623af4133f94d1",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_claimed_work_does_not_emit_wake:013c225fd5878f2c",
+        "name": "WakeAdapterTests.test_claimed_work_does_not_emit_wake",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 57,
+        "end_line": 61,
+        "signature_hash": "88b2d5a2578b199d",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_dependency_completion_wakes_newly_eligible_work_version:8408c99e97b41a73",
+        "name": "WakeAdapterTests.test_dependency_completion_wakes_newly_eligible_work_version",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 46,
+        "end_line": 55,
+        "signature_hash": "192301ecc2368d36",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_newly_eligible_work_emits_one_targeted_wake:20b8df478d065651",
+        "name": "WakeAdapterTests.test_newly_eligible_work_emits_one_targeted_wake",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 28,
+        "end_line": 37,
+        "signature_hash": "d15d86311fb18654",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_one_worker_receives_at_most_one_work_wake_per_scan:2f9e55c4c47e8c75",
+        "name": "WakeAdapterTests.test_one_worker_receives_at_most_one_work_wake_per_scan",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 124,
+        "end_line": 130,
+        "signature_hash": "7836cfba5f618873",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_recommission_intent_is_coordination_only:d7f5a473caaa4ca6",
+        "name": "WakeAdapterTests.test_recommission_intent_is_coordination_only",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 132,
+        "end_line": 141,
+        "signature_hash": "213662e123943d7e",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_reopen_version_allows_new_wake_without_rewriting_old_event:9c4f4597a8fd0ee7",
+        "name": "WakeAdapterTests.test_reopen_version_allows_new_wake_without_rewriting_old_event",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 77,
+        "end_line": 82,
+        "signature_hash": "45d8ab1d528b1894",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_repeated_scan_is_idempotent_on_disk:3a2c99579ce342d4",
+        "name": "WakeAdapterTests.test_repeated_scan_is_idempotent_on_disk",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 39,
+        "end_line": 44,
+        "signature_hash": "5d55b8d8870b2a59",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_restart_reuses_durable_ledger_idempotently:f76ad5f451be8ca6",
+        "name": "WakeAdapterTests.test_restart_reuses_durable_ledger_idempotently",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 84,
+        "end_line": 90,
+        "signature_hash": "54c78eba6d1baed7",
+        "file_digest8": "ab7e3159946157b3"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_wake_adapter.py#method:WakeAdapterTests.test_stale_currentness_emits_rebase_not_work:c980b12b8542104f",
+        "name": "WakeAdapterTests.test_stale_currentness_emits_rebase_not_work",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_wake_adapter.py",
+        "line": 68,
+        "end_line": 75,
+        "signature_hash": "fce4b39647755046",
+        "file_digest8": "ab7e3159946157b3"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -447762,7 +448860,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "9989f21130fd1664413955b78f6f6a3f",
-    "payload_hash": "65607f13160f25ac6dde6a57f9272da9"
+    "record_fingerprint": "a0392a59bfb6dcda18cfd660116f291f",
+    "payload_hash": "7442a1766ac357c249ffb6c0651d846d"
   }
 }
