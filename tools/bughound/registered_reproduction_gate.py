@@ -1,20 +1,19 @@
 """Producer-bound independent-reproduction gate for BugHound cash candidates.
 
 This layer removes caller control over the three PR420 expectation fields. A
-registry lookup owned outside the discoverer/candidate boundary must return a
+source-owned registry outside the discoverer/candidate boundary must contain a
 current, independently observed record for the exact reproduction receipt.
 
-The default path fails closed because no canonical production registry is yet
-wired. Passing the software contract does not prove that a real bounty
-reproduction registry exists, does not authorize live testing or submission,
-and does not clear PR425's remaining duplicate/lint/program producer-trust debt.
+The default path fails closed because the canonical production registry is empty.
+Passing the software contract does not prove that a real bounty reproduction
+registry exists, does not authorize live testing or submission, and does not
+clear PR425's remaining duplicate/lint/program producer-trust debt.
 """
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import hashlib
 import json
-from typing import Callable
 
 from tools.bughound.bounty_candidate_admission import (
     BountyCandidateEvidenceV1,
@@ -26,6 +25,7 @@ from tools.bughound.bounty_mission import BugHoundCashMissionInputV1
 
 SCHEMA = "BugHoundRegisteredIndependentReproductionAdmissionV1"
 REGISTRY_SCHEMA = "BugHoundIndependentReproductionRegistryRecordV1"
+REGISTRY_GENERATION = "BUGHOUND_INDEPENDENT_REPRODUCTION_REGISTRY_HOLD_V1"
 
 
 def _canonical(value: object) -> bytes:
@@ -72,9 +72,31 @@ class BugHoundIndependentReproductionRegistryRecordV1:
         return _digest("AURA_BUGHOUND_INDEPENDENT_REPRO_REGISTRY_V1", asdict(self))
 
 
+# Repository-owned production trust root. Deliberately empty until a real,
+# independently observed reproduction record is pinned by source change. Public
+# consequence APIs never accept a caller-provided lookup, record, or registry.
+_CANONICAL_RECORDS: tuple[BugHoundIndependentReproductionRegistryRecordV1, ...] = ()
+
+
+@dataclass(frozen=True)
+class BugHoundIndependentReproductionRegistryReceiptV1:
+    registry_generation: str
+    record_digests: tuple[str, ...]
+    active_record_count: int
+    authority: bool = False
+    external_effect: bool = False
+    schema: str = "BugHoundIndependentReproductionRegistryReceiptV1"
+
+    @property
+    def registry_digest(self) -> str:
+        return _digest("AURA_BUGHOUND_INDEPENDENT_REPRO_REGISTRY_RECEIPT_V1", asdict(self))
+
+
 @dataclass(frozen=True)
 class BugHoundRegisteredIndependentReproductionAdmissionV1:
     candidate_admission: BugHoundCashCandidateAdmissionReceiptV1
+    registry_generation: str
+    registry_digest: str
     registry_record_digest: str
     registry_receipt_ref: str
     registry_observer_ref: str
@@ -98,16 +120,33 @@ class BugHoundRegisteredIndependentReproductionAdmissionV1:
         )
 
 
-RegistryLookup = Callable[
-    [IndependentBountyReproductionReceiptV1],
-    BugHoundIndependentReproductionRegistryRecordV1,
-]
+def independent_reproduction_registry_receipt() -> BugHoundIndependentReproductionRegistryReceiptV1:
+    records = tuple(sorted(_CANONICAL_RECORDS, key=lambda record: record.record_digest))
+    return BugHoundIndependentReproductionRegistryReceiptV1(
+        registry_generation=REGISTRY_GENERATION,
+        record_digests=tuple(record.record_digest for record in records),
+        active_record_count=sum(
+            1
+            for record in records
+            if record.registry_current and record.independently_observed and not record.revoked
+        ),
+    )
 
 
-def _production_registry_unavailable(
-    _reproduction: IndependentBountyReproductionReceiptV1,
+def _canonical_registry_lookup(
+    reproduction: IndependentBountyReproductionReceiptV1,
 ) -> BugHoundIndependentReproductionRegistryRecordV1:
-    raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_REQUIRED")
+    matches = tuple(
+        record
+        for record in _CANONICAL_RECORDS
+        if isinstance(record, BugHoundIndependentReproductionRegistryRecordV1)
+        and record.reproduction_receipt_digest == reproduction.receipt_digest
+    )
+    if not matches:
+        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_REQUIRED")
+    if len(matches) != 1:
+        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_AMBIGUOUS")
+    return matches[0]
 
 
 def _require_false(record: object, field: str, code: str) -> None:
@@ -122,11 +161,18 @@ def _verify_registry_record(
     mission_input: BugHoundCashMissionInputV1,
     record: BugHoundIndependentReproductionRegistryRecordV1,
 ) -> None:
+    if not isinstance(record, BugHoundIndependentReproductionRegistryRecordV1):
+        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_RECORD_REQUIRED")
     if record.schema != REGISTRY_SCHEMA:
         raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_SCHEMA_MISMATCH")
-    if not record.registry_receipt_ref.strip():
+    if not isinstance(record.registry_receipt_ref, str) or not record.registry_receipt_ref.strip():
         raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_RECEIPT_REQUIRED")
-    if not record.registry_observer_ref.strip() or not record.registry_observer_generation.strip():
+    if (
+        not isinstance(record.registry_observer_ref, str)
+        or not record.registry_observer_ref.strip()
+        or not isinstance(record.registry_observer_generation, str)
+        or not record.registry_observer_generation.strip()
+    ):
         raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_OBSERVER_REQUIRED")
     if record.registry_current is not True:
         raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_STALE")
@@ -181,40 +227,42 @@ def admit_with_registered_independent_reproduction(
     report_digest: str,
     program_admissibility_state: str,
     program_admissibility_ref: str,
-    registry_lookup: RegistryLookup = _production_registry_unavailable,
-    **forbidden_expectation_fields: object,
+    **forbidden_fields: object,
 ) -> BugHoundRegisteredIndependentReproductionAdmissionV1:
-    """Admit PR420 through an independently owned reproduction-registry boundary.
+    """Admit PR420 only through the repository-owned reproduction registry.
 
-    Callers cannot provide the three `expected_*` reproduction fields. A trusted
-    registry lookup is the only source for them. The default production path
-    fails closed until a canonical registry is wired.
+    Callers cannot provide expectation fields, a registry lookup, a registry
+    record, or an alternate registry. The canonical source-owned registry is the
+    only production trust root and is empty until an independently observed
+    reproduction record is explicitly pinned in repository source.
     """
-    if forbidden_expectation_fields:
-        forbidden = {
+    if forbidden_fields:
+        forbidden_expectations = {
             "expected_independent_reproduction_digest",
             "expected_reproducer_ref",
             "expected_reproducer_generation",
         }
-        if forbidden.intersection(forbidden_expectation_fields):
+        forbidden_registry = {"registry_lookup", "registry", "registry_record"}
+        names = set(forbidden_fields)
+        if forbidden_expectations.intersection(names):
             raise ValueError("CALLER_REPRODUCTION_EXPECTATION_FORBIDDEN")
+        if forbidden_registry.intersection(names):
+            raise ValueError("CALLER_REPRODUCTION_REGISTRY_FORBIDDEN")
         raise TypeError(
-            "UNEXPECTED_REGISTERED_REPRODUCTION_ARGUMENTS: "
-            + ",".join(sorted(forbidden_expectation_fields))
+            "UNEXPECTED_REGISTERED_REPRODUCTION_ARGUMENTS: " + ",".join(sorted(names))
         )
 
     if independent_reproduction.external_effect:
         raise ValueError("BOUNTY_REPRODUCTION_EXTERNAL_EFFECT_FORBIDDEN")
 
-    record = registry_lookup(independent_reproduction)
-    if not isinstance(record, BugHoundIndependentReproductionRegistryRecordV1):
-        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_RECORD_REQUIRED")
+    record = _canonical_registry_lookup(independent_reproduction)
     _verify_registry_record(
         reproduction=independent_reproduction,
         candidate=candidate,
         mission_input=mission_input,
         record=record,
     )
+    registry = independent_reproduction_registry_receipt()
 
     admitted = admit_cash_bounty_candidate_for_human_review(
         mission_input=mission_input,
@@ -243,6 +291,8 @@ def admit_with_registered_independent_reproduction(
 
     return BugHoundRegisteredIndependentReproductionAdmissionV1(
         candidate_admission=admitted,
+        registry_generation=registry.registry_generation,
+        registry_digest=registry.registry_digest,
         registry_record_digest=record.record_digest,
         registry_receipt_ref=record.registry_receipt_ref,
         registry_observer_ref=record.registry_observer_ref,
