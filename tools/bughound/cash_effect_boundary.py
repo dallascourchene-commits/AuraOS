@@ -7,15 +7,16 @@ separate proof planes:
 
 1. exact cash-mission admission,
 2. live-effect request validation,
-3. source-owned live-effect producer trust,
+3. source-owned live-effect producer+artifact trust,
 4. sanitized-pattern validation,
-5. source-owned sanitizer/reviewer trust,
+5. source-owned sanitizer/reviewer+artifact trust,
 6. external execution/submission/payment (not performed here).
 
 Validation is useful lower-plane evidence but never self-promotes into producer
 trust. Canonical authority admission resolves only the repository-owned registry
 in :mod:`tools.bughound.authority_registry`; it accepts no caller-supplied
-`expected_*` values or alternate registry object.
+``expected_*`` values or alternate registry object. Registry resolution binds
+the exact consumed artifact digest in addition to producer/reviewer identity.
 
 D0 by default. Nothing here performs network access, credential use, submission,
 claiming/payment, provider calls, repository mutation, deployment, or spend.
@@ -389,11 +390,12 @@ def admit_live_effect(
     receipt: BugHoundCashMissionReceiptV1,
     grant: BountyLiveEffectGrantV1,
 ) -> LiveEffectAdmissionReceiptV1:
-    """Admit live effect only after source-owned producer registry resolution."""
+    """Admit live effect only after exact-artifact source-owned trust resolution."""
     validate_live_effect_request(receipt, grant)
     try:
         record = resolve_authority_producer(
             proof_plane=LIVE_EFFECT_PLANE,
+            artifact_digest=grant.grant_digest,
             producer_ref=grant.producer_ref,
             producer_generation=grant.producer_generation,
             producer_currentness_ref=grant.producer_currentness_ref,
@@ -478,7 +480,7 @@ def export_sanitized_pattern(
     *,
     destination_context: str,
 ) -> ReusablePatternExportV1:
-    """Export only after repository-owned sanitizer/reviewer trust resolution."""
+    """Export only after exact-artifact sanitizer/reviewer trust resolution."""
     validation = validate_sanitized_pattern(
         receipt,
         sanitized,
@@ -487,6 +489,7 @@ def export_sanitized_pattern(
     try:
         record = resolve_authority_producer(
             proof_plane=SANITIZER_PLANE,
+            artifact_digest=sanitized.receipt_digest,
             producer_ref=sanitized.producer_ref,
             producer_generation=sanitized.producer_generation,
             producer_currentness_ref=sanitized.producer_currentness_ref,
