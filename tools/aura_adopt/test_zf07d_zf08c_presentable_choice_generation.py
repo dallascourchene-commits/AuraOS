@@ -60,10 +60,13 @@ class T(unittest.TestCase):
         c=choice('route:r',True,'provider:b')
         with self.assertRaisesRegex(m.ChoiceMembraneError,'REMOTE_RUNTIME_CACHE_ROUTE_REQUIREMENT_REQUIRED'):
             m.build_choice_generation_requirement(c,resolver_ref='resolver:aura',resolver_generation='g',resolver_currentness_ref='c',source_currentness_ref='s',owner_currentness_ref='o',target_currentness_ref='t',principal_currentness_ref='p',source_basis_ref='bs',owner_basis_ref='bo',resolver_basis_ref='br',target_basis_ref='bt',principal_basis_ref='bp')
-    def test_local_runtime_forbidden(self):
+    def test_local_runtime_optional(self):
+        c=choice();r=m.build_choice_generation_requirement(c,resolver_ref='resolver:aura',resolver_generation='g',resolver_currentness_ref='c',source_currentness_ref='s',owner_currentness_ref='o',target_currentness_ref='t',principal_currentness_ref='p',source_basis_ref='bs',owner_basis_ref='bo',resolver_basis_ref='br',target_basis_ref='bt',principal_basis_ref='bp',runtime_cache_route_generation='x',runtime_cache_route_currentness_ref='y',runtime_cache_route_basis_ref='z')
+        self.assertEqual(r.by_axis()[m.RUNTIME].identity_ref,c.model_ref)
+    def test_runtime_requirement_partial_rejected(self):
         c=choice()
-        with self.assertRaisesRegex(m.ChoiceMembraneError,'LOCAL_RUNTIME_CACHE_ROUTE_REQUIREMENT_FORBIDDEN'):
-            m.build_choice_generation_requirement(c,resolver_ref='resolver:aura',resolver_generation='g',resolver_currentness_ref='c',source_currentness_ref='s',owner_currentness_ref='o',target_currentness_ref='t',principal_currentness_ref='p',source_basis_ref='bs',owner_basis_ref='bo',resolver_basis_ref='br',target_basis_ref='bt',principal_basis_ref='bp',runtime_cache_route_generation='x',runtime_cache_route_currentness_ref='y',runtime_cache_route_basis_ref='z')
+        with self.assertRaisesRegex(m.ChoiceMembraneError,'RUNTIME_CACHE_ROUTE_REQUIREMENT_INCOMPLETE'):
+            m.build_choice_generation_requirement(c,resolver_ref='resolver:aura',resolver_generation='g',resolver_currentness_ref='c',source_currentness_ref='s',owner_currentness_ref='o',target_currentness_ref='t',principal_currentness_ref='p',source_basis_ref='bs',owner_basis_ref='bo',resolver_basis_ref='br',target_basis_ref='bt',principal_basis_ref='bp',runtime_cache_route_generation='x')
     def test_choice_digest_tamper(self):
         c=choice()
         with self.assertRaisesRegex(m.ChoiceMembraneError,'CHOICE_DIGEST_MISMATCH'):
