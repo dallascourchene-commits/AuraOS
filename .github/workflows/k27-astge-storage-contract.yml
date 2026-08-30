@@ -1,0 +1,45 @@
+name: K27 ASTGE Storage Kernel Contract
+
+on:
+  pull_request:
+    paths:
+      - "native/aura-k27-astge/**"
+      - ".github/workflows/k27-astge-storage-contract.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: k27-astge-storage-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  storage-contract:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact source head without persisted credentials
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+
+      - name: Verify exact PR head
+        if: github.event_name == 'pull_request'
+        env:
+          EXPECTED_SHA: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_SHA"
+
+      - name: Show Rust toolchain
+        run: |
+          rustc --version
+          cargo --version
+
+      - name: Format check
+        run: cargo fmt --manifest-path native/aura-k27-astge/Cargo.toml -- --check
+
+      - name: Compile and test storage contract
+        run: cargo test --manifest-path native/aura-k27-astge/Cargo.toml --all-targets
+
+      - name: Clippy fail-closed
+        run: cargo clippy --manifest-path native/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
