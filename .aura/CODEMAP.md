@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1639
-- **total_bytes**: 26415048
-- **text_tokens_est**: 6594113
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1642
+- **total_bytes**: 26433868
+- **text_tokens_est**: 6598819
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1639,
+  "repo_file_count": 1642,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -160,6 +160,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-spatial-s3-s4a.yml",
     ".github/workflows/aura-spatial-s4.yml",
     ".github/workflows/aura-spatial-s5-s6-construction.yml",
+    ".github/workflows/bughound-foundry-intake.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1262,6 +1263,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_spatial_s4b_architect_harness.py",
     "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
     "scripts/aura_verify_construction_demo_assets.py",
+    "scripts/bughound_foundry_intake.py",
     "scripts/deploy_huggingface_space.py",
     "scripts/finalize_refactor_quality_doc_sync.py",
     "scripts/install_refactor_quality_docs.py",
@@ -1640,6 +1642,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_authority_bridge.py",
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
+    "tests/test_bughound_foundry_intake.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
@@ -1712,6 +1715,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_spatial_s4b_architect_harness.py",
     "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
     "scripts/aura_verify_construction_demo_assets.py",
+    "scripts/bughound_foundry_intake.py",
     "scripts/deploy_huggingface_space.py",
     "scripts/finalize_refactor_quality_doc_sync.py",
     "scripts/install_refactor_quality_docs.py",
@@ -1764,8 +1768,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_blind_gate10_benchmark.py",
     "tests/test_aura_capability_connectome.py",
     "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py"
+    "tests/test_aura_capability_lane_registry.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1779,16 +1782,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1639,
-  "bytes": 26415048,
-  "tokens_est": 6594113,
+  "files": 1642,
+  "bytes": 26433868,
+  "tokens_est": 6598819,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 997,
-    "schema_or_lexicon": 271,
+    "python_module": 999,
+    "schema_or_lexicon": 272,
     "support_file": 49
   }
 }
