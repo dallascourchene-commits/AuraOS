@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1661
-- **total_bytes**: 26446528
-- **text_tokens_est**: 6602023
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1665
+- **total_bytes**: 26478912
+- **text_tokens_est**: 6610121
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1014, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1661,
+  "repo_file_count": 1665,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1669,7 +1669,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
     "tools/awj032/README.md",
+    "tools/awj032/airllm_hard_false_inspected_tree.py",
+    "tools/awj032/airllm_hard_false_remediation.py",
     "tools/awj032/airllm_source_admission.py",
+    "tools/awj032/test_airllm_hard_false_inspected_tree.py",
+    "tools/awj032/test_airllm_hard_false_remediation.py",
     "tools/awj032/test_airllm_source_admission.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
@@ -1801,15 +1805,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1661,
-  "bytes": 26446528,
-  "tokens_est": 6602023,
+  "files": 1665,
+  "bytes": 26478912,
+  "tokens_est": 6610121,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1010,
+    "python_module": 1014,
     "schema_or_lexicon": 274,
     "support_file": 49
   }
