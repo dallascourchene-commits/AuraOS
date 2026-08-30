@@ -7,9 +7,11 @@ from tools.bughound.blind_discovery import (
     FORBIDDEN_CANDIDATE_FIELDS,
     BlindDiscoveryError,
     BlindFindingV1,
+    EvaluatorFindingResolutionV1,
     adjudicate_blind_finding,
     compile_blind_case,
     parse_blind_finding,
+    validate_evaluator_resolution,
     validate_packet_binding,
 )
 from tools.bughound.seedlab_benchmark import Visibility, seeded_cases
@@ -34,6 +36,28 @@ class BlindDiscoveryTests(unittest.TestCase):
             localized_symbols=tuple(symbols),
             defect_hypothesis=hypothesis,
             evidence_refs=("source:admit",),
+        )
+
+    def resolution(
+        self,
+        finding=None,
+        *,
+        corroborates=True,
+        oracle_id=None,
+        hidden_case_digest=None,
+        evaluator_generation=None,
+        independent_oracle=True,
+    ):
+        finding = finding or self.finding()
+        return EvaluatorFindingResolutionV1(
+            target_id=self.packet.target_id,
+            finding_id=finding.finding_id,
+            hidden_case_digest=hidden_case_digest or self.bug.case_digest,
+            oracle_id=oracle_id or self.bug.oracle_id,
+            evaluator_generation=evaluator_generation or self.binding.evaluator_generation,
+            corroborates_seeded_bug=corroborates,
+            evidence_refs=("evaluator:seed-oracle",),
+            independent_oracle=independent_oracle,
         )
 
     def test_candidate_packet_contains_no_forbidden_hidden_fields(self):
@@ -99,17 +123,34 @@ class BlindDiscoveryTests(unittest.TestCase):
             )
         self.assertEqual("BLIND_FINDING_UNKNOWN_FIELD", ctx.exception.code)
 
-    def test_seeded_bug_localized_finding_is_discovered(self):
+    def test_localization_alone_cannot_earn_seeded_tp(self):
         out = adjudicate_blind_finding(
             packet=self.packet,
             binding=self.binding,
             case=self.bug,
             finding=self.finding(),
         )
+        self.assertEqual("POTENTIAL_NOVELTY_UNVERIFIED", out.outcome)
+        self.assertFalse(out.seeded_true_positive)
+        self.assertTrue(out.novelty_verification_required)
+        self.assertFalse(out.independent_oracle_observed)
+        self.assertIsNone(out.evaluator_resolution_digest)
+
+    def test_seeded_bug_localized_finding_with_independent_resolution_is_discovered(self):
+        finding = self.finding()
+        out = adjudicate_blind_finding(
+            packet=self.packet,
+            binding=self.binding,
+            case=self.bug,
+            finding=finding,
+            resolution=self.resolution(finding),
+        )
         self.assertEqual(ADJUDICATION_SCHEMA, out.schema)
         self.assertEqual("SEEDED_BUG_DISCOVERED", out.outcome)
         self.assertTrue(out.seeded_true_positive)
         self.assertFalse(out.novelty_verification_required)
+        self.assertTrue(out.independent_oracle_observed)
+        self.assertIsNotNone(out.evaluator_resolution_digest)
         self.assertFalse(out.authority)
         self.assertFalse(out.external_effect)
 
@@ -123,16 +164,92 @@ class BlindDiscoveryTests(unittest.TestCase):
         self.assertEqual("SEEDED_BUG_MISSED", out.outcome)
         self.assertFalse(out.seeded_true_positive)
 
-    def test_nonmatching_seeded_finding_is_novelty_unverified(self):
+    def test_resolution_without_finding_fails_closed(self):
+        with self.assertRaises(BlindDiscoveryError) as ctx:
+            adjudicate_blind_finding(
+                packet=self.packet,
+                binding=self.binding,
+                case=self.bug,
+                finding=None,
+                resolution=self.resolution(),
+            )
+        self.assertEqual("EVALUATOR_FINDING_MISMATCH", ctx.exception.code)
+
+    def test_nonmatching_seeded_finding_is_novelty_unverified_even_if_resolution_claims_corroboration(self):
+        finding = self.finding(
+            symbols=("other_symbol",), hypothesis="unrelated suspicious behavior"
+        )
         out = adjudicate_blind_finding(
             packet=self.packet,
             binding=self.binding,
             case=self.bug,
-            finding=self.finding(symbols=("other_symbol",), hypothesis="unrelated suspicious behavior"),
+            finding=finding,
+            resolution=self.resolution(finding),
         )
         self.assertEqual("POTENTIAL_NOVELTY_UNVERIFIED", out.outcome)
         self.assertFalse(out.seeded_true_positive)
         self.assertTrue(out.novelty_verification_required)
+        self.assertTrue(out.independent_oracle_observed)
+
+    def test_negative_evaluator_resolution_does_not_credit_seeded_tp(self):
+        finding = self.finding()
+        out = adjudicate_blind_finding(
+            packet=self.packet,
+            binding=self.binding,
+            case=self.bug,
+            finding=finding,
+            resolution=self.resolution(finding, corroborates=False),
+        )
+        self.assertEqual("POTENTIAL_NOVELTY_UNVERIFIED", out.outcome)
+        self.assertFalse(out.seeded_true_positive)
+
+    def test_nonindependent_resolution_fails_closed(self):
+        finding = self.finding()
+        with self.assertRaises(BlindDiscoveryError) as ctx:
+            adjudicate_blind_finding(
+                packet=self.packet,
+                binding=self.binding,
+                case=self.bug,
+                finding=finding,
+                resolution=self.resolution(finding, independent_oracle=False),
+            )
+        self.assertEqual("INDEPENDENT_ORACLE_REQUIRED", ctx.exception.code)
+
+    def test_wrong_oracle_resolution_fails_closed(self):
+        finding = self.finding()
+        with self.assertRaises(BlindDiscoveryError) as ctx:
+            validate_evaluator_resolution(
+                self.resolution(finding, oracle_id="wrong-oracle"),
+                packet=self.packet,
+                binding=self.binding,
+                case=self.bug,
+                finding=finding,
+            )
+        self.assertEqual("EVALUATOR_ORACLE_MISMATCH", ctx.exception.code)
+
+    def test_wrong_hidden_case_resolution_fails_closed(self):
+        finding = self.finding()
+        with self.assertRaises(BlindDiscoveryError) as ctx:
+            validate_evaluator_resolution(
+                self.resolution(finding, hidden_case_digest="0" * 64),
+                packet=self.packet,
+                binding=self.binding,
+                case=self.bug,
+                finding=finding,
+            )
+        self.assertEqual("EVALUATOR_BINDING_MISMATCH", ctx.exception.code)
+
+    def test_wrong_evaluator_generation_resolution_fails_closed(self):
+        finding = self.finding()
+        with self.assertRaises(BlindDiscoveryError) as ctx:
+            validate_evaluator_resolution(
+                self.resolution(finding, evaluator_generation="old-evaluator"),
+                packet=self.packet,
+                binding=self.binding,
+                case=self.bug,
+                finding=finding,
+            )
+        self.assertEqual("EVALUATOR_BINDING_MISMATCH", ctx.exception.code)
 
     def test_clean_control_without_finding_is_correct(self):
         packet, binding = compile_blind_case(
@@ -140,7 +257,9 @@ class BlindDiscoveryTests(unittest.TestCase):
             evaluator_salt="clean-salt",
             evaluator_generation="blind-eval-v1",
         )
-        out = adjudicate_blind_finding(packet=packet, binding=binding, case=self.clean, finding=None)
+        out = adjudicate_blind_finding(
+            packet=packet, binding=binding, case=self.clean, finding=None
+        )
         self.assertEqual("CLEAN_CONTROL_CORRECT", out.outcome)
         self.assertTrue(out.clean_control_correct)
 
@@ -156,7 +275,9 @@ class BlindDiscoveryTests(unittest.TestCase):
             localized_symbols=("admit",),
             defect_hypothesis="claims a bug",
         )
-        out = adjudicate_blind_finding(packet=packet, binding=binding, case=self.clean, finding=finding)
+        out = adjudicate_blind_finding(
+            packet=packet, binding=binding, case=self.clean, finding=finding
+        )
         self.assertEqual("CLEAN_CONTROL_FALSE_POSITIVE", out.outcome)
         self.assertFalse(out.clean_control_correct)
 
@@ -225,23 +346,31 @@ class BlindDiscoveryTests(unittest.TestCase):
 
     def test_neutral_instruction_cannot_be_replaced_with_issue_guidance(self):
         with self.assertRaises(BlindDiscoveryError) as ctx:
-            replace(self.packet, instruction="The bug is in admit; fix stale generation acceptance.")
+            replace(
+                self.packet,
+                instruction="The bug is in admit; fix stale generation acceptance.",
+            )
         self.assertEqual("NONNEUTRAL_INSTRUCTION_FORBIDDEN", ctx.exception.code)
 
-    def test_adjudication_identity_is_deterministic(self):
+    def test_adjudication_identity_is_deterministic_with_resolution(self):
+        finding = self.finding()
+        resolution = self.resolution(finding)
         a = adjudicate_blind_finding(
             packet=self.packet,
             binding=self.binding,
             case=self.bug,
-            finding=self.finding(),
+            finding=finding,
+            resolution=resolution,
         )
         b = adjudicate_blind_finding(
             packet=self.packet,
             binding=self.binding,
             case=self.bug,
-            finding=self.finding(),
+            finding=finding,
+            resolution=resolution,
         )
         self.assertEqual(a.adjudication_digest, b.adjudication_digest)
+        self.assertEqual(a.evaluator_resolution_digest, resolution.resolution_digest)
 
 
 if __name__ == "__main__":
