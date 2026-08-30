@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import replace
-import inspect
 import unittest
 
 from tools.bughound.bounty_candidate_admission import (
@@ -11,7 +10,10 @@ from tools.bughound.bounty_candidate_admission import (
 from tools.bughound.bounty_mission import BugHoundCashMissionInputV1
 from tools.bughound.registered_reproduction_gate import (
     BugHoundIndependentReproductionRegistryRecordV1,
+    _compose_registered_independent_reproduction,
     admit_with_registered_independent_reproduction,
+    independent_reproduction_registry_receipt,
+    registered_reproduction_parameter_names,
 )
 
 
@@ -81,10 +83,10 @@ class RegisteredIndependentReproductionGateTests(unittest.TestCase):
             independently_observed=True,
         )
 
-    def admit(self, *, repro=None, record=None, **extra):
+    def private_admit(self, *, repro=None, record=None):
         repro = repro or self.repro()
         record = record or self.record(repro)
-        return admit_with_registered_independent_reproduction(
+        return _compose_registered_independent_reproduction(
             mission_input=self.mission(),
             candidate=self.candidate(),
             independent_reproduction=repro,
@@ -94,12 +96,24 @@ class RegisteredIndependentReproductionGateTests(unittest.TestCase):
             report_digest="report-1",
             program_admissibility_state="CURRENTLY_ADMISSIBLE",
             program_admissibility_ref="program-current-1",
-            registry_lookup=lambda _: record,
-            **extra,
+            record=record,
         )
 
-    def test_registered_path_plumbs_to_candidate_without_effect_authority(self):
-        out = self.admit()
+    def public_kwargs(self):
+        return dict(
+            mission_input=self.mission(),
+            candidate=self.candidate(),
+            independent_reproduction=self.repro(),
+            duplicate_pressure_state="LOW_OBSERVED_DUPLICATE_PRESSURE",
+            duplicate_check_currentness_ref="dup-current-1",
+            report_lint_state="REPORT_LINT_CLEAN",
+            report_digest="report-1",
+            program_admissibility_state="CURRENTLY_ADMISSIBLE",
+            program_admissibility_ref="program-current-1",
+        )
+
+    def test_private_exact_record_plumbs_without_effect_authority(self):
+        out = self.private_admit()
         self.assertTrue(out.independent_reproduction_registry_proven)
         self.assertFalse(out.duplicate_check_producer_proven)
         self.assertFalse(out.report_lint_producer_proven)
@@ -108,87 +122,116 @@ class RegisteredIndependentReproductionGateTests(unittest.TestCase):
         self.assertFalse(out.submission_authorized)
         self.assertTrue(out.candidate_admission.ready_for_human_submission_review)
 
-    def test_default_production_lookup_fails_closed(self):
+    def test_production_registry_is_source_owned_empty_hold(self):
+        receipt = independent_reproduction_registry_receipt()
+        self.assertEqual("BUGHOUND_INDEPENDENT_REPRODUCTION_REGISTRY_HOLD_V2", receipt.registry_generation)
+        self.assertEqual((), receipt.record_digests)
+        self.assertEqual(0, receipt.active_record_count)
+        self.assertFalse(receipt.authority)
+        self.assertFalse(receipt.external_effect)
         with self.assertRaisesRegex(ValueError, "INDEPENDENT_REPRODUCTION_REGISTRY_REQUIRED"):
+            admit_with_registered_independent_reproduction(**self.public_kwargs())
+
+    def test_public_signature_has_no_caller_trust_root(self):
+        params = set(registered_reproduction_parameter_names())
+        for forbidden in (
+            "registry_lookup",
+            "registry",
+            "records",
+            "record",
+            "expected_independent_reproduction_digest",
+            "expected_reproducer_ref",
+            "expected_reproducer_generation",
+            "trusted",
+        ):
+            self.assertNotIn(forbidden, params)
+
+    def test_caller_registry_lookup_override_is_not_an_api(self):
+        with self.assertRaises(TypeError):
             admit_with_registered_independent_reproduction(
-                mission_input=self.mission(), candidate=self.candidate(),
-                independent_reproduction=self.repro(),
-                duplicate_pressure_state="LOW_OBSERVED_DUPLICATE_PRESSURE",
-                duplicate_check_currentness_ref="dup-current-1",
-                report_lint_state="REPORT_LINT_CLEAN", report_digest="report-1",
-                program_admissibility_state="CURRENTLY_ADMISSIBLE",
-                program_admissibility_ref="program-current-1",
+                **self.public_kwargs(), registry_lookup=lambda _: self.record()
             )
 
-    def test_public_signature_has_no_expected_reproduction_parameters(self):
-        params = set(inspect.signature(admit_with_registered_independent_reproduction).parameters)
-        self.assertNotIn("expected_independent_reproduction_digest", params)
-        self.assertNotIn("expected_reproducer_ref", params)
-        self.assertNotIn("expected_reproducer_generation", params)
+    def test_caller_record_override_is_not_an_api(self):
+        with self.assertRaises(TypeError):
+            admit_with_registered_independent_reproduction(
+                **self.public_kwargs(), record=self.record()
+            )
 
-    def test_caller_expected_digest_override_is_forbidden(self):
-        with self.assertRaisesRegex(ValueError, "CALLER_REPRODUCTION_EXPECTATION_FORBIDDEN"):
-            self.admit(expected_independent_reproduction_digest="forged")
+    def test_caller_expected_fields_are_not_an_api(self):
+        for field in (
+            "expected_independent_reproduction_digest",
+            "expected_reproducer_ref",
+            "expected_reproducer_generation",
+        ):
+            with self.subTest(field=field):
+                with self.assertRaises(TypeError):
+                    admit_with_registered_independent_reproduction(
+                        **self.public_kwargs(), **{field: "forged"}
+                    )
 
-    def test_caller_expected_reproducer_override_is_forbidden(self):
-        with self.assertRaisesRegex(ValueError, "CALLER_REPRODUCTION_EXPECTATION_FORBIDDEN"):
-            self.admit(expected_reproducer_ref="reproducer://caller")
-
-    def test_receipt_digest_substitution_fails(self):
+    def test_receipt_digest_substitution_fails_privately(self):
         with self.assertRaisesRegex(ValueError, "REPRODUCTION_RECEIPT_DIGEST_MISMATCH"):
-            self.admit(record=replace(self.record(), reproduction_receipt_digest="wrong"))
+            self.private_admit(record=replace(self.record(), reproduction_receipt_digest="wrong"))
 
-    def test_reproducer_identity_substitution_fails(self):
+    def test_reproducer_identity_substitution_fails_privately(self):
         with self.assertRaisesRegex(ValueError, "REPRODUCER_REF_MISMATCH"):
-            self.admit(record=replace(self.record(), reproducer_ref="other"))
+            self.private_admit(record=replace(self.record(), reproducer_ref="other"))
 
-    def test_reproducer_generation_substitution_fails(self):
+    def test_reproducer_generation_substitution_fails_privately(self):
         with self.assertRaisesRegex(ValueError, "REPRODUCER_GENERATION_MISMATCH"):
-            self.admit(record=replace(self.record(), reproducer_generation="other"))
+            self.private_admit(record=replace(self.record(), reproducer_generation="other"))
 
-    def test_witness_substitution_fails(self):
-        with self.assertRaisesRegex(ValueError, "WITNESS_DIGEST_MISMATCH"):
-            self.admit(record=replace(self.record(), witness_digest="other"))
+    def test_witness_and_environment_substitution_fail_privately(self):
+        for field in ("witness_digest", "environment_digest"):
+            with self.subTest(field=field):
+                with self.assertRaisesRegex(ValueError, field.upper() + "_MISMATCH"):
+                    self.private_admit(record=replace(self.record(), **{field: "other"}))
 
-    def test_environment_substitution_fails(self):
-        with self.assertRaisesRegex(ValueError, "ENVIRONMENT_DIGEST_MISMATCH"):
-            self.admit(record=replace(self.record(), environment_digest="other"))
-
-    def test_scope_substitution_fails(self):
+    def test_scope_and_source_currentness_substitution_fail_privately(self):
         with self.assertRaisesRegex(ValueError, "SCOPE_RULES_DIGEST_MISMATCH"):
-            self.admit(record=replace(self.record(), scope_rules_digest="other"))
-
-    def test_source_currentness_substitution_fails(self):
+            self.private_admit(record=replace(self.record(), scope_rules_digest="other"))
         with self.assertRaisesRegex(ValueError, "SOURCE_CURRENTNESS_REF_MISMATCH"):
-            self.admit(record=replace(self.record(), source_currentness_ref="old"))
+            self.private_admit(record=replace(self.record(), source_currentness_ref="old"))
 
-    def test_stale_registry_fails(self):
-        with self.assertRaisesRegex(ValueError, "INDEPENDENT_REPRODUCTION_REGISTRY_STALE"):
-            self.admit(record=replace(self.record(), registry_current=False))
+    def test_stale_nonindependent_or_revoked_record_fails_privately(self):
+        cases = (
+            (replace(self.record(), registry_current=False), "REGISTRY_STALE"),
+            (replace(self.record(), independently_observed=False), "INDEPENDENT_OBSERVER_REQUIRED"),
+            (replace(self.record(), revoked=True), "INDEPENDENT_REPRODUCTION_REVOKED"),
+        )
+        for record, code in cases:
+            with self.subTest(code=code):
+                with self.assertRaisesRegex(ValueError, code):
+                    self.private_admit(record=record)
 
-    def test_nonindependent_observer_fails(self):
-        with self.assertRaisesRegex(ValueError, "INDEPENDENT_OBSERVER_REQUIRED"):
-            self.admit(record=replace(self.record(), independently_observed=False))
+    def test_registry_effect_or_authority_widening_fails_privately(self):
+        for field in (
+            "live_target_testing_authorized",
+            "credential_use_authorized",
+            "submission_authorized",
+            "claim_or_payment_authorized",
+            "external_effect",
+        ):
+            with self.subTest(field=field):
+                with self.assertRaises(ValueError):
+                    self.private_admit(record=replace(self.record(), **{field: True}))
 
-    def test_revoked_record_fails(self):
-        with self.assertRaisesRegex(ValueError, "INDEPENDENT_REPRODUCTION_REVOKED"):
-            self.admit(record=replace(self.record(), revoked=True))
-
-    def test_registry_external_effect_widening_fails(self):
-        with self.assertRaisesRegex(ValueError, "REPRO_REGISTRY_EXTERNAL_EFFECT_FORBIDDEN"):
-            self.admit(record=replace(self.record(), external_effect=True))
-
-    def test_reproduction_external_effect_fails_before_registry(self):
-        repro = replace(self.repro(), external_effect=True)
+    def test_reproduction_external_effect_fails_public_before_registry(self):
+        kwargs = self.public_kwargs()
+        kwargs["independent_reproduction"] = replace(self.repro(), external_effect=True)
         with self.assertRaisesRegex(ValueError, "BOUNTY_REPRODUCTION_EXTERNAL_EFFECT_FORBIDDEN"):
-            self.admit(repro=repro, record=self.record(repro))
+            admit_with_registered_independent_reproduction(**kwargs)
 
-    def test_target_substitution_fails(self):
+    def test_target_substitution_fails_privately(self):
         with self.assertRaisesRegex(ValueError, "TARGET_REF_MISMATCH"):
-            self.admit(record=replace(self.record(), target_ref="target://other"))
+            self.private_admit(record=replace(self.record(), target_ref="target://other"))
 
-    def test_output_digest_is_deterministic(self):
-        self.assertEqual(self.admit().receipt_digest, self.admit().receipt_digest)
+    def test_private_fixture_output_digest_is_deterministic(self):
+        self.assertEqual(
+            self.private_admit().receipt_digest,
+            self.private_admit().receipt_digest,
+        )
 
 
 if __name__ == "__main__":
