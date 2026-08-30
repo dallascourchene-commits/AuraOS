@@ -102,29 +102,56 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
         run: |
-          set -o pipefail
-          {
-            set -x
-            git config user.name "AuraOS CODEMAP Bot"
-            git config user.email "actions@users.noreply.github.com"
-            git status --short
-            git add \
-              .aura/CODEMAP.json \
-              .aura/CODEMAP.md \
-              .aura/SOURCE_ANCHORS.md \
-              topology_map.json
-            git add -f Aura_Memory/live_topology_ast.json
-            git diff --cached --stat
-            if git diff --cached --quiet; then
-              exit 0
-            fi
-            git commit -m "docs: synchronize CODEMAP topology and source anchors"
-            AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-            git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-              push origin HEAD:"${TARGET_BRANCH}"
+          status_file=/tmp/codemap-push-status.txt
+          printf 'PUSH_NOT_ATTEMPTED\n' > "$status_file"
+          git config user.name "AuraOS CODEMAP Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git status --short
+          git add \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            .aura/SOURCE_ANCHORS.md \
+            topology_map.json
+          git add -f Aura_Memory/live_topology_ast.json
+          git diff --cached --stat
+          if git diff --cached --quiet; then
+            printf 'NO_CHANGES\n' > "$status_file"
+            exit 0
+          fi
+          git commit -m "docs: synchronize CODEMAP topology and source anchors"
+          printf 'PUSH_ATTEMPTED\n' > "$status_file"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          if git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push origin HEAD:"${TARGET_BRANCH}"; then
             unset AUTH_HEADER
-          } 2>&1 | tee codemap-push.log
-      - name: Upload synchronized maps and push diagnostics
+            printf 'PUSH_SUCCEEDED\n' > "$status_file"
+          else
+            push_status=$?
+            unset AUTH_HEADER
+            printf 'PUSH_FAILED\n' > "$status_file"
+            exit "$push_status"
+          fi
+      - name: Verify diagnostic secret-safety contract
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          status = Path('/tmp/codemap-push-status.txt')
+          if not status.exists():
+              raise SystemExit('missing bounded CODEMAP push status')
+          value = status.read_text(encoding='utf-8').strip()
+          allowed = {
+              'PUSH_NOT_ATTEMPTED',
+              'NO_CHANGES',
+              'PUSH_ATTEMPTED',
+              'PUSH_SUCCEEDED',
+              'PUSH_FAILED',
+          }
+          if value not in allowed:
+              raise SystemExit(f'unexpected CODEMAP push status: {value!r}')
+          PY
+      - name: Upload synchronized maps and bounded push diagnostics
         if: always()
         uses: actions/upload-artifact@v7
         with:
@@ -135,7 +162,7 @@ jobs:
             .aura/SOURCE_ANCHORS.md
             topology_map.json
             Aura_Memory/live_topology_ast.json
-            codemap-push.log
+            /tmp/codemap-push-status.txt
             /tmp/aura-codemap-comparison.json
             /tmp/aura-codemap-change-class.txt
           if-no-files-found: error
