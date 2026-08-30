@@ -1,6 +1,9 @@
-"""Creator Studio WorkGraph projection and continual-work selection.
+"""Creator Studio WorkGraph projection, claim preparation, and continuation state.
 
-Coordination only: claims and wake proposals never grant authority or prove execution.
+This module is a coordination/control-plane reference for CS-HARNESS-001/H-C.
+It never grants effect authority, starts a worker, calls a model/provider, or treats
+board/document presence as proof of execution. Planning proposes; governance
+authorizes; command/effect-bound receipts prove execution.
 """
 from __future__ import annotations
 
@@ -12,8 +15,9 @@ from typing import Any, Sequence
 from aura_event_contracts import canonical_json, stable_digest
 
 VERSION = "AURA_CREATOR_STUDIO_WORKGRAPH_V1"
+PROJECTION_SCHEMA = "WorkGraphProjectionV1"
 SCHEMA_VERSION = "1.0"
-DEFAULT_STALE_AFTER_MS = 30 * 60 * 1000
+DEFAULT_LEASE_MS = 30 * 60 * 1000
 
 
 class WorkState(str, Enum):
@@ -22,6 +26,56 @@ class WorkState(str, Enum):
     BLOCKED = "BLOCKED"
     COMPLETE = "COMPLETE"
     SUPERSEDED = "SUPERSEDED"
+
+
+class WorkerState(str, Enum):
+    ORIENTING = "ORIENTING"
+    IDLE = "IDLE"
+    CLAIMING = "CLAIMING"
+    ACTIVE = "ACTIVE"
+    BLOCKED = "BLOCKED"
+    RELEASED = "RELEASED"
+    DORMANT = "DORMANT"
+    STALE = "STALE"
+
+
+class ExecutionState(str, Enum):
+    NOT_STARTED = "NOT_STARTED"
+    EFFECT_ADMITTED = "EFFECT_ADMITTED"
+    EFFECT_STARTED = "EFFECT_STARTED"
+    RESULT_PARTIAL = "RESULT_PARTIAL"
+    VERIFIED_COMPLETE = "VERIFIED_COMPLETE"
+    FAILED = "FAILED"
+    UNKNOWN = "UNKNOWN"
+
+
+class ProjectionStatus(str, Enum):
+    CURRENT = "CURRENT"
+    STALE = "STALE"
+    INVALID = "INVALID"
+
+
+class SelectionDecision(str, Enum):
+    REBASE = "REBASE"
+    SELECT_WORK = "SELECT_WORK"
+    IDLE = "IDLE"
+    BLOCKED = "BLOCKED"
+    WAKE_LOCAL = "WAKE_LOCAL"
+    RECOMMISSION_REQUIRED = "RECOMMISSION_REQUIRED"
+
+
+class ClaimCASStatus(str, Enum):
+    READY = "READY"
+    STALE = "STALE"
+    REJECTED = "REJECTED"
+
+
+class RecoveryDecision(str, Enum):
+    NOOP = "NOOP"
+    RELEASE_TO_OPEN = "RELEASE_TO_OPEN"
+    REBASE = "REBASE"
+    RECONCILE_EFFECT_STATE_REQUIRED = "RECONCILE_EFFECT_STATE_REQUIRED"
+    VERIFIED_COMPLETE = "VERIFIED_COMPLETE"
 
 
 class Priority(str, Enum):
@@ -34,6 +88,12 @@ class Priority(str, Enum):
 
 _PRIORITY = {value: index for index, value in enumerate(Priority)}
 _TERMINAL = frozenset({WorkState.COMPLETE, WorkState.SUPERSEDED})
+_ASSIGNABLE_WORKER_STATES = frozenset({WorkerState.IDLE, WorkerState.RELEASED})
+_EFFECT_ORDER = {"D0": 0, "D1": 1, "D2": 2, "D3": 3}
+
+
+class WorkGraphParseError(ValueError):
+    pass
 
 
 def _text(value: Any, field: str) -> str:
@@ -56,6 +116,12 @@ def _integer(value: Any, field: str, minimum: int = 0) -> int:
     return value
 
 
+def _optional_integer(value: Any, field: str, minimum: int = 0) -> int | None:
+    if value is None:
+        return None
+    return _integer(value, field, minimum)
+
+
 def _strings(values: Sequence[str] | None, field: str) -> tuple[str, ...]:
     if values is None:
         return ()
@@ -67,32 +133,67 @@ def _strings(values: Sequence[str] | None, field: str) -> tuple[str, ...]:
     return result
 
 
-def _state(value: WorkState | str) -> WorkState:
+def _enum(value: Any, enum_type: type[Enum], field: str):
     try:
-        return value if isinstance(value, WorkState) else WorkState(str(value))
+        return value if isinstance(value, enum_type) else enum_type(str(value))
     except ValueError as exc:
-        raise ValueError(f"unknown work state: {value}") from exc
+        raise ValueError(f"unknown {field}: {value}") from exc
 
 
-def _priority(value: Priority | str) -> Priority:
-    try:
-        return value if isinstance(value, Priority) else Priority(str(value))
-    except ValueError as exc:
-        raise ValueError(f"unknown priority: {value}") from exc
+def _effect_covers(worker_ceiling: str, required: str) -> bool:
+    worker = _EFFECT_ORDER.get(str(worker_ceiling).upper())
+    need = _EFFECT_ORDER.get(str(required).upper())
+    return worker is not None and need is not None and worker >= need
 
 
 @dataclass(frozen=True)
 class WorkerSpec:
     worker_id: str
+    worker_class: str
     capabilities: tuple[str, ...]
-    currentness_ref: str
-    joined_at_ms: int
+    join_ref: str
+    currentness_basis: str
+    effect_ceiling: str = "D0"
+    state: WorkerState | str = WorkerState.IDLE
+    active_claim_id: str | None = None
+    heartbeat_ref: str | None = None
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "worker_id", _text(self.worker_id, "worker_id"))
+        object.__setattr__(self, "worker_class", _text(self.worker_class, "worker_class"))
         object.__setattr__(self, "capabilities", _strings(self.capabilities, "capabilities"))
-        object.__setattr__(self, "currentness_ref", _text(self.currentness_ref, "currentness_ref"))
-        object.__setattr__(self, "joined_at_ms", _integer(self.joined_at_ms, "joined_at_ms"))
+        object.__setattr__(self, "join_ref", _text(self.join_ref, "join_ref"))
+        object.__setattr__(self, "currentness_basis", _text(self.currentness_basis, "currentness_basis"))
+        ceiling = _text(self.effect_ceiling, "effect_ceiling").upper()
+        if ceiling not in _EFFECT_ORDER:
+            raise ValueError("effect_ceiling must be D0-D3")
+        object.__setattr__(self, "effect_ceiling", ceiling)
+        object.__setattr__(self, "state", _enum(self.state, WorkerState, "worker.state"))
+        object.__setattr__(self, "active_claim_id", _optional(self.active_claim_id, "active_claim_id"))
+        object.__setattr__(self, "heartbeat_ref", _optional(self.heartbeat_ref, "heartbeat_ref"))
+
+
+@dataclass(frozen=True)
+class ClaimLease:
+    lease_id: str
+    worker_id: str
+    acquired_at_ms: int
+    expires_at_ms: int
+    basis_revision: str
+    currentness_basis: str
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "lease_id", _text(self.lease_id, "lease_id"))
+        object.__setattr__(self, "worker_id", _text(self.worker_id, "worker_id"))
+        object.__setattr__(self, "acquired_at_ms", _integer(self.acquired_at_ms, "acquired_at_ms"))
+        object.__setattr__(self, "expires_at_ms", _integer(self.expires_at_ms, "expires_at_ms"))
+        if self.expires_at_ms <= self.acquired_at_ms:
+            raise ValueError("lease expiry must follow acquisition")
+        object.__setattr__(self, "basis_revision", _text(self.basis_revision, "basis_revision"))
+        object.__setattr__(self, "currentness_basis", _text(self.currentness_basis, "currentness_basis"))
+
+    def expired(self, now_ms: int) -> bool:
+        return _integer(now_ms, "now_ms") >= self.expires_at_ms
 
 
 @dataclass(frozen=True)
@@ -102,51 +203,53 @@ class WorkItem:
     priority: Priority | str
     parent_objective: str
     residual: str
-    currentness_ref: str
+    currentness_basis: str
     dependencies: tuple[str, ...] = ()
     required_capabilities: tuple[str, ...] = ()
+    owner_worker_id: str | None = None
+    free_first_route: tuple[str, ...] = ("R0_REUSE", "R1_DETERMINISTIC_LOCAL")
     expected_output: str | None = None
-    cost_ceiling_microusd: int = 0
-    reopen: str | None = None
+    acceptance: tuple[str, ...] = ()
+    reopen_conditions: tuple[str, ...] = ()
+    cost_ceiling_microusd: int | None = None
+    required_effect_ceiling: str = "D0"
+    claim_lease: ClaimLease | None = None
+    execution_state: ExecutionState | str = ExecutionState.NOT_STARTED
+    execution_receipt_refs: tuple[str, ...] = ()
+    hydration_refs: tuple[str, ...] = ()
     evidence_refs: tuple[str, ...] = ()
     source_order: int = 0
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "work_id", _text(self.work_id, "work_id"))
-        object.__setattr__(self, "state", _state(self.state))
-        object.__setattr__(self, "priority", _priority(self.priority))
+        object.__setattr__(self, "state", _enum(self.state, WorkState, "work.state"))
+        object.__setattr__(self, "priority", _enum(self.priority, Priority, "priority"))
         object.__setattr__(self, "parent_objective", _text(self.parent_objective, "parent_objective"))
         object.__setattr__(self, "residual", _text(self.residual, "residual"))
-        object.__setattr__(self, "currentness_ref", _text(self.currentness_ref, "currentness_ref"))
+        object.__setattr__(self, "currentness_basis", _text(self.currentness_basis, "currentness_basis"))
         object.__setattr__(self, "dependencies", _strings(self.dependencies, "dependencies"))
         object.__setattr__(self, "required_capabilities", _strings(self.required_capabilities, "required_capabilities"))
+        object.__setattr__(self, "owner_worker_id", _optional(self.owner_worker_id, "owner_worker_id"))
+        object.__setattr__(self, "free_first_route", _strings(self.free_first_route, "free_first_route"))
         object.__setattr__(self, "expected_output", _optional(self.expected_output, "expected_output"))
-        object.__setattr__(self, "cost_ceiling_microusd", _integer(self.cost_ceiling_microusd, "cost_ceiling_microusd"))
-        object.__setattr__(self, "reopen", _optional(self.reopen, "reopen"))
+        object.__setattr__(self, "acceptance", _strings(self.acceptance, "acceptance"))
+        object.__setattr__(self, "reopen_conditions", _strings(self.reopen_conditions, "reopen_conditions"))
+        object.__setattr__(self, "cost_ceiling_microusd", _optional_integer(self.cost_ceiling_microusd, "cost_ceiling_microusd"))
+        required_effect = _text(self.required_effect_ceiling, "required_effect_ceiling").upper()
+        if required_effect not in _EFFECT_ORDER:
+            raise ValueError("required_effect_ceiling must be D0-D3")
+        object.__setattr__(self, "required_effect_ceiling", required_effect)
+        if self.claim_lease is not None and not isinstance(self.claim_lease, ClaimLease):
+            raise ValueError("claim_lease must be ClaimLease or null")
+        object.__setattr__(self, "execution_state", _enum(self.execution_state, ExecutionState, "execution_state"))
+        object.__setattr__(self, "execution_receipt_refs", _strings(self.execution_receipt_refs, "execution_receipt_refs"))
+        object.__setattr__(self, "hydration_refs", _strings(self.hydration_refs, "hydration_refs"))
         object.__setattr__(self, "evidence_refs", _strings(self.evidence_refs, "evidence_refs"))
         object.__setattr__(self, "source_order", _integer(self.source_order, "source_order"))
         if self.work_id in self.dependencies:
             raise ValueError("work item cannot depend on itself")
-
-
-@dataclass(frozen=True)
-class ClaimRecord:
-    claim_id: str
-    work_id: str
-    worker_id: str
-    claimed_at_ms: int
-    last_checkpoint_ms: int
-    released: bool = False
-
-    def __post_init__(self) -> None:
-        for field in ("claim_id", "work_id", "worker_id"):
-            object.__setattr__(self, field, _text(getattr(self, field), field))
-        object.__setattr__(self, "claimed_at_ms", _integer(self.claimed_at_ms, "claimed_at_ms"))
-        object.__setattr__(self, "last_checkpoint_ms", _integer(self.last_checkpoint_ms, "last_checkpoint_ms"))
-        if self.last_checkpoint_ms < self.claimed_at_ms:
-            raise ValueError("checkpoint cannot precede claim")
-        if type(self.released) is not bool:
-            raise ValueError("released must be boolean")
+        if self.execution_state is ExecutionState.VERIFIED_COMPLETE and not self.execution_receipt_refs:
+            raise ValueError("VERIFIED_COMPLETE requires command/effect-bound receipt refs")
 
 
 @dataclass(frozen=True)
@@ -158,12 +261,18 @@ class Finding:
 
 
 @dataclass(frozen=True)
+class DependencyEdge:
+    upstream_work_id: str
+    downstream_work_id: str
+
+
+@dataclass(frozen=True)
 class WorkProjection:
     work: WorkItem
     effective_state: WorkState
     dependency_satisfied: bool
     capability_candidates: tuple[str, ...]
-    active_claim: ClaimRecord | None
+    active_lease: ClaimLease | None
     stale_claim_recoverable: bool
     eligible: bool
     reasons: tuple[str, ...]
@@ -171,29 +280,46 @@ class WorkProjection:
 
 @dataclass(frozen=True)
 class WorkGraphSnapshot:
-    arena_id: str
-    currentness_ref: str
-    observed_at_ms: int
+    project_id: str
+    canonical_orientation_ref: str
+    canonical_orientation_revision: str
+    board_ref: str
+    board_revision: str
+    generated_at_ms: int
+    projector_version: str
+    source_digests: tuple[str, ...]
     workers: tuple[WorkerSpec, ...]
     work: tuple[WorkProjection, ...]
+    dependency_edges: tuple[DependencyEdge, ...]
+    currentness_invalidators: tuple[str, ...]
+    route_policy_ref: str
+    projection_status: ProjectionStatus
     findings: tuple[Finding, ...]
     source_digest: str
-    version: str = VERSION
     execution_proven: bool = False
 
     def __post_init__(self) -> None:
-        if self.version != VERSION or self.execution_proven is not False:
+        if self.projector_version != VERSION or self.execution_proven is not False:
             raise ValueError("WorkGraph is coordination-only and cannot prove execution")
 
     def to_dict(self) -> dict[str, Any]:
         return {
+            "schema": PROJECTION_SCHEMA,
             "schema_version": SCHEMA_VERSION,
-            "version": self.version,
-            "arena_id": self.arena_id,
-            "currentness_ref": self.currentness_ref,
-            "observed_at_ms": self.observed_at_ms,
+            "project_id": self.project_id,
+            "canonical_orientation_ref": self.canonical_orientation_ref,
+            "canonical_orientation_revision": self.canonical_orientation_revision,
+            "board_ref": self.board_ref,
+            "board_revision": self.board_revision,
+            "generated_at_ms": self.generated_at_ms,
+            "projector_version": self.projector_version,
+            "source_digests": self.source_digests,
             "workers": self.workers,
-            "work": self.work,
+            "work_items": self.work,
+            "dependency_edges": self.dependency_edges,
+            "currentness_invalidators": self.currentness_invalidators,
+            "route_policy_ref": self.route_policy_ref,
+            "projection_status": self.projection_status,
             "findings": self.findings,
             "source_digest": self.source_digest,
             "coordination_only": True,
@@ -202,23 +328,53 @@ class WorkGraphSnapshot:
         }
 
     @property
-    def digest(self) -> str:
+    def revision(self) -> str:
         return stable_digest(self.to_dict())
 
 
 @dataclass(frozen=True)
 class SelectionProposal:
+    decision: SelectionDecision
     worker_id: str
-    work_id: str | None
-    claim_required: bool
-    stale_recovery_required: bool
-    wake_needed: bool
-    reasons: tuple[str, ...]
+    selected_work_id: str | None
+    reason_codes: tuple[str, ...]
+    projection_revision: str
+    required_hydration_refs: tuple[str, ...]
+    effect_allowed: bool = False
     runtime_effect_started: bool = False
 
     def __post_init__(self) -> None:
-        if self.runtime_effect_started is not False:
-            raise ValueError("selection proposal cannot start runtime effects")
+        if self.effect_allowed is not False or self.runtime_effect_started is not False:
+            raise ValueError("WorkGraph selection cannot grant or start effects")
+
+
+@dataclass(frozen=True)
+class ClaimCASResult:
+    status: ClaimCASStatus
+    worker_id: str
+    work_id: str
+    reason_codes: tuple[str, ...]
+    expected_projection_revision: str
+    observed_projection_revision: str
+    proposed_lease: ClaimLease | None = None
+    effect_started: bool = False
+
+    def __post_init__(self) -> None:
+        if self.effect_started is not False:
+            raise ValueError("claim preparation cannot start effects")
+
+
+@dataclass(frozen=True)
+class RecoveryProposal:
+    decision: RecoveryDecision
+    work_id: str
+    reason_codes: tuple[str, ...]
+    recovered_state: WorkState | None = None
+    effect_started: bool = False
+
+    def __post_init__(self) -> None:
+        if self.effect_started is not False:
+            raise ValueError("stale recovery proposal cannot start effects")
 
 
 @dataclass(frozen=True)
@@ -237,175 +393,444 @@ class CompletionRecord:
         if not self.output_refs:
             raise ValueError("completion requires output receipts")
         object.__setattr__(self, "residual", _optional(self.residual, "residual"))
-        object.__setattr__(self, "residual_priority", _priority(self.residual_priority))
+        object.__setattr__(self, "residual_priority", _enum(self.residual_priority, Priority, "residual_priority"))
         object.__setattr__(self, "residual_required_capabilities", _strings(self.residual_required_capabilities, "residual_required_capabilities"))
 
 
-def project_workgraph(*, arena_id: str, currentness_ref: str, observed_at_ms: int,
-                      workers: Sequence[WorkerSpec], work_items: Sequence[WorkItem],
-                      claims: Sequence[ClaimRecord] = (),
-                      stale_after_ms: int = DEFAULT_STALE_AFTER_MS) -> WorkGraphSnapshot:
-    """Project state; never mutate source state, authorize work, or start a wake."""
-    now = _integer(observed_at_ms, "observed_at_ms")
-    ttl = _integer(stale_after_ms, "stale_after_ms", 1)
-    workers, work_items, claims = tuple(workers), tuple(work_items), tuple(claims)
+def project_workgraph(
+    *,
+    project_id: str,
+    canonical_orientation_ref: str,
+    canonical_orientation_revision: str,
+    board_ref: str,
+    board_revision: str,
+    generated_at_ms: int,
+    workers: Sequence[WorkerSpec],
+    work_items: Sequence[WorkItem],
+    route_policy_ref: str,
+    source_digests: Sequence[str] = (),
+    currentness_invalidators: Sequence[str] = (),
+) -> WorkGraphSnapshot:
+    """Project shared state without mutating, authorizing, waking, or executing."""
+    project_id = _text(project_id, "project_id")
+    orientation_ref = _text(canonical_orientation_ref, "canonical_orientation_ref")
+    currentness = _text(canonical_orientation_revision, "canonical_orientation_revision")
+    board_ref = _text(board_ref, "board_ref")
+    board_revision = _text(board_revision, "board_revision")
+    route_policy_ref = _text(route_policy_ref, "route_policy_ref")
+    now = _integer(generated_at_ms, "generated_at_ms")
+    workers = tuple(workers)
+    work_items = tuple(work_items)
+    source_digests = _strings(tuple(source_digests), "source_digests")
+    invalidators = _strings(tuple(currentness_invalidators), "currentness_invalidators")
     worker_map = {worker.worker_id: worker for worker in workers}
     item_map = {item.work_id: item for item in work_items}
     if len(worker_map) != len(workers) or len(item_map) != len(work_items):
         raise ValueError("worker_id and work_id values must be unique")
 
     findings: list[Finding] = []
-    claims_by_work: dict[str, list[ClaimRecord]] = {}
-    for claim in claims:
-        if claim.work_id not in item_map:
-            findings.append(Finding("CLAIM_UNKNOWN_WORK", claim.work_id, "claim targets unknown work", True))
-        elif claim.worker_id not in worker_map:
-            findings.append(Finding("CLAIM_UNKNOWN_WORKER", claim.work_id, "claim names unknown worker", True))
-        elif not claim.released:
-            claims_by_work.setdefault(claim.work_id, []).append(claim)
-
+    edges: list[DependencyEdge] = []
     complete = {item.work_id for item in work_items if item.state is WorkState.COMPLETE}
     projected: list[WorkProjection] = []
+
     for item in sorted(work_items, key=lambda value: (value.source_order, value.work_id)):
         reasons: list[str] = []
-        missing = tuple(dep for dep in item.dependencies if dep not in complete)
+        for dependency in item.dependencies:
+            edges.append(DependencyEdge(dependency, item.work_id))
+            if dependency not in item_map:
+                findings.append(Finding("UNKNOWN_DEPENDENCY", item.work_id, dependency, True))
+        missing = tuple(dependency for dependency in item.dependencies if dependency not in complete)
         if missing:
             reasons.append("DEPENDENCY_BLOCKED:" + ",".join(missing))
-        if any(dep not in item_map for dep in item.dependencies):
-            findings.append(Finding("UNKNOWN_DEPENDENCY", item.work_id, "dependency absent from projection", True))
 
-        active = sorted(claims_by_work.get(item.work_id, ()), key=lambda value: (value.last_checkpoint_ms, value.claim_id), reverse=True)
-        claim = active[0] if active else None
-        if len(active) > 1:
-            findings.append(Finding("CLAIM_COLLISION", item.work_id, "multiple active claims", True))
-            reasons.append("CLAIM_COLLISION")
-        stale = bool(claim and now - claim.last_checkpoint_ms > ttl)
-        if stale:
-            reasons.append("STALE_CLAIM_RECOVERABLE")
+        lease = item.claim_lease
+        live_lease = bool(lease and not lease.expired(now))
+        stale_lease = bool(lease and lease.expired(now))
+        safe_stale = bool(
+            stale_lease
+            and item.execution_state is ExecutionState.NOT_STARTED
+            and item.currentness_basis == currentness
+            and not invalidators
+        )
+        if lease and lease.worker_id not in worker_map:
+            findings.append(Finding("CLAIM_UNKNOWN_WORKER", item.work_id, lease.worker_id, True))
+        if stale_lease:
+            reasons.append("STALE_CLAIM")
+            if safe_stale:
+                reasons.append("STALE_CLAIM_RECOVERABLE")
+            else:
+                reasons.append("STALE_CLAIM_RECONCILIATION_REQUIRED")
 
         effective = item.state
         if item.state not in _TERMINAL:
-            if claim and not stale:
+            if live_lease:
                 effective = WorkState.CLAIMED
-            elif item.state is WorkState.CLAIMED and (claim is None or stale):
+            elif stale_lease and safe_stale:
                 effective = WorkState.OPEN
-                reasons.append("SOURCE_CLAIM_STATE_REQUIRES_RECOVERY")
-            elif item.state is WorkState.BLOCKED and not missing:
-                reasons.append("EXPLICIT_BLOCK_REMAINS")
+            elif item.state is WorkState.CLAIMED and lease is None:
+                findings.append(Finding("CLAIM_STATE_WITHOUT_LEASE", item.work_id, "CLAIMED state has no lease", True))
+                reasons.append("CLAIM_STATE_WITHOUT_LEASE")
 
         candidates = tuple(
-            worker.worker_id for worker in sorted(workers, key=lambda value: value.worker_id)
-            if set(item.required_capabilities).issubset(worker.capabilities)
-            and worker.currentness_ref == currentness_ref
+            worker.worker_id
+            for worker in sorted(workers, key=lambda value: value.worker_id)
+            if worker.state in _ASSIGNABLE_WORKER_STATES
+            and worker.currentness_basis == currentness
+            and set(item.required_capabilities).issubset(worker.capabilities)
+            and _effect_covers(worker.effect_ceiling, item.required_effect_ceiling)
         )
-        if item.currentness_ref != currentness_ref:
+        if item.currentness_basis != currentness or invalidators:
             reasons.append("STALE_WORK_CURRENTNESS")
         if not candidates:
-            reasons.append("NO_CAPABILITY_FIT")
-        eligible = (
-            effective is WorkState.OPEN and not missing and item.currentness_ref == currentness_ref
-            and bool(candidates) and len(active) <= 1
+            reasons.append("NO_CAPABILITY_OR_EFFECT_FIT")
+        if item.cost_ceiling_microusd is None:
+            reasons.append("COST_CEILING_UNKNOWN")
+
+        eligible = bool(
+            effective is WorkState.OPEN
+            and not missing
+            and item.currentness_basis == currentness
+            and not invalidators
+            and candidates
+            and (lease is None or safe_stale)
         )
-        projected.append(WorkProjection(item, effective, not missing, candidates, claim, stale, eligible, tuple(reasons)))
+        projected.append(
+            WorkProjection(
+                item,
+                effective,
+                not missing,
+                candidates,
+                lease,
+                safe_stale,
+                eligible,
+                tuple(reasons),
+            )
+        )
 
-    source = stable_digest({
-        "arena_id": arena_id, "currentness_ref": currentness_ref,
-        "workers": workers, "work_items": work_items, "claims": claims,
-        "stale_after_ms": ttl,
-    })
-    return WorkGraphSnapshot(arena_id, currentness_ref, now, workers, tuple(projected), tuple(findings), source)
-
-
-def select_next_work(snapshot: WorkGraphSnapshot, *, worker_id: str) -> SelectionProposal:
-    """Propose the cheapest highest-priority eligible cell for one worker."""
-    worker_id = _text(worker_id, "worker_id")
-    if worker_id not in {worker.worker_id for worker in snapshot.workers}:
-        raise ValueError("worker_id is not present in snapshot")
-    candidates = [item for item in snapshot.work if item.eligible and worker_id in item.capability_candidates]
-    candidates.sort(key=lambda value: (
-        _PRIORITY[value.work.priority], value.work.cost_ceiling_microusd,
-        value.work.source_order, value.work.work_id,
-    ))
-    if not candidates:
-        return SelectionProposal(worker_id, None, False, False, False, ("NO_ELIGIBLE_NON_DUPLICATE_WORK",))
-    selected = candidates[0]
-    return SelectionProposal(
-        worker_id, selected.work.work_id, True, selected.stale_claim_recoverable, True,
-        ("HIGHEST_PRIORITY_ELIGIBLE", "CLAIM_WRITE_REQUIRED_BEFORE_WORK", "WAKE_IS_PROPOSAL_NOT_EXECUTION"),
+    structural_invalid = any(finding.blocking for finding in findings)
+    status = ProjectionStatus.INVALID if structural_invalid else (
+        ProjectionStatus.STALE if invalidators else ProjectionStatus.CURRENT
+    )
+    source_digest = stable_digest(
+        {
+            "project_id": project_id,
+            "canonical_orientation_ref": orientation_ref,
+            "canonical_orientation_revision": currentness,
+            "board_ref": board_ref,
+            "board_revision": board_revision,
+            "workers": workers,
+            "work_items": work_items,
+            "route_policy_ref": route_policy_ref,
+            "source_digests": source_digests,
+            "currentness_invalidators": invalidators,
+        }
+    )
+    return WorkGraphSnapshot(
+        project_id,
+        orientation_ref,
+        currentness,
+        board_ref,
+        board_revision,
+        now,
+        VERSION,
+        source_digests,
+        workers,
+        tuple(projected),
+        tuple(edges),
+        invalidators,
+        route_policy_ref,
+        status,
+        tuple(findings),
+        source_digest,
     )
 
 
-def compile_successor_residual(*, parent: WorkItem, completion: CompletionRecord,
-                               currentness_ref: str, source_order: int) -> WorkItem | None:
-    """Create successor work only from an explicit completion residual."""
+def select_next_work(snapshot: WorkGraphSnapshot, *, worker_id: str) -> SelectionProposal:
+    """Return a deterministic coordination proposal; claim/effect still require separate commits."""
+    worker_id = _text(worker_id, "worker_id")
+    worker_map = {worker.worker_id: worker for worker in snapshot.workers}
+    if worker_id not in worker_map:
+        raise ValueError("worker_id is not present in snapshot")
+    if snapshot.projection_status is ProjectionStatus.STALE:
+        return SelectionProposal(
+            SelectionDecision.REBASE, worker_id, None,
+            ("PROJECTION_STALE",), snapshot.revision,
+            (snapshot.canonical_orientation_ref, snapshot.board_ref),
+        )
+    if snapshot.projection_status is ProjectionStatus.INVALID:
+        return SelectionProposal(
+            SelectionDecision.BLOCKED, worker_id, None,
+            ("PROJECTION_INVALID",), snapshot.revision,
+            (snapshot.canonical_orientation_ref, snapshot.board_ref),
+        )
+    worker = worker_map[worker_id]
+    if worker.currentness_basis != snapshot.canonical_orientation_revision:
+        return SelectionProposal(
+            SelectionDecision.REBASE, worker_id, None,
+            ("WORKER_CURRENTNESS_STALE",), snapshot.revision,
+            (snapshot.canonical_orientation_ref, snapshot.board_ref),
+        )
+    if worker.state not in _ASSIGNABLE_WORKER_STATES:
+        return SelectionProposal(
+            SelectionDecision.BLOCKED, worker_id, None,
+            ("WORKER_NOT_ASSIGNABLE",), snapshot.revision, (),
+        )
+
+    candidates = [
+        projection
+        for projection in snapshot.work
+        if projection.eligible and worker_id in projection.capability_candidates
+    ]
+    candidates.sort(
+        key=lambda projection: (
+            _PRIORITY[projection.work.priority],
+            projection.work.cost_ceiling_microusd is None,
+            projection.work.cost_ceiling_microusd or 0,
+            projection.work.source_order,
+            projection.work.work_id,
+        )
+    )
+    if not candidates:
+        return SelectionProposal(
+            SelectionDecision.IDLE, worker_id, None,
+            ("NO_ELIGIBLE_NON_DUPLICATE_WORK",), snapshot.revision, (),
+        )
+    selected = candidates[0]
+    return SelectionProposal(
+        SelectionDecision.SELECT_WORK,
+        worker_id,
+        selected.work.work_id,
+        (
+            "HIGHEST_PRIORITY_ELIGIBLE",
+            "ATOMIC_CLAIM_COMMIT_REQUIRED",
+            "SELECTION_IS_NOT_EXECUTION",
+        ),
+        snapshot.revision,
+        selected.work.hydration_refs,
+    )
+
+
+def prepare_claim_compare_and_set(
+    snapshot: WorkGraphSnapshot,
+    *,
+    expected_projection_revision: str,
+    worker_id: str,
+    work_id: str,
+    lease_id: str,
+    acquired_at_ms: int,
+    expires_at_ms: int,
+) -> ClaimCASResult:
+    """Prepare a revision-bound claim. Persistence/atomicity belongs to the host adapter."""
+    expected = _text(expected_projection_revision, "expected_projection_revision")
+    observed = snapshot.revision
+    worker_id = _text(worker_id, "worker_id")
+    work_id = _text(work_id, "work_id")
+    if expected != observed:
+        return ClaimCASResult(
+            ClaimCASStatus.STALE, worker_id, work_id,
+            ("CLAIM_STALE_REBASE_REQUIRED",), expected, observed,
+        )
+    projection = next((item for item in snapshot.work if item.work.work_id == work_id), None)
+    if projection is None:
+        return ClaimCASResult(
+            ClaimCASStatus.REJECTED, worker_id, work_id,
+            ("WORK_NOT_FOUND",), expected, observed,
+        )
+    if not projection.eligible or worker_id not in projection.capability_candidates:
+        return ClaimCASResult(
+            ClaimCASStatus.REJECTED, worker_id, work_id,
+            ("WORK_NOT_ELIGIBLE_FOR_WORKER",), expected, observed,
+        )
+    lease = ClaimLease(
+        lease_id,
+        worker_id,
+        acquired_at_ms,
+        expires_at_ms,
+        snapshot.board_revision,
+        snapshot.canonical_orientation_revision,
+    )
+    return ClaimCASResult(
+        ClaimCASStatus.READY,
+        worker_id,
+        work_id,
+        ("HOST_ATOMIC_COMMIT_REQUIRED", "ZERO_EFFECT_BEFORE_COMMIT"),
+        expected,
+        observed,
+        lease,
+    )
+
+
+def reconcile_stale_claim(
+    projection: WorkProjection,
+    *,
+    now_ms: int,
+    currentness_basis: str,
+) -> RecoveryProposal:
+    """Fail closed when a stale lease has any ambiguous consequence-bearing effect state."""
+    now = _integer(now_ms, "now_ms")
+    currentness = _text(currentness_basis, "currentness_basis")
+    lease = projection.active_lease
+    if lease is None or not lease.expired(now):
+        return RecoveryProposal(RecoveryDecision.NOOP, projection.work.work_id, ("LEASE_NOT_STALE",))
+    if projection.work.currentness_basis != currentness or lease.currentness_basis != currentness:
+        return RecoveryProposal(
+            RecoveryDecision.REBASE,
+            projection.work.work_id,
+            ("STALE_CURRENTNESS_REBASE_REQUIRED",),
+            WorkState.SUPERSEDED,
+        )
+    if projection.work.execution_state is ExecutionState.VERIFIED_COMPLETE:
+        return RecoveryProposal(
+            RecoveryDecision.VERIFIED_COMPLETE,
+            projection.work.work_id,
+            ("RECEIPT_BOUND_COMPLETION_PRESERVED",),
+            WorkState.COMPLETE,
+        )
+    if projection.work.execution_state is not ExecutionState.NOT_STARTED:
+        return RecoveryProposal(
+            RecoveryDecision.RECONCILE_EFFECT_STATE_REQUIRED,
+            projection.work.work_id,
+            ("EFFECT_STATE_NOT_PROVABLY_NOT_STARTED",),
+            WorkState.BLOCKED,
+        )
+    return RecoveryProposal(
+        RecoveryDecision.RELEASE_TO_OPEN,
+        projection.work.work_id,
+        ("STALE_LEASE_EFFECT_NOT_STARTED", "APPEND_ONLY_RELEASE_RECEIPT_REQUIRED"),
+        WorkState.OPEN,
+    )
+
+
+def compile_successor_residual(
+    *,
+    parent: WorkItem,
+    completion: CompletionRecord,
+    currentness_basis: str,
+    source_order: int,
+) -> WorkItem | None:
+    """Create one deterministic successor only when completion explicitly exposes a residual."""
     if completion.work_id != parent.work_id:
         raise ValueError("completion does not bind to parent")
     if completion.residual is None:
         return None
-    payload = {"parent": parent.work_id, "outputs": completion.output_refs,
-               "residual": completion.residual, "currentness_ref": currentness_ref}
+    payload = {
+        "parent": parent.work_id,
+        "outputs": completion.output_refs,
+        "residual": completion.residual,
+        "currentness_basis": currentness_basis,
+    }
     return WorkItem(
-        f"{parent.work_id}::RESIDUAL::{stable_digest(payload, digest_size=8)}",
-        WorkState.OPEN, completion.residual_priority, parent.parent_objective,
-        completion.residual, currentness_ref, (parent.work_id,),
-        completion.residual_required_capabilities, "Successor residual closure receipt",
-        parent.cost_ceiling_microusd, parent.reopen, completion.output_refs, source_order,
+        work_id=f"{parent.work_id}::RESIDUAL::{stable_digest(payload, digest_size=8)}",
+        state=WorkState.OPEN,
+        priority=completion.residual_priority,
+        parent_objective=parent.parent_objective,
+        residual=completion.residual,
+        currentness_basis=currentness_basis,
+        dependencies=(parent.work_id,),
+        required_capabilities=completion.residual_required_capabilities,
+        free_first_route=parent.free_first_route,
+        expected_output="Successor residual closure receipt",
+        acceptance=("Residual acceptance evidence recorded",),
+        reopen_conditions=parent.reopen_conditions,
+        cost_ceiling_microusd=parent.cost_ceiling_microusd,
+        required_effect_ceiling=parent.required_effect_ceiling,
+        hydration_refs=completion.output_refs,
+        evidence_refs=completion.output_refs,
+        source_order=_integer(source_order, "source_order"),
     )
 
 
 _GROUP = re.compile(r"^GROUP-WO\s*\|\s*([^|]+)\s*\|\s*(.*)$")
 _FIELDS = {
-    "PARENT OBJECTIVE:": "parent_objective", "RESIDUAL:": "residual",
-    "DEPENDENCIES:": "dependencies", "EXPECTED OUTPUT:": "expected_output",
-    "COST CEILING:": "cost_ceiling", "REOPEN:": "reopen",
+    "PARENT OBJECTIVE:": "parent_objective",
+    "RESIDUAL:": "residual",
+    "DEPENDENCIES:": "dependencies",
+    "FREE-FIRST ROUTE:": "free_first_route",
+    "EXPECTED OUTPUT:": "expected_output",
+    "ACCEPTANCE:": "acceptance",
+    "COST CEILING:": "cost_ceiling",
+    "REOPEN:": "reopen",
 }
+_DEP_ID = re.compile(r"\b(?:CS-[A-Z0-9-]+-\d+|COST-\d+|S\d{2}-[A-Z0-9-]+|H-[A-Z])\b")
 
 
-def parse_group_work_orders(text: str, *, currentness_ref: str) -> tuple[WorkItem, ...]:
-    """Conservatively parse formal GROUP-WO blocks; prose never proves completion."""
+def _parse_cost(text: str) -> int | None:
+    match = re.search(r"\$\s*([0-9]+(?:\.[0-9]+)?)", text)
+    return None if match is None else int(round(float(match.group(1)) * 1_000_000))
+
+
+def parse_group_work_orders(text: str, *, currentness_basis: str) -> tuple[WorkItem, ...]:
+    """Parse formal GROUP-WO blocks; malformed formal blocks are typed errors, never silent drops."""
     if type(text) is not str:
         raise ValueError("text must be a string")
-    lines, records, index, order = text.splitlines(), [], 0, 0
+    lines = text.splitlines()
+    records: list[WorkItem] = []
+    index = 0
+    source_order = 0
     while index < len(lines):
-        match = _GROUP.match(lines[index].strip())
+        stripped = lines[index].strip()
+        if stripped.startswith("GROUP-WO") and not _GROUP.match(stripped):
+            raise WorkGraphParseError(f"MALFORMED_GROUP_WO_HEADER:{index + 1}")
+        match = _GROUP.match(stripped)
         if not match:
             index += 1
             continue
-        header = {}
+        header: dict[str, str] = {}
         for part in match.group(2).split("|"):
             if ":" in part:
                 key, value = part.split(":", 1)
                 header[key.strip().upper()] = value.strip()
         raw_state = header.get("STATE", "OPEN")
-        raw_state = "BLOCKED" if raw_state.startswith("BLOCKED") else raw_state
-        if raw_state not in {value.value for value in WorkState}:
-            index += 1
-            continue
-        fields, scan = {}, index + 1
+        if raw_state.startswith("BLOCKED"):
+            raw_state = "BLOCKED"
+        if raw_state not in {state.value for state in WorkState}:
+            raise WorkGraphParseError(f"INVALID_GROUP_WO_STATE:{match.group(1).strip()}")
+        priority = header.get("PRIORITY", "P4")
+        if priority not in {value.value for value in Priority}:
+            raise WorkGraphParseError(f"INVALID_GROUP_WO_PRIORITY:{match.group(1).strip()}")
+
+        fields: dict[str, str] = {}
+        scan = index + 1
         while scan < len(lines):
             line = lines[scan].strip()
-            if _GROUP.match(line) or line.startswith(("JOIN |", "CLAIM |", "COMPLETE |", "COMPLETE /", "CHECKPOINT |", "HANDOFF |", "TRIADIC ")):
+            if _GROUP.match(line) or line.startswith(
+                ("JOIN |", "CLAIM |", "COMPLETE |", "COMPLETE /", "CHECKPOINT |", "HANDOFF |", "TRIADIC ")
+            ):
                 break
             for prefix, key in _FIELDS.items():
                 if line.startswith(prefix):
                     fields[key] = line[len(prefix):].strip()
                     break
             scan += 1
-        if "parent_objective" in fields and "residual" in fields:
-            dep_text = fields.get("dependencies", "")
-            deps = () if dep_text.upper() in {"", "NONE"} else tuple(
-                value.strip() for value in re.split(r"[,;]", dep_text) if value.strip()
+        missing = [name for name in ("parent_objective", "residual") if not fields.get(name)]
+        if missing:
+            raise WorkGraphParseError(
+                f"GROUP_WO_REQUIRED_FIELD_MISSING:{match.group(1).strip()}:{','.join(missing)}"
             )
-            cost = 0
-            cost_match = re.search(r"\$\s*([0-9]+(?:\.[0-9]+)?)", fields.get("cost_ceiling", ""))
-            if cost_match:
-                cost = int(round(float(cost_match.group(1)) * 1_000_000))
-            records.append(WorkItem(
-                match.group(1).strip(), raw_state, header.get("PRIORITY", "P4"),
-                fields["parent_objective"], fields["residual"], currentness_ref,
-                deps, (), fields.get("expected_output"), cost, fields.get("reopen"), (), order,
-            ))
-            order += 1
+        dependency_ids = tuple(dict.fromkeys(_DEP_ID.findall(fields.get("dependencies", ""))))
+        route = tuple(
+            value.strip()
+            for value in re.split(r"\s*->\s*|\s*;\s*", fields.get("free_first_route", ""))
+            if value.strip()
+        ) or ("R0_REUSE", "R1_DETERMINISTIC_LOCAL")
+        records.append(
+            WorkItem(
+                work_id=match.group(1).strip(),
+                state=raw_state,
+                priority=priority,
+                parent_objective=fields["parent_objective"],
+                residual=fields["residual"],
+                currentness_basis=currentness_basis,
+                dependencies=dependency_ids,
+                free_first_route=route,
+                expected_output=fields.get("expected_output"),
+                acceptance=(fields["acceptance"],) if fields.get("acceptance") else (),
+                reopen_conditions=(fields["reopen"],) if fields.get("reopen") else (),
+                cost_ceiling_microusd=_parse_cost(fields.get("cost_ceiling", "")),
+                source_order=source_order,
+            )
+        )
+        source_order += 1
         index = max(scan, index + 1)
     return tuple(records)
 
