@@ -1,17 +1,22 @@
-name: CS Arena Sync AS-02 C0 Repair
+name: CS Arena Sync AS-02 + AS-04
 
 on:
   push:
     branches:
       - cs-arena-sync-001/as02-c0-fence-quiescence-repair-20260830
+      - cs-arena-sync-001/as04-local-watch-outbox-20260830
     paths:
       - "aura_arena_artifact_event_core.py"
+      - "aura_local_artifact_outbox.py"
       - "tests/test_aura_arena_artifact_event_core.py"
+      - "tests/test_aura_local_artifact_outbox.py"
       - ".github/workflows/cs-arena-sync-as02-c0.yml"
   pull_request:
     paths:
       - "aura_arena_artifact_event_core.py"
+      - "aura_local_artifact_outbox.py"
       - "tests/test_aura_arena_artifact_event_core.py"
+      - "tests/test_aura_local_artifact_outbox.py"
       - ".github/workflows/cs-arena-sync-as02-c0.yml"
   workflow_dispatch:
 
@@ -27,7 +32,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Compile and run AS-02 core regressions
+      - name: Compile staged modules
         run: |
-          python -m py_compile aura_arena_artifact_event_core.py tests/test_aura_arena_artifact_event_core.py
-          python -m unittest -v tests/test_aura_arena_artifact_event_core.py
+          python -m py_compile aura_arena_artifact_event_core.py aura_local_artifact_outbox.py tests/test_aura_arena_artifact_event_core.py tests/test_aura_local_artifact_outbox.py
+      - name: Run inherited AS-02 and AS-04 regressions
+        run: |
+          python -m unittest -v tests/test_aura_arena_artifact_event_core.py tests/test_aura_local_artifact_outbox.py
