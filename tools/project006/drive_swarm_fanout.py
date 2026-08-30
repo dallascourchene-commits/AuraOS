@@ -59,6 +59,32 @@ def _target_size(value: Any) -> int:
     return value
 
 
+def _payload_digest(
+    *,
+    parent_command_id: str,
+    parent_idempotency_key: str,
+    target_size: int,
+    roles: Sequence[Mapping[str, str]],
+    base_command: Mapping[str, Any],
+) -> str:
+    """Bind replay identity to the exact semantic swarm payload.
+
+    The host still owns durable idempotency. This digest lets it detect the dangerous case
+    where the same parent idempotency key is reused with different content instead of
+    silently aliasing changed work onto old child keys.
+    """
+    return _digest(
+        {
+            "schema": SWARM_SCHEMA,
+            "parent_command_id": parent_command_id,
+            "parent_idempotency_key": parent_idempotency_key,
+            "target_size": target_size,
+            "roles": list(roles),
+            "base_command": dict(base_command),
+        }
+    )
+
+
 def validate_parent_swarm(raw: Mapping[str, Any]) -> dict[str, Any]:
     if not isinstance(raw, Mapping):
         raise SwarmFanoutError("SWARM_NOT_OBJECT")
@@ -105,22 +131,35 @@ def validate_parent_swarm(raw: Mapping[str, Any]) -> dict[str, Any]:
         raise SwarmFanoutError("INVALID_BASE_COMMAND")
     if base_command.get("schema") != "AuraCommandEnvelopeV1-candidate":
         raise SwarmFanoutError("BASE_COMMAND_SCHEMA_MISMATCH")
+    if "_host_child_context" in base_command:
+        raise SwarmFanoutError("BASE_COMMAND_ALREADY_CHILD")
+
+    normalized_base = dict(base_command)
+    parent_payload_digest = _payload_digest(
+        parent_command_id=parent_command_id,
+        parent_idempotency_key=parent_idempotency_key,
+        target_size=target_size,
+        roles=normalized_roles,
+        base_command=normalized_base,
+    )
 
     return {
         "schema": SWARM_SCHEMA,
         "parent_command_id": parent_command_id,
         "parent_idempotency_key": parent_idempotency_key,
+        "parent_payload_digest": parent_payload_digest,
         "target_size": target_size,
         "roles": normalized_roles,
-        "base_command": dict(base_command),
+        "base_command": normalized_base,
     }
 
 
 def compile_role_distinct_children(raw: Mapping[str, Any]) -> list[dict[str, Any]]:
     """Compile deterministic role-distinct child commands.
 
-    Durable replay/dedup belongs to the host scheduler. These deterministic child IDs make
-    that durable idempotency possible across restarts.
+    Durable replay/dedup belongs to the host scheduler. Child identity is bound to both the
+    parent idempotency key and the canonical parent payload digest, so changed semantics
+    cannot silently reuse an old child idempotency key.
     """
     parent = validate_parent_swarm(raw)
     base = parent["base_command"]
@@ -133,7 +172,10 @@ def compile_role_distinct_children(raw: Mapping[str, Any]) -> list[dict[str, Any
     for ordinal, role in enumerate(parent["roles"]):
         role_key = f"{ordinal}:{role['role_id']}:{role['worker_id']}"
         child_digest = hashlib.sha256(
-            f"{parent['parent_idempotency_key']}|{role_key}".encode("utf-8")
+            (
+                f"{parent['parent_idempotency_key']}|"
+                f"{parent['parent_payload_digest']}|{role_key}"
+            ).encode("utf-8")
         ).hexdigest()[:24]
         child_command_id = f"{parent['parent_command_id']}::{role['role_id']}::{child_digest}"
         child_idempotency_key = (
@@ -159,6 +201,7 @@ def compile_role_distinct_children(raw: Mapping[str, Any]) -> list[dict[str, Any
             "schema": CHILD_CONTEXT_SCHEMA,
             "parent_command_id": parent["parent_command_id"],
             "parent_idempotency_key": parent["parent_idempotency_key"],
+            "parent_payload_digest": parent["parent_payload_digest"],
             "target_size": parent["target_size"],
             "ordinal": ordinal,
             "role_id": role["role_id"],
@@ -183,6 +226,7 @@ def fanout_manifest(raw: Mapping[str, Any]) -> dict[str, Any]:
         "schema": "AuraPhysicalSwarmCompileReceiptV1",
         "parent_command_id": parent["parent_command_id"],
         "parent_idempotency_key": parent["parent_idempotency_key"],
+        "parent_payload_digest": parent["parent_payload_digest"],
         "target_size": parent["target_size"],
         "child_count": len(children),
         "child_refs": [
@@ -196,15 +240,18 @@ def fanout_manifest(raw: Mapping[str, Any]) -> dict[str, Any]:
             for child in children
         ],
         "manifest_digest": _digest(
-            [
-                (
-                    child["command_id"],
-                    child["idempotency_key"],
-                    child["_host_child_context"]["role_id"],
-                    child["_host_child_context"]["worker_id"],
-                )
-                for child in children
-            ]
+            {
+                "parent_payload_digest": parent["parent_payload_digest"],
+                "children": [
+                    (
+                        child["command_id"],
+                        child["idempotency_key"],
+                        child["_host_child_context"]["role_id"],
+                        child["_host_child_context"]["worker_id"],
+                    )
+                    for child in children
+                ],
+            }
         ),
         "effect_started": False,
     }
