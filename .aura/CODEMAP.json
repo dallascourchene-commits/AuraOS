@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788059016,
+  "generated_at_unix": 1788059096,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1659,
+    "repo_file_count": 1661,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -928,6 +928,7 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_arena_triads.py",
       "core/aura_cost_first_orchestration.py",
       "core/aura_dual_persistence.py",
       "core/aura_resident_idle_policy.py",
@@ -1376,6 +1377,7 @@
       "tests/test_aura_arena_persistence_adapters.py",
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
+      "tests/test_aura_arena_triads.py",
       "tests/test_aura_arena_wfst_phase_a.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
@@ -1687,6 +1689,7 @@
       "aura_spatial_importers/spz.py",
       "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
       "benchmarks/refactor_code_quality/generate_fixture.py",
+      "core/aura_arena_triads.py",
       "core/aura_cost_first_orchestration.py",
       "core/aura_dual_persistence.py",
       "core/aura_resident_idle_policy.py",
@@ -1765,9 +1768,8 @@
       "tests/test_aura_arena_persistence_adapters.py",
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
-      "tests/test_aura_arena_wfst_phase_a.py",
-      "tests/test_aura_benchmark_four.py",
-      "tests/test_aura_benchmark_four_hardening.py"
+      "tests/test_aura_arena_triads.py",
+      "tests/test_aura_arena_wfst_phase_a.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1775,15 +1777,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1659,
-      "bytes": 26425406,
-      "tokens_est": 6596740,
+      "files": 1661,
+      "bytes": 26451091,
+      "tokens_est": 6603162,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1008,
+        "python_module": 1010,
         "schema_or_lexicon": 274,
         "support_file": 49
       }
@@ -3890,6 +3892,14 @@
         "line": 43,
         "end_line": 44,
         "semantic_id": "aura_refactor_output_vault.py#function:_canonical:649bf0ccd3c56f0c",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 144,
+        "end_line": 151,
+        "semantic_id": "core/aura_arena_triads.py#function:_canonical:d50df8239c8391c9",
         "signature_hash": "8d5bf5695239b859"
       },
       {
@@ -8103,6 +8113,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 154,
+        "end_line": 155,
+        "semantic_id": "core/aura_arena_triads.py#function:_sha:2b894341713eed76",
+        "signature_hash": "ef2d11bf40f6dca1"
       }
     ],
     "_repo": [
@@ -96761,6 +96779,236 @@
         "signature_hash": "d4d8a57e306c4b5e"
       }
     ],
+    "ArenaTriadError": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "class",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "core/aura_arena_triads.py#class:ArenaTriadError:e35655451532e41e",
+        "signature_hash": "26778630b4f99c65"
+      }
+    ],
+    "ArenaTriadStale": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 45,
+        "semantic_id": "core/aura_arena_triads.py#class:ArenaTriadStale:3b7735f95c8741d0",
+        "signature_hash": "fabe48b94300b89d"
+      }
+    ],
+    "ArenaTriadBudgetExceeded": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "core/aura_arena_triads.py#class:ArenaTriadBudgetExceeded:cecb0821ef30c508",
+        "signature_hash": "bbc02baf5410a80a"
+      }
+    ],
+    "WorkCell": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "class",
+        "line": 53,
+        "end_line": 58,
+        "semantic_id": "core/aura_arena_triads.py#class:WorkCell:a14dbf89a78b7bb2",
+        "signature_hash": "234272598936c719"
+      }
+    ],
+    "ArenaTriadCommand": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "class",
+        "line": 62,
+        "end_line": 76,
+        "semantic_id": "core/aura_arena_triads.py#class:ArenaTriadCommand:53fb18c7b43b1f7a",
+        "signature_hash": "84937d394ed9742c"
+      }
+    ],
+    "LeafCall": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 94,
+        "semantic_id": "core/aura_arena_triads.py#class:LeafCall:6f29d0ee5baeb918",
+        "signature_hash": "fa309daed1a7b544"
+      }
+    ],
+    "LeafResult": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "class",
+        "line": 98,
+        "end_line": 108,
+        "semantic_id": "core/aura_arena_triads.py#class:LeafResult:be868d29b8b2e51f",
+        "signature_hash": "9c1533b7ce4f94b5"
+      }
+    ],
+    "LeafExecutor": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "class",
+        "line": 111,
+        "end_line": 112,
+        "semantic_id": "core/aura_arena_triads.py#class:LeafExecutor:ed9a4ec80b50a0ed",
+        "signature_hash": "e2f2d709872eac9c"
+      }
+    ],
+    "LeafExecutor.__call__": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 112,
+        "semantic_id": "core/aura_arena_triads.py#method:LeafExecutor.__call__:edf5e0418d52e85b",
+        "signature_hash": "8cda9b2aa341b783"
+      }
+    ],
+    "LeafReceipt": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "class",
+        "line": 116,
+        "end_line": 130,
+        "semantic_id": "core/aura_arena_triads.py#class:LeafReceipt:4c19679948f91043",
+        "signature_hash": "d7c2adc8aba3a8ff"
+      }
+    ],
+    "_safe_component": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 158,
+        "end_line": 159,
+        "semantic_id": "core/aura_arena_triads.py#function:_safe_component:bc938cc75eb7fae5",
+        "signature_hash": "163f7a731595ae24"
+      }
+    ],
+    "_validate_payload": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 162,
+        "end_line": 168,
+        "semantic_id": "core/aura_arena_triads.py#function:_validate_payload:f70b33a14e5f3136",
+        "signature_hash": "afe532fd780db99c"
+      }
+    ],
+    "_common_capsule": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 171,
+        "end_line": 205,
+        "semantic_id": "core/aura_arena_triads.py#function:_common_capsule:e8992f7e7d0b0101",
+        "signature_hash": "27622115fcd93b19"
+      }
+    ],
+    "_leaf_call": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 247,
+        "end_line": 274,
+        "semantic_id": "core/aura_arena_triads.py#function:_leaf_call:419de66c08d3a1ce",
+        "signature_hash": "75f34ea14b6bac48"
+      }
+    ],
+    "_leaf_file": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 277,
+        "end_line": 280,
+        "semantic_id": "core/aura_arena_triads.py#function:_leaf_file:e359c963e1238b7f",
+        "signature_hash": "fe10cfb9e6c5d976"
+      }
+    ],
+    "_persist": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 283,
+        "end_line": 330,
+        "semantic_id": "core/aura_arena_triads.py#function:_persist:f4be9915e449893c",
+        "signature_hash": "2fa2111ea8f43690"
+      }
+    ],
+    "_run_leaf": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 333,
+        "end_line": 357,
+        "semantic_id": "core/aura_arena_triads.py#function:_run_leaf:4b9f5c5656d61f3f",
+        "signature_hash": "ee11422dfd3d288f"
+      }
+    ],
+    "_independent_reciprocal": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 360,
+        "end_line": 419,
+        "semantic_id": "core/aura_arena_triads.py#function:_independent_reciprocal:4cd4cc55c0713ca5",
+        "signature_hash": "cc074c1ce802eaac"
+      }
+    ],
+    "_staggered_efficient": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 422,
+        "end_line": 464,
+        "semantic_id": "core/aura_arena_triads.py#function:_staggered_efficient:3a3d50b76eded68c",
+        "signature_hash": "6048f02295499b22"
+      }
+    ],
+    "_calls_per_cell": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 467,
+        "end_line": 468,
+        "semantic_id": "core/aura_arena_triads.py#function:_calls_per_cell:2d4911cd35682011",
+        "signature_hash": "11f33e5ec91f7f7d"
+      }
+    ],
+    "parse_command": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 471,
+        "end_line": 498,
+        "semantic_id": "core/aura_arena_triads.py#function:parse_command:b546d84a8e8f0302",
+        "signature_hash": "90253c13a6c44561"
+      }
+    ],
+    "_usage_totals": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 501,
+        "end_line": 509,
+        "semantic_id": "core/aura_arena_triads.py#function:_usage_totals:710cde44b3c60f5a",
+        "signature_hash": "843a1a22612e06e5"
+      }
+    ],
+    "execute_arena_triads": [
+      {
+        "file": "core/aura_arena_triads.py",
+        "kind": "function",
+        "line": 512,
+        "end_line": 604,
+        "semantic_id": "core/aura_arena_triads.py#function:execute_arena_triads:83c3911aa339e7ef",
+        "signature_hash": "67af413ee8c63402"
+      }
+    ],
     "CognitionRequest": [
       {
         "file": "core/aura_cost_first_orchestration.py",
@@ -117903,6 +118151,146 @@
         "end_line": 169,
         "semantic_id": "tests/test_aura_arena_st3gg_shadow_hardening.py#function:test_comparison_carries_the_complete_live_v1_decision:ed9d3a34505d73b0",
         "signature_hash": "ad0f10a7ca368848"
+      }
+    ],
+    "FakeExecutor": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 38,
+        "semantic_id": "tests/test_aura_arena_triads.py#class:FakeExecutor:8431af364bce8698",
+        "signature_hash": "b57ecce58fe3d521"
+      }
+    ],
+    "FakeExecutor.__init__": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tests/test_aura_arena_triads.py#method:FakeExecutor.__init__:adc02c33b61b1657",
+        "signature_hash": "3d77650513b79756"
+      }
+    ],
+    "FakeExecutor.__call__": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 38,
+        "semantic_id": "tests/test_aura_arena_triads.py#method:FakeExecutor.__call__:e423f8feafc91898",
+        "signature_hash": "f8ff74b96a4c6c59"
+      }
+    ],
+    "command": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 59,
+        "semantic_id": "tests/test_aura_arena_triads.py#function:command:0f65a7ebd9b64cd8",
+        "signature_hash": "ed271f17bef26e66"
+      }
+    ],
+    "test_independent_mode_is_seven_calls_and_first_three_are_independent": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 73,
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_independent_mode_is_seven_calls_and_first_three_are_independent:6b0b77c30c9b3d7c",
+        "signature_hash": "81d73de654fbf8a5"
+      }
+    ],
+    "test_staggered_mode_is_four_calls_with_ordered_dependencies": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 86,
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_staggered_mode_is_four_calls_with_ordered_dependencies:c5eab121ddab09fb",
+        "signature_hash": "54c21a7df8a3f295"
+      }
+    ],
+    "test_hyperscale_parallelizes_independent_cells": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "function",
+        "line": 89,
+        "end_line": 96,
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_hyperscale_parallelizes_independent_cells:384c75aa8677a5dc",
+        "signature_hash": "1e83177057c0bda8"
+      }
+    ],
+    "test_stale_head_blocks_before_leaf_effect": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "function",
+        "line": 99,
+        "end_line": 110,
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_stale_head_blocks_before_leaf_effect:586ba1957ff01c5c",
+        "signature_hash": "d417015301e246ce"
+      }
+    ],
+    "test_budget_blocks_before_leaf_effect": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "function",
+        "line": 113,
+        "end_line": 126,
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_budget_blocks_before_leaf_effect:ae2e71758e589f3a",
+        "signature_hash": "bfcd26d7b21b2dee"
+      }
+    ],
+    "test_replay_uses_terminal_result_without_new_effect": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "function",
+        "line": 129,
+        "end_line": 143,
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_replay_uses_terminal_result_without_new_effect:54c5d0ba2c197108",
+        "signature_hash": "0a3ab5e74bf88412"
+      }
+    ],
+    "test_child_idempotency_keys_are_unique": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "function",
+        "line": 146,
+        "end_line": 153,
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_child_idempotency_keys_are_unique:f912f2b1ec7803fc",
+        "signature_hash": "fc5f5f03d510c856"
+      }
+    ],
+    "test_leaf_results_are_persisted_before_dependents": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 172,
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_leaf_results_are_persisted_before_dependents:bdb783381b564926",
+        "signature_hash": "80e821215051bcca"
+      }
+    ],
+    "test_leaf_results_are_persisted_before_dependents.CheckingExecutor": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "class",
+        "line": 159,
+        "end_line": 164,
+        "semantic_id": "tests/test_aura_arena_triads.py#class:test_leaf_results_are_persisted_before_dependents.CheckingExecutor:2a19f1d70ad0fcf8",
+        "signature_hash": "7c4982bb81ad2f7e"
+      }
+    ],
+    "test_leaf_results_are_persisted_before_dependents.CheckingExecutor.__call__": [
+      {
+        "file": "tests/test_aura_arena_triads.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 164,
+        "semantic_id": "tests/test_aura_arena_triads.py#method:test_leaf_results_are_persisted_before_dependents.CheckingExecutor.__call__:6288402703067290",
+        "signature_hash": "f8ff74b96a4c6c59"
       }
     ],
     "test_compiler_is_deterministic_and_rejects_unknown_guard": [
@@ -226856,6 +227244,53 @@
       ]
     },
     {
+      "path": "core/aura_arena_triads.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 20046,
+      "lines": 605,
+      "tokens_est": 5012,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "09e2f6e809fd023a",
+      "vector": [
+        -0.146203,
+        -0.097892,
+        -0.260623,
+        -0.197056,
+        0.026698,
+        0.069923,
+        0.080094,
+        -0.202142,
+        0.225026,
+        0.280964,
+        0.306391,
+        -0.202142,
+        -0.14366,
+        -0.247909,
+        -0.20977,
+        0.164002,
+        0.052125,
+        0.166544,
+        0.166544,
+        0.039411,
+        0.146203,
+        0.225026,
+        -0.120776,
+        0.120776,
+        -0.072466,
+        -0.217398,
+        -0.136032,
+        0.130947,
+        0.059753,
+        0.280964,
+        0.128404,
+        -0.20977
+      ]
+    },
+    {
       "path": "core/aura_cost_first_orchestration.py",
       "role": "python_module",
       "binary": false,
@@ -251454,6 +251889,53 @@
         0.313929,
         -0.080021,
         0.038164
+      ]
+    },
+    {
+      "path": "tests/test_aura_arena_triads.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5639,
+      "lines": 173,
+      "tokens_est": 1410,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "af98c5c0acd7eec5",
+      "vector": [
+        -0.023136,
+        -0.208227,
+        -0.266677,
+        0.127859,
+        0.152213,
+        0.086457,
+        0.200921,
+        0.07428,
+        0.198486,
+        -0.045055,
+        -0.244758,
+        -0.266677,
+        -0.04749,
+        0.217969,
+        -0.04262,
+        0.144907,
+        0.19605,
+        -0.103505,
+        -0.13273,
+        -0.305643,
+        -0.118117,
+        0.205792,
+        0.04262,
+        0.247194,
+        0.176567,
+        0.310514,
+        0.256935,
+        -0.028007,
+        0.13273,
+        -0.01583,
+        -0.130294,
+        -0.19605
       ]
     },
     {
@@ -288380,15 +288862,15 @@
     }
   },
   "summary": {
-    "file_count": 1659,
-    "total_bytes": 26425406,
-    "text_tokens_est": 6596740,
+    "file_count": 1661,
+    "total_bytes": 26451091,
+    "text_tokens_est": 6603162,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1008,
+      "python_module": 1010,
       "schema_or_lexicon": 274,
       "support_file": 49
     },
@@ -289327,6 +289809,7 @@
       "bus_init.cpp",
       "cognitive_router.py",
       "cognitive_search.rs",
+      "core/aura_arena_triads.py",
       "core/aura_cost_first_orchestration.py",
       "core/aura_dual_persistence.py",
       "core/aura_resident_idle_policy.py",
@@ -289775,6 +290258,7 @@
       "tests/test_aura_arena_persistence_adapters.py",
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
+      "tests/test_aura_arena_triads.py",
       "tests/test_aura_arena_wfst_phase_a.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
@@ -384408,6 +384892,256 @@
         "file_digest8": "31325b9af6403347"
       },
       {
+        "semantic_id": "core/aura_arena_triads.py#class:ArenaTriadBudgetExceeded:cecb0821ef30c508",
+        "name": "ArenaTriadBudgetExceeded",
+        "kind": "class",
+        "file": "core/aura_arena_triads.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "bbc02baf5410a80a",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#class:ArenaTriadCommand:53fb18c7b43b1f7a",
+        "name": "ArenaTriadCommand",
+        "kind": "class",
+        "file": "core/aura_arena_triads.py",
+        "line": 62,
+        "end_line": 76,
+        "signature_hash": "84937d394ed9742c",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#class:ArenaTriadError:e35655451532e41e",
+        "name": "ArenaTriadError",
+        "kind": "class",
+        "file": "core/aura_arena_triads.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "26778630b4f99c65",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#class:ArenaTriadStale:3b7735f95c8741d0",
+        "name": "ArenaTriadStale",
+        "kind": "class",
+        "file": "core/aura_arena_triads.py",
+        "line": 44,
+        "end_line": 45,
+        "signature_hash": "fabe48b94300b89d",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#class:LeafCall:6f29d0ee5baeb918",
+        "name": "LeafCall",
+        "kind": "class",
+        "file": "core/aura_arena_triads.py",
+        "line": 80,
+        "end_line": 94,
+        "signature_hash": "fa309daed1a7b544",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#class:LeafExecutor:ed9a4ec80b50a0ed",
+        "name": "LeafExecutor",
+        "kind": "class",
+        "file": "core/aura_arena_triads.py",
+        "line": 111,
+        "end_line": 112,
+        "signature_hash": "e2f2d709872eac9c",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#class:LeafReceipt:4c19679948f91043",
+        "name": "LeafReceipt",
+        "kind": "class",
+        "file": "core/aura_arena_triads.py",
+        "line": 116,
+        "end_line": 130,
+        "signature_hash": "d7c2adc8aba3a8ff",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#class:LeafResult:be868d29b8b2e51f",
+        "name": "LeafResult",
+        "kind": "class",
+        "file": "core/aura_arena_triads.py",
+        "line": 98,
+        "end_line": 108,
+        "signature_hash": "9c1533b7ce4f94b5",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#class:WorkCell:a14dbf89a78b7bb2",
+        "name": "WorkCell",
+        "kind": "class",
+        "file": "core/aura_arena_triads.py",
+        "line": 53,
+        "end_line": 58,
+        "signature_hash": "234272598936c719",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_calls_per_cell:2d4911cd35682011",
+        "name": "_calls_per_cell",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 467,
+        "end_line": 468,
+        "signature_hash": "11f33e5ec91f7f7d",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_canonical:d50df8239c8391c9",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 144,
+        "end_line": 151,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_common_capsule:e8992f7e7d0b0101",
+        "name": "_common_capsule",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 171,
+        "end_line": 205,
+        "signature_hash": "27622115fcd93b19",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_independent_reciprocal:4cd4cc55c0713ca5",
+        "name": "_independent_reciprocal",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 360,
+        "end_line": 419,
+        "signature_hash": "cc074c1ce802eaac",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_leaf_call:419de66c08d3a1ce",
+        "name": "_leaf_call",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 247,
+        "end_line": 274,
+        "signature_hash": "75f34ea14b6bac48",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_leaf_file:e359c963e1238b7f",
+        "name": "_leaf_file",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 277,
+        "end_line": 280,
+        "signature_hash": "fe10cfb9e6c5d976",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_persist:f4be9915e449893c",
+        "name": "_persist",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 283,
+        "end_line": 330,
+        "signature_hash": "2fa2111ea8f43690",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_run_leaf:4b9f5c5656d61f3f",
+        "name": "_run_leaf",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 333,
+        "end_line": 357,
+        "signature_hash": "ee11422dfd3d288f",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_safe_component:bc938cc75eb7fae5",
+        "name": "_safe_component",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 158,
+        "end_line": 159,
+        "signature_hash": "163f7a731595ae24",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_sha:2b894341713eed76",
+        "name": "_sha",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 154,
+        "end_line": 155,
+        "signature_hash": "ef2d11bf40f6dca1",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_staggered_efficient:3a3d50b76eded68c",
+        "name": "_staggered_efficient",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 422,
+        "end_line": 464,
+        "signature_hash": "6048f02295499b22",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_usage_totals:710cde44b3c60f5a",
+        "name": "_usage_totals",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 501,
+        "end_line": 509,
+        "signature_hash": "843a1a22612e06e5",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:_validate_payload:f70b33a14e5f3136",
+        "name": "_validate_payload",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 162,
+        "end_line": 168,
+        "signature_hash": "afe532fd780db99c",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:execute_arena_triads:83c3911aa339e7ef",
+        "name": "execute_arena_triads",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 512,
+        "end_line": 604,
+        "signature_hash": "67af413ee8c63402",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#function:parse_command:b546d84a8e8f0302",
+        "name": "parse_command",
+        "kind": "function",
+        "file": "core/aura_arena_triads.py",
+        "line": 471,
+        "end_line": 498,
+        "signature_hash": "90253c13a6c44561",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
+        "semantic_id": "core/aura_arena_triads.py#method:LeafExecutor.__call__:edf5e0418d52e85b",
+        "name": "LeafExecutor.__call__",
+        "kind": "method",
+        "file": "core/aura_arena_triads.py",
+        "line": 112,
+        "end_line": 112,
+        "signature_hash": "8cda9b2aa341b783",
+        "file_digest8": "09e2f6e809fd023a"
+      },
+      {
         "semantic_id": "core/aura_cost_first_orchestration.py#class:CognitionRequest:f88b9300b6e59d32",
         "name": "CognitionRequest",
         "kind": "class",
@@ -406616,6 +407350,146 @@
         "end_line": 69,
         "signature_hash": "536f4ce7f0232a49",
         "file_digest8": "3c605e86416756af"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#class:FakeExecutor:8431af364bce8698",
+        "name": "FakeExecutor",
+        "kind": "class",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 17,
+        "end_line": 38,
+        "signature_hash": "b57ecce58fe3d521",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#class:test_leaf_results_are_persisted_before_dependents.CheckingExecutor:2a19f1d70ad0fcf8",
+        "name": "test_leaf_results_are_persisted_before_dependents.CheckingExecutor",
+        "kind": "class",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 159,
+        "end_line": 164,
+        "signature_hash": "7c4982bb81ad2f7e",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#function:command:0f65a7ebd9b64cd8",
+        "name": "command",
+        "kind": "function",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 41,
+        "end_line": 59,
+        "signature_hash": "ed271f17bef26e66",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_budget_blocks_before_leaf_effect:ae2e71758e589f3a",
+        "name": "test_budget_blocks_before_leaf_effect",
+        "kind": "function",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 113,
+        "end_line": 126,
+        "signature_hash": "bfcd26d7b21b2dee",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_child_idempotency_keys_are_unique:f912f2b1ec7803fc",
+        "name": "test_child_idempotency_keys_are_unique",
+        "kind": "function",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 146,
+        "end_line": 153,
+        "signature_hash": "fc5f5f03d510c856",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_hyperscale_parallelizes_independent_cells:384c75aa8677a5dc",
+        "name": "test_hyperscale_parallelizes_independent_cells",
+        "kind": "function",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 89,
+        "end_line": 96,
+        "signature_hash": "1e83177057c0bda8",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_independent_mode_is_seven_calls_and_first_three_are_independent:6b0b77c30c9b3d7c",
+        "name": "test_independent_mode_is_seven_calls_and_first_three_are_independent",
+        "kind": "function",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 62,
+        "end_line": 73,
+        "signature_hash": "81d73de654fbf8a5",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_leaf_results_are_persisted_before_dependents:bdb783381b564926",
+        "name": "test_leaf_results_are_persisted_before_dependents",
+        "kind": "function",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 156,
+        "end_line": 172,
+        "signature_hash": "80e821215051bcca",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_replay_uses_terminal_result_without_new_effect:54c5d0ba2c197108",
+        "name": "test_replay_uses_terminal_result_without_new_effect",
+        "kind": "function",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 129,
+        "end_line": 143,
+        "signature_hash": "0a3ab5e74bf88412",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_staggered_mode_is_four_calls_with_ordered_dependencies:c5eab121ddab09fb",
+        "name": "test_staggered_mode_is_four_calls_with_ordered_dependencies",
+        "kind": "function",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 76,
+        "end_line": 86,
+        "signature_hash": "54c21a7df8a3f295",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#function:test_stale_head_blocks_before_leaf_effect:586ba1957ff01c5c",
+        "name": "test_stale_head_blocks_before_leaf_effect",
+        "kind": "function",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 99,
+        "end_line": 110,
+        "signature_hash": "d417015301e246ce",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#method:FakeExecutor.__call__:e423f8feafc91898",
+        "name": "FakeExecutor.__call__",
+        "kind": "method",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 21,
+        "end_line": 38,
+        "signature_hash": "f8ff74b96a4c6c59",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#method:FakeExecutor.__init__:adc02c33b61b1657",
+        "name": "FakeExecutor.__init__",
+        "kind": "method",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "3d77650513b79756",
+        "file_digest8": "af98c5c0acd7eec5"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_triads.py#method:test_leaf_results_are_persisted_before_dependents.CheckingExecutor.__call__:6288402703067290",
+        "name": "test_leaf_results_are_persisted_before_dependents.CheckingExecutor.__call__",
+        "kind": "method",
+        "file": "tests/test_aura_arena_triads.py",
+        "line": 160,
+        "end_line": 164,
+        "signature_hash": "f8ff74b96a4c6c59",
+        "file_digest8": "af98c5c0acd7eec5"
       },
       {
         "semantic_id": "tests/test_aura_arena_wfst_phase_a.py#class:test_audit_uses_canonical_record_trace_event.Atom:445d1339069971bf",
@@ -449388,7 +450262,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "3904fe51d6dad5e2ad8c2b727b3a0f74",
-    "payload_hash": "a7c9296593fc5054d78b672cea97b642"
+    "record_fingerprint": "16c6db5851f6c4dbfc53d30b4d1d62ad",
+    "payload_hash": "5594defa919dc2023705da0006a924ca"
   }
 }
