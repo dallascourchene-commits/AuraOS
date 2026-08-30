@@ -4,7 +4,7 @@ on:
   pull_request:
   push:
     branches:
-      - "**"
+      - main
     paths-ignore:
       - ".aura/CODEMAP.json"
       - ".aura/CODEMAP.md"
@@ -13,17 +13,20 @@ on:
       - "Aura_Memory/live_topology_ast.json"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: sync-architecture-codemap-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
-  sync-codemap:
+  validate-codemap:
     if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    outputs:
+      drift_class: ${{ steps.classify.outputs.drift_class }}
+      generation_artifact: ${{ steps.artifact-name.outputs.name }}
     steps:
       - name: Fetch exact head without persisted credentials
         env:
@@ -39,57 +42,65 @@ jobs:
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
-      - uses: actions/setup-python@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
           python-version: "3.12"
           cache: pip
+
       - name: Install declared dependencies
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
+
       - name: Regenerate and validate navigation
         run: |
           cp .aura/CODEMAP.json /tmp/aura-codemap-reference.json
           python scripts/aura_navigation_refresh.py --root .
           python scripts/aura_source_anchor_map.py --root . --check
+
           set +e
           python -m aura_codemap_verify \
             --compare-json /tmp/aura-codemap-reference.json \
             > /tmp/aura-codemap-comparison.json
           comparison_status=$?
           set -e
-          python - <<'PY'
+
+          if git diff --quiet -- \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            .aura/SOURCE_ANCHORS.md \
+            topology_map.json \
+            Aura_Memory/live_topology_ast.json; then
+            printf 'NO_DRIFT\n' > /tmp/aura-codemap-change-class.txt
+            test "$comparison_status" -eq 0
+          else
+            stable_ok="$(
+              python - <<'PY'
           import json
           from pathlib import Path
-          import subprocess
-
           result = json.loads(
               Path('/tmp/aura-codemap-comparison.json').read_text(encoding='utf-8')
           )
-          if result.get('stable_comparison', {}).get('ok') is True:
-              subprocess.run(
-                  [
-                      'git', 'checkout', 'HEAD', '--',
-                      '.aura/CODEMAP.json',
-                      '.aura/CODEMAP.md',
-                      'topology_map.json',
-                      'Aura_Memory/live_topology_ast.json',
-                  ],
-                  check=True,
-              )
-              Path('/tmp/aura-codemap-change-class.txt').write_text(
-                  'VOLATILE_ONLY\n', encoding='utf-8'
-              )
-          else:
-              Path('/tmp/aura-codemap-change-class.txt').write_text(
-                  'MEANINGFUL\n', encoding='utf-8'
-              )
+          print('1' if result.get('stable_comparison', {}).get('ok') is True else '0')
           PY
-          if [ "$(cat /tmp/aura-codemap-change-class.txt)" = "MEANINGFUL" ]; then
-            python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
-          else
-            test "$comparison_status" -eq 0
+            )"
+            if [ "$stable_ok" = "1" ]; then
+              printf 'VOLATILE_ONLY\n' > /tmp/aura-codemap-change-class.txt
+              git checkout HEAD -- \
+                .aura/CODEMAP.json \
+                .aura/CODEMAP.md \
+                .aura/SOURCE_ANCHORS.md \
+                topology_map.json \
+                Aura_Memory/live_topology_ast.json
+              test "$comparison_status" -eq 0
+            else
+              printf 'MEANINGFUL_GENERATED_DRIFT\n' > /tmp/aura-codemap-change-class.txt
+              python -m aura_codemap_verify --compare-json .aura/CODEMAP.json
+            fi
           fi
+
           python scripts/aura_source_anchor_map.py --root . --check
           test -s .aura/CODEMAP.json
           test -s .aura/CODEMAP.md
@@ -97,73 +108,173 @@ jobs:
           test -s topology_map.json
           test -s Aura_Memory/live_topology_ast.json
           git diff --check
-      - name: Commit synchronized navigation artifacts
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TARGET_BRANCH: ${{ github.event.pull_request.head.ref || github.ref_name }}
+
+      - name: Build generation attestation
         run: |
-          status_file=/tmp/codemap-push-status.txt
-          printf 'PUSH_NOT_ATTEMPTED\n' > "$status_file"
-          git config user.name "AuraOS CODEMAP Bot"
-          git config user.email "actions@users.noreply.github.com"
-          git status --short
-          git add \
-            .aura/CODEMAP.json \
-            .aura/CODEMAP.md \
-            .aura/SOURCE_ANCHORS.md \
-            topology_map.json
-          git add -f Aura_Memory/live_topology_ast.json
-          git diff --cached --stat
-          if git diff --cached --quiet; then
-            printf 'NO_CHANGES\n' > "$status_file"
-            exit 0
-          fi
-          git commit -m "docs: synchronize CODEMAP topology and source anchors"
-          printf 'PUSH_ATTEMPTED\n' > "$status_file"
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          if git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            push origin HEAD:"${TARGET_BRANCH}"; then
-            unset AUTH_HEADER
-            printf 'PUSH_SUCCEEDED\n' > "$status_file"
-          else
-            push_status=$?
-            unset AUTH_HEADER
-            printf 'PUSH_FAILED\n' > "$status_file"
-            exit "$push_status"
-          fi
-      - name: Verify diagnostic secret-safety contract
-        if: always()
-        run: |
+          mkdir -p codemap-ci
+          python -m pip freeze --all | LC_ALL=C sort > /tmp/aura-codemap-pip-freeze.txt
           python - <<'PY'
+          import hashlib
+          import json
+          import platform
+          import subprocess
           from pathlib import Path
 
-          status = Path('/tmp/codemap-push-status.txt')
-          if not status.exists():
-              raise SystemExit('missing bounded CODEMAP push status')
-          value = status.read_text(encoding='utf-8').strip()
-          allowed = {
-              'PUSH_NOT_ATTEMPTED',
-              'NO_CHANGES',
-              'PUSH_ATTEMPTED',
-              'PUSH_SUCCEEDED',
-              'PUSH_FAILED',
+          source_paths = (
+              '.github/workflows/sync-analysis-codemap.yml',
+              'scripts/aura_navigation_refresh.py',
+              'scripts/aura_source_anchor_map.py',
+              'aura_codemap_verify.py',
+              'aura_codebase_navigator.py',
+              'requirements.txt',
+          )
+          output_paths = (
+              '.aura/CODEMAP.json',
+              '.aura/CODEMAP.md',
+              '.aura/SOURCE_ANCHORS.md',
+              'topology_map.json',
+              'Aura_Memory/live_topology_ast.json',
+          )
+
+          def sha(path: str) -> str:
+              return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+          source_rows = [{'path': p, 'sha256': sha(p)} for p in source_paths]
+          output_rows = [{'path': p, 'sha256': sha(p)} for p in output_paths]
+          pip_freeze = Path('/tmp/aura-codemap-pip-freeze.txt').read_bytes()
+          generated_set = hashlib.sha256(
+              json.dumps(output_rows, sort_keys=True, separators=(',', ':')).encode('utf-8')
+          ).hexdigest()
+
+          body = {
+              'schema': 'AuraCodemapGenerationAttestationV1',
+              'head_sha': subprocess.check_output(
+                  ['git', 'rev-parse', 'HEAD'], text=True
+              ).strip(),
+              'python_version': platform.python_version(),
+              'source_rows': source_rows,
+              'output_rows': output_rows,
+              'resolved_environment_sha256': hashlib.sha256(pip_freeze).hexdigest(),
+              'generated_set_sha256': generated_set,
+              'drift_class': Path(
+                  '/tmp/aura-codemap-change-class.txt'
+              ).read_text(encoding='utf-8').strip(),
+              'authority': False,
+              'quality_pass': False,
+              'effect_authorized': False,
           }
-          if value not in allowed:
-              raise SystemExit(f'unexpected CODEMAP push status: {value!r}')
+          Path('codemap-ci/aura-codemap-generation-attestation.json').write_text(
+              json.dumps(body, sort_keys=True, indent=2) + '\n',
+              encoding='utf-8',
+          )
           PY
-      - name: Upload synchronized maps and bounded push diagnostics
-        if: always()
-        uses: actions/upload-artifact@v7
+          cp /tmp/aura-codemap-comparison.json codemap-ci/aura-codemap-comparison.json
+          cp /tmp/aura-codemap-change-class.txt codemap-ci/aura-codemap-change-class.txt
+
+      - id: classify
+        name: Publish typed drift class
+        run: |
+          drift_class="$(cat /tmp/aura-codemap-change-class.txt)"
+          case "$drift_class" in
+            NO_DRIFT|VOLATILE_ONLY|MEANINGFUL_GENERATED_DRIFT) ;;
+            *) echo "::error::Unknown CODEMAP drift class: $drift_class"; exit 1 ;;
+          esac
+          printf 'drift_class=%s\n' "$drift_class" >> "$GITHUB_OUTPUT"
+
+      - id: artifact-name
+        name: Publish generation artifact name
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          printf 'name=codemap-generation-%s\n' "$TARGET_SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Upload generated maps and generation attestation
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: synchronized-codemap-${{ github.event.pull_request.head.sha || github.sha }}
+          name: ${{ steps.artifact-name.outputs.name }}
           path: |
             .aura/CODEMAP.json
             .aura/CODEMAP.md
             .aura/SOURCE_ANCHORS.md
             topology_map.json
             Aura_Memory/live_topology_ast.json
-            /tmp/codemap-push-status.txt
-            /tmp/aura-codemap-comparison.json
-            /tmp/aura-codemap-change-class.txt
+            codemap-ci/aura-codemap-generation-attestation.json
+            codemap-ci/aura-codemap-comparison.json
+            codemap-ci/aura-codemap-change-class.txt
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 14
+
+      - name: Require generated-map materialization before PR review
+        if: github.event_name == 'pull_request'
+        run: |
+          drift_class="$(cat /tmp/aura-codemap-change-class.txt)"
+          if [ "$drift_class" = "MEANINGFUL_GENERATED_DRIFT" ]; then
+            echo "::error::MATERIALIZATION_REQUIRED: generated navigation differs materially from the exact PR head. Consume the attested artifact in a separately authorized semantic generation; PR validation never pushes."
+            exit 1
+          fi
+
+  materialize-main:
+    if: >-
+      github.event_name == 'push' &&
+      github.ref == 'refs/heads/main' &&
+      needs.validate-codemap.outputs.drift_class == 'MEANINGFUL_GENERATED_DRIFT'
+    needs: validate-codemap
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - name: Fetch exact main head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Download exact validated generation
+        uses: actions/download-artifact@634f93cb2916e3fdff6788551b99b062d0335ce0
+        with:
+          name: ${{ needs.validate-codemap.outputs.generation_artifact }}
+          path: /tmp/codemap-generation
+
+      - name: Materialize validated generated maps on main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp /tmp/codemap-generation/.aura/CODEMAP.json .aura/CODEMAP.json
+          cp /tmp/codemap-generation/.aura/CODEMAP.md .aura/CODEMAP.md
+          cp /tmp/codemap-generation/.aura/SOURCE_ANCHORS.md .aura/SOURCE_ANCHORS.md
+          cp /tmp/codemap-generation/topology_map.json topology_map.json
+          cp /tmp/codemap-generation/Aura_Memory/live_topology_ast.json Aura_Memory/live_topology_ast.json
+
+          git config user.name "AuraOS CODEMAP Bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add \
+            .aura/CODEMAP.json \
+            .aura/CODEMAP.md \
+            .aura/SOURCE_ANCHORS.md \
+            topology_map.json
+          git add -f Aura_Memory/live_topology_ast.json
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "docs: materialize attested CODEMAP topology and source anchors"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          if git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            push origin HEAD:main; then
+            unset AUTH_HEADER
+          else
+            push_status=$?
+            unset AUTH_HEADER
+            exit "$push_status"
+          fi
