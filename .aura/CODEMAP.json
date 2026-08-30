@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788099548,
+  "generated_at_unix": 1788100164,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1641,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1633,7 +1633,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project030/creator_studio_claim_lease.py",
       "tools/project030/creator_studio_continuation_harness.py",
+      "tools/project030/test_creator_studio_claim_lease.py",
       "tools/project030/test_creator_studio_continuation_harness.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -1757,15 +1759,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1641,
-      "bytes": 26434791,
-      "tokens_est": 6599049,
+      "files": 1643,
+      "bytes": 26449182,
+      "tokens_est": 6602647,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
+        "python_module": 1001,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -157183,6 +157185,266 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "LeaseError": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#class:LeaseError:1d0b0eef8de72388",
+        "signature_hash": "e9c96c3fdc7a63e7"
+      }
+    ],
+    "ClaimBusy": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#class:ClaimBusy:411b536274fff3ff",
+        "signature_hash": "751f9a65f039cad3"
+      }
+    ],
+    "StaleFence": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 29,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#class:StaleFence:f58898b7603c9134",
+        "signature_hash": "3be3ea54efcb3962"
+      }
+    ],
+    "CurrentnessRequired": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#class:CurrentnessRequired:2b65feda6b4bc299",
+        "signature_hash": "e70a16de448cc371"
+      }
+    ],
+    "ClaimLeaseReceipt": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 48,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#class:ClaimLeaseReceipt:4db3be49dac67004",
+        "signature_hash": "534901bdbf1cebce"
+      }
+    ],
+    "_digest_capabilities": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 53,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#function:_digest_capabilities:687e58fdce06f0a7",
+        "signature_hash": "10315948f3ea491d"
+      }
+    ],
+    "ClaimLeaseStore": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "class",
+        "line": 56,
+        "end_line": 263,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#class:ClaimLeaseStore:c4c3ecc276df7c20",
+        "signature_hash": "a8919118f1427085"
+      }
+    ],
+    "ClaimLeaseStore.__init__": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 70,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.__init__:b8c711c4e9a84fcb",
+        "signature_hash": "a7fb208f0f617f92"
+      }
+    ],
+    "ClaimLeaseStore._read_unlocked": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 76,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._read_unlocked:e57490e6458bd860",
+        "signature_hash": "2267e19c91f04aed"
+      }
+    ],
+    "ClaimLeaseStore._write_unlocked": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 81,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._write_unlocked:66b9c432f37418d6",
+        "signature_hash": "6d24d32b374b3d5e"
+      }
+    ],
+    "ClaimLeaseStore._acquire_lock": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 99,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._acquire_lock:af193a608462c530",
+        "signature_hash": "978800449a2263dc"
+      }
+    ],
+    "ClaimLeaseStore._release_lock": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 105,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._release_lock:045819d272ec38bb",
+        "signature_hash": "4fa15a8eac3de546"
+      }
+    ],
+    "ClaimLeaseStore._mutate": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 116,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._mutate:9d72db6244c97a69",
+        "signature_hash": "adf1ebad8e59474d"
+      }
+    ],
+    "ClaimLeaseStore._event": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 120,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._event:83d7743dc01adc2f",
+        "signature_hash": "756d20a0e95bf2a0"
+      }
+    ],
+    "ClaimLeaseStore._as_receipt": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 124,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._as_receipt:52cc07d4cf347ce7",
+        "signature_hash": "e7968db686ada75e"
+      }
+    ],
+    "ClaimLeaseStore._assert_fence": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 136,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._assert_fence:2d5c9a5cfc082c3e",
+        "signature_hash": "c978fdae6dea2a10"
+      }
+    ],
+    "ClaimLeaseStore.claim": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 193,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.claim:89b13f8357a6b82c",
+        "signature_hash": "511db511bef5617b"
+      }
+    ],
+    "ClaimLeaseStore.claim.op": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 191,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.claim.op:b14d3496cfd69383",
+        "signature_hash": "06649f494df3b3d2"
+      }
+    ],
+    "ClaimLeaseStore.heartbeat": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 195,
+        "end_line": 222,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.heartbeat:91c239807ac57922",
+        "signature_hash": "cdc3b0e5ee531075"
+      }
+    ],
+    "ClaimLeaseStore.heartbeat.op": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 210,
+        "end_line": 220,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.heartbeat.op:107825493ee7c9b2",
+        "signature_hash": "06649f494df3b3d2"
+      }
+    ],
+    "ClaimLeaseStore.release": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 224,
+        "end_line": 233,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.release:08e8407201d23963",
+        "signature_hash": "cf21701eaa338c09"
+      }
+    ],
+    "ClaimLeaseStore.release.op": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 227,
+        "end_line": 231,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.release.op:13595891aa766fba",
+        "signature_hash": "06649f494df3b3d2"
+      }
+    ],
+    "ClaimLeaseStore.recover_stale": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 235,
+        "end_line": 256,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.recover_stale:25b293bb85fefc44",
+        "signature_hash": "125ee68977a83e49"
+      }
+    ],
+    "ClaimLeaseStore.recover_stale.op": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 238,
+        "end_line": 254,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.recover_stale.op:7610db979f53bfac",
+        "signature_hash": "06649f494df3b3d2"
+      }
+    ],
+    "ClaimLeaseStore.snapshot": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 258,
+        "end_line": 263,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.snapshot:d25cd2410e62c311",
+        "signature_hash": "6d0c0b0a811ae770"
+      }
+    ],
+    "dependency_wake_candidates": [
+      {
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "kind": "function",
+        "line": 266,
+        "end_line": 279,
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#function:dependency_wake_candidates:94e35947d82a4c46",
+        "signature_hash": "6aca6e4b37947b5e"
+      }
+    ],
     "HarnessRefusal": [
       {
         "file": "tools/project030/creator_studio_continuation_harness.py",
@@ -157381,6 +157643,186 @@
         "end_line": 355,
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#function:continuation_snapshot:bbec937430e6e1ba",
         "signature_hash": "539a8ea0c99ffe91"
+      }
+    ],
+    "ClaimLeaseStoreTests": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 121,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#class:ClaimLeaseStoreTests:2671e4cab6abee64",
+        "signature_hash": "dda53b612a9f6159"
+      }
+    ],
+    "ClaimLeaseStoreTests.setUp": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 20,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.setUp:9a0fc682013fd1c2",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "ClaimLeaseStoreTests.tearDown": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.tearDown:07521e67e75824ff",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "ClaimLeaseStoreTests.claim": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 35,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.claim:74e37d042180253e",
+        "signature_hash": "5374abc3c79cb804"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_concurrent_claim_race_has_one_winner": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 46,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_concurrent_claim_race_has_one_winner:76d816a0e4d69757",
+        "signature_hash": "fb77c95f4c2e3634"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_concurrent_claim_race_has_one_winner.attempt": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 42,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_concurrent_claim_race_has_one_winner.attempt:32580a2b2f7232f4",
+        "signature_hash": "6ed471db9ff28ee2"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_stale_claim_can_be_recovered_with_new_fence": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 52,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_stale_claim_can_be_recovered_with_new_fence:92c8b69ba67937cb",
+        "signature_hash": "a3995665e9ea4ca0"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_stale_worker_cannot_heartbeat_after_reclaim": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 58,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_stale_worker_cannot_heartbeat_after_reclaim:d4d33f4de8f949ef",
+        "signature_hash": "92506aebaf541b88"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_stale_worker_cannot_release_after_reclaim": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 64,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_stale_worker_cannot_release_after_reclaim:0cbcc2e873601c06",
+        "signature_hash": "3ae9e1317166c3d1"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_heartbeat_extends_live_lease": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 69,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_heartbeat_extends_live_lease:7ebc543a43b3164d",
+        "signature_hash": "f5b55494f66b1ec1"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_source_cut_change_fails_closed": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 74,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_source_cut_change_fails_closed:4c8adfe984b7e081",
+        "signature_hash": "f5becf166830a482"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_stale_currentness_cannot_claim_or_heartbeat": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 81,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_stale_currentness_cannot_claim_or_heartbeat:1a61d3126a7c5cda",
+        "signature_hash": "20204fd39d9e4de9"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_release_allows_new_claim_with_new_fence": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 87,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_release_allows_new_claim_with_new_fence:8a1598244e40c27d",
+        "signature_hash": "1da8ba0f6f664825"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_restart_reads_same_live_claim": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 94,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_restart_reads_same_live_claim:207f3a61aa639466",
+        "signature_hash": "3a2184a39b1db5bc"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_recover_stale_removes_expired_claim": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 99,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_recover_stale_removes_expired_claim:a54c777c9d4edf62",
+        "signature_hash": "d27815a453edf1f3"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_capability_digest_and_effect_ceiling_are_bound": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 105,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_capability_digest_and_effect_ceiling_are_bound:3f436c1aae2ac816",
+        "signature_hash": "3cc77452528fa5e4"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_schema_tamper_fails_closed": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 112,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_schema_tamper_fails_closed:ac7c158ec3dbc5cb",
+        "signature_hash": "b560e2480aba95fa"
+      }
+    ],
+    "ClaimLeaseStoreTests.test_dependency_wake_candidates": [
+      {
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 121,
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_dependency_wake_candidates:8b9644f2b17f997d",
+        "signature_hash": "456edc15fc2b57c6"
       }
     ],
     "state_with": [
@@ -263134,6 +263576,53 @@
       ]
     },
     {
+      "path": "tools/project030/creator_studio_claim_lease.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9712,
+      "lines": 280,
+      "tokens_est": 2428,
+      "symbol_count": 26,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7597ef087b4a8b1e",
+      "vector": [
+        0.108039,
+        0.276928,
+        0.090654,
+        0.06085,
+        -0.065817,
+        -0.29183,
+        -0.29183,
+        0.053399,
+        0.095621,
+        0.11549,
+        -0.085686,
+        0.259543,
+        -0.167647,
+        -0.232222,
+        -0.274445,
+        -0.177582,
+        0.244641,
+        0.021111,
+        0.063333,
+        0.177582,
+        0.249608,
+        0.180065,
+        0.122941,
+        -0.023595,
+        -0.209869,
+        -0.259543,
+        -0.043464,
+        -0.085686,
+        0.137843,
+        -0.155229,
+        0.227255,
+        0.120458
+      ]
+    },
+    {
       "path": "tools/project030/creator_studio_continuation_harness.py",
       "role": "python_module",
       "binary": false,
@@ -263178,6 +263667,53 @@
         -0.071939,
         0.071939,
         0.180477
+      ]
+    },
+    {
+      "path": "tools/project030/test_creator_studio_claim_lease.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4679,
+      "lines": 126,
+      "tokens_est": 1170,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "dbf74e8adc4a5d25",
+      "vector": [
+        -0.173253,
+        0.233831,
+        0.059366,
+        0.107829,
+        0.09329,
+        -0.168407,
+        -0.042405,
+        -0.013327,
+        0.284717,
+        0.110252,
+        0.301678,
+        -0.098136,
+        0.262908,
+        0.282293,
+        0.308948,
+        -0.262908,
+        -0.039981,
+        0.277447,
+        -0.144176,
+        -0.190215,
+        0.182946,
+        -0.06179,
+        -0.228985,
+        0.001212,
+        -0.136906,
+        -0.212023,
+        0.071482,
+        0.124791,
+        0.107829,
+        0.06179,
+        -0.071482,
+        0.153868
       ]
     },
     {
@@ -287132,15 +287668,15 @@
     }
   },
   "summary": {
-    "file_count": 1641,
-    "total_bytes": 26434791,
-    "text_tokens_est": 6599049,
+    "file_count": 1643,
+    "total_bytes": 26449182,
+    "text_tokens_est": 6602647,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
+      "python_module": 1001,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -288784,7 +289320,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/project030/creator_studio_claim_lease.py",
       "tools/project030/creator_studio_continuation_harness.py",
+      "tools/project030/test_creator_studio_claim_lease.py",
       "tools/project030/test_creator_studio_continuation_harness.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -446122,6 +446660,266 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#class:ClaimBusy:411b536274fff3ff",
+        "name": "ClaimBusy",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "751f9a65f039cad3",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#class:ClaimLeaseReceipt:4db3be49dac67004",
+        "name": "ClaimLeaseReceipt",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 37,
+        "end_line": 48,
+        "signature_hash": "534901bdbf1cebce",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#class:ClaimLeaseStore:c4c3ecc276df7c20",
+        "name": "ClaimLeaseStore",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 56,
+        "end_line": 263,
+        "signature_hash": "a8919118f1427085",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#class:CurrentnessRequired:2b65feda6b4bc299",
+        "name": "CurrentnessRequired",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "e70a16de448cc371",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#class:LeaseError:1d0b0eef8de72388",
+        "name": "LeaseError",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "e9c96c3fdc7a63e7",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#class:StaleFence:f58898b7603c9134",
+        "name": "StaleFence",
+        "kind": "class",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 28,
+        "end_line": 29,
+        "signature_hash": "3be3ea54efcb3962",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#function:_digest_capabilities:687e58fdce06f0a7",
+        "name": "_digest_capabilities",
+        "kind": "function",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 51,
+        "end_line": 53,
+        "signature_hash": "10315948f3ea491d",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#function:dependency_wake_candidates:94e35947d82a4c46",
+        "name": "dependency_wake_candidates",
+        "kind": "function",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 266,
+        "end_line": 279,
+        "signature_hash": "6aca6e4b37947b5e",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.__init__:b8c711c4e9a84fcb",
+        "name": "ClaimLeaseStore.__init__",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 64,
+        "end_line": 70,
+        "signature_hash": "a7fb208f0f617f92",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._acquire_lock:af193a608462c530",
+        "name": "ClaimLeaseStore._acquire_lock",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 83,
+        "end_line": 99,
+        "signature_hash": "978800449a2263dc",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._as_receipt:52cc07d4cf347ce7",
+        "name": "ClaimLeaseStore._as_receipt",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 123,
+        "end_line": 124,
+        "signature_hash": "e7968db686ada75e",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._assert_fence:2d5c9a5cfc082c3e",
+        "name": "ClaimLeaseStore._assert_fence",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 127,
+        "end_line": 136,
+        "signature_hash": "c978fdae6dea2a10",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._event:83d7743dc01adc2f",
+        "name": "ClaimLeaseStore._event",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 119,
+        "end_line": 120,
+        "signature_hash": "756d20a0e95bf2a0",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._mutate:9d72db6244c97a69",
+        "name": "ClaimLeaseStore._mutate",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 107,
+        "end_line": 116,
+        "signature_hash": "adf1ebad8e59474d",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._read_unlocked:e57490e6458bd860",
+        "name": "ClaimLeaseStore._read_unlocked",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 72,
+        "end_line": 76,
+        "signature_hash": "2267e19c91f04aed",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._release_lock:045819d272ec38bb",
+        "name": "ClaimLeaseStore._release_lock",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 101,
+        "end_line": 105,
+        "signature_hash": "4fa15a8eac3de546",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore._write_unlocked:66b9c432f37418d6",
+        "name": "ClaimLeaseStore._write_unlocked",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 78,
+        "end_line": 81,
+        "signature_hash": "6d24d32b374b3d5e",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.claim.op:b14d3496cfd69383",
+        "name": "ClaimLeaseStore.claim.op",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 159,
+        "end_line": 191,
+        "signature_hash": "06649f494df3b3d2",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.claim:89b13f8357a6b82c",
+        "name": "ClaimLeaseStore.claim",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 138,
+        "end_line": 193,
+        "signature_hash": "511db511bef5617b",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.heartbeat.op:107825493ee7c9b2",
+        "name": "ClaimLeaseStore.heartbeat.op",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 210,
+        "end_line": 220,
+        "signature_hash": "06649f494df3b3d2",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.heartbeat:91c239807ac57922",
+        "name": "ClaimLeaseStore.heartbeat",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 195,
+        "end_line": 222,
+        "signature_hash": "cdc3b0e5ee531075",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.recover_stale.op:7610db979f53bfac",
+        "name": "ClaimLeaseStore.recover_stale.op",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 238,
+        "end_line": 254,
+        "signature_hash": "06649f494df3b3d2",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.recover_stale:25b293bb85fefc44",
+        "name": "ClaimLeaseStore.recover_stale",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 235,
+        "end_line": 256,
+        "signature_hash": "125ee68977a83e49",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.release.op:13595891aa766fba",
+        "name": "ClaimLeaseStore.release.op",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 227,
+        "end_line": 231,
+        "signature_hash": "06649f494df3b3d2",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.release:08e8407201d23963",
+        "name": "ClaimLeaseStore.release",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 224,
+        "end_line": 233,
+        "signature_hash": "cf21701eaa338c09",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
+        "semantic_id": "tools/project030/creator_studio_claim_lease.py#method:ClaimLeaseStore.snapshot:d25cd2410e62c311",
+        "name": "ClaimLeaseStore.snapshot",
+        "kind": "method",
+        "file": "tools/project030/creator_studio_claim_lease.py",
+        "line": 258,
+        "end_line": 263,
+        "signature_hash": "6d0c0b0a811ae770",
+        "file_digest8": "7597ef087b4a8b1e"
+      },
+      {
         "semantic_id": "tools/project030/creator_studio_continuation_harness.py#class:HarnessAction:514c4d2eaa18c080",
         "name": "HarnessAction",
         "kind": "class",
@@ -446320,6 +447118,186 @@
         "end_line": 62,
         "signature_hash": "175e4972e4d2d582",
         "file_digest8": "03e6ae09275639cb"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#class:ClaimLeaseStoreTests:2671e4cab6abee64",
+        "name": "ClaimLeaseStoreTests",
+        "kind": "class",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 16,
+        "end_line": 121,
+        "signature_hash": "dda53b612a9f6159",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.claim:74e37d042180253e",
+        "name": "ClaimLeaseStoreTests.claim",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 25,
+        "end_line": 35,
+        "signature_hash": "5374abc3c79cb804",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.setUp:9a0fc682013fd1c2",
+        "name": "ClaimLeaseStoreTests.setUp",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 17,
+        "end_line": 20,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.tearDown:07521e67e75824ff",
+        "name": "ClaimLeaseStoreTests.tearDown",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_capability_digest_and_effect_ceiling_are_bound:3f436c1aae2ac816",
+        "name": "ClaimLeaseStoreTests.test_capability_digest_and_effect_ceiling_are_bound",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 101,
+        "end_line": 105,
+        "signature_hash": "3cc77452528fa5e4",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_concurrent_claim_race_has_one_winner.attempt:32580a2b2f7232f4",
+        "name": "ClaimLeaseStoreTests.test_concurrent_claim_race_has_one_winner.attempt",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 38,
+        "end_line": 42,
+        "signature_hash": "6ed471db9ff28ee2",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_concurrent_claim_race_has_one_winner:76d816a0e4d69757",
+        "name": "ClaimLeaseStoreTests.test_concurrent_claim_race_has_one_winner",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 37,
+        "end_line": 46,
+        "signature_hash": "fb77c95f4c2e3634",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_dependency_wake_candidates:8b9644f2b17f997d",
+        "name": "ClaimLeaseStoreTests.test_dependency_wake_candidates",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 114,
+        "end_line": 121,
+        "signature_hash": "456edc15fc2b57c6",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_heartbeat_extends_live_lease:7ebc543a43b3164d",
+        "name": "ClaimLeaseStoreTests.test_heartbeat_extends_live_lease",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 66,
+        "end_line": 69,
+        "signature_hash": "f5b55494f66b1ec1",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_recover_stale_removes_expired_claim:a54c777c9d4edf62",
+        "name": "ClaimLeaseStoreTests.test_recover_stale_removes_expired_claim",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 96,
+        "end_line": 99,
+        "signature_hash": "d27815a453edf1f3",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_release_allows_new_claim_with_new_fence:8a1598244e40c27d",
+        "name": "ClaimLeaseStoreTests.test_release_allows_new_claim_with_new_fence",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 83,
+        "end_line": 87,
+        "signature_hash": "1da8ba0f6f664825",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_restart_reads_same_live_claim:207f3a61aa639466",
+        "name": "ClaimLeaseStoreTests.test_restart_reads_same_live_claim",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 89,
+        "end_line": 94,
+        "signature_hash": "3a2184a39b1db5bc",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_schema_tamper_fails_closed:ac7c158ec3dbc5cb",
+        "name": "ClaimLeaseStoreTests.test_schema_tamper_fails_closed",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 107,
+        "end_line": 112,
+        "signature_hash": "b560e2480aba95fa",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_source_cut_change_fails_closed:4c8adfe984b7e081",
+        "name": "ClaimLeaseStoreTests.test_source_cut_change_fails_closed",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 71,
+        "end_line": 74,
+        "signature_hash": "f5becf166830a482",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_stale_claim_can_be_recovered_with_new_fence:92c8b69ba67937cb",
+        "name": "ClaimLeaseStoreTests.test_stale_claim_can_be_recovered_with_new_fence",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 48,
+        "end_line": 52,
+        "signature_hash": "a3995665e9ea4ca0",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_stale_currentness_cannot_claim_or_heartbeat:1a61d3126a7c5cda",
+        "name": "ClaimLeaseStoreTests.test_stale_currentness_cannot_claim_or_heartbeat",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 76,
+        "end_line": 81,
+        "signature_hash": "20204fd39d9e4de9",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_stale_worker_cannot_heartbeat_after_reclaim:d4d33f4de8f949ef",
+        "name": "ClaimLeaseStoreTests.test_stale_worker_cannot_heartbeat_after_reclaim",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 54,
+        "end_line": 58,
+        "signature_hash": "92506aebaf541b88",
+        "file_digest8": "dbf74e8adc4a5d25"
+      },
+      {
+        "semantic_id": "tools/project030/test_creator_studio_claim_lease.py#method:ClaimLeaseStoreTests.test_stale_worker_cannot_release_after_reclaim:0cbcc2e873601c06",
+        "name": "ClaimLeaseStoreTests.test_stale_worker_cannot_release_after_reclaim",
+        "kind": "method",
+        "file": "tools/project030/test_creator_studio_claim_lease.py",
+        "line": 60,
+        "end_line": 64,
+        "signature_hash": "3ae9e1317166c3d1",
+        "file_digest8": "dbf74e8adc4a5d25"
       },
       {
         "semantic_id": "tools/project030/test_creator_studio_continuation_harness.py#class:ContinuationHarnessTests:e40a4e8190d90aa7",
@@ -447762,7 +448740,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "9989f21130fd1664413955b78f6f6a3f",
-    "payload_hash": "65607f13160f25ac6dde6a57f9272da9"
+    "record_fingerprint": "fa476e77cb394c38ab2cadf27042c02c",
+    "payload_hash": "b6b214e219e96a29237b3b74afaccb77"
   }
 }
