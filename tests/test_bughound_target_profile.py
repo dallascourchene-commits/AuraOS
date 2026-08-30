@@ -21,7 +21,7 @@ class BugHoundTargetProfileTests(unittest.TestCase):
             target_generation="cash-gen-1",
         )
 
-    def auraos(self) -> BugHoundTargetProfileV1:
+    def auraos_historical_marker(self) -> BugHoundTargetProfileV1:
         return BugHoundTargetProfileV1(
             profile_id=AURAOS_HARDENING_PROFILE_ID,
             profile_kind="INTERNAL_AURAOS_HARDENING",
@@ -29,26 +29,25 @@ class BugHoundTargetProfileTests(unittest.TestCase):
             target_generation="auraos-head-1",
         )
 
-    def test_cash_and_auraos_profiles_share_engine_but_not_authority(self) -> None:
+    def test_cash_profile_is_the_only_registered_bughound_profile(self) -> None:
         cash = bind_target_profile(self.cash())
-        auraos = bind_target_profile(self.auraos())
         self.assertEqual(cash.engine_id, ENGINE_ID)
-        self.assertEqual(auraos.engine_id, ENGINE_ID)
         self.assertTrue(cash.cash_mission_eligible)
         self.assertFalse(cash.auraos_hardening)
-        self.assertFalse(auraos.cash_mission_eligible)
-        self.assertTrue(auraos.auraos_hardening)
-        for receipt in (cash, auraos):
-            self.assertFalse(receipt.cross_profile_authority_credit)
-            self.assertFalse(receipt.payout_authority)
-            self.assertFalse(receipt.live_target_testing_authority)
-            self.assertFalse(receipt.submission_authority)
-            self.assertFalse(receipt.external_effect)
+        self.assertFalse(cash.cross_profile_authority_credit)
+        self.assertFalse(cash.payout_authority)
+        self.assertFalse(cash.live_target_testing_authority)
+        self.assertFalse(cash.submission_authority)
+        self.assertFalse(cash.external_effect)
 
-    def test_profile_kind_cannot_be_cross_cast(self) -> None:
+    def test_auraos_hardening_historical_marker_is_not_registered(self) -> None:
+        with self.assertRaisesRegex(ValueError, "BUGHOUND_PROFILE_NOT_REGISTERED"):
+            bind_target_profile(self.auraos_historical_marker())
+
+    def test_cash_profile_kind_cannot_be_cross_cast(self) -> None:
         with self.assertRaisesRegex(ValueError, "BUGHOUND_PROFILE_KIND_MISMATCH"):
             bind_target_profile(
-                replace(self.auraos(), profile_kind="EXTERNAL_CASH_BOUNTY")
+                replace(self.cash(), profile_kind="INTERNAL_AURAOS_HARDENING")
             )
 
     def test_unknown_profile_fails_closed(self) -> None:
