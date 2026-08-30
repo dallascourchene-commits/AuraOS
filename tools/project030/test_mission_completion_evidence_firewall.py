@@ -7,6 +7,8 @@ WORKER = "worker-1"
 CELL = "cell-1"
 MISSION = "mission:test"
 CURRENT = "current:1"
+CANDIDATE = "candidate://artifact-1"
+CANDIDATE_DIGEST = "c" * 64
 
 
 def base_state():
@@ -75,8 +77,13 @@ def policy(**changes):
     values = dict(
         policy_ref="mission-policy://completion-v1",
         policy_generation="policy-gen:1",
-        policy_currentness_ref=CURRENT,
+        policy_currentness_ref="policy-current:1",
+        project_id="project-1",
         mission_ref=MISSION,
+        cell_id=CELL,
+        workgraph_currentness_ref=CURRENT,
+        candidate_ref=CANDIDATE,
+        candidate_digest=CANDIDATE_DIGEST,
         trusted_attestation_issuer_refs=("mission-evidence-owner://1",),
         allows_not_required=False,
         requires_execution_verification=False,
@@ -95,7 +102,7 @@ def attestation(state=None, now_ms=1000, **changes):
         issuer_generation="issuer-gen:1",
         policy_ref="mission-policy://completion-v1",
         policy_generation="policy-gen:1",
-        policy_currentness_ref=CURRENT,
+        policy_currentness_ref="policy-current:1",
         project_id="project-1",
         mission_ref=MISSION,
         cell_id=CELL,
@@ -103,8 +110,8 @@ def attestation(state=None, now_ms=1000, **changes):
         worker_id=WORKER,
         graph_digest=p["graph_digest"],
         currentness_ref=CURRENT,
-        candidate_ref="candidate://artifact-1",
-        candidate_digest="c" * 64,
+        candidate_ref=CANDIDATE,
+        candidate_digest=CANDIDATE_DIGEST,
         acceptance_refs=("accept://1",),
         output_refs=("output://1",),
         evidence_refs=("evidence://mission-owner/1",),
@@ -139,68 +146,81 @@ class MissionCompletionEvidenceFirewallTests(unittest.TestCase):
         self.assertFalse(result["review_pass_proven"])
         self.assertFalse(result["effect_authorized"])
         self.assertFalse(result["promotion_authorized"])
+        self.assertFalse(result["policy_resolution_proven_by_this_module"])
 
     def test_review_adjudication_cannot_complete_mission(self):
         state = claimed_state()
-        a = attestation(state, evidence_domain=m.EvidenceDomain.REVIEW_ADJUDICATION)
         with self.assertRaises(m.CompletionEvidenceError) as cm:
-            admit(state=state, a=a)
+            admit(state=state, a=attestation(state, evidence_domain=m.EvidenceDomain.REVIEW_ADJUDICATION))
         self.assertEqual("COMPLETION_EVIDENCE_DOMAIN_MISMATCH", cm.exception.code)
 
     def test_review_context_cache_cannot_complete_mission(self):
         state = claimed_state()
-        a = attestation(state, evidence_domain=m.EvidenceDomain.REVIEW_CONTEXT)
         with self.assertRaises(m.CompletionEvidenceError) as cm:
-            admit(state=state, a=a)
+            admit(state=state, a=attestation(state, evidence_domain=m.EvidenceDomain.REVIEW_CONTEXT))
         self.assertEqual("COMPLETION_EVIDENCE_DOMAIN_MISMATCH", cm.exception.code)
 
     def test_model_prefix_kv_cannot_complete_mission(self):
         state = claimed_state()
-        a = attestation(state, evidence_domain=m.EvidenceDomain.MODEL_PREFIX_KV)
         with self.assertRaises(m.CompletionEvidenceError) as cm:
-            admit(state=state, a=a)
+            admit(state=state, a=attestation(state, evidence_domain=m.EvidenceDomain.MODEL_PREFIX_KV))
         self.assertEqual("COMPLETION_EVIDENCE_DOMAIN_MISMATCH", cm.exception.code)
 
     def test_untrusted_attestation_issuer_refused(self):
         state = claimed_state()
-        a = attestation(state, issuer_ref="caller://self-minted")
         with self.assertRaises(m.CompletionEvidenceError) as cm:
-            admit(state=state, a=a)
+            admit(state=state, a=attestation(state, issuer_ref="caller://self-minted"))
         self.assertEqual("COMPLETION_ATTESTATION_ISSUER_UNTRUSTED", cm.exception.code)
 
     def test_stale_graph_digest_refused(self):
         state = claimed_state()
-        a = attestation(state, graph_digest="stale-graph")
         with self.assertRaises(m.CompletionEvidenceError) as cm:
-            admit(state=state, a=a)
+            admit(state=state, a=attestation(state, graph_digest="stale-graph"))
         self.assertEqual("COMPLETION_GRAPH_STALE", cm.exception.code)
 
     def test_stale_currentness_refused(self):
         state = claimed_state()
-        a = attestation(state, currentness_ref="current:old")
         with self.assertRaises(m.CompletionEvidenceError) as cm:
-            admit(state=state, a=a)
+            admit(state=state, a=attestation(state, currentness_ref="current:old"))
         self.assertEqual("COMPLETION_CURRENTNESS_STALE", cm.exception.code)
+
+    def test_policy_stale_to_workgraph_currentness_refused(self):
+        state = claimed_state()
+        with self.assertRaises(m.CompletionEvidenceError) as cm:
+            admit(state=state, p=policy(workgraph_currentness_ref="current:old"))
+        self.assertEqual("COMPLETION_POLICY_CURRENTNESS_STALE", cm.exception.code)
+
+    def test_policy_wrong_cell_refused(self):
+        state = claimed_state()
+        with self.assertRaises(m.CompletionEvidenceError) as cm:
+            admit(state=state, p=policy(cell_id="cell-other"))
+        self.assertEqual("COMPLETION_POLICY_CELL_MISMATCH", cm.exception.code)
+
+    def test_candidate_ref_and_digest_are_policy_bound(self):
+        state = claimed_state()
+        with self.assertRaises(m.CompletionEvidenceError) as cm:
+            admit(state=state, a=attestation(state, candidate_ref="candidate://other"))
+        self.assertEqual("COMPLETION_CANDIDATE_REF_MISMATCH", cm.exception.code)
+        with self.assertRaises(m.CompletionEvidenceError) as cm:
+            admit(state=state, a=attestation(state, candidate_digest="d" * 64))
+        self.assertEqual("COMPLETION_CANDIDATE_DIGEST_MISMATCH", cm.exception.code)
 
     def test_wrong_claim_refused(self):
         state = claimed_state()
-        a = attestation(state, claim_id="claim:wrong")
         with self.assertRaises(m.CompletionEvidenceError) as cm:
-            admit(state=state, a=a)
+            admit(state=state, a=attestation(state, claim_id="claim:wrong"))
         self.assertEqual("COMPLETION_CLAIM_MISMATCH", cm.exception.code)
 
     def test_acceptance_ref_mismatch_refused(self):
         state = claimed_state()
-        a = attestation(state, acceptance_refs=("accept://other",))
         with self.assertRaises(m.CompletionEvidenceError) as cm:
-            admit(state=state, a=a)
+            admit(state=state, a=attestation(state, acceptance_refs=("accept://other",)))
         self.assertEqual("COMPLETION_ACCEPTANCE_REFS_MISMATCH", cm.exception.code)
 
     def test_blocked_attestation_refused(self):
         state = claimed_state()
-        a = attestation(state, disposition=m.CompletionDisposition.BLOCKED)
         with self.assertRaises(m.CompletionEvidenceError) as cm:
-            admit(state=state, a=a)
+            admit(state=state, a=attestation(state, disposition=m.CompletionDisposition.BLOCKED))
         self.assertEqual("MISSION_COMPLETION_BLOCKED", cm.exception.code)
 
     def test_not_required_must_be_explicitly_allowed_by_policy(self):
@@ -218,13 +238,12 @@ class MissionCompletionEvidenceFirewallTests(unittest.TestCase):
             admit(state=state, p=policy(requires_execution_verification=True))
         self.assertEqual("REQUIRED_EXECUTION_VERIFICATION_MISSING", cm.exception.code)
 
-    def test_attestation_cannot_self_assert_execution_or_review_pass(self):
+    def test_attestation_cannot_self_assert_execution_review_or_effect(self):
         state = claimed_state()
-        with self.assertRaises(m.CompletionEvidenceError) as cm:
-            attestation(state, execution_verified=True)
-        self.assertEqual("ATTESTATION_AUTHORITY_WIDENING", cm.exception.code)
-        with self.assertRaises(m.CompletionEvidenceError):
-            attestation(state, review_pass_proven=True)
+        for field in ("execution_verified", "review_pass_proven", "effect_authorized"):
+            with self.assertRaises(m.CompletionEvidenceError) as cm:
+                attestation(state, **{field: True})
+            self.assertEqual("ATTESTATION_AUTHORITY_WIDENING", cm.exception.code)
 
     def test_transition_request_stops_before_raw_workgraph_mutation(self):
         state = claimed_state()
@@ -235,11 +254,13 @@ class MissionCompletionEvidenceFirewallTests(unittest.TestCase):
             attestation=a,
             worker_id=WORKER,
             cell_id=CELL,
-            acceptance_refs=("accept://1",),
-            output_refs=("output://1",),
+            acceptance_refs=("accept://1", "accept://1"),
+            output_refs=("output://1", "output://1"),
             now_ms=1000,
         )
         self.assertEqual("COMPLETE", request["action"])
+        self.assertEqual(("accept://1",), request["acceptance_refs"])
+        self.assertEqual(("output://1",), request["output_refs"])
         self.assertTrue(request["raw_workgraph_v1_complete_bypass_unrepaired"])
         self.assertFalse(request["execution_state_mutation_authorized"])
         projection = project_workgraph(state, now_ms=1000)
@@ -247,18 +268,21 @@ class MissionCompletionEvidenceFirewallTests(unittest.TestCase):
         self.assertEqual("CLAIMED", cell["effective_state"])
         self.assertEqual("NOT_STARTED", cell["execution_state"])
 
-    def test_policy_and_attestation_bindings_change_request_identity(self):
+    def test_policy_generation_changes_request_identity(self):
         state = claimed_state()
-        a = attestation(state)
         req1 = m.compile_terminal_completion_request(
-            state, policy=policy(), attestation=a, worker_id=WORKER, cell_id=CELL,
+            state, policy=policy(), attestation=attestation(state), worker_id=WORKER, cell_id=CELL,
             acceptance_refs=("accept://1",), output_refs=("output://1",), now_ms=1000,
         )
-        p2 = policy(policy_generation="policy-gen:2")
-        a2 = attestation(state, policy_generation="policy-gen:2")
         req2 = m.compile_terminal_completion_request(
-            state, policy=p2, attestation=a2, worker_id=WORKER, cell_id=CELL,
-            acceptance_refs=("accept://1",), output_refs=("output://1",), now_ms=1000,
+            state,
+            policy=policy(policy_generation="policy-gen:2"),
+            attestation=attestation(state, policy_generation="policy-gen:2"),
+            worker_id=WORKER,
+            cell_id=CELL,
+            acceptance_refs=("accept://1",),
+            output_refs=("output://1",),
+            now_ms=1000,
         )
         self.assertNotEqual(req1["request_digest"], req2["request_digest"])
 
