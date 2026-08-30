@@ -5,15 +5,19 @@ AWJ-033 repair target:
 - a parent swarm request must never reach the one-call hook directly;
 - only a role-distinct child produced by the fanout coordinator may carry physical
   swarm context into the single-call executor;
+- child context must carry the parent semantic payload digest used to derive its identity;
 - transport success is never promoted directly to objective success;
-- explicit refusal/provider-identity contradictions are quarantined fail-closed.
+- refusal/provider/model identity contradictions are quarantined fail-closed.
 
 This module deliberately does not own durable replay, Drive I/O, provider routing,
 heartbeats, leases, or objective-specific verification. Those remain host/scheduler
-responsibilities.
+responsibilities. The host MUST reject caller-supplied reserved `_host_*` fields before
+fanout compilation; deterministic digests are integrity evidence, not an authentication
+substitute.
 """
 from __future__ import annotations
 
+import string
 from collections.abc import Callable, Mapping
 from typing import Any
 
@@ -28,12 +32,21 @@ _BAD_TERMINAL = {
     "RESULT_INVALID",
     "MODEL_REFUSAL",
     "PROVIDER_IDENTITY_MISMATCH",
+    "MODEL_IDENTITY_MISMATCH",
     "ROLE_FANOUT_VIOLATION",
 }
 
 
 def _nonempty_text(value: Any) -> bool:
     return isinstance(value, str) and bool(value.strip())
+
+
+def _sha256_hex(value: Any) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(ch in string.hexdigits for ch in value)
+    )
 
 
 def validate_single_call_route(raw: Mapping[str, Any]) -> dict[str, Any] | None:
@@ -68,6 +81,8 @@ def validate_single_call_route(raw: Mapping[str, Any]) -> dict[str, Any] | None:
     for key in required_text:
         if not _nonempty_text(ctx.get(key)):
             raise CommandHookError("PHYSICAL_CHILD_CONTEXT_INVALID")
+    if not _sha256_hex(ctx.get("parent_payload_digest")):
+        raise CommandHookError("PHYSICAL_CHILD_PAYLOAD_DIGEST_INVALID")
 
     target_size = ctx.get("target_size")
     ordinal = ctx.get("ordinal")
@@ -82,6 +97,8 @@ def validate_single_call_route(raw: Mapping[str, Any]) -> dict[str, Any] | None:
     ):
         raise CommandHookError("PHYSICAL_CHILD_CONTEXT_INVALID")
 
+    if top_target is not None and top_target != target_size:
+        raise CommandHookError("PHYSICAL_CHILD_TARGET_SIZE_BINDING_MISMATCH")
     if ctx["child_command_id"] != raw.get("command_id"):
         raise CommandHookError("PHYSICAL_CHILD_COMMAND_BINDING_MISMATCH")
     if ctx["child_idempotency_key"] != raw.get("idempotency_key"):
@@ -91,6 +108,7 @@ def validate_single_call_route(raw: Mapping[str, Any]) -> dict[str, Any] | None:
         "schema": CHILD_CONTEXT_SCHEMA,
         "parent_command_id": str(ctx["parent_command_id"]),
         "parent_idempotency_key": str(ctx["parent_idempotency_key"]),
+        "parent_payload_digest": str(ctx["parent_payload_digest"]).lower(),
         "target_size": target_size,
         "ordinal": ordinal,
         "role_id": str(ctx["role_id"]),
@@ -104,6 +122,7 @@ def integrity_gate_result(
     result: Mapping[str, Any],
     *,
     expected_provider: str = "deepseek",
+    expected_model: str | None = None,
 ) -> dict[str, Any]:
     """Convert raw transport RESULT into a fail-closed adequacy state."""
     if not isinstance(result, Mapping):
@@ -116,10 +135,13 @@ def integrity_gate_result(
     check = classify_model_output(
         out,
         expected_provider=expected_provider,
+        expected_model=expected_model,
         physical_swarm_expected=False,
     )
     out["integrity_classification"] = check["classification"]
     out["integrity_reasons"] = list(check["reasons"])
+    out["provider_observed"] = check["provider_observed"]
+    out["model_observed"] = check["model_observed"]
 
     if check["classification"] in _BAD_TERMINAL:
         out["record_type"] = "ERROR"
@@ -144,16 +166,22 @@ def execute_integrity_checked_command(
     *,
     executor: Callable[..., Mapping[str, Any]] = execute_admitted_command,
     expected_provider: str = "deepseek",
+    expected_model: str | None = None,
     **executor_kwargs: Any,
 ) -> dict[str, Any]:
     """Guard route shape, execute one admitted child/single command, gate result."""
     child_context = validate_single_call_route(raw)
     result = dict(executor(raw, **executor_kwargs))
-    gated = integrity_gate_result(result, expected_provider=expected_provider)
+    gated = integrity_gate_result(
+        result,
+        expected_provider=expected_provider,
+        expected_model=expected_model,
+    )
 
     if child_context is not None:
         gated["physical_child_context"] = child_context
         gated["parent_command_id"] = child_context["parent_command_id"]
+        gated["parent_payload_digest"] = child_context["parent_payload_digest"]
         gated["role_id"] = child_context["role_id"]
         gated["worker_id"] = child_context["worker_id"]
         # One child attempt is not a physical-swarm proof. The reducer must gather
