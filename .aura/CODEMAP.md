@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1652
-- **total_bytes**: 26516911
-- **text_tokens_est**: 6619651
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1655
+- **total_bytes**: 26524695
+- **text_tokens_est**: 6621598
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 235, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1012, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1652,
+  "repo_file_count": 1655,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1650,9 +1650,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/project006/creator_media_handoff.py",
+    "tools/project006/creator_media_nono_runner.py",
     "tools/project006/drive_command_executor_hook.py",
     "tools/project006/local_runner_preflight.py",
     "tools/project006/local_runner_preflight_v2.py",
+    "tools/project006/nono_profiles/creator-studio-higgsfield.json",
     "tools/project006/provider_sidecar_reference/README.md",
     "tools/project006/provider_sidecar_reference/provider_handoff.py",
     "tools/project006/provider_sidecar_reference/provider_sidecar.py",
@@ -1662,6 +1664,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
     "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
     "tools/project006/test_creator_media_handoff.py",
+    "tools/project006/test_creator_media_nono_runner.py",
     "tools/project006/test_drive_command_executor_hook.py",
     "tools/project006/test_local_runner_preflight.py",
     "travel_extractors/__init__.py",
@@ -1792,16 +1795,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1652,
-  "bytes": 26516911,
-  "tokens_est": 6619651,
+  "files": 1655,
+  "bytes": 26524695,
+  "tokens_est": 6621598,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 235,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1010,
-    "schema_or_lexicon": 273,
+    "python_module": 1012,
+    "schema_or_lexicon": 274,
     "support_file": 49
   }
 }

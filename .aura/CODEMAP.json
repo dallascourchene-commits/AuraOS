@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788127740,
+  "generated_at_unix": 1788128070,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1652,
+    "repo_file_count": 1655,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1632,9 +1632,11 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/creator_media_handoff.py",
+      "tools/project006/creator_media_nono_runner.py",
       "tools/project006/drive_command_executor_hook.py",
       "tools/project006/local_runner_preflight.py",
       "tools/project006/local_runner_preflight_v2.py",
+      "tools/project006/nono_profiles/creator-studio-higgsfield.json",
       "tools/project006/provider_sidecar_reference/README.md",
       "tools/project006/provider_sidecar_reference/provider_handoff.py",
       "tools/project006/provider_sidecar_reference/provider_sidecar.py",
@@ -1644,6 +1646,7 @@
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
       "tools/project006/test_creator_media_handoff.py",
+      "tools/project006/test_creator_media_nono_runner.py",
       "tools/project006/test_drive_command_executor_hook.py",
       "tools/project006/test_local_runner_preflight.py",
       "travel_extractors/__init__.py",
@@ -1768,16 +1771,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1652,
-      "bytes": 26516911,
-      "tokens_est": 6619651,
+      "files": 1655,
+      "bytes": 26524695,
+      "tokens_est": 6621598,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 235,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1010,
-        "schema_or_lexicon": 273,
+        "python_module": 1012,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -3471,6 +3474,14 @@
         "line": 472,
         "end_line": 484,
         "semantic_id": "tools/project006/creator_media_handoff.py#function:main:60004c8529dc96a2",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/project006/creator_media_nono_runner.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 77,
+        "semantic_id": "tools/project006/creator_media_nono_runner.py#function:main:cc03708c59859daf",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -157490,6 +157501,16 @@
         "signature_hash": "9315d1041aec221d"
       }
     ],
+    "_nono_phantom_credential": [
+      {
+        "file": "tools/project006/creator_media_nono_runner.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 53,
+        "semantic_id": "tools/project006/creator_media_nono_runner.py#function:_nono_phantom_credential:d9f04c4a8d98f665",
+        "signature_hash": "3884a334e63d2a38"
+      }
+    ],
     "CommandHookError": [
       {
         "file": "tools/project006/drive_command_executor_hook.py",
@@ -159420,6 +159441,66 @@
         "end_line": 140,
         "semantic_id": "tools/project006/test_creator_media_handoff.py#method:CreatorMediaHandoffTests.test_request_digest_changes_with_fence_without_exposing_it:97cb7312a379d59e",
         "signature_hash": "b8cca5cbf015546b"
+      }
+    ],
+    "NonoRunnerTests": [
+      {
+        "file": "tools/project006/test_creator_media_nono_runner.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 80,
+        "semantic_id": "tools/project006/test_creator_media_nono_runner.py#class:NonoRunnerTests:9952dd0b4daa9177",
+        "signature_hash": "b3c8f6ea0bab09a8"
+      }
+    ],
+    "NonoRunnerTests.test_accepts_phantom_with_loopback_https_proxy": [
+      {
+        "file": "tools/project006/test_creator_media_nono_runner.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 20,
+        "semantic_id": "tools/project006/test_creator_media_nono_runner.py#method:NonoRunnerTests.test_accepts_phantom_with_loopback_https_proxy:6010938495cffc02",
+        "signature_hash": "5f746f281918b5dd"
+      }
+    ],
+    "NonoRunnerTests.test_rejects_raw_higgsfield_id_secret_shape": [
+      {
+        "file": "tools/project006/test_creator_media_nono_runner.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 31,
+        "semantic_id": "tools/project006/test_creator_media_nono_runner.py#method:NonoRunnerTests.test_rejects_raw_higgsfield_id_secret_shape:ad60de176981179b",
+        "signature_hash": "012189eb86b7190f"
+      }
+    ],
+    "NonoRunnerTests.test_rejects_non_loopback_proxy": [
+      {
+        "file": "tools/project006/test_creator_media_nono_runner.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 42,
+        "semantic_id": "tools/project006/test_creator_media_nono_runner.py#method:NonoRunnerTests.test_rejects_non_loopback_proxy:0e0e2378be6f11b4",
+        "signature_hash": "6bd141533c9b829b"
+      }
+    ],
+    "NonoRunnerTests.test_rejects_missing_proxy": [
+      {
+        "file": "tools/project006/test_creator_media_nono_runner.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 50,
+        "semantic_id": "tools/project006/test_creator_media_nono_runner.py#method:NonoRunnerTests.test_rejects_missing_proxy:ec0e3ad522ca28dc",
+        "signature_hash": "f17eb5a9419ee8b7"
+      }
+    ],
+    "NonoRunnerTests.test_nono_profile_has_fixed_windows_capture_and_no_secret_value": [
+      {
+        "file": "tools/project006/test_creator_media_nono_runner.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 80,
+        "semantic_id": "tools/project006/test_creator_media_nono_runner.py#method:NonoRunnerTests.test_nono_profile_has_fixed_windows_capture_and_no_secret_value:38388e4fd815232e",
+        "signature_hash": "40b7c80628bce936"
       }
     ],
     "_FakeExecutor": [
@@ -265380,6 +265461,53 @@
       ]
     },
     {
+      "path": "tools/project006/creator_media_nono_runner.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2450,
+      "lines": 82,
+      "tokens_est": 613,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "09ab6e952579ea19",
+      "vector": [
+        0.25695,
+        -0.141141,
+        -0.288314,
+        0.05911,
+        -0.259362,
+        -0.22076,
+        -0.119427,
+        -0.095301,
+        -0.131491,
+        0.107364,
+        0.232823,
+        0.264188,
+        0.148379,
+        0.232823,
+        0.167681,
+        -0.218347,
+        0.054285,
+        0.025333,
+        0.088063,
+        -0.211109,
+        -0.119427,
+        -0.165268,
+        0.010857,
+        0.08565,
+        0.2666,
+        0.08565,
+        -0.080825,
+        -0.305203,
+        0.080825,
+        -0.02292,
+        0.003619,
+        0.305203
+      ]
+    },
+    {
       "path": "tools/project006/drive_command_executor_hook.py",
       "role": "python_module",
       "binary": false,
@@ -265518,6 +265646,53 @@
         0.255543,
         -0.233948,
         0.123573
+      ]
+    },
+    {
+      "path": "tools/project006/nono_profiles/creator-studio-higgsfield.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2155,
+      "lines": 84,
+      "tokens_est": 539,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6854c1597e252305",
+      "vector": [
+        -0.266829,
+        0.198653,
+        -0.222162,
+        -0.248022,
+        0.059948,
+        0.132827,
+        -0.071703,
+        -0.186898,
+        -0.266829,
+        -0.024685,
+        0.156336,
+        -0.041141,
+        -0.001175,
+        -0.005877,
+        0.177494,
+        0.297391,
+        -0.276233,
+        0.111669,
+        0.132827,
+        -0.156336,
+        -0.050545,
+        0.149283,
+        -0.130476,
+        -0.248022,
+        0.088159,
+        0.099914,
+        -0.088159,
+        0.212758,
+        -0.240969,
+        0.224513,
+        -0.074054,
+        -0.283286
       ]
     },
     {
@@ -265941,6 +266116,53 @@
         0.162744,
         0.170932,
         0.172979
+      ]
+    },
+    {
+      "path": "tools/project006/test_creator_media_nono_runner.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3179,
+      "lines": 85,
+      "tokens_est": 795,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6df928b988314178",
+      "vector": [
+        -0.149306,
+        -0.240372,
+        -0.020119,
+        -0.212841,
+        0.041297,
+        -0.121774,
+        0.267904,
+        0.041297,
+        -0.134481,
+        0.225548,
+        0.221312,
+        -0.217076,
+        -0.094243,
+        -0.191662,
+        -0.210723,
+        0.219194,
+        0.234019,
+        0.011648,
+        -0.05824,
+        0.204369,
+        -0.250961,
+        -0.098478,
+        0.049769,
+        -0.265786,
+        -0.244608,
+        0.060358,
+        0.231901,
+        0.03918,
+        0.198016,
+        -0.138717,
+        -0.238254,
+        0.034944
       ]
     },
     {
@@ -289942,16 +290164,16 @@
     }
   },
   "summary": {
-    "file_count": 1652,
-    "total_bytes": 26516911,
-    "text_tokens_est": 6619651,
+    "file_count": 1655,
+    "total_bytes": 26524695,
+    "text_tokens_est": 6621598,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 235,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1010,
-      "schema_or_lexicon": 273,
+      "python_module": 1012,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -291593,9 +291815,11 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/project006/creator_media_handoff.py",
+      "tools/project006/creator_media_nono_runner.py",
       "tools/project006/drive_command_executor_hook.py",
       "tools/project006/local_runner_preflight.py",
       "tools/project006/local_runner_preflight_v2.py",
+      "tools/project006/nono_profiles/creator-studio-higgsfield.json",
       "tools/project006/provider_sidecar_reference/README.md",
       "tools/project006/provider_sidecar_reference/provider_handoff.py",
       "tools/project006/provider_sidecar_reference/provider_sidecar.py",
@@ -291605,6 +291829,7 @@
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_g3_followup.py",
       "tools/project006/provider_sidecar_reference/test_provider_sidecar_repair_r1.py",
       "tools/project006/test_creator_media_handoff.py",
+      "tools/project006/test_creator_media_nono_runner.py",
       "tools/project006/test_drive_command_executor_hook.py",
       "tools/project006/test_local_runner_preflight.py",
       "travel_extractors/__init__.py",
@@ -448923,6 +449148,26 @@
         "file_digest8": "c5ae4432ad6771f6"
       },
       {
+        "semantic_id": "tools/project006/creator_media_nono_runner.py#function:_nono_phantom_credential:d9f04c4a8d98f665",
+        "name": "_nono_phantom_credential",
+        "kind": "function",
+        "file": "tools/project006/creator_media_nono_runner.py",
+        "line": 28,
+        "end_line": 53,
+        "signature_hash": "3884a334e63d2a38",
+        "file_digest8": "09ab6e952579ea19"
+      },
+      {
+        "semantic_id": "tools/project006/creator_media_nono_runner.py#function:main:cc03708c59859daf",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/project006/creator_media_nono_runner.py",
+        "line": 56,
+        "end_line": 77,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "09ab6e952579ea19"
+      },
+      {
         "semantic_id": "tools/project006/drive_command_executor_hook.py#class:CommandHookError:03b6fad3ce560c86",
         "name": "CommandHookError",
         "kind": "class",
@@ -451273,6 +451518,66 @@
         "file_digest8": "10da65bbb052e63c"
       },
       {
+        "semantic_id": "tools/project006/test_creator_media_nono_runner.py#class:NonoRunnerTests:9952dd0b4daa9177",
+        "name": "NonoRunnerTests",
+        "kind": "class",
+        "file": "tools/project006/test_creator_media_nono_runner.py",
+        "line": 10,
+        "end_line": 80,
+        "signature_hash": "b3c8f6ea0bab09a8",
+        "file_digest8": "6df928b988314178"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_nono_runner.py#method:NonoRunnerTests.test_accepts_phantom_with_loopback_https_proxy:6010938495cffc02",
+        "name": "NonoRunnerTests.test_accepts_phantom_with_loopback_https_proxy",
+        "kind": "method",
+        "file": "tools/project006/test_creator_media_nono_runner.py",
+        "line": 11,
+        "end_line": 20,
+        "signature_hash": "5f746f281918b5dd",
+        "file_digest8": "6df928b988314178"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_nono_runner.py#method:NonoRunnerTests.test_nono_profile_has_fixed_windows_capture_and_no_secret_value:38388e4fd815232e",
+        "name": "NonoRunnerTests.test_nono_profile_has_fixed_windows_capture_and_no_secret_value",
+        "kind": "method",
+        "file": "tools/project006/test_creator_media_nono_runner.py",
+        "line": 52,
+        "end_line": 80,
+        "signature_hash": "40b7c80628bce936",
+        "file_digest8": "6df928b988314178"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_nono_runner.py#method:NonoRunnerTests.test_rejects_missing_proxy:ec0e3ad522ca28dc",
+        "name": "NonoRunnerTests.test_rejects_missing_proxy",
+        "kind": "method",
+        "file": "tools/project006/test_creator_media_nono_runner.py",
+        "line": 44,
+        "end_line": 50,
+        "signature_hash": "f17eb5a9419ee8b7",
+        "file_digest8": "6df928b988314178"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_nono_runner.py#method:NonoRunnerTests.test_rejects_non_loopback_proxy:0e0e2378be6f11b4",
+        "name": "NonoRunnerTests.test_rejects_non_loopback_proxy",
+        "kind": "method",
+        "file": "tools/project006/test_creator_media_nono_runner.py",
+        "line": 33,
+        "end_line": 42,
+        "signature_hash": "6bd141533c9b829b",
+        "file_digest8": "6df928b988314178"
+      },
+      {
+        "semantic_id": "tools/project006/test_creator_media_nono_runner.py#method:NonoRunnerTests.test_rejects_raw_higgsfield_id_secret_shape:ad60de176981179b",
+        "name": "NonoRunnerTests.test_rejects_raw_higgsfield_id_secret_shape",
+        "kind": "method",
+        "file": "tools/project006/test_creator_media_nono_runner.py",
+        "line": 22,
+        "end_line": 31,
+        "signature_hash": "012189eb86b7190f",
+        "file_digest8": "6df928b988314178"
+      },
+      {
         "semantic_id": "tools/project006/test_drive_command_executor_hook.py#class:DriveCommandExecutorHookTests:2074889ac22e692b",
         "name": "DriveCommandExecutorHookTests",
         "kind": "class",
@@ -452953,7 +453258,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "10392727de13a834e07f7353b7ddbd4d",
-    "payload_hash": "51bf712570d6e30eaacda0069aa5fb96"
+    "record_fingerprint": "b67ad9d6797beb2ad32e34f5e999ca8b",
+    "payload_hash": "90e396700ce29ea1c84910558ace2840"
   }
 }
