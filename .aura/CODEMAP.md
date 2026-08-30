@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1658
-- **total_bytes**: 26418741
-- **text_tokens_est**: 6595075
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1659
+- **total_bytes**: 26436343
+- **text_tokens_est**: 6599455
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1658,
+  "repo_file_count": 1659,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -972,6 +972,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AMD_DEMO_RECORDING_SCRIPT.md",
     "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
     "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+    "docs/ARENA_ORCHESTRATION_FIELD_RESULT_2026-08-30.md",
     "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
     "docs/AURA_AFFORDANCE_DIRECTORY.md",
     "docs/AURA_AGENT_ARENA_BRIDGE.md",
@@ -1798,12 +1799,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1658,
-  "bytes": 26418741,
-  "tokens_est": 6595075,
+  "files": 1659,
+  "bytes": 26436343,
+  "tokens_est": 6599455,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 242,
+    "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1008,
@@ -1955,6 +1956,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AMD_DEMO_RECORDING_SCRIPT.md",
     "docs/AMD_TRACK3_CRUCIBLE_DEMO.md",
     "docs/ARENA-NAVIGATION-DOMAIN-LENS-SHARDING.md",
+    "docs/ARENA_ORCHESTRATION_FIELD_RESULT_2026-08-30.md",
     "docs/AURA-DUAL-PERSISTENCE-FABRIC.md",
     "docs/AURA_AFFORDANCE_DIRECTORY.md",
     "docs/AURA_AGENT_ARENA_BRIDGE.md",
@@ -2091,8 +2093,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md"
+    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
   ]
 }
 ```
