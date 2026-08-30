@@ -1,0 +1,41 @@
+name: Project006 Higgsfield Media Source Tests
+
+on:
+  pull_request:
+    paths:
+      - 'tools/project006/creator_media_handoff.py'
+      - 'tools/project006/creator_media_nono_runner.py'
+      - 'tools/project006/creator_media_arena_adapter.py'
+      - 'tools/project006/nono_profiles/creator-studio-higgsfield.json'
+      - 'tools/project006/test_creator_media_handoff.py'
+      - 'tools/project006/test_creator_media_nono_runner.py'
+      - 'tools/project006/test_creator_media_arena_adapter.py'
+      - '.github/workflows/project006-higgsfield-media-source-tests.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-media-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pytest
+        run: python -m pip install --disable-pip-version-check pytest
+      - name: Compile media modules
+        run: |
+          python -m py_compile \
+            tools/project006/creator_media_handoff.py \
+            tools/project006/creator_media_nono_runner.py \
+            tools/project006/creator_media_arena_adapter.py
+      - name: Run focused media tests
+        run: |
+          python -m pytest -q \
+            tools/project006/test_creator_media_handoff.py \
+            tools/project006/test_creator_media_nono_runner.py \
+            tools/project006/test_creator_media_arena_adapter.py
