@@ -1,0 +1,106 @@
+name: AWJ032 PR340 canonical producer snapshot v1
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_pr340_producer_snapshot.py'
+      - 'tools/awj032/test_glm53_pr340_producer_snapshot.py'
+      - 'tools/awj032/glm53_checkpoint_layout_probe.py'
+      - 'tools/awj032/glm53_checkpoint_extra_layer_classification.py'
+      - 'tools/awj032/glm53_checkpoint_source_binding.py'
+      - '.github/workflows/awj032-glm53-pr340-producer-snapshot.yml'
+  push:
+    branches:
+      - 'awj032/glm53-pr340-producer-snapshot-v1-20260830'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  producer-snapshot:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+      - name: Compile producer path
+        run: >-
+          python -m py_compile
+          tools/awj032/glm53_checkpoint_layout_probe.py
+          tools/awj032/glm53_checkpoint_extra_layer_classification.py
+          tools/awj032/glm53_checkpoint_source_binding.py
+          tools/awj032/glm53_pr340_producer_snapshot.py
+          tools/awj032/test_glm53_pr340_producer_snapshot.py
+      - name: Run snapshot regressions
+        run: python -m unittest -v tools.awj032.test_glm53_pr340_producer_snapshot
+      - name: Emit canonical snapshot from live immutable official source
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import os
+          from urllib.request import Request, urlopen
+
+          from tools.awj032.glm53_checkpoint_source_binding import bind_checkpoint_sources
+          from tools.awj032.glm53_pr340_producer_snapshot import (
+              OFFICIAL_CONFIG_SHA256,
+              OFFICIAL_INDEX_SHA256,
+              OFFICIAL_REVISION,
+              OFFICIAL_SOURCE_BUNDLE_ID,
+              emit_pr340_producer_snapshot,
+          )
+
+          def read(url, ceiling):
+              req = Request(url, headers={"User-Agent": "AuraOS-AWJ032-PR340-Snapshot/1"})
+              with urlopen(req, timeout=60) as response:
+                  raw = response.read(ceiling + 1)
+              assert len(raw) <= ceiling
+              return raw
+
+          base = f"https://huggingface.co/zai-org/GLM-5.3/resolve/{OFFICIAL_REVISION}"
+          config_raw = read(base + "/config.json?download=true", 2 * 1024 * 1024)
+          index_raw = read(base + "/model.safetensors.index.json?download=true", 16 * 1024 * 1024)
+          assert hashlib.sha256(config_raw).hexdigest() == OFFICIAL_CONFIG_SHA256
+          assert hashlib.sha256(index_raw).hexdigest() == OFFICIAL_INDEX_SHA256
+
+          sources = bind_checkpoint_sources(
+              model_revision=OFFICIAL_REVISION,
+              config_raw_bytes=config_raw,
+              expected_config_sha256=OFFICIAL_CONFIG_SHA256,
+              index_raw_bytes=index_raw,
+              expected_index_sha256=OFFICIAL_INDEX_SHA256,
+          )
+          assert sources.source_bundle_id == OFFICIAL_SOURCE_BUNDLE_ID
+          snapshot, report = emit_pr340_producer_snapshot(
+              sources,
+              producer_execution_head=os.environ["TARGET_SHA"],
+              observation_time="hosted-live-official-source",
+          )
+          assert report["blockers"] == ["GLM53_MTP_RESOLVER_PROVENANCE_REQUIRED"]
+          assert snapshot.producer_snapshot_verified_by_external_registry is False
+          assert snapshot.g2_admitted is False
+          assert snapshot.runtime_execution_proven is False
+          assert snapshot.authority is False
+          print("PR340_FINAL_REPORT_DIGEST=" + snapshot.final_report_digest)
+          print("PR340_CLASSIFICATION_STAGE_LOGICAL_ID=" + snapshot.classification_stage_logical_id)
+          print("PR340_SNAPSHOT_DIGEST=" + snapshot.snapshot_digest)
+          print("PR340_SNAPSHOT_JSON=" + json.dumps(snapshot.to_dict(), sort_keys=True, separators=(",", ":")))
+          PY
