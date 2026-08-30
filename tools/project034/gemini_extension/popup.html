@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Aura Arena Gemini Bridge</title>
+  <style>
+    body { font: 13px system-ui, sans-serif; margin: 14px; width: 340px; color: #202124; }
+    h1 { font-size: 16px; margin: 0 0 10px; }
+    label { display: block; font-weight: 600; margin-top: 8px; }
+    input { width: 100%; box-sizing: border-box; padding: 6px; margin-top: 3px; }
+    button { width: 100%; margin-top: 10px; padding: 8px; cursor: pointer; }
+    #status { margin-top: 10px; padding: 8px; background: #f3f4f6; white-space: pre-wrap; border-radius: 6px; }
+    .law { margin-top: 10px; font-size: 11px; color: #5f6368; }
+  </style>
+</head>
+<body>
+  <h1>Aura Arena → Gemini</h1>
+
+  <label for="endpointId">Endpoint ID</label>
+  <input id="endpointId" autocomplete="off" placeholder="gemini-web-001">
+
+  <label for="visitId">Visit ID</label>
+  <input id="visitId" autocomplete="off" placeholder="visit-001">
+
+  <label for="bridgeToken">Local bridge token</label>
+  <input id="bridgeToken" type="password" autocomplete="off" placeholder="From loopback_token.txt">
+
+  <button id="save">Save local binding</button>
+  <button id="load">Load next Aura turn into Gemini</button>
+  <button id="capture">Capture visible Gemini response → Arena</button>
+
+  <div id="status">ASSISTED mode. This extension will not press Gemini Send.</div>
+  <div class="law">No Google cookies, passwords or provider tokens are read. AuraOS revalidates head/currentness before delivery and again when accepting the visible result.</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
