@@ -27,6 +27,7 @@ PLAN = {
     "execution_proven": False,
     "publication_authorized": False,
     "payment_authorized": False,
+    "marketplace_listed": False,
 }
 
 CURRENT = RouterCurrentnessV1(
@@ -63,6 +64,8 @@ def local_present(route="local.included", **kwargs):
         source_generation="mg1",
         model_currentness_ref="models-cur-1",
         context_window_tokens=8192,
+        evidence_ref="catalog:local:included",
+        evidence_digest="d" * 64,
     )
     values.update(kwargs)
     return CandidateRouteEvidenceV1(**values)
@@ -82,6 +85,8 @@ def local_download(**kwargs):
         source_generation="mg1",
         model_currentness_ref="models-cur-1",
         context_window_tokens=32768,
+        evidence_ref="catalog:local:download",
+        evidence_digest="e" * 64,
         download_bytes=5_000_000_000,
     )
     values.update(kwargs)
@@ -102,6 +107,8 @@ def remote_free(**kwargs):
         source_generation="pg1",
         model_currentness_ref="models-cur-1",
         context_window_tokens=32768,
+        evidence_ref="catalog:remote:free",
+        evidence_digest="f" * 64,
         provider_ref="provider.free",
         provider_currentness_ref="providers-cur-1",
         rate_currentness_ref="rates-cur-1",
@@ -126,6 +133,8 @@ def remote_paid(**kwargs):
         source_generation="pg1",
         model_currentness_ref="models-cur-1",
         context_window_tokens=131072,
+        evidence_ref="catalog:remote:paid",
+        evidence_digest="1" * 64,
         provider_ref="provider.paid",
         provider_currentness_ref="providers-cur-1",
         rate_currentness_ref="rates-cur-1",
@@ -162,6 +171,7 @@ class CapabilityEscalationRouterTests(unittest.TestCase):
         local = next(option for option in decision.options if option.route_id == "local.included")
         self.assertEqual(local.required_actions, ())
         self.assertFalse(decision.provider_call_made)
+        self.assertFalse(decision.catalog_evidence_authenticated)
 
     def test_download_consent_only_after_model_residual(self):
         decision = compile_capability_escalation(
@@ -175,6 +185,7 @@ class CapabilityEscalationRouterTests(unittest.TestCase):
             PLAN, residual(), [remote_free()], currentness=CURRENT
         )
         self.assertEqual(decision.disposition, EscalationDisposition.USER_CHOICE_REQUIRED)
+        self.assertIsNone(decision.selected_route_id)
         option = decision.options[0]
         self.assertIn("EXPLICIT_REMOTE_EXECUTION_CONSENT", option.required_actions)
         self.assertNotIn("EXPLICIT_PAYMENT_CONSENT", option.required_actions)
@@ -314,6 +325,52 @@ class CapabilityEscalationRouterTests(unittest.TestCase):
         )
         self.assertEqual(decision.disposition, EscalationDisposition.EVIDENCE_REQUIRED)
         self.assertIn("local.included:AVAILABILITY_UNKNOWN", decision.blockers)
+
+    def test_multiple_zero_effect_locals_require_choice_not_route_name_tiebreak(self):
+        decision = compile_capability_escalation(
+            PLAN,
+            residual(),
+            [
+                local_present("local.z"),
+                local_present(
+                    "local.a",
+                    model_ref="model.local.other",
+                    evidence_ref="catalog:local:other",
+                    evidence_digest="2" * 64,
+                ),
+            ],
+            currentness=CURRENT,
+        )
+        self.assertEqual(decision.disposition, EscalationDisposition.USER_CHOICE_REQUIRED)
+        self.assertIsNone(decision.selected_route_id)
+        self.assertIn(
+            "MULTIPLE_ZERO_EFFECT_ROUTES_NEED_POLICY_OR_USER_CHOICE",
+            decision.blockers,
+        )
+
+    def test_decision_identity_changes_when_currentness_generation_changes(self):
+        one = compile_capability_escalation(
+            PLAN, residual(), [local_present()], currentness=CURRENT
+        )
+        newer = RouterCurrentnessV1(
+            "src-cur-2", "models-cur-2", "providers-cur-2", "rates-cur-2"
+        )
+        plan2 = dict(PLAN, plan_digest="b" * 64)
+        residual2 = residual(
+            recipe_plan_digest="b" * 64,
+            source_generation="g2",
+            source_currentness_ref="src-cur-2",
+        )
+        candidate2 = local_present(model_currentness_ref="models-cur-2")
+        two = compile_capability_escalation(
+            plan2, residual2, [candidate2], currentness=newer
+        )
+        self.assertNotEqual(one.decision_digest, two.decision_digest)
+        self.assertNotEqual(one.router_currentness_digest, two.router_currentness_digest)
+
+    def test_candidate_requires_exact_evidence_digest(self):
+        with self.assertRaisesRegex(RouterError, "CANDIDATE_EVIDENCE_DIGEST_INVALID"):
+            local_present(evidence_digest="not-a-digest")
 
 
 if __name__ == "__main__":
