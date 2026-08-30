@@ -24,9 +24,10 @@ class HostPreflightReducerTests(unittest.TestCase):
         self.assertAlmostEqual(warm, 0.779242, places=5)
         self.assertAlmostEqual(cold, 0.904242, places=5)
         self.assertTrue(r["unknown_costs_are_zero_only_for_optimistic_lower_bound"])
-        self.assertFalse(r["g3_formally_admitted"])
+        self.assertFalse(r["g3_gate_prerequisites_satisfied"])
+        self.assertFalse(r["g3_admitted"])
 
-    def test_nonstorage_cost_can_make_target_unattainable(self):
+    def test_nonstorage_cost_can_make_target_unattainable_without_admission(self):
         r = m.reduce_host_preflight(
             measurement={
                 "sustained_read_gbps": 5.0,
@@ -38,7 +39,8 @@ class HostPreflightReducerTests(unittest.TestCase):
             g2_tiny_fixture_pass=True,
         )
         self.assertFalse(r["target_results"]["X"]["shared_resident"]["attainable_under_assumptions"])
-        self.assertTrue(r["g3_formally_admitted"])
+        self.assertTrue(r["g3_gate_prerequisites_satisfied"])
+        self.assertFalse(r["g3_admitted"])
 
     def test_observed_reuse_preserves_amplification_signal(self):
         r = m.observed_reuse(logical_expert_gb=10, physical_expert_gb=12)
@@ -68,6 +70,7 @@ class HostPreflightReducerTests(unittest.TestCase):
             g2_tiny_fixture_pass=True,
         )
         self.assertTrue(r["storage_fit"])
+        self.assertFalse(r["g3_admitted"])
         self.assertFalse(r["g4_admitted"])
 
     def test_logical_id_deterministic(self):
