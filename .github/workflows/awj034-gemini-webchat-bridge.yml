@@ -25,13 +25,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Python protocol and relay tests
+      - name: Python protocol relay and tool-broker tests
         working-directory: tools/project034
         run: |
           python -m unittest -v \
             test_gemini_webchat_endpoint.py \
             test_gemini_webchat_relay.py \
-            test_gemini_webchat_loopback.py
+            test_gemini_webchat_loopback.py \
+            test_gemini_tool_broker.py
       - name: Validate extension manifest
         run: python -m json.tool tools/project034/gemini_extension/manifest.json >/dev/null
       - name: JavaScript syntax checks
