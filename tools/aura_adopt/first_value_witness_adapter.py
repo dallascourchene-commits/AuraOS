@@ -9,6 +9,8 @@ Evidence law:
 - SAVE_REOPEN completion requires a source/currentness-bound output artifact,
   a distinct save predecessor receipt, and a distinct reopen receipt whose
   observed artifact digests all match the rendered output.
+- Consequence evidence is committed into stage/verifier digests; it is never
+  mislabeled as a capability reference.
 - This adapter cannot complete TRUST; a trust-owner bridge must do that.
 - Causally impossible witness combinations fail closed.
 - UNKNOWN remains UNKNOWN.
@@ -17,6 +19,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from enum import Enum
+import hashlib
+import json
 import re
 from typing import Mapping, Sequence
 
@@ -70,6 +74,16 @@ def _sha(value: str | None, code: str) -> str:
     return value.lower()
 
 
+def _evidence_commitment(kind: str, payload: Mapping[str, str]) -> str:
+    encoded = json.dumps(
+        {"kind": kind, **dict(payload)},
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+    ).encode("utf-8")
+    return hashlib.sha256(b"AURA_FIRST_VALUE_EVIDENCE_V1\0" + encoded).hexdigest()
+
+
 @dataclass(frozen=True)
 class FirstValueWitnessObservationV1:
     opened: bool
@@ -117,7 +131,6 @@ class FirstValueWitnessObservationV1:
         elif self.acceptance_evidence_ref is not None:
             raise FrictionReceiptError("UNBOUND_ACCEPTANCE_EVIDENCE_REF")
 
-        # Every rendered artifact gets an exact consequence identity and source/currentness binding.
         if self.rendered:
             output_sha = _sha(self.output_artifact_sha256, "OUTPUT_ARTIFACT_SHA256_REQUIRED")
             source_generation = _ref(self.evidence_source_generation, "EVIDENCE_SOURCE_GENERATION_REQUIRED")
@@ -170,7 +183,6 @@ class FirstValueWitnessObservationV1:
         elif self.share_or_reuse_evidence_ref is not None:
             raise FrictionReceiptError("UNBOUND_SHARE_REUSE_EVIDENCE_REF")
 
-        # Witness-causality membrane.
         if self.rendered and not self.opened:
             raise FrictionReceiptError("RENDER_REQUIRES_OPENED_WITNESS")
         if self.rendered and not self.input_selected:
@@ -185,6 +197,15 @@ class FirstValueWitnessObservationV1:
             raise FrictionReceiptError("SAVE_OBSERVATION_REQUIRES_RENDER")
         if self.share_or_reuse_observed and not self.rendered:
             raise FrictionReceiptError("SHARE_REUSE_REQUIRES_RENDER")
+
+    def common_evidence_binding(self) -> dict[str, str]:
+        if not self.rendered:
+            raise FrictionReceiptError("RENDER_EVIDENCE_REQUIRED")
+        return {
+            "artifact_sha256": str(self.output_artifact_sha256),
+            "source_generation": str(self.evidence_source_generation),
+            "currentness_ref": str(self.evidence_currentness_ref),
+        }
 
 
 def _event(stage: str, status: StageStatus, *, reason: str | None = None,
@@ -206,32 +227,83 @@ def _binary_stage(stage: str, observed: bool, *, blocked_code: str, blocked_reas
 
 def _acceptance(obs: FirstValueWitnessObservationV1) -> tuple[StageEvent, AcceptedValue]:
     artifact = obs.output_artifact_sha256 or "UNOBSERVED"
-    if obs.acceptance_mode is AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT:
+    if obs.acceptance_mode in {
+        AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT,
+        AcceptanceEvidenceMode.USER_EXPLICIT_REJECT,
+    }:
         ref = _ref(obs.acceptance_evidence_ref, "USER_ACCEPTANCE_EVIDENCE_REF_REQUIRED")
-        return (_event("VERIFY_ACCEPT", StageStatus.COMPLETED, steps=1),
-                AcceptedValue("USER_EXPLICIT_FIRST_VALUE", True, f"USER_EXPLICIT_REF:{ref}@sha256:{artifact}"))
-    if obs.acceptance_mode is AcceptanceEvidenceMode.USER_EXPLICIT_REJECT:
-        ref = _ref(obs.acceptance_evidence_ref, "USER_ACCEPTANCE_EVIDENCE_REF_REQUIRED")
-        return (_event("VERIFY_ACCEPT", StageStatus.COMPLETED, steps=1),
-                AcceptedValue("USER_EXPLICIT_FIRST_VALUE", False, f"USER_EXPLICIT_REF:{ref}@sha256:{artifact}"))
+        commitment = _evidence_commitment(
+            "USER_EXPLICIT_ACCEPTANCE",
+            {
+                **obs.common_evidence_binding(),
+                "evidence_ref": ref,
+                "result": "ACCEPT" if obs.acceptance_mode is AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT else "REJECT",
+            },
+        )
+        result = obs.acceptance_mode is AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT
+        return (
+            _event("VERIFY_ACCEPT", StageStatus.COMPLETED, reason=f"EVIDENCE_COMMITMENT:{commitment}", steps=1),
+            AcceptedValue("USER_EXPLICIT_FIRST_VALUE", result, f"EVIDENCE_COMMITMENT:{commitment}"),
+        )
     if obs.acceptance_mode is AcceptanceEvidenceMode.SYNTHETIC_TECHNICAL:
-        return (_event("VERIFY_ACCEPT", StageStatus.UNKNOWN,
-                       reason="SYNTHETIC_TECHNICAL_OUTPUT_DOES_NOT_PROVE_USER_ACCEPTANCE"),
-                AcceptedValue("USER_EXPLICIT_FIRST_VALUE", None, f"SYNTHETIC_TECHNICAL@sha256:{artifact}"))
-    return (_event("VERIFY_ACCEPT", StageStatus.UNKNOWN, reason="USER_ACCEPTANCE_NOT_OBSERVED"),
-            AcceptedValue("USER_EXPLICIT_FIRST_VALUE", None, f"UNOBSERVED@sha256:{artifact}"))
+        return (
+            _event("VERIFY_ACCEPT", StageStatus.UNKNOWN,
+                   reason="SYNTHETIC_TECHNICAL_OUTPUT_DOES_NOT_PROVE_USER_ACCEPTANCE"),
+            AcceptedValue("USER_EXPLICIT_FIRST_VALUE", None, f"SYNTHETIC_TECHNICAL@sha256:{artifact}"),
+        )
+    return (
+        _event("VERIFY_ACCEPT", StageStatus.UNKNOWN, reason="USER_ACCEPTANCE_NOT_OBSERVED"),
+        AcceptedValue("USER_EXPLICIT_FIRST_VALUE", None, f"UNOBSERVED@sha256:{artifact}"),
+    )
 
 
 def _save_reopen(obs: FirstValueWitnessObservationV1) -> StageEvent:
     if obs.save_mode is SaveEvidenceMode.REOPEN_OBSERVED:
-        return _event("SAVE_REOPEN", StageStatus.COMPLETED, steps=2)
+        commitment = _evidence_commitment(
+            "SAVE_REOPEN_CHAIN",
+            {
+                **obs.common_evidence_binding(),
+                "save_evidence_ref": _ref(obs.save_evidence_ref, "SAVE_EVIDENCE_REF_REQUIRED"),
+                "save_artifact_sha256": str(obs.save_artifact_sha256),
+                "reopen_evidence_ref": _ref(obs.reopen_evidence_ref, "REOPEN_EVIDENCE_REF_REQUIRED"),
+                "reopen_artifact_sha256": str(obs.reopen_artifact_sha256),
+            },
+        )
+        return _event("SAVE_REOPEN", StageStatus.COMPLETED,
+                      reason=f"EVIDENCE_COMMITMENT:{commitment}", steps=2)
     if obs.save_mode is SaveEvidenceMode.SAVE_OBSERVED:
-        return _event("SAVE_REOPEN", StageStatus.UNKNOWN,
-                      reason="SAVE_OBSERVED_BUT_REOPEN_NOT_OBSERVED", steps=1)
+        commitment = _evidence_commitment(
+            "SAVE_ONLY",
+            {
+                **obs.common_evidence_binding(),
+                "save_evidence_ref": _ref(obs.save_evidence_ref, "SAVE_EVIDENCE_REF_REQUIRED"),
+                "save_artifact_sha256": str(obs.save_artifact_sha256),
+            },
+        )
+        return _event(
+            "SAVE_REOPEN", StageStatus.UNKNOWN,
+            reason=f"SAVE_OBSERVED_BUT_REOPEN_NOT_OBSERVED@EVIDENCE_COMMITMENT:{commitment}",
+            steps=1,
+        )
     if obs.save_mode is SaveEvidenceMode.DOWNLOAD_INITIATED:
         return _event("SAVE_REOPEN", StageStatus.UNKNOWN,
                       reason="DOWNLOAD_INITIATED_DOES_NOT_PROVE_SAVE_OR_REOPEN", steps=1)
     return _event("SAVE_REOPEN", StageStatus.UNKNOWN, reason="SAVE_REOPEN_NOT_OBSERVED")
+
+
+def _share_or_reuse(obs: FirstValueWitnessObservationV1) -> StageEvent:
+    if not obs.share_or_reuse_observed:
+        return _event("SHARE_OR_REUSE", StageStatus.NOT_APPLICABLE,
+                      reason="NO_SHARE_OR_REUSE_CLAIM_FOR_FIRST_VALUE_WITNESS", steps=0)
+    commitment = _evidence_commitment(
+        "SHARE_OR_REUSE",
+        {
+            **obs.common_evidence_binding(),
+            "evidence_ref": _ref(obs.share_or_reuse_evidence_ref, "SHARE_REUSE_EVIDENCE_REF_REQUIRED"),
+        },
+    )
+    return _event("SHARE_OR_REUSE", StageStatus.COMPLETED,
+                  reason=f"EVIDENCE_COMMITMENT:{commitment}", steps=1)
 
 
 def compile_first_value_receipt(
@@ -294,21 +366,7 @@ def compile_first_value_receipt(
     accept_event, accepted_value = _acceptance(observation)
     events.append(accept_event)
     events.append(_save_reopen(observation))
-    if observation.share_or_reuse_observed:
-        events.append(_event("SHARE_OR_REUSE", StageStatus.COMPLETED, steps=1))
-    else:
-        events.append(_event("SHARE_OR_REUSE", StageStatus.NOT_APPLICABLE,
-                             reason="NO_SHARE_OR_REUSE_CLAIM_FOR_FIRST_VALUE_WITNESS", steps=0))
-
-    refs = list(cap_refs)
-    for value, code in (
-        (observation.acceptance_evidence_ref, "USER_ACCEPTANCE_EVIDENCE_REF_REQUIRED"),
-        (observation.save_evidence_ref, "SAVE_EVIDENCE_REF_REQUIRED"),
-        (observation.reopen_evidence_ref, "REOPEN_EVIDENCE_REF_REQUIRED"),
-        (observation.share_or_reuse_evidence_ref, "SHARE_REUSE_EVIDENCE_REF_REQUIRED"),
-    ):
-        if value is not None:
-            refs.append(_ref(value, code))
+    events.append(_share_or_reuse(observation))
 
     vector = {
         "discovery": None, "trust": None, "install": 0, "hardware": None,
@@ -332,13 +390,14 @@ def compile_first_value_receipt(
         reopen_trigger="WITNESS_OR_ZF00B_CONTRACT_CHANGES_OR_NEW_REAL_EVIDENCE",
         permissions=(), mandatory_account=False, mandatory_key=False,
         clarification_events=0, support_events=0, route_changes=(),
-        capability_refs=tuple(refs), recipe_refs=(recipe,),
+        capability_refs=cap_refs, recipe_refs=(recipe,),
         privacy_telemetry_mode=privacy_telemetry_mode,
         invalidators=(
             "SOURCE_CURRENTNESS_MISMATCH",
             "SYNTHETIC_ACCEPTANCE_LAUNDERED_AS_USER_ACCEPTANCE",
             "SIMULATED_SAVE_LAUNDERED_AS_REOPEN",
             "SAVE_REOPEN_ARTIFACT_CHAIN_MISMATCH",
+            "CONSEQUENCE_EVIDENCE_MISLABELED_AS_CAPABILITY",
             "TRUST_POINTER_PRESENCE_LAUNDERED_AS_TRUST_COMPLETION",
             "WITNESS_CAUSALITY_CONTRADICTION",
         ),
