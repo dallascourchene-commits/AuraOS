@@ -150,12 +150,14 @@ def _validate_fixture_evidence(value: Any) -> tuple[dict[str, Any], str]:
     expected = verified_pr406_fixture_evidence().to_dict()
     if evidence.get("schema") != FIXTURE_EVIDENCE_SCHEMA:
         raise W3AdmittedSyntheticProofError("PR406_FIXTURE_EVIDENCE_SCHEMA_MISMATCH")
+    if set(evidence) != set(expected):
+        raise W3AdmittedSyntheticProofError("PR406_FIXTURE_EVIDENCE_FIELD_SET_MISMATCH")
 
     for key, expected_value in expected.items():
         actual = evidence.get(key)
         if key == "negative_controls_detected" and isinstance(actual, tuple):
             actual = list(actual)
-        if actual != expected_value:
+        if type(actual) is not type(expected_value) or actual != expected_value:
             raise W3AdmittedSyntheticProofError("PR406_FIXTURE_EVIDENCE_MISMATCH", key)
 
     return evidence, _digest(evidence)
