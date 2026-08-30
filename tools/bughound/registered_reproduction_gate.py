@@ -1,9 +1,9 @@
 """Canonical source-owned independent-reproduction trust root for BugHound.
 
-This convergence successor combines independently hosted registry repairs:
-unique matching-record resolution plus full registry generation/content binding,
-and source-owned record self-validation plus structural observer/reproducer
-separation.
+This convergence successor combines two independently hosted sibling repairs:
+- unique matching-record resolution plus full registry generation/content binding;
+- source-owned record self-validation plus structural observer/reproducer
+  separation.
 
 Callers cannot provide expected producer identities, registry callbacks, records,
 prebuilt admissions, trusted booleans, or alternate trust roots. Production
@@ -31,7 +31,13 @@ REGISTRY_GENERATION = "BUGHOUND_INDEPENDENT_REPRODUCTION_REGISTRY_HOLD_V4"
 
 
 def _canonical(value: object) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("utf-8")
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        allow_nan=False,
+    ).encode("utf-8")
 
 
 def _digest(domain: str, value: object) -> str:
@@ -68,7 +74,9 @@ class BugHoundIndependentReproductionRegistryRecordV1:
         return _digest("AURA_BUGHOUND_INDEPENDENT_REPRO_REGISTRY_V1", asdict(self))
 
 
-_CANONICAL_REPRODUCTION_RECORDS: tuple[BugHoundIndependentReproductionRegistryRecordV1, ...] = ()
+_CANONICAL_REPRODUCTION_RECORDS: tuple[
+    BugHoundIndependentReproductionRegistryRecordV1, ...
+] = ()
 
 
 @dataclass(frozen=True)
@@ -107,7 +115,10 @@ class BugHoundRegisteredIndependentReproductionAdmissionV1:
 
     @property
     def receipt_digest(self) -> str:
-        return _digest("AURA_BUGHOUND_REGISTERED_INDEPENDENT_REPRO_ADMISSION_V1", asdict(self))
+        return _digest(
+            "AURA_BUGHOUND_REGISTERED_INDEPENDENT_REPRO_ADMISSION_V1",
+            asdict(self),
+        )
 
 
 def _require_text(record: object, field: str, code: str) -> str:
@@ -129,11 +140,15 @@ def _require_false(record: object, field: str, code: str) -> None:
         raise ValueError(code)
 
 
-def _validate_registry_record_shape(record: BugHoundIndependentReproductionRegistryRecordV1) -> None:
+def _validate_registry_record_shape(
+    record: BugHoundIndependentReproductionRegistryRecordV1,
+) -> None:
+    """Validate one source-owned record before it can participate in trust."""
     if not isinstance(record, BugHoundIndependentReproductionRegistryRecordV1):
         raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_RECORD_REQUIRED")
     if record.schema != REGISTRY_SCHEMA:
         raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_SCHEMA_MISMATCH")
+
     for field, code in (
         ("candidate_id", "INDEPENDENT_REPRODUCTION_REGISTRY_CANDIDATE_REQUIRED"),
         ("target_ref", "INDEPENDENT_REPRODUCTION_REGISTRY_TARGET_REQUIRED"),
@@ -150,9 +165,23 @@ def _validate_registry_record_shape(record: BugHoundIndependentReproductionRegis
         ("registry_observer_generation", "INDEPENDENT_REPRODUCTION_REGISTRY_OBSERVER_REQUIRED"),
     ):
         _require_text(record, field, code)
-    _require_exact_bool(record, "registry_current", "INDEPENDENT_REPRODUCTION_REGISTRY_CURRENT_BOOL_REQUIRED")
-    _require_exact_bool(record, "independently_observed", "INDEPENDENT_REPRODUCTION_INDEPENDENTLY_OBSERVED_BOOL_REQUIRED")
-    _require_exact_bool(record, "revoked", "INDEPENDENT_REPRODUCTION_REVOKED_BOOL_REQUIRED")
+
+    _require_exact_bool(
+        record,
+        "registry_current",
+        "INDEPENDENT_REPRODUCTION_REGISTRY_CURRENT_BOOL_REQUIRED",
+    )
+    _require_exact_bool(
+        record,
+        "independently_observed",
+        "INDEPENDENT_REPRODUCTION_INDEPENDENTLY_OBSERVED_BOOL_REQUIRED",
+    )
+    _require_exact_bool(
+        record,
+        "revoked",
+        "INDEPENDENT_REPRODUCTION_REVOKED_BOOL_REQUIRED",
+    )
+
     for field, code in (
         ("live_target_testing_authorized", "REPRO_REGISTRY_LIVE_TEST_AUTHORITY_FORBIDDEN"),
         ("credential_use_authorized", "REPRO_REGISTRY_CREDENTIAL_AUTHORITY_FORBIDDEN"),
@@ -161,11 +190,19 @@ def _validate_registry_record_shape(record: BugHoundIndependentReproductionRegis
         ("external_effect", "REPRO_REGISTRY_EXTERNAL_EFFECT_FORBIDDEN"),
     ):
         _require_false(record, field, code)
+
+    # A boolean label or different generation label cannot manufacture
+    # independence.  The observer must be a distinct logical principal.
     if record.registry_observer_ref.strip() == record.reproducer_ref.strip():
         raise ValueError("INDEPENDENT_REPRODUCTION_OBSERVER_PRODUCER_SEPARATION_REQUIRED")
 
 
-def _registry_receipt_from_records(records: tuple[BugHoundIndependentReproductionRegistryRecordV1, ...]) -> BugHoundIndependentReproductionRegistryReceiptV4:
+def _registry_receipt_from_records(
+    records: tuple[BugHoundIndependentReproductionRegistryRecordV1, ...],
+) -> BugHoundIndependentReproductionRegistryReceiptV4:
+    # Full-registry binding is meaningful only if every source-owned record has
+    # first passed structural validation.  A malformed neighbor therefore cannot
+    # hide behind one valid selected record.
     records = tuple(records)
     for record in records:
         _validate_registry_record_shape(record)
@@ -174,7 +211,8 @@ def _registry_receipt_from_records(records: tuple[BugHoundIndependentReproductio
         registry_generation=REGISTRY_GENERATION,
         record_digests=tuple(record.record_digest for record in ordered),
         active_record_count=sum(
-            1 for record in ordered
+            1
+            for record in ordered
             if record.registry_current is True
             and record.independently_observed is True
             and record.revoked is False
@@ -187,7 +225,13 @@ def independent_reproduction_registry_receipt() -> BugHoundIndependentReproducti
     return _registry_receipt_from_records(_CANONICAL_REPRODUCTION_RECORDS)
 
 
-def _verify_registry_record(*, reproduction: IndependentBountyReproductionReceiptV1, candidate: BountyCandidateEvidenceV1, mission_input: BugHoundCashMissionInputV1, record: BugHoundIndependentReproductionRegistryRecordV1) -> None:
+def _verify_registry_record(
+    *,
+    reproduction: IndependentBountyReproductionReceiptV1,
+    candidate: BountyCandidateEvidenceV1,
+    mission_input: BugHoundCashMissionInputV1,
+    record: BugHoundIndependentReproductionRegistryRecordV1,
+) -> None:
     _validate_registry_record_shape(record)
     if record.registry_current is not True:
         raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_STALE")
@@ -195,28 +239,50 @@ def _verify_registry_record(*, reproduction: IndependentBountyReproductionReceip
         raise ValueError("INDEPENDENT_REPRODUCTION_INDEPENDENT_OBSERVER_REQUIRED")
     if record.revoked is not False:
         raise ValueError("INDEPENDENT_REPRODUCTION_REVOKED")
+
     exact = {
         "candidate_id": (record.candidate_id, candidate.candidate_id),
         "target_ref": (record.target_ref, candidate.target_ref),
         "target_generation": (record.target_generation, candidate.target_generation),
-        "reproduction_receipt_digest": (record.reproduction_receipt_digest, reproduction.receipt_digest),
+        "reproduction_receipt_digest": (
+            record.reproduction_receipt_digest,
+            reproduction.receipt_digest,
+        ),
         "reproducer_ref": (record.reproducer_ref, reproduction.reproducer_ref),
-        "reproducer_generation": (record.reproducer_generation, reproduction.reproducer_generation),
+        "reproducer_generation": (
+            record.reproducer_generation,
+            reproduction.reproducer_generation,
+        ),
         "witness_digest": (record.witness_digest, reproduction.witness_digest),
         "environment_digest": (record.environment_digest, reproduction.environment_digest),
         "scope_rules_digest": (record.scope_rules_digest, mission_input.scope_rules_digest),
-        "source_currentness_ref": (record.source_currentness_ref, mission_input.source_currentness_ref),
+        "source_currentness_ref": (
+            record.source_currentness_ref,
+            mission_input.source_currentness_ref,
+        ),
     }
     for field, (observed, expected) in exact.items():
         if observed != expected:
             raise ValueError(f"INDEPENDENT_REPRODUCTION_REGISTRY_{field.upper()}_MISMATCH")
 
 
-def _resolve_from_records(*, records: tuple[BugHoundIndependentReproductionRegistryRecordV1, ...], reproduction: IndependentBountyReproductionReceiptV1, candidate: BountyCandidateEvidenceV1, mission_input: BugHoundCashMissionInputV1) -> BugHoundIndependentReproductionRegistryRecordV1:
+def _resolve_from_records(
+    *,
+    records: tuple[BugHoundIndependentReproductionRegistryRecordV1, ...],
+    reproduction: IndependentBountyReproductionReceiptV1,
+    candidate: BountyCandidateEvidenceV1,
+    mission_input: BugHoundCashMissionInputV1,
+) -> BugHoundIndependentReproductionRegistryRecordV1:
+    """Resolve exactly one active exact-match record; ambiguity fails closed."""
     valid: list[BugHoundIndependentReproductionRegistryRecordV1] = []
     for record in records:
         try:
-            _verify_registry_record(reproduction=reproduction, candidate=candidate, mission_input=mission_input, record=record)
+            _verify_registry_record(
+                reproduction=reproduction,
+                candidate=candidate,
+                mission_input=mission_input,
+                record=record,
+            )
         except ValueError:
             continue
         valid.append(record)
@@ -227,8 +293,27 @@ def _resolve_from_records(*, records: tuple[BugHoundIndependentReproductionRegis
     return valid[0]
 
 
-def _compose_registered_independent_reproduction(*, mission_input: BugHoundCashMissionInputV1, candidate: BountyCandidateEvidenceV1, independent_reproduction: IndependentBountyReproductionReceiptV1, duplicate_pressure_state: str, duplicate_check_currentness_ref: str, report_lint_state: str, report_digest: str, program_admissibility_state: str, program_admissibility_ref: str, record: BugHoundIndependentReproductionRegistryRecordV1, registry_records: tuple[BugHoundIndependentReproductionRegistryRecordV1, ...] | None = None) -> BugHoundRegisteredIndependentReproductionAdmissionV1:
-    _verify_registry_record(reproduction=independent_reproduction, candidate=candidate, mission_input=mission_input, record=record)
+def _compose_registered_independent_reproduction(
+    *,
+    mission_input: BugHoundCashMissionInputV1,
+    candidate: BountyCandidateEvidenceV1,
+    independent_reproduction: IndependentBountyReproductionReceiptV1,
+    duplicate_pressure_state: str,
+    duplicate_check_currentness_ref: str,
+    report_lint_state: str,
+    report_digest: str,
+    program_admissibility_state: str,
+    program_admissibility_ref: str,
+    record: BugHoundIndependentReproductionRegistryRecordV1,
+    registry_records: tuple[BugHoundIndependentReproductionRegistryRecordV1, ...] | None = None,
+) -> BugHoundRegisteredIndependentReproductionAdmissionV1:
+    """Private reducer after one source-owned record has been resolved."""
+    _verify_registry_record(
+        reproduction=independent_reproduction,
+        candidate=candidate,
+        mission_input=mission_input,
+        record=record,
+    )
     admitted = admit_cash_bounty_candidate_for_human_review(
         mission_input=mission_input,
         candidate=candidate,
@@ -243,9 +328,17 @@ def _compose_registered_independent_reproduction(*, mission_input: BugHoundCashM
         program_admissibility_state=program_admissibility_state,
         program_admissibility_ref=program_admissibility_ref,
     )
-    for field in ("live_target_testing_authorized", "credential_use_authorized", "submission_authorized", "claim_or_payment_authorized", "external_effect"):
+
+    for field in (
+        "live_target_testing_authorized",
+        "credential_use_authorized",
+        "submission_authorized",
+        "claim_or_payment_authorized",
+        "external_effect",
+    ):
         if getattr(admitted, field) is not False:
             raise ValueError("REGISTERED_REPRODUCTION_ADMISSION_AUTHORITY_WIDENED")
+
     registry = _registry_receipt_from_records(registry_records or (record,))
     return BugHoundRegisteredIndependentReproductionAdmissionV1(
         candidate_admission=admitted,
@@ -258,10 +351,27 @@ def _compose_registered_independent_reproduction(*, mission_input: BugHoundCashM
     )
 
 
-def admit_with_registered_independent_reproduction(*, mission_input: BugHoundCashMissionInputV1, candidate: BountyCandidateEvidenceV1, independent_reproduction: IndependentBountyReproductionReceiptV1, duplicate_pressure_state: str, duplicate_check_currentness_ref: str, report_lint_state: str, report_digest: str, program_admissibility_state: str, program_admissibility_ref: str) -> BugHoundRegisteredIndependentReproductionAdmissionV1:
+def admit_with_registered_independent_reproduction(
+    *,
+    mission_input: BugHoundCashMissionInputV1,
+    candidate: BountyCandidateEvidenceV1,
+    independent_reproduction: IndependentBountyReproductionReceiptV1,
+    duplicate_pressure_state: str,
+    duplicate_check_currentness_ref: str,
+    report_lint_state: str,
+    report_digest: str,
+    program_admissibility_state: str,
+    program_admissibility_ref: str,
+) -> BugHoundRegisteredIndependentReproductionAdmissionV1:
+    """Resolve reproduction provenance only from the source-owned registry."""
     if independent_reproduction.external_effect:
         raise ValueError("BOUNTY_REPRODUCTION_EXTERNAL_EFFECT_FORBIDDEN")
-    record = _resolve_from_records(records=_CANONICAL_REPRODUCTION_RECORDS, reproduction=independent_reproduction, candidate=candidate, mission_input=mission_input)
+    record = _resolve_from_records(
+        records=_CANONICAL_REPRODUCTION_RECORDS,
+        reproduction=independent_reproduction,
+        candidate=candidate,
+        mission_input=mission_input,
+    )
     return _compose_registered_independent_reproduction(
         mission_input=mission_input,
         candidate=candidate,
