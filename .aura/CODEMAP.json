@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066598,
+  "generated_at_unix": 1788066834,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1637,
+    "repo_file_count": 1639,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1224,6 +1224,7 @@
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
       "scripts/aura_benchmark_suite.py",
+      "scripts/aura_blind_gate10_benchmark.py",
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
       "scripts/aura_exact_head_transport.py",
       "scripts/aura_fetch_construction_demo_source.py",
@@ -1364,6 +1365,7 @@
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
+      "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
@@ -1672,6 +1674,7 @@
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
       "scripts/aura_benchmark_suite.py",
+      "scripts/aura_blind_gate10_benchmark.py",
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
       "scripts/aura_exact_head_transport.py",
       "scripts/aura_fetch_construction_demo_source.py",
@@ -1740,12 +1743,11 @@
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
+      "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py",
-      "tests/test_aura_capability_resolver_connectome.py",
-      "tests/test_aura_change_graph.py"
+      "tests/test_aura_capability_resolver.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1753,15 +1755,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1637,
-      "bytes": 26393372,
-      "tokens_est": 6588693,
+      "files": 1639,
+      "bytes": 26415048,
+      "tokens_est": 6594113,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 995,
+        "python_module": 997,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -3248,6 +3250,14 @@
         "line": 450,
         "end_line": 459,
         "semantic_id": "scripts/aura_benchmark_suite.py#function:main:fb3939ae7b7be1e6",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 367,
+        "end_line": 377,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:main:dd8c4c0b3b8329d3",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -20105,6 +20115,14 @@
         "end_line": 96,
         "semantic_id": "aura_refactor_state_identity.py#function:digest:344aa69d358de265",
         "signature_hash": "cb7986ce5e23d90c"
+      },
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
+        "signature_hash": "bd189b17ea870e50"
       }
     ],
     "_runtime_binding_digest": [
@@ -45393,6 +45411,14 @@
         "end_line": 266,
         "semantic_id": "aura_relationship_contracts.py#function:canonical_json:6ff6ee0dde564a0d",
         "signature_hash": "2af8a10abc3d606e"
+      },
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:canonical_json:7be1f5afca6c5f46",
+        "signature_hash": "c9911db40069043d"
       },
       {
         "file": "scripts/aura_global_benchmark_daemon.py",
@@ -92453,6 +92479,14 @@
         "end_line": 352,
         "semantic_id": "aura_topology_manager.py#function:write_json:364637eaa75d6503",
         "signature_hash": "a69da0a38127a8a6"
+      },
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:write_json:3d220c153340593c",
+        "signature_hash": "aa7b5efba73144d6"
       }
     ],
     "AuraTopologyPriorMemory": [
@@ -96557,6 +96591,14 @@
         "signature_hash": "14f27adf741dce28"
       },
       {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 312,
+        "end_line": 328,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:generate:8f256fbac9cbe8fe",
+        "signature_hash": "1c5e1e67479187a7"
+      },
+      {
         "file": "scripts/aura_source_anchor_map.py",
         "kind": "function",
         "line": 193,
@@ -99913,6 +99955,156 @@
         "end_line": 412,
         "semantic_id": "scripts/aura_benchmark_suite.py#function:render_docs:48e82bcca87a2402",
         "signature_hash": "31f568bdbc13f368"
+      }
+    ],
+    "write_jsonl": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 38,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:write_jsonl:d529f9f3adc35337",
+        "signature_hash": "06f5fa14a7645bc4"
+      }
+    ],
+    "CellSpec": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "class",
+        "line": 42,
+        "end_line": 46,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#class:CellSpec:18c5b0c014f45d25",
+        "signature_hash": "40ca3764428a036e"
+      }
+    ],
+    "arm_mapping": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 66,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:arm_mapping:343a8afc891073b8",
+        "signature_hash": "5b84dd4b08488bb3"
+      }
+    ],
+    "bit_checksum": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 70,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:bit_checksum:21bdad2a1f72488d",
+        "signature_hash": "f3c1c946cb45dd38"
+      }
+    ],
+    "make_shards": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 77,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:make_shards:bcc41e4cbb32412a",
+        "signature_hash": "a0e81aaeb22abba3"
+      }
+    ],
+    "shard_case": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 129,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:shard_case:fa566bd9a6fa1037",
+        "signature_hash": "838319b2f918f447"
+      }
+    ],
+    "generate_cell01": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 132,
+        "end_line": 136,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:generate_cell01:f9c63fe229bf629d",
+        "signature_hash": "3bb114db653c1a86"
+      }
+    ],
+    "score_cell01": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 139,
+        "end_line": 167,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:score_cell01:b7015f33cc874b8b",
+        "signature_hash": "dc8ae4df2968c233"
+      }
+    ],
+    "generate_cell02": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 170,
+        "end_line": 201,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:generate_cell02:0fd019884c02c427",
+        "signature_hash": "867930780ef95368"
+      }
+    ],
+    "score_cell02": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 204,
+        "end_line": 215,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:score_cell02:de58a17455d11394",
+        "signature_hash": "99290882d1f53f89"
+      }
+    ],
+    "generate_cell04": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 218,
+        "end_line": 251,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:generate_cell04:2d1a71b56f61dd8b",
+        "signature_hash": "8a7c076bc68a17cc"
+      }
+    ],
+    "score_cell04": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 254,
+        "end_line": 274,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:score_cell04:ddd54e8d003678db",
+        "signature_hash": "ec2786572070861f"
+      }
+    ],
+    "aggregate": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 277,
+        "end_line": 292,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:aggregate:3b7993b859e1d608",
+        "signature_hash": "7b6df86b37a03d2e"
+      }
+    ],
+    "campaign_manifest": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 295,
+        "end_line": 309,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:campaign_manifest:1fb1773b560a735c",
+        "signature_hash": "1babd4a2e93c6dba"
+      }
+    ],
+    "selftest": [
+      {
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 331,
+        "end_line": 364,
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:selftest:76888b548ace0fe9",
+        "signature_hash": "6121d9fbfb70fe78"
       }
     ],
     "_canonical_path": [
@@ -119241,6 +119433,66 @@
         "end_line": 963,
         "semantic_id": "tests/test_aura_bilateral_planning_enforcement.py#function:test_external_llm_turn_bounds_large_bilateral_micro_context:9056e09eb03aa9d2",
         "signature_hash": "e4ff9bc2716d7c4b"
+      }
+    ],
+    "test_cell01_is_deterministic_and_has_27_slot_cases": [
+      {
+        "file": "tests/test_aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_blind_gate10_benchmark.py#function:test_cell01_is_deterministic_and_has_27_slot_cases:77decc3d4a4236fd",
+        "signature_hash": "061e29a53303e234"
+      }
+    ],
+    "test_cell01_perfect_responses_score_exact_and_impossible_fabrication_is_penalized": [
+      {
+        "file": "tests/test_aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 42,
+        "semantic_id": "tests/test_aura_blind_gate10_benchmark.py#function:test_cell01_perfect_responses_score_exact_and_impossible_fabrication_is_penalized:9ceb3780dbd78e8c",
+        "signature_hash": "8770aac98a91e05c"
+      }
+    ],
+    "test_currentness_scorer_rejects_stale_value": [
+      {
+        "file": "tests/test_aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 65,
+        "semantic_id": "tests/test_aura_blind_gate10_benchmark.py#function:test_currentness_scorer_rejects_stale_value:cd276380bce5736f",
+        "signature_hash": "cfc2032083bd6485"
+      }
+    ],
+    "test_hallucination_scorer_separates_unknown_from_supported_value": [
+      {
+        "file": "tests/test_aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_blind_gate10_benchmark.py#function:test_hallucination_scorer_separates_unknown_from_supported_value:ec515e767e6ab52d",
+        "signature_hash": "e2283f66df31c57d"
+      }
+    ],
+    "test_public_manifest_does_not_reveal_randomized_arm_mapping": [
+      {
+        "file": "tests/test_aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 98,
+        "semantic_id": "tests/test_aura_blind_gate10_benchmark.py#function:test_public_manifest_does_not_reveal_randomized_arm_mapping:f59a1ee9cb9d4fb7",
+        "signature_hash": "d6eecd7846263d60"
+      }
+    ],
+    "test_generated_files_have_hash_manifest": [
+      {
+        "file": "tests/test_aura_blind_gate10_benchmark.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 108,
+        "semantic_id": "tests/test_aura_blind_gate10_benchmark.py#function:test_generated_files_have_hash_manifest:3e3d7b9d305c56b5",
+        "signature_hash": "f7c7fdeebd26d7c8"
       }
     ],
     "TestBuildConnectome": [
@@ -241232,6 +241484,53 @@
       ]
     },
     {
+      "path": "scripts/aura_blind_gate10_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 17098,
+      "lines": 382,
+      "tokens_est": 4275,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1730565ece010748",
+      "vector": [
+        -0.157918,
+        -0.108502,
+        0.0376,
+        0.261048,
+        0.12569,
+        -0.237414,
+        -0.114947,
+        0.168661,
+        0.256751,
+        0.230969,
+        0.22882,
+        0.003223,
+        0.27394,
+        -0.200889,
+        0.046194,
+        -0.24386,
+        -0.145027,
+        -0.181552,
+        0.27394,
+        -0.078422,
+        0.222375,
+        0.121393,
+        0.069828,
+        -0.211632,
+        -0.230969,
+        0.192295,
+        0.119244,
+        0.052639,
+        -0.166512,
+        -0.112799,
+        -0.123541,
+        -0.138581
+      ]
+    },
+    {
       "path": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
       "role": "python_module",
       "binary": false,
@@ -249844,6 +250143,53 @@
         -0.084533,
         -0.052974,
         0.00789
+      ]
+    },
+    {
+      "path": "tests/test_aura_blind_gate10_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4578,
+      "lines": 109,
+      "tokens_est": 1145,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c8a125613307660f",
+      "vector": [
+        -0.089933,
+        0.197854,
+        -0.212666,
+        0.180925,
+        0.193621,
+        0.140719,
+        -0.227479,
+        0.081469,
+        -0.231711,
+        0.155532,
+        -0.22113,
+        -0.180925,
+        0.225363,
+        -0.147068,
+        -0.19997,
+        -0.204202,
+        -0.034915,
+        -0.170345,
+        -0.231711,
+        0.21055,
+        -0.223247,
+        0.265568,
+        -0.075121,
+        0.094166,
+        0.001058,
+        0.22113,
+        -0.05396,
+        -0.185157,
+        -0.2698,
+        -0.051844,
+        0.020103,
+        -0.142835
       ]
     },
     {
@@ -286300,15 +286646,15 @@
     }
   },
   "summary": {
-    "file_count": 1637,
-    "total_bytes": 26393372,
-    "text_tokens_est": 6588693,
+    "file_count": 1639,
+    "total_bytes": 26415048,
+    "text_tokens_est": 6594113,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 995,
+      "python_module": 997,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -287543,6 +287889,7 @@
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
       "scripts/aura_benchmark_suite.py",
+      "scripts/aura_blind_gate10_benchmark.py",
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
       "scripts/aura_exact_head_transport.py",
       "scripts/aura_fetch_construction_demo_source.py",
@@ -287683,6 +288030,7 @@
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
+      "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
       "tests/test_aura_capability_lane_registry.py",
@@ -385676,6 +386024,206 @@
         "file_digest8": "28521e7aebf0eea8"
       },
       {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#class:CellSpec:18c5b0c014f45d25",
+        "name": "CellSpec",
+        "kind": "class",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 42,
+        "end_line": 46,
+        "signature_hash": "40ca3764428a036e",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:aggregate:3b7993b859e1d608",
+        "name": "aggregate",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 277,
+        "end_line": 292,
+        "signature_hash": "7b6df86b37a03d2e",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:arm_mapping:343a8afc891073b8",
+        "name": "arm_mapping",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 62,
+        "end_line": 66,
+        "signature_hash": "5b84dd4b08488bb3",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:bit_checksum:21bdad2a1f72488d",
+        "name": "bit_checksum",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 69,
+        "end_line": 70,
+        "signature_hash": "f3c1c946cb45dd38",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:campaign_manifest:1fb1773b560a735c",
+        "name": "campaign_manifest",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 295,
+        "end_line": 309,
+        "signature_hash": "1babd4a2e93c6dba",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:canonical_json:7be1f5afca6c5f46",
+        "name": "canonical_json",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "c9911db40069043d",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:digest:a6884f304f932e8e",
+        "name": "digest",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "bd189b17ea870e50",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:generate:8f256fbac9cbe8fe",
+        "name": "generate",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 312,
+        "end_line": 328,
+        "signature_hash": "1c5e1e67479187a7",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:generate_cell01:f9c63fe229bf629d",
+        "name": "generate_cell01",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 132,
+        "end_line": 136,
+        "signature_hash": "3bb114db653c1a86",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:generate_cell02:0fd019884c02c427",
+        "name": "generate_cell02",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 170,
+        "end_line": 201,
+        "signature_hash": "867930780ef95368",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:generate_cell04:2d1a71b56f61dd8b",
+        "name": "generate_cell04",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 218,
+        "end_line": 251,
+        "signature_hash": "8a7c076bc68a17cc",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:main:dd8c4c0b3b8329d3",
+        "name": "main",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 367,
+        "end_line": 377,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:make_shards:bcc41e4cbb32412a",
+        "name": "make_shards",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 73,
+        "end_line": 77,
+        "signature_hash": "a0e81aaeb22abba3",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:score_cell01:b7015f33cc874b8b",
+        "name": "score_cell01",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 139,
+        "end_line": 167,
+        "signature_hash": "dc8ae4df2968c233",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:score_cell02:de58a17455d11394",
+        "name": "score_cell02",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 204,
+        "end_line": 215,
+        "signature_hash": "99290882d1f53f89",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:score_cell04:ddd54e8d003678db",
+        "name": "score_cell04",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 254,
+        "end_line": 274,
+        "signature_hash": "ec2786572070861f",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:selftest:76888b548ace0fe9",
+        "name": "selftest",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 331,
+        "end_line": 364,
+        "signature_hash": "6121d9fbfb70fe78",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:shard_case:fa566bd9a6fa1037",
+        "name": "shard_case",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 80,
+        "end_line": 129,
+        "signature_hash": "838319b2f918f447",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:write_json:3d220c153340593c",
+        "name": "write_json",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "aa7b5efba73144d6",
+        "file_digest8": "1730565ece010748"
+      },
+      {
+        "semantic_id": "scripts/aura_blind_gate10_benchmark.py#function:write_jsonl:d529f9f3adc35337",
+        "name": "write_jsonl",
+        "kind": "function",
+        "file": "scripts/aura_blind_gate10_benchmark.py",
+        "line": 35,
+        "end_line": 38,
+        "signature_hash": "06f5fa14a7645bc4",
+        "file_digest8": "1730565ece010748"
+      },
+      {
         "semantic_id": "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py#function:main:cd2d8a7ac706963d",
         "name": "main",
         "kind": "function",
@@ -405784,6 +406332,66 @@
         "end_line": 447,
         "signature_hash": "86d9d67fcba578a9",
         "file_digest8": "66ab03c19a58d808"
+      },
+      {
+        "semantic_id": "tests/test_aura_blind_gate10_benchmark.py#function:test_cell01_is_deterministic_and_has_27_slot_cases:77decc3d4a4236fd",
+        "name": "test_cell01_is_deterministic_and_has_27_slot_cases",
+        "kind": "function",
+        "file": "tests/test_aura_blind_gate10_benchmark.py",
+        "line": 17,
+        "end_line": 23,
+        "signature_hash": "061e29a53303e234",
+        "file_digest8": "c8a125613307660f"
+      },
+      {
+        "semantic_id": "tests/test_aura_blind_gate10_benchmark.py#function:test_cell01_perfect_responses_score_exact_and_impossible_fabrication_is_penalized:9ceb3780dbd78e8c",
+        "name": "test_cell01_perfect_responses_score_exact_and_impossible_fabrication_is_penalized",
+        "kind": "function",
+        "file": "tests/test_aura_blind_gate10_benchmark.py",
+        "line": 26,
+        "end_line": 42,
+        "signature_hash": "8770aac98a91e05c",
+        "file_digest8": "c8a125613307660f"
+      },
+      {
+        "semantic_id": "tests/test_aura_blind_gate10_benchmark.py#function:test_currentness_scorer_rejects_stale_value:cd276380bce5736f",
+        "name": "test_currentness_scorer_rejects_stale_value",
+        "kind": "function",
+        "file": "tests/test_aura_blind_gate10_benchmark.py",
+        "line": 45,
+        "end_line": 65,
+        "signature_hash": "cfc2032083bd6485",
+        "file_digest8": "c8a125613307660f"
+      },
+      {
+        "semantic_id": "tests/test_aura_blind_gate10_benchmark.py#function:test_generated_files_have_hash_manifest:3e3d7b9d305c56b5",
+        "name": "test_generated_files_have_hash_manifest",
+        "kind": "function",
+        "file": "tests/test_aura_blind_gate10_benchmark.py",
+        "line": 101,
+        "end_line": 108,
+        "signature_hash": "f7c7fdeebd26d7c8",
+        "file_digest8": "c8a125613307660f"
+      },
+      {
+        "semantic_id": "tests/test_aura_blind_gate10_benchmark.py#function:test_hallucination_scorer_separates_unknown_from_supported_value:ec515e767e6ab52d",
+        "name": "test_hallucination_scorer_separates_unknown_from_supported_value",
+        "kind": "function",
+        "file": "tests/test_aura_blind_gate10_benchmark.py",
+        "line": 68,
+        "end_line": 87,
+        "signature_hash": "e2283f66df31c57d",
+        "file_digest8": "c8a125613307660f"
+      },
+      {
+        "semantic_id": "tests/test_aura_blind_gate10_benchmark.py#function:test_public_manifest_does_not_reveal_randomized_arm_mapping:f59a1ee9cb9d4fb7",
+        "name": "test_public_manifest_does_not_reveal_randomized_arm_mapping",
+        "kind": "function",
+        "file": "tests/test_aura_blind_gate10_benchmark.py",
+        "line": 90,
+        "end_line": 98,
+        "signature_hash": "d6eecd7846263d60",
+        "file_digest8": "c8a125613307660f"
       },
       {
         "semantic_id": "tests/test_aura_capability_connectome.py#class:TestBuildConnectome:9c09157e9bafeb64",
@@ -446276,7 +446884,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "f54ee2e4da0bb0db05767925275e2b15",
-    "payload_hash": "c2d15f48bea9e4699aa88a6d5c9d16d1"
+    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
+    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
   }
 }
