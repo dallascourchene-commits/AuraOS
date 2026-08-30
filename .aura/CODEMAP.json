@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788126580,
+  "generated_at_unix": 1788127086,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1642,
+    "repo_file_count": 1644,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1623,6 +1623,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_bughound_envelope_lint.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -1633,6 +1634,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/bughound/envelope_lint.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -1758,15 +1760,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1642,
-      "bytes": 26436063,
-      "tokens_est": 6599369,
+      "files": 1644,
+      "bytes": 26449100,
+      "tokens_est": 6602624,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
+        "python_module": 1001,
         "schema_or_lexicon": 272,
         "support_file": 49
       }
@@ -156900,6 +156902,146 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "BugHoundEnvelopeLintTests": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 103,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#class:BugHoundEnvelopeLintTests:d3944653b480574b",
+        "signature_hash": "c936925accdbb15c"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_canonical_google_doc_shape_is_structurally_parseable": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 25,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_canonical_google_doc_shape_is_structurally_parseable:9ecc1becf5440f05",
+        "signature_hash": "4d0002d1f254ed22"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_near_miss_title_is_rejected": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_near_miss_title_is_rejected:18071a88b4e410dc",
+        "signature_hash": "3ee9acd7e656b08a"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_hash_prefixed_title_is_rejected": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 33,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_hash_prefixed_title_is_rejected:c7b508e1909e0a1a",
+        "signature_hash": "9b4ed5abf2f94053"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_prose_continuation_is_line_format": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 37,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_prose_continuation_is_line_format:f3b604358fa28c42",
+        "signature_hash": "12ef04a86cfb5400"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_json_trailing_text_detected": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 41,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_json_trailing_text_detected:fcbd7f3aeaf25da1",
+        "signature_hash": "655c6dda5a6a62f5"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_json_array_is_not_object": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 45,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_json_array_is_not_object:f641bf03c30f8cf8",
+        "signature_hash": "30d8f6d4af0ae099"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_json_object_structural_parse_does_not_grant_authority": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 54,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_json_object_structural_parse_does_not_grant_authority:771dfec09bd09455",
+        "signature_hash": "c35d3e5b74145648"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_forbidden_credentials_are_reported_without_repair": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 64,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_forbidden_credentials_are_reported_without_repair:fa4bb0b162173080",
+        "signature_hash": "dacc2a8160ed8616"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_non_exact_d0_is_reported": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 75,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_non_exact_d0_is_reported:44d32a62d90d2909",
+        "signature_hash": "79e89674d7e4eae5"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_one_leading_prose_token": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 81,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_one_leading_prose_token:ffe6be12fc134d37",
+        "signature_hash": "a8dfabbc9af560e5"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_suffix_embedding": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 88,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_suffix_embedding:2f87bb246eb9b414",
+        "signature_hash": "c7cb9e18591c222f"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_bom_is_not_a_structural_failure": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 99,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_bom_is_not_a_structural_failure:f2856d16cfca4bd3",
+        "signature_hash": "6436f17878129c37"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_receipt_digest_is_deterministic": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 103,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_receipt_digest_is_deterministic:a037c082fa510554",
+        "signature_hash": "49954c66936facb3"
+      }
+    ],
     "BugHoundSeedLabTests": [
       {
         "file": "tests/test_bughound_seedlab_benchmark.py",
@@ -157358,6 +157500,76 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "LintDisposition": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 31,
+        "semantic_id": "tools/bughound/envelope_lint.py#class:LintDisposition:48cfb00c65b5a6a6",
+        "signature_hash": "ec81a0e47aa3e071"
+      }
+    ],
+    "LintFindingV1": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 38,
+        "semantic_id": "tools/bughound/envelope_lint.py#class:LintFindingV1:4eef4b2f916623c0",
+        "signature_hash": "155d430396359b01"
+      }
+    ],
+    "EnvelopeLintReceiptV1": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "class",
+        "line": 42,
+        "end_line": 71,
+        "semantic_id": "tools/bughound/envelope_lint.py#class:EnvelopeLintReceiptV1:c85fe19b2b7b2cf4",
+        "signature_hash": "01f295d6be3409aa"
+      }
+    ],
+    "EnvelopeLintReceiptV1.receipt_digest": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 71,
+        "semantic_id": "tools/bughound/envelope_lint.py#method:EnvelopeLintReceiptV1.receipt_digest:a5208fcd36154142",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "_flatten_json": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 82,
+        "semantic_id": "tools/bughound/envelope_lint.py#function:_flatten_json:2d7adb56a5d14a9d",
+        "signature_hash": "2534941137a2288d"
+      }
+    ],
+    "_lint_semantics": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 109,
+        "semantic_id": "tools/bughound/envelope_lint.py#function:_lint_semantics:869c41b749604ad5",
+        "signature_hash": "5ab2d94a21f3707f"
+      }
+    ],
+    "lint_envelope": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 208,
+        "semantic_id": "tools/bughound/envelope_lint.py#function:lint_envelope:72a9c9fcfb3c121a",
+        "signature_hash": "8d871b696a6b8aaa"
       }
     ],
     "BenchmarkError": [
@@ -168546,9 +168758,9 @@
       "path": ".github/workflows/bughound-seedlab.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 1589,
+      "bytes": 1656,
       "lines": 44,
-      "tokens_est": 398,
+      "tokens_est": 414,
       "symbol_count": 0,
       "commands": [
         "python -m py_compile",
@@ -168563,40 +168775,40 @@
         ]
       },
       "topology": {},
-      "digest8": "f9c24b66c3a66104",
+      "digest8": "be9357e453a0f82d",
       "vector": [
-        0.108868,
-        0.319095,
-        -0.083841,
-        -0.22149,
-        0.28656,
-        -0.003754,
-        -0.103862,
-        0.148911,
-        0.003754,
-        0.131392,
-        0.126387,
-        -0.279052,
-        -0.163927,
-        0.153917,
-        -0.269041,
-        -0.136398,
-        0.071327,
-        -0.239009,
-        -0.201468,
-        0.1389,
-        -0.249019,
-        -0.223992,
-        -0.25903,
-        0.218987,
-        -0.076333,
-        0.033787,
-        0.008759,
-        -0.223992,
-        0.143906,
-        -0.136398,
-        0.001251,
-        0.128889
+        0.275733,
+        0.227987,
+        0.194564,
+        0.146819,
+        -0.204114,
+        0.029841,
+        0.15398,
+        -0.034616,
+        -0.227987,
+        -0.103847,
+        -0.046552,
+        -0.294831,
+        0.165917,
+        0.182628,
+        0.199339,
+        0.03939,
+        -0.132495,
+        -0.182628,
+        0.032228,
+        0.282894,
+        0.24231,
+        -0.096685,
+        -0.299605,
+        0.084749,
+        0.0752,
+        -0.175466,
+        -0.01313,
+        0.192177,
+        -0.144431,
+        0.072812,
+        0.247085,
+        0.182628
       ]
     },
     {
@@ -262693,6 +262905,53 @@
       ]
     },
     {
+      "path": "tests/test_bughound_envelope_lint.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4373,
+      "lines": 108,
+      "tokens_est": 1090,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "16ed168936bc6c3c",
+      "vector": [
+        -0.202066,
+        0.236356,
+        -0.118791,
+        -0.206965,
+        0.243704,
+        -0.08695,
+        0.030616,
+        0.277994,
+        0.037964,
+        0.057558,
+        0.263299,
+        -0.192269,
+        0.160428,
+        -0.238806,
+        0.12124,
+        -0.148182,
+        0.184921,
+        -0.157979,
+        0.091848,
+        0.251052,
+        -0.270646,
+        -0.263299,
+        0.028167,
+        -0.18982,
+        -0.101645,
+        0.140834,
+        0.138385,
+        0.079602,
+        0.113892,
+        0.079602,
+        -0.229009,
+        0.182472
+      ]
+    },
+    {
       "path": "tests/test_bughound_seedlab_benchmark.py",
       "role": "python_module",
       "binary": false,
@@ -263160,6 +263419,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/bughound/envelope_lint.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8597,
+      "lines": 209,
+      "tokens_est": 2149,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2d0f6c622209ff06",
+      "vector": [
+        0.046675,
+        0.31339,
+        0.017336,
+        0.038674,
+        -0.214706,
+        -0.204037,
+        -0.254713,
+        -0.012002,
+        -0.041341,
+        -0.25738,
+        0.116021,
+        -0.337395,
+        -0.068012,
+        -0.052009,
+        -0.025338,
+        0.212038,
+        -0.172031,
+        0.14536,
+        0.060011,
+        -0.150694,
+        -0.33206,
+        0.20137,
+        0.078681,
+        -0.084015,
+        0.022671,
+        -0.009335,
+        -0.33206,
+        0.196036,
+        0.028005,
+        -0.204037,
+        0.153361,
+        0.20137
       ]
     },
     {
@@ -287208,15 +287514,15 @@
     }
   },
   "summary": {
-    "file_count": 1642,
-    "total_bytes": 26436063,
-    "text_tokens_est": 6599369,
+    "file_count": 1644,
+    "total_bytes": 26449100,
+    "text_tokens_est": 6602624,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
+      "python_module": 1001,
       "schema_or_lexicon": 272,
       "support_file": 49
     },
@@ -288850,6 +289156,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_bughound_envelope_lint.py",
       "tests/test_bughound_seedlab_benchmark.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -288860,6 +289167,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/bughound/envelope_lint.py",
       "tools/bughound/seedlab_benchmark.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -445879,6 +446187,146 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#class:BugHoundEnvelopeLintTests:d3944653b480574b",
+        "name": "BugHoundEnvelopeLintTests",
+        "kind": "class",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 9,
+        "end_line": 103,
+        "signature_hash": "c936925accdbb15c",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_bom_is_not_a_structural_failure:f2856d16cfca4bd3",
+        "name": "BugHoundEnvelopeLintTests.test_bom_is_not_a_structural_failure",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 90,
+        "end_line": 99,
+        "signature_hash": "6436f17878129c37",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_canonical_google_doc_shape_is_structurally_parseable:9ecc1becf5440f05",
+        "name": "BugHoundEnvelopeLintTests.test_canonical_google_doc_shape_is_structurally_parseable",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 10,
+        "end_line": 25,
+        "signature_hash": "4d0002d1f254ed22",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_forbidden_credentials_are_reported_without_repair:fa4bb0b162173080",
+        "name": "BugHoundEnvelopeLintTests.test_forbidden_credentials_are_reported_without_repair",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 56,
+        "end_line": 64,
+        "signature_hash": "dacc2a8160ed8616",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_hash_prefixed_title_is_rejected:c7b508e1909e0a1a",
+        "name": "BugHoundEnvelopeLintTests.test_hash_prefixed_title_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 31,
+        "end_line": 33,
+        "signature_hash": "9b4ed5abf2f94053",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_json_array_is_not_object:f641bf03c30f8cf8",
+        "name": "BugHoundEnvelopeLintTests.test_json_array_is_not_object",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 43,
+        "end_line": 45,
+        "signature_hash": "30d8f6d4af0ae099",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_json_object_structural_parse_does_not_grant_authority:771dfec09bd09455",
+        "name": "BugHoundEnvelopeLintTests.test_json_object_structural_parse_does_not_grant_authority",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 47,
+        "end_line": 54,
+        "signature_hash": "c35d3e5b74145648",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_json_trailing_text_detected:fcbd7f3aeaf25da1",
+        "name": "BugHoundEnvelopeLintTests.test_json_trailing_text_detected",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 39,
+        "end_line": 41,
+        "signature_hash": "655c6dda5a6a62f5",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_near_miss_title_is_rejected:18071a88b4e410dc",
+        "name": "BugHoundEnvelopeLintTests.test_near_miss_title_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "3ee9acd7e656b08a",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_non_exact_d0_is_reported:44d32a62d90d2909",
+        "name": "BugHoundEnvelopeLintTests.test_non_exact_d0_is_reported",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 66,
+        "end_line": 75,
+        "signature_hash": "79e89674d7e4eae5",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_one_leading_prose_token:ffe6be12fc134d37",
+        "name": "BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_one_leading_prose_token",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 77,
+        "end_line": 81,
+        "signature_hash": "a8dfabbc9af560e5",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_suffix_embedding:2f87bb246eb9b414",
+        "name": "BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_suffix_embedding",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 83,
+        "end_line": 88,
+        "signature_hash": "c7cb9e18591c222f",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_prose_continuation_is_line_format:f3b604358fa28c42",
+        "name": "BugHoundEnvelopeLintTests.test_prose_continuation_is_line_format",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 35,
+        "end_line": 37,
+        "signature_hash": "12ef04a86cfb5400",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_receipt_digest_is_deterministic:a037c082fa510554",
+        "name": "BugHoundEnvelopeLintTests.test_receipt_digest_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 101,
+        "end_line": 103,
+        "signature_hash": "49954c66936facb3",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
         "semantic_id": "tests/test_bughound_seedlab_benchmark.py#class:BugHoundSeedLabTests:6f8cb762fcb0d1d6",
         "name": "BugHoundSeedLabTests",
         "kind": "class",
@@ -446357,6 +446805,76 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#class:EnvelopeLintReceiptV1:c85fe19b2b7b2cf4",
+        "name": "EnvelopeLintReceiptV1",
+        "kind": "class",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 42,
+        "end_line": 71,
+        "signature_hash": "01f295d6be3409aa",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#class:LintDisposition:48cfb00c65b5a6a6",
+        "name": "LintDisposition",
+        "kind": "class",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 25,
+        "end_line": 31,
+        "signature_hash": "ec81a0e47aa3e071",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#class:LintFindingV1:4eef4b2f916623c0",
+        "name": "LintFindingV1",
+        "kind": "class",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 35,
+        "end_line": 38,
+        "signature_hash": "155d430396359b01",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#function:_flatten_json:2d7adb56a5d14a9d",
+        "name": "_flatten_json",
+        "kind": "function",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 74,
+        "end_line": 82,
+        "signature_hash": "2534941137a2288d",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#function:_lint_semantics:869c41b749604ad5",
+        "name": "_lint_semantics",
+        "kind": "function",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 85,
+        "end_line": 109,
+        "signature_hash": "5ab2d94a21f3707f",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#function:lint_envelope:72a9c9fcfb3c121a",
+        "name": "lint_envelope",
+        "kind": "function",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 112,
+        "end_line": 208,
+        "signature_hash": "8d871b696a6b8aaa",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#method:EnvelopeLintReceiptV1.receipt_digest:a5208fcd36154142",
+        "name": "EnvelopeLintReceiptV1.receipt_digest",
+        "kind": "method",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 55,
+        "end_line": 71,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "2d0f6c622209ff06"
       },
       {
         "semantic_id": "tools/bughound/seedlab_benchmark.py#class:BenchmarkError:cac2d2d6778f17c5",
@@ -447859,7 +448377,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "ccf2a9f9b9b39b190d1b613db31ad369",
-    "payload_hash": "cb1eaea095fe402d9f3a85800223c55a"
+    "record_fingerprint": "9c0382d13637ea7a4bb3e492877454c7",
+    "payload_hash": "894105f247df1d86cf14f23d1f8bafa4"
   }
 }
