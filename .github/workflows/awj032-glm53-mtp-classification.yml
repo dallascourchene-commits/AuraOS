@@ -1,0 +1,43 @@
+name: AWJ032 GLM53 G1 MTP classification
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_checkpoint_layout_probe.py'
+      - 'tools/awj032/glm53_checkpoint_source_binding.py'
+      - 'tools/awj032/glm53_mtp_checkpoint_classifier.py'
+      - 'tools/awj032/test_glm53_checkpoint_layout_probe.py'
+      - 'tools/awj032/test_glm53_checkpoint_source_binding.py'
+      - 'tools/awj032/test_glm53_mtp_checkpoint_classifier.py'
+      - '.github/workflows/awj032-glm53-mtp-classification.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-bound-mtp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile source probe and MTP classifier
+        run: >-
+          python -m py_compile
+          tools/awj032/glm53_checkpoint_layout_probe.py
+          tools/awj032/glm53_checkpoint_source_binding.py
+          tools/awj032/glm53_mtp_checkpoint_classifier.py
+          tools/awj032/test_glm53_checkpoint_layout_probe.py
+          tools/awj032/test_glm53_checkpoint_source_binding.py
+          tools/awj032/test_glm53_mtp_checkpoint_classifier.py
+      - name: Re-run inherited checkpoint probe regressions
+        working-directory: tools/awj032
+        run: python -m unittest -v test_glm53_checkpoint_layout_probe.py
+      - name: Re-run inherited source-binding regressions
+        working-directory: tools/awj032
+        run: python -m unittest -v test_glm53_checkpoint_source_binding.py
+      - name: Run MTP classification regressions
+        working-directory: tools/awj032
+        run: python -m unittest -v test_glm53_mtp_checkpoint_classifier.py
