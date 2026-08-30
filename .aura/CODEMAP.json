@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788092504,
+  "generated_at_unix": 1788105567,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1661,
+    "repo_file_count": 1663,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1652,7 +1652,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
+      "tools/awj032/glm53_checkpoint_layout_probe.py",
       "tools/awj032/test_airllm_source_admission.py",
+      "tools/awj032/test_glm53_checkpoint_layout_probe.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1777,15 +1779,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1661,
-      "bytes": 26436751,
-      "tokens_est": 6599579,
+      "files": 1663,
+      "bytes": 26455698,
+      "tokens_est": 6604316,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1010,
+        "python_module": 1012,
         "schema_or_lexicon": 274,
         "support_file": 49
       }
@@ -3941,6 +3943,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_canonical:aaf01bd1d8109e0b",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -8113,6 +8123,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_sha:116e5b617174946a",
+        "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
     "_repo": [
@@ -45609,6 +45627,14 @@
         "end_line": 172,
         "semantic_id": "aura_project_context_compiler.py#function:_int:8a0a00dcd2538f6b",
         "signature_hash": "e77fdaf331f45530"
+      },
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_int:ef74868636877e09",
+        "signature_hash": "0d9d7bc3e65394e3"
       }
     ],
     "_prob": [
@@ -158069,6 +158095,146 @@
         "signature_hash": "46b37ab1f36534cb"
       }
     ],
+    "ProbeError": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 28,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#class:ProbeError:e35cf5b01384b72e",
+        "signature_hash": "7c421b08047c1609"
+      }
+    ],
+    "ProbeError.__init__": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 28,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:ProbeError.__init__:2dde176739535269",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "Geometry": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "class",
+        "line": 53,
+        "end_line": 90,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#class:Geometry:6909379da99ddcb0",
+        "signature_hash": "1550b2056b16f0be"
+      }
+    ],
+    "Geometry.total_fp8_weight_bytes": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:Geometry.total_fp8_weight_bytes:0da0dc38c9fec035",
+        "signature_hash": "4d6139f0239feb94"
+      }
+    ],
+    "Geometry.candidate_fp32_scale_bank_bytes": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 73,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:Geometry.candidate_fp32_scale_bank_bytes:b6ef61ba43c985c7",
+        "signature_hash": "667682036cfb86d9"
+      }
+    ],
+    "Geometry.to_dict": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 90,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:Geometry.to_dict:00d612851f20d7fb",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "geometry_from_config": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 131,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:geometry_from_config:4bba51429afe0a75",
+        "signature_hash": "717229019f609fe1"
+      }
+    ],
+    "_layer_prefix": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 134,
+        "end_line": 135,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_layer_prefix:3fbd992a71a926df",
+        "signature_hash": "df196be264c348ba"
+      }
+    ],
+    "_packed_candidates": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 138,
+        "end_line": 140,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_packed_candidates:6e26b13eba99bf22",
+        "signature_hash": "012f9a8c56e6bb7f"
+      }
+    ],
+    "_scale_keys_for_layer": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 143,
+        "end_line": 150,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_scale_keys_for_layer:20b4b7abd14977ef",
+        "signature_hash": "53cfba367b4dc0c3"
+      }
+    ],
+    "_per_expert_projection_coverage": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 153,
+        "end_line": 163,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_per_expert_projection_coverage:41792882d3e2a3ce",
+        "signature_hash": "4a0d17c23beecf9c"
+      }
+    ],
+    "_all_layer_indices": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 166,
+        "end_line": 173,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_all_layer_indices:50133c5efd74f6ce",
+        "signature_hash": "fc74b6a78f691f3f"
+      }
+    ],
+    "classify_layer_layout": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 176,
+        "end_line": 252,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:classify_layer_layout:e18076da396e6a45",
+        "signature_hash": "8a5119975d5c4611"
+      }
+    ],
+    "probe_checkpoint": [
+      {
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 255,
+        "end_line": 342,
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:probe_checkpoint:c0f32f855e67c055",
+        "signature_hash": "89ad21b6871b488b"
+      }
+    ],
     "make_tree": [
       {
         "file": "tools/awj032/test_airllm_source_admission.py",
@@ -158207,6 +158373,136 @@
         "end_line": 146,
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_missing_root_fails_closed:6e21701ad0ec8d47",
         "signature_hash": "378536f4432265cb"
+      }
+    ],
+    "config": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 25,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#function:config:26563543af8f19b3",
+        "signature_hash": "2a76accc26aabd44"
+      }
+    ],
+    "GLM53CheckpointLayoutProbeTests": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 159,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#class:GLM53CheckpointLayoutProbeTests:507d7650a59b36f7",
+        "signature_hash": "9c5a8b50a3f2504e"
+      }
+    ],
+    "GLM53CheckpointLayoutProbeTests.test_geometry_matches_flagship_shape_law": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_geometry_matches_flagship_shape_law:0a83290c2a804cbd",
+        "signature_hash": "7cee14c907742704"
+      }
+    ],
+    "GLM53CheckpointLayoutProbeTests.test_packed_physical_layout_detected": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_packed_physical_layout_detected:6c7bc757a64cdfb7",
+        "signature_hash": "db840e0af9d08f23"
+      }
+    ],
+    "GLM53CheckpointLayoutProbeTests.test_monolithic_gate_cannot_fit_smaller_assigned_shard": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_monolithic_gate_cannot_fit_smaller_assigned_shard:27e530797fee90e3",
+        "signature_hash": "69c5358c62e13ce0"
+      }
+    ],
+    "GLM53CheckpointLayoutProbeTests.test_complete_per_expert_layout_detected": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 66,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_complete_per_expert_layout_detected:0ef2190f43adec7c",
+        "signature_hash": "e9cb19b8c8f231c5"
+      }
+    ],
+    "GLM53CheckpointLayoutProbeTests.test_partial_per_expert_layout_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 76,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_partial_per_expert_layout_fails_closed:4cf88bf9b83b7f34",
+        "signature_hash": "96b12a765cc4946d"
+      }
+    ],
+    "GLM53CheckpointLayoutProbeTests.test_fp8_without_scale_keys_is_unresolved": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_fp8_without_scale_keys_is_unresolved:a2dd530e24779e75",
+        "signature_hash": "4487f3870ccccfc6"
+      }
+    ],
+    "GLM53CheckpointLayoutProbeTests.test_mtp_extra_layer_is_explicit_blocker": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 104,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_mtp_extra_layer_is_explicit_blocker:89b804abf3ea9846",
+        "signature_hash": "4ff20e1ad5c83636"
+      }
+    ],
+    "GLM53CheckpointLayoutProbeTests.test_security_block_has_priority": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_security_block_has_priority:4613fe670ae904e9",
+        "signature_hash": "186fbb538f027d01"
+      }
+    ],
+    "GLM53CheckpointLayoutProbeTests.test_observation_time_does_not_churn_logical_id": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 131,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_observation_time_does_not_churn_logical_id:c41e9d8607f6126d",
+        "signature_hash": "27c7e6abe916ef5c"
+      }
+    ],
+    "GLM53CheckpointLayoutProbeTests.test_missing_currentness_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 144,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_missing_currentness_fails_closed:87edc27a184e18da",
+        "signature_hash": "be82dbf01c541212"
+      }
+    ],
+    "GLM53CheckpointLayoutProbeTests.test_report_never_admits_large_checkpoint_or_g2": [
+      {
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 159,
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_report_never_admits_large_checkpoint_or_g2:55d70d0e71955b90",
+        "signature_hash": "6c1c31e4144a5cd5"
       }
     ],
     "_coordinates": [
@@ -264711,6 +265007,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_checkpoint_layout_probe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12656,
+      "lines": 343,
+      "tokens_est": 3164,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e86c127d437d0673",
+      "vector": [
+        -0.242568,
+        -0.190064,
+        -0.150161,
+        -0.238368,
+        -0.227867,
+        -0.009451,
+        0.099757,
+        -0.108158,
+        0.232067,
+        0.250968,
+        0.114458,
+        -0.211066,
+        0.227867,
+        0.156462,
+        0.13756,
+        -0.255169,
+        0.192164,
+        -0.232067,
+        0.242568,
+        -0.087156,
+        -0.196364,
+        0.156462,
+        0.261469,
+        -0.068255,
+        0.108158,
+        0.019951,
+        0.047253,
+        -0.190064,
+        -0.068255,
+        0.032552,
+        0.059854,
+        -0.253069
+      ]
+    },
+    {
       "path": "tools/awj032/test_airllm_source_admission.py",
       "role": "python_module",
       "binary": false,
@@ -264755,6 +265098,53 @@
         -0.067951,
         -0.024186,
         0.272957
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6291,
+      "lines": 164,
+      "tokens_est": 1573,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "33a40c5f8ca1cb48",
+      "vector": [
+        0.07558,
+        0.106325,
+        0.318975,
+        0.172938,
+        0.211369,
+        0.16269,
+        -0.101201,
+        0.201121,
+        -0.106325,
+        0.213931,
+        -0.188311,
+        -0.26261,
+        0.067894,
+        0.172938,
+        0.121697,
+        0.321537,
+        0.039712,
+        0.247238,
+        -0.07558,
+        0.029464,
+        -0.277982,
+        0.006405,
+        -0.219055,
+        -0.065332,
+        -0.039712,
+        -0.167814,
+        -0.211369,
+        0.324099,
+        -0.026902,
+        -0.083267,
+        -0.165252,
+        -0.044836
       ]
     },
     {
@@ -288756,15 +289146,15 @@
     }
   },
   "summary": {
-    "file_count": 1661,
-    "total_bytes": 26436751,
-    "text_tokens_est": 6599579,
+    "file_count": 1663,
+    "total_bytes": 26455698,
+    "text_tokens_est": 6604316,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1010,
+      "python_module": 1012,
       "schema_or_lexicon": 274,
       "support_file": 49
     },
@@ -290427,7 +290817,9 @@
       "third_party/pascal/pascal-lock.json",
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
+      "tools/awj032/glm53_checkpoint_layout_probe.py",
       "tools/awj032/test_airllm_source_admission.py",
+      "tools/awj032/test_glm53_checkpoint_layout_probe.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -448646,6 +449038,176 @@
         "file_digest8": "cecff98d2a4fb9ba"
       },
       {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#class:Geometry:6909379da99ddcb0",
+        "name": "Geometry",
+        "kind": "class",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 53,
+        "end_line": 90,
+        "signature_hash": "1550b2056b16f0be",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#class:ProbeError:e35cf5b01384b72e",
+        "name": "ProbeError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 24,
+        "end_line": 28,
+        "signature_hash": "7c421b08047c1609",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_all_layer_indices:50133c5efd74f6ce",
+        "name": "_all_layer_indices",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 166,
+        "end_line": 173,
+        "signature_hash": "fc74b6a78f691f3f",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_canonical:aaf01bd1d8109e0b",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 38,
+        "end_line": 45,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_int:ef74868636877e09",
+        "name": "_int",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 31,
+        "end_line": 35,
+        "signature_hash": "0d9d7bc3e65394e3",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_layer_prefix:3fbd992a71a926df",
+        "name": "_layer_prefix",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 134,
+        "end_line": 135,
+        "signature_hash": "df196be264c348ba",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_packed_candidates:6e26b13eba99bf22",
+        "name": "_packed_candidates",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 138,
+        "end_line": 140,
+        "signature_hash": "012f9a8c56e6bb7f",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_per_expert_projection_coverage:41792882d3e2a3ce",
+        "name": "_per_expert_projection_coverage",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 153,
+        "end_line": 163,
+        "signature_hash": "4a0d17c23beecf9c",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_scale_keys_for_layer:20b4b7abd14977ef",
+        "name": "_scale_keys_for_layer",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 143,
+        "end_line": 150,
+        "signature_hash": "53cfba367b4dc0c3",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:_sha:116e5b617174946a",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:classify_layer_layout:e18076da396e6a45",
+        "name": "classify_layer_layout",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 176,
+        "end_line": 252,
+        "signature_hash": "8a5119975d5c4611",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:geometry_from_config:4bba51429afe0a75",
+        "name": "geometry_from_config",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 93,
+        "end_line": 131,
+        "signature_hash": "717229019f609fe1",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#function:probe_checkpoint:c0f32f855e67c055",
+        "name": "probe_checkpoint",
+        "kind": "function",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 255,
+        "end_line": 342,
+        "signature_hash": "89ad21b6871b488b",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:Geometry.candidate_fp32_scale_bank_bytes:b6ef61ba43c985c7",
+        "name": "Geometry.candidate_fp32_scale_bank_bytes",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 70,
+        "end_line": 73,
+        "signature_hash": "667682036cfb86d9",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:Geometry.to_dict:00d612851f20d7fb",
+        "name": "Geometry.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 75,
+        "end_line": 90,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:Geometry.total_fp8_weight_bytes:0da0dc38c9fec035",
+        "name": "Geometry.total_fp8_weight_bytes",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 66,
+        "end_line": 67,
+        "signature_hash": "4d6139f0239feb94",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_checkpoint_layout_probe.py#method:ProbeError.__init__:2dde176739535269",
+        "name": "ProbeError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_checkpoint_layout_probe.py",
+        "line": 25,
+        "end_line": 28,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "e86c127d437d0673"
+      },
+      {
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
         "name": "GateTests",
         "kind": "class",
@@ -448784,6 +449346,136 @@
         "end_line": 95,
         "signature_hash": "e53ec68793bba4bf",
         "file_digest8": "f3d37a2c9e5c244c"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#class:GLM53CheckpointLayoutProbeTests:507d7650a59b36f7",
+        "name": "GLM53CheckpointLayoutProbeTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 28,
+        "end_line": 159,
+        "signature_hash": "9c5a8b50a3f2504e",
+        "file_digest8": "33a40c5f8ca1cb48"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#function:config:26563543af8f19b3",
+        "name": "config",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 14,
+        "end_line": 25,
+        "signature_hash": "2a76accc26aabd44",
+        "file_digest8": "33a40c5f8ca1cb48"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_complete_per_expert_layout_detected:0ef2190f43adec7c",
+        "name": "GLM53CheckpointLayoutProbeTests.test_complete_per_expert_layout_detected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 58,
+        "end_line": 66,
+        "signature_hash": "e9cb19b8c8f231c5",
+        "file_digest8": "33a40c5f8ca1cb48"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_fp8_without_scale_keys_is_unresolved:a2dd530e24779e75",
+        "name": "GLM53CheckpointLayoutProbeTests.test_fp8_without_scale_keys_is_unresolved",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 78,
+        "end_line": 84,
+        "signature_hash": "4487f3870ccccfc6",
+        "file_digest8": "33a40c5f8ca1cb48"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_geometry_matches_flagship_shape_law:0a83290c2a804cbd",
+        "name": "GLM53CheckpointLayoutProbeTests.test_geometry_matches_flagship_shape_law",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 29,
+        "end_line": 35,
+        "signature_hash": "7cee14c907742704",
+        "file_digest8": "33a40c5f8ca1cb48"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_missing_currentness_fails_closed:87edc27a184e18da",
+        "name": "GLM53CheckpointLayoutProbeTests.test_missing_currentness_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 133,
+        "end_line": 144,
+        "signature_hash": "be82dbf01c541212",
+        "file_digest8": "33a40c5f8ca1cb48"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_monolithic_gate_cannot_fit_smaller_assigned_shard:27e530797fee90e3",
+        "name": "GLM53CheckpointLayoutProbeTests.test_monolithic_gate_cannot_fit_smaller_assigned_shard",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 47,
+        "end_line": 56,
+        "signature_hash": "69c5358c62e13ce0",
+        "file_digest8": "33a40c5f8ca1cb48"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_mtp_extra_layer_is_explicit_blocker:89b804abf3ea9846",
+        "name": "GLM53CheckpointLayoutProbeTests.test_mtp_extra_layer_is_explicit_blocker",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 86,
+        "end_line": 104,
+        "signature_hash": "4ff20e1ad5c83636",
+        "file_digest8": "33a40c5f8ca1cb48"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_observation_time_does_not_churn_logical_id:c41e9d8607f6126d",
+        "name": "GLM53CheckpointLayoutProbeTests.test_observation_time_does_not_churn_logical_id",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 119,
+        "end_line": 131,
+        "signature_hash": "27c7e6abe916ef5c",
+        "file_digest8": "33a40c5f8ca1cb48"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_packed_physical_layout_detected:6c7bc757a64cdfb7",
+        "name": "GLM53CheckpointLayoutProbeTests.test_packed_physical_layout_detected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 37,
+        "end_line": 45,
+        "signature_hash": "db840e0af9d08f23",
+        "file_digest8": "33a40c5f8ca1cb48"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_partial_per_expert_layout_fails_closed:4cf88bf9b83b7f34",
+        "name": "GLM53CheckpointLayoutProbeTests.test_partial_per_expert_layout_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 68,
+        "end_line": 76,
+        "signature_hash": "96b12a765cc4946d",
+        "file_digest8": "33a40c5f8ca1cb48"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_report_never_admits_large_checkpoint_or_g2:55d70d0e71955b90",
+        "name": "GLM53CheckpointLayoutProbeTests.test_report_never_admits_large_checkpoint_or_g2",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 146,
+        "end_line": 159,
+        "signature_hash": "6c1c31e4144a5cd5",
+        "file_digest8": "33a40c5f8ca1cb48"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_checkpoint_layout_probe.py#method:GLM53CheckpointLayoutProbeTests.test_security_block_has_priority:4613fe670ae904e9",
+        "name": "GLM53CheckpointLayoutProbeTests.test_security_block_has_priority",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_checkpoint_layout_probe.py",
+        "line": 106,
+        "end_line": 117,
+        "signature_hash": "186fbb538f027d01",
+        "file_digest8": "33a40c5f8ca1cb48"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -450036,7 +450728,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "6b6796e20f381c4dff8502ac5aac7bbe",
-    "payload_hash": "2f1488077b05e7d0803264ecf1883478"
+    "record_fingerprint": "0b5d748f7d33630442d05d037bb89e8a",
+    "payload_hash": "952b984cbdde19268f1e65cd1898c28a"
   }
 }
