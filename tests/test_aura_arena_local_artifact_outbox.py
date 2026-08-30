@@ -1,0 +1,188 @@
+import tempfile
+import time
+import unittest
+from pathlib import Path
+
+from aura_arena_artifact_event_core import ArtifactEventRefusal, FileObservation, MirrorLineage
+from aura_arena_local_artifact_outbox import LocalArtifactOutbox, LocalOutboxRefusal, LocalWatchConfig
+
+
+def obs(path, t):
+    st = Path(path).stat()
+    return FileObservation(st.st_size, st.st_mtime_ns, t)
+
+
+class LocalOutboxTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name) / "Aura Drive 2"
+        self.root.mkdir()
+        self.db = Path(self.tmp.name) / "outbox.sqlite"
+        self.cfg = LocalWatchConfig(
+            roots=(str(self.root),),
+            source_surface="AURA_DRIVE_2_LOCAL",
+            project_id="CS-PROJ-001",
+            source_currentness_ref="board-rev-1",
+            producer_worker_id="W1",
+            claim_id="AS04",
+            work_order_id="CS-ARENA-SYNC-001",
+            min_stable_ns=10,
+        )
+        self.out = LocalArtifactOutbox(self.db, self.cfg)
+
+    def tearDown(self):
+        self.out.close()
+        self.tmp.cleanup()
+
+    def stable(self, path):
+        return [obs(path, 100), obs(path, 120)]
+
+    def test_outside_root_refused(self):
+        p = Path(self.tmp.name) / "x.txt"
+        p.write_text("x")
+        with self.assertRaisesRegex(LocalOutboxRefusal, "PATH_OUTSIDE_CONFIGURED_ROOT"):
+            self.out.ingest_file_notification(p, event_type="CREATE", observations=self.stable(p), observed_at="t")
+
+    def test_partial_write_not_quiescent(self):
+        p = self.root / "x.txt"
+        p.write_text("a")
+        a = obs(p, 100)
+        p.write_text("abcdef")
+        b = obs(p, 120)
+        with self.assertRaisesRegex(ArtifactEventRefusal, "ARTIFACT_NOT_QUIESCENT"):
+            self.out.ingest_file_notification(p, event_type="CREATE", observations=[a, b], observed_at="t")
+
+    def test_short_stability_window_refused(self):
+        p = self.root / "x.txt"
+        p.write_text("a")
+        st = p.stat()
+        samples = [
+            FileObservation(st.st_size, st.st_mtime_ns, 100),
+            FileObservation(st.st_size, st.st_mtime_ns, 105),
+        ]
+        with self.assertRaisesRegex(ArtifactEventRefusal, "ARTIFACT_STABILITY_WINDOW_TOO_SHORT"):
+            self.out.ingest_file_notification(p, event_type="CREATE", observations=samples, observed_at="t")
+
+    def test_closed_evidence_allows_single_sample(self):
+        p = self.root / "x.txt"
+        p.write_text("a")
+        result = self.out.ingest_file_notification(
+            p, event_type="CREATE", observations=[obs(p, 100)], observed_at="t", closed_evidence=True
+        )
+        self.assertEqual(result.disposition, "ENQUEUED")
+
+    def test_atomic_publish_allows_single_sample(self):
+        p = self.root / "x.txt"
+        p.write_text("a")
+        result = self.out.ingest_file_notification(
+            p, event_type="CREATE", observations=[obs(p, 100)], observed_at="t", atomic_publish_evidence=True
+        )
+        self.assertEqual(result.disposition, "ENQUEUED")
+
+    def test_duplicate_notification_is_idempotent_without_generation_bump(self):
+        p = self.root / "x.txt"
+        p.write_text("one")
+        samples = self.stable(p)
+        first = self.out.ingest_file_notification(p, event_type="CREATE", observations=samples, observed_at="t1")
+        second = self.out.ingest_file_notification(p, event_type="CREATE", observations=samples, observed_at="t2")
+        self.assertEqual(second.disposition, "IDEMPOTENT_REPLAY")
+        self.assertEqual(first.record.event.event_id, second.record.event.event_id)
+        self.assertEqual(self.out.generation_for(p), 1)
+        self.assertEqual(len(self.out.pending()), 1)
+
+    def test_same_name_new_content_versions_without_collision(self):
+        p = self.root / "x.txt"
+        p.write_text("one")
+        first = self.out.ingest_file_notification(p, event_type="CREATE", observations=self.stable(p), observed_at="t1")
+        time.sleep(0.001)
+        p.write_text("two")
+        second = self.out.ingest_file_notification(p, event_type="MODIFY", observations=self.stable(p), observed_at="t2")
+        self.assertNotEqual(first.record.identity.artifact_sid, second.record.identity.artifact_sid)
+        self.assertEqual(second.record.event.generation, 2)
+        self.assertEqual(len(self.out.pending()), 2)
+
+    def test_restart_replays_pending_exactly(self):
+        p = self.root / "x.txt"
+        p.write_text("one")
+        first = self.out.ingest_file_notification(p, event_type="CREATE", observations=self.stable(p), observed_at="t")
+        self.out.close()
+        self.out = LocalArtifactOutbox(self.db, self.cfg)
+        pending = self.out.pending()
+        self.assertEqual(len(pending), 1)
+        self.assertEqual(pending[0].event.event_id, first.record.event.event_id)
+
+    def test_ack_is_idempotent_and_removes_pending(self):
+        p = self.root / "x.txt"
+        p.write_text("one")
+        result = self.out.ingest_file_notification(p, event_type="CREATE", observations=self.stable(p), observed_at="t")
+        self.assertEqual(self.out.ack(result.record.event.event_id, persistence_receipt_ref="receipt:1"), "ACKED")
+        self.assertEqual(self.out.ack(result.record.event.event_id, persistence_receipt_ref="receipt:1"), "IDEMPOTENT_ACK")
+        self.assertEqual(self.out.pending(), [])
+
+    def test_ack_conflict_fails_closed(self):
+        p = self.root / "x.txt"
+        p.write_text("one")
+        result = self.out.ingest_file_notification(p, event_type="CREATE", observations=self.stable(p), observed_at="t")
+        self.out.ack(result.record.event.event_id, persistence_receipt_ref="receipt:1")
+        with self.assertRaisesRegex(LocalOutboxRefusal, "ACK_RECEIPT_CONFLICT"):
+            self.out.ack(result.record.event.event_id, persistence_receipt_ref="receipt:2")
+
+    def test_tombstone_requires_prior_lineage_and_no_bytes(self):
+        p = self.root / "gone.txt"
+        with self.assertRaisesRegex(LocalOutboxRefusal, "PRIOR_LINEAGE_REQUIRED"):
+            self.out.ingest_tombstone(p, observed_at="t")
+        result = self.out.ingest_tombstone(
+            p, observed_at="t", prior_artifact_id="artifact-sha256-" + "0" * 64
+        )
+        self.assertIsNone(result.record.identity)
+        self.assertEqual(result.record.event.event_type, "TOMBSTONE")
+
+    def test_rename_binds_old_resource_lineage(self):
+        old = self.root / "a.txt"
+        new = self.root / "b.txt"
+        new.write_text("body")
+        result = self.out.ingest_rename(old, new, observations=self.stable(new), observed_at="t")
+        self.assertEqual(result.record.event.event_type, "RENAME")
+        self.assertIn("a.txt", result.record.event.prior_resource_ref)
+
+    def test_inbound_mirror_to_same_surface_is_suppressed(self):
+        p = self.root / "x.txt"
+        p.write_text("one")
+        lineage = MirrorLineage.start("cloud-origin", "CLOUD", artifact_generation=7).next_hop("AURA_DRIVE_2_LOCAL")
+        result = self.out.ingest_file_notification(
+            p,
+            event_type="MODIFY",
+            observations=self.stable(p),
+            observed_at="t",
+            inbound_mirror_lineage=lineage,
+        )
+        self.assertEqual(result.disposition, "SELF_LOOP_SUPPRESSED")
+        self.assertEqual(self.out.pending(), [])
+
+    def test_records_never_claim_execution_or_provider_authority(self):
+        p = self.root / "x.txt"
+        p.write_text("one")
+        result = self.out.ingest_file_notification(p, event_type="CREATE", observations=self.stable(p), observed_at="t")
+        data = result.record.to_dict()
+        self.assertFalse(data["execution_authorized"])
+        self.assertFalse(data["provider_calls_authorized"])
+        self.assertFalse(data["background_execution_claimed"])
+
+    def test_unknown_currentness_config_is_refused(self):
+        with self.assertRaisesRegex(LocalOutboxRefusal, "CURRENTNESS_REF_REQUIRED"):
+            LocalWatchConfig(
+                roots=(str(self.root),),
+                source_surface="LOCAL",
+                project_id="P",
+                source_currentness_ref="UNKNOWN",
+            )
+
+    def test_sqlite_wal_and_full_sync_enabled(self):
+        mode = self.out._conn.execute("PRAGMA journal_mode").fetchone()[0]
+        sync = self.out._conn.execute("PRAGMA synchronous").fetchone()[0]
+        self.assertEqual(mode.lower(), "wal")
+        self.assertEqual(sync, 2)
+
+
+if __name__ == "__main__":
+    unittest.main()
