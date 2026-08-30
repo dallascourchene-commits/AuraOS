@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1639
-- **total_bytes**: 26415048
-- **text_tokens_est**: 6594113
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1641
+- **total_bytes**: 26428436
+- **text_tokens_est**: 6597461
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1639,
+  "repo_file_count": 1641,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -335,6 +335,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_architect_council_v3.py",
     "aura_architect_loop.py",
     "aura_architecture_harness_git_tree_routing.py",
+    "aura_arena_admission.py",
     "aura_arena_architect_connector.py",
     "aura_arena_architect_runtime.py",
     "aura_arena_attempt_archive.py",
@@ -1370,6 +1371,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_architecture_harness_export_workflow.py",
     "tests/test_aura_architecture_harness_git_tree_routing.py",
     "tests/test_aura_architecture_harness_original_github_routing.py",
+    "tests/test_aura_arena_admission.py",
     "tests/test_aura_arena_connector_hardening.py",
     "tests/test_aura_arena_experience_ledger.py",
     "tests/test_aura_arena_live_cli.py",
@@ -1670,6 +1672,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
     "06_refactor/aura_os_minimal.py",
+    "aura_arena_admission.py",
     "aura_blockchain/__init__.py",
     "aura_blockchain/block.py",
     "aura_blockchain/consensus.py",
@@ -1748,6 +1751,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_architecture_harness_export_workflow.py",
     "tests/test_aura_architecture_harness_git_tree_routing.py",
     "tests/test_aura_architecture_harness_original_github_routing.py",
+    "tests/test_aura_arena_admission.py",
     "tests/test_aura_arena_connector_hardening.py",
     "tests/test_aura_arena_experience_ledger.py",
     "tests/test_aura_arena_live_cli.py",
@@ -1763,9 +1767,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_bilateral_planning_enforcement.py",
     "tests/test_aura_blind_gate10_benchmark.py",
     "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py"
+    "tests/test_aura_capability_connectome_v2.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1779,15 +1781,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1639,
-  "bytes": 26415048,
-  "tokens_est": 6594113,
+  "files": 1641,
+  "bytes": 26428436,
+  "tokens_est": 6597461,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 997,
+    "python_module": 999,
     "schema_or_lexicon": 271,
     "support_file": 49
   }
@@ -2139,6 +2141,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_architect_council_v3.py",
     "aura_architect_loop.py",
     "aura_architecture_harness_git_tree_routing.py",
+    "aura_arena_admission.py",
     "aura_arena_architect_connector.py",
     "aura_arena_architect_runtime.py",
     "aura_arena_attempt_archive.py",
@@ -2482,8 +2485,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_planning_events.py",
     "aura_planning_frontier.py",
     "aura_planning_projector.py",
-    "aura_planning_regression.py",
-    "aura_plugin_registry.py"
+    "aura_planning_regression.py"
   ]
 }
 ```
