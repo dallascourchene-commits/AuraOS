@@ -7,7 +7,7 @@ against a repository-owned tuple of independently observed reproduction records.
 The canonical tuple is intentionally empty until a real, independently observed
 reproduction producer is pinned by source change. Passing this software contract
 does not prove a real bounty reproduction registry exists and grants no live
- testing, submission, payment, deployment, or other external-effect authority.
+testing, submission, payment, deployment, or other external-effect authority.
 """
 from __future__ import annotations
 
@@ -120,22 +120,18 @@ class BugHoundRegisteredIndependentReproductionAdmissionV1:
         )
 
 
-def independent_reproduction_registry_receipt() -> BugHoundIndependentReproductionRegistryReceiptV2:
-    records = tuple(
-        sorted(_CANONICAL_REPRODUCTION_RECORDS, key=lambda record: record.record_digest)
-    )
-    return BugHoundIndependentReproductionRegistryReceiptV2(
-        registry_generation=REGISTRY_GENERATION,
-        record_digests=tuple(record.record_digest for record in records),
-        active_record_count=sum(
-            1
-            for record in records
-            if record.registry_current
-            and record.independently_observed
-            and not record.revoked
-            and not record.external_effect
-        ),
-    )
+def _require_text(record: object, field: str, code: str) -> str:
+    value = getattr(record, field, None)
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(code)
+    return value.strip()
+
+
+def _require_exact_bool(record: object, field: str, code: str) -> bool:
+    value = getattr(record, field, None)
+    if type(value) is not bool:
+        raise ValueError(code)
+    return value
 
 
 def _require_false(record: object, field: str, code: str) -> None:
@@ -143,27 +139,52 @@ def _require_false(record: object, field: str, code: str) -> None:
         raise ValueError(code)
 
 
-def _verify_registry_record(
-    *,
-    reproduction: IndependentBountyReproductionReceiptV1,
-    candidate: BountyCandidateEvidenceV1,
-    mission_input: BugHoundCashMissionInputV1,
+def _validate_registry_record_shape(
     record: BugHoundIndependentReproductionRegistryRecordV1,
 ) -> None:
+    """Validate a source-owned record before it can participate in trust.
+
+    Source ownership is not enough by itself: record schema, identity shape,
+    boolean state and observer independence must be valid before either registry
+    receipt generation or consequence resolution can use the record.
+    """
     if not isinstance(record, BugHoundIndependentReproductionRegistryRecordV1):
         raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_RECORD_REQUIRED")
     if record.schema != REGISTRY_SCHEMA:
         raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_SCHEMA_MISMATCH")
-    if not record.registry_receipt_ref.strip():
-        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_RECEIPT_REQUIRED")
-    if not record.registry_observer_ref.strip() or not record.registry_observer_generation.strip():
-        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_OBSERVER_REQUIRED")
-    if record.registry_current is not True:
-        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_STALE")
-    if record.independently_observed is not True:
-        raise ValueError("INDEPENDENT_REPRODUCTION_INDEPENDENT_OBSERVER_REQUIRED")
-    if record.revoked is not False:
-        raise ValueError("INDEPENDENT_REPRODUCTION_REVOKED")
+
+    for field, code in (
+        ("candidate_id", "INDEPENDENT_REPRODUCTION_REGISTRY_CANDIDATE_REQUIRED"),
+        ("target_ref", "INDEPENDENT_REPRODUCTION_REGISTRY_TARGET_REQUIRED"),
+        ("target_generation", "INDEPENDENT_REPRODUCTION_REGISTRY_TARGET_GENERATION_REQUIRED"),
+        ("reproduction_receipt_digest", "INDEPENDENT_REPRODUCTION_REGISTRY_REPRODUCTION_DIGEST_REQUIRED"),
+        ("reproducer_ref", "INDEPENDENT_REPRODUCTION_REGISTRY_REPRODUCER_REQUIRED"),
+        ("reproducer_generation", "INDEPENDENT_REPRODUCTION_REGISTRY_REPRODUCER_GENERATION_REQUIRED"),
+        ("witness_digest", "INDEPENDENT_REPRODUCTION_REGISTRY_WITNESS_REQUIRED"),
+        ("environment_digest", "INDEPENDENT_REPRODUCTION_REGISTRY_ENVIRONMENT_REQUIRED"),
+        ("scope_rules_digest", "INDEPENDENT_REPRODUCTION_REGISTRY_SCOPE_REQUIRED"),
+        ("source_currentness_ref", "INDEPENDENT_REPRODUCTION_REGISTRY_SOURCE_CURRENTNESS_REQUIRED"),
+        ("registry_receipt_ref", "INDEPENDENT_REPRODUCTION_REGISTRY_RECEIPT_REQUIRED"),
+        ("registry_observer_ref", "INDEPENDENT_REPRODUCTION_REGISTRY_OBSERVER_REQUIRED"),
+        ("registry_observer_generation", "INDEPENDENT_REPRODUCTION_REGISTRY_OBSERVER_REQUIRED"),
+    ):
+        _require_text(record, field, code)
+
+    _require_exact_bool(
+        record,
+        "registry_current",
+        "INDEPENDENT_REPRODUCTION_REGISTRY_CURRENT_BOOL_REQUIRED",
+    )
+    _require_exact_bool(
+        record,
+        "independently_observed",
+        "INDEPENDENT_REPRODUCTION_INDEPENDENTLY_OBSERVED_BOOL_REQUIRED",
+    )
+    _require_exact_bool(
+        record,
+        "revoked",
+        "INDEPENDENT_REPRODUCTION_REVOKED_BOOL_REQUIRED",
+    )
 
     for field, code in (
         ("live_target_testing_authorized", "REPRO_REGISTRY_LIVE_TEST_AUTHORITY_FORBIDDEN"),
@@ -173,6 +194,46 @@ def _verify_registry_record(
         ("external_effect", "REPRO_REGISTRY_EXTERNAL_EFFECT_FORBIDDEN"),
     ):
         _require_false(record, field, code)
+
+    # A boolean label cannot manufacture observer independence. The registry
+    # observer must be a different logical principal from the reproducer whose
+    # evidence it is attesting, regardless of generation labels.
+    if record.registry_observer_ref.strip() == record.reproducer_ref.strip():
+        raise ValueError("INDEPENDENT_REPRODUCTION_OBSERVER_PRODUCER_SEPARATION_REQUIRED")
+
+
+def independent_reproduction_registry_receipt() -> BugHoundIndependentReproductionRegistryReceiptV2:
+    records = tuple(_CANONICAL_REPRODUCTION_RECORDS)
+    for record in records:
+        _validate_registry_record_shape(record)
+    records = tuple(sorted(records, key=lambda record: record.record_digest))
+    return BugHoundIndependentReproductionRegistryReceiptV2(
+        registry_generation=REGISTRY_GENERATION,
+        record_digests=tuple(record.record_digest for record in records),
+        active_record_count=sum(
+            1
+            for record in records
+            if record.registry_current is True
+            and record.independently_observed is True
+            and record.revoked is False
+        ),
+    )
+
+
+def _verify_registry_record(
+    *,
+    reproduction: IndependentBountyReproductionReceiptV1,
+    candidate: BountyCandidateEvidenceV1,
+    mission_input: BugHoundCashMissionInputV1,
+    record: BugHoundIndependentReproductionRegistryRecordV1,
+) -> None:
+    _validate_registry_record_shape(record)
+    if record.registry_current is not True:
+        raise ValueError("INDEPENDENT_REPRODUCTION_REGISTRY_STALE")
+    if record.independently_observed is not True:
+        raise ValueError("INDEPENDENT_REPRODUCTION_INDEPENDENT_OBSERVER_REQUIRED")
+    if record.revoked is not False:
+        raise ValueError("INDEPENDENT_REPRODUCTION_REVOKED")
 
     exact = {
         "candidate_id": (record.candidate_id, candidate.candidate_id),
