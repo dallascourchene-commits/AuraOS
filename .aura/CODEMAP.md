@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1644
-- **total_bytes**: 26474827
-- **text_tokens_est**: 6609058
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1002, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1646
+- **total_bytes**: 26490309
+- **text_tokens_est**: 6612929
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1644,
+  "repo_file_count": 1646,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -919,6 +919,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_wfst_temporal_adapter.py",
     "aura_work_splitter.py",
     "aura_workflow_gates.py",
+    "aura_workgraph_abi.py",
     "aura_workspace/inbox/bounties/BATCH2_TARGETS.md",
     "aura_workspace/inbox/bounties/BOUNTY_HARVEST_INDEX.md",
     "aura_workspace/inbox/bounties/INTAKE_ONLY_RESIDUE.md",
@@ -1644,6 +1645,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_work_splitter.py",
     "tests/test_aura_workflow_authority_bridge.py",
     "tests/test_aura_workflow_gates.py",
+    "tests/test_aura_workgraph_abi.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
@@ -1690,6 +1692,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_spatial_importers/gltf.py",
     "aura_spatial_importers/ply.py",
     "aura_spatial_importers/spz.py",
+    "aura_workgraph_abi.py",
     "benchmarks/architect_consolidation/generate_gpt56_pilot_fixture.py",
     "benchmarks/refactor_code_quality/generate_fixture.py",
     "core/aura_task_dispatcher.py",
@@ -1769,8 +1772,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
     "tests/test_aura_bilateral_planning_enforcement.py",
     "tests/test_aura_blind_gate10_benchmark.py",
-    "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py"
+    "tests/test_aura_capability_connectome.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1784,15 +1786,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1644,
-  "bytes": 26474827,
-  "tokens_est": 6609058,
+  "files": 1646,
+  "bytes": 26490309,
+  "tokens_est": 6612929,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1002,
+    "python_module": 1004,
     "schema_or_lexicon": 271,
     "support_file": 49
   }
