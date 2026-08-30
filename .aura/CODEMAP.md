@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1636
-- **total_bytes**: 26374389
-- **text_tokens_est**: 6583959
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 236, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1637
+- **total_bytes**: 26386347
+- **text_tokens_est**: 6586943
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 995, 'schema_or_lexicon': 271, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1636,
+  "repo_file_count": 1637,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -984,6 +984,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_ARENA_GUARDED_WFST_PHASE_A.md",
     "docs/AURA_ARENA_GUARDED_WFST_PHASE_A2.md",
     "docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md",
+    "docs/AURA_BLIND_GATE10_BENCHMARK_PROTOCOL_2026-08-30.md",
     "docs/AURA_CAPABILITY_CONNECTOME.md",
     "docs/AURA_CAPABILITY_GENOME_RESOLVER.md",
     "docs/AURA_CAPABILITY_LANES.md",
@@ -1776,12 +1777,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1636,
-  "bytes": 26374389,
-  "tokens_est": 6583959,
+  "files": 1637,
+  "bytes": 26386347,
+  "tokens_est": 6586943,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 236,
+    "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 995,
@@ -1951,6 +1952,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_ARENA_GUARDED_WFST_PHASE_A.md",
     "docs/AURA_ARENA_GUARDED_WFST_PHASE_A2.md",
     "docs/AURA_BILATERAL_LIVE_REPAIR_FOUNDRY.md",
+    "docs/AURA_BLIND_GATE10_BENCHMARK_PROTOCOL_2026-08-30.md",
     "docs/AURA_CAPABILITY_CONNECTOME.md",
     "docs/AURA_CAPABILITY_GENOME_RESOLVER.md",
     "docs/AURA_CAPABILITY_LANES.md",
@@ -2069,8 +2071,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md",
-    "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md"
+    "docs/BENCHMARKS.md"
   ]
 }
 ```
