@@ -1,0 +1,25 @@
+name: AURA ADOPT ZF-00 Bootstrap
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/aura_adoption_bootstrap.py'
+      - 'tools/aura_adopt/test_aura_adoption_bootstrap.py'
+      - '.github/workflows/aura-adopt-zf00.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile
+        run: python -m py_compile tools/aura_adopt/aura_adoption_bootstrap.py tools/aura_adopt/test_aura_adoption_bootstrap.py
+      - name: Run focused regressions
+        run: python -m unittest -v tools.aura_adopt.test_aura_adoption_bootstrap
