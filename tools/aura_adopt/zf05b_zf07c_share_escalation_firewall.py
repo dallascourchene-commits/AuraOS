@@ -12,6 +12,7 @@ from enum import Enum
 import hashlib
 import json
 import re
+from typing import Any
 
 SCHEMA = "ShareEscalationFirewallV1"
 DECISION_SCHEMA = "ShareEscalationFirewallDecisionV1"
@@ -19,10 +20,22 @@ _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _TOKEN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/@+-]{0,255}$")
 
 SHARE_SCOPES = frozenset({
-    "SHARE_SOURCE", "SHARE_RECIPE", "SHARE_OUTPUT", "SHARE_DISTRIBUTION", "SHARE_ATTRIBUTION"
+    "SHARE_SOURCE",
+    "SHARE_RECIPE",
+    "SHARE_OUTPUT",
+    "SHARE_DISTRIBUTION",
+    "SHARE_ATTRIBUTION",
 })
 PROVIDER_SCOPES = frozenset({
-    "MODEL_CATALOG", "PROVIDER_CATALOG", "RATE_CATALOG", "FREE_RATE_EVIDENCE"
+    "MODEL_CATALOG",
+    "PROVIDER_CATALOG",
+    "RATE_CATALOG",
+    "FREE_RATE_EVIDENCE",
+})
+CONTROL_SCOPES = frozenset({
+    "SHARE_LAUNCH_PLAN",
+    "RECIPIENT_CAPABILITY_PLAN",
+    "ESCALATION_DECISION",
 })
 FORBIDDEN_SHARE_ACTION_PREFIXES = (
     "REQUEST_CREDENTIAL",
@@ -39,21 +52,25 @@ PROVIDER_ACTION_PREFIXES = (
     "EXPLICIT_REMOTE_EXECUTION",
 )
 
+
 class FirewallError(ValueError):
     def __init__(self, code: str, detail: str = "") -> None:
         super().__init__(f"{code}:{detail}" if detail else code)
         self.code = code
         self.detail = detail
 
+
 class ResidualKind(str, Enum):
     MODEL_INFERENCE_REQUIRED = "MODEL_INFERENCE_REQUIRED"
     NON_MODEL_RESIDUAL = "NON_MODEL_RESIDUAL"
+
 
 class FirewallDisposition(str, Enum):
     SHARE_EVIDENCE_REQUIRED = "SHARE_EVIDENCE_REQUIRED"
     NO_MODEL_ESCALATION = "NO_MODEL_ESCALATION"
     RECIPIENT_ESCALATION_READY = "RECIPIENT_ESCALATION_READY"
     EVIDENCE_REQUIRED = "EVIDENCE_REQUIRED"
+
 
 def _token(value: object, code: str) -> str:
     if not isinstance(value, str):
@@ -63,6 +80,7 @@ def _token(value: object, code: str) -> str:
         raise FirewallError(code)
     return value
 
+
 def _sha(value: object, code: str) -> str:
     if not isinstance(value, str):
         raise FirewallError(code)
@@ -71,20 +89,30 @@ def _sha(value: object, code: str) -> str:
         raise FirewallError(code)
     return value
 
+
 def _canonical(value: object) -> bytes:
     try:
         return json.dumps(
-            value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False
+            value,
+            sort_keys=True,
+            separators=(",", ":"),
+            ensure_ascii=True,
+            allow_nan=False,
         ).encode("utf-8")
     except (TypeError, ValueError) as exc:
         raise FirewallError("NONCANONICAL_FIREWALL_STATE") from exc
 
+
 def _digest(domain: str, value: object) -> str:
-    return hashlib.sha256(domain.encode("utf-8") + b"\0" + _canonical(value)).hexdigest()
+    return hashlib.sha256(
+        domain.encode("utf-8") + b"\0" + _canonical(value)
+    ).hexdigest()
+
 
 def _false(flag: object, code: str) -> None:
     if flag is not False:
         raise FirewallError(code)
+
 
 def _tuple_tokens(values: object, code: str) -> tuple[str, ...]:
     if not isinstance(values, tuple):
@@ -93,6 +121,7 @@ def _tuple_tokens(values: object, code: str) -> tuple[str, ...]:
     if len(set(clean)) != len(clean):
         raise FirewallError(f"{code}_DUPLICATE")
     return clean
+
 
 @dataclass(frozen=True)
 class ScopedEvidenceV1:
@@ -105,17 +134,47 @@ class ScopedEvidenceV1:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "ref", _token(self.ref, "EVIDENCE_REF_INVALID"))
-        object.__setattr__(self, "digest", _sha(self.digest, "EVIDENCE_DIGEST_INVALID"))
-        object.__setattr__(self, "source_generation", _token(self.source_generation, "EVIDENCE_GENERATION_INVALID"))
-        object.__setattr__(self, "currentness_ref", _token(self.currentness_ref, "EVIDENCE_CURRENTNESS_REF_INVALID"))
+        object.__setattr__(
+            self, "digest", _sha(self.digest, "EVIDENCE_DIGEST_INVALID")
+        )
+        object.__setattr__(
+            self,
+            "source_generation",
+            _token(self.source_generation, "EVIDENCE_GENERATION_INVALID"),
+        )
+        object.__setattr__(
+            self,
+            "currentness_ref",
+            _token(self.currentness_ref, "EVIDENCE_CURRENTNESS_REF_INVALID"),
+        )
         if self.currentness_state not in {"CURRENT", "STALE", "UNKNOWN"}:
             raise FirewallError("EVIDENCE_CURRENTNESS_STATE_INVALID")
-        object.__setattr__(self, "scope", _token(self.scope, "EVIDENCE_SCOPE_INVALID"))
+        object.__setattr__(
+            self, "scope", _token(self.scope, "EVIDENCE_SCOPE_INVALID")
+        )
+
+
+def _evidence_aliases(
+    left: tuple[ScopedEvidenceV1, ...],
+    right: tuple[ScopedEvidenceV1, ...],
+) -> tuple[str, ...]:
+    left_refs = {item.ref for item in left}
+    left_digests = {item.digest for item in left}
+    aliases: list[str] = []
+    for item in right:
+        if item.ref in left_refs:
+            aliases.append(f"ref:{item.ref}")
+        if item.digest in left_digests:
+            aliases.append(f"digest:{item.digest}")
+    return tuple(sorted(set(aliases)))
+
 
 @dataclass(frozen=True)
 class ShareLaunchProjectionV1:
     capsule_digest: str
     capsule_id: str
+    launch_plan_digest: str
+    launch_evidence: ScopedEvidenceV1
     status: str
     creator_ref: str
     evidence: tuple[ScopedEvidenceV1, ...]
@@ -131,11 +190,34 @@ class ShareLaunchProjectionV1:
     provider_call_authorized: bool = False
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "capsule_digest", _sha(self.capsule_digest, "CAPSULE_DIGEST_INVALID"))
-        object.__setattr__(self, "capsule_id", _token(self.capsule_id, "CAPSULE_ID_INVALID"))
-        if self.status not in {"READY_FOR_USER_ACTION", "EVIDENCE_REQUIRED", "ROUTE_OR_EVIDENCE_REQUIRED"}:
+        object.__setattr__(
+            self, "capsule_digest", _sha(self.capsule_digest, "CAPSULE_DIGEST_INVALID")
+        )
+        object.__setattr__(
+            self, "capsule_id", _token(self.capsule_id, "CAPSULE_ID_INVALID")
+        )
+        object.__setattr__(
+            self,
+            "launch_plan_digest",
+            _sha(self.launch_plan_digest, "SHARE_LAUNCH_PLAN_DIGEST_INVALID"),
+        )
+        if not isinstance(self.launch_evidence, ScopedEvidenceV1):
+            raise FirewallError("SHARE_LAUNCH_EVIDENCE_REQUIRED")
+        if self.launch_evidence.scope != "SHARE_LAUNCH_PLAN":
+            raise FirewallError("SHARE_LAUNCH_EVIDENCE_SCOPE_INVALID")
+        if self.launch_evidence.currentness_state != "CURRENT":
+            raise FirewallError("SHARE_LAUNCH_EVIDENCE_NOT_CURRENT")
+        if self.launch_evidence.digest != self.launch_plan_digest:
+            raise FirewallError("SHARE_LAUNCH_EVIDENCE_DIGEST_MISMATCH")
+        if self.status not in {
+            "READY_FOR_USER_ACTION",
+            "EVIDENCE_REQUIRED",
+            "ROUTE_OR_EVIDENCE_REQUIRED",
+        }:
             raise FirewallError("SHARE_STATUS_INVALID")
-        object.__setattr__(self, "creator_ref", _token(self.creator_ref, "CREATOR_REF_INVALID"))
+        object.__setattr__(
+            self, "creator_ref", _token(self.creator_ref, "CREATOR_REF_INVALID")
+        )
         if not isinstance(self.evidence, tuple) or not self.evidence:
             raise FirewallError("SHARE_EVIDENCE_REQUIRED")
         if any(not isinstance(item, ScopedEvidenceV1) for item in self.evidence):
@@ -144,17 +226,36 @@ class ShareLaunchProjectionV1:
             raise FirewallError("SHARE_EVIDENCE_SCOPE_INVALID")
         if len({item.ref for item in self.evidence}) != len(self.evidence):
             raise FirewallError("SHARE_EVIDENCE_REF_DUPLICATE")
-        object.__setattr__(self, "required_user_actions", _tuple_tokens(self.required_user_actions, "SHARE_ACTION_INVALID"))
+        if self.status == "READY_FOR_USER_ACTION" and any(
+            item.currentness_state != "CURRENT" for item in self.evidence
+        ):
+            raise FirewallError("READY_SHARE_EVIDENCE_NOT_CURRENT")
+        if _evidence_aliases(self.evidence, (self.launch_evidence,)):
+            raise FirewallError("SHARE_LAUNCH_EVIDENCE_MUST_BE_DISTINCT")
+        object.__setattr__(
+            self,
+            "required_user_actions",
+            _tuple_tokens(self.required_user_actions, "SHARE_ACTION_INVALID"),
+        )
         for action in self.required_user_actions:
             if action.startswith(FORBIDDEN_SHARE_ACTION_PREFIXES):
                 raise FirewallError("SHARE_CANNOT_MINT_ESCALATION_ACTION", action)
-        _false(self.attribution_identity_proven, "SHARE_ATTRIBUTION_IDENTITY_AUTHORITY_FORBIDDEN")
+        _false(
+            self.attribution_identity_proven,
+            "SHARE_ATTRIBUTION_IDENTITY_AUTHORITY_FORBIDDEN",
+        )
         for name in (
-            "network_fetch_authorized", "install_authorized", "execution_authorized",
-            "publication_authorized", "payment_authorized", "telemetry_authorized",
-            "recipient_tracking_authorized", "provider_call_authorized",
+            "network_fetch_authorized",
+            "install_authorized",
+            "execution_authorized",
+            "publication_authorized",
+            "payment_authorized",
+            "telemetry_authorized",
+            "recipient_tracking_authorized",
+            "provider_call_authorized",
         ):
             _false(getattr(self, name), f"SHARE_AUTHORITY_WIDENING:{name}")
+
 
 @dataclass(frozen=True)
 class RecipientCapabilityResidualV1:
@@ -167,9 +268,17 @@ class RecipientCapabilityResidualV1:
     derivation_evidence: ScopedEvidenceV1
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "residual_id", _token(self.residual_id, "RESIDUAL_ID_INVALID"))
-        object.__setattr__(self, "recipe_plan_digest", _sha(self.recipe_plan_digest, "RECIPE_PLAN_DIGEST_INVALID"))
-        object.__setattr__(self, "capability_ref", _token(self.capability_ref, "CAPABILITY_REF_INVALID"))
+        object.__setattr__(
+            self, "residual_id", _token(self.residual_id, "RESIDUAL_ID_INVALID")
+        )
+        object.__setattr__(
+            self,
+            "recipe_plan_digest",
+            _sha(self.recipe_plan_digest, "RECIPE_PLAN_DIGEST_INVALID"),
+        )
+        object.__setattr__(
+            self, "capability_ref", _token(self.capability_ref, "CAPABILITY_REF_INVALID")
+        )
         if not isinstance(self.residual_kind, ResidualKind):
             raise FirewallError("RESIDUAL_KIND_INVALID")
         if type(self.unresolved) is not bool:
@@ -182,6 +291,9 @@ class RecipientCapabilityResidualV1:
             raise FirewallError("DERIVATION_EVIDENCE_SCOPE_INVALID")
         if self.derivation_evidence.currentness_state != "CURRENT":
             raise FirewallError("RECIPIENT_DERIVATION_NOT_CURRENT")
+        if self.derivation_evidence.digest != self.recipe_plan_digest:
+            raise FirewallError("RECIPIENT_DERIVATION_DIGEST_MISMATCH")
+
 
 @dataclass(frozen=True)
 class EscalationDecisionProjectionV1:
@@ -190,6 +302,7 @@ class EscalationDecisionProjectionV1:
     recipe_plan_digest: str
     disposition: str
     decision_digest: str
+    decision_evidence: ScopedEvidenceV1
     selected_route_id: str | None
     earned_action_classes: tuple[str, ...]
     provider_evidence: tuple[ScopedEvidenceV1, ...]
@@ -202,18 +315,56 @@ class EscalationDecisionProjectionV1:
     execution_proven: bool = False
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "residual_id", _token(self.residual_id, "DECISION_RESIDUAL_ID_INVALID"))
-        object.__setattr__(self, "capability_ref", _token(self.capability_ref, "DECISION_CAPABILITY_REF_INVALID"))
-        object.__setattr__(self, "recipe_plan_digest", _sha(self.recipe_plan_digest, "DECISION_RECIPE_PLAN_DIGEST_INVALID"))
+        object.__setattr__(
+            self,
+            "residual_id",
+            _token(self.residual_id, "DECISION_RESIDUAL_ID_INVALID"),
+        )
+        object.__setattr__(
+            self,
+            "capability_ref",
+            _token(self.capability_ref, "DECISION_CAPABILITY_REF_INVALID"),
+        )
+        object.__setattr__(
+            self,
+            "recipe_plan_digest",
+            _sha(
+                self.recipe_plan_digest,
+                "DECISION_RECIPE_PLAN_DIGEST_INVALID",
+            ),
+        )
         if self.disposition not in {
-            "NO_ESCALATION_REQUIRED", "LOCAL_ROUTE_READY", "USER_CHOICE_REQUIRED",
-            "EVIDENCE_REQUIRED", "UPSTREAM_BLOCKED",
+            "NO_ESCALATION_REQUIRED",
+            "LOCAL_ROUTE_READY",
+            "USER_CHOICE_REQUIRED",
+            "EVIDENCE_REQUIRED",
+            "UPSTREAM_BLOCKED",
         }:
             raise FirewallError("ESCALATION_DISPOSITION_INVALID")
-        object.__setattr__(self, "decision_digest", _sha(self.decision_digest, "ESCALATION_DECISION_DIGEST_INVALID"))
+        object.__setattr__(
+            self,
+            "decision_digest",
+            _sha(self.decision_digest, "ESCALATION_DECISION_DIGEST_INVALID"),
+        )
+        if not isinstance(self.decision_evidence, ScopedEvidenceV1):
+            raise FirewallError("ESCALATION_DECISION_EVIDENCE_REQUIRED")
+        if self.decision_evidence.scope != "ESCALATION_DECISION":
+            raise FirewallError("ESCALATION_DECISION_EVIDENCE_SCOPE_INVALID")
+        if self.decision_evidence.currentness_state != "CURRENT":
+            raise FirewallError("ESCALATION_DECISION_EVIDENCE_NOT_CURRENT")
+        if self.decision_evidence.digest != self.decision_digest:
+            raise FirewallError("ESCALATION_DECISION_EVIDENCE_DIGEST_MISMATCH")
         if self.selected_route_id is not None:
-            object.__setattr__(self, "selected_route_id", _token(self.selected_route_id, "SELECTED_ROUTE_ID_INVALID"))
-        object.__setattr__(self, "earned_action_classes", _tuple_tokens(self.earned_action_classes, "EARNED_ACTION_INVALID"))
+            object.__setattr__(
+                self,
+                "selected_route_id",
+                _token(self.selected_route_id, "SELECTED_ROUTE_ID_INVALID"),
+            )
+        object.__setattr__(
+            self,
+            "earned_action_classes",
+            _tuple_tokens(self.earned_action_classes, "EARNED_ACTION_INVALID"),
+        )
         if not isinstance(self.provider_evidence, tuple):
             raise FirewallError("PROVIDER_EVIDENCE_INVALID")
         if any(not isinstance(item, ScopedEvidenceV1) for item in self.provider_evidence):
@@ -222,22 +373,41 @@ class EscalationDecisionProjectionV1:
             raise FirewallError("PROVIDER_EVIDENCE_SCOPE_INVALID")
         if any(item.currentness_state != "CURRENT" for item in self.provider_evidence):
             raise FirewallError("PROVIDER_EVIDENCE_NOT_CURRENT")
-        if len({item.ref for item in self.provider_evidence}) != len(self.provider_evidence):
+        if len({item.ref for item in self.provider_evidence}) != len(
+            self.provider_evidence
+        ):
             raise FirewallError("PROVIDER_EVIDENCE_REF_DUPLICATE")
-        needs_provider = any(action.startswith(PROVIDER_ACTION_PREFIXES) for action in self.earned_action_classes)
+        if _evidence_aliases((self.decision_evidence,), self.provider_evidence):
+            raise FirewallError(
+                "ESCALATION_DECISION_CANNOT_DOUBLE_AS_PROVIDER_EVIDENCE"
+            )
+        needs_provider = any(
+            action.startswith(PROVIDER_ACTION_PREFIXES)
+            for action in self.earned_action_classes
+        )
         if needs_provider and not self.provider_evidence:
             raise FirewallError("PROVIDER_EVIDENCE_REQUIRED_FOR_ACTIONS")
         if self.disposition == "LOCAL_ROUTE_READY" and self.earned_action_classes:
             raise FirewallError("LOCAL_READY_CANNOT_HAVE_EARNED_ACTIONS")
         for name in (
-            "credential_prompt_performed", "credential_collected", "model_download_started",
-            "provider_call_made", "payment_performed", "effect_authorized", "execution_proven",
+            "credential_prompt_performed",
+            "credential_collected",
+            "model_download_started",
+            "provider_call_made",
+            "payment_performed",
+            "effect_authorized",
+            "execution_proven",
         ):
-            _false(getattr(self, name), f"ESCALATION_EFFECT_ALREADY_OCCURRED:{name}")
+            _false(
+                getattr(self, name),
+                f"ESCALATION_EFFECT_ALREADY_OCCURRED:{name}",
+            )
+
 
 @dataclass(frozen=True)
 class ShareEscalationFirewallDecisionV1:
     capsule_digest: str
+    share_launch_plan_digest: str
     residual_id: str
     capability_ref: str
     recipe_plan_digest: str
@@ -256,16 +426,6 @@ class ShareEscalationFirewallDecisionV1:
     effect_authorized: bool = False
     execution_proven: bool = False
 
-def _evidence_aliases(left: tuple[ScopedEvidenceV1, ...], right: tuple[ScopedEvidenceV1, ...]) -> tuple[str, ...]:
-    left_refs = {item.ref for item in left}
-    left_digests = {item.digest for item in left}
-    aliases = []
-    for item in right:
-        if item.ref in left_refs:
-            aliases.append(f"ref:{item.ref}")
-        if item.digest in left_digests:
-            aliases.append(f"digest:{item.digest}")
-    return tuple(sorted(set(aliases)))
 
 def compile_share_escalation_firewall(
     share: ShareLaunchProjectionV1,
@@ -286,15 +446,43 @@ def compile_share_escalation_firewall(
     if escalation.recipe_plan_digest != residual.recipe_plan_digest:
         raise FirewallError("ESCALATION_RECIPE_PLAN_MISMATCH")
 
-    residual_alias = _evidence_aliases(share.evidence, (residual.derivation_evidence,))
+    share_control = share.evidence + (share.launch_evidence,)
+    residual_alias = _evidence_aliases(
+        share_control, (residual.derivation_evidence,)
+    )
     if residual_alias:
-        raise FirewallError("SHARE_EVIDENCE_CANNOT_DERIVE_RECIPIENT_RESIDUAL", ",".join(residual_alias))
-    provider_alias = _evidence_aliases(share.evidence, escalation.provider_evidence)
+        raise FirewallError(
+            "SHARE_EVIDENCE_CANNOT_DERIVE_RECIPIENT_RESIDUAL",
+            ",".join(residual_alias),
+        )
+
+    provider_alias = _evidence_aliases(
+        share_control, escalation.provider_evidence
+    )
     if provider_alias:
-        raise FirewallError("SHARE_EVIDENCE_CANNOT_SATISFY_PROVIDER_EVIDENCE", ",".join(provider_alias))
-    derivation_provider_alias = _evidence_aliases((residual.derivation_evidence,), escalation.provider_evidence)
+        raise FirewallError(
+            "SHARE_EVIDENCE_CANNOT_SATISFY_PROVIDER_EVIDENCE",
+            ",".join(provider_alias),
+        )
+
+    derivation_provider_alias = _evidence_aliases(
+        (residual.derivation_evidence,), escalation.provider_evidence
+    )
     if derivation_provider_alias:
-        raise FirewallError("RECIPIENT_DERIVATION_CANNOT_SATISFY_PROVIDER_EVIDENCE", ",".join(derivation_provider_alias))
+        raise FirewallError(
+            "RECIPIENT_DERIVATION_CANNOT_SATISFY_PROVIDER_EVIDENCE",
+            ",".join(derivation_provider_alias),
+        )
+
+    upstream_evidence = share_control + (residual.derivation_evidence,)
+    decision_alias = _evidence_aliases(
+        upstream_evidence, (escalation.decision_evidence,)
+    )
+    if decision_alias:
+        raise FirewallError(
+            "ESCALATION_DECISION_EVIDENCE_MUST_BE_DISTINCT",
+            ",".join(decision_alias),
+        )
 
     blockers: list[str] = []
     actions: tuple[str, ...] = ()
@@ -302,9 +490,16 @@ def compile_share_escalation_firewall(
     if share.status != "READY_FOR_USER_ACTION":
         disposition = FirewallDisposition.SHARE_EVIDENCE_REQUIRED
         blockers.append(f"SHARE_NOT_READY:{share.status}")
-    elif not residual.unresolved or residual.residual_kind is ResidualKind.NON_MODEL_RESIDUAL:
+    elif (
+        not residual.unresolved
+        or residual.residual_kind is ResidualKind.NON_MODEL_RESIDUAL
+    ):
         disposition = FirewallDisposition.NO_MODEL_ESCALATION
-        if escalation.disposition not in {"NO_ESCALATION_REQUIRED", "UPSTREAM_BLOCKED", "EVIDENCE_REQUIRED"}:
+        if escalation.disposition not in {
+            "NO_ESCALATION_REQUIRED",
+            "UPSTREAM_BLOCKED",
+            "EVIDENCE_REQUIRED",
+        }:
             raise FirewallError("ESCALATION_PRESENT_WITHOUT_MODEL_RESIDUAL")
     elif escalation.disposition in {"EVIDENCE_REQUIRED", "UPSTREAM_BLOCKED"}:
         disposition = FirewallDisposition.EVIDENCE_REQUIRED
@@ -313,17 +508,28 @@ def compile_share_escalation_firewall(
         disposition = FirewallDisposition.RECIPIENT_ESCALATION_READY
         actions = tuple(sorted(escalation.earned_action_classes))
 
-    logical = {
+    logical: dict[str, Any] = {
         "schema": DECISION_SCHEMA,
         "firewall_schema": SCHEMA,
         "capsule_digest": share.capsule_digest,
-        "share_evidence": [asdict(item) for item in sorted(share.evidence, key=lambda x: (x.scope, x.ref))],
+        "share_launch_plan_digest": share.launch_plan_digest,
+        "share_launch_evidence": asdict(share.launch_evidence),
+        "share_evidence": [
+            asdict(item)
+            for item in sorted(share.evidence, key=lambda x: (x.scope, x.ref))
+        ],
         "residual_id": residual.residual_id,
         "capability_ref": residual.capability_ref,
         "recipe_plan_digest": residual.recipe_plan_digest,
         "residual_derivation_evidence": asdict(residual.derivation_evidence),
         "escalation_decision_digest": escalation.decision_digest,
-        "provider_evidence": [asdict(item) for item in sorted(escalation.provider_evidence, key=lambda x: (x.scope, x.ref))],
+        "escalation_decision_evidence": asdict(escalation.decision_evidence),
+        "provider_evidence": [
+            asdict(item)
+            for item in sorted(
+                escalation.provider_evidence, key=lambda x: (x.scope, x.ref)
+            )
+        ],
         "disposition": disposition.value,
         "presentable_action_classes": actions,
         "blockers": tuple(blockers),
@@ -339,6 +545,7 @@ def compile_share_escalation_firewall(
     digest = _digest("AURA_ADOPT_SHARE_ESCALATION_FIREWALL_V1", logical)
     return ShareEscalationFirewallDecisionV1(
         capsule_digest=share.capsule_digest,
+        share_launch_plan_digest=share.launch_plan_digest,
         residual_id=residual.residual_id,
         capability_ref=residual.capability_ref,
         recipe_plan_digest=residual.recipe_plan_digest,
