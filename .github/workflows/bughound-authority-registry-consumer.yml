@@ -1,71 +1,17 @@
-name: BugHound authority registry consumer
+name: BugHound authority registry consumer (superseded historical challenger)
 
 on:
-  push:
-    paths:
-      - "tools/bughound/authority_registry.py"
-      - "tools/bughound/cash_effect_boundary.py"
-      - "tests/test_bughound_cash_effect_boundary.py"
-      - ".github/workflows/bughound-authority-registry-consumer.yml"
-  pull_request:
-    paths:
-      - "tools/bughound/authority_registry.py"
-      - "tools/bughound/cash_effect_boundary.py"
-      - "tests/test_bughound_cash_effect_boundary.py"
-      - ".github/workflows/bughound-authority-registry-consumer.yml"
   workflow_dispatch:
 
 permissions:
   contents: read
 
-concurrency:
-  group: bughound-authority-registry-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  verify:
+  historical-challenger:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     steps:
-      - name: Fetch exact head without persisted credentials
-        env:
-          GH_TOKEN: ${{ github.token }}
-          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Historical-only notice
         run: |
-          git init .
-          git remote add origin "https://github.com/${{ github.repository }}.git"
-          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin "$TARGET_SHA"
-          unset AUTH_HEADER
-          git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
-          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
-
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
-        with:
-          python-version: "3.12"
-
-      - name: Compile authority boundary
-        run: |
-          python -m py_compile \
-            tools/bughound/authority_registry.py \
-            tools/bughound/cash_effect_boundary.py \
-            tests/test_bughound_cash_effect_boundary.py
-
-      - name: Run full BugHound regressions
-        run: python -m unittest discover -s tests -p "test_bughound_*.py" -v
-
-      - name: Prove production consequence registries remain empty
-        run: |
-          python - <<'PY'
-          from tools.bughound.authority_registry import authority_registry_receipt
-          r = authority_registry_receipt()
-          assert r.live_effect_producer_count == 0
-          assert r.sanitizer_producer_count == 0
-          assert r.authority is False
-          print("LIVE_EFFECT_REGISTRY_RECORDS=0")
-          print("SANITIZER_REGISTRY_RECORDS=0")
-          print("LIVE_EFFECT_AUTHORITY_PROVEN=false")
-          print("SPECIFIC_SANITIZED_EXPORT_AUTHORITY_PROVEN=false")
-          PY
+          echo "SUPERSEDED_BY_PR433=true"
+          echo "NO_CURRENT_PROOF_OWNERSHIP=true"
