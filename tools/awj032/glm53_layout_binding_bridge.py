@@ -207,6 +207,7 @@ def compile_pager_source_plan(
     if not isinstance(headers, Mapping):
         raise LayoutBindingError("PACKED_HEADER_EVIDENCE_REQUIRED")
 
+    weight_keys = {gate_key, down_key}
     required = [gate_key, down_key, *scale_map.values()]
     evidence: dict[str, Any] = {}
     for key in required:
@@ -224,6 +225,8 @@ def compile_pager_source_plan(
             raise LayoutBindingError("EXPERT_AXIS_HEADER_MISMATCH", key)
         if shard != assigned:
             raise LayoutBindingError("HEADER_SHARD_BINDING_MISMATCH", key)
+        if key in weight_keys and "E4M3" not in dtype.upper():
+            raise LayoutBindingError("PACKED_WEIGHT_DTYPE_MISMATCH", f"{key}:{dtype}")
         evidence[key] = {"shape": list(shape), "shard": shard, "dtype": dtype, "header_digest": hd}
 
     header_digest = _digest(dict(sorted(evidence.items())))
