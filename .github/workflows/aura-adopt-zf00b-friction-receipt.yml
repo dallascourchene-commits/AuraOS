@@ -7,6 +7,7 @@ on:
       - 'tests/test_aura_adoption_bootstrap.py'
       - 'tools/aura_adopt/adoption_friction_receipt.py'
       - 'tools/aura_adopt/test_adoption_friction_receipt.py'
+      - 'schemas/adoption_friction_receipt_v1.schema.json'
       - '.github/workflows/aura-adopt-zf00b-friction-receipt.yml'
   workflow_dispatch:
 
@@ -29,6 +30,8 @@ jobs:
           tests/test_aura_adoption_bootstrap.py
           tools/aura_adopt/adoption_friction_receipt.py
           tools/aura_adopt/test_adoption_friction_receipt.py
+      - name: Validate machine-readable receipt schema
+        run: python -m json.tool schemas/adoption_friction_receipt_v1.schema.json > /dev/null
       - name: Run consequence-complete receipt regressions
         run: python -m unittest -v tools.aura_adopt.test_adoption_friction_receipt
       - name: Re-run inherited Objective-1 compiler regressions
