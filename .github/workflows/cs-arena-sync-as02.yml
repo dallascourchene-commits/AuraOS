@@ -1,0 +1,32 @@
+name: CS Arena Sync AS-02 Artifact Core
+
+on:
+  push:
+    branches:
+      - cs-arena-sync-001/as02-artifact-core-20260830
+    paths:
+      - "tools/project035/**"
+      - ".github/workflows/cs-arena-sync-as02.yml"
+  pull_request:
+    paths:
+      - "tools/project035/**"
+      - ".github/workflows/cs-arena-sync-as02.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile and test artifact mutation core
+        working-directory: tools/project035
+        run: |
+          python -m py_compile artifact_sync_core.py test_artifact_sync_core.py
+          python -m unittest -v test_artifact_sync_core.py
