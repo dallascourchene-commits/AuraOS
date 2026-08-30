@@ -1,0 +1,81 @@
+name: AWJ032 GLM53 stable layout binding bridge
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_layout_binding_bridge.py'
+      - 'tools/awj032/test_glm53_layout_binding_bridge.py'
+      - 'tools/awj032/glm53_source_bound_layout_bridge.py'
+      - 'tools/awj032/test_glm53_source_bound_layout_bridge.py'
+      - 'tools/awj032/glm53_official_w2_observation.py'
+      - 'tools/awj032/glm53_official_w2_plan_binding.py'
+      - 'tools/awj032/test_glm53_official_w2_plan_binding.py'
+      - 'tools/awj032/glm53_packed_expert_pager.py'
+      - 'tools/awj032/glm53_per_expert_index_pager.py'
+      - 'tools/awj032/glm53_pager_cache_telemetry.py'
+      - '.github/workflows/awj032-glm53-layout-bind-bridge.yml'
+  push:
+    branches:
+      - 'awj032/glm53-layout-bind-stable-20260830'
+    paths:
+      - 'tools/awj032/glm53_layout_binding_bridge.py'
+      - 'tools/awj032/test_glm53_layout_binding_bridge.py'
+      - 'tools/awj032/glm53_source_bound_layout_bridge.py'
+      - 'tools/awj032/test_glm53_source_bound_layout_bridge.py'
+      - 'tools/awj032/glm53_official_w2_observation.py'
+      - 'tools/awj032/glm53_official_w2_plan_binding.py'
+      - 'tools/awj032/test_glm53_official_w2_plan_binding.py'
+      - '.github/workflows/awj032-glm53-layout-bind-bridge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-tests:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+      - name: Compile bridge and current pager ABI
+        run: >-
+          python -m py_compile
+          tools/awj032/glm53_packed_expert_pager.py
+          tools/awj032/glm53_per_expert_index_pager.py
+          tools/awj032/glm53_pager_cache_telemetry.py
+          tools/awj032/glm53_layout_binding_bridge.py
+          tools/awj032/glm53_source_bound_layout_bridge.py
+          tools/awj032/glm53_official_w2_observation.py
+          tools/awj032/glm53_official_w2_plan_binding.py
+          tools/awj032/test_glm53_layout_binding_bridge.py
+          tools/awj032/test_glm53_source_bound_layout_bridge.py
+          tools/awj032/test_glm53_official_w2_plan_binding.py
+      - name: Run bridge and official-producer regressions
+        run: >-
+          python -m unittest
+          tools.awj032.test_glm53_layout_binding_bridge
+          tools.awj032.test_glm53_source_bound_layout_bridge
+          tools.awj032.test_glm53_official_w2_plan_binding
+      - name: Re-run current pager owner regressions
+        working-directory: tools/awj032
+        run: >-
+          python -m unittest -v
+          test_glm53_packed_expert_pager.py
+          test_glm53_per_expert_index_pager.py
+          test_glm53_pager_cache_telemetry.py
