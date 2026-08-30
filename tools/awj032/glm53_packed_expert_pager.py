@@ -1,8 +1,13 @@
 """AWJ032-GLM53-01A fail-closed packed-expert pager core.
 
-D0 synthetic/reference code only.  This module never downloads or imports GLM-5.3,
-never opens a real checkpoint by itself, and never grants G2.  It establishes the
+D0 synthetic/reference code only. This module never downloads or imports GLM-5.3,
+never opens a real checkpoint by itself, and never grants G2. It establishes the
 source-binding and bounded-row-read invariants a real safetensors backend must obey.
+
+Important evidence boundary: ``read_rows`` proves only the pager's caller-facing
+bounded-read contract. Physical filesystem/page-cache I/O is UNKNOWN unless the
+backend explicitly attests it. The pager must never turn an API shape into a
+physical-I/O claim.
 """
 from __future__ import annotations
 
@@ -10,7 +15,11 @@ from dataclasses import dataclass
 import hashlib
 import json
 import math
+from types import MappingProxyType
 from typing import Any, Mapping, Protocol, Sequence
+
+
+UNKNOWN = "UNKNOWN"
 
 
 class PagerError(RuntimeError):
@@ -29,6 +38,10 @@ class ExpertRangeError(PagerError):
     pass
 
 
+class WholeBankSelectionForbidden(ExpertRangeError):
+    pass
+
+
 class MissingSliceError(PagerError):
     pass
 
@@ -38,9 +51,50 @@ class WholeTensorReadForbidden(PagerError):
 
 
 class SliceBackend(Protocol):
-    """Backend contract: bounded first-axis row reads only."""
+    """Caller-facing contract: bounded first-axis row reads only.
+
+    This protocol deliberately does not claim how a backend satisfies the request
+    physically. A backend may optionally implement ``read_evidence()`` to attest
+    measured/source-bound physical I/O facts after a successful pager load.
+    """
 
     def read_rows(self, key: str, start: int, end: int) -> Sequence[Any]: ...
+
+
+@dataclass(frozen=True)
+class BackendReadEvidence:
+    """Optional backend attestation for physical I/O.
+
+    UNKNOWN is required whenever the backend did not measure a field. Source ranges
+    are evidence about requested/observed bounded ranges, not authority to execute.
+    """
+
+    physical_bytes_read: int | str = UNKNOWN
+    whole_tensor_reads: int | str = UNKNOWN
+    read_operations: int | str = UNKNOWN
+    source_ranges: tuple[tuple[str, int, int], ...] = ()
+
+    def __post_init__(self) -> None:
+        for name in ("physical_bytes_read", "whole_tensor_reads", "read_operations"):
+            value = getattr(self, name)
+            if value == UNKNOWN:
+                continue
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                raise PagerError(f"invalid backend evidence field {name}={value!r}")
+        for item in self.source_ranges:
+            if (
+                not isinstance(item, tuple)
+                or len(item) != 3
+                or not isinstance(item[0], str)
+                or not item[0]
+                or isinstance(item[1], bool)
+                or isinstance(item[2], bool)
+                or not isinstance(item[1], int)
+                or not isinstance(item[2], int)
+                or item[1] < 0
+                or item[2] <= item[1]
+            ):
+                raise PagerError(f"invalid backend source range {item!r}")
 
 
 @dataclass(frozen=True)
@@ -56,16 +110,26 @@ class ExpertSourceBinding:
     def __post_init__(self) -> None:
         if not self.model_revision or not self.index_digest or not self.layer_id:
             raise SourceBindingError("source identity fields must be non-empty")
-        if self.num_experts <= 0:
+        if not isinstance(self.representation, str) or not self.representation:
+            raise SourceBindingError("representation must be a non-empty string")
+        if isinstance(self.num_experts, bool) or not isinstance(self.num_experts, int) or self.num_experts <= 0:
             raise SourceBindingError("num_experts must be positive")
+
+        # A frozen dataclass is not sufficient when it retains caller-owned mutable
+        # dictionaries. Copy then freeze the mappings so validation, digest, and
+        # future reads remain bound to one immutable source identity.
+        tensor_map = dict(self.tensor_map)
+        scale_map = dict(self.scale_map)
         required = {"gate_up", "down"}
-        if set(self.tensor_map) != required:
+        if set(tensor_map) != required:
             raise SourceBindingError(f"tensor_map must contain exactly {sorted(required)}")
-        values = list(self.tensor_map.values()) + list(self.scale_map.values())
+        values = list(tensor_map.values()) + list(scale_map.values())
         if not all(isinstance(v, str) and v for v in values):
             raise SourceBindingError("all tensor keys must be non-empty strings")
         if len(set(values)) != len(values):
             raise SourceBindingError("tensor/scale keys must be unambiguous")
+        object.__setattr__(self, "tensor_map", MappingProxyType(tensor_map))
+        object.__setattr__(self, "scale_map", MappingProxyType(scale_map))
 
     @property
     def digest(self) -> str:
@@ -102,7 +166,11 @@ class PagerReceipt:
     selected_experts: tuple[int, ...]
     contiguous_runs: tuple[tuple[int, int], ...]
     read_count: int
-    whole_tensor_reads: int
+    physical_bytes_read: int | str
+    physical_read_operations: int | str
+    whole_tensor_reads: int | str
+    backend_evidence_attested: bool
+    source_ranges: tuple[tuple[str, int, int], ...]
     g2_admitted: bool = False
     claim_ceiling: str = "SYNTHETIC_PAGER_CORE_ONLY_NO_FLAGSHIP_WEIGHT_OR_RUNTIME_PROOF"
 
@@ -137,10 +205,32 @@ def contiguous_runs(expert_ids: Sequence[int]) -> tuple[tuple[int, int], ...]:
     return tuple(runs)
 
 
+def _backend_evidence(backend: SliceBackend) -> tuple[BackendReadEvidence, bool]:
+    provider = getattr(backend, "read_evidence", None)
+    if not callable(provider):
+        return BackendReadEvidence(), False
+    raw = provider()
+    if isinstance(raw, BackendReadEvidence):
+        return raw, True
+    if not isinstance(raw, Mapping):
+        raise PagerError("backend read_evidence() must return BackendReadEvidence or a mapping")
+    allowed = {"physical_bytes_read", "whole_tensor_reads", "read_operations", "source_ranges"}
+    unknown_keys = set(raw) - allowed
+    if unknown_keys:
+        raise PagerError(f"unknown backend evidence fields: {sorted(unknown_keys)}")
+    evidence = BackendReadEvidence(
+        physical_bytes_read=raw.get("physical_bytes_read", UNKNOWN),
+        whole_tensor_reads=raw.get("whole_tensor_reads", UNKNOWN),
+        read_operations=raw.get("read_operations", UNKNOWN),
+        source_ranges=tuple(raw.get("source_ranges", ())),
+    )
+    return evidence, True
+
+
 class PackedExpertPager:
     """Source-bound first-axis pager for grouped expert tensors.
 
-    The binding is immutable.  Each load rechecks the caller's model revision and
+    The binding is immutable. Each load rechecks the caller's model revision and
     index digest before any backend read, eliminating execution-order/global-state
     inference of layer identity.
     """
@@ -165,6 +255,11 @@ class PackedExpertPager:
     ) -> PagedExperts:
         self._assert_current(model_revision, index_digest)
         selected = canonical_expert_ids(expert_ids, self.binding.num_experts)
+        if len(selected) == self.binding.num_experts:
+            raise WholeBankSelectionForbidden(
+                "single-call selection of the complete expert bank is forbidden; "
+                "prove all-expert addressability across bounded sparse calls instead"
+            )
         runs = contiguous_runs(selected)
 
         families = dict(self.binding.tensor_map)
@@ -202,14 +297,19 @@ class PackedExpertPager:
             binding_digest=self.binding.digest,
             read_count=read_count,
         )
+        evidence, attested = _backend_evidence(self.backend)
         self._last_receipt = PagerReceipt(
-            schema="AuraPackedExpertPagerReceiptV1",
+            schema="AuraPackedExpertPagerReceiptV2",
             binding_digest=self.binding.digest,
             layer_id=self.binding.layer_id,
             selected_experts=selected,
             contiguous_runs=runs,
             read_count=read_count,
-            whole_tensor_reads=0,
+            physical_bytes_read=evidence.physical_bytes_read,
+            physical_read_operations=evidence.read_operations,
+            whole_tensor_reads=evidence.whole_tensor_reads,
+            backend_evidence_attested=attested,
+            source_ranges=evidence.source_ranges,
         )
         return result
 
@@ -219,7 +319,7 @@ class PackedExpertPager:
         return self._last_receipt
 
     def evict(self) -> None:
-        # Core holds no tensor cache.  A future bounded cache may implement this
+        # Core holds no tensor cache. A future bounded cache may implement this
         # without weakening source identity or whole-bank prohibitions.
         return None
 
