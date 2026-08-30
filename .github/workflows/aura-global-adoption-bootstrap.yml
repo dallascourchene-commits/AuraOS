@@ -1,0 +1,25 @@
+name: Aura Global Adoption Bootstrap
+
+on:
+  pull_request:
+    paths:
+      - 'aura_adoption_bootstrap.py'
+      - 'tests/test_aura_adoption_bootstrap.py'
+      - '.github/workflows/aura-global-adoption-bootstrap.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile bootstrap contract
+        run: python -m py_compile aura_adoption_bootstrap.py tests/test_aura_adoption_bootstrap.py
+      - name: Focused adoption routing regressions
+        run: python -m unittest -v tests/test_aura_adoption_bootstrap.py
