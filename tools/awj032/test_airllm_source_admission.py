@@ -22,6 +22,11 @@ def make_tree(
 
 
 class GateTests(unittest.TestCase):
+    def _codes(self, auto: str) -> set[str]:
+        with tempfile.TemporaryDirectory() as d:
+            make_tree(Path(d), auto=auto)
+            return {f.code for f in a.audit_airllm_source(d).findings}
+
     def test_hard_false_source_passes(self):
         with tempfile.TemporaryDirectory() as d:
             make_tree(Path(d))
@@ -31,62 +36,47 @@ class GateTests(unittest.TestCase):
             self.assertEqual([], list(r.findings))
 
     def test_explicit_true_blocks(self):
-        with tempfile.TemporaryDirectory() as d:
-            make_tree(
-                Path(d), auto="def load(f):\n    return f(trust_remote_code=True)\n"
-            )
-            r = a.audit_airllm_source(d)
-            self.assertEqual("BLOCKED", r.status)
-            self.assertIn("REMOTE_CODE_TRUE", {f.code for f in r.findings})
+        self.assertIn(
+            "REMOTE_CODE_TRUE",
+            self._codes("def load(f):\n    return f(trust_remote_code=True)\n"),
+        )
 
     def test_dynamic_policy_blocks(self):
-        with tempfile.TemporaryDirectory() as d:
-            make_tree(
-                Path(d),
-                auto="def load(f, trust):\n    return f(trust_remote_code=trust)\n",
-            )
-            r = a.audit_airllm_source(d)
-            self.assertIn("REMOTE_CODE_DYNAMIC", {f.code for f in r.findings})
+        self.assertIn(
+            "REMOTE_CODE_DYNAMIC",
+            self._codes("def load(f, trust):\n    return f(trust_remote_code=trust)\n"),
+        )
 
     def test_mapping_true_blocks(self):
-        with tempfile.TemporaryDirectory() as d:
-            make_tree(
-                Path(d),
-                auto=(
-                    "def load(f):\n"
-                    "    opts = {'trust_remote_code': True}\n"
-                    "    return f(**opts)\n"
-                ),
-            )
-            r = a.audit_airllm_source(d)
-            self.assertIn("REMOTE_CODE_TRUE", {f.code for f in r.findings})
+        self.assertIn(
+            "REMOTE_CODE_TRUE",
+            self._codes(
+                "def load(f):\n"
+                "    opts = {'trust_remote_code': True}\n"
+                "    return f(**opts)\n"
+            ),
+        )
 
     def test_mapping_dynamic_blocks(self):
-        with tempfile.TemporaryDirectory() as d:
-            make_tree(
-                Path(d),
-                auto=(
-                    "def load(f, trust):\n"
-                    "    opts = {'trust_remote_code': trust}\n"
-                    "    return f(**opts)\n"
-                ),
-            )
-            r = a.audit_airllm_source(d)
-            self.assertIn("REMOTE_CODE_DYNAMIC", {f.code for f in r.findings})
+        self.assertIn(
+            "REMOTE_CODE_DYNAMIC",
+            self._codes(
+                "def load(f, trust):\n"
+                "    opts = {'trust_remote_code': trust}\n"
+                "    return f(**opts)\n"
+            ),
+        )
 
     def test_subscript_assignment_true_blocks(self):
-        with tempfile.TemporaryDirectory() as d:
-            make_tree(
-                Path(d),
-                auto=(
-                    "def load(f):\n"
-                    "    opts = {}\n"
-                    "    opts['trust_remote_code'] = True\n"
-                    "    return f(**opts)\n"
-                ),
-            )
-            r = a.audit_airllm_source(d)
-            self.assertIn("REMOTE_CODE_TRUE", {f.code for f in r.findings})
+        self.assertIn(
+            "REMOTE_CODE_TRUE",
+            self._codes(
+                "def load(f):\n"
+                "    opts = {}\n"
+                "    opts['trust_remote_code'] = True\n"
+                "    return f(**opts)\n"
+            ),
+        )
 
     def test_version_drift_blocks(self):
         with tempfile.TemporaryDirectory() as d:
@@ -115,9 +105,7 @@ class GateTests(unittest.TestCase):
             except OSError as exc:
                 self.skipTest(f"symlink unsupported in test environment: {exc}")
             r = a.audit_airllm_source(root)
-            self.assertIn(
-                "SOURCE_SYMLINK_FORBIDDEN", {f.code for f in r.findings}
-            )
+            self.assertIn("SOURCE_SYMLINK_FORBIDDEN", {f.code for f in r.findings})
 
     def test_digest_changes_with_source(self):
         with tempfile.TemporaryDirectory() as d:
@@ -144,6 +132,108 @@ class GateTests(unittest.TestCase):
         r = a.audit_airllm_source("/definitely/not/a/source")
         self.assertEqual("BLOCKED", r.status)
         self.assertEqual("SOURCE_ROOT_MISSING", r.findings[0].code)
+
+    def test_computed_mapping_key_blocks(self):
+        self.assertIn(
+            "REMOTE_CODE_TRUE",
+            self._codes(
+                "KEY = 'trust_' + 'remote_code'\n"
+                "def load(f):\n"
+                "    opts = {KEY: True}\n"
+                "    return f(**opts)\n"
+            ),
+        )
+
+    def test_computed_subscript_key_blocks(self):
+        self.assertIn(
+            "REMOTE_CODE_TRUE",
+            self._codes(
+                "KEY = f\"trust_{'remote_code'}\"\n"
+                "def load(f):\n"
+                "    opts = {}\n"
+                "    opts[KEY] = True\n"
+                "    return f(**opts)\n"
+            ),
+        )
+
+    def test_attribute_assignment_blocks(self):
+        self.assertIn(
+            "REMOTE_CODE_TRUE",
+            self._codes(
+                "def load(obj):\n"
+                "    obj.trust_remote_code = True\n"
+                "    return obj\n"
+            ),
+        )
+
+    def test_setattr_blocks(self):
+        self.assertIn(
+            "REMOTE_CODE_DYNAMIC",
+            self._codes(
+                "def load(obj, value):\n"
+                "    setattr(obj, 'trust_remote_code', value)\n"
+                "    return obj\n"
+            ),
+        )
+
+    def test_setdefault_blocks(self):
+        self.assertIn(
+            "REMOTE_CODE_TRUE",
+            self._codes(
+                "def load(opts):\n"
+                "    opts.setdefault('trust_remote_code', True)\n"
+                "    return opts\n"
+            ),
+        )
+
+    def test_loader_opaque_kwargs_fail_closed(self):
+        self.assertIn(
+            "REMOTE_CODE_OPAQUE_LOADER_KWARGS",
+            self._codes(
+                "def load(model, opts):\n"
+                "    return model.from_pretrained('x', **opts)\n"
+            ),
+        )
+
+    def test_loader_explicit_false_with_opaque_kwargs_passes(self):
+        with tempfile.TemporaryDirectory() as d:
+            make_tree(
+                Path(d),
+                auto=(
+                    "def load(model, opts):\n"
+                    "    return model.from_pretrained('x', trust_remote_code=False, **opts)\n"
+                ),
+            )
+            self.assertEqual("PASS", a.audit_airllm_source(d).status)
+
+    def test_loader_static_unrelated_mapping_passes(self):
+        with tempfile.TemporaryDirectory() as d:
+            make_tree(
+                Path(d),
+                auto=(
+                    "def load(model):\n"
+                    "    opts = {'revision': 'abc'}\n"
+                    "    return model.from_pretrained('x', **opts)\n"
+                ),
+            )
+            self.assertEqual("PASS", a.audit_airllm_source(d).status)
+
+    def test_dict_constructor_pair_blocks(self):
+        self.assertIn(
+            "REMOTE_CODE_TRUE",
+            self._codes(
+                "def load(model):\n"
+                "    opts = dict([('trust_remote_code', True)])\n"
+                "    return model.from_pretrained('x', **opts)\n"
+            ),
+        )
+
+    def test_generic_opaque_kwargs_not_globally_blocked(self):
+        with tempfile.TemporaryDirectory() as d:
+            make_tree(
+                Path(d), auto="def load(f, opts):\n    return f(**opts)\n"
+            )
+            self.assertEqual("PASS", a.audit_airllm_source(d).status)
 
 
 if __name__ == "__main__":
