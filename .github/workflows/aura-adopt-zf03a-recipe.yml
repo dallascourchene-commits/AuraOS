@@ -1,0 +1,25 @@
+name: AURA ADOPT ZF-03A Arena Recipe
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/arena_recipe.py'
+      - 'tools/aura_adopt/test_arena_recipe.py'
+      - '.github/workflows/aura-adopt-zf03a-recipe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recipe-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile
+        run: python -m py_compile tools/aura_adopt/arena_recipe.py tools/aura_adopt/test_arena_recipe.py
+      - name: Run focused regressions
+        run: python -m unittest -v tools.aura_adopt.test_arena_recipe

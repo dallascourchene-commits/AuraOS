@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788110389,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -132,6 +132,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf03a-recipe.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1631,6 +1632,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/arena_recipe.py",
+      "tools/aura_adopt/test_arena_recipe.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26434858,
+      "tokens_est": 6599067,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3895,6 +3898,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 32,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_canonical:a8cca6eb6693e74e",
+        "signature_hash": "8e43409cca322220"
       }
     ],
     "_digest": [
@@ -4337,6 +4348,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_digest:11ffc127d64e42ca",
+        "signature_hash": "8d381d1850a0b155"
       }
     ],
     "_token_proxy": [
@@ -8067,6 +8086,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_sha:585b5731f335febb",
+        "signature_hash": "51ad05b727d38ce8"
       }
     ],
     "_repo": [
@@ -14713,6 +14740,14 @@
         "end_line": 106,
         "semantic_id": "aura_arena_attempt_archive.py#function:_safe:6db084dcea2c1f77",
         "signature_hash": "f83ad98bde6a94e5"
+      },
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 55,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_safe:cb612b693d1aa5df",
+        "signature_hash": "ae68d60f4076f902"
       }
     ],
     "_find_first": [
@@ -157181,6 +157216,446 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "RecipeError": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 29,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#class:RecipeError:738370403e3faf32",
+        "signature_hash": "8a201044e962131b"
+      }
+    ],
+    "RecipeError.__init__": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:RecipeError.__init__:fc1db1a827fd3de2",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_ident": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 39,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_ident:1994d170e31d6b6a",
+        "signature_hash": "b01121e67af11860"
+      }
+    ],
+    "BoundRef": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "class",
+        "line": 58,
+        "end_line": 62,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#class:BoundRef:8658c7d01d4714c5",
+        "signature_hash": "1c87a7c8e9d28fc7"
+      }
+    ],
+    "BoundRef.__post_init__": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 62,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:BoundRef.__post_init__:ddcfbb883958c8c5",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "BindingEvidence": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "class",
+        "line": 65,
+        "end_line": 69,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#class:BindingEvidence:c1700a4fa2bac767",
+        "signature_hash": "87bd36729de9892b"
+      }
+    ],
+    "BindingEvidence.__post_init__": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 69,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:BindingEvidence.__post_init__:522ef4408c80c680",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "Attribution": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "class",
+        "line": 72,
+        "end_line": 76,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#class:Attribution:a272ca3056ed72fc",
+        "signature_hash": "487c2226a86d50c8"
+      }
+    ],
+    "Attribution.__post_init__": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 76,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:Attribution.__post_init__:04f642bcb6ebc0d5",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RightsEnvelope": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "class",
+        "line": 79,
+        "end_line": 85,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#class:RightsEnvelope:a6b83625eb4534fd",
+        "signature_hash": "e3369b6c5098bcdd"
+      }
+    ],
+    "RightsEnvelope.__post_init__": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 85,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:RightsEnvelope.__post_init__:1f24fb3aadecd5bf",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "_effect_rank": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 89,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_effect_rank:982d154d84596253",
+        "signature_hash": "b7e3875330c8ef27"
+      }
+    ],
+    "ArenaRecipe": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "class",
+        "line": 92,
+        "end_line": 122,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#class:ArenaRecipe:e2a2f4903d748d4e",
+        "signature_hash": "e873d04f33e6793c"
+      }
+    ],
+    "ArenaRecipe.__post_init__": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 109,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:ArenaRecipe.__post_init__:fcfefa937710a077",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ArenaRecipe.canonical_payload": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 119,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:ArenaRecipe.canonical_payload:15692a9f872c6410",
+        "signature_hash": "5aac0e95c9ede280"
+      }
+    ],
+    "ArenaRecipe.digest": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 121,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:ArenaRecipe.digest:c7445d5ec1348cb6",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "ArenaRecipe.export_json": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 122,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:ArenaRecipe.export_json:99474481b8f9ac26",
+        "signature_hash": "fbb7a0e312c8ecc5"
+      }
+    ],
+    "_b": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 124,
+        "end_line": 125,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_b:3beeeb28d0b14533",
+        "signature_hash": "d612e433f5f9bf19"
+      }
+    ],
+    "_a": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 127,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_a:6f4a93bb5166c35f",
+        "signature_hash": "9ce326f61a84c7e5"
+      }
+    ],
+    "_r": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 129,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_r:bcc3babd5a54844a",
+        "signature_hash": "c2f005d759d4cdef"
+      }
+    ],
+    "import_recipe_json": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 131,
+        "end_line": 147,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:import_recipe_json:ccc85b59b66c14af",
+        "signature_hash": "f4787884dc6ac9c4"
+      }
+    ],
+    "_no_rights_widen": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 150,
+        "end_line": 153,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_no_rights_widen:313257f28d864708",
+        "signature_hash": "5be6797ad2de98ff"
+      }
+    ],
+    "remix_recipe": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 165,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:remix_recipe:a6b4980ea837c795",
+        "signature_hash": "b225e40492bc3c6f"
+      }
+    ],
+    "compile_recipe_plan": [
+      {
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "kind": "function",
+        "line": 167,
+        "end_line": 183,
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:compile_recipe_plan:62ffcc54336ec5a3",
+        "signature_hash": "51ebf7e1802cb047"
+      }
+    ],
+    "ArenaRecipeTests": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "class",
+        "line": 11,
+        "end_line": 67,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#class:ArenaRecipeTests:55022f22769bfd19",
+        "signature_hash": "92f8557b7574f612"
+      }
+    ],
+    "ArenaRecipeTests.base": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 27,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.base:2a443a132a6127fa",
+        "signature_hash": "d5b3905ca19cf058"
+      }
+    ],
+    "ArenaRecipeTests.exact": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 31,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.exact:82ada9b023c04172",
+        "signature_hash": "e6ba4a0ebc8ba637"
+      }
+    ],
+    "ArenaRecipeTests.test_export_import_roundtrip_is_stable": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 34,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_export_import_roundtrip_is_stable:bb389bac5cb3fd4c",
+        "signature_hash": "92e5d4f67d71ee64"
+      }
+    ],
+    "ArenaRecipeTests.test_semantic_order_does_not_churn_digest": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_semantic_order_does_not_churn_digest:78ed6ce80b0797c1",
+        "signature_hash": "863829eb9d328312"
+      }
+    ],
+    "ArenaRecipeTests.test_recursive_secret_field_is_rejected": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_recursive_secret_field_is_rejected:7ca27ba444a51af7",
+        "signature_hash": "03476041efa29b49"
+      }
+    ],
+    "ArenaRecipeTests.test_executable_field_is_rejected": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_executable_field_is_rejected:2a5c6494ecab6a1b",
+        "signature_hash": "6060f78b20aabf99"
+      }
+    ],
+    "ArenaRecipeTests.test_remix_preserves_parent_lineage": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_remix_preserves_parent_lineage:bcb452f29f3449de",
+        "signature_hash": "e3410e3ef54779f1"
+      }
+    ],
+    "ArenaRecipeTests.test_remix_cannot_widen_rights": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_remix_cannot_widen_rights:368deab7b3efb34f",
+        "signature_hash": "14f915fd99288ea6"
+      }
+    ],
+    "ArenaRecipeTests.test_remix_cannot_drop_attribution": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_remix_cannot_drop_attribution:d2381f59bbcbad08",
+        "signature_hash": "0f5b51d20af1c076"
+      }
+    ],
+    "ArenaRecipeTests.test_remix_cannot_widen_effect": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_remix_cannot_widen_effect:e4df83021f8f7e4e",
+        "signature_hash": "d3b6a3d0e882ba17"
+      }
+    ],
+    "ArenaRecipeTests.test_missing_binding_is_typed_residual": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_missing_binding_is_typed_residual:38ad5bc3d7921de6",
+        "signature_hash": "1cbdd2ffb04000d2"
+      }
+    ],
+    "ArenaRecipeTests.test_digest_mismatch_fails_closed": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_digest_mismatch_fails_closed:09f3c5b94f65947f",
+        "signature_hash": "b4f686eacac35ffb"
+      }
+    ],
+    "ArenaRecipeTests.test_same_digest_wrong_generation_fails_closed": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_same_digest_wrong_generation_fails_closed:b2165ce7c2e89c49",
+        "signature_hash": "fbfca793e6eca6d2"
+      }
+    ],
+    "ArenaRecipeTests.test_external_unknown_currentness_cannot_self_certify": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 56,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_external_unknown_currentness_cannot_self_certify:5e2cae0921ddc666",
+        "signature_hash": "e1f591896120abf0"
+      }
+    ],
+    "ArenaRecipeTests.test_recipe_unknown_currentness_blocks": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_recipe_unknown_currentness_blocks:6a00fe76f6973cf2",
+        "signature_hash": "ec719b07ef22a91a"
+      }
+    ],
+    "ArenaRecipeTests.test_digest_only_binding_is_insufficient": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_digest_only_binding_is_insufficient:c6b4dccb9febc824",
+        "signature_hash": "58c665fdb753c2db"
+      }
+    ],
+    "ArenaRecipeTests.test_exact_bindings_ready_only_for_admission": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_exact_bindings_ready_only_for_admission:be1def78bda12683",
+        "signature_hash": "69394d7097718425"
+      }
+    ],
+    "ArenaRecipeTests.test_unknown_rights_remain_unknown": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_unknown_rights_remain_unknown:cc8e251078ecbadf",
+        "signature_hash": "2a0491d277170c70"
+      }
+    ],
+    "ArenaRecipeTests.test_unknown_top_level_field_rejected": [
+      {
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 67,
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_unknown_top_level_field_rejected:bb5a1a3d0a7e007a",
+        "signature_hash": "d0a539914298cd2d"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -167495,6 +167970,53 @@
         0.180531,
         0.255844,
         0.26249
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-adopt-zf03a-recipe.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 686,
+      "lines": 26,
+      "tokens_est": 172,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e5b00e86b5e40352",
+      "vector": [
+        0.016242,
+        -0.007383,
+        -0.308605,
+        0.152088,
+        -0.222963,
+        0.202291,
+        0.181619,
+        -0.181619,
+        0.128462,
+        0.222963,
+        0.149134,
+        0.346996,
+        0.267261,
+        0.078259,
+        0.157994,
+        0.166853,
+        -0.252495,
+        -0.320417,
+        -0.146181,
+        0.178666,
+        0.087118,
+        0.110743,
+        -0.128462,
+        -0.069399,
+        0.016242,
+        0.00443,
+        -0.125509,
+        0.039868,
+        0.211151,
+        -0.184572,
+        0.022149,
+        0.166853
       ]
     },
     {
@@ -262648,6 +263170,100 @@
       ]
     },
     {
+      "path": "tools/aura_adopt/arena_recipe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12761,
+      "lines": 184,
+      "tokens_est": 3191,
+      "symbol_count": 28,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fe430b55696a57ec",
+      "vector": [
+        -0.278684,
+        0.016246,
+        -0.151214,
+        -0.018746,
+        0.228696,
+        0.063735,
+        -0.25119,
+        0.191205,
+        0.058736,
+        0.221197,
+        0.068734,
+        0.286182,
+        -0.246192,
+        -0.133718,
+        0.266187,
+        -0.171209,
+        -0.028743,
+        -0.163711,
+        0.186206,
+        0.008748,
+        -0.231195,
+        -0.123721,
+        -0.25119,
+        0.113723,
+        -0.16871,
+        -0.213699,
+        0.278684,
+        -0.04374,
+        0.123721,
+        -0.051238,
+        0.196203,
+        -0.088729
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_arena_recipe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6363,
+      "lines": 70,
+      "tokens_est": 1591,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "42bc22563ea87eed",
+      "vector": [
+        0.291133,
+        0.178271,
+        0.075669,
+        0.073104,
+        -0.062844,
+        0.319348,
+        -0.11158,
+        0.037193,
+        0.183401,
+        0.088494,
+        -0.078234,
+        0.165446,
+        0.060279,
+        0.278308,
+        0.11671,
+        -0.011543,
+        0.096189,
+        0.014108,
+        0.306523,
+        -0.303958,
+        -0.083364,
+        -0.021803,
+        0.206486,
+        -0.019238,
+        0.173141,
+        -0.183401,
+        0.216746,
+        0.173141,
+        -0.191096,
+        0.134665,
+        -0.206486,
+        0.314218
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -286646,16 +287262,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26434858,
+    "text_tokens_est": 6599067,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286797,6 +287413,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf03a-recipe.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -288296,6 +288913,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/arena_recipe.py",
+      "tools/aura_adopt/test_arena_recipe.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445634,6 +446253,486 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#class:ArenaRecipe:e2a2f4903d748d4e",
+        "name": "ArenaRecipe",
+        "kind": "class",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 92,
+        "end_line": 122,
+        "signature_hash": "e873d04f33e6793c",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#class:Attribution:a272ca3056ed72fc",
+        "name": "Attribution",
+        "kind": "class",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 72,
+        "end_line": 76,
+        "signature_hash": "487c2226a86d50c8",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#class:BindingEvidence:c1700a4fa2bac767",
+        "name": "BindingEvidence",
+        "kind": "class",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 65,
+        "end_line": 69,
+        "signature_hash": "87bd36729de9892b",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#class:BoundRef:8658c7d01d4714c5",
+        "name": "BoundRef",
+        "kind": "class",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 58,
+        "end_line": 62,
+        "signature_hash": "1c87a7c8e9d28fc7",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#class:RecipeError:738370403e3faf32",
+        "name": "RecipeError",
+        "kind": "class",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 26,
+        "end_line": 29,
+        "signature_hash": "8a201044e962131b",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#class:RightsEnvelope:a6b83625eb4534fd",
+        "name": "RightsEnvelope",
+        "kind": "class",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 79,
+        "end_line": 85,
+        "signature_hash": "e3369b6c5098bcdd",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_a:6f4a93bb5166c35f",
+        "name": "_a",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 126,
+        "end_line": 127,
+        "signature_hash": "9ce326f61a84c7e5",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_b:3beeeb28d0b14533",
+        "name": "_b",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 124,
+        "end_line": 125,
+        "signature_hash": "d612e433f5f9bf19",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_canonical:a8cca6eb6693e74e",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 31,
+        "end_line": 32,
+        "signature_hash": "8e43409cca322220",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_digest:11ffc127d64e42ca",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "8d381d1850a0b155",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_effect_rank:982d154d84596253",
+        "name": "_effect_rank",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 87,
+        "end_line": 89,
+        "signature_hash": "b7e3875330c8ef27",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_ident:1994d170e31d6b6a",
+        "name": "_ident",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 37,
+        "end_line": 39,
+        "signature_hash": "b01121e67af11860",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_no_rights_widen:313257f28d864708",
+        "name": "_no_rights_widen",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 150,
+        "end_line": 153,
+        "signature_hash": "5be6797ad2de98ff",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_r:bcc3babd5a54844a",
+        "name": "_r",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 128,
+        "end_line": 129,
+        "signature_hash": "c2f005d759d4cdef",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_safe:cb612b693d1aa5df",
+        "name": "_safe",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 45,
+        "end_line": 55,
+        "signature_hash": "ae68d60f4076f902",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:_sha:585b5731f335febb",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "51ad05b727d38ce8",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:compile_recipe_plan:62ffcc54336ec5a3",
+        "name": "compile_recipe_plan",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 167,
+        "end_line": 183,
+        "signature_hash": "51ebf7e1802cb047",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:import_recipe_json:ccc85b59b66c14af",
+        "name": "import_recipe_json",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 131,
+        "end_line": 147,
+        "signature_hash": "f4787884dc6ac9c4",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#function:remix_recipe:a6b4980ea837c795",
+        "name": "remix_recipe",
+        "kind": "function",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 155,
+        "end_line": 165,
+        "signature_hash": "b225e40492bc3c6f",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:ArenaRecipe.__post_init__:fcfefa937710a077",
+        "name": "ArenaRecipe.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 98,
+        "end_line": 109,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:ArenaRecipe.canonical_payload:15692a9f872c6410",
+        "name": "ArenaRecipe.canonical_payload",
+        "kind": "method",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 110,
+        "end_line": 119,
+        "signature_hash": "5aac0e95c9ede280",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:ArenaRecipe.digest:c7445d5ec1348cb6",
+        "name": "ArenaRecipe.digest",
+        "kind": "method",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 121,
+        "end_line": 121,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:ArenaRecipe.export_json:99474481b8f9ac26",
+        "name": "ArenaRecipe.export_json",
+        "kind": "method",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 122,
+        "end_line": 122,
+        "signature_hash": "fbb7a0e312c8ecc5",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:Attribution.__post_init__:04f642bcb6ebc0d5",
+        "name": "Attribution.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 74,
+        "end_line": 76,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:BindingEvidence.__post_init__:522ef4408c80c680",
+        "name": "BindingEvidence.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 67,
+        "end_line": 69,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:BoundRef.__post_init__:ddcfbb883958c8c5",
+        "name": "BoundRef.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 60,
+        "end_line": 62,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:RecipeError.__init__:fc1db1a827fd3de2",
+        "name": "RecipeError.__init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/arena_recipe.py#method:RightsEnvelope.__post_init__:1f24fb3aadecd5bf",
+        "name": "RightsEnvelope.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/arena_recipe.py",
+        "line": 82,
+        "end_line": 85,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "fe430b55696a57ec"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#class:ArenaRecipeTests:55022f22769bfd19",
+        "name": "ArenaRecipeTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 11,
+        "end_line": 67,
+        "signature_hash": "92f8557b7574f612",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.base:2a443a132a6127fa",
+        "name": "ArenaRecipeTests.base",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 12,
+        "end_line": 27,
+        "signature_hash": "d5b3905ca19cf058",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.exact:82ada9b023c04172",
+        "name": "ArenaRecipeTests.exact",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 28,
+        "end_line": 31,
+        "signature_hash": "e6ba4a0ebc8ba637",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_digest_mismatch_fails_closed:09f3c5b94f65947f",
+        "name": "ArenaRecipeTests.test_digest_mismatch_fails_closed",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "b4f686eacac35ffb",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_digest_only_binding_is_insufficient:c6b4dccb9febc824",
+        "name": "ArenaRecipeTests.test_digest_only_binding_is_insufficient",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "58c665fdb753c2db",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_exact_bindings_ready_only_for_admission:be1def78bda12683",
+        "name": "ArenaRecipeTests.test_exact_bindings_ready_only_for_admission",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 61,
+        "end_line": 62,
+        "signature_hash": "69394d7097718425",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_executable_field_is_rejected:2a5c6494ecab6a1b",
+        "name": "ArenaRecipeTests.test_executable_field_is_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 39,
+        "end_line": 40,
+        "signature_hash": "6060f78b20aabf99",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_export_import_roundtrip_is_stable:bb389bac5cb3fd4c",
+        "name": "ArenaRecipeTests.test_export_import_roundtrip_is_stable",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 33,
+        "end_line": 34,
+        "signature_hash": "92e5d4f67d71ee64",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_external_unknown_currentness_cannot_self_certify:5e2cae0921ddc666",
+        "name": "ArenaRecipeTests.test_external_unknown_currentness_cannot_self_certify",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 55,
+        "end_line": 56,
+        "signature_hash": "e1f591896120abf0",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_missing_binding_is_typed_residual:38ad5bc3d7921de6",
+        "name": "ArenaRecipeTests.test_missing_binding_is_typed_residual",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "1cbdd2ffb04000d2",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_recipe_unknown_currentness_blocks:6a00fe76f6973cf2",
+        "name": "ArenaRecipeTests.test_recipe_unknown_currentness_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "ec719b07ef22a91a",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_recursive_secret_field_is_rejected:7ca27ba444a51af7",
+        "name": "ArenaRecipeTests.test_recursive_secret_field_is_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "03476041efa29b49",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_remix_cannot_drop_attribution:d2381f59bbcbad08",
+        "name": "ArenaRecipeTests.test_remix_cannot_drop_attribution",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "0f5b51d20af1c076",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_remix_cannot_widen_effect:e4df83021f8f7e4e",
+        "name": "ArenaRecipeTests.test_remix_cannot_widen_effect",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 47,
+        "end_line": 48,
+        "signature_hash": "d3b6a3d0e882ba17",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_remix_cannot_widen_rights:368deab7b3efb34f",
+        "name": "ArenaRecipeTests.test_remix_cannot_widen_rights",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 43,
+        "end_line": 44,
+        "signature_hash": "14f915fd99288ea6",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_remix_preserves_parent_lineage:bcb452f29f3449de",
+        "name": "ArenaRecipeTests.test_remix_preserves_parent_lineage",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "e3410e3ef54779f1",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_same_digest_wrong_generation_fails_closed:b2165ce7c2e89c49",
+        "name": "ArenaRecipeTests.test_same_digest_wrong_generation_fails_closed",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "fbfca793e6eca6d2",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_semantic_order_does_not_churn_digest:78ed6ce80b0797c1",
+        "name": "ArenaRecipeTests.test_semantic_order_does_not_churn_digest",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "863829eb9d328312",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_unknown_rights_remain_unknown:cc8e251078ecbadf",
+        "name": "ArenaRecipeTests.test_unknown_rights_remain_unknown",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "2a0491d277170c70",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_arena_recipe.py#method:ArenaRecipeTests.test_unknown_top_level_field_rejected:bb5a1a3d0a7e007a",
+        "name": "ArenaRecipeTests.test_unknown_top_level_field_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_arena_recipe.py",
+        "line": 65,
+        "end_line": 67,
+        "signature_hash": "d0a539914298cd2d",
+        "file_digest8": "42bc22563ea87eed"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447983,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "df9fd7ef5ea7c678f350a2ca1b149853",
+    "payload_hash": "edf55c8f8416e0c0bea16f8c1ac594b7"
   }
 }
