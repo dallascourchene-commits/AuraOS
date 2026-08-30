@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1658
-- **total_bytes**: 26418741
-- **text_tokens_est**: 6595075
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1661
+- **total_bytes**: 26449368
+- **text_tokens_est**: 6602732
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1658,
+  "repo_file_count": 1661,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -359,6 +359,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_arena_wfst_registry.py",
     "aura_arena_wfst_runtime.py",
     "aura_arena_wfst_types.py",
+    "aura_arena_workgraph.py",
     "aura_associative_core.py",
     "aura_att_fst_runtime.py",
     "aura_attention_palace.py",
@@ -1113,6 +1114,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
     "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
     "docs/CREATOR-STUDIO-GEMINI-DELTA-GATE10.md",
+    "docs/CREATOR_STUDIO_CONTINUATION_WORKGRAPH.md",
     "docs/INDUSTRY_BENCHMARK_SCORECARD.md",
     "docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md",
     "docs/PR_KIT.md",
@@ -1394,6 +1396,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_st3gg_shadow.py",
     "tests/test_aura_arena_st3gg_shadow_hardening.py",
     "tests/test_aura_arena_wfst_phase_a.py",
+    "tests/test_aura_arena_workgraph.py",
     "tests/test_aura_benchmark_four.py",
     "tests/test_aura_benchmark_four_hardening.py",
     "tests/test_aura_bilateral_gate_dialogue.py",
@@ -1689,6 +1692,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
     "06_refactor/D0_MUTANT_HARNESS.py",
     "06_refactor/aura_os_minimal.py",
+    "aura_arena_workgraph.py",
     "aura_blockchain/__init__.py",
     "aura_blockchain/block.py",
     "aura_blockchain/consensus.py",
@@ -1783,8 +1787,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_st3gg_shadow.py",
     "tests/test_aura_arena_st3gg_shadow_hardening.py",
     "tests/test_aura_arena_wfst_phase_a.py",
-    "tests/test_aura_benchmark_four.py",
-    "tests/test_aura_benchmark_four_hardening.py"
+    "tests/test_aura_arena_workgraph.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1798,15 +1801,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1658,
-  "bytes": 26418741,
-  "tokens_est": 6595075,
+  "files": 1661,
+  "bytes": 26449368,
+  "tokens_est": 6602732,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 242,
+    "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1008,
+    "python_module": 1010,
     "schema_or_lexicon": 274,
     "support_file": 49
   }
@@ -2179,6 +2182,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_arena_wfst_registry.py",
     "aura_arena_wfst_runtime.py",
     "aura_arena_wfst_types.py",
+    "aura_arena_workgraph.py",
     "aura_associative_core.py",
     "aura_att_fst_runtime.py",
     "aura_attention_palace.py",
@@ -2501,8 +2505,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_planning_events.py",
     "aura_planning_frontier.py",
     "aura_planning_projector.py",
-    "aura_planning_regression.py",
-    "aura_plugin_registry.py"
+    "aura_planning_regression.py"
   ]
 }
 ```
