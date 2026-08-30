@@ -31,6 +31,37 @@ LAWFUL_TERMINALS = {
 
 
 @dataclass(frozen=True)
+class GateEvidence:
+    evidence_class: str
+    ref: str
+
+    def __post_init__(self) -> None:
+        if not self.evidence_class.strip():
+            raise ValueError("evidence_class required")
+        if not self.ref.strip():
+            raise ValueError("evidence ref required")
+
+
+GATE_EVIDENCE_REQUIREMENTS: Mapping[int, frozenset[str]] = {
+    1: frozenset({"ARENA_ADMISSION_RECEIPT"}),
+    2: frozenset({"WORKGRAPH_PROJECTION_RECEIPT"}),
+    3: frozenset({"CONTINUATION_REPLAY_RECEIPT"}),
+    4: frozenset({"SUCCESSOR_GROUP_WO_RECEIPT"}),
+    5: frozenset({"COLLAB_WAKE_RECEIPT"}),
+    6: frozenset({"COST_ROUTE_RECEIPT"}),
+    7: frozenset({"ADVERSARIAL_REPLAY_RECEIPT"}),
+    8: frozenset({"FRESH_WORKER_PROBE_RECEIPT"}),
+    9: frozenset({"LIVE_CREATOR_STUDIO_INTEGRATION_RECEIPT"}),
+    10: frozenset({
+        "DIFFERENT_J_REVIEW_RECEIPT",
+        "RESTART_REPLAY_RECEIPT",
+        "CURRENTNESS_REPLAY_RECEIPT",
+        "MISSION_RETURN_RECEIPT",
+    }),
+}
+
+
+@dataclass(frozen=True)
 class WorkerContext:
     worker_id: str
     capabilities: frozenset[str] = frozenset()
@@ -110,6 +141,7 @@ class HarnessState:
     residual_fingerprints: Set[str] = field(default_factory=set)
     currentness: str = "CURRENT"
     owner_stop: bool = False
+    external_boundary_ref: Optional[str] = None
     history: List[dict] = field(default_factory=list)
     _sequence: int = 0
 
@@ -282,17 +314,43 @@ def complete_and_continue(
     return claim_best_available(state, worker)
 
 
-def advance_gate(state: HarnessState, target_gate: int, evidence_refs: Iterable[str]) -> int:
-    """Advance at most one gate, and only with durable evidence references."""
-    refs = tuple(ref for ref in evidence_refs if str(ref).strip())
+def advance_gate(
+    state: HarnessState,
+    target_gate: int,
+    evidence: Iterable[GateEvidence],
+) -> int:
+    """Advance exactly one gate only when that gate's typed evidence classes are present."""
     if target_gate != state.gate + 1:
         raise HarnessRefusal("GATE_SEQUENCE_VIOLATION", f"{state.gate}->{target_gate}")
-    if target_gate < 0 or target_gate > 10:
+    if target_gate < 1 or target_gate > 10:
         raise HarnessRefusal("INVALID_GATE", str(target_gate))
-    if not refs:
+
+    items = tuple(evidence)
+    if not items:
         raise HarnessRefusal("GATE_EVIDENCE_REQUIRED", str(target_gate))
+    if any(not isinstance(item, GateEvidence) for item in items):
+        raise HarnessRefusal("GATE_EVIDENCE_SHAPE_INVALID", str(target_gate))
+
+    present = {item.evidence_class for item in items}
+    required = GATE_EVIDENCE_REQUIREMENTS[target_gate]
+    missing = sorted(required - present)
+    if missing:
+        raise HarnessRefusal(
+            "GATE_EVIDENCE_CLASS_MISSING",
+            f"gate={target_gate} missing={','.join(missing)}",
+        )
+
     state.gate = target_gate
-    state.history.append({"event": "GATE_ADVANCE", "gate": target_gate, "evidence_refs": refs})
+    state.history.append(
+        {
+            "event": "GATE_ADVANCE",
+            "gate": target_gate,
+            "evidence": [
+                {"evidence_class": item.evidence_class, "ref": item.ref}
+                for item in items
+            ],
+        }
+    )
     return state.gate
 
 
@@ -323,17 +381,42 @@ def assert_terminal_allowed(
     worker: WorkerContext,
     requested_reason: str,
 ) -> None:
-    """Reject chat-local/premature terminal behavior while work remains."""
+    """Reject untyped or predicate-unbound terminal behavior."""
+
     if requested_reason not in LAWFUL_TERMINALS:
-        if any(eligible_work(state, worker, stage=s) for s in PRIORITY_STAGE_ORDER):
-            raise HarnessRefusal("PREMATURE_TERMINAL_REFUSED", requested_reason)
+        if state.currentness == "CURRENT":
+            if any(eligible_work(state, worker, stage=s) for s in PRIORITY_STAGE_ORDER):
+                raise HarnessRefusal("PREMATURE_TERMINAL_REFUSED", requested_reason)
         raise HarnessRefusal("UNTYPED_TERMINAL_REFUSED", requested_reason)
 
-    if requested_reason == "GATE10_COMPLETE" and state.gate < 10:
-        raise HarnessRefusal("GATE10_NOT_REACHED", str(state.gate))
+    if requested_reason == "GATE10_COMPLETE":
+        if state.gate < 10:
+            raise HarnessRefusal("GATE10_NOT_REACHED", str(state.gate))
+        return
+
+    if requested_reason == "OWNER_STOP":
+        if not state.owner_stop:
+            raise HarnessRefusal("OWNER_STOP_NOT_BOUND")
+        return
+
+    if requested_reason == "BLOCKED_EXTERNAL_BOUNDARY":
+        if not (state.external_boundary_ref and state.external_boundary_ref.strip()):
+            raise HarnessRefusal("EXTERNAL_BOUNDARY_NOT_BOUND")
+        return
+
+    if requested_reason == "SUPERSEDED_CURRENTNESS":
+        if state.currentness == "CURRENT":
+            raise HarnessRefusal("CURRENTNESS_NOT_SUPERSEDED")
+        return
+
     if requested_reason == "NO_ELIGIBLE_WORK_AFTER_REVIEW":
+        if state.currentness != "CURRENT":
+            raise HarnessRefusal("CURRENTNESS_REBASE_REQUIRED")
         if any(eligible_work(state, worker, stage=s) for s in PRIORITY_STAGE_ORDER):
             raise HarnessRefusal("ELIGIBLE_WORK_REMAINS", requested_reason)
+        return
+
+    raise HarnessRefusal("UNTYPED_TERMINAL_REFUSED", requested_reason)
 
 
 def continuation_snapshot(state: HarnessState, worker: WorkerContext) -> dict:
