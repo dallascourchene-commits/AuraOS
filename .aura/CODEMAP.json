@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788107771,
+  "generated_at_unix": 1788108573,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1671,
+    "repo_file_count": 1674,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -146,6 +146,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
+      ".github/workflows/awj032-glm53-05a-backend-evidence.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
@@ -1654,11 +1655,13 @@
       "third_party/pascal/pascal-lock.json",
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
+      "tools/awj032/glm53_backend_io_evidence_guard.py",
       "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
+      "tools/awj032/test_glm53_backend_io_evidence_guard.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
@@ -1787,16 +1790,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1671,
-      "bytes": 26538030,
-      "tokens_est": 6624903,
+      "files": 1674,
+      "bytes": 26550449,
+      "tokens_est": 6628009,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1018,
-        "schema_or_lexicon": 276,
+        "python_module": 1020,
+        "schema_or_lexicon": 277,
         "support_file": 49
       }
     },
@@ -26379,6 +26382,14 @@
         "end_line": 218,
         "semantic_id": "aura_spatial_contracts.py#function:_optional_text:8583faca45e3f118",
         "signature_hash": "dc2d34123f0d676b"
+      },
+      {
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 41,
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#function:_optional_text:963dcb6e9af6bbff",
+        "signature_hash": "8f16b2d96a173889"
       }
     ],
     "_optional_repo_path": [
@@ -97087,6 +97098,14 @@
         "end_line": 33,
         "semantic_id": "examples/arena_expert_fabric/expert_fabric.py#class:Backend:5e1c8b6fb1006f78",
         "signature_hash": "a95bc105f69d7b78"
+      },
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 21,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#class:Backend:887f385940a02feb",
+        "signature_hash": "a95bc105f69d7b78"
       }
     ],
     "cache_key": [
@@ -158127,6 +158146,66 @@
         "signature_hash": "46b37ab1f36534cb"
       }
     ],
+    "BackendEvidenceError": [
+      {
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 25,
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#class:BackendEvidenceError:827331577d0b25b6",
+        "signature_hash": "d23a4a42095b9910"
+      }
+    ],
+    "BackendEvidenceError.__init__": [
+      {
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#method:BackendEvidenceError.__init__:30e4b351e7c1d7a3",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_nonneg_int": [
+      {
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#function:_nonneg_int:f48cb7594595e3f0",
+        "signature_hash": "8da88530f542cb0c"
+      }
+    ],
+    "W4BackendEvidence": [
+      {
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#class:W4BackendEvidence:20bb40b7783a36c5",
+        "signature_hash": "086148771fa48aac"
+      }
+    ],
+    "W4BackendEvidence.to_dict": [
+      {
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#method:W4BackendEvidence.to_dict:fd46aa3f8752a40b",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "validate_backend_evidence": [
+      {
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 155,
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#function:validate_backend_evidence:64d25743cc068f68",
+        "signature_hash": "bd53fd36c00510f3"
+      }
+    ],
     "CompatibilityReceipt": [
       {
         "file": "tools/awj032/glm53_compatibility_probe.py",
@@ -159171,6 +159250,136 @@
         "end_line": 146,
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#method:GateTests.test_missing_root_fails_closed:6e21701ad0ec8d47",
         "signature_hash": "378536f4432265cb"
+      }
+    ],
+    "Backend.__init__": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 11,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:Backend.__init__:2817e9a807d3c5b5",
+        "signature_hash": "f469bc64577679b8"
+      }
+    ],
+    "Backend.io_attestation": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 13,
+        "end_line": 21,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:Backend.io_attestation:918322ca933bbbd8",
+        "signature_hash": "d3cfe7ec781686af"
+      }
+    ],
+    "NoAttestation": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#class:NoAttestation:bcc606ff475ea545",
+        "signature_hash": "cc1c197b394cb9d3"
+      }
+    ],
+    "EvidenceGuardTests": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 124,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#class:EvidenceGuardTests:547c17e39604af86",
+        "signature_hash": "479164a97d926b3b"
+      }
+    ],
+    "EvidenceGuardTests.test_missing_attestation_stays_unknown_and_not_w4_admissible": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_missing_attestation_stays_unknown_and_not_w4_admissible:2650538e150ca789",
+        "signature_hash": "e69fa94becc2a761"
+      }
+    ],
+    "EvidenceGuardTests.test_safe_complete_attestation_is_w4_admissible": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 53,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_safe_complete_attestation_is_w4_admissible:8d3f0ae0510a7b36",
+        "signature_hash": "d89fab672a554b96"
+      }
+    ],
+    "EvidenceGuardTests.test_safe_but_incomplete_attestation_is_not_promoted_to_w4": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_safe_but_incomplete_attestation_is_not_promoted_to_w4:04152dbec9faaea3",
+        "signature_hash": "336fc62473581354"
+      }
+    ],
+    "EvidenceGuardTests.test_nonselected_physical_reads_fail_closed": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 67,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_nonselected_physical_reads_fail_closed:bb904901e2a13d72",
+        "signature_hash": "454d7494924cc456"
+      }
+    ],
+    "EvidenceGuardTests.test_whole_bank_read_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 74,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_whole_bank_read_fails_closed:27a77a2a5a766083",
+        "signature_hash": "a508ba36c282395e"
+      }
+    ],
+    "EvidenceGuardTests.test_whole_bank_materialization_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 81,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_whole_bank_materialization_fails_closed:a86426cd88fafba7",
+        "signature_hash": "410ede852cf7f58f"
+      }
+    ],
+    "EvidenceGuardTests.test_binding_mismatch_fails_closed": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 88,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_binding_mismatch_fails_closed:9180ee58615fc6dc",
+        "signature_hash": "a4a3acdcfde9b962"
+      }
+    ],
+    "EvidenceGuardTests.test_invalid_metrics_fail_closed": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 101,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_invalid_metrics_fail_closed:a2f6dbfa0b1e7a97",
+        "signature_hash": "7002e329b853e9cb"
+      }
+    ],
+    "EvidenceGuardTests.test_receipt_is_deterministically_nonpromoting": [
+      {
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 124,
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_receipt_is_deterministically_nonpromoting:4d659da36e691cb3",
+        "signature_hash": "b0bfb02888b87dda"
       }
     ],
     "GLM53CompatibilityProbeTests": [
@@ -171157,6 +171366,53 @@
         0.261152,
         0.184548,
         -0.15437
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-05a-backend-evidence.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 797,
+      "lines": 27,
+      "tokens_est": 200,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a06bcb5a6e14c84f",
+      "vector": [
+        0.217878,
+        0.07443,
+        -0.08255,
+        0.193519,
+        -0.280129,
+        -0.098789,
+        0.036539,
+        -0.158334,
+        0.215172,
+        -0.133975,
+        -0.207052,
+        0.171867,
+        0.223291,
+        -0.34238,
+        0.209758,
+        0.044658,
+        -0.179986,
+        -0.028419,
+        -0.272009,
+        0.077137,
+        -0.182693,
+        -0.250357,
+        0.128562,
+        -0.047365,
+        -0.006766,
+        -0.144801,
+        0.188106,
+        -0.106909,
+        -0.08255,
+        0.09067,
+        -0.207052,
+        -0.290955
       ]
     },
     {
@@ -266601,6 +266857,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_backend_io_evidence_guard.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6370,
+      "lines": 156,
+      "tokens_est": 1593,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bf6d40ba8eaa4152",
+      "vector": [
+        0.231566,
+        -0.240516,
+        0.231566,
+        -0.02573,
+        -0.151021,
+        -0.186819,
+        -0.184582,
+        -0.068239,
+        0.24499,
+        0.117461,
+        0.130885,
+        0.238278,
+        0.117461,
+        -0.090613,
+        -0.162208,
+        0.128648,
+        0.262889,
+        -0.157734,
+        -0.276313,
+        -0.139835,
+        0.02573,
+        -0.070477,
+        0.106274,
+        -0.001119,
+        0.256177,
+        0.274076,
+        -0.003356,
+        0.267364,
+        -0.189056,
+        -0.213667,
+        -0.133123,
+        -0.083901
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_compatibility_probe.py",
       "role": "python_module",
       "binary": false,
@@ -266833,6 +267136,53 @@
         -0.067951,
         -0.024186,
         0.272957
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5252,
+      "lines": 129,
+      "tokens_est": 1313,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ed60077239bfea43",
+      "vector": [
+        0.054039,
+        -0.135757,
+        -0.249107,
+        0.038223,
+        -0.117304,
+        0.051403,
+        0.101488,
+        -0.322917,
+        0.151573,
+        0.096216,
+        -0.133121,
+        0.3071,
+        -0.067219,
+        0.225383,
+        -0.217475,
+        -0.067219,
+        -0.251743,
+        0.127849,
+        -0.135757,
+        -0.217475,
+        -0.257015,
+        -0.059311,
+        -0.199022,
+        -0.296556,
+        0.098852,
+        0.164753,
+        0.011862,
+        -0.119941,
+        0.199022,
+        -0.233291,
+        -0.20693,
+        0.043495
       ]
     },
     {
@@ -291022,16 +291372,16 @@
     }
   },
   "summary": {
-    "file_count": 1671,
-    "total_bytes": 26538030,
-    "text_tokens_est": 6624903,
+    "file_count": 1674,
+    "total_bytes": 26550449,
+    "text_tokens_est": 6628009,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1018,
-      "schema_or_lexicon": 276,
+      "python_module": 1020,
+      "schema_or_lexicon": 277,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -291187,6 +291537,7 @@
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
+      ".github/workflows/awj032-glm53-05a-backend-evidence.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
@@ -292695,11 +293046,13 @@
       "third_party/pascal/pascal-lock.json",
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
+      "tools/awj032/glm53_backend_io_evidence_guard.py",
       "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
       "tools/awj032/test_airllm_source_admission.py",
+      "tools/awj032/test_glm53_backend_io_evidence_guard.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
@@ -450922,6 +451275,76 @@
         "file_digest8": "cecff98d2a4fb9ba"
       },
       {
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#class:BackendEvidenceError:827331577d0b25b6",
+        "name": "BackendEvidenceError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "line": 21,
+        "end_line": 25,
+        "signature_hash": "d23a4a42095b9910",
+        "file_digest8": "bf6d40ba8eaa4152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#class:W4BackendEvidence:20bb40b7783a36c5",
+        "name": "W4BackendEvidence",
+        "kind": "class",
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "line": 45,
+        "end_line": 63,
+        "signature_hash": "086148771fa48aac",
+        "file_digest8": "bf6d40ba8eaa4152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#function:_nonneg_int:f48cb7594595e3f0",
+        "name": "_nonneg_int",
+        "kind": "function",
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "line": 28,
+        "end_line": 33,
+        "signature_hash": "8da88530f542cb0c",
+        "file_digest8": "bf6d40ba8eaa4152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#function:_optional_text:963dcb6e9af6bbff",
+        "name": "_optional_text",
+        "kind": "function",
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "line": 36,
+        "end_line": 41,
+        "signature_hash": "8f16b2d96a173889",
+        "file_digest8": "bf6d40ba8eaa4152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#function:validate_backend_evidence:64d25743cc068f68",
+        "name": "validate_backend_evidence",
+        "kind": "function",
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "line": 66,
+        "end_line": 155,
+        "signature_hash": "bd53fd36c00510f3",
+        "file_digest8": "bf6d40ba8eaa4152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#method:BackendEvidenceError.__init__:30e4b351e7c1d7a3",
+        "name": "BackendEvidenceError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "bf6d40ba8eaa4152"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_backend_io_evidence_guard.py#method:W4BackendEvidence.to_dict:fd46aa3f8752a40b",
+        "name": "W4BackendEvidence.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_backend_io_evidence_guard.py",
+        "line": 62,
+        "end_line": 63,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "bf6d40ba8eaa4152"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_compatibility_probe.py#class:CompatibilityReceipt:cf47c7f40f630a26",
         "name": "CompatibilityReceipt",
         "kind": "class",
@@ -452030,6 +452453,146 @@
         "end_line": 95,
         "signature_hash": "e53ec68793bba4bf",
         "file_digest8": "f3d37a2c9e5c244c"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#class:Backend:887f385940a02feb",
+        "name": "Backend",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 9,
+        "end_line": 21,
+        "signature_hash": "a95bc105f69d7b78",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#class:EvidenceGuardTests:547c17e39604af86",
+        "name": "EvidenceGuardTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 28,
+        "end_line": 124,
+        "signature_hash": "479164a97d926b3b",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#class:NoAttestation:bcc606ff475ea545",
+        "name": "NoAttestation",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "cc1c197b394cb9d3",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:Backend.__init__:2817e9a807d3c5b5",
+        "name": "Backend.__init__",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 10,
+        "end_line": 11,
+        "signature_hash": "f469bc64577679b8",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:Backend.io_attestation:918322ca933bbbd8",
+        "name": "Backend.io_attestation",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 13,
+        "end_line": 21,
+        "signature_hash": "d3cfe7ec781686af",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_binding_mismatch_fails_closed:9180ee58615fc6dc",
+        "name": "EvidenceGuardTests.test_binding_mismatch_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 83,
+        "end_line": 88,
+        "signature_hash": "a4a3acdcfde9b962",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_invalid_metrics_fail_closed:a2f6dbfa0b1e7a97",
+        "name": "EvidenceGuardTests.test_invalid_metrics_fail_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 90,
+        "end_line": 101,
+        "signature_hash": "7002e329b853e9cb",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_missing_attestation_stays_unknown_and_not_w4_admissible:2650538e150ca789",
+        "name": "EvidenceGuardTests.test_missing_attestation_stays_unknown_and_not_w4_admissible",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 29,
+        "end_line": 35,
+        "signature_hash": "e69fa94becc2a761",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_nonselected_physical_reads_fail_closed:bb904901e2a13d72",
+        "name": "EvidenceGuardTests.test_nonselected_physical_reads_fail_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 62,
+        "end_line": 67,
+        "signature_hash": "454d7494924cc456",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_receipt_is_deterministically_nonpromoting:4d659da36e691cb3",
+        "name": "EvidenceGuardTests.test_receipt_is_deterministically_nonpromoting",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 103,
+        "end_line": 124,
+        "signature_hash": "b0bfb02888b87dda",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_safe_but_incomplete_attestation_is_not_promoted_to_w4:04152dbec9faaea3",
+        "name": "EvidenceGuardTests.test_safe_but_incomplete_attestation_is_not_promoted_to_w4",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 55,
+        "end_line": 60,
+        "signature_hash": "336fc62473581354",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_safe_complete_attestation_is_w4_admissible:8d3f0ae0510a7b36",
+        "name": "EvidenceGuardTests.test_safe_complete_attestation_is_w4_admissible",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 37,
+        "end_line": 53,
+        "signature_hash": "d89fab672a554b96",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_whole_bank_materialization_fails_closed:a86426cd88fafba7",
+        "name": "EvidenceGuardTests.test_whole_bank_materialization_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 76,
+        "end_line": 81,
+        "signature_hash": "410ede852cf7f58f",
+        "file_digest8": "ed60077239bfea43"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_backend_io_evidence_guard.py#method:EvidenceGuardTests.test_whole_bank_read_fails_closed:27a77a2a5a766083",
+        "name": "EvidenceGuardTests.test_whole_bank_read_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_backend_io_evidence_guard.py",
+        "line": 69,
+        "end_line": 74,
+        "signature_hash": "a508ba36c282395e",
+        "file_digest8": "ed60077239bfea43"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#class:GLM53CompatibilityProbeTests:9981eef41d375672",
@@ -454102,7 +454665,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "8d27c07d8e96856178971532f0748488",
-    "payload_hash": "0f4f24be3f3881e0df8c47971c0a618d"
+    "record_fingerprint": "113264333b75c618f4e8e2d01da909fa",
+    "payload_hash": "b0572275bda329bbca2676a5b51e179c"
   }
 }
