@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1658
-- **total_bytes**: 26418741
-- **text_tokens_est**: 6595075
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1659
+- **total_bytes**: 26425406
+- **text_tokens_est**: 6596740
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1658,
+  "repo_file_count": 1659,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1109,6 +1109,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
+    "docs/AWJ026_ARENA_TRIAD_ORCHESTRATION_IMPLEMENTATION.md",
     "docs/BENCHMARKS.md",
     "docs/CODING_WABOOSE_W2_CONTINUAL_REVIEW_INTELLIGENCE_REFACTOR_PLAN.md",
     "docs/COST-FIRST-COGNITIVE-ALLOCATION.md",
@@ -1798,12 +1799,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1658,
-  "bytes": 26418741,
-  "tokens_est": 6595075,
+  "files": 1659,
+  "bytes": 26425406,
+  "tokens_est": 6596740,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 242,
+    "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1008,
@@ -2092,7 +2093,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
     "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md"
+    "docs/AWJ026_ARENA_TRIAD_ORCHESTRATION_IMPLEMENTATION.md"
   ]
 }
 ```
