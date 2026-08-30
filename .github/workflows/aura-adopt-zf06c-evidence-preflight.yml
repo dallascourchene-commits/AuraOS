@@ -1,0 +1,34 @@
+name: AURA-ADOPT ZF-06C Evidence Preflight
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/low_storage_mechanism_assessment.py'
+      - 'tools/aura_adopt/test_low_storage_mechanism_assessment.py'
+      - 'tools/aura_adopt/low_storage_evidence_preflight.py'
+      - 'tools/aura_adopt/test_low_storage_evidence_preflight.py'
+      - '.github/workflows/aura-adopt-zf06c-evidence-preflight.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile focused sources
+        run: >-
+          python -m py_compile
+          tools/aura_adopt/low_storage_mechanism_assessment.py
+          tools/aura_adopt/low_storage_evidence_preflight.py
+          tools/aura_adopt/test_low_storage_mechanism_assessment.py
+          tools/aura_adopt/test_low_storage_evidence_preflight.py
+      - name: Run ZF-06C preflight regressions
+        run: python -m unittest tools.aura_adopt.test_low_storage_evidence_preflight
+      - name: Replay canonical ZF-06A regressions
+        run: python -m unittest tools.aura_adopt.test_low_storage_mechanism_assessment
