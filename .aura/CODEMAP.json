@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788102406,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1641,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -319,6 +319,7 @@
       "aura_architecture_harness_git_tree_routing.py",
       "aura_arena_architect_connector.py",
       "aura_arena_architect_runtime.py",
+      "aura_arena_artifact_event_core.py",
       "aura_arena_attempt_archive.py",
       "aura_arena_connector_server.py",
       "aura_arena_crucible.py",
@@ -1352,6 +1353,7 @@
       "tests/test_aura_architecture_harness_export_workflow.py",
       "tests/test_aura_architecture_harness_git_tree_routing.py",
       "tests/test_aura_architecture_harness_original_github_routing.py",
+      "tests/test_aura_arena_artifact_event_core.py",
       "tests/test_aura_arena_connector_hardening.py",
       "tests/test_aura_arena_experience_ledger.py",
       "tests/test_aura_arena_live_cli.py",
@@ -1652,6 +1654,7 @@
       "05_staging/ledgers/CORE_PRIMITIVE_INTERFACES.py",
       "06_refactor/D0_MUTANT_HARNESS.py",
       "06_refactor/aura_os_minimal.py",
+      "aura_arena_artifact_event_core.py",
       "aura_blockchain/__init__.py",
       "aura_blockchain/block.py",
       "aura_blockchain/consensus.py",
@@ -1730,6 +1733,7 @@
       "tests/test_aura_architecture_harness_export_workflow.py",
       "tests/test_aura_architecture_harness_git_tree_routing.py",
       "tests/test_aura_architecture_harness_original_github_routing.py",
+      "tests/test_aura_arena_artifact_event_core.py",
       "tests/test_aura_arena_connector_hardening.py",
       "tests/test_aura_arena_experience_ledger.py",
       "tests/test_aura_arena_live_cli.py",
@@ -1745,9 +1749,7 @@
       "tests/test_aura_bilateral_planning_enforcement.py",
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_connectome_v2.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,15 +1757,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1641,
+      "bytes": 26433491,
+      "tokens_est": 6598724,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
+        "python_module": 999,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -2102,6 +2104,7 @@
         "aura_architecture_harness_git_tree_routing.py",
         "aura_arena_architect_connector.py",
         "aura_arena_architect_runtime.py",
+        "aura_arena_artifact_event_core.py",
         "aura_arena_attempt_archive.py",
         "aura_arena_connector_server.py",
         "aura_arena_crucible.py",
@@ -2443,8 +2446,7 @@
         "aura_planning_events.py",
         "aura_planning_frontier.py",
         "aura_planning_projector.py",
-        "aura_planning_regression.py",
-        "aura_plugin_registry.py"
+        "aura_planning_regression.py"
       ]
     }
   ],
@@ -14409,6 +14411,262 @@
         "end_line": 190,
         "semantic_id": "aura_arena_architect_runtime.py#method:HumanAgentArenaArchitectRuntime.__init__:0afd8e953473b17d",
         "signature_hash": "acb0ac8198efb533"
+      }
+    ],
+    "ArtifactEventRefusal": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 24,
+        "semantic_id": "aura_arena_artifact_event_core.py#class:ArtifactEventRefusal:1dc095b22f995d98",
+        "signature_hash": "2f971df988334afc"
+      }
+    ],
+    "ArtifactEventRefusal.__init__": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 24,
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactEventRefusal.__init__:cecc9a0ef82e71d9",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_clean_text": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 35,
+        "semantic_id": "aura_arena_artifact_event_core.py#function:_clean_text:4aed7003820018a4",
+        "signature_hash": "4f25162bbe6e6220"
+      }
+    ],
+    "_canonical_digest": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 40,
+        "semantic_id": "aura_arena_artifact_event_core.py#function:_canonical_digest:25e5d81f7f23443a",
+        "signature_hash": "ba68c4ec1f60ec2b"
+      },
+      {
+        "file": "aura_codemap_verify.py",
+        "kind": "function",
+        "line": 315,
+        "end_line": 317,
+        "semantic_id": "aura_codemap_verify.py#function:_canonical_digest:f8aec97fbdb5f28e",
+        "signature_hash": "0513d5eea6b714f2"
+      },
+      {
+        "file": "aura_construction_architect_refactor.py",
+        "kind": "function",
+        "line": 137,
+        "end_line": 139,
+        "semantic_id": "aura_construction_architect_refactor.py#function:_canonical_digest:be0ef5279214bc45",
+        "signature_hash": "0513d5eea6b714f2"
+      }
+    ],
+    "ArtifactMutationEvent": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "class",
+        "line": 44,
+        "end_line": 114,
+        "semantic_id": "aura_arena_artifact_event_core.py#class:ArtifactMutationEvent:f348bc3467bc1d76",
+        "signature_hash": "daba1701598a518d"
+      }
+    ],
+    "ArtifactMutationEvent.__post_init__": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 88,
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactMutationEvent.__post_init__:c19b7fd20256cb30",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ArtifactMutationEvent.identity_payload": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 108,
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactMutationEvent.identity_payload:932507b6f311a72c",
+        "signature_hash": "6d1e263cf6d17eaa"
+      }
+    ],
+    "ArtifactMutationEvent.compute_event_id": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 111,
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactMutationEvent.compute_event_id:88b66df0e78eb133",
+        "signature_hash": "7cfb2622955baa96"
+      }
+    ],
+    "ArtifactMutationEvent.to_dict": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 114,
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactMutationEvent.to_dict:9fef6468adf09926",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "ArtifactIdentity": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "class",
+        "line": 118,
+        "end_line": 167,
+        "semantic_id": "aura_arena_artifact_event_core.py#class:ArtifactIdentity:3bf942f390119439",
+        "signature_hash": "309c1172b79421e7"
+      }
+    ],
+    "ArtifactIdentity.__post_init__": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 147,
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactIdentity.__post_init__:3e6d2ffe7b29b75d",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ArtifactIdentity.from_bytes": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 167,
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactIdentity.from_bytes:540fa6463101d057",
+        "signature_hash": "36ad648a143187f2"
+      }
+    ],
+    "FileObservation": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "class",
+        "line": 171,
+        "end_line": 179,
+        "semantic_id": "aura_arena_artifact_event_core.py#class:FileObservation:b9d0bf0f60986826",
+        "signature_hash": "2c8216e6a9484900"
+      }
+    ],
+    "FileObservation.__post_init__": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 179,
+        "semantic_id": "aura_arena_artifact_event_core.py#method:FileObservation.__post_init__:d2d8120bc4841f46",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "QuiescenceProof": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "class",
+        "line": 183,
+        "end_line": 187,
+        "semantic_id": "aura_arena_artifact_event_core.py#class:QuiescenceProof:906009a4ff78c8da",
+        "signature_hash": "f6bf400e342a913d"
+      }
+    ],
+    "prove_quiescence": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "function",
+        "line": 190,
+        "end_line": 210,
+        "semantic_id": "aura_arena_artifact_event_core.py#function:prove_quiescence:0255ceec226adecb",
+        "signature_hash": "f65ea038017c4d8b"
+      }
+    ],
+    "MirrorLineage": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "class",
+        "line": 214,
+        "end_line": 265,
+        "semantic_id": "aura_arena_artifact_event_core.py#class:MirrorLineage:068138827457aad0",
+        "signature_hash": "4ac6e88dd24e37d7"
+      }
+    ],
+    "MirrorLineage.__post_init__": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 221,
+        "end_line": 238,
+        "semantic_id": "aura_arena_artifact_event_core.py#method:MirrorLineage.__post_init__:3d54d51e9c39b678",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "MirrorLineage.start": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 241,
+        "end_line": 242,
+        "semantic_id": "aura_arena_artifact_event_core.py#method:MirrorLineage.start:d6af375827a4b923",
+        "signature_hash": "f862b4b4b34dfda1"
+      }
+    ],
+    "MirrorLineage.next_hop": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 244,
+        "end_line": 255,
+        "semantic_id": "aura_arena_artifact_event_core.py#method:MirrorLineage.next_hop:8a2abc0ba61d4b59",
+        "signature_hash": "820e1c7af44746ce"
+      }
+    ],
+    "MirrorLineage.fence": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 258,
+        "end_line": 265,
+        "semantic_id": "aura_arena_artifact_event_core.py#method:MirrorLineage.fence:52dbb3d0cadb2880",
+        "signature_hash": "058774cb88dd54d2"
+      }
+    ],
+    "classify_replay": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "function",
+        "line": 268,
+        "end_line": 281,
+        "semantic_id": "aura_arena_artifact_event_core.py#function:classify_replay:51ef32ca39e16ab2",
+        "signature_hash": "37faeb42ef91fb52"
+      }
+    ],
+    "require_rename_parent": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "function",
+        "line": 284,
+        "end_line": 286,
+        "semantic_id": "aura_arena_artifact_event_core.py#function:require_rename_parent:7630870a117ea221",
+        "signature_hash": "4a2369a3cf5c4f85"
+      }
+    ],
+    "validate_event_identity_binding": [
+      {
+        "file": "aura_arena_artifact_event_core.py",
+        "kind": "function",
+        "line": 289,
+        "end_line": 298,
+        "semantic_id": "aura_arena_artifact_event_core.py#function:validate_event_identity_binding:fba37d41579668a0",
+        "signature_hash": "6fe8886c77235963"
       }
     ],
     "_json": [
@@ -27083,24 +27341,6 @@
         "end_line": 294,
         "semantic_id": "aura_codemap_verify.py#function:_stable_topology_bucket:488cc10e2d71aeda",
         "signature_hash": "0fc47c54182e7761"
-      }
-    ],
-    "_canonical_digest": [
-      {
-        "file": "aura_codemap_verify.py",
-        "kind": "function",
-        "line": 315,
-        "end_line": 317,
-        "semantic_id": "aura_codemap_verify.py#function:_canonical_digest:f8aec97fbdb5f28e",
-        "signature_hash": "0513d5eea6b714f2"
-      },
-      {
-        "file": "aura_construction_architect_refactor.py",
-        "kind": "function",
-        "line": 137,
-        "end_line": 139,
-        "semantic_id": "aura_construction_architect_refactor.py#function:_canonical_digest:be0ef5279214bc45",
-        "signature_hash": "0513d5eea6b714f2"
       }
     ],
     "_markdown_integer": [
@@ -116801,6 +117041,296 @@
         "signature_hash": "f2f63b76ed979c84"
       }
     ],
+    "ArtifactEventCoreTests": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 154,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#class:ArtifactEventCoreTests:acee1e7f6deb66f6",
+        "signature_hash": "4655777ce3266b3a"
+      }
+    ],
+    "ArtifactEventCoreTests.event": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 32,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.event:1c1b782d2e3b6b34",
+        "signature_hash": "b7e1cb31444ed670"
+      }
+    ],
+    "ArtifactEventCoreTests.test_event_id_is_replay_stable_across_observed_time": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 37,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_event_id_is_replay_stable_across_observed_time:9d98d638476b9184",
+        "signature_hash": "e43304fbef93d247"
+      }
+    ],
+    "ArtifactEventCoreTests.test_event_id_changes_for_generation": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_event_id_changes_for_generation:9e61bf541921fdd7",
+        "signature_hash": "ff137c5c7ce3b99b"
+      }
+    ],
+    "ArtifactEventCoreTests.test_supplied_bad_event_id_refused": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 44,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_supplied_bad_event_id_refused:a6e1c04f5d5fc50b",
+        "signature_hash": "4e8644358b9514cf"
+      }
+    ],
+    "ArtifactEventCoreTests.test_unsupported_event_type_refused": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 48,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_unsupported_event_type_refused:4e808bb3589f7cb1",
+        "signature_hash": "d61334ae08355046"
+      }
+    ],
+    "ArtifactEventCoreTests.test_identity_is_content_addressed_not_filename_addressed": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 54,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_identity_is_content_addressed_not_filename_addressed:749af2c6f1502770",
+        "signature_hash": "99ea38ff7ed5472b"
+      }
+    ],
+    "ArtifactEventCoreTests.test_same_filename_different_bytes_are_different_artifacts": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 59,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_same_filename_different_bytes_are_different_artifacts:81bb29c15fbbd5b6",
+        "signature_hash": "0230b102911e9438"
+      }
+    ],
+    "ArtifactEventCoreTests.test_invalid_sha_refused": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 63,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_invalid_sha_refused:4b5c9874d8ec125e",
+        "signature_hash": "f7e47f249f5899ce"
+      }
+    ],
+    "ArtifactEventCoreTests.test_quiescence_requires_stable_tail": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 68,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_quiescence_requires_stable_tail:f728b577a40f0481",
+        "signature_hash": "5a371a0d1b8c3e56"
+      }
+    ],
+    "ArtifactEventCoreTests.test_unstable_file_refused": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 72,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_unstable_file_refused:daf2538a4ff23673",
+        "signature_hash": "970d174389c63920"
+      }
+    ],
+    "ArtifactEventCoreTests.test_single_sample_insufficient_without_close": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 76,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_single_sample_insufficient_without_close:5fc3a4564b3c9ac7",
+        "signature_hash": "38574b4c2cc75628"
+      }
+    ],
+    "ArtifactEventCoreTests.test_close_evidence_allows_one_observation": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 80,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_close_evidence_allows_one_observation:1eb969ed7d243be9",
+        "signature_hash": "8415833636acb336"
+      }
+    ],
+    "ArtifactEventCoreTests.test_mirror_lineage_advances_generation": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 86,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_mirror_lineage_advances_generation:bdef999e2ec47bcc",
+        "signature_hash": "5a99a12d0ba6172f"
+      }
+    ],
+    "ArtifactEventCoreTests.test_mirror_bounce_loop_is_refused": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 91,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_mirror_bounce_loop_is_refused:7d53c0df04b2ab17",
+        "signature_hash": "0ec25df5e5d305f3"
+      }
+    ],
+    "ArtifactEventCoreTests.test_duplicate_surface_inside_lineage_refused": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 95,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_duplicate_surface_inside_lineage_refused:1be30278c7e1878e",
+        "signature_hash": "da6a4b7008d806fe"
+      }
+    ],
+    "ArtifactEventCoreTests.test_generation_must_match_lineage": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 99,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_generation_must_match_lineage:a371397a7565125d",
+        "signature_hash": "5e1952a7837d3c8d"
+      }
+    ],
+    "ArtifactEventCoreTests.test_mirror_fence_is_stable": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 104,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_mirror_fence_is_stable:4e442b82d4280ec6",
+        "signature_hash": "4480ae5f14d6767f"
+      }
+    ],
+    "ArtifactEventCoreTests.test_current_event_is_ingest": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 107,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_current_event_is_ingest:4db140c8d5668817",
+        "signature_hash": "f6d5d5d69902e4dc"
+      }
+    ],
+    "ArtifactEventCoreTests.test_seen_event_is_idempotent_replay": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_seen_event_is_idempotent_replay:d3c8b1c3af615665",
+        "signature_hash": "07e7ed2d1ba1c02d"
+      }
+    ],
+    "ArtifactEventCoreTests.test_stale_currentness_returns_rebase_before_replay": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 121,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_stale_currentness_returns_rebase_before_replay:db553f3c7167f35a",
+        "signature_hash": "c24d50f17dd2bc0c"
+      }
+    ],
+    "ArtifactEventCoreTests.test_delete_is_tombstone_disposition": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 125,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_delete_is_tombstone_disposition:f292b09be70ef3a0",
+        "signature_hash": "69a3db139d7fb6ad"
+      }
+    ],
+    "ArtifactEventCoreTests.test_rename_requires_prior_artifact": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 129,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_rename_requires_prior_artifact:7fa6cb16fe635fe9",
+        "signature_hash": "30a12c4e780d5813"
+      }
+    ],
+    "ArtifactEventCoreTests.test_rename_with_prior_artifact_is_allowed": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 134,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_rename_with_prior_artifact_is_allowed:077a6dded0fae03d",
+        "signature_hash": "2f049b49e4b0aac4"
+      }
+    ],
+    "ArtifactEventCoreTests.test_non_tombstone_requires_identity": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 138,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_non_tombstone_requires_identity:e71ca5090f9f73d0",
+        "signature_hash": "d722473357391056"
+      }
+    ],
+    "ArtifactEventCoreTests.test_tombstone_accepts_no_identity": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 141,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_tombstone_accepts_no_identity:421f27f7fadf9ddc",
+        "signature_hash": "cde30b5a502339e1"
+      }
+    ],
+    "ArtifactEventCoreTests.test_tombstone_rejects_attached_bytes_identity": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 146,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_tombstone_rejects_attached_bytes_identity:36e04207b52ab6df",
+        "signature_hash": "19682b152d47b620"
+      }
+    ],
+    "ArtifactEventCoreTests.test_parent_refs_deduplicate_and_sort": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 150,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_parent_refs_deduplicate_and_sort:7fe827fdc117f957",
+        "signature_hash": "045174b8f29771a8"
+      }
+    ],
+    "ArtifactEventCoreTests.test_extension_normalizes_dot": [
+      {
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 154,
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_extension_normalizes_dot:fbec4f167819fd55",
+        "signature_hash": "72f9701d83f0d644"
+      }
+    ],
     "test_connector_record_is_redacted_and_digest_bound": [
       {
         "file": "tests/test_aura_arena_connector_hardening.py",
@@ -179797,6 +180327,53 @@
         -0.192107,
         0.199948,
         0.064036
+      ]
+    },
+    {
+      "path": "aura_arena_artifact_event_core.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11823,
+      "lines": 299,
+      "tokens_est": 2956,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e6100ec605a57838",
+      "vector": [
+        0.24661,
+        0.176794,
+        0.161029,
+        0.185802,
+        0.124994,
+        0.034908,
+        -0.109229,
+        0.102473,
+        -0.190307,
+        -0.282645,
+        -0.001126,
+        0.124994,
+        0.273636,
+        0.028152,
+        -0.251115,
+        -0.280393,
+        0.172289,
+        -0.217332,
+        0.185802,
+        0.001126,
+        0.275888,
+        -0.156524,
+        0.248863,
+        0.077699,
+        -0.181298,
+        0.091212,
+        0.208324,
+        0.156524,
+        0.251115,
+        0.001126,
+        0.079951,
+        -0.023648
       ]
     },
     {
@@ -249535,6 +250112,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_arena_artifact_event_core.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6620,
+      "lines": 159,
+      "tokens_est": 1655,
+      "symbol_count": 29,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ff17cff2506b5140",
+      "vector": [
+        0.088249,
+        -0.078017,
+        -0.154755,
+        -0.078017,
+        0.170103,
+        0.175219,
+        -0.290326,
+        0.188008,
+        -0.159871,
+        0.062669,
+        0.054996,
+        0.04988,
+        0.292884,
+        0.172661,
+        -0.103596,
+        -0.313347,
+        0.280094,
+        -0.277536,
+        -0.277536,
+        0.088249,
+        0.039648,
+        0.221262,
+        0.060112,
+        0.116386,
+        -0.065227,
+        0.218704,
+        -0.080575,
+        -0.067785,
+        0.126618,
+        -0.067785,
+        0.310789,
+        0.170103
+      ]
+    },
+    {
       "path": "tests/test_aura_arena_connector_hardening.py",
       "role": "python_module",
       "binary": false,
@@ -286646,15 +287270,15 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1641,
+    "total_bytes": 26433491,
+    "text_tokens_est": 6598724,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
+      "python_module": 999,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -286984,6 +287608,7 @@
       "aura_architecture_harness_git_tree_routing.py",
       "aura_arena_architect_connector.py",
       "aura_arena_architect_runtime.py",
+      "aura_arena_artifact_event_core.py",
       "aura_arena_attempt_archive.py",
       "aura_arena_connector_server.py",
       "aura_arena_crucible.py",
@@ -288017,6 +288642,7 @@
       "tests/test_aura_architecture_harness_export_workflow.py",
       "tests/test_aura_architecture_harness_git_tree_routing.py",
       "tests/test_aura_architecture_harness_original_github_routing.py",
+      "tests/test_aura_arena_artifact_event_core.py",
       "tests/test_aura_arena_connector_hardening.py",
       "tests/test_aura_arena_experience_ledger.py",
       "tests/test_aura_arena_live_cli.py",
@@ -297242,6 +297868,246 @@
         "end_line": 180,
         "signature_hash": "acb0ac8198efb533",
         "file_digest8": "b69074607de4da3b"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#class:ArtifactEventRefusal:1dc095b22f995d98",
+        "name": "ArtifactEventRefusal",
+        "kind": "class",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 18,
+        "end_line": 24,
+        "signature_hash": "2f971df988334afc",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#class:ArtifactIdentity:3bf942f390119439",
+        "name": "ArtifactIdentity",
+        "kind": "class",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 118,
+        "end_line": 167,
+        "signature_hash": "309c1172b79421e7",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#class:ArtifactMutationEvent:f348bc3467bc1d76",
+        "name": "ArtifactMutationEvent",
+        "kind": "class",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 44,
+        "end_line": 114,
+        "signature_hash": "daba1701598a518d",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#class:FileObservation:b9d0bf0f60986826",
+        "name": "FileObservation",
+        "kind": "class",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 171,
+        "end_line": 179,
+        "signature_hash": "2c8216e6a9484900",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#class:MirrorLineage:068138827457aad0",
+        "name": "MirrorLineage",
+        "kind": "class",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 214,
+        "end_line": 265,
+        "signature_hash": "4ac6e88dd24e37d7",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#class:QuiescenceProof:906009a4ff78c8da",
+        "name": "QuiescenceProof",
+        "kind": "class",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 183,
+        "end_line": 187,
+        "signature_hash": "f6bf400e342a913d",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#function:_canonical_digest:25e5d81f7f23443a",
+        "name": "_canonical_digest",
+        "kind": "function",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 38,
+        "end_line": 40,
+        "signature_hash": "ba68c4ec1f60ec2b",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#function:_clean_text:4aed7003820018a4",
+        "name": "_clean_text",
+        "kind": "function",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 27,
+        "end_line": 35,
+        "signature_hash": "4f25162bbe6e6220",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#function:classify_replay:51ef32ca39e16ab2",
+        "name": "classify_replay",
+        "kind": "function",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 268,
+        "end_line": 281,
+        "signature_hash": "37faeb42ef91fb52",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#function:prove_quiescence:0255ceec226adecb",
+        "name": "prove_quiescence",
+        "kind": "function",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 190,
+        "end_line": 210,
+        "signature_hash": "f65ea038017c4d8b",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#function:require_rename_parent:7630870a117ea221",
+        "name": "require_rename_parent",
+        "kind": "function",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 284,
+        "end_line": 286,
+        "signature_hash": "4a2369a3cf5c4f85",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#function:validate_event_identity_binding:fba37d41579668a0",
+        "name": "validate_event_identity_binding",
+        "kind": "function",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 289,
+        "end_line": 298,
+        "signature_hash": "6fe8886c77235963",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactEventRefusal.__init__:cecc9a0ef82e71d9",
+        "name": "ArtifactEventRefusal.__init__",
+        "kind": "method",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 21,
+        "end_line": 24,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactIdentity.__post_init__:3e6d2ffe7b29b75d",
+        "name": "ArtifactIdentity.__post_init__",
+        "kind": "method",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 127,
+        "end_line": 147,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactIdentity.from_bytes:540fa6463101d057",
+        "name": "ArtifactIdentity.from_bytes",
+        "kind": "method",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 150,
+        "end_line": 167,
+        "signature_hash": "36ad648a143187f2",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactMutationEvent.__post_init__:c19b7fd20256cb30",
+        "name": "ArtifactMutationEvent.__post_init__",
+        "kind": "method",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 62,
+        "end_line": 88,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactMutationEvent.compute_event_id:88b66df0e78eb133",
+        "name": "ArtifactMutationEvent.compute_event_id",
+        "kind": "method",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 110,
+        "end_line": 111,
+        "signature_hash": "7cfb2622955baa96",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactMutationEvent.identity_payload:932507b6f311a72c",
+        "name": "ArtifactMutationEvent.identity_payload",
+        "kind": "method",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 90,
+        "end_line": 108,
+        "signature_hash": "6d1e263cf6d17eaa",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#method:ArtifactMutationEvent.to_dict:9fef6468adf09926",
+        "name": "ArtifactMutationEvent.to_dict",
+        "kind": "method",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 113,
+        "end_line": 114,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#method:FileObservation.__post_init__:d2d8120bc4841f46",
+        "name": "FileObservation.__post_init__",
+        "kind": "method",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 175,
+        "end_line": 179,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#method:MirrorLineage.__post_init__:3d54d51e9c39b678",
+        "name": "MirrorLineage.__post_init__",
+        "kind": "method",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 221,
+        "end_line": 238,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#method:MirrorLineage.fence:52dbb3d0cadb2880",
+        "name": "MirrorLineage.fence",
+        "kind": "method",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 258,
+        "end_line": 265,
+        "signature_hash": "058774cb88dd54d2",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#method:MirrorLineage.next_hop:8a2abc0ba61d4b59",
+        "name": "MirrorLineage.next_hop",
+        "kind": "method",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 244,
+        "end_line": 255,
+        "signature_hash": "820e1c7af44746ce",
+        "file_digest8": "e6100ec605a57838"
+      },
+      {
+        "semantic_id": "aura_arena_artifact_event_core.py#method:MirrorLineage.start:d6af375827a4b923",
+        "name": "MirrorLineage.start",
+        "kind": "method",
+        "file": "aura_arena_artifact_event_core.py",
+        "line": 241,
+        "end_line": 242,
+        "signature_hash": "f862b4b4b34dfda1",
+        "file_digest8": "e6100ec605a57838"
       },
       {
         "semantic_id": "aura_arena_attempt_archive.py#class:ArenaAttemptArchive:3073cdf8a4c84df8",
@@ -403794,6 +404660,296 @@
         "file_digest8": "4478d3f233974cfb"
       },
       {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#class:ArtifactEventCoreTests:acee1e7f6deb66f6",
+        "name": "ArtifactEventCoreTests",
+        "kind": "class",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 16,
+        "end_line": 154,
+        "signature_hash": "4655777ce3266b3a",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.event:1c1b782d2e3b6b34",
+        "name": "ArtifactEventCoreTests.event",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 17,
+        "end_line": 32,
+        "signature_hash": "b7e1cb31444ed670",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_close_evidence_allows_one_observation:1eb969ed7d243be9",
+        "name": "ArtifactEventCoreTests.test_close_evidence_allows_one_observation",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 78,
+        "end_line": 80,
+        "signature_hash": "8415833636acb336",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_current_event_is_ingest:4db140c8d5668817",
+        "name": "ArtifactEventCoreTests.test_current_event_is_ingest",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 106,
+        "end_line": 107,
+        "signature_hash": "f6d5d5d69902e4dc",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_delete_is_tombstone_disposition:f292b09be70ef3a0",
+        "name": "ArtifactEventCoreTests.test_delete_is_tombstone_disposition",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 123,
+        "end_line": 125,
+        "signature_hash": "69a3db139d7fb6ad",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_duplicate_surface_inside_lineage_refused:1be30278c7e1878e",
+        "name": "ArtifactEventCoreTests.test_duplicate_surface_inside_lineage_refused",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 93,
+        "end_line": 95,
+        "signature_hash": "da6a4b7008d806fe",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_event_id_changes_for_generation:9e61bf541921fdd7",
+        "name": "ArtifactEventCoreTests.test_event_id_changes_for_generation",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 39,
+        "end_line": 40,
+        "signature_hash": "ff137c5c7ce3b99b",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_event_id_is_replay_stable_across_observed_time:9d98d638476b9184",
+        "name": "ArtifactEventCoreTests.test_event_id_is_replay_stable_across_observed_time",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 34,
+        "end_line": 37,
+        "signature_hash": "e43304fbef93d247",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_extension_normalizes_dot:fbec4f167819fd55",
+        "name": "ArtifactEventCoreTests.test_extension_normalizes_dot",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 152,
+        "end_line": 154,
+        "signature_hash": "72f9701d83f0d644",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_generation_must_match_lineage:a371397a7565125d",
+        "name": "ArtifactEventCoreTests.test_generation_must_match_lineage",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 97,
+        "end_line": 99,
+        "signature_hash": "5e1952a7837d3c8d",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_identity_is_content_addressed_not_filename_addressed:749af2c6f1502770",
+        "name": "ArtifactEventCoreTests.test_identity_is_content_addressed_not_filename_addressed",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 50,
+        "end_line": 54,
+        "signature_hash": "99ea38ff7ed5472b",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_invalid_sha_refused:4b5c9874d8ec125e",
+        "name": "ArtifactEventCoreTests.test_invalid_sha_refused",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 61,
+        "end_line": 63,
+        "signature_hash": "f7e47f249f5899ce",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_mirror_bounce_loop_is_refused:7d53c0df04b2ab17",
+        "name": "ArtifactEventCoreTests.test_mirror_bounce_loop_is_refused",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 88,
+        "end_line": 91,
+        "signature_hash": "0ec25df5e5d305f3",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_mirror_fence_is_stable:4e442b82d4280ec6",
+        "name": "ArtifactEventCoreTests.test_mirror_fence_is_stable",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 101,
+        "end_line": 104,
+        "signature_hash": "4480ae5f14d6767f",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_mirror_lineage_advances_generation:bdef999e2ec47bcc",
+        "name": "ArtifactEventCoreTests.test_mirror_lineage_advances_generation",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 82,
+        "end_line": 86,
+        "signature_hash": "5a99a12d0ba6172f",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_non_tombstone_requires_identity:e71ca5090f9f73d0",
+        "name": "ArtifactEventCoreTests.test_non_tombstone_requires_identity",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 136,
+        "end_line": 138,
+        "signature_hash": "d722473357391056",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_parent_refs_deduplicate_and_sort:7fe827fdc117f957",
+        "name": "ArtifactEventCoreTests.test_parent_refs_deduplicate_and_sort",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 148,
+        "end_line": 150,
+        "signature_hash": "045174b8f29771a8",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_quiescence_requires_stable_tail:f728b577a40f0481",
+        "name": "ArtifactEventCoreTests.test_quiescence_requires_stable_tail",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 65,
+        "end_line": 68,
+        "signature_hash": "5a371a0d1b8c3e56",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_rename_requires_prior_artifact:7fa6cb16fe635fe9",
+        "name": "ArtifactEventCoreTests.test_rename_requires_prior_artifact",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 127,
+        "end_line": 129,
+        "signature_hash": "30a12c4e780d5813",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_rename_with_prior_artifact_is_allowed:077a6dded0fae03d",
+        "name": "ArtifactEventCoreTests.test_rename_with_prior_artifact_is_allowed",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 131,
+        "end_line": 134,
+        "signature_hash": "2f049b49e4b0aac4",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_same_filename_different_bytes_are_different_artifacts:81bb29c15fbbd5b6",
+        "name": "ArtifactEventCoreTests.test_same_filename_different_bytes_are_different_artifacts",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 56,
+        "end_line": 59,
+        "signature_hash": "0230b102911e9438",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_seen_event_is_idempotent_replay:d3c8b1c3af615665",
+        "name": "ArtifactEventCoreTests.test_seen_event_is_idempotent_replay",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 109,
+        "end_line": 114,
+        "signature_hash": "07e7ed2d1ba1c02d",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_single_sample_insufficient_without_close:5fc3a4564b3c9ac7",
+        "name": "ArtifactEventCoreTests.test_single_sample_insufficient_without_close",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 74,
+        "end_line": 76,
+        "signature_hash": "38574b4c2cc75628",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_stale_currentness_returns_rebase_before_replay:db553f3c7167f35a",
+        "name": "ArtifactEventCoreTests.test_stale_currentness_returns_rebase_before_replay",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 116,
+        "end_line": 121,
+        "signature_hash": "c24d50f17dd2bc0c",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_supplied_bad_event_id_refused:a6e1c04f5d5fc50b",
+        "name": "ArtifactEventCoreTests.test_supplied_bad_event_id_refused",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 42,
+        "end_line": 44,
+        "signature_hash": "4e8644358b9514cf",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_tombstone_accepts_no_identity:421f27f7fadf9ddc",
+        "name": "ArtifactEventCoreTests.test_tombstone_accepts_no_identity",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 140,
+        "end_line": 141,
+        "signature_hash": "cde30b5a502339e1",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_tombstone_rejects_attached_bytes_identity:36e04207b52ab6df",
+        "name": "ArtifactEventCoreTests.test_tombstone_rejects_attached_bytes_identity",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 143,
+        "end_line": 146,
+        "signature_hash": "19682b152d47b620",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_unstable_file_refused:daf2538a4ff23673",
+        "name": "ArtifactEventCoreTests.test_unstable_file_refused",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 70,
+        "end_line": 72,
+        "signature_hash": "970d174389c63920",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
+        "semantic_id": "tests/test_aura_arena_artifact_event_core.py#method:ArtifactEventCoreTests.test_unsupported_event_type_refused:4e808bb3589f7cb1",
+        "name": "ArtifactEventCoreTests.test_unsupported_event_type_refused",
+        "kind": "method",
+        "file": "tests/test_aura_arena_artifact_event_core.py",
+        "line": 46,
+        "end_line": 48,
+        "signature_hash": "d61334ae08355046",
+        "file_digest8": "ff17cff2506b5140"
+      },
+      {
         "semantic_id": "tests/test_aura_arena_connector_hardening.py#function:_candidate:9aa359336cf1610e",
         "name": "_candidate",
         "kind": "function",
@@ -446884,7 +448040,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "32617ee3d6b2bb1c9eaa304c7b9edbb5",
+    "payload_hash": "2951010d1a19d721e5c54a7500c240ec"
   }
 }
