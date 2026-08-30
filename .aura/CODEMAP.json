@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788107771,
+  "generated_at_unix": 1788108742,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1671,
+    "repo_file_count": 1677,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -147,6 +147,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
+      ".github/workflows/awj032-glm53-host-preflight.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1652,14 +1653,19 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/awj032/.host_preflight_nonpromotion",
       "tools/awj032/README.md",
+      "tools/awj032/README_HOST_PREFLIGHT.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_host_preflight_reducer.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
+      "tools/awj032/host_preflight_measurement_example.json",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_host_preflight_reducer.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
@@ -1787,17 +1793,17 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1671,
-      "bytes": 26538030,
-      "tokens_est": 6624903,
+      "files": 1677,
+      "bytes": 26550539,
+      "tokens_est": 6628034,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 243,
+        "knowledge_artifact": 244,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1018,
-        "schema_or_lexicon": 276,
-        "support_file": 49
+        "python_module": 1020,
+        "schema_or_lexicon": 278,
+        "support_file": 50
       }
     },
     {
@@ -3961,6 +3967,14 @@
         "signature_hash": "711cdedc61c63424"
       },
       {
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#function:_canonical:947abae647fd3832",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
         "kind": "function",
         "line": 50,
@@ -4409,6 +4423,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#function:_digest:e0000939fcaba0f1",
+        "signature_hash": "514f786724465716"
       },
       {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
@@ -73845,6 +73867,14 @@
         "end_line": 533,
         "semantic_id": "aura_st3gg_compatibility.py#function:_number:226779a479bb2757",
         "signature_hash": "ea564a98ecf72370"
+      },
+      {
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#function:_number:2c006df74526c7e4",
+        "signature_hash": "41203efbb9544110"
       }
     ],
     "_grammar_manifest_digest": [
@@ -158227,6 +158257,56 @@
         "signature_hash": "3313625eaf98b5c7"
       }
     ],
+    "PreflightError": [
+      {
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 25,
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#class:PreflightError:c0216676e1a05991",
+        "signature_hash": "db63a003b81a5a2e"
+      }
+    ],
+    "PreflightError.__init__": [
+      {
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#method:PreflightError.__init__:7c06d07b3d93cd8e",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "observed_reuse": [
+      {
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#function:observed_reuse:3e8841b0c8b519ea",
+        "signature_hash": "a37d90a5a1b53eb6"
+      }
+    ],
+    "_target": [
+      {
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 92,
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#function:_target:f1641338d88c330e",
+        "signature_hash": "fdebf7d5d4498a7c"
+      }
+    ],
+    "reduce_host_preflight": [
+      {
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 169,
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#function:reduce_host_preflight:3f7d39ec170b3510",
+        "signature_hash": "5ae0f14dd58fb1a6"
+      }
+    ],
     "PagerError": [
       {
         "file": "tools/awj032/glm53_packed_expert_pager.py",
@@ -159311,6 +159391,76 @@
         "end_line": 159,
         "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_probe_never_admits_g2:f5368fa39d715758",
         "signature_hash": "a6a2281c320c3c5b"
+      }
+    ],
+    "HostPreflightReducerTests": [
+      {
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 83,
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#class:HostPreflightReducerTests:f98c55c0a6b1c775",
+        "signature_hash": "702b82a6936d7634"
+      }
+    ],
+    "HostPreflightReducerTests.test_known_5gbps_one_second_lower_bounds": [
+      {
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 27,
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#method:HostPreflightReducerTests.test_known_5gbps_one_second_lower_bounds:e054c7a9005940b2",
+        "signature_hash": "15242ef7c97d65ba"
+      }
+    ],
+    "HostPreflightReducerTests.test_nonstorage_cost_can_make_target_unattainable": [
+      {
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 41,
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#method:HostPreflightReducerTests.test_nonstorage_cost_can_make_target_unattainable:f4233cdff05c120a",
+        "signature_hash": "6ee9bddd50a0b36d"
+      }
+    ],
+    "HostPreflightReducerTests.test_observed_reuse_preserves_amplification_signal": [
+      {
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#method:HostPreflightReducerTests.test_observed_reuse_preserves_amplification_signal:5bb61a17a4e53dca",
+        "signature_hash": "949a3062c7ba6756"
+      }
+    ],
+    "HostPreflightReducerTests.test_storage_fit_unknown_without_representation": [
+      {
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 57,
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#method:HostPreflightReducerTests.test_storage_fit_unknown_without_representation:984bfbf8bd611507",
+        "signature_hash": "f2e4038e1312e40c"
+      }
+    ],
+    "HostPreflightReducerTests.test_storage_fit_is_measured_not_admission": [
+      {
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 71,
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#method:HostPreflightReducerTests.test_storage_fit_is_measured_not_admission:b041789cbc1035dd",
+        "signature_hash": "e4ed0fd874a00748"
+      }
+    ],
+    "HostPreflightReducerTests.test_logical_id_deterministic": [
+      {
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 83,
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#method:HostPreflightReducerTests.test_logical_id_deterministic:8d4a6ae2e57f2f8a",
+        "signature_hash": "cf688be0ee925c8d"
       }
     ],
     "FakeSliceBackend": [
@@ -171204,6 +171354,53 @@
         0.075468,
         0.236997,
         0.088708
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-host-preflight.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 746,
+      "lines": 26,
+      "tokens_est": 187,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "83cea3903d9e9394",
+      "vector": [
+        -0.095279,
+        -0.204169,
+        -0.087855,
+        -0.204169,
+        0.273463,
+        0.02351,
+        -0.147249,
+        0.18932,
+        0.144774,
+        -0.087855,
+        -0.221493,
+        -0.073006,
+        0.152199,
+        0.171997,
+        0.305635,
+        0.075481,
+        0.001237,
+        0.258614,
+        0.1423,
+        0.105178,
+        -0.112602,
+        0.129926,
+        -0.006187,
+        -0.219018,
+        0.256139,
+        -0.001237,
+        -0.204169,
+        -0.283362,
+        -0.248715,
+        -0.152199,
+        -0.02351,
+        -0.288312
       ]
     },
     {
@@ -266497,6 +266694,53 @@
       ]
     },
     {
+      "path": "tools/awj032/.host_preflight_nonpromotion",
+      "role": "support_file",
+      "binary": false,
+      "bytes": 105,
+      "lines": 2,
+      "tokens_est": 27,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "286f1d77890b967d",
+      "vector": [
+        -0.172492,
+        -0.29621,
+        -0.105874,
+        0.051153,
+        -0.167734,
+        -0.241489,
+        -0.044015,
+        -0.093978,
+        -0.132046,
+        -0.105874,
+        0.215318,
+        -0.072566,
+        0.122529,
+        0.06067,
+        -0.286694,
+        -0.11777,
+        0.291452,
+        -0.286694,
+        0.098737,
+        -0.215318,
+        0.101116,
+        0.153458,
+        0.289073,
+        -0.215318,
+        -0.113012,
+        -0.06067,
+        0.29859,
+        -0.229593,
+        -0.158217,
+        0.036878,
+        0.067807,
+        0.013086
+      ]
+    },
+    {
       "path": "tools/awj032/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -266551,6 +266795,53 @@
         -0.267337,
         -0.234602,
         -0.238967
+      ]
+    },
+    {
+      "path": "tools/awj032/README_HOST_PREFLIGHT.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1073,
+      "lines": 23,
+      "tokens_est": 269,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4bffa53ae9ffc7f1",
+      "vector": [
+        0.088459,
+        -0.001361,
+        0.167392,
+        -0.091181,
+        -0.333423,
+        -0.036745,
+        -0.006805,
+        -0.257212,
+        -0.259933,
+        0.042188,
+        -0.289873,
+        0.096624,
+        0.28443,
+        -0.25449,
+        0.066685,
+        -0.006805,
+        0.112955,
+        -0.183723,
+        0.083015,
+        0.22455,
+        -0.25449,
+        0.017692,
+        0.028579,
+        -0.191888,
+        -0.028579,
+        -0.091181,
+        -0.020414,
+        0.31437,
+        0.10479,
+        -0.249046,
+        -0.107512,
+        0.25449
       ]
     },
     {
@@ -266645,6 +266936,53 @@
         -0.243823,
         -0.1663,
         0.318846
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_host_preflight_reducer.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6835,
+      "lines": 170,
+      "tokens_est": 1709,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "67b3964cc6a8377b",
+      "vector": [
+        0.01021,
+        0.071467,
+        0.223476,
+        -0.04651,
+        0.230283,
+        -0.164488,
+        -0.157681,
+        -0.175831,
+        0.248433,
+        -0.280196,
+        -0.27339,
+        -0.27339,
+        -0.148606,
+        0.262046,
+        -0.275658,
+        -0.051048,
+        -0.21667,
+        0.200788,
+        0.023822,
+        0.062392,
+        -0.01021,
+        -0.1781,
+        0.27339,
+        -0.162219,
+        -0.037435,
+        -0.096424,
+        0.107768,
+        0.026091,
+        0.169025,
+        0.053317,
+        -0.198519,
+        -0.171294
       ]
     },
     {
@@ -266789,6 +267127,53 @@
       ]
     },
     {
+      "path": "tools/awj032/host_preflight_measurement_example.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 329,
+      "lines": 9,
+      "tokens_est": 83,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d9ccbd1dc58df562",
+      "vector": [
+        0.16899,
+        0.199715,
+        0.048452,
+        0.086267,
+        -0.150082,
+        -0.218623,
+        -0.204442,
+        0.294255,
+        -0.211533,
+        -0.07445,
+        0.258802,
+        -0.211533,
+        0.124083,
+        -0.246985,
+        -0.029544,
+        -0.301345,
+        -0.147718,
+        -0.076813,
+        -0.166626,
+        -0.036634,
+        0.086267,
+        0.001182,
+        -0.216259,
+        0.190261,
+        0.294255,
+        0.090994,
+        -0.124083,
+        0.164263,
+        -0.194988,
+        -0.02718,
+        -0.187898,
+        0.185534
+      ]
+    },
+    {
       "path": "tools/awj032/test_airllm_source_admission.py",
       "role": "python_module",
       "binary": false,
@@ -266880,6 +267265,53 @@
         0.046165,
         -0.170935,
         -0.185908
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_host_preflight_reducer.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3421,
+      "lines": 88,
+      "tokens_est": 856,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d52104528bc18cfc",
+      "vector": [
+        -0.215215,
+        0.112843,
+        -0.208235,
+        0.036063,
+        -0.133782,
+        -0.226848,
+        -0.217542,
+        0.285015,
+        -0.05933,
+        0.138436,
+        0.075616,
+        0.226848,
+        -0.145416,
+        0.117496,
+        -0.145416,
+        -0.201255,
+        -0.205909,
+        -0.103536,
+        0.282688,
+        0.245462,
+        -0.250115,
+        -0.173336,
+        -0.224522,
+        0.02443,
+        0.275708,
+        -0.177989,
+        -0.01047,
+        -0.047696,
+        0.147742,
+        0.168682,
+        -0.026756,
+        0.154722
       ]
     },
     {
@@ -291022,17 +291454,17 @@
     }
   },
   "summary": {
-    "file_count": 1671,
-    "total_bytes": 26538030,
-    "text_tokens_est": 6624903,
+    "file_count": 1677,
+    "total_bytes": 26550539,
+    "text_tokens_est": 6628034,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 243,
+      "knowledge_artifact": 244,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1018,
-      "schema_or_lexicon": 276,
-      "support_file": 49
+      "python_module": 1020,
+      "schema_or_lexicon": 278,
+      "support_file": 50
     },
     "topology_nodes": 11478,
     "topology_edges": 28068,
@@ -291188,6 +291620,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
+      ".github/workflows/awj032-glm53-host-preflight.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -292693,14 +293126,19 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/awj032/.host_preflight_nonpromotion",
       "tools/awj032/README.md",
+      "tools/awj032/README_HOST_PREFLIGHT.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_host_preflight_reducer.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
+      "tools/awj032/host_preflight_measurement_example.json",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_host_preflight_reducer.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
@@ -451052,6 +451490,86 @@
         "file_digest8": "e47f5028c4e7cc25"
       },
       {
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#class:PreflightError:c0216676e1a05991",
+        "name": "PreflightError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "line": 21,
+        "end_line": 25,
+        "signature_hash": "db63a003b81a5a2e",
+        "file_digest8": "67b3964cc6a8377b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#function:_canonical:947abae647fd3832",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "67b3964cc6a8377b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#function:_digest:e0000939fcaba0f1",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "67b3964cc6a8377b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#function:_number:2c006df74526c7e4",
+        "name": "_number",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "line": 28,
+        "end_line": 34,
+        "signature_hash": "41203efbb9544110",
+        "file_digest8": "67b3964cc6a8377b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#function:_target:f1641338d88c330e",
+        "name": "_target",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "line": 58,
+        "end_line": 92,
+        "signature_hash": "fdebf7d5d4498a7c",
+        "file_digest8": "67b3964cc6a8377b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#function:observed_reuse:3e8841b0c8b519ea",
+        "name": "observed_reuse",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "line": 45,
+        "end_line": 55,
+        "signature_hash": "a37d90a5a1b53eb6",
+        "file_digest8": "67b3964cc6a8377b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#function:reduce_host_preflight:3f7d39ec170b3510",
+        "name": "reduce_host_preflight",
+        "kind": "function",
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "line": 95,
+        "end_line": 169,
+        "signature_hash": "5ae0f14dd58fb1a6",
+        "file_digest8": "67b3964cc6a8377b"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_host_preflight_reducer.py#method:PreflightError.__init__:7c06d07b3d93cd8e",
+        "name": "PreflightError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_host_preflight_reducer.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "67b3964cc6a8377b"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_packed_expert_pager.py#class:ExpertRangeError:a8c6d962660c0c2f",
         "name": "ExpertRangeError",
         "kind": "class",
@@ -452170,6 +452688,76 @@
         "end_line": 97,
         "signature_hash": "b67b9af0cf1f2b78",
         "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#class:HostPreflightReducerTests:f98c55c0a6b1c775",
+        "name": "HostPreflightReducerTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "line": 14,
+        "end_line": 83,
+        "signature_hash": "702b82a6936d7634",
+        "file_digest8": "d52104528bc18cfc"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#method:HostPreflightReducerTests.test_known_5gbps_one_second_lower_bounds:e054c7a9005940b2",
+        "name": "HostPreflightReducerTests.test_known_5gbps_one_second_lower_bounds",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "line": 15,
+        "end_line": 27,
+        "signature_hash": "15242ef7c97d65ba",
+        "file_digest8": "d52104528bc18cfc"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#method:HostPreflightReducerTests.test_logical_id_deterministic:8d4a6ae2e57f2f8a",
+        "name": "HostPreflightReducerTests.test_logical_id_deterministic",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "line": 73,
+        "end_line": 83,
+        "signature_hash": "cf688be0ee925c8d",
+        "file_digest8": "d52104528bc18cfc"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#method:HostPreflightReducerTests.test_nonstorage_cost_can_make_target_unattainable:f4233cdff05c120a",
+        "name": "HostPreflightReducerTests.test_nonstorage_cost_can_make_target_unattainable",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "line": 29,
+        "end_line": 41,
+        "signature_hash": "6ee9bddd50a0b36d",
+        "file_digest8": "d52104528bc18cfc"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#method:HostPreflightReducerTests.test_observed_reuse_preserves_amplification_signal:5bb61a17a4e53dca",
+        "name": "HostPreflightReducerTests.test_observed_reuse_preserves_amplification_signal",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "line": 43,
+        "end_line": 47,
+        "signature_hash": "949a3062c7ba6756",
+        "file_digest8": "d52104528bc18cfc"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#method:HostPreflightReducerTests.test_storage_fit_is_measured_not_admission:b041789cbc1035dd",
+        "name": "HostPreflightReducerTests.test_storage_fit_is_measured_not_admission",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "line": 59,
+        "end_line": 71,
+        "signature_hash": "e4ed0fd874a00748",
+        "file_digest8": "d52104528bc18cfc"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_host_preflight_reducer.py#method:HostPreflightReducerTests.test_storage_fit_unknown_without_representation:984bfbf8bd611507",
+        "name": "HostPreflightReducerTests.test_storage_fit_unknown_without_representation",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_host_preflight_reducer.py",
+        "line": 49,
+        "end_line": 57,
+        "signature_hash": "f2e4038e1312e40c",
+        "file_digest8": "d52104528bc18cfc"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:FakeSliceBackend:bf8532e42602b3b5",
@@ -454102,7 +454690,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "8d27c07d8e96856178971532f0748488",
-    "payload_hash": "0f4f24be3f3881e0df8c47971c0a618d"
+    "record_fingerprint": "693ba36774bae9c9f3862a38782b83e1",
+    "payload_hash": "49359ba460b21907aaee8d7b4ec2dce9"
   }
 }
