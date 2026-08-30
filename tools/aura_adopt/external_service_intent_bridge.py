@@ -177,8 +177,8 @@ def _model_projection(decision: Mapping[str, Any] | Any) -> dict[str, Any]:
     )
 
     # ZF-07A deliberately exposes the union of future action classes across all
-    # eligible options. For LOCAL_ROUTE_READY those classes can therefore be
-    # non-empty even though the selected zero-effect route needs no action now.
+    # eligible options. That union is diagnostic candidate-set information; an
+    # actionable USER_CHOICE surface must preserve each exact option binding.
     earned_actions = _string_list(
         decision.get("earned_action_classes", []), "MODEL_ACTION_INVALID"
     )
@@ -196,21 +196,19 @@ def _model_projection(decision: Mapping[str, Any] | Any) -> dict[str, Any]:
     if not isinstance(options, (list, tuple)):
         raise IntentBridgeError("MODEL_OPTIONS_SEQUENCE_REQUIRED")
     provider_refs: set[str] = set()
+    candidate_choices: list[dict[str, Any]] = []
     selected_required_actions: tuple[str, ...] | None = None
     saw_routed_option = False
     for option in options:
         if not isinstance(option, Mapping):
             raise IntentBridgeError("MODEL_OPTION_MAPPING_REQUIRED")
-        for field in ("candidate_evidence_digest",):
-            if field in option:
-                _sha(option[field], "MODEL_OPTION_EVIDENCE_DIGEST_INVALID")
-        ref = option.get("provider_ref", "")
-        if ref:
-            provider_refs.add(_token(ref, "MODEL_PROVIDER_REF_INVALID"))
-        route_id = option.get("route_id", "")
-        if route_id:
+
+        route_raw = option.get("route_id", "")
+        route_id = ""
+        if route_raw:
             saw_routed_option = True
-            route_id = _token(route_id, "MODEL_OPTION_ROUTE_ID_INVALID")
+            route_id = _token(route_raw, "MODEL_OPTION_ROUTE_ID_INVALID")
+
         required_actions = _string_list(
             option.get("required_actions", ()), "MODEL_OPTION_ACTION_INVALID"
         )
@@ -219,6 +217,55 @@ def _model_projection(decision: Mapping[str, Any] | Any) -> dict[str, Any]:
             raise IntentBridgeError(
                 "MODEL_OPTION_ACTION_UNSUPPORTED", ",".join(option_unknown)
             )
+
+        evidence_digest = option.get("candidate_evidence_digest")
+        if evidence_digest is not None:
+            evidence_digest = _sha(
+                evidence_digest, "MODEL_OPTION_EVIDENCE_DIGEST_INVALID"
+            )
+        evidence_ref_raw = option.get("candidate_evidence_ref", "")
+        evidence_ref = ""
+        if evidence_ref_raw:
+            evidence_ref = _token(
+                evidence_ref_raw, "MODEL_OPTION_EVIDENCE_REF_INVALID"
+            )
+
+        model_ref_raw = option.get("model_ref", "")
+        model_ref = ""
+        if model_ref_raw:
+            model_ref = _token(model_ref_raw, "MODEL_OPTION_MODEL_REF_INVALID")
+
+        provider_raw = option.get("provider_ref", "")
+        provider_ref = ""
+        if provider_raw:
+            provider_ref = _token(provider_raw, "MODEL_PROVIDER_REF_INVALID")
+            provider_refs.add(provider_ref)
+
+        execution_raw = _enum_value(option.get("execution_location", ""))
+        execution_location = ""
+        if execution_raw:
+            execution_location = _token(
+                execution_raw, "MODEL_OPTION_EXECUTION_LOCATION_INVALID"
+            )
+        cost_raw = _enum_value(option.get("cost_class", ""))
+        cost_class = ""
+        if cost_raw:
+            cost_class = _token(cost_raw, "MODEL_OPTION_COST_CLASS_INVALID")
+
+        if route_id:
+            if not model_ref or not evidence_ref or evidence_digest is None:
+                raise IntentBridgeError("MODEL_OPTION_BINDING_INCOMPLETE", route_id)
+            candidate_choices.append({
+                "route_id": route_id,
+                "model_ref": model_ref,
+                "provider_ref": provider_ref,
+                "execution_location": execution_location,
+                "cost_class": cost_class,
+                "required_actions": required_actions,
+                "candidate_evidence_ref": evidence_ref,
+                "candidate_evidence_digest": evidence_digest,
+            })
+
         if selected_route_id is not None and route_id == selected_route_id:
             selected_required_actions = required_actions
 
@@ -229,20 +276,23 @@ def _model_projection(decision: Mapping[str, Any] | Any) -> dict[str, Any]:
             raise IntentBridgeError("MODEL_SELECTED_ROUTE_NOT_IN_OPTIONS")
         if selected_required_actions:
             raise IntentBridgeError("MODEL_SELECTED_ROUTE_REQUIRES_ACTION")
-        presentable_actions: tuple[str, ...] = ()
+        presentable_choices: tuple[dict[str, Any], ...] = ()
     elif disposition == "USER_CHOICE_REQUIRED":
-        presentable_actions = earned_actions
+        if not candidate_choices:
+            raise IntentBridgeError("MODEL_PRESENTABLE_CHOICES_REQUIRED")
+        presentable_choices = tuple(candidate_choices)
     else:
         # Evidence-required/upstream-blocked decisions may retain future options
-        # for reconstruction, but they have no actions presentable right now.
-        presentable_actions = ()
+        # for reconstruction, but no option is presentable right now.
+        presentable_choices = ()
 
     return {
         "decision_digest": digest,
         "disposition": disposition,
         "selected_route_id": selected_route_id,
         "earned_action_classes": earned_actions,
-        "presentable_action_classes": presentable_actions,
+        "candidate_choices": tuple(candidate_choices),
+        "presentable_choices": presentable_choices,
         "provider_refs": tuple(sorted(provider_refs)),
     }
 
@@ -304,7 +354,7 @@ def compile_external_service_intent_plan(
         blockers.append("MODEL_DECISION_NOT_READY")
 
     storage_actions = tuple(storage["required_user_actions"])
-    model_actions = tuple(model["presentable_action_classes"])
+    model_choices = tuple(model["presentable_choices"])
 
     # Future actions are not current prompts. If either upstream owner says the
     # composite is blocked/evidence-required, suppress all presentation groups
@@ -319,10 +369,13 @@ def compile_external_service_intent_plan(
                 "evidence_present": "AURA_DRIVE_STORAGE" in by_scope,
                 "evidence_owner_proven": False,
             })
-        if model_actions:
+        if model_choices:
             groups.append({
                 "scope": "MODEL_PROVIDER",
-                "actions": model_actions,
+                "choices": model_choices,
+                # Union remains diagnostic only; the actionable consequences are
+                # carried solely by each route-bound choice above.
+                "candidate_action_classes": model["earned_action_classes"],
                 "authority_owner": "EXTERNAL_MODEL_PROVIDER_AUTHORITY_OWNER",
                 "evidence_present": "MODEL_PROVIDER" in by_scope,
                 "evidence_owner_proven": False,
@@ -344,6 +397,8 @@ def compile_external_service_intent_plan(
         "storage_status": storage["status"],
         "model_disposition": model["disposition"],
         "model_selected_route_id": model["selected_route_id"],
+        "model_candidate_action_classes": model["earned_action_classes"],
+        "model_candidate_choices": model["candidate_choices"],
         "storage_primary_location": storage["primary_location"],
         "storage_secondary_location": storage["secondary_location"],
         "storage_cloud_selected": storage["cloud_selected"],
