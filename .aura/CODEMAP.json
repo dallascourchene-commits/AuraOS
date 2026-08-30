@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788111157,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -132,6 +132,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf09.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1631,6 +1632,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/accessible_onboarding.py",
+      "tools/aura_adopt/test_accessible_onboarding.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26432529,
+      "tokens_est": 6598484,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -125759,6 +125762,14 @@
         "end_line": 12,
         "semantic_id": "tests/test_aura_construction_contracts.py#function:evidence:a7e99cea64606d49",
         "signature_hash": "4be851cb61f4aeb9"
+      },
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#function:evidence:2cbf3ad834ccc499",
+        "signature_hash": "0989df994e9424ca"
       }
     ],
     "claim": [
@@ -157181,6 +157192,426 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "PreferenceSource": [
+      {
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 10,
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:PreferenceSource:8de31df1680dc429",
+        "signature_hash": "540fc23bf425dede"
+      }
+    ],
+    "PlanStatus": [
+      {
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 17,
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:PlanStatus:8322fc743b2dd2b3",
+        "signature_hash": "847d53963a50d13c"
+      }
+    ],
+    "AcceptanceMode": [
+      {
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 23,
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:AcceptanceMode:99c4da9338920481",
+        "signature_hash": "dfec8fc04276b28e"
+      }
+    ],
+    "SaveEvidenceMode": [
+      {
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 31,
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:SaveEvidenceMode:9380e864793ab374",
+        "signature_hash": "53ad63aa1d36d374"
+      }
+    ],
+    "AccessNeedsV1": [
+      {
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 66,
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:AccessNeedsV1:64156392ef131f60",
+        "signature_hash": "ef6e64c48f5c4c0f"
+      }
+    ],
+    "AccessNeedsV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 66,
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#method:AccessNeedsV1.__post_init__:e29514b42cad6b1b",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "OnboardingSurfaceCapabilitiesV1": [
+      {
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "kind": "class",
+        "line": 70,
+        "end_line": 103,
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:OnboardingSurfaceCapabilitiesV1:682bd3a938903151",
+        "signature_hash": "04d95e627ac73814"
+      }
+    ],
+    "OnboardingSurfaceCapabilitiesV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 103,
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#method:OnboardingSurfaceCapabilitiesV1.__post_init__:1b4a82d849a74e64",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "FirstValueEvidenceV1": [
+      {
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "kind": "class",
+        "line": 107,
+        "end_line": 123,
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:FirstValueEvidenceV1:d14b1798a138ce71",
+        "signature_hash": "4e223b0ce2ce88c2"
+      }
+    ],
+    "FirstValueEvidenceV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 123,
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#method:FirstValueEvidenceV1.__post_init__:2480c5a255d2fa37",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "AccessibleOnboardingPlanV1": [
+      {
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "kind": "class",
+        "line": 127,
+        "end_line": 142,
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:AccessibleOnboardingPlanV1:535d5ba8dfe05a1a",
+        "signature_hash": "7dad724a0b82c119"
+      }
+    ],
+    "compile_accessible_onboarding_plan": [
+      {
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "kind": "function",
+        "line": 145,
+        "end_line": 240,
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#function:compile_accessible_onboarding_plan:64d0714e2bc628de",
+        "signature_hash": "3d1c935e3cc7225e"
+      }
+    ],
+    "needs": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 25,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#function:needs:4dae7e47f8bcf935",
+        "signature_hash": "debe2ccd4f3c2658"
+      }
+    ],
+    "caps": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 44,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#function:caps:fd1569715e9181a1",
+        "signature_hash": "01f8108b081bf846"
+      }
+    ],
+    "plan": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 58,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#function:plan:d2a15e8263754c10",
+        "signature_hash": "9d7e82c1e639e74c"
+      }
+    ],
+    "AccessibleOnboardingTests": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 180,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#class:AccessibleOnboardingTests:c938b68581112a93",
+        "signature_hash": "b8920bb7e0ef1c63"
+      }
+    ],
+    "AccessibleOnboardingTests.test_01_default_guided_path_is_ready": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 66,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_01_default_guided_path_is_ready:927afe5d61cfdb2a",
+        "signature_hash": "f4748c8439121add"
+      }
+    ],
+    "AccessibleOnboardingTests.test_02_advanced_surfaces_hidden_by_default": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 73,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_02_advanced_surfaces_hidden_by_default:a50f187078e0ed8e",
+        "signature_hash": "b3ffef00e82700a1"
+      }
+    ],
+    "AccessibleOnboardingTests.test_03_no_telemetry_or_effect_authority": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 82,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_03_no_telemetry_or_effect_authority:a0f9691c29c06eb8",
+        "signature_hash": "58ebf03377bea2d4"
+      }
+    ],
+    "AccessibleOnboardingTests.test_04_stale_needs_rebases": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 85,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_04_stale_needs_rebases:5de27c3facd938f0",
+        "signature_hash": "2556a92d3c4dd1b3"
+      }
+    ],
+    "AccessibleOnboardingTests.test_05_stale_capabilities_rebases": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 88,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_05_stale_capabilities_rebases:c8699bcf2d54be98",
+        "signature_hash": "ae3a05630a726d6a"
+      }
+    ],
+    "AccessibleOnboardingTests.test_06_keyboard_required_and_available": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 92,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_06_keyboard_required_and_available:42d5879643039d9d",
+        "signature_hash": "b4952eb03f884bf5"
+      }
+    ],
+    "AccessibleOnboardingTests.test_07_keyboard_unavailable_requires_assisted_fallback": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 97,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_07_keyboard_unavailable_requires_assisted_fallback:b9519bab930a5f99",
+        "signature_hash": "bf9ea41aa97b65d5"
+      }
+    ],
+    "AccessibleOnboardingTests.test_08_keyboard_unknown_is_partial": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 102,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_08_keyboard_unknown_is_partial:e2032e3ec7d0f0e9",
+        "signature_hash": "6cbb43157648a413"
+      }
+    ],
+    "AccessibleOnboardingTests.test_09_screen_reader_requirement_checked": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 106,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_09_screen_reader_requirement_checked:3472443f3b619fea",
+        "signature_hash": "cfd261cd7cddfa89"
+      }
+    ],
+    "AccessibleOnboardingTests.test_10_high_contrast_requirement_checked": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 110,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_10_high_contrast_requirement_checked:d18707046a867cbc",
+        "signature_hash": "7a5824030c50a87e"
+      }
+    ],
+    "AccessibleOnboardingTests.test_11_reduced_motion_requirement_checked": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 114,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_11_reduced_motion_requirement_checked:0bd89071f23bea67",
+        "signature_hash": "da17e4041f8f96f1"
+      }
+    ],
+    "AccessibleOnboardingTests.test_12_captions_requirement_checked": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 118,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_12_captions_requirement_checked:c2730296db2b3000",
+        "signature_hash": "a94e5789346511e1"
+      }
+    ],
+    "AccessibleOnboardingTests.test_13_voice_request_checked": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 122,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_13_voice_request_checked:de8c6f9f36fd9ccc",
+        "signature_hash": "0a7a7cc86c9ee1ba"
+      }
+    ],
+    "AccessibleOnboardingTests.test_14_touch_request_checked": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 126,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_14_touch_request_checked:9cf11e0665501b59",
+        "signature_hash": "bb80c58741abe1f2"
+      }
+    ],
+    "AccessibleOnboardingTests.test_15_local_file_picker_is_required_for_witness": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 130,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_15_local_file_picker_is_required_for_witness:d6e623f9f0b39c6d",
+        "signature_hash": "f8b39abcad98c8fe"
+      }
+    ],
+    "AccessibleOnboardingTests.test_16_canvas_is_required_for_current_witness": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 134,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_16_canvas_is_required_for_current_witness:b4e301f60ff1718e",
+        "signature_hash": "a2e8f684012154d3"
+      }
+    ],
+    "AccessibleOnboardingTests.test_17_local_download_is_required_for_current_witness": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 138,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_17_local_download_is_required_for_current_witness:73d3834038c70e05",
+        "signature_hash": "9548350fa68fad81"
+      }
+    ],
+    "AccessibleOnboardingTests.test_18_synthetic_technical_acceptance_is_not_user_value": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 142,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_18_synthetic_technical_acceptance_is_not_user_value:e826328f224227ed",
+        "signature_hash": "4275e0b3fa5ce0bc"
+      }
+    ],
+    "AccessibleOnboardingTests.test_19_user_explicit_acceptance_requires_reference": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 146,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_19_user_explicit_acceptance_requires_reference:64845ad0014201d8",
+        "signature_hash": "c9ef90bf53c0f934"
+      }
+    ],
+    "AccessibleOnboardingTests.test_20_user_explicit_acceptance_is_proven_only_by_typed_mode": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 150,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_20_user_explicit_acceptance_is_proven_only_by_typed_mode:a70612a0d32c0459",
+        "signature_hash": "ef3d5c727371068c"
+      }
+    ],
+    "AccessibleOnboardingTests.test_21_simulated_save_is_not_save_proof": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 155,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_21_simulated_save_is_not_save_proof:9797238b1d352177",
+        "signature_hash": "26106f290f781a2a"
+      }
+    ],
+    "AccessibleOnboardingTests.test_22_download_initiated_is_not_save_observed": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 159,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_22_download_initiated_is_not_save_observed:cc1a7c289a9528ac",
+        "signature_hash": "16a11c9ea7396ceb"
+      }
+    ],
+    "AccessibleOnboardingTests.test_23_save_observed_requires_reference_and_not_reopen": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 166,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_23_save_observed_requires_reference_and_not_reopen:5d143946dc047d9c",
+        "signature_hash": "fb1a742bfd105e20"
+      }
+    ],
+    "AccessibleOnboardingTests.test_24_reopen_observed_is_strongest_save_state": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 171,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_24_reopen_observed_is_strongest_save_state:82817e24ebaee4ca",
+        "signature_hash": "803f4c1052c96fd9"
+      }
+    ],
+    "AccessibleOnboardingTests.test_25_unguided_path_removes_guided_step": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 173,
+        "end_line": 176,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_25_unguided_path_removes_guided_step:b5d9f3b2f81deada",
+        "signature_hash": "c6145cbad25fdad5"
+      }
+    ],
+    "AccessibleOnboardingTests.test_26_platform_exposed_preference_is_accepted_but_not_inferred": [
+      {
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 180,
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_26_platform_exposed_preference_is_accepted_but_not_inferred:9f800965180a6d0d",
+        "signature_hash": "966f09b33093ba42"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -167495,6 +167926,53 @@
         0.180531,
         0.255844,
         0.26249
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-adopt-zf09.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 756,
+      "lines": 27,
+      "tokens_est": 189,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4638b7c5241bdb26",
+      "vector": [
+        -0.15539,
+        0.293514,
+        -0.116255,
+        0.054099,
+        -0.051797,
+        0.03338,
+        0.051797,
+        0.102442,
+        0.116255,
+        -0.019568,
+        0.226754,
+        0.185317,
+        0.284306,
+        -0.049495,
+        0.095536,
+        -0.286608,
+        0.150786,
+        0.206035,
+        0.240566,
+        -0.130067,
+        0.109348,
+        -0.238264,
+        0.10014,
+        0.031078,
+        -0.116255,
+        0.279702,
+        0.054099,
+        -0.275097,
+        -0.169202,
+        0.224452,
+        -0.183015,
+        0.282004
       ]
     },
     {
@@ -262648,6 +263126,100 @@
       ]
     },
     {
+      "path": "tools/aura_adopt/accessible_onboarding.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8848,
+      "lines": 241,
+      "tokens_est": 2212,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f9d1a7ce097909ae",
+      "vector": [
+        0.208361,
+        0.016537,
+        -0.082683,
+        -0.241434,
+        0.106937,
+        -0.175288,
+        -0.117961,
+        -0.047405,
+        -0.05402,
+        0.252459,
+        -0.237025,
+        0.095912,
+        -0.226,
+        -0.212771,
+        -0.252459,
+        0.124576,
+        0.250254,
+        -0.071659,
+        -0.267893,
+        -0.281122,
+        0.093707,
+        -0.0452,
+        -0.111346,
+        0.23482,
+        0.241434,
+        -0.109142,
+        0.082683,
+        -0.091503,
+        0.265688,
+        0.177493,
+        0.009922,
+        0.201747
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_accessible_onboarding.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7877,
+      "lines": 185,
+      "tokens_est": 1970,
+      "symbol_count": 31,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "09e0aeb8a3801a81",
+      "vector": [
+        0.012521,
+        0.212851,
+        0.039838,
+        0.048944,
+        -0.269763,
+        -0.169598,
+        0.290251,
+        -0.060327,
+        -0.035285,
+        -0.033009,
+        -0.037562,
+        -0.010244,
+        -0.235616,
+        -0.192363,
+        -0.235616,
+        0.283422,
+        -0.144557,
+        0.101303,
+        0.260657,
+        0.089921,
+        -0.137727,
+        -0.087645,
+        0.135451,
+        0.262934,
+        0.055774,
+        -0.176427,
+        0.246998,
+        0.165045,
+        -0.26521,
+        0.196916,
+        -0.233339,
+        0.146833
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -286646,16 +287218,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26432529,
+    "text_tokens_est": 6598484,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286797,6 +287369,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf09.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -288296,6 +288869,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/accessible_onboarding.py",
+      "tools/aura_adopt/test_accessible_onboarding.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445634,6 +446209,436 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:AcceptanceMode:99c4da9338920481",
+        "name": "AcceptanceMode",
+        "kind": "class",
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "line": 20,
+        "end_line": 23,
+        "signature_hash": "dfec8fc04276b28e",
+        "file_digest8": "f9d1a7ce097909ae"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:AccessNeedsV1:64156392ef131f60",
+        "name": "AccessNeedsV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "line": 35,
+        "end_line": 66,
+        "signature_hash": "ef6e64c48f5c4c0f",
+        "file_digest8": "f9d1a7ce097909ae"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:AccessibleOnboardingPlanV1:535d5ba8dfe05a1a",
+        "name": "AccessibleOnboardingPlanV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "line": 127,
+        "end_line": 142,
+        "signature_hash": "7dad724a0b82c119",
+        "file_digest8": "f9d1a7ce097909ae"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:FirstValueEvidenceV1:d14b1798a138ce71",
+        "name": "FirstValueEvidenceV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "line": 107,
+        "end_line": 123,
+        "signature_hash": "4e223b0ce2ce88c2",
+        "file_digest8": "f9d1a7ce097909ae"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:OnboardingSurfaceCapabilitiesV1:682bd3a938903151",
+        "name": "OnboardingSurfaceCapabilitiesV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "line": 70,
+        "end_line": 103,
+        "signature_hash": "04d95e627ac73814",
+        "file_digest8": "f9d1a7ce097909ae"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:PlanStatus:8322fc743b2dd2b3",
+        "name": "PlanStatus",
+        "kind": "class",
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "line": 13,
+        "end_line": 17,
+        "signature_hash": "847d53963a50d13c",
+        "file_digest8": "f9d1a7ce097909ae"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:PreferenceSource:8de31df1680dc429",
+        "name": "PreferenceSource",
+        "kind": "class",
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "line": 8,
+        "end_line": 10,
+        "signature_hash": "540fc23bf425dede",
+        "file_digest8": "f9d1a7ce097909ae"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#class:SaveEvidenceMode:9380e864793ab374",
+        "name": "SaveEvidenceMode",
+        "kind": "class",
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "line": 26,
+        "end_line": 31,
+        "signature_hash": "53ad63aa1d36d374",
+        "file_digest8": "f9d1a7ce097909ae"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#function:compile_accessible_onboarding_plan:64d0714e2bc628de",
+        "name": "compile_accessible_onboarding_plan",
+        "kind": "function",
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "line": 145,
+        "end_line": 240,
+        "signature_hash": "3d1c935e3cc7225e",
+        "file_digest8": "f9d1a7ce097909ae"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#method:AccessNeedsV1.__post_init__:e29514b42cad6b1b",
+        "name": "AccessNeedsV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "line": 48,
+        "end_line": 66,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "f9d1a7ce097909ae"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#method:FirstValueEvidenceV1.__post_init__:2480c5a255d2fa37",
+        "name": "FirstValueEvidenceV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "line": 113,
+        "end_line": 123,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "f9d1a7ce097909ae"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/accessible_onboarding.py#method:OnboardingSurfaceCapabilitiesV1.__post_init__:1b4a82d849a74e64",
+        "name": "OnboardingSurfaceCapabilitiesV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/accessible_onboarding.py",
+        "line": 84,
+        "end_line": 103,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "f9d1a7ce097909ae"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#class:AccessibleOnboardingTests:c938b68581112a93",
+        "name": "AccessibleOnboardingTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 61,
+        "end_line": 180,
+        "signature_hash": "b8920bb7e0ef1c63",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#function:caps:fd1569715e9181a1",
+        "name": "caps",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 28,
+        "end_line": 44,
+        "signature_hash": "01f8108b081bf846",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#function:evidence:2cbf3ad834ccc499",
+        "name": "evidence",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 47,
+        "end_line": 48,
+        "signature_hash": "0989df994e9424ca",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#function:needs:4dae7e47f8bcf935",
+        "name": "needs",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 18,
+        "end_line": 25,
+        "signature_hash": "debe2ccd4f3c2658",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#function:plan:d2a15e8263754c10",
+        "name": "plan",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 51,
+        "end_line": 58,
+        "signature_hash": "9d7e82c1e639e74c",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_01_default_guided_path_is_ready:927afe5d61cfdb2a",
+        "name": "AccessibleOnboardingTests.test_01_default_guided_path_is_ready",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 62,
+        "end_line": 66,
+        "signature_hash": "f4748c8439121add",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_02_advanced_surfaces_hidden_by_default:a50f187078e0ed8e",
+        "name": "AccessibleOnboardingTests.test_02_advanced_surfaces_hidden_by_default",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 68,
+        "end_line": 73,
+        "signature_hash": "b3ffef00e82700a1",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_03_no_telemetry_or_effect_authority:a0f9691c29c06eb8",
+        "name": "AccessibleOnboardingTests.test_03_no_telemetry_or_effect_authority",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 75,
+        "end_line": 82,
+        "signature_hash": "58ebf03377bea2d4",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_04_stale_needs_rebases:5de27c3facd938f0",
+        "name": "AccessibleOnboardingTests.test_04_stale_needs_rebases",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 84,
+        "end_line": 85,
+        "signature_hash": "2556a92d3c4dd1b3",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_05_stale_capabilities_rebases:c8699bcf2d54be98",
+        "name": "AccessibleOnboardingTests.test_05_stale_capabilities_rebases",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 87,
+        "end_line": 88,
+        "signature_hash": "ae3a05630a726d6a",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_06_keyboard_required_and_available:42d5879643039d9d",
+        "name": "AccessibleOnboardingTests.test_06_keyboard_required_and_available",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 90,
+        "end_line": 92,
+        "signature_hash": "b4952eb03f884bf5",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_07_keyboard_unavailable_requires_assisted_fallback:b9519bab930a5f99",
+        "name": "AccessibleOnboardingTests.test_07_keyboard_unavailable_requires_assisted_fallback",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 94,
+        "end_line": 97,
+        "signature_hash": "bf9ea41aa97b65d5",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_08_keyboard_unknown_is_partial:e2032e3ec7d0f0e9",
+        "name": "AccessibleOnboardingTests.test_08_keyboard_unknown_is_partial",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 99,
+        "end_line": 102,
+        "signature_hash": "6cbb43157648a413",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_09_screen_reader_requirement_checked:3472443f3b619fea",
+        "name": "AccessibleOnboardingTests.test_09_screen_reader_requirement_checked",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 104,
+        "end_line": 106,
+        "signature_hash": "cfd261cd7cddfa89",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_10_high_contrast_requirement_checked:d18707046a867cbc",
+        "name": "AccessibleOnboardingTests.test_10_high_contrast_requirement_checked",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 108,
+        "end_line": 110,
+        "signature_hash": "7a5824030c50a87e",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_11_reduced_motion_requirement_checked:0bd89071f23bea67",
+        "name": "AccessibleOnboardingTests.test_11_reduced_motion_requirement_checked",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 112,
+        "end_line": 114,
+        "signature_hash": "da17e4041f8f96f1",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_12_captions_requirement_checked:c2730296db2b3000",
+        "name": "AccessibleOnboardingTests.test_12_captions_requirement_checked",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 116,
+        "end_line": 118,
+        "signature_hash": "a94e5789346511e1",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_13_voice_request_checked:de8c6f9f36fd9ccc",
+        "name": "AccessibleOnboardingTests.test_13_voice_request_checked",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 120,
+        "end_line": 122,
+        "signature_hash": "0a7a7cc86c9ee1ba",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_14_touch_request_checked:9cf11e0665501b59",
+        "name": "AccessibleOnboardingTests.test_14_touch_request_checked",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 124,
+        "end_line": 126,
+        "signature_hash": "bb80c58741abe1f2",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_15_local_file_picker_is_required_for_witness:d6e623f9f0b39c6d",
+        "name": "AccessibleOnboardingTests.test_15_local_file_picker_is_required_for_witness",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 128,
+        "end_line": 130,
+        "signature_hash": "f8b39abcad98c8fe",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_16_canvas_is_required_for_current_witness:b4e301f60ff1718e",
+        "name": "AccessibleOnboardingTests.test_16_canvas_is_required_for_current_witness",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 132,
+        "end_line": 134,
+        "signature_hash": "a2e8f684012154d3",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_17_local_download_is_required_for_current_witness:73d3834038c70e05",
+        "name": "AccessibleOnboardingTests.test_17_local_download_is_required_for_current_witness",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 136,
+        "end_line": 138,
+        "signature_hash": "9548350fa68fad81",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_18_synthetic_technical_acceptance_is_not_user_value:e826328f224227ed",
+        "name": "AccessibleOnboardingTests.test_18_synthetic_technical_acceptance_is_not_user_value",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 140,
+        "end_line": 142,
+        "signature_hash": "4275e0b3fa5ce0bc",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_19_user_explicit_acceptance_requires_reference:64845ad0014201d8",
+        "name": "AccessibleOnboardingTests.test_19_user_explicit_acceptance_requires_reference",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 144,
+        "end_line": 146,
+        "signature_hash": "c9ef90bf53c0f934",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_20_user_explicit_acceptance_is_proven_only_by_typed_mode:a70612a0d32c0459",
+        "name": "AccessibleOnboardingTests.test_20_user_explicit_acceptance_is_proven_only_by_typed_mode",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 148,
+        "end_line": 150,
+        "signature_hash": "ef3d5c727371068c",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_21_simulated_save_is_not_save_proof:9797238b1d352177",
+        "name": "AccessibleOnboardingTests.test_21_simulated_save_is_not_save_proof",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 152,
+        "end_line": 155,
+        "signature_hash": "26106f290f781a2a",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_22_download_initiated_is_not_save_observed:cc1a7c289a9528ac",
+        "name": "AccessibleOnboardingTests.test_22_download_initiated_is_not_save_observed",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 157,
+        "end_line": 159,
+        "signature_hash": "16a11c9ea7396ceb",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_23_save_observed_requires_reference_and_not_reopen:5d143946dc047d9c",
+        "name": "AccessibleOnboardingTests.test_23_save_observed_requires_reference_and_not_reopen",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 161,
+        "end_line": 166,
+        "signature_hash": "fb1a742bfd105e20",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_24_reopen_observed_is_strongest_save_state:82817e24ebaee4ca",
+        "name": "AccessibleOnboardingTests.test_24_reopen_observed_is_strongest_save_state",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 168,
+        "end_line": 171,
+        "signature_hash": "803f4c1052c96fd9",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_25_unguided_path_removes_guided_step:b5d9f3b2f81deada",
+        "name": "AccessibleOnboardingTests.test_25_unguided_path_removes_guided_step",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 173,
+        "end_line": 176,
+        "signature_hash": "c6145cbad25fdad5",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_accessible_onboarding.py#method:AccessibleOnboardingTests.test_26_platform_exposed_preference_is_accepted_but_not_inferred:9f800965180a6d0d",
+        "name": "AccessibleOnboardingTests.test_26_platform_exposed_preference_is_accepted_but_not_inferred",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_accessible_onboarding.py",
+        "line": 178,
+        "end_line": 180,
+        "signature_hash": "966f09b33093ba42",
+        "file_digest8": "09e0aeb8a3801a81"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447889,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "87c213ed3da2900cb31dcacbc1cb4785",
+    "payload_hash": "2bc333aa93c9cbbf834f1694b343efc7"
   }
 }

@@ -1,0 +1,26 @@
+name: AURA-ADOPT ZF-09 Accessible Onboarding
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/accessible_onboarding.py'
+      - 'tools/aura_adopt/test_accessible_onboarding.py'
+      - '.github/workflows/aura-adopt-zf09.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  accessible-onboarding:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile
+        run: python -m py_compile tools/aura_adopt/accessible_onboarding.py tools/aura_adopt/test_accessible_onboarding.py
+      - name: Focused regressions
+        run: python -m unittest -v tools.aura_adopt.test_accessible_onboarding
