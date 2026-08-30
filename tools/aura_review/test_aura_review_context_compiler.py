@@ -4,6 +4,8 @@ from tools.aura_review.aura_review_context_compiler import (
     ContextCompileRefusal,
     CoordinateLocatorV1,
     GraphEdgeV1,
+    NONAUTHORITATIVE_FIXTURE,
+    PRODUCTION,
     compile_affected_cone,
     project_review_capsule_inputs,
 )
@@ -34,6 +36,8 @@ def compile(**kw):
         changed_paths=("tools/a.py",),
         code_graph_edges=(),
         workgraph_edges=(),
+        expected_codemap_generation_ref=CGEN,
+        expected_workgraph_generation_ref=WGEN,
         max_nodes=64,
         optional_depth=0,
     )
@@ -44,6 +48,7 @@ def compile(**kw):
 class T(unittest.TestCase):
     def test_changed_path_is_required(self):
         c = compile()
+        self.assertEqual(PRODUCTION, c["mode"])
         self.assertEqual(c["changed_paths"], ["tools/a.py"])
         self.assertTrue(c["nodes"][0]["required"])
 
@@ -139,6 +144,39 @@ class T(unittest.TestCase):
     def test_missing_binding_refused(self):
         with self.assertRaisesRegex(ContextCompileRefusal, "INVALID_CURRENTNESS_REF"):
             compile(currentness_ref=" ")
+
+    # V2 convergence regressions.
+    def test_production_requires_expected_graph_generations(self):
+        with self.assertRaisesRegex(ContextCompileRefusal, "CURRENTNESS_EVIDENCE_REQUIRED"):
+            compile(
+                expected_codemap_generation_ref=None,
+                expected_workgraph_generation_ref=None,
+            )
+
+    def test_explicit_fixture_is_nonauthoritative_and_cannot_project(self):
+        c = compile(
+            fixture_mode=True,
+            expected_codemap_generation_ref=None,
+            expected_workgraph_generation_ref=None,
+        )
+        self.assertEqual(NONAUTHORITATIVE_FIXTURE, c["mode"])
+        with self.assertRaisesRegex(ContextCompileRefusal, "NONAUTHORITATIVE_FIXTURE_CONTEXT"):
+            project_review_capsule_inputs(c)
+
+    def test_projection_recomputes_digest_and_rejects_mutation(self):
+        c = compile()
+        c["changed_paths"].append("mutated.py")
+        with self.assertRaisesRegex(ContextCompileRefusal, "AFFECTED_CONE_DIGEST_MISMATCH"):
+            project_review_capsule_inputs(c)
+
+    def test_disconnected_dependency_region_does_not_inflate_mandatory_cone(self):
+        edges = tuple(
+            we(f"island/{i}.py", f"island/{i+1}.py", "DEPENDS_ON", ref=f"wg:{i}")
+            for i in range(100)
+        )
+        c = compile(workgraph_edges=edges, max_nodes=2, optional_depth=1)
+        self.assertEqual(1, c["required_node_count"])
+        self.assertEqual({"tools/a.py"}, {n["path"] for n in c["nodes"]})
 
 
 if __name__ == "__main__":
