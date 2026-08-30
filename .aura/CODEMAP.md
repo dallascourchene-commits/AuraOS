@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1642
-- **total_bytes**: 26441797
-- **text_tokens_est**: 6600801
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1649
+- **total_bytes**: 26549883
+- **text_tokens_est**: 6627825
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 275, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1642,
+  "repo_file_count": 1649,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -150,6 +150,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/architect-external-llm-session.yml",
     ".github/workflows/architect-real-refactor-hardening.yml",
     ".github/workflows/architect-real-refactor-trial.yml",
+    ".github/workflows/aura-adopt-first-value-adapter.yml",
+    ".github/workflows/aura-adopt-zf00b-friction-receipt.yml",
     ".github/workflows/aura-architecture-harness-export.yml",
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1195,6 +1197,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "requirements-amd-track3.txt",
     "requirements-spatial-s4b.txt",
     "requirements.txt",
+    "schemas/adoption_friction_receipt_v1.schema.json",
     "schemas/aura_coding_relationship_compass.schema.json",
     "schemas/aura_coding_waboose_contract.schema.json",
     "schemas/aura_compass_act_capsule.schema.json",
@@ -1652,6 +1655,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/aura_adopt/adoption_friction_receipt.py",
+    "tools/aura_adopt/first_value_witness_adapter.py",
+    "tools/aura_adopt/test_adoption_friction_receipt.py",
+    "tools/aura_adopt/test_first_value_witness_adapter.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1782,16 +1789,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1642,
-  "bytes": 26441797,
-  "tokens_est": 6600801,
+  "files": 1649,
+  "bytes": 26549883,
+  "tokens_est": 6627825,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 999,
-    "schema_or_lexicon": 272,
+    "python_module": 1003,
+    "schema_or_lexicon": 275,
     "support_file": 49
   }
 }
