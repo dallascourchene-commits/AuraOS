@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788123516,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -132,6 +132,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf07d-zf08c-presentable-choice-generation.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1631,6 +1632,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+      "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26444904,
+      "tokens_est": 6601578,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -8067,6 +8070,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 37,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_sha:5d83de0117eb66c8",
+        "signature_hash": "2d45ad457db840dc"
       }
     ],
     "_repo": [
@@ -157181,6 +157192,626 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "issuers": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 6,
+        "end_line": 7,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#function:issuers:fc75453ffe5cf536",
+        "signature_hash": "8606d8ccca811a48"
+      }
+    ],
+    "choice": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 10,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#function:choice:1cc137c63a331cd7",
+        "signature_hash": "0e8fe7502cd965f1"
+      }
+    ],
+    "req": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 15,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#function:req:4d668495bf341f61",
+        "signature_hash": "41d83468cc04690d"
+      }
+    ],
+    "Resolver": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 32,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#class:Resolver:b916c502000fd850",
+        "signature_hash": "226f168e7c0877bf"
+      }
+    ],
+    "Resolver.__init__": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 18,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:Resolver.__init__:c1d5b011c10ff1b0",
+        "signature_hash": "f73165938dc47c12"
+      }
+    ],
+    "Resolver.resolve_choice_generation": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 32,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:Resolver.resolve_choice_generation:ea62c3277ff6368a",
+        "signature_hash": "ec2e784bab5c6712"
+      }
+    ],
+    "T": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 104,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#class:T:adb200a52778f891",
+        "signature_hash": "1a51332cd1dc4f10"
+      }
+    ],
+    "T.test_local_happy": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_local_happy:8b66b77e87d4a0fd",
+        "signature_hash": "50f06d159a216fe0"
+      }
+    ],
+    "T.test_remote_happy": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_remote_happy:0d020b299b490376",
+        "signature_hash": "da95d1e7c74fdfde"
+      }
+    ],
+    "T.test_no_resolver": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_no_resolver:b75c73258fc370b8",
+        "signature_hash": "aa408aca34ec6978"
+      }
+    ],
+    "T.test_target_stale_only_blocks_one_choice": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 47,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_target_stale_only_blocks_one_choice:a1f1e7b24ed45bed",
+        "signature_hash": "9e5bb5ef3f473e0c"
+      }
+    ],
+    "T.test_target_stale_only_blocks_one_choice.R": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "class",
+        "line": 43,
+        "end_line": 46,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#class:T.test_target_stale_only_blocks_one_choice.R:74233813d2063d34",
+        "signature_hash": "5f1cd881150837b4"
+      }
+    ],
+    "T.test_target_stale_only_blocks_one_choice.R.resolve_choice_generation": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 46,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_target_stale_only_blocks_one_choice.R.resolve_choice_generation:4daf681f33e56fc0",
+        "signature_hash": "ec2e784bab5c6712"
+      }
+    ],
+    "T.test_owner_stale": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 49,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_owner_stale:ad92232cc027fff3",
+        "signature_hash": "675170f0b92f56e6"
+      }
+    ],
+    "T.test_resolver_generation_skew": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_resolver_generation_skew:92fdf2a6dee77b21",
+        "signature_hash": "96d35eba8edca4e8"
+      }
+    ],
+    "T.test_principal_revoked": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 53,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_principal_revoked:b801c4421600b055",
+        "signature_hash": "473f65f7fc6b6e6b"
+      }
+    ],
+    "T.test_unknown_source": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_unknown_source:16f384cc2be4f2e8",
+        "signature_hash": "77a3da39790f83ce"
+      }
+    ],
+    "T.test_cross_choice_resolution_replay": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 58,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_cross_choice_resolution_replay:9ae50c223e09f904",
+        "signature_hash": "b55f4a1edd22b3c8"
+      }
+    ],
+    "T.test_union_summary_cannot_change_admission": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_union_summary_cannot_change_admission:2a82adedcfdbd7d3",
+        "signature_hash": "34d12ab090e463e3"
+      }
+    ],
+    "T.test_requirement_cannot_bind_other_choice": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 63,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_requirement_cannot_bind_other_choice:a9d42993dbed1f44",
+        "signature_hash": "9f006cfb30920399"
+      }
+    ],
+    "T.test_remote_runtime_provider_binding": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 66,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_remote_runtime_provider_binding:4cdff8a947069241",
+        "signature_hash": "727e212d127bac64"
+      }
+    ],
+    "T.test_principal_binding": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 69,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_principal_binding:5fc7a01165d93178",
+        "signature_hash": "4c1254e211e1bbb7"
+      }
+    ],
+    "T.test_missing_base_axis": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 72,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_missing_base_axis:23896312b6d022c7",
+        "signature_hash": "a0a6310e9bcb5cee"
+      }
+    ],
+    "T.test_remote_runtime_required": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 76,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_remote_runtime_required:7478678cc4b524b9",
+        "signature_hash": "8b3c4c8858ddfc8c"
+      }
+    ],
+    "T.test_local_runtime_optional": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 79,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_local_runtime_optional:bf911bed4f335179",
+        "signature_hash": "97c1e193be671c07"
+      }
+    ],
+    "T.test_runtime_requirement_partial_rejected": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 83,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_runtime_requirement_partial_rejected:f72176a168c570f3",
+        "signature_hash": "9d3e756f78d47fd4"
+      }
+    ],
+    "T.test_choice_digest_tamper": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 87,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_choice_digest_tamper:6aea1478a70fa02e",
+        "signature_hash": "a2df1ae1753a8f8d"
+      }
+    ],
+    "T.test_duplicate_route": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 90,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_duplicate_route:1574e35e177f3b85",
+        "signature_hash": "0e432b57e76e3494"
+      }
+    ],
+    "T.test_authority_flags_false": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 93,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_authority_flags_false:187d8525bebb9198",
+        "signature_hash": "63082e0f1bb1d685"
+      }
+    ],
+    "T.test_wrong_evidence_domain_blocks_target": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 95,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_wrong_evidence_domain_blocks_target:3899d54f433630c3",
+        "signature_hash": "e890afe656fbf063"
+      }
+    ],
+    "T.test_wrong_issuer_generation_blocks_target": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 97,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_wrong_issuer_generation_blocks_target:71c784ba160069f6",
+        "signature_hash": "382d2bd187fd2c65"
+      }
+    ],
+    "T.test_missing_issuer_binding_rejected": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 101,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_missing_issuer_binding_rejected:d139b055b859c85c",
+        "signature_hash": "7531695462077517"
+      }
+    ],
+    "T.test_requirement_domain_cross_cast_rejected": [
+      {
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 104,
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_requirement_domain_cross_cast_rejected:b33b00a81b1bcbd3",
+        "signature_hash": "1c0f800bd6de9658"
+      }
+    ],
+    "ChoiceMembraneError": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:ChoiceMembraneError:5ee024ad8709754c",
+        "signature_hash": "0870d784160aa412"
+      }
+    ],
+    "ChoiceMembraneError.__init__": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 21,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:ChoiceMembraneError.__init__:781d4a0ccd3a37e1",
+        "signature_hash": "9aa685653b3913ec"
+      }
+    ],
+    "_canon": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 25,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_canon:5796f9a04e54d0fd",
+        "signature_hash": "3973a7eaf2bd7224"
+      }
+    ],
+    "_dig": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 26,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_dig:b057fc079f3cc76a",
+        "signature_hash": "a8f2dca07c403f7b"
+      }
+    ],
+    "_tok": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 32,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_tok:6b51a04a597d497f",
+        "signature_hash": "955344d7452ac645"
+      }
+    ],
+    "_uniq": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 42,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_uniq:c6948ea84025efde",
+        "signature_hash": "c95bad96c455d4a6"
+      }
+    ],
+    "PresentableChoiceEnvelopeV1": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 58,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:PresentableChoiceEnvelopeV1:8f75f7a060da1da0",
+        "signature_hash": "d8b55ce08dd731fa"
+      }
+    ],
+    "PresentableChoiceEnvelopeV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 56,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:PresentableChoiceEnvelopeV1.__post_init__:2a45256360f5193c",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "PresentableChoiceEnvelopeV1.payload": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 57,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:PresentableChoiceEnvelopeV1.payload:239b77f85bfadcad",
+        "signature_hash": "46f4116b00af9128"
+      }
+    ],
+    "PresentableChoiceEnvelopeV1.target_ref": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 58,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:PresentableChoiceEnvelopeV1.target_ref:a34f3d4ba7f3c1ad",
+        "signature_hash": "d50694c107010f08"
+      }
+    ],
+    "GenerationAxisRequirementV1": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 68,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:GenerationAxisRequirementV1:b947bf901a18e7a5",
+        "signature_hash": "253371a97c7bc55b"
+      }
+    ],
+    "GenerationAxisRequirementV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 67,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:GenerationAxisRequirementV1.__post_init__:9e65125dd31819d9",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "GenerationAxisRequirementV1.payload": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 68,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:GenerationAxisRequirementV1.payload:53f1cda0e776ee1c",
+        "signature_hash": "46f4116b00af9128"
+      }
+    ],
+    "ChoiceGenerationRequirementV1": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "class",
+        "line": 71,
+        "end_line": 83,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:ChoiceGenerationRequirementV1:c4fbace86f725902",
+        "signature_hash": "11e56b127cccc91d"
+      }
+    ],
+    "ChoiceGenerationRequirementV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 82,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:ChoiceGenerationRequirementV1.__post_init__:5468105ac7812b7f",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ChoiceGenerationRequirementV1.by_axis": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 83,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:ChoiceGenerationRequirementV1.by_axis:7a972be8372261c3",
+        "signature_hash": "e38b803503aa3efd"
+      }
+    ],
+    "_issuer": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 89,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_issuer:1578f7f3b8b2709d",
+        "signature_hash": "dedf31eb4176c841"
+      }
+    ],
+    "build_choice_generation_requirement": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 101,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:build_choice_generation_requirement:eb22a52abb8c13d3",
+        "signature_hash": "c9fec270f1bbcaa3"
+      }
+    ],
+    "build_choice_generation_requirement.ar": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 93,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:build_choice_generation_requirement.ar:9b0b50e1050edd2b",
+        "signature_hash": "e43d97a1d5e494bb"
+      }
+    ],
+    "verify_requirement_binding": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 112,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:verify_requirement_binding:9e0ceb6be8d2173f",
+        "signature_hash": "618154ffec2202ec"
+      }
+    ],
+    "ChoiceGenerationQueryV1": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "class",
+        "line": 115,
+        "end_line": 125,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:ChoiceGenerationQueryV1:2a23272aaede53e6",
+        "signature_hash": "64ce6926f7195688"
+      }
+    ],
+    "ChoiceGenerationQueryV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 125,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:ChoiceGenerationQueryV1.__post_init__:30d208eef4f64ac3",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ChoiceGenerationResolutionV1": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "class",
+        "line": 128,
+        "end_line": 137,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:ChoiceGenerationResolutionV1:07e7a12a169632be",
+        "signature_hash": "188174b928361692"
+      }
+    ],
+    "ChoiceGenerationResolutionV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 137,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:ChoiceGenerationResolutionV1.__post_init__:8ce917d34f58db22",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ChoiceGenerationResolverV1": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "class",
+        "line": 139,
+        "end_line": 140,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:ChoiceGenerationResolverV1:8dd1d6a2b8b10d0c",
+        "signature_hash": "b02d259fd51eb7e9"
+      }
+    ],
+    "ChoiceGenerationResolverV1.resolve_choice_generation": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "method",
+        "line": 140,
+        "end_line": 140,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:ChoiceGenerationResolverV1.resolve_choice_generation:60b63cf6623df7ed",
+        "signature_hash": "dd2a9a9e9025f424"
+      }
+    ],
+    "_query": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 141,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_query:9ee53fd1d9c8f9e5",
+        "signature_hash": "da6e3c4cc861a4fc"
+      }
+    ],
+    "compile_presentable_choice": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 143,
+        "end_line": 163,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:compile_presentable_choice:290760d14b2a9af9",
+        "signature_hash": "f9c3c349ccf89097"
+      }
+    ],
+    "compile_presentable_choice_set": [
+      {
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "kind": "function",
+        "line": 165,
+        "end_line": 174,
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:compile_presentable_choice_set:23eaaa2aaf4c1a61",
+        "signature_hash": "0b299a16216594b3"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -167495,6 +168126,53 @@
         0.180531,
         0.255844,
         0.26249
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-adopt-zf07d-zf08c-presentable-choice-generation.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 866,
+      "lines": 27,
+      "tokens_est": 217,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9e9d5314bf1ba5bd",
+      "vector": [
+        0.185628,
+        -0.070658,
+        0.161676,
+        0.173652,
+        -0.156885,
+        0.152095,
+        -0.180837,
+        -0.228741,
+        0.20958,
+        -0.041916,
+        -0.061078,
+        0.082634,
+        0.063473,
+        -0.166466,
+        -0.130538,
+        -0.226346,
+        -0.26946,
+        0.02994,
+        0.125748,
+        -0.108981,
+        0.228741,
+        0.192813,
+        -0.161676,
+        0.211975,
+        -0.017964,
+        0.27425,
+        0.058682,
+        0.276645,
+        0.276645,
+        -0.247903,
+        0.156885,
+        -0.188023
       ]
     },
     {
@@ -262648,6 +263326,100 @@
       ]
     },
     {
+      "path": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11570,
+      "lines": 107,
+      "tokens_est": 2893,
+      "symbol_count": 33,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b76eb284d6bab67f",
+      "vector": [
+        0.291993,
+        0.15851,
+        -0.15851,
+        0.272924,
+        0.060782,
+        0.120373,
+        -0.146592,
+        -0.113222,
+        0.060782,
+        0.139442,
+        0.208566,
+        -0.077468,
+        0.175196,
+        -0.003575,
+        -0.203799,
+        -0.227635,
+        0.287226,
+        0.160894,
+        -0.21095,
+        0.106071,
+        0.084618,
+        -0.010726,
+        -0.156127,
+        0.175196,
+        0.261006,
+        -0.227635,
+        0.15851,
+        0.175196,
+        0.010726,
+        -0.253855,
+        0.148976,
+        0.227635
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 17420,
+      "lines": 175,
+      "tokens_est": 4355,
+      "symbol_count": 30,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9a26a2ab7817075f",
+      "vector": [
+        -0.267229,
+        -0.179252,
+        -0.201246,
+        0.194648,
+        -0.086877,
+        0.245234,
+        -0.104472,
+        0.058284,
+        -0.214443,
+        -0.166056,
+        -0.155059,
+        0.254032,
+        0.249633,
+        0.22544,
+        -0.161657,
+        -0.093475,
+        0.212243,
+        -0.159457,
+        -0.102273,
+        0.210044,
+        -0.216642,
+        0.199047,
+        -0.166056,
+        0.07368,
+        0.146261,
+        -0.128666,
+        0.11107,
+        -0.049487,
+        -0.192449,
+        -0.007698,
+        -0.137463,
+        -0.269428
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -286646,16 +287418,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26444904,
+    "text_tokens_est": 6601578,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286797,6 +287569,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf07d-zf08c-presentable-choice-generation.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -288296,6 +289069,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+      "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445634,6 +446409,636 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#class:Resolver:b916c502000fd850",
+        "name": "Resolver",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 17,
+        "end_line": 32,
+        "signature_hash": "226f168e7c0877bf",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#class:T.test_target_stale_only_blocks_one_choice.R:74233813d2063d34",
+        "name": "T.test_target_stale_only_blocks_one_choice.R",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 43,
+        "end_line": 46,
+        "signature_hash": "5f1cd881150837b4",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#class:T:adb200a52778f891",
+        "name": "T",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 34,
+        "end_line": 104,
+        "signature_hash": "1a51332cd1dc4f10",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#function:choice:1cc137c63a331cd7",
+        "name": "choice",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 9,
+        "end_line": 10,
+        "signature_hash": "0e8fe7502cd965f1",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#function:issuers:fc75453ffe5cf536",
+        "name": "issuers",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 6,
+        "end_line": 7,
+        "signature_hash": "8606d8ccca811a48",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#function:req:4d668495bf341f61",
+        "name": "req",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 12,
+        "end_line": 15,
+        "signature_hash": "41d83468cc04690d",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:Resolver.__init__:c1d5b011c10ff1b0",
+        "name": "Resolver.__init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 18,
+        "end_line": 18,
+        "signature_hash": "f73165938dc47c12",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:Resolver.resolve_choice_generation:ea62c3277ff6368a",
+        "name": "Resolver.resolve_choice_generation",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 19,
+        "end_line": 32,
+        "signature_hash": "ec2e784bab5c6712",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_authority_flags_false:187d8525bebb9198",
+        "name": "T.test_authority_flags_false",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 91,
+        "end_line": 93,
+        "signature_hash": "63082e0f1bb1d685",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_choice_digest_tamper:6aea1478a70fa02e",
+        "name": "T.test_choice_digest_tamper",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 84,
+        "end_line": 87,
+        "signature_hash": "a2df1ae1753a8f8d",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_cross_choice_resolution_replay:9ae50c223e09f904",
+        "name": "T.test_cross_choice_resolution_replay",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 56,
+        "end_line": 58,
+        "signature_hash": "b55f4a1edd22b3c8",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_duplicate_route:1574e35e177f3b85",
+        "name": "T.test_duplicate_route",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 88,
+        "end_line": 90,
+        "signature_hash": "0e432b57e76e3494",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_local_happy:8b66b77e87d4a0fd",
+        "name": "T.test_local_happy",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "50f06d159a216fe0",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_local_runtime_optional:bf911bed4f335179",
+        "name": "T.test_local_runtime_optional",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 77,
+        "end_line": 79,
+        "signature_hash": "97c1e193be671c07",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_missing_base_axis:23896312b6d022c7",
+        "name": "T.test_missing_base_axis",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 70,
+        "end_line": 72,
+        "signature_hash": "a0a6310e9bcb5cee",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_missing_issuer_binding_rejected:d139b055b859c85c",
+        "name": "T.test_missing_issuer_binding_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 98,
+        "end_line": 101,
+        "signature_hash": "7531695462077517",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_no_resolver:b75c73258fc370b8",
+        "name": "T.test_no_resolver",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 39,
+        "end_line": 40,
+        "signature_hash": "aa408aca34ec6978",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_owner_stale:ad92232cc027fff3",
+        "name": "T.test_owner_stale",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 48,
+        "end_line": 49,
+        "signature_hash": "675170f0b92f56e6",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_principal_binding:5fc7a01165d93178",
+        "name": "T.test_principal_binding",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 67,
+        "end_line": 69,
+        "signature_hash": "4c1254e211e1bbb7",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_principal_revoked:b801c4421600b055",
+        "name": "T.test_principal_revoked",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 52,
+        "end_line": 53,
+        "signature_hash": "473f65f7fc6b6e6b",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_remote_happy:0d020b299b490376",
+        "name": "T.test_remote_happy",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "da95d1e7c74fdfde",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_remote_runtime_provider_binding:4cdff8a947069241",
+        "name": "T.test_remote_runtime_provider_binding",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 64,
+        "end_line": 66,
+        "signature_hash": "727e212d127bac64",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_remote_runtime_required:7478678cc4b524b9",
+        "name": "T.test_remote_runtime_required",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 73,
+        "end_line": 76,
+        "signature_hash": "8b3c4c8858ddfc8c",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_requirement_cannot_bind_other_choice:a9d42993dbed1f44",
+        "name": "T.test_requirement_cannot_bind_other_choice",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 61,
+        "end_line": 63,
+        "signature_hash": "9f006cfb30920399",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_requirement_domain_cross_cast_rejected:b33b00a81b1bcbd3",
+        "name": "T.test_requirement_domain_cross_cast_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 102,
+        "end_line": 104,
+        "signature_hash": "1c0f800bd6de9658",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_resolver_generation_skew:92fdf2a6dee77b21",
+        "name": "T.test_resolver_generation_skew",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "96d35eba8edca4e8",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_runtime_requirement_partial_rejected:f72176a168c570f3",
+        "name": "T.test_runtime_requirement_partial_rejected",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 80,
+        "end_line": 83,
+        "signature_hash": "9d3e756f78d47fd4",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_target_stale_only_blocks_one_choice.R.resolve_choice_generation:4daf681f33e56fc0",
+        "name": "T.test_target_stale_only_blocks_one_choice.R.resolve_choice_generation",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 44,
+        "end_line": 46,
+        "signature_hash": "ec2e784bab5c6712",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_target_stale_only_blocks_one_choice:a1f1e7b24ed45bed",
+        "name": "T.test_target_stale_only_blocks_one_choice",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 41,
+        "end_line": 47,
+        "signature_hash": "9e5bb5ef3f473e0c",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_union_summary_cannot_change_admission:2a82adedcfdbd7d3",
+        "name": "T.test_union_summary_cannot_change_admission",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "34d12ab090e463e3",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_unknown_source:16f384cc2be4f2e8",
+        "name": "T.test_unknown_source",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "77a3da39790f83ce",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_wrong_evidence_domain_blocks_target:3899d54f433630c3",
+        "name": "T.test_wrong_evidence_domain_blocks_target",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 94,
+        "end_line": 95,
+        "signature_hash": "e890afe656fbf063",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py#method:T.test_wrong_issuer_generation_blocks_target:71c784ba160069f6",
+        "name": "T.test_wrong_issuer_generation_blocks_target",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_zf07d_zf08c_presentable_choice_generation.py",
+        "line": 96,
+        "end_line": 97,
+        "signature_hash": "382d2bd187fd2c65",
+        "file_digest8": "b76eb284d6bab67f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:ChoiceGenerationQueryV1:2a23272aaede53e6",
+        "name": "ChoiceGenerationQueryV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 115,
+        "end_line": 125,
+        "signature_hash": "64ce6926f7195688",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:ChoiceGenerationRequirementV1:c4fbace86f725902",
+        "name": "ChoiceGenerationRequirementV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 71,
+        "end_line": 83,
+        "signature_hash": "11e56b127cccc91d",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:ChoiceGenerationResolutionV1:07e7a12a169632be",
+        "name": "ChoiceGenerationResolutionV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 128,
+        "end_line": 137,
+        "signature_hash": "188174b928361692",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:ChoiceGenerationResolverV1:8dd1d6a2b8b10d0c",
+        "name": "ChoiceGenerationResolverV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 139,
+        "end_line": 140,
+        "signature_hash": "b02d259fd51eb7e9",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:ChoiceMembraneError:5ee024ad8709754c",
+        "name": "ChoiceMembraneError",
+        "kind": "class",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "0870d784160aa412",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:GenerationAxisRequirementV1:b947bf901a18e7a5",
+        "name": "GenerationAxisRequirementV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 61,
+        "end_line": 68,
+        "signature_hash": "253371a97c7bc55b",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#class:PresentableChoiceEnvelopeV1:8f75f7a060da1da0",
+        "name": "PresentableChoiceEnvelopeV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 45,
+        "end_line": 58,
+        "signature_hash": "d8b55ce08dd731fa",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_canon:5796f9a04e54d0fd",
+        "name": "_canon",
+        "kind": "function",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 23,
+        "end_line": 25,
+        "signature_hash": "3973a7eaf2bd7224",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_dig:b057fc079f3cc76a",
+        "name": "_dig",
+        "kind": "function",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 26,
+        "end_line": 26,
+        "signature_hash": "a8f2dca07c403f7b",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_issuer:1578f7f3b8b2709d",
+        "name": "_issuer",
+        "kind": "function",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 85,
+        "end_line": 89,
+        "signature_hash": "dedf31eb4176c841",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_query:9ee53fd1d9c8f9e5",
+        "name": "_query",
+        "kind": "function",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 141,
+        "end_line": 141,
+        "signature_hash": "da6e3c4cc861a4fc",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_sha:5d83de0117eb66c8",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 33,
+        "end_line": 37,
+        "signature_hash": "2d45ad457db840dc",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_tok:6b51a04a597d497f",
+        "name": "_tok",
+        "kind": "function",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 27,
+        "end_line": 32,
+        "signature_hash": "955344d7452ac645",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:_uniq:c6948ea84025efde",
+        "name": "_uniq",
+        "kind": "function",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 38,
+        "end_line": 42,
+        "signature_hash": "c95bad96c455d4a6",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:build_choice_generation_requirement:eb22a52abb8c13d3",
+        "name": "build_choice_generation_requirement",
+        "kind": "function",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 91,
+        "end_line": 101,
+        "signature_hash": "c9fec270f1bbcaa3",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:compile_presentable_choice:290760d14b2a9af9",
+        "name": "compile_presentable_choice",
+        "kind": "function",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 143,
+        "end_line": 163,
+        "signature_hash": "f9c3c349ccf89097",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:compile_presentable_choice_set:23eaaa2aaf4c1a61",
+        "name": "compile_presentable_choice_set",
+        "kind": "function",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 165,
+        "end_line": 174,
+        "signature_hash": "0b299a16216594b3",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#function:verify_requirement_binding:9e0ceb6be8d2173f",
+        "name": "verify_requirement_binding",
+        "kind": "function",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 103,
+        "end_line": 112,
+        "signature_hash": "618154ffec2202ec",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:ChoiceGenerationQueryV1.__post_init__:30d208eef4f64ac3",
+        "name": "ChoiceGenerationQueryV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 117,
+        "end_line": 125,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:ChoiceGenerationRequirementV1.__post_init__:5468105ac7812b7f",
+        "name": "ChoiceGenerationRequirementV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 73,
+        "end_line": 82,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:ChoiceGenerationRequirementV1.by_axis:7a972be8372261c3",
+        "name": "ChoiceGenerationRequirementV1.by_axis",
+        "kind": "method",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 83,
+        "end_line": 83,
+        "signature_hash": "e38b803503aa3efd",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:ChoiceGenerationResolutionV1.__post_init__:8ce917d34f58db22",
+        "name": "ChoiceGenerationResolutionV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 130,
+        "end_line": 137,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:ChoiceGenerationResolverV1.resolve_choice_generation:60b63cf6623df7ed",
+        "name": "ChoiceGenerationResolverV1.resolve_choice_generation",
+        "kind": "method",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 140,
+        "end_line": 140,
+        "signature_hash": "dd2a9a9e9025f424",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:ChoiceMembraneError.__init__:781d4a0ccd3a37e1",
+        "name": "ChoiceMembraneError.__init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 21,
+        "end_line": 21,
+        "signature_hash": "9aa685653b3913ec",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:GenerationAxisRequirementV1.__post_init__:9e65125dd31819d9",
+        "name": "GenerationAxisRequirementV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 63,
+        "end_line": 67,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:GenerationAxisRequirementV1.payload:53f1cda0e776ee1c",
+        "name": "GenerationAxisRequirementV1.payload",
+        "kind": "method",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 68,
+        "end_line": 68,
+        "signature_hash": "46f4116b00af9128",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:PresentableChoiceEnvelopeV1.__post_init__:2a45256360f5193c",
+        "name": "PresentableChoiceEnvelopeV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 47,
+        "end_line": 56,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:PresentableChoiceEnvelopeV1.payload:239b77f85bfadcad",
+        "name": "PresentableChoiceEnvelopeV1.payload",
+        "kind": "method",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 57,
+        "end_line": 57,
+        "signature_hash": "46f4116b00af9128",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:PresentableChoiceEnvelopeV1.target_ref:a34f3d4ba7f3c1ad",
+        "name": "PresentableChoiceEnvelopeV1.target_ref",
+        "kind": "method",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 58,
+        "end_line": 58,
+        "signature_hash": "d50694c107010f08",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py#method:build_choice_generation_requirement.ar:9b0b50e1050edd2b",
+        "name": "build_choice_generation_requirement.ar",
+        "kind": "method",
+        "file": "tools/aura_adopt/zf07d_zf08c_presentable_choice_generation.py",
+        "line": 92,
+        "end_line": 93,
+        "signature_hash": "e43d97a1d5e494bb",
+        "file_digest8": "9a26a2ab7817075f"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +448289,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "44bcfef7ee49f19bd148115a4a707027",
+    "payload_hash": "a49ca70b3cb7ba6ede3c4618e8ea50b9"
   }
 }
