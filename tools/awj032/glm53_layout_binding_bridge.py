@@ -4,8 +4,9 @@ G1A integration only. No checkpoint download/model import/G2 admission. Consumes
 GLM53CheckpointLayoutProbeV1 plus the exact pinned weight map. Packed physical
 layouts require exact safetensors-header evidence before first-axis paging is
 considered lawful. Per-expert layouts additionally require one exact bounded
-GLM53SafetensorsHeaderEvidenceV1 canary before a W3 source plan can be emitted;
-that representative canary is never generalized to all experts.
+GLM53SafetensorsHeaderEvidenceV1 canary plus an independently supplied expected
+W2 observation identity before a W3 source plan can be emitted; that
+representative canary is never generalized to all experts.
 """
 from __future__ import annotations
 
@@ -67,6 +68,13 @@ def _sha256(name: str, value: Any) -> str:
     return out
 
 
+def _receipt(name: str, value: Any, invalid_code: str) -> str:
+    out = _text(name, value).lower()
+    if not _RECEIPT_RE.fullmatch(out):
+        raise LayoutBindingError(invalid_code)
+    return out
+
+
 def _shape(name: str, value: Any) -> tuple[int, ...]:
     if not isinstance(value, Sequence) or isinstance(value, (str, bytes)) or not value:
         raise LayoutBindingError("HEADER_SHAPE_REQUIRED", name)
@@ -125,6 +133,8 @@ class PagerSourcePlan:
     header_evidence_digest: str
     source_plan_digest: str
     header_receipt_digest: str | None = None
+    header_observation_repo_id: str | None = None
+    official_w2_observation_bound: bool = False
     representative_header_bound: bool = False
     representative_layer: int | None = None
     representative_expert: int | None = None
@@ -143,6 +153,8 @@ class PagerSourcePlan:
             "weight_map_digest": self.weight_map_digest,
             "header_evidence_digest": self.header_evidence_digest,
             "header_receipt_digest": self.header_receipt_digest,
+            "header_observation_repo_id": self.header_observation_repo_id,
+            "official_w2_observation_bound": self.official_w2_observation_bound,
             "source_plan_digest": self.source_plan_digest,
             "representative_header_bound": self.representative_header_bound,
             "representative_layer": self.representative_layer,
@@ -185,6 +197,8 @@ def _finalize(
     header_digest: str,
     *,
     header_receipt_digest: str | None = None,
+    header_observation_repo_id: str | None = None,
+    official_w2_observation_bound: bool = False,
     representative_header_bound: bool = False,
     representative_layer: int | None = None,
     representative_expert: int | None = None,
@@ -198,6 +212,8 @@ def _finalize(
         "weight_map_digest": weight_map_digest,
         "header_evidence_digest": header_digest,
         "header_receipt_digest": header_receipt_digest,
+        "header_observation_repo_id": header_observation_repo_id,
+        "official_w2_observation_bound": official_w2_observation_bound,
         "representative_header_bound": representative_header_bound,
         "representative_layer": representative_layer,
         "representative_expert": representative_expert,
@@ -214,6 +230,8 @@ def _finalize(
         header_evidence_digest=header_digest,
         source_plan_digest=_digest(payload),
         header_receipt_digest=header_receipt_digest,
+        header_observation_repo_id=header_observation_repo_id,
+        official_w2_observation_bound=official_w2_observation_bound,
         representative_header_bound=representative_header_bound,
         representative_layer=representative_layer,
         representative_expert=representative_expert,
@@ -229,7 +247,15 @@ def _per_expert_header_digest(
     layer_no: int,
     num_experts: int,
     block_size: tuple[int, int],
-) -> tuple[str, int, str]:
+    expected_repo_id: str | None,
+    expected_receipt_digest: str | None,
+) -> tuple[str, int, str, str]:
+    expected_repo = _text("expected_per_expert_header_repo_id", expected_repo_id)
+    expected_receipt = _receipt(
+        "expected_per_expert_header_receipt_digest",
+        expected_receipt_digest,
+        "PER_EXPERT_HEADER_EXPECTED_RECEIPT_INVALID",
+    )
     if not isinstance(evidence, Mapping):
         raise LayoutBindingError("PER_EXPERT_HEADER_EVIDENCE_REQUIRED")
     if evidence.get("schema") != PER_EXPERT_HEADER_SCHEMA:
@@ -239,6 +265,11 @@ def _per_expert_header_digest(
     if _text("header_index_sha256", evidence.get("index_sha256")) != index_digest:
         raise LayoutBindingError("PER_EXPERT_HEADER_INDEX_MISMATCH")
     repo_id = _text("header_repo_id", evidence.get("repo_id"))
+    if repo_id != expected_repo:
+        raise LayoutBindingError(
+            "PER_EXPERT_HEADER_OFFICIAL_REPO_MISMATCH",
+            f"expected={expected_repo},observed={repo_id}",
+        )
     index_size = evidence.get("index_size_bytes")
     if isinstance(index_size, bool) or not isinstance(index_size, int) or index_size <= 0:
         raise LayoutBindingError("PER_EXPERT_HEADER_INDEX_SIZE_INVALID")
@@ -335,16 +366,34 @@ def _per_expert_header_digest(
         "authority": False,
         "schema": PER_EXPERT_HEADER_SCHEMA,
     }
-    receipt = _text("receipt_digest", evidence.get("receipt_digest")).lower()
-    if not _RECEIPT_RE.fullmatch(receipt):
-        raise LayoutBindingError("PER_EXPERT_HEADER_RECEIPT_INVALID")
+    receipt = _receipt(
+        "receipt_digest",
+        evidence.get("receipt_digest"),
+        "PER_EXPERT_HEADER_RECEIPT_INVALID",
+    )
     observed_receipt = _transport_receipt_digest(normalized_body)
     if receipt != observed_receipt:
         raise LayoutBindingError(
             "PER_EXPERT_HEADER_RECEIPT_MISMATCH",
-            f"expected={receipt},observed={observed_receipt}",
+            f"claimed={receipt},observed={observed_receipt}",
         )
-    return _digest({"transport_receipt_digest": receipt, "evidence": normalized_body}), selected_expert, receipt
+    if observed_receipt != expected_receipt:
+        raise LayoutBindingError(
+            "PER_EXPERT_HEADER_OFFICIAL_OBSERVATION_MISMATCH",
+            f"expected_official={expected_receipt},observed_candidate={observed_receipt}",
+        )
+    return (
+        _digest(
+            {
+                "official_observation_repo_id": expected_repo,
+                "official_transport_receipt_digest": expected_receipt,
+                "evidence": normalized_body,
+            }
+        ),
+        selected_expert,
+        expected_receipt,
+        expected_repo,
+    )
 
 
 def compile_pager_source_plan(
@@ -355,6 +404,8 @@ def compile_pager_source_plan(
     expected_model_revision: str,
     expected_index_digest: str,
     per_expert_header_evidence: Mapping[str, Any] | None = None,
+    expected_per_expert_header_repo_id: str | None = None,
+    expected_per_expert_header_receipt_digest: str | None = None,
 ) -> PagerSourcePlan:
     model_revision, index_digest, logical_id, layer = _common(
         report,
@@ -387,7 +438,7 @@ def compile_pager_source_plan(
         block = _shape("block_size", geom.get("block_size"))
         if len(block) != 2:
             raise LayoutBindingError("INVALID_FP8_BLOCK_SIZE")
-        header_digest, selected_expert, receipt_digest = _per_expert_header_digest(
+        header_digest, selected_expert, receipt_digest, observation_repo = _per_expert_header_digest(
             per_expert_header_evidence,
             weight_map=weight_map,
             model_revision=model_revision,
@@ -395,6 +446,8 @@ def compile_pager_source_plan(
             layer_no=layer_no,
             num_experts=num_experts,
             block_size=(block[0], block[1]),
+            expected_repo_id=expected_per_expert_header_repo_id,
+            expected_receipt_digest=expected_per_expert_header_receipt_digest,
         )
         return _finalize(
             "PER_EXPERT_INDEX",
@@ -403,6 +456,8 @@ def compile_pager_source_plan(
             weight_map,
             header_digest,
             header_receipt_digest=receipt_digest,
+            header_observation_repo_id=observation_repo,
+            official_w2_observation_bound=True,
             representative_header_bound=True,
             representative_layer=layer_no,
             representative_expert=selected_expert,
