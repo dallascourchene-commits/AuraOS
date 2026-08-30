@@ -1,8 +1,8 @@
-"""AURA-ADOPT-001 ZF-06A low-storage mechanism assessment.
+"""AURA-ADOPT-001 ZF-06C low-storage mechanism evidence firewall.
 
 Pure evidence reducer. It does not benchmark a device, execute a mechanism,
-or convert historical mechanism names or literature claims into device
-performance claims.
+or convert mechanism names, cache coordinates, literature, or host references
+into runtime/device truth.
 """
 from __future__ import annotations
 
@@ -11,9 +11,11 @@ from enum import Enum
 import hashlib
 import json
 import math
+import re
 from typing import Any, Mapping, Sequence
 
-SCHEMA = "LowStorageMechanismAssessmentV1"
+SCHEMA = "LowStorageMechanismAssessmentV2"
+_SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
 class AssessmentError(ValueError):
@@ -46,10 +48,24 @@ class Disposition(str, Enum):
     UNKNOWN = "UNKNOWN"
 
 
+class ResponsibilityClass(str, Enum):
+    TRANSFORMER_KV_CACHE = "TRANSFORMER_KV_CACHE"
+    COORDINATE_MEMORY = "COORDINATE_MEMORY"
+    ARTIFACT_COMPRESSION = "ARTIFACT_COMPRESSION"
+    MODEL_STATE = "MODEL_STATE"
+
+
 def _text(v: Any, code: str) -> str:
     if not isinstance(v, str) or not v.strip():
         raise AssessmentError(code)
     return v.strip()
+
+
+def _sha(v: Any, code: str) -> str:
+    value = _text(v, code).lower()
+    if not _SHA256.fullmatch(value):
+        raise AssessmentError(code)
+    return value
 
 
 def _num(v: Any, code: str) -> float | None:
@@ -84,8 +100,6 @@ def _digest(domain: str, v: Any) -> str:
 
 @dataclass(frozen=True)
 class BenchmarkScenario:
-    """Common workload/environment binding for candidate and baseline."""
-
     workload_id: str
     model_ref: str
     runtime_ref: str
@@ -140,6 +154,65 @@ class MetricSet:
 
 
 METRIC_NAMES = frozenset(f.name for f in fields(MetricSet))
+RESPONSIBILITY_METRIC_FLOORS: Mapping[ResponsibilityClass, frozenset[str]] = {
+    ResponsibilityClass.TRANSFORMER_KV_CACHE: frozenset({
+        "encoded_or_retained_bytes",
+        "kv_cache_peak_bytes",
+        "ttft_ms",
+        "prefill_ms",
+        "decode_ms_per_token",
+        "recompute_or_cache_load_ms",
+    }),
+    ResponsibilityClass.COORDINATE_MEMORY: frozenset({
+        "encoded_or_retained_bytes",
+        "peak_working_memory_bytes",
+        "lookup_ms",
+        "decode_or_reopen_ms",
+    }),
+    ResponsibilityClass.ARTIFACT_COMPRESSION: frozenset({
+        "encoded_or_retained_bytes",
+        "peak_working_memory_bytes",
+        "encode_ms",
+        "decode_or_reopen_ms",
+    }),
+    ResponsibilityClass.MODEL_STATE: frozenset({
+        "encoded_or_retained_bytes",
+        "peak_working_memory_bytes",
+        "startup_ms",
+        "downloaded_bytes",
+    }),
+}
+
+
+@dataclass(frozen=True)
+class MeasuredPathEvidenceV1:
+    mechanism_active: bool
+    evidence_ref: str
+    evidence_digest: str
+    source_generation: str
+    currentness_ref: str
+
+    def __post_init__(self) -> None:
+        if type(self.mechanism_active) is not bool:
+            raise AssessmentError("MEASURED_PATH_ACTIVE_BOOL_REQUIRED")
+        _text(self.evidence_ref, "MEASURED_PATH_EVIDENCE_REF_REQUIRED")
+        _sha(self.evidence_digest, "MEASURED_PATH_EVIDENCE_DIGEST_INVALID")
+        _text(self.source_generation, "MEASURED_PATH_SOURCE_GENERATION_REQUIRED")
+        _text(self.currentness_ref, "MEASURED_PATH_CURRENTNESS_REF_REQUIRED")
+
+
+@dataclass(frozen=True)
+class HostWitnessBindingV1:
+    witness_ref: str
+    witness_digest: str
+    source_generation: str
+    currentness_ref: str
+
+    def __post_init__(self) -> None:
+        _text(self.witness_ref, "HOST_WITNESS_REF_REQUIRED")
+        _sha(self.witness_digest, "HOST_WITNESS_DIGEST_INVALID")
+        _text(self.source_generation, "HOST_WITNESS_SOURCE_GENERATION_REQUIRED")
+        _text(self.currentness_ref, "HOST_WITNESS_CURRENTNESS_REF_REQUIRED")
 
 
 @dataclass(frozen=True)
@@ -149,7 +222,7 @@ class MechanismEvidence:
     source_ref: str
     source_generation: str
     currentness_ref: str
-    responsibility: str
+    responsibility: ResponsibilityClass
     platform_scope: tuple[str, ...]
     baseline_id: str
     logical_payload_id: str
@@ -166,7 +239,8 @@ class MechanismEvidence:
     counterexample: str
     trust_update_overhead: str
     invalidators: tuple[str, ...]
-    host_witness_ref: str | None = None
+    measured_path: MeasuredPathEvidenceV1 | None = None
+    host_witness: HostWitnessBindingV1 | None = None
     notes: str = ""
 
     def __post_init__(self) -> None:
@@ -176,7 +250,6 @@ class MechanismEvidence:
             (self.source_ref, "SOURCE_REF_REQUIRED"),
             (self.source_generation, "SOURCE_GENERATION_REQUIRED"),
             (self.currentness_ref, "CURRENTNESS_REF_REQUIRED"),
-            (self.responsibility, "RESPONSIBILITY_REQUIRED"),
             (self.baseline_id, "BASELINE_ID_REQUIRED"),
             (self.logical_payload_id, "LOGICAL_PAYLOAD_ID_REQUIRED"),
             (self.quality_target, "QUALITY_TARGET_REQUIRED"),
@@ -184,6 +257,8 @@ class MechanismEvidence:
             (self.trust_update_overhead, "TRUST_UPDATE_OVERHEAD_REQUIRED"),
         ):
             _text(value, code)
+        if not isinstance(self.responsibility, ResponsibilityClass):
+            raise AssessmentError("RESPONSIBILITY_CLASS_REQUIRED")
         if not isinstance(self.scenario, BenchmarkScenario):
             raise AssessmentError("BENCHMARK_SCENARIO_REQUIRED")
         if not isinstance(self.evidence_class, EvidenceClass):
@@ -201,6 +276,10 @@ class MechanismEvidence:
             raise AssessmentError("REQUIRED_METRIC_INVALID", ",".join(invalid_metrics))
         if len(set(self.required_metrics)) != len(self.required_metrics):
             raise AssessmentError("REQUIRED_METRIC_DUPLICATE")
+        floor = RESPONSIBILITY_METRIC_FLOORS[self.responsibility]
+        missing_floor = sorted(floor - set(self.required_metrics))
+        if missing_floor:
+            raise AssessmentError("RESPONSIBILITY_METRIC_FLOOR_MISSING", ",".join(missing_floor))
         if self.candidate.logical_payload_bytes is None or self.baseline.logical_payload_bytes is None:
             raise AssessmentError("LOGICAL_PAYLOAD_SIZE_REQUIRED")
         if self.candidate.logical_payload_bytes != self.baseline.logical_payload_bytes:
@@ -222,14 +301,41 @@ class MechanismEvidence:
             and not self.benchmark_ref
         ):
             raise AssessmentError("BENCHMARK_REF_REQUIRED")
-        if self.evidence_class is EvidenceClass.ANDROID_MEASURED and not self.host_witness_ref:
-            raise AssessmentError("ANDROID_HOST_WITNESS_REQUIRED")
+        if self.measured_path is not None and not isinstance(self.measured_path, MeasuredPathEvidenceV1):
+            raise AssessmentError("MEASURED_PATH_EVIDENCE_INVALID")
+        if self.host_witness is not None and not isinstance(self.host_witness, HostWitnessBindingV1):
+            raise AssessmentError("HOST_WITNESS_BINDING_INVALID")
+        if self.evidence_class is EvidenceClass.ANDROID_MEASURED and self.host_witness is None:
+            raise AssessmentError("ANDROID_HOST_WITNESS_BINDING_REQUIRED")
 
 
 def _ratio(candidate: float | None, baseline: float | None) -> float | None:
     if candidate is None or baseline is None or baseline == 0:
         return None
     return candidate / baseline
+
+
+def _zero_baseline_added_burdens(c: MetricSet, b: MetricSet) -> tuple[str, ...]:
+    names = (
+        "peak_working_memory_bytes",
+        "startup_ms",
+        "encode_ms",
+        "decode_or_reopen_ms",
+        "lookup_ms",
+        "downloaded_bytes",
+        "network_bytes",
+        "energy_proxy",
+        "kv_cache_peak_bytes",
+        "ttft_ms",
+        "prefill_ms",
+        "decode_ms_per_token",
+        "recompute_or_cache_load_ms",
+    )
+    return tuple(
+        name
+        for name in names
+        if getattr(b, name) == 0 and getattr(c, name) is not None and getattr(c, name) > 0
+    )
 
 
 def assess(e: MechanismEvidence) -> Mapping[str, Any]:
@@ -247,9 +353,12 @@ def assess(e: MechanismEvidence) -> Mapping[str, Any]:
         "retained_bytes": _ratio(c.encoded_or_retained_bytes, b.encoded_or_retained_bytes),
         "peak_working_memory": _ratio(c.peak_working_memory_bytes, b.peak_working_memory_bytes),
         "startup": _ratio(c.startup_ms, b.startup_ms),
+        "encode": _ratio(c.encode_ms, b.encode_ms),
         "decode_or_reopen": _ratio(c.decode_or_reopen_ms, b.decode_or_reopen_ms),
+        "lookup": _ratio(c.lookup_ms, b.lookup_ms),
         "downloaded_bytes": _ratio(c.downloaded_bytes, b.downloaded_bytes),
         "network_bytes": _ratio(c.network_bytes, b.network_bytes),
+        "energy_proxy": _ratio(c.energy_proxy, b.energy_proxy),
         "kv_cache_peak_bytes": _ratio(c.kv_cache_peak_bytes, b.kv_cache_peak_bytes),
         "ttft": _ratio(c.ttft_ms, b.ttft_ms),
         "prefill": _ratio(c.prefill_ms, b.prefill_ms),
@@ -257,6 +366,16 @@ def assess(e: MechanismEvidence) -> Mapping[str, Any]:
         "recompute_or_cache_load": _ratio(c.recompute_or_cache_load_ms, b.recompute_or_cache_load_ms),
     }
     storage_ratio = ratios["retained_bytes"]
+    zero_added = _zero_baseline_added_burdens(c, b)
+
+    kv_path_ready = True
+    if e.responsibility is ResponsibilityClass.TRANSFORMER_KV_CACHE:
+        kv_path_ready = bool(
+            e.measured_path is not None
+            and e.measured_path.mechanism_active is True
+            and e.measured_path.source_generation == e.source_generation
+            and e.measured_path.currentness_ref == e.currentness_ref
+        )
 
     if e.evidence_class is EvidenceClass.UNKNOWN:
         disposition = Disposition.UNKNOWN
@@ -273,6 +392,9 @@ def assess(e: MechanismEvidence) -> Mapping[str, Any]:
     elif e.fidelity is FidelityClass.BOUNDED_LOSS:
         disposition = Disposition.CONDITIONAL
         reasons.append("LOSSY_REQUIRES_QUALITY_DISPOSITION")
+    elif not kv_path_ready:
+        disposition = Disposition.CONDITIONAL
+        reasons.append("TRANSFORMER_KV_MEASURED_PATH_NOT_PROVEN")
     else:
         hidden_cost = any(
             ratio is not None and ratio > 2.0
@@ -282,12 +404,15 @@ def assess(e: MechanismEvidence) -> Mapping[str, Any]:
         if storage_ratio >= 1.0:
             disposition = Disposition.DEMOTE
             reasons.append("NO_RETAINED_BYTE_REDUCTION")
+        elif zero_added:
+            disposition = Disposition.CONDITIONAL
+            reasons.extend(f"ZERO_BASELINE_ADDED_BURDEN:{name}" for name in zero_added)
         elif hidden_cost:
             disposition = Disposition.CONDITIONAL
             reasons.append("STORAGE_WIN_WITH_GT2X_MEASURED_LIFECYCLE_COST")
         else:
             disposition = Disposition.RETAIN
-            reasons.append("QUALITY_ADMITTED_STORAGE_WIN_NO_GT2X_MEASURED_REGRESSION")
+            reasons.append("RESPONSIBILITY_FLOOR_COMPLETE_QUALITY_ADMITTED_STORAGE_WIN")
 
     if e.evidence_class in {EvidenceClass.SYNTHETIC, EvidenceClass.LITERATURE_REPORTED} and disposition is Disposition.RETAIN:
         disposition = Disposition.CONDITIONAL
@@ -296,8 +421,13 @@ def assess(e: MechanismEvidence) -> Mapping[str, Any]:
             if e.evidence_class is EvidenceClass.LITERATURE_REPORTED
             else "SYNTHETIC_CANNOT_PROVE_DEVICE_LIFECYCLE_WIN"
         )
-    if e.host_witness_ref is None and "ANDROID" in {x.upper() for x in e.platform_scope}:
-        reasons.append("ANDROID_VIABILITY_NOT_PROVEN_WITHOUT_HOST_WITNESS")
+
+    android_scope = "ANDROID" in {x.upper() for x in e.platform_scope}
+    host_binding_current = bool(
+        e.host_witness is not None and e.host_witness.currentness_ref == e.currentness_ref
+    )
+    if android_scope and not host_binding_current:
+        reasons.append("ANDROID_CURRENT_HOST_BINDING_NOT_PROVEN")
         if disposition is Disposition.RETAIN:
             disposition = Disposition.CONDITIONAL
 
@@ -308,7 +438,8 @@ def assess(e: MechanismEvidence) -> Mapping[str, Any]:
         "source_ref": e.source_ref,
         "source_generation": e.source_generation,
         "currentness_ref": e.currentness_ref,
-        "responsibility": e.responsibility,
+        "responsibility": e.responsibility.value,
+        "responsibility_metric_floor": tuple(sorted(RESPONSIBILITY_METRIC_FLOORS[e.responsibility])),
         "platform_scope": e.platform_scope,
         "baseline_id": e.baseline_id,
         "logical_payload_id": e.logical_payload_id,
@@ -318,6 +449,7 @@ def assess(e: MechanismEvidence) -> Mapping[str, Any]:
         "candidate": asdict(c),
         "baseline": asdict(b),
         "ratios": ratios,
+        "zero_baseline_added_burdens": zero_added,
         "fidelity": e.fidelity.value,
         "fidelity_evidence_ref": e.fidelity_evidence_ref,
         "quality_threshold_ref": e.quality_threshold_ref,
@@ -325,18 +457,19 @@ def assess(e: MechanismEvidence) -> Mapping[str, Any]:
         "benchmark_ref": e.benchmark_ref,
         "counterexample": e.counterexample,
         "trust_update_overhead": e.trust_update_overhead,
-        "host_witness_ref": e.host_witness_ref,
+        "measured_path": asdict(e.measured_path) if e.measured_path else None,
+        "transformer_kv_measured_path_proven": kv_path_ready if e.responsibility is ResponsibilityClass.TRANSFORMER_KV_CACHE else False,
+        "host_witness_binding": asdict(e.host_witness) if e.host_witness else None,
+        "host_binding_current": host_binding_current,
+        "device_viability_proven": False,
         "invalidators": e.invalidators,
         "disposition": disposition.value,
         "reasons": tuple(reasons),
         "effect_authorized": False,
-        "device_viability_proven": bool(
-            e.evidence_class is EvidenceClass.ANDROID_MEASURED and e.host_witness_ref
-        ),
     }
     return {
         **logical,
-        "logical_id": "lsm-" + _digest("LOW_STORAGE_MECHANISM_ASSESSMENT_V1", logical)[:32],
+        "logical_id": "lsm-" + _digest("LOW_STORAGE_MECHANISM_ASSESSMENT_V2", logical)[:32],
         "claim_ceiling": "EVIDENCE_REDUCER_ONLY_NO_DEVICE_BENCHMARK_OR_INSTALL_EFFECT",
     }
 
