@@ -14,10 +14,11 @@ import hashlib
 import hmac
 import json
 import re
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 _SHA = re.compile(r"^[0-9a-f]{64}$")
 _TOK = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/@+-]{0,255}$")
+PROJECTION_SCHEMA = "PersistentKVReuseProjectionV1"
 
 
 class KVAdmissionError(ValueError):
@@ -36,6 +37,12 @@ class ResolverDisposition(str, Enum):
     OWNER_RESOLVED_CURRENT = "OWNER_RESOLVED_CURRENT"
     OWNER_RESOLVED_HISTORICAL = "OWNER_RESOLVED_HISTORICAL"
     OWNER_UNRESOLVED = "OWNER_UNRESOLVED"
+
+
+class ObservationDisposition(str, Enum):
+    PATH_OBSERVED_CURRENT = "PATH_OBSERVED_CURRENT"
+    PATH_OBSERVED_HISTORICAL = "PATH_OBSERVED_HISTORICAL"
+    PATH_UNOBSERVED = "PATH_UNOBSERVED"
 
 
 def _canon(v: Any) -> bytes:
@@ -278,6 +285,8 @@ class KVReuseProjectionClaimV1:
             "projection_payload_digest",
             _sha(self.projection_payload_digest, "PROJECTION_PAYLOAD_DIGEST_INVALID"),
         )
+        if self.projection_schema != PROJECTION_SCHEMA:
+            raise KVAdmissionError("PROJECTION_SCHEMA_UNSUPPORTED")
         if self.consequence_ceiling != "TRANSFORMER_KV_REUSE_EVIDENCE_ONLY":
             raise KVAdmissionError("PROJECTION_CONSEQUENCE_CEILING_WIDENING")
 
@@ -354,6 +363,62 @@ class OwnerResolverProofV1:
         return _dig("AURA_PCK2_RESOLVER_PROOF_V1", v)
 
 
+@dataclass(frozen=True)
+class KVPathObservationProofV1:
+    path_digest: str
+    target_digest: str
+    evidence_ref: str
+    observer_ref: str
+    observer_generation: str
+    observer_currentness_ref: str
+    source_ref: str
+    source_generation: str
+    source_currentness_ref: str
+    disposition: ObservationDisposition
+    revoked: bool
+    supersedes_proof_digest: str | None
+    observer_signature: str
+    schema: str = "KVPathObservationProofV1"
+
+    def __post_init__(self):
+        if self.schema != "KVPathObservationProofV1":
+            raise KVAdmissionError("OBSERVATION_PROOF_SCHEMA_MISMATCH")
+        for f in (
+            "evidence_ref",
+            "observer_ref",
+            "observer_generation",
+            "observer_currentness_ref",
+            "source_ref",
+            "source_generation",
+            "source_currentness_ref",
+        ):
+            object.__setattr__(self, f, _text(getattr(self, f), f"{f.upper()}_INVALID"))
+        for f in ("path_digest", "target_digest", "observer_signature"):
+            object.__setattr__(self, f, _sha(getattr(self, f), f"{f.upper()}_INVALID"))
+        if self.supersedes_proof_digest is not None:
+            object.__setattr__(
+                self,
+                "supersedes_proof_digest",
+                _sha(self.supersedes_proof_digest, "OBSERVATION_SUPERSEDES_DIGEST_INVALID"),
+            )
+        if not isinstance(self.disposition, ObservationDisposition):
+            raise KVAdmissionError("OBSERVATION_DISPOSITION_INVALID")
+        if type(self.revoked) is not bool:
+            raise KVAdmissionError("OBSERVATION_REVOKED_BOOL_REQUIRED")
+
+    def signing_payload(self):
+        v = asdict(self)
+        v["disposition"] = self.disposition.value
+        v.pop("observer_signature")
+        return v
+
+    @property
+    def proof_digest(self):
+        v = asdict(self)
+        v["disposition"] = self.disposition.value
+        return _dig("AURA_PCK2_PATH_OBSERVATION_PROOF_V1", v)
+
+
 def _sign(payload: Mapping[str, Any], key: bytes) -> str:
     if not isinstance(key, bytes) or not key:
         raise KVAdmissionError("RESOLVER_KEY_REQUIRED")
@@ -408,17 +473,92 @@ def build_resolver_proof(
     )
 
 
-def _resolver_state_tuple(state: Mapping[str, Any], resolver_ref: str) -> tuple[str, str]:
-    raw = state.get(resolver_ref)
+def build_observation_proof(
+    *,
+    path_evidence: PersistentKVPathEvidenceV1,
+    target: PersistentKVReuseTargetV1,
+    claim: KVReuseProjectionClaimV1,
+    observer_ref: str,
+    observer_generation: str,
+    observer_currentness_ref: str,
+    disposition: ObservationDisposition,
+    key: bytes,
+    revoked: bool = False,
+    supersedes_proof_digest: str | None = None,
+) -> KVPathObservationProofV1:
+    if not isinstance(path_evidence, PersistentKVPathEvidenceV1):
+        raise KVAdmissionError("KV_PATH_EVIDENCE_REQUIRED")
+    if not isinstance(target, PersistentKVReuseTargetV1):
+        raise KVAdmissionError("KV_TARGET_REQUIRED")
+    if not isinstance(claim, KVReuseProjectionClaimV1):
+        raise KVAdmissionError("PROJECTION_CLAIM_REQUIRED")
+    if not isinstance(disposition, ObservationDisposition):
+        raise KVAdmissionError("OBSERVATION_DISPOSITION_INVALID")
+    if type(revoked) is not bool:
+        raise KVAdmissionError("OBSERVATION_REVOKED_BOOL_REQUIRED")
+    u = {
+        "path_digest": path_evidence.path_digest,
+        "target_digest": target.target_digest,
+        "evidence_ref": path_evidence.evidence_ref,
+        "observer_ref": _text(observer_ref, "OBSERVER_REF_INVALID"),
+        "observer_generation": _text(observer_generation, "OBSERVER_GENERATION_INVALID"),
+        "observer_currentness_ref": _text(
+            observer_currentness_ref, "OBSERVER_CURRENTNESS_REF_INVALID"
+        ),
+        "source_ref": claim.source_ref,
+        "source_generation": claim.source_generation,
+        "source_currentness_ref": claim.source_currentness_ref,
+        "disposition": disposition.value,
+        "revoked": revoked,
+        "supersedes_proof_digest": supersedes_proof_digest,
+        "schema": "KVPathObservationProofV1",
+    }
+    sig = _sign(u, key)
+    return KVPathObservationProofV1(
+        **{**u, "disposition": disposition, "observer_signature": sig}
+    )
+
+
+def _trusted_state_tuple(
+    state: Mapping[str, Any], ref: str, *, record_code: str, generation_code: str, currentness_code: str
+) -> tuple[str, str]:
+    raw = state.get(ref)
     if (
         not isinstance(raw, (tuple, list))
         or isinstance(raw, (str, bytes))
         or len(raw) != 2
     ):
-        raise KVAdmissionError("RESOLVER_STATE_RECORD_INVALID")
-    return (
-        _text(raw[0], "RESOLVER_STATE_GENERATION_INVALID"),
-        _text(raw[1], "RESOLVER_STATE_CURRENTNESS_INVALID"),
+        raise KVAdmissionError(record_code)
+    return (_text(raw[0], generation_code), _text(raw[1], currentness_code))
+
+
+def _resolver_state_tuple(state: Mapping[str, Any], resolver_ref: str) -> tuple[str, str]:
+    return _trusted_state_tuple(
+        state,
+        resolver_ref,
+        record_code="RESOLVER_STATE_RECORD_INVALID",
+        generation_code="RESOLVER_STATE_GENERATION_INVALID",
+        currentness_code="RESOLVER_STATE_CURRENTNESS_INVALID",
+    )
+
+
+def _observer_state_tuple(state: Mapping[str, Any], observer_ref: str) -> tuple[str, str]:
+    return _trusted_state_tuple(
+        state,
+        observer_ref,
+        record_code="OBSERVER_STATE_RECORD_INVALID",
+        generation_code="OBSERVER_STATE_GENERATION_INVALID",
+        currentness_code="OBSERVER_STATE_CURRENTNESS_INVALID",
+    )
+
+
+def _source_state_tuple(state: Mapping[str, Any], source_ref: str) -> tuple[str, str]:
+    return _trusted_state_tuple(
+        state,
+        source_ref,
+        record_code="SOURCE_STATE_RECORD_INVALID",
+        generation_code="SOURCE_STATE_GENERATION_INVALID",
+        currentness_code="SOURCE_STATE_CURRENTNESS_INVALID",
     )
 
 
@@ -438,6 +578,38 @@ def _current_proof_digests(
     if len(set(digests)) != len(digests):
         raise KVAdmissionError("RESOLVER_PROOF_STATE_DUPLICATE")
     return digests
+
+
+def _current_observation_proof_digests(
+    proof_state: Mapping[str, Any], path_digest: str
+) -> tuple[str, ...]:
+    raw = proof_state.get(path_digest)
+    if raw is None:
+        raise KVAdmissionError("OBSERVATION_PROOF_NOT_REGISTERED")
+    if (
+        not isinstance(raw, (tuple, list))
+        or isinstance(raw, (str, bytes))
+        or not raw
+    ):
+        raise KVAdmissionError("OBSERVATION_PROOF_STATE_INVALID")
+    digests = tuple(_sha(x, "OBSERVATION_PROOF_STATE_DIGEST_INVALID") for x in raw)
+    if len(set(digests)) != len(digests):
+        raise KVAdmissionError("OBSERVATION_PROOF_STATE_DUPLICATE")
+    return digests
+
+
+def _verify_source_currentness(
+    claim: KVReuseProjectionClaimV1, source_state: Mapping[str, Any]
+) -> None:
+    if not isinstance(source_state, Mapping):
+        raise KVAdmissionError("TRUSTED_SOURCE_STATE_REQUIRED")
+    if claim.source_ref not in source_state:
+        raise KVAdmissionError("SOURCE_UNTRUSTED")
+    generation, currentness = _source_state_tuple(source_state, claim.source_ref)
+    if claim.source_generation != generation:
+        raise KVAdmissionError("SOURCE_GENERATION_STALE")
+    if claim.source_currentness_ref != currentness:
+        raise KVAdmissionError("SOURCE_CURRENTNESS_STALE")
 
 
 def _verify_resolver(
@@ -488,6 +660,57 @@ def _verify_resolver(
         raise KVAdmissionError("RESOLVER_PROOF_SUPERSEDED_OR_REVOKED")
 
 
+def _verify_observation(
+    *,
+    target: PersistentKVReuseTargetV1,
+    path: PersistentKVPathEvidenceV1,
+    claim: KVReuseProjectionClaimV1,
+    resolver_proof: OwnerResolverProofV1,
+    observation_proof: KVPathObservationProofV1,
+    keys: Mapping[str, Any],
+    state: Mapping[str, Any],
+    proof_state: Mapping[str, Any],
+) -> None:
+    if not isinstance(observation_proof, KVPathObservationProofV1):
+        raise KVAdmissionError("KV_PATH_OBSERVATION_PROOF_REQUIRED")
+    if (
+        not isinstance(keys, Mapping)
+        or not isinstance(state, Mapping)
+        or not isinstance(proof_state, Mapping)
+    ):
+        raise KVAdmissionError("TRUSTED_OBSERVER_STATE_REQUIRED")
+    if observation_proof.observer_ref == resolver_proof.resolver_ref:
+        raise KVAdmissionError("OBSERVER_RESOLVER_ROLE_COLLISION")
+    if observation_proof.path_digest != path.path_digest:
+        raise KVAdmissionError("OBSERVATION_PATH_DIGEST_MISMATCH")
+    if observation_proof.target_digest != target.target_digest:
+        raise KVAdmissionError("OBSERVATION_TARGET_DIGEST_MISMATCH")
+    if observation_proof.evidence_ref != path.evidence_ref:
+        raise KVAdmissionError("OBSERVATION_EVIDENCE_REF_MISMATCH")
+    for field in ("source_ref", "source_generation", "source_currentness_ref"):
+        if getattr(observation_proof, field) != getattr(claim, field):
+            raise KVAdmissionError("OBSERVATION_SOURCE_BINDING_MISMATCH", field)
+    if observation_proof.disposition is not ObservationDisposition.PATH_OBSERVED_CURRENT:
+        raise KVAdmissionError("OBSERVATION_NOT_CURRENT")
+    if observation_proof.revoked:
+        raise KVAdmissionError("OBSERVATION_PROOF_REVOKED")
+    if observation_proof.observer_ref not in keys or observation_proof.observer_ref not in state:
+        raise KVAdmissionError("OBSERVER_UNTRUSTED")
+    generation, currentness = _observer_state_tuple(state, observation_proof.observer_ref)
+    if observation_proof.observer_generation != generation:
+        raise KVAdmissionError("OBSERVER_GENERATION_STALE")
+    if observation_proof.observer_currentness_ref != currentness:
+        raise KVAdmissionError("OBSERVER_CURRENTNESS_STALE")
+    if not hmac.compare_digest(
+        observation_proof.observer_signature,
+        _sign(observation_proof.signing_payload(), keys[observation_proof.observer_ref]),
+    ):
+        raise KVAdmissionError("OBSERVER_SIGNATURE_INVALID")
+    current = _current_observation_proof_digests(proof_state, path.path_digest)
+    if observation_proof.proof_digest not in current:
+        raise KVAdmissionError("OBSERVATION_PROOF_SUPERSEDED_OR_REVOKED")
+
+
 def _blockers(t: PersistentKVReuseTargetV1, p: PersistentKVPathEvidenceV1):
     b = []
     if t.responsibility is not ResponsibilityClass.TRANSFORMER_KV_CACHE:
@@ -530,9 +753,14 @@ def admit_persistent_kv_reuse(
     claim: KVReuseProjectionClaimV1,
     resolver_proof: OwnerResolverProofV1,
     path_evidence: PersistentKVPathEvidenceV1,
+    observation_proof: KVPathObservationProofV1,
+    trusted_source_state: Mapping[str, Any],
     trusted_resolver_keys: Mapping[str, Any],
     trusted_resolver_state: Mapping[str, Any],
     trusted_resolver_proof_state: Mapping[str, Any],
+    trusted_observer_keys: Mapping[str, Any],
+    trusted_observer_state: Mapping[str, Any],
+    trusted_observation_proof_state: Mapping[str, Any],
 ):
     if not isinstance(target, PersistentKVReuseTargetV1):
         raise KVAdmissionError("KV_TARGET_REQUIRED")
@@ -542,12 +770,20 @@ def admit_persistent_kv_reuse(
         raise KVAdmissionError("PROJECTION_CLAIM_REQUIRED")
     if not isinstance(resolver_proof, OwnerResolverProofV1):
         raise KVAdmissionError("OWNER_RESOLVER_PROOF_REQUIRED")
+    if not isinstance(observation_proof, KVPathObservationProofV1):
+        raise KVAdmissionError("KV_PATH_OBSERVATION_PROOF_REQUIRED")
     if (
-        not isinstance(trusted_resolver_keys, Mapping)
+        not isinstance(trusted_source_state, Mapping)
+        or not isinstance(trusted_resolver_keys, Mapping)
         or not isinstance(trusted_resolver_state, Mapping)
         or not isinstance(trusted_resolver_proof_state, Mapping)
+        or not isinstance(trusted_observer_keys, Mapping)
+        or not isinstance(trusted_observer_state, Mapping)
+        or not isinstance(trusted_observation_proof_state, Mapping)
     ):
-        raise KVAdmissionError("TRUSTED_RESOLVER_STATE_REQUIRED")
+        raise KVAdmissionError("TRUSTED_EXTERNAL_STATE_REQUIRED")
+    if claim.projection_schema != PROJECTION_SCHEMA:
+        raise KVAdmissionError("PROJECTION_SCHEMA_UNSUPPORTED")
     if claim.projection_payload_digest != resolved_projection_payload_digest(
         target, path_evidence
     ):
@@ -560,6 +796,8 @@ def admit_persistent_kv_reuse(
         raise KVAdmissionError("PROJECTION_SOURCE_GENERATION_MISMATCH")
     if claim.source_currentness_ref != target.source_currentness_ref:
         raise KVAdmissionError("PROJECTION_SOURCE_CURRENTNESS_MISMATCH")
+
+    _verify_source_currentness(claim, trusted_source_state)
     _verify_resolver(
         claim,
         resolver_proof,
@@ -567,6 +805,17 @@ def admit_persistent_kv_reuse(
         trusted_resolver_state,
         trusted_resolver_proof_state,
     )
+    _verify_observation(
+        target=target,
+        path=path_evidence,
+        claim=claim,
+        resolver_proof=resolver_proof,
+        observation_proof=observation_proof,
+        keys=trusted_observer_keys,
+        state=trusted_observer_state,
+        proof_state=trusted_observation_proof_state,
+    )
+
     b = _blockers(target, path_evidence)
     net = path_evidence.net_reuse_us
     if b:
@@ -575,15 +824,21 @@ def admit_persistent_kv_reuse(
         disp, ok = "KV_REUSE_OBSERVED_NO_POSITIVE_NET_BENEFIT", False
     else:
         disp, ok = "TRANSFORMER_KV_REUSE_ADMISSIBLE", True
+
     logical = {
         "schema": "OwnerResolvedPersistentKVReuseAdmissionV1",
         "target_digest": target.target_digest,
         "coordinate_ref": target.coordinate_ref,
         "k27_cell": target.k27_cell,
         "responsibility": target.responsibility.value,
+        "projection_schema": claim.projection_schema,
         "projection_claim_digest": claim.claim_digest,
         "owner_resolver_proof_digest": resolver_proof.proof_digest,
         "path_evidence_digest": path_evidence.path_digest,
+        "path_observation_proof_digest": observation_proof.proof_digest,
+        "source_ref": claim.source_ref,
+        "source_generation": claim.source_generation,
+        "source_currentness_ref": claim.source_currentness_ref,
         "disposition": disp,
         "blockers": tuple(sorted(set(b))),
         "persistent_restore_observed": path_evidence.persistent_restore_observed,
@@ -598,11 +853,17 @@ def admit_persistent_kv_reuse(
         "invalidation_penalty_us": path_evidence.invalidation_penalty_us,
         "overhead_us": path_evidence.prefill_saved_us - net,
         "net_reuse_us": net,
+        "source_currentness_verified_against_external_state": True,
         "owner_resolver_proof_verified": True,
         "resolver_proof_current_in_external_registry": True,
+        "runtime_observation_proof_verified": True,
+        "observation_proof_current_in_external_registry": True,
+        "admission_conditioned_on_external_trust_roots": True,
         "resolver_trust_root_proven_by_this_module": False,
         "proof_registry_authority_proven_by_this_module": False,
-        "runtime_observation_authenticity_proven_by_this_module": False,
+        "source_registry_authority_proven_by_this_module": False,
+        "observer_trust_root_proven_by_this_module": False,
+        "observation_registry_authority_proven_by_this_module": False,
         "live_kv_access_performed": False,
         "transformer_kv_reuse_admissible": ok,
         "coordinate_nomination_is_authority": False,
