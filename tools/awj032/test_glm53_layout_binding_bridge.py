@@ -7,6 +7,7 @@ from tools.awj032.glm53_layout_binding_bridge import LayoutBindingError, compile
 
 MODEL = "glm53-pinned-revision"
 INDEX = "index-pinned-digest"
+OFFICIAL_REPO = "zai-org/GLM-5.3"
 GATE = "model.layers.3.mlp.experts.gate_up_proj.weight"
 DOWN = "model.layers.3.mlp.experts.down_proj.weight"
 GS = "model.layers.3.mlp.experts.gate_up_proj.weight_scale_inv"
@@ -99,7 +100,7 @@ def per_expert_header_fixture(wm, *, expert=0):
             }
         )
     evidence = {
-        "repo_id": "zai-org/GLM-5.3",
+        "repo_id": OFFICIAL_REPO,
         "model_revision": MODEL,
         "index_sha256": INDEX,
         "index_size_bytes": 11_359_251,
@@ -126,10 +127,19 @@ def compile_packed(report=None, wm=None, hs=None):
     )
 
 
-def compile_per_expert(report=None, wm=None, evidence=None):
+def compile_per_expert(
+    report=None,
+    wm=None,
+    evidence=None,
+    *,
+    expected_repo=OFFICIAL_REPO,
+    expected_receipt=None,
+):
     r, w = per_expert_fixture()
     chosen_wm = w if wm is None else wm
     chosen_evidence = per_expert_header_fixture(chosen_wm) if evidence is None else evidence
+    if expected_receipt is None:
+        expected_receipt = chosen_evidence.get("receipt_digest")
     return compile_pager_source_plan(
         r if report is None else report,
         weight_map=chosen_wm,
@@ -137,6 +147,8 @@ def compile_per_expert(report=None, wm=None, evidence=None):
         expected_model_revision=MODEL,
         expected_index_digest=INDEX,
         per_expert_header_evidence=chosen_evidence,
+        expected_per_expert_header_repo_id=expected_repo,
+        expected_per_expert_header_receipt_digest=expected_receipt,
     )
 
 
@@ -153,23 +165,26 @@ class BridgeTests(unittest.TestCase):
         self.assertEqual(plan.binding.scale_map, {"gate_up_scale": GS, "down_scale": DS})
         self.assertFalse(plan.g2_admitted)
         self.assertFalse(plan.representative_header_bound)
+        self.assertFalse(plan.official_w2_observation_bound)
 
-    def test_per_expert_layout_binds_current_per_expert_abi_and_w2_canary(self):
+    def test_per_expert_layout_binds_current_per_expert_abi_and_official_w2_canary(self):
         plan = compile_per_expert()
         self.assertEqual(plan.binding_kind, "PER_EXPERT_INDEX")
         self.assertEqual(len(plan.binding.experts), 256)
         self.assertTrue(plan.binding.require_fp8_scales)
         self.assertTrue(plan.representative_header_bound)
+        self.assertTrue(plan.official_w2_observation_bound)
+        self.assertEqual(OFFICIAL_REPO, plan.header_observation_repo_id)
         self.assertEqual(3, plan.representative_layer)
         self.assertEqual(0, plan.representative_expert)
         self.assertFalse(plan.all_experts_header_uniformity_proven)
         self.assertNotEqual("INDEX_PROVEN_NO_HEADER_BINDING", plan.header_evidence_digest)
         self.assertFalse(plan.to_dict()["g2_admitted"])
 
-    def test_per_expert_index_only_plan_is_no_longer_w3_eligible(self):
+    def test_per_expert_index_only_plan_requires_independent_w2_observation(self):
         report, wm = per_expert_fixture()
         self.code(
-            "PER_EXPERT_HEADER_EVIDENCE_REQUIRED",
+            "EXPECTED_PER_EXPERT_HEADER_REPO_ID_REQUIRED",
             lambda: compile_pager_source_plan(
                 report,
                 weight_map=wm,
@@ -190,6 +205,8 @@ class BridgeTests(unittest.TestCase):
                 expected_model_revision=MODEL,
                 expected_index_digest=INDEX,
                 per_expert_header_evidence={},
+                expected_per_expert_header_repo_id=OFFICIAL_REPO,
+                expected_per_expert_header_receipt_digest="0" * 40,
             )
         self.assertIn("FP8_SCALE_KEYS_UNRESOLVED", str(ctx.exception))
 
@@ -227,14 +244,40 @@ class BridgeTests(unittest.TestCase):
         evidence["receipt_digest"] = "0" * 40
         self.code("PER_EXPERT_HEADER_RECEIPT_MISMATCH", lambda: compile_per_expert(evidence=evidence))
 
-    def test_per_expert_canary_change_changes_plan_identity_without_universalizing(self):
+    def test_self_consistent_fabricated_header_fails_official_observation_binding(self):
+        _, wm = per_expert_fixture()
+        official = per_expert_header_fixture(wm)
+        expected_official = official["receipt_digest"]
+        forged = copy.deepcopy(official)
+        forged["entries"][0]["header_sha256"] = "b" * 64
+        refresh_receipt(forged)
+        self.assertNotEqual(expected_official, forged["receipt_digest"])
+        self.code(
+            "PER_EXPERT_HEADER_OFFICIAL_OBSERVATION_MISMATCH",
+            lambda: compile_per_expert(
+                evidence=forged,
+                expected_receipt=expected_official,
+            ),
+        )
+
+    def test_self_consistent_repo_substitution_fails_official_repo_binding(self):
+        _, wm = per_expert_fixture()
+        evidence = per_expert_header_fixture(wm)
+        evidence["repo_id"] = "attacker/GLM-5.3"
+        refresh_receipt(evidence)
+        self.code(
+            "PER_EXPERT_HEADER_OFFICIAL_REPO_MISMATCH",
+            lambda: compile_per_expert(evidence=evidence, expected_repo=OFFICIAL_REPO),
+        )
+
+    def test_independently_changed_observation_changes_plan_identity_without_universalizing(self):
         _, wm = per_expert_fixture()
         first = per_expert_header_fixture(wm)
         second = copy.deepcopy(first)
         second["entries"][0]["header_sha256"] = "b" * 64
         refresh_receipt(second)
-        p1 = compile_per_expert(evidence=first)
-        p2 = compile_per_expert(evidence=second)
+        p1 = compile_per_expert(evidence=first, expected_receipt=first["receipt_digest"])
+        p2 = compile_per_expert(evidence=second, expected_receipt=second["receipt_digest"])
         self.assertNotEqual(p1.header_evidence_digest, p2.header_evidence_digest)
         self.assertNotEqual(p1.source_plan_digest, p2.source_plan_digest)
         self.assertFalse(p1.all_experts_header_uniformity_proven)
@@ -272,6 +315,8 @@ class BridgeTests(unittest.TestCase):
     def test_serialized_plan_remains_nonpromoting(self):
         payload = compile_per_expert().to_dict()
         self.assertTrue(payload["representative_header_bound"])
+        self.assertTrue(payload["official_w2_observation_bound"])
+        self.assertEqual(OFFICIAL_REPO, payload["header_observation_repo_id"])
         self.assertFalse(payload["all_experts_header_uniformity_proven"])
         self.assertFalse(payload["g2_admitted"])
         self.assertFalse(payload["large_checkpoint_admitted"])
