@@ -1,0 +1,41 @@
+name: AURA ADOPT ZF-03A ZF-04 recipe distribution binding
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/arena_recipe.py'
+      - 'tools/aura_adopt/test_arena_recipe.py'
+      - 'tools/aura_adopt/recipe_distribution_binding.py'
+      - 'tools/aura_adopt/test_recipe_distribution_binding.py'
+      - 'tools/aura_adopt/test_recipe_distribution_provenance_separation.py'
+      - '.github/workflows/aura-adopt-zf03a-zf04-bind.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recipe-distribution-binding:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile recipe and distribution binding
+        run: >-
+          python -m py_compile
+          tools/aura_adopt/arena_recipe.py
+          tools/aura_adopt/test_arena_recipe.py
+          tools/aura_adopt/recipe_distribution_binding.py
+          tools/aura_adopt/test_recipe_distribution_binding.py
+          tools/aura_adopt/test_recipe_distribution_provenance_separation.py
+      - name: Re-run ZF-03A Arena Recipe regressions
+        working-directory: tools/aura_adopt
+        run: python -m unittest -v test_arena_recipe.py
+      - name: Run recipe/distribution binding regressions
+        working-directory: tools/aura_adopt
+        run: >-
+          python -m unittest -v
+          test_recipe_distribution_binding.py
+          test_recipe_distribution_provenance_separation.py
