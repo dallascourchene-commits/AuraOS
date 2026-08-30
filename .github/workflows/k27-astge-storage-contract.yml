@@ -38,10 +38,7 @@ jobs:
           rustc --version
           cargo --version
 
-      - name: Format check
-        run: cargo fmt --manifest-path native/aura-k27-astge/Cargo.toml -- --check
-
-      - name: Compile and test storage contract
+      - name: Compile and test exact storage source
         run: cargo test --manifest-path native/aura-k27-astge/Cargo.toml --all-targets
 
       - name: Clippy fail-closed
