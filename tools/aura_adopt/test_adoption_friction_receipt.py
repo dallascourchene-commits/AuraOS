@@ -1,4 +1,3 @@
-import copy
 import unittest
 
 import aura_adoption_bootstrap as bootstrap
@@ -71,39 +70,87 @@ def decision(generation="gen-1"):
 
 
 def complete_events(
-    *, clock_shift=0, blocked=None, account_na=True, key_na=True,
-    install_na=True, permission_na=True, unknown_download_stage=None,
+    *,
+    clock_shift=0,
+    blocked=None,
+    account_na=True,
+    key_na=True,
+    install_na=True,
+    permission_na=True,
+    unknown_download_stage=None,
 ):
     blocked = blocked or {}
     events = []
     for idx, stage in enumerate(STAGES):
         clock = 1000 + idx + clock_shift
         if stage in blocked:
-            events.append(StageEvent(
-                stage, StageStatus.BLOCKED, steps=1, wall_time_ms=10,
-                downloaded_bytes=0, retained_bytes=0, monetary_cost_microunits=0,
-                reason="fixture blocker", failure_code=blocked[stage],
-                observation_clock_ms=clock,
-            ))
+            events.append(
+                StageEvent(
+                    stage,
+                    StageStatus.BLOCKED,
+                    steps=1,
+                    wall_time_ms=10,
+                    downloaded_bytes=0,
+                    retained_bytes=0,
+                    monetary_cost_microunits=0,
+                    reason="fixture blocker",
+                    failure_code=blocked[stage],
+                    observation_clock_ms=clock,
+                )
+            )
             continue
         if stage == "OPTIONAL_ACCOUNT" and account_na:
-            events.append(StageEvent(stage, StageStatus.NOT_APPLICABLE, reason="no account required", observation_clock_ms=clock))
+            events.append(
+                StageEvent(
+                    stage,
+                    StageStatus.NOT_APPLICABLE,
+                    reason="no account required",
+                    observation_clock_ms=clock,
+                )
+            )
             continue
         if stage == "OPTIONAL_KEY" and key_na:
-            events.append(StageEvent(stage, StageStatus.NOT_APPLICABLE, reason="no key required", observation_clock_ms=clock))
+            events.append(
+                StageEvent(
+                    stage,
+                    StageStatus.NOT_APPLICABLE,
+                    reason="no key required",
+                    observation_clock_ms=clock,
+                )
+            )
             continue
         if stage == "OPEN_INSTALL" and install_na:
-            events.append(StageEvent(stage, StageStatus.NOT_APPLICABLE, reason="zero-install route", observation_clock_ms=clock))
+            events.append(
+                StageEvent(
+                    stage,
+                    StageStatus.NOT_APPLICABLE,
+                    reason="zero-install route",
+                    observation_clock_ms=clock,
+                )
+            )
             continue
         if stage == "PERMISSION" and permission_na:
-            events.append(StageEvent(stage, StageStatus.NOT_APPLICABLE, reason="no permission required", observation_clock_ms=clock))
+            events.append(
+                StageEvent(
+                    stage,
+                    StageStatus.NOT_APPLICABLE,
+                    reason="no permission required",
+                    observation_clock_ms=clock,
+                )
+            )
             continue
-        events.append(StageEvent(
-            stage, StageStatus.COMPLETED, steps=1, wall_time_ms=10,
-            downloaded_bytes=None if stage == unknown_download_stage else 0,
-            retained_bytes=0, monetary_cost_microunits=0,
-            observation_clock_ms=clock,
-        ))
+        events.append(
+            StageEvent(
+                stage,
+                StageStatus.COMPLETED,
+                steps=1,
+                wall_time_ms=10,
+                downloaded_bytes=None if stage == unknown_download_stage else 0,
+                retained_bytes=0,
+                monetary_cost_microunits=0,
+                observation_clock_ms=clock,
+            )
+        )
     return tuple(events)
 
 
@@ -111,26 +158,59 @@ def vector(value=1.0):
     return {key: value for key in FRICTION_COMPONENTS}
 
 
-def weights():
-    return {key: 1.0 for key in FRICTION_COMPONENTS}
+def weights(value=1.0):
+    return {key: value for key in FRICTION_COMPONENTS}
+
+
+def default_cohort():
+    return {
+        "device_class": "browser-only",
+        "skill_class": "nontechnical-creator",
+        "connectivity_class": "normal",
+    }
 
 
 def make_receipt(
-    *, route_decision=None, events=None, friction=None, mandatory_account=False,
-    mandatory_key=False, permissions=(), starting_state=None,
-    evidence_class="SYNTHETIC", privacy_mode="SYNTHETIC_NO_TELEMETRY",
+    *,
+    route_decision=None,
+    events=None,
+    friction=None,
+    mandatory_account=False,
+    mandatory_key=False,
+    permissions=(),
+    starting_state=None,
+    evidence_class="SYNTHETIC",
+    privacy_mode="SYNTHETIC_NO_TELEMETRY",
+    accepted_result=True,
+    cohort=None,
+    weight_map=None,
+    weighting_method="fixture-equal-weights-only",
 ):
     return build_friction_receipt(
-        route_decision or decision(), route_id="fixture-route",
-        mission_head="AURA-ADOPT-001@fixture", build_refs=("sha:fixture",),
-        cohort={"device_class": "browser-only", "skill_class": "nontechnical-creator", "connectivity_class": "normal"},
-        starting_state=starting_state or {"account_present": False, "app_installed": False},
-        stage_events=events or complete_events(), permissions=permissions,
-        mandatory_account=mandatory_account, mandatory_key=mandatory_key,
-        accepted_value=AcceptedValue("deterministic useful output accepted", True, "fixture-verifier"),
-        friction_vector=friction or vector(), weights=weights(),
-        weighting_method="fixture-equal-weights-only", privacy_telemetry_mode=privacy_mode,
-        invalidators=("route-source-change",), reopen_trigger="replay on source change",
+        route_decision or decision(),
+        route_id="fixture-route",
+        mission_head="AURA-ADOPT-001@fixture",
+        build_refs=("sha:fixture",),
+        cohort=cohort or default_cohort(),
+        starting_state=starting_state or {
+            "account_present": False,
+            "app_installed": False,
+        },
+        stage_events=events or complete_events(),
+        permissions=permissions,
+        mandatory_account=mandatory_account,
+        mandatory_key=mandatory_key,
+        accepted_value=AcceptedValue(
+            "deterministic useful output accepted",
+            accepted_result,
+            "fixture-verifier",
+        ),
+        friction_vector=friction or vector(),
+        weights=weight_map or weights(),
+        weighting_method=weighting_method,
+        privacy_telemetry_mode=privacy_mode,
+        invalidators=("route-source-change",),
+        reopen_trigger="replay on source change",
         evidence_class=evidence_class,
     )
 
@@ -151,14 +231,20 @@ class AdoptionFrictionReceiptTests(unittest.TestCase):
             bind_route_decision(raw)
         self.assertEqual("COMPILER_EFFECT_AUTHORITY_WIDENING", ctx.exception.code)
 
-    def test_compiler_required_action_count_must_match_declared_actions(self):
+    def test_compiler_shape_and_required_action_count_are_exact(self):
+        raw = compiler_receipt().logical()
+        raw["unexpected_future_semantics"] = False
+        with self.assertRaises(FrictionReceiptError) as ctx:
+            bind_route_decision(raw)
+        self.assertEqual("COMPILER_RECEIPT_SHAPE_MISMATCH", ctx.exception.code)
+
         raw = compiler_receipt().logical()
         raw["friction"]["required_action_count"] += 1
         with self.assertRaises(FrictionReceiptError) as ctx:
             bind_route_decision(raw)
         self.assertEqual("COMPILER_REQUIRED_ACTION_COUNT_MISMATCH", ctx.exception.code)
 
-    def test_complete_fixture_emits_stable_consequence_receipt(self):
+    def test_complete_fixture_emits_canonical_schema_ready_receipt(self):
         receipt = make_receipt()
         self.assertEqual("AdoptionFrictionReceiptV1", receipt.schema)
         self.assertEqual(tuple(STAGES), tuple(e.stage for e in receipt.stage_events))
@@ -167,6 +253,10 @@ class AdoptionFrictionReceiptTests(unittest.TestCase):
         self.assertEqual(0, receipt.total_downloaded_bytes)
         self.assertFalse(receipt.effect_authorized)
         self.assertFalse(receipt.execution_proven)
+        serialized = receipt.to_dict()
+        self.assertEqual(13, len(serialized["stage_events"]))
+        self.assertNotIn("observation_clock_ms", serialized["stage_events"][0])
+        self.assertEqual(False, serialized["decision"]["source_binding_authenticated"])
 
     def test_observation_clock_does_not_churn_logical_identity(self):
         a = make_receipt(events=complete_events(clock_shift=0))
@@ -176,7 +266,10 @@ class AdoptionFrictionReceiptTests(unittest.TestCase):
     def test_compiler_source_generation_is_identity_bearing(self):
         a = make_receipt(route_decision=decision("gen-1"))
         b = make_receipt(route_decision=decision("gen-2"))
-        self.assertNotEqual(a.decision.compiler_receipt_digest, b.decision.compiler_receipt_digest)
+        self.assertNotEqual(
+            a.decision.compiler_receipt_digest,
+            b.decision.compiler_receipt_digest,
+        )
         self.assertNotEqual(a.logical_id, b.logical_id)
 
     def test_missing_or_reordered_stage_fails(self):
@@ -189,10 +282,22 @@ class AdoptionFrictionReceiptTests(unittest.TestCase):
             make_receipt(events=tuple(reordered))
         self.assertEqual("CONSEQUENCE_STAGE_COVERAGE_INVALID", ctx.exception.code)
 
-    def test_noncompleted_stage_requires_reason(self):
-        for status in (StageStatus.NOT_APPLICABLE, StageStatus.UNKNOWN, StageStatus.BLOCKED):
+    def test_noncompleted_stage_requires_reason_and_na_cannot_hide_work(self):
+        for status in (
+            StageStatus.NOT_APPLICABLE,
+            StageStatus.UNKNOWN,
+            StageStatus.BLOCKED,
+        ):
             with self.assertRaises(FrictionReceiptError):
                 StageEvent("TRUST", status)
+        with self.assertRaises(FrictionReceiptError) as ctx:
+            StageEvent(
+                "OPTIONAL_KEY",
+                StageStatus.NOT_APPLICABLE,
+                steps=2,
+                reason="incorrectly hidden work",
+            )
+        self.assertEqual("NOT_APPLICABLE_CONSEQUENCE_NONZERO", ctx.exception.code)
 
     def test_mandatory_account_and_key_cannot_be_hidden_as_na(self):
         with self.assertRaises(FrictionReceiptError) as ctx:
@@ -213,45 +318,104 @@ class AdoptionFrictionReceiptTests(unittest.TestCase):
             make_receipt(route_decision=bound, events=events)
         self.assertEqual("PERMISSION_BURDEN_OMITTED", ctx.exception.code)
 
+    def test_accepted_value_true_requires_execution_and_verification(self):
+        with self.assertRaises(FrictionReceiptError) as ctx:
+            make_receipt(
+                events=complete_events(blocked={"EXECUTE": "RUNTIME_BLOCKED"})
+            )
+        self.assertEqual("ACCEPTED_VALUE_EXECUTION_NOT_COMPLETED", ctx.exception.code)
+        with self.assertRaises(FrictionReceiptError) as ctx:
+            make_receipt(
+                events=complete_events(blocked={"VERIFY_ACCEPT": "OUTPUT_REJECTED"})
+            )
+        self.assertEqual("ACCEPTED_VALUE_VERIFICATION_NOT_COMPLETED", ctx.exception.code)
+
     def test_unknown_friction_and_stage_metrics_never_become_zero(self):
         f = vector()
         f["storage_network"] = None
-        receipt = make_receipt(friction=f, events=complete_events(unknown_download_stage="EXECUTE"))
+        receipt = make_receipt(
+            friction=f,
+            events=complete_events(unknown_download_stage="EXECUTE"),
+        )
         self.assertIsNone(receipt.total_score)
         self.assertIsNone(receipt.total_downloaded_bytes)
 
     def test_private_starting_state_and_direct_identity_cohort_rejected(self):
-        for state in ({"api_key": "x"}, {"prompt": "private"}, {"nested": {"email": "x@y"}}):
+        for state in (
+            {"api_key": "x"},
+            {"prompt": "private"},
+            {"nested": {"email": "x@y"}},
+        ):
             with self.assertRaises(FrictionReceiptError) as ctx:
                 make_receipt(starting_state=state)
             self.assertEqual("PRIVATE_FIELD_FORBIDDEN", ctx.exception.code)
         with self.assertRaises(FrictionReceiptError) as ctx:
             build_friction_receipt(
-                decision(), route_id="r", mission_head="m", build_refs=("b",),
-                cohort={"email": "x@y"}, starting_state={"account_present": False},
-                stage_events=complete_events(), accepted_value=AcceptedValue("x", True, "fixture"),
-                friction_vector=vector(), weights=weights(), weighting_method="fixture",
+                decision(),
+                route_id="r",
+                mission_head="m",
+                build_refs=("b",),
+                cohort={"email": "x@y"},
+                starting_state={"account_present": False},
+                stage_events=complete_events(),
+                accepted_value=AcceptedValue("x", True, "fixture"),
+                friction_vector=vector(),
+                weights=weights(),
+                weighting_method="fixture",
                 reopen_trigger="source change",
             )
         self.assertEqual("COHORT_FIELD_NOT_PRIVACY_MINIMAL", ctx.exception.code)
 
     def test_comparison_preserves_failure_reasons_unknowns_and_burdens(self):
-        baseline = make_receipt(events=complete_events(blocked={"TRUST": "UNTRUSTED_BINARY"}), friction=vector(2.0))
+        baseline = make_receipt(
+            events=complete_events(blocked={"TRUST": "UNTRUSTED_BINARY"}),
+            friction=vector(2.0),
+        )
         candidate_f = vector(1.0)
         candidate_f["storage_network"] = None
-        candidate = make_receipt(events=complete_events(blocked={"VERIFY_ACCEPT": "OUTPUT_REJECTED"}), friction=candidate_f)
+        candidate = make_receipt(
+            events=complete_events(blocked={"VERIFY_ACCEPT": "OUTPUT_REJECTED"}),
+            friction=candidate_f,
+            accepted_result=False,
+        )
         comparison = compare_receipts(baseline, candidate)
-        self.assertIn("TRUST:UNTRUSTED_BINARY", comparison.baseline_failure_signature)
-        self.assertIn("VERIFY_ACCEPT:OUTPUT_REJECTED", comparison.candidate_failure_signature)
+        self.assertIn(
+            "TRUST:UNTRUSTED_BINARY", comparison.baseline_failure_signature
+        )
+        self.assertIn(
+            "VERIFY_ACCEPT:OUTPUT_REJECTED", comparison.candidate_failure_signature
+        )
         self.assertIn("storage_network", comparison.unresolved_components)
         self.assertIsNone(comparison.scalar_delta)
         self.assertTrue(comparison.comparable_without_scalar_collapse)
 
+    def test_scalar_delta_requires_same_cohort_and_weighting_basis(self):
+        baseline = make_receipt(friction=vector(2.0))
+        candidate = make_receipt(friction=vector(1.0))
+        self.assertEqual(-9.0, compare_receipts(baseline, candidate).scalar_delta)
+
+        different_cohort = dict(default_cohort())
+        different_cohort["skill_class"] = "expert-creator"
+        candidate = make_receipt(friction=vector(1.0), cohort=different_cohort)
+        self.assertIsNone(compare_receipts(baseline, candidate).scalar_delta)
+
+        candidate = make_receipt(
+            friction=vector(1.0),
+            weight_map=weights(2.0),
+            weighting_method="different-weights",
+        )
+        self.assertIsNone(compare_receipts(baseline, candidate).scalar_delta)
+
     def test_comparison_exposes_added_account_key_install_burdens(self):
         baseline = make_receipt()
         candidate = make_receipt(
-            events=complete_events(account_na=False, key_na=False, install_na=False),
-            mandatory_account=True, mandatory_key=True,
+            events=complete_events(
+                account_na=False,
+                key_na=False,
+                install_na=False,
+            ),
+            mandatory_account=True,
+            mandatory_key=True,
         )
         comparison = compare_receipts(baseline, candidate)
         self.assertIn("MANDATORY_ACCOUNT", comparison.added_burdens)
@@ -260,9 +424,15 @@ class AdoptionFrictionReceiptTests(unittest.TestCase):
 
     def test_consented_study_requires_explicit_consent_mode(self):
         with self.assertRaises(FrictionReceiptError) as ctx:
-            make_receipt(evidence_class="CONSENTED_STUDY", privacy_mode="VISIBLE_TELEMETRY")
+            make_receipt(
+                evidence_class="CONSENTED_STUDY",
+                privacy_mode="VISIBLE_TELEMETRY",
+            )
         self.assertEqual("CONSENT_SCOPE_REQUIRED", ctx.exception.code)
-        receipt = make_receipt(evidence_class="CONSENTED_STUDY", privacy_mode="EXPLICIT_CONSENT_VISIBLE_TELEMETRY")
+        receipt = make_receipt(
+            evidence_class="CONSENTED_STUDY",
+            privacy_mode="EXPLICIT_CONSENT_VISIBLE_TELEMETRY",
+        )
         self.assertEqual("CONSENTED_STUDY", receipt.evidence_class)
 
 
