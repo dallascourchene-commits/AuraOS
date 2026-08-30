@@ -43,3 +43,50 @@ jobs:
         run: |
           python -m py_compile tools/awj032/glm53_safetensors_header_transport.py
           python -m pytest -q tools/awj032/test_glm53_safetensors_header_transport.py
+      - name: Observe official GLM-5.3 header evidence without payload
+        env:
+          GLM53_REPO: zai-org/GLM-5.3
+          GLM53_REVISION: 7cda81930d6e4cef42f48555de830aa32ecdde28
+          GLM53_INDEX_SHA256: e0fe7f28c1f853d4824e4d796374e3dacf1fe470988773952c79b063768134bf
+        run: |
+          python - <<'PY'
+          from dataclasses import asdict
+          import json
+          import os
+          from tools.awj032.glm53_safetensors_header_transport import (
+              HeaderTransportError,
+              collect_header_evidence,
+          )
+
+          target = {
+              "repo_id": os.environ["GLM53_REPO"],
+              "model_revision": os.environ["GLM53_REVISION"],
+              "expected_index_sha256": os.environ["GLM53_INDEX_SHA256"],
+              "selected_layer": 3,
+              "selected_expert": 0,
+          }
+          try:
+              receipt = collect_header_evidence(**target)
+          except HeaderTransportError as exc:
+              print("AURA_W2_OFFICIAL_HEADER_RESULT=" + json.dumps({
+                  "status": "BLOCKED_TRANSPORT_TYPED",
+                  "error_code": exc.code,
+                  "detail": exc.detail,
+                  "repo_id": target["repo_id"],
+                  "model_revision": target["model_revision"],
+                  "index_sha256": target["expected_index_sha256"],
+                  "selected_layer": 3,
+                  "selected_expert": 0,
+                  "payload_bytes_read": 0,
+                  "g2_admitted": False,
+                  "runtime_executed": False,
+                  "authority": False,
+              }, sort_keys=True, separators=(",", ":")))
+          else:
+              body = asdict(receipt)
+              body["status"] = "OFFICIAL_HEADER_OBSERVED"
+              body["receipt_digest"] = receipt.receipt_digest
+              print("AURA_W2_OFFICIAL_HEADER_RESULT=" + json.dumps(
+                  body, sort_keys=True, separators=(",", ":")
+              ))
+          PY
