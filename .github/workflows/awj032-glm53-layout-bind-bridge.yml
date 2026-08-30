@@ -1,0 +1,41 @@
+name: AWJ032 GLM53 stable layout binding bridge
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_layout_binding_bridge.py'
+      - 'tools/awj032/test_glm53_layout_binding_bridge.py'
+      - 'tools/awj032/glm53_packed_expert_pager.py'
+      - 'tools/awj032/glm53_per_expert_index_pager.py'
+      - 'tools/awj032/glm53_pager_cache_telemetry.py'
+      - '.github/workflows/awj032-glm53-layout-bind-bridge.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  focused-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile bridge and current pager ABI
+        run: >-
+          python -m py_compile
+          tools/awj032/glm53_packed_expert_pager.py
+          tools/awj032/glm53_per_expert_index_pager.py
+          tools/awj032/glm53_pager_cache_telemetry.py
+          tools/awj032/glm53_layout_binding_bridge.py
+          tools/awj032/test_glm53_layout_binding_bridge.py
+      - name: Run bridge regressions
+        run: python -m unittest tools.awj032.test_glm53_layout_binding_bridge
+      - name: Re-run current pager owner regressions
+        working-directory: tools/awj032
+        run: >-
+          python -m unittest -v
+          test_glm53_packed_expert_pager.py
+          test_glm53_per_expert_index_pager.py
+          test_glm53_pager_cache_telemetry.py
