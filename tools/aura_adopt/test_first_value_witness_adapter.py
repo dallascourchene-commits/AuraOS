@@ -190,6 +190,13 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
         for raw_ref in ("evidence:accept-01", "evidence:save-01", "evidence:reopen-01", "evidence:share-01"):
             self.assertNotIn(raw_ref, serialized)
 
+    def test_public_capability_refs_reject_non_capability_namespaces(self):
+        for bad in ("evidence:save-01", "recipe:thing-01", "witness:reopen-01"):
+            with self.subTest(bad=bad):
+                with self.assertRaises(afr.FrictionReceiptError) as ctx:
+                    compile_receipt(capability_refs=(bad,))
+                self.assertEqual("CAPABILITY_REF_NAMESPACE_REQUIRED", ctx.exception.code)
+
     def test_evidence_commitment_changes_when_consequence_evidence_changes(self):
         first = compile_receipt(observation(
             save_mode=bridge.SaveEvidenceMode.REOPEN_OBSERVED,
@@ -289,7 +296,7 @@ class FirstValueWitnessAdapterTests(unittest.TestCase):
                     observation(acceptance_mode=bridge.AcceptanceEvidenceMode.USER_EXPLICIT_ACCEPT,
                                 acceptance_evidence_ref=bad)
 
-    def test_recipe_and_capability_refs_use_same_opaque_ref_membrane(self):
+    def test_recipe_and_capability_refs_use_opaque_hygiene_membrane(self):
         with self.assertRaises(afr.FrictionReceiptError) as ctx:
             compile_receipt(recipe_ref="raw user content here")
         self.assertEqual("RECIPE_REF_REQUIRED", ctx.exception.code)
