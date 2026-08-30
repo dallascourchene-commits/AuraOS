@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788111402,
+  "generated_at_unix": 1788115077,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1646,
+    "repo_file_count": 1650,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -132,6 +132,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-first-value-adapter.yml",
       ".github/workflows/aura-adopt-zf00b-friction-receipt.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
@@ -1637,7 +1638,10 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/aura_adopt/adoption_friction_receipt.py",
+      "tools/aura_adopt/first_value_witness_adapter.py",
       "tools/aura_adopt/test_adoption_friction_receipt.py",
+      "tools/aura_adopt/test_first_value_witness_adapter.py",
+      "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1762,16 +1766,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1646,
-      "bytes": 26507759,
-      "tokens_est": 6617293,
+      "files": 1650,
+      "bytes": 26555547,
+      "tokens_est": 6629242,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1001,
-        "schema_or_lexicon": 274,
+        "python_module": 1004,
+        "schema_or_lexicon": 275,
         "support_file": 49
       }
     },
@@ -8426,6 +8430,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 124,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_sha:ec7afcdcdffa404e",
+        "signature_hash": "ada84dce30d96991"
       }
     ],
     "_repo": [
@@ -34882,6 +34894,14 @@
         "end_line": 54,
         "semantic_id": "tests/test_aura_project_context_compiler.py#function:_ref:b498827f5cc23be6",
         "signature_hash": "0ae37ca44ed8a649"
+      },
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 84,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_ref:c51302a888aa1f3c",
+        "signature_hash": "31aef7170550e3ac"
       }
     ],
     "_export_digest": [
@@ -35030,6 +35050,14 @@
         "end_line": 189,
         "semantic_id": "tests/test_aura_event_contracts.py#function:_event:752cd2a6ced44975",
         "signature_hash": "1b79d0cca1c1536c"
+      },
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 259,
+        "end_line": 267,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_event:70a55187e3a71a0c",
+        "signature_hash": "dca1c186f1a635cf"
       }
     ],
     "build_sco_construction_demo_fixture": [
@@ -134140,6 +134168,22 @@
         "end_line": 29,
         "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:observation:231f671c5509f472",
         "signature_hash": "b6d2f925be861055"
+      },
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 41,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#function:observation:c2f53651e667c837",
+        "signature_hash": "61d98d33f2ab3b16"
+      },
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 38,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#function:observation:2217be9040b429da",
+        "signature_hash": "b6d2f925be861055"
       }
     ],
     "expected_project_refs": [
@@ -158074,6 +158118,166 @@
         "signature_hash": "a9a7fbaa3289acc1"
       }
     ],
+    "AcceptanceEvidenceMode": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 58,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#class:AcceptanceEvidenceMode:4597a0a50b38a2a2",
+        "signature_hash": "07d5a97e6b6645d8"
+      }
+    ],
+    "SaveEvidenceMode": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 65,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#class:SaveEvidenceMode:0e38264d02bb3b16",
+        "signature_hash": "53ad63aa1d36d374"
+      }
+    ],
+    "_private_like": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 75,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_private_like:d65d7ffa655fff69",
+        "signature_hash": "d958252b8055c5f7"
+      }
+    ],
+    "_closed_token": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 90,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_closed_token:f993ccb8c65070ae",
+        "signature_hash": "2780eb3e9c73e571"
+      }
+    ],
+    "_capability_ref": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 97,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_capability_ref:a9b35b2dc09644a1",
+        "signature_hash": "4b92bef9467399f1"
+      }
+    ],
+    "_recipe_ref": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 104,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_recipe_ref:fcff2808c39c3a4e",
+        "signature_hash": "07f1e68c7870806b"
+      }
+    ],
+    "_privacy_minimal_cohort": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 118,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_privacy_minimal_cohort:d200a554358c3a80",
+        "signature_hash": "44126840f5d795c8"
+      }
+    ],
+    "_evidence_commitment": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 127,
+        "end_line": 132,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_evidence_commitment:e728f8203747b175",
+        "signature_hash": "c252417d57c6aa7c"
+      }
+    ],
+    "FirstValueWitnessObservationV1": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "class",
+        "line": 136,
+        "end_line": 256,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#class:FirstValueWitnessObservationV1:3a74a4644a684032",
+        "signature_hash": "51c36727b536f210"
+      }
+    ],
+    "FirstValueWitnessObservationV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 247,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#method:FirstValueWitnessObservationV1.__post_init__:8f4fe57fcc17213a",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "FirstValueWitnessObservationV1.common_evidence_binding": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 249,
+        "end_line": 256,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#method:FirstValueWitnessObservationV1.common_evidence_binding:a5d3bc221ce5eb79",
+        "signature_hash": "b7bafd7a4e9e7da8"
+      }
+    ],
+    "_binary_stage": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 270,
+        "end_line": 273,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_binary_stage:0227331429ddf274",
+        "signature_hash": "06cf72bb8fab8233"
+      }
+    ],
+    "_acceptance": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 276,
+        "end_line": 313,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_acceptance:ae27052643030af6",
+        "signature_hash": "c0ba80f93262d0b6"
+      }
+    ],
+    "_save_reopen": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 316,
+        "end_line": 351,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_save_reopen:8450090a5d12e9a4",
+        "signature_hash": "16ec98987b29af5b"
+      }
+    ],
+    "_share_or_reuse": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 354,
+        "end_line": 371,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_share_or_reuse:dd8cdf8051e0bffa",
+        "signature_hash": "f96ba43f5b6f07f5"
+      }
+    ],
+    "compile_first_value_receipt": [
+      {
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 374,
+        "end_line": 490,
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:compile_first_value_receipt:b0dabcf9ea0bcf65",
+        "signature_hash": "4ca48260fbc51735"
+      }
+    ],
     "source": [
       {
         "file": "tools/aura_adopt/test_adoption_friction_receipt.py",
@@ -158112,6 +158316,22 @@
         "end_line": 69,
         "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#function:decision:6190eabd4a20a69c",
         "signature_hash": "6c16610f66d08db9"
+      },
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 26,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#function:decision:1895f1ea58055e4b",
+        "signature_hash": "80ea801e50609b38"
+      },
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 23,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#function:decision:f5bc62cdfb78e170",
+        "signature_hash": "24501cc056f2b843"
       }
     ],
     "complete_events": [
@@ -158342,6 +158562,474 @@
         "end_line": 436,
         "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#method:AdoptionFrictionReceiptTests.test_consented_study_requires_explicit_consent_mode:03ccbc24289e69cf",
         "signature_hash": "858391719a1ee416"
+      }
+    ],
+    "unrendered": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 51,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#function:unrendered:957b060ce198aee1",
+        "signature_hash": "b97bd9fe1413f776"
+      }
+    ],
+    "compile_receipt": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 69,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#function:compile_receipt:b707be22207686db",
+        "signature_hash": "2a6a8615749a3f70"
+      },
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 53,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#function:compile_receipt:298473ae98971ec9",
+        "signature_hash": "4ca4842a2742f7dd"
+      }
+    ],
+    "FirstValueWitnessAdapterTests": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "class",
+        "line": 72,
+        "end_line": 359,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#class:FirstValueWitnessAdapterTests:51bb7920915a59d9",
+        "signature_hash": "7e7799e49e61e7b7"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.stage": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 74,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.stage:9821b74df3748cce",
+        "signature_hash": "b7e38b7b2c5bcc20"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_synthetic_technical_never_becomes_user_acceptance": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 80,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_synthetic_technical_never_becomes_user_acceptance:cf5e6ecb2af56109",
+        "signature_hash": "9898113a080bc1ce"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_caller_explicit_accept_is_structural_unknown_not_authenticated": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 92,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_caller_explicit_accept_is_structural_unknown_not_authenticated:1cece3332c93f739",
+        "signature_hash": "5076f163f83fe2c8"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_caller_explicit_reject_is_also_structural_unknown": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 100,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_caller_explicit_reject_is_also_structural_unknown:74b3f8712897419e",
+        "signature_hash": "4ed94874a44d81c7"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_user_acceptance_without_evidence_ref_fails_closed": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 105,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_user_acceptance_without_evidence_ref_fails_closed:11a021d2afb95b8d",
+        "signature_hash": "ffebdd62f53d667e"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_download_initiated_never_proves_save_or_reopen": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 110,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_download_initiated_never_proves_save_or_reopen:cd2249b663f7e688",
+        "signature_hash": "313ace34b27cd7d6"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_save_observed_binds_exact_output_but_not_reopen": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 119,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_save_observed_binds_exact_output_but_not_reopen:160e0971af1dbfc2",
+        "signature_hash": "6a45f6d58b7ce783"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_save_digest_mismatch_fails_closed": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 125,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_save_digest_mismatch_fails_closed:c6ad0ec98d238144",
+        "signature_hash": "bc54295c5e44f241"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_reopen_requires_distinct_chain_but_remains_unauthenticated_unknown": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 137,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_reopen_requires_distinct_chain_but_remains_unauthenticated_unknown:a12306b2ddae207d",
+        "signature_hash": "8ab0d8cd5976bb2e"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_even_consented_study_caller_assertion_cannot_complete_without_resolver": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 149,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_even_consented_study_caller_assertion_cannot_complete_without_resolver:0bda681fc6310f87",
+        "signature_hash": "d6a4ba7c067a1812"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_reopen_pointer_alone_cannot_complete": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 154,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_reopen_pointer_alone_cannot_complete:d21b47084d936e11",
+        "signature_hash": "c992ce69399ff00d"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_reopen_cannot_reuse_save_evidence_ref": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 163,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_reopen_cannot_reuse_save_evidence_ref:8474e0d4043a0a65",
+        "signature_hash": "30f7a8a38e580aa1"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_reopen_digest_mismatch_fails_closed": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 172,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_reopen_digest_mismatch_fails_closed:6edc9dfdb5cbc9e9",
+        "signature_hash": "5fbe0d1599d95313"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_share_or_reuse_structural_assertion_remains_unknown": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 182,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_share_or_reuse_structural_assertion_remains_unknown:6cd83ffc5a45de81",
+        "signature_hash": "8a0ac115b7f4a139"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_rendered_output_requires_digest_source_generation_and_currentness": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 184,
+        "end_line": 188,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_rendered_output_requires_digest_source_generation_and_currentness:0b021b1813a54a71",
+        "signature_hash": "8cc278193aad3f3d"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_consequence_evidence_never_pollutes_capability_refs": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 190,
+        "end_line": 209,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_consequence_evidence_never_pollutes_capability_refs:95c058e478b58d9f",
+        "signature_hash": "701a70236cbfa5d2"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_public_capability_refs_reject_non_capability_namespaces": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 216,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_public_capability_refs_reject_non_capability_namespaces:12768d192097298b",
+        "signature_hash": "674fcea8888fed5c"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_private_content_rejected_from_serialized_refs_and_cohort_values": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 233,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_private_content_rejected_from_serialized_refs_and_cohort_values:7e8db779d7d003ad",
+        "signature_hash": "0f9de84b768ef7ed"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_recipe_ref_requires_typed_namespace": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 235,
+        "end_line": 238,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_recipe_ref_requires_typed_namespace:45d2b55c22c7449d",
+        "signature_hash": "fdea60c4cfabdcad"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_tokenizer_named_capability_is_not_false_positive_secret": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 240,
+        "end_line": 242,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_tokenizer_named_capability_is_not_false_positive_secret:7f3bab2e99878fce",
+        "signature_hash": "5cff1f37a7a6bddc"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_evidence_commitment_changes_when_consequence_evidence_changes": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 244,
+        "end_line": 257,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_evidence_commitment_changes_when_consequence_evidence_changes:432c312d6032e5eb",
+        "signature_hash": "ea16b6616fb48292"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_trust_is_not_completable_by_pointer_presence": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 259,
+        "end_line": 262,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_trust_is_not_completable_by_pointer_presence:bba7b52190102d33",
+        "signature_hash": "22706a5b8975d892"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_failed_trust_is_a_typed_blocker": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 264,
+        "end_line": 267,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_failed_trust_is_a_typed_blocker:97d6588e10479a2e",
+        "signature_hash": "92921b9e11e59f4e"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_missing_browser_capability_is_visible_not_guessed": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 269,
+        "end_line": 273,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_missing_browser_capability_is_visible_not_guessed:6a14dce9b961045b",
+        "signature_hash": "ace93e98727075a9"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_only_ready_zero_install_route_is_admitted": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 275,
+        "end_line": 281,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_only_ready_zero_install_route_is_admitted:fa8907aa69aad76e",
+        "signature_hash": "24b7ebddff30a51b"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_adapter_uses_canonical_zf00_identity_and_full_stage_order": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 283,
+        "end_line": 290,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_adapter_uses_canonical_zf00_identity_and_full_stage_order:840e6bbf2b3afb8d",
+        "signature_hash": "a142b1f7215fb83f"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_render_requires_open": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 292,
+        "end_line": 295,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_render_requires_open:27ce121a6737c8d9",
+        "signature_hash": "eb61f38b33c624e7"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_render_requires_input": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 297,
+        "end_line": 300,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_render_requires_input:9e63442958ea6f78",
+        "signature_hash": "a406fa7da4619c61"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_render_requires_proven_browser_capability": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 302,
+        "end_line": 305,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_render_requires_proven_browser_capability:78f2fc7f541e14dc",
+        "signature_hash": "c64e7dc04b5b232d"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_preview_requires_render": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 307,
+        "end_line": 310,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_preview_requires_render:71cdbc0496b5e3b9",
+        "signature_hash": "41cdaa43bd3caf34"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_explicit_acceptance_requires_preview": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 312,
+        "end_line": 320,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_explicit_acceptance_requires_preview:ac305454cbc38943",
+        "signature_hash": "79413b5d53b397d9"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_save_observation_requires_render": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 322,
+        "end_line": 325,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_save_observation_requires_render:4ca79f7165b331b7",
+        "signature_hash": "ec1c6994b8ef498b"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_share_reuse_requires_render_and_evidence": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 327,
+        "end_line": 334,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_share_reuse_requires_render_and_evidence:8f48b8b295f28c8b",
+        "signature_hash": "128a370248014de1"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_evidence_refs_reject_whitespace_and_secret_like_values": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 336,
+        "end_line": 341,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_evidence_refs_reject_whitespace_and_secret_like_values:7346bbbc580dc2aa",
+        "signature_hash": "1790e364324c39b7"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_recipe_and_capability_refs_use_opaque_hygiene_membrane": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 343,
+        "end_line": 349,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_recipe_and_capability_refs_use_opaque_hygiene_membrane:02231a2f1a48f805",
+        "signature_hash": "134e6eb125af57c8"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_unrendered_state_cannot_carry_artifact_provenance": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 351,
+        "end_line": 354,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_unrendered_state_cannot_carry_artifact_provenance:ad8cad75a2a437ae",
+        "signature_hash": "73d7ee45c5021f4e"
+      }
+    ],
+    "FirstValueWitnessAdapterTests.test_observation_is_immutable": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "kind": "method",
+        "line": 356,
+        "end_line": 359,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_observation_is_immutable:6123329ee4d3a4e7",
+        "signature_hash": "e6b738f89ca8a1cc"
+      }
+    ],
+    "FirstValueWitnessScalarPrivacyTests": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "kind": "class",
+        "line": 56,
+        "end_line": 91,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#class:FirstValueWitnessScalarPrivacyTests:aafd3b05a39cb803",
+        "signature_hash": "d812c0c87d3d11dc"
+      }
+    ],
+    "FirstValueWitnessScalarPrivacyTests.test_route_id_rejects_private_content": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 60,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#method:FirstValueWitnessScalarPrivacyTests.test_route_id_rejects_private_content:3ed23374bad73e0f",
+        "signature_hash": "42be007a6f89528b"
+      }
+    ],
+    "FirstValueWitnessScalarPrivacyTests.test_mission_head_rejects_private_content": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 65,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#method:FirstValueWitnessScalarPrivacyTests.test_mission_head_rejects_private_content:c0890e28c2a99833",
+        "signature_hash": "b27dd7c1c82b3b91"
+      }
+    ],
+    "FirstValueWitnessScalarPrivacyTests.test_privacy_telemetry_mode_is_closed_vocabulary": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 72,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#method:FirstValueWitnessScalarPrivacyTests.test_privacy_telemetry_mode_is_closed_vocabulary:29cb8dc9901a9ddd",
+        "signature_hash": "0e77587bc06c3104"
+      }
+    ],
+    "FirstValueWitnessScalarPrivacyTests.test_evidence_class_is_closed_vocabulary": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 77,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#method:FirstValueWitnessScalarPrivacyTests.test_evidence_class_is_closed_vocabulary:9daf6ba52e975abd",
+        "signature_hash": "d49447944206839e"
+      }
+    ],
+    "FirstValueWitnessScalarPrivacyTests.test_consented_study_mode_is_bounded_and_does_not_authenticate_consequence": [
+      {
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 91,
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#method:FirstValueWitnessScalarPrivacyTests.test_consented_study_mode_is_bounded_and_does_not_authenticate_consequence:f597301e7d48e323",
+        "signature_hash": "8adc048c10a79ea7"
       }
     ],
     "_coordinates": [
@@ -159451,6 +160139,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-first-value-adapter.yml",
       ".github/workflows/aura-adopt-zf00b-friction-receipt.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
@@ -168659,6 +169348,59 @@
         0.180531,
         0.255844,
         0.26249
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-adopt-first-value-adapter.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1757,
+      "lines": 44,
+      "tokens_est": 440,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          30
+        ]
+      },
+      "topology": {},
+      "digest8": "a4d65bd7fe716de2",
+      "vector": [
+        0.322788,
+        0.1529,
+        0.265287,
+        0.160741,
+        -0.113695,
+        -0.056194,
+        0.192105,
+        -0.045739,
+        0.291424,
+        0.205173,
+        0.173809,
+        0.150286,
+        -0.150286,
+        0.113695,
+        0.192105,
+        0.032671,
+        -0.124149,
+        0.045739,
+        0.087558,
+        -0.273128,
+        -0.006534,
+        -0.111081,
+        -0.113695,
+        0.037898,
+        0.150286,
+        -0.027444,
+        -0.325402,
+        0.273128,
+        -0.218241,
+        0.108467,
+        0.1529,
+        -0.233923
       ]
     },
     {
@@ -264100,6 +264842,53 @@
       ]
     },
     {
+      "path": "tools/aura_adopt/first_value_witness_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 23185,
+      "lines": 494,
+      "tokens_est": 5797,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7d1d9a58ccd52735",
+      "vector": [
+        0.212082,
+        0.036014,
+        0.025343,
+        0.078697,
+        0.092036,
+        0.260101,
+        0.193408,
+        0.118713,
+        0.060023,
+        -0.081365,
+        0.036014,
+        0.169399,
+        -0.116045,
+        -0.225421,
+        -0.289446,
+        -0.31879,
+        -0.041349,
+        0.201411,
+        0.329461,
+        0.294781,
+        -0.209415,
+        0.190741,
+        0.025343,
+        0.105374,
+        -0.028011,
+        0.134719,
+        -0.177402,
+        0.118713,
+        -0.070694,
+        0.270772,
+        -0.236092,
+        0.033346
+      ]
+    },
+    {
       "path": "tools/aura_adopt/test_adoption_friction_receipt.py",
       "role": "python_module",
       "binary": false,
@@ -264144,6 +264933,100 @@
         -0.266069,
         -0.266069,
         0.059256
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_first_value_witness_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 18656,
+      "lines": 364,
+      "tokens_est": 4664,
+      "symbol_count": 42,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a304f2ec99bcf4e6",
+      "vector": [
+        0.131128,
+        -0.133332,
+        -0.261154,
+        -0.124516,
+        0.139943,
+        -0.186224,
+        -0.252339,
+        0.188427,
+        -0.179612,
+        0.276581,
+        0.060605,
+        0.219281,
+        -0.007713,
+        -0.236912,
+        -0.067217,
+        0.190631,
+        -0.256746,
+        0.173001,
+        -0.058402,
+        -0.115701,
+        0.170797,
+        0.12672,
+        -0.166389,
+        0.087051,
+        -0.25895,
+        -0.089255,
+        -0.245727,
+        0.234708,
+        0.082644,
+        -0.034159,
+        0.274377,
+        -0.058402
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4190,
+      "lines": 96,
+      "tokens_est": 1048,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c19d80e32faaef8f",
+      "vector": [
+        -0.240221,
+        0.204131,
+        0.165786,
+        -0.271799,
+        0.025939,
+        0.274055,
+        0.053006,
+        -0.237965,
+        -0.27631,
+        -0.134208,
+        -0.109396,
+        0.06654,
+        -0.253755,
+        0.028195,
+        0.084585,
+        0.177064,
+        -0.265032,
+        0.098118,
+        -0.050751,
+        -0.138719,
+        -0.253755,
+        -0.064284,
+        -0.053006,
+        -0.201876,
+        0.206387,
+        -0.181575,
+        0.084585,
+        -0.136464,
+        0.188342,
+        0.17932,
+        -0.258266,
+        -0.012406
       ]
     },
     {
@@ -288145,16 +289028,16 @@
     }
   },
   "summary": {
-    "file_count": 1646,
-    "total_bytes": 26507759,
-    "text_tokens_est": 6617293,
+    "file_count": 1650,
+    "total_bytes": 26555547,
+    "text_tokens_est": 6629242,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1001,
-      "schema_or_lexicon": 274,
+      "python_module": 1004,
+      "schema_or_lexicon": 275,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288296,6 +289179,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-first-value-adapter.yml",
       ".github/workflows/aura-adopt-zf00b-friction-receipt.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
@@ -289801,7 +290685,10 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/aura_adopt/adoption_friction_receipt.py",
+      "tools/aura_adopt/first_value_witness_adapter.py",
       "tools/aura_adopt/test_adoption_friction_receipt.py",
+      "tools/aura_adopt/test_first_value_witness_adapter.py",
+      "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -448040,6 +448927,196 @@
         "file_digest8": "46be3aafb09ef0f2"
       },
       {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#class:AcceptanceEvidenceMode:4597a0a50b38a2a2",
+        "name": "AcceptanceEvidenceMode",
+        "kind": "class",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 54,
+        "end_line": 58,
+        "signature_hash": "07d5a97e6b6645d8",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#class:FirstValueWitnessObservationV1:3a74a4644a684032",
+        "name": "FirstValueWitnessObservationV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 136,
+        "end_line": 256,
+        "signature_hash": "51c36727b536f210",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#class:SaveEvidenceMode:0e38264d02bb3b16",
+        "name": "SaveEvidenceMode",
+        "kind": "class",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 61,
+        "end_line": 65,
+        "signature_hash": "53ad63aa1d36d374",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_acceptance:ae27052643030af6",
+        "name": "_acceptance",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 276,
+        "end_line": 313,
+        "signature_hash": "c0ba80f93262d0b6",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_binary_stage:0227331429ddf274",
+        "name": "_binary_stage",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 270,
+        "end_line": 273,
+        "signature_hash": "06cf72bb8fab8233",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_capability_ref:a9b35b2dc09644a1",
+        "name": "_capability_ref",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 93,
+        "end_line": 97,
+        "signature_hash": "4b92bef9467399f1",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_closed_token:f993ccb8c65070ae",
+        "name": "_closed_token",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 87,
+        "end_line": 90,
+        "signature_hash": "2780eb3e9c73e571",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_event:70a55187e3a71a0c",
+        "name": "_event",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 259,
+        "end_line": 267,
+        "signature_hash": "dca1c186f1a635cf",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_evidence_commitment:e728f8203747b175",
+        "name": "_evidence_commitment",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 127,
+        "end_line": 132,
+        "signature_hash": "c252417d57c6aa7c",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_privacy_minimal_cohort:d200a554358c3a80",
+        "name": "_privacy_minimal_cohort",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 107,
+        "end_line": 118,
+        "signature_hash": "44126840f5d795c8",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_private_like:d65d7ffa655fff69",
+        "name": "_private_like",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 68,
+        "end_line": 75,
+        "signature_hash": "d958252b8055c5f7",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_recipe_ref:fcff2808c39c3a4e",
+        "name": "_recipe_ref",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 100,
+        "end_line": 104,
+        "signature_hash": "07f1e68c7870806b",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_ref:c51302a888aa1f3c",
+        "name": "_ref",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 78,
+        "end_line": 84,
+        "signature_hash": "31aef7170550e3ac",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_save_reopen:8450090a5d12e9a4",
+        "name": "_save_reopen",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 316,
+        "end_line": 351,
+        "signature_hash": "16ec98987b29af5b",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_sha:ec7afcdcdffa404e",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 121,
+        "end_line": 124,
+        "signature_hash": "ada84dce30d96991",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:_share_or_reuse:dd8cdf8051e0bffa",
+        "name": "_share_or_reuse",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 354,
+        "end_line": 371,
+        "signature_hash": "f96ba43f5b6f07f5",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#function:compile_first_value_receipt:b0dabcf9ea0bcf65",
+        "name": "compile_first_value_receipt",
+        "kind": "function",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 374,
+        "end_line": 490,
+        "signature_hash": "4ca48260fbc51735",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#method:FirstValueWitnessObservationV1.__post_init__:8f4fe57fcc17213a",
+        "name": "FirstValueWitnessObservationV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 157,
+        "end_line": 247,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/first_value_witness_adapter.py#method:FirstValueWitnessObservationV1.common_evidence_binding:a5d3bc221ce5eb79",
+        "name": "FirstValueWitnessObservationV1.common_evidence_binding",
+        "kind": "method",
+        "file": "tools/aura_adopt/first_value_witness_adapter.py",
+        "line": 249,
+        "end_line": 256,
+        "signature_hash": "b7bafd7a4e9e7da8",
+        "file_digest8": "7d1d9a58ccd52735"
+      },
+      {
         "semantic_id": "tools/aura_adopt/test_adoption_friction_receipt.py#class:AdoptionFrictionReceiptTests:78f19facdea9d5e6",
         "name": "AdoptionFrictionReceiptTests",
         "kind": "class",
@@ -448308,6 +449385,516 @@
         "end_line": 341,
         "signature_hash": "b3d724bd1d5bf60b",
         "file_digest8": "75e4d533373ec21f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#class:FirstValueWitnessAdapterTests:51bb7920915a59d9",
+        "name": "FirstValueWitnessAdapterTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 72,
+        "end_line": 359,
+        "signature_hash": "7e7799e49e61e7b7",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#function:compile_receipt:b707be22207686db",
+        "name": "compile_receipt",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 54,
+        "end_line": 69,
+        "signature_hash": "2a6a8615749a3f70",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#function:decision:1895f1ea58055e4b",
+        "name": "decision",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 11,
+        "end_line": 26,
+        "signature_hash": "80ea801e50609b38",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#function:observation:c2f53651e667c837",
+        "name": "observation",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 29,
+        "end_line": 41,
+        "signature_hash": "61d98d33f2ab3b16",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#function:unrendered:957b060ce198aee1",
+        "name": "unrendered",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 44,
+        "end_line": 51,
+        "signature_hash": "b97bd9fe1413f776",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.stage:9821b74df3748cce",
+        "name": "FirstValueWitnessAdapterTests.stage",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 73,
+        "end_line": 74,
+        "signature_hash": "b7e38b7b2c5bcc20",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_adapter_uses_canonical_zf00_identity_and_full_stage_order:840e6bbf2b3afb8d",
+        "name": "FirstValueWitnessAdapterTests.test_adapter_uses_canonical_zf00_identity_and_full_stage_order",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 283,
+        "end_line": 290,
+        "signature_hash": "a142b1f7215fb83f",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_caller_explicit_accept_is_structural_unknown_not_authenticated:1cece3332c93f739",
+        "name": "FirstValueWitnessAdapterTests.test_caller_explicit_accept_is_structural_unknown_not_authenticated",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 82,
+        "end_line": 92,
+        "signature_hash": "5076f163f83fe2c8",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_caller_explicit_reject_is_also_structural_unknown:74b3f8712897419e",
+        "name": "FirstValueWitnessAdapterTests.test_caller_explicit_reject_is_also_structural_unknown",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 94,
+        "end_line": 100,
+        "signature_hash": "4ed94874a44d81c7",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_consequence_evidence_never_pollutes_capability_refs:95c058e478b58d9f",
+        "name": "FirstValueWitnessAdapterTests.test_consequence_evidence_never_pollutes_capability_refs",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 190,
+        "end_line": 209,
+        "signature_hash": "701a70236cbfa5d2",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_download_initiated_never_proves_save_or_reopen:cd2249b663f7e688",
+        "name": "FirstValueWitnessAdapterTests.test_download_initiated_never_proves_save_or_reopen",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 107,
+        "end_line": 110,
+        "signature_hash": "313ace34b27cd7d6",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_even_consented_study_caller_assertion_cannot_complete_without_resolver:0bda681fc6310f87",
+        "name": "FirstValueWitnessAdapterTests.test_even_consented_study_caller_assertion_cannot_complete_without_resolver",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 139,
+        "end_line": 149,
+        "signature_hash": "d6a4ba7c067a1812",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_evidence_commitment_changes_when_consequence_evidence_changes:432c312d6032e5eb",
+        "name": "FirstValueWitnessAdapterTests.test_evidence_commitment_changes_when_consequence_evidence_changes",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 244,
+        "end_line": 257,
+        "signature_hash": "ea16b6616fb48292",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_evidence_refs_reject_whitespace_and_secret_like_values:7346bbbc580dc2aa",
+        "name": "FirstValueWitnessAdapterTests.test_evidence_refs_reject_whitespace_and_secret_like_values",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 336,
+        "end_line": 341,
+        "signature_hash": "1790e364324c39b7",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_explicit_acceptance_requires_preview:ac305454cbc38943",
+        "name": "FirstValueWitnessAdapterTests.test_explicit_acceptance_requires_preview",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 312,
+        "end_line": 320,
+        "signature_hash": "79413b5d53b397d9",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_failed_trust_is_a_typed_blocker:97d6588e10479a2e",
+        "name": "FirstValueWitnessAdapterTests.test_failed_trust_is_a_typed_blocker",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 264,
+        "end_line": 267,
+        "signature_hash": "92921b9e11e59f4e",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_missing_browser_capability_is_visible_not_guessed:6a14dce9b961045b",
+        "name": "FirstValueWitnessAdapterTests.test_missing_browser_capability_is_visible_not_guessed",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 269,
+        "end_line": 273,
+        "signature_hash": "ace93e98727075a9",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_observation_is_immutable:6123329ee4d3a4e7",
+        "name": "FirstValueWitnessAdapterTests.test_observation_is_immutable",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 356,
+        "end_line": 359,
+        "signature_hash": "e6b738f89ca8a1cc",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_only_ready_zero_install_route_is_admitted:fa8907aa69aad76e",
+        "name": "FirstValueWitnessAdapterTests.test_only_ready_zero_install_route_is_admitted",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 275,
+        "end_line": 281,
+        "signature_hash": "24b7ebddff30a51b",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_preview_requires_render:71cdbc0496b5e3b9",
+        "name": "FirstValueWitnessAdapterTests.test_preview_requires_render",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 307,
+        "end_line": 310,
+        "signature_hash": "41cdaa43bd3caf34",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_private_content_rejected_from_serialized_refs_and_cohort_values:7e8db779d7d003ad",
+        "name": "FirstValueWitnessAdapterTests.test_private_content_rejected_from_serialized_refs_and_cohort_values",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 218,
+        "end_line": 233,
+        "signature_hash": "0f9de84b768ef7ed",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_public_capability_refs_reject_non_capability_namespaces:12768d192097298b",
+        "name": "FirstValueWitnessAdapterTests.test_public_capability_refs_reject_non_capability_namespaces",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 211,
+        "end_line": 216,
+        "signature_hash": "674fcea8888fed5c",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_recipe_and_capability_refs_use_opaque_hygiene_membrane:02231a2f1a48f805",
+        "name": "FirstValueWitnessAdapterTests.test_recipe_and_capability_refs_use_opaque_hygiene_membrane",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 343,
+        "end_line": 349,
+        "signature_hash": "134e6eb125af57c8",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_recipe_ref_requires_typed_namespace:45d2b55c22c7449d",
+        "name": "FirstValueWitnessAdapterTests.test_recipe_ref_requires_typed_namespace",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 235,
+        "end_line": 238,
+        "signature_hash": "fdea60c4cfabdcad",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_render_requires_input:9e63442958ea6f78",
+        "name": "FirstValueWitnessAdapterTests.test_render_requires_input",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 297,
+        "end_line": 300,
+        "signature_hash": "a406fa7da4619c61",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_render_requires_open:27ce121a6737c8d9",
+        "name": "FirstValueWitnessAdapterTests.test_render_requires_open",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 292,
+        "end_line": 295,
+        "signature_hash": "eb61f38b33c624e7",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_render_requires_proven_browser_capability:78f2fc7f541e14dc",
+        "name": "FirstValueWitnessAdapterTests.test_render_requires_proven_browser_capability",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 302,
+        "end_line": 305,
+        "signature_hash": "c64e7dc04b5b232d",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_rendered_output_requires_digest_source_generation_and_currentness:0b021b1813a54a71",
+        "name": "FirstValueWitnessAdapterTests.test_rendered_output_requires_digest_source_generation_and_currentness",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 184,
+        "end_line": 188,
+        "signature_hash": "8cc278193aad3f3d",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_reopen_cannot_reuse_save_evidence_ref:8474e0d4043a0a65",
+        "name": "FirstValueWitnessAdapterTests.test_reopen_cannot_reuse_save_evidence_ref",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 156,
+        "end_line": 163,
+        "signature_hash": "30f7a8a38e580aa1",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_reopen_digest_mismatch_fails_closed:6edc9dfdb5cbc9e9",
+        "name": "FirstValueWitnessAdapterTests.test_reopen_digest_mismatch_fails_closed",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 165,
+        "end_line": 172,
+        "signature_hash": "5fbe0d1599d95313",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_reopen_pointer_alone_cannot_complete:d21b47084d936e11",
+        "name": "FirstValueWitnessAdapterTests.test_reopen_pointer_alone_cannot_complete",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 151,
+        "end_line": 154,
+        "signature_hash": "c992ce69399ff00d",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_reopen_requires_distinct_chain_but_remains_unauthenticated_unknown:a12306b2ddae207d",
+        "name": "FirstValueWitnessAdapterTests.test_reopen_requires_distinct_chain_but_remains_unauthenticated_unknown",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 127,
+        "end_line": 137,
+        "signature_hash": "8ab0d8cd5976bb2e",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_save_digest_mismatch_fails_closed:c6ad0ec98d238144",
+        "name": "FirstValueWitnessAdapterTests.test_save_digest_mismatch_fails_closed",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 121,
+        "end_line": 125,
+        "signature_hash": "bc54295c5e44f241",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_save_observation_requires_render:4ca79f7165b331b7",
+        "name": "FirstValueWitnessAdapterTests.test_save_observation_requires_render",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 322,
+        "end_line": 325,
+        "signature_hash": "ec1c6994b8ef498b",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_save_observed_binds_exact_output_but_not_reopen:160e0971af1dbfc2",
+        "name": "FirstValueWitnessAdapterTests.test_save_observed_binds_exact_output_but_not_reopen",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 112,
+        "end_line": 119,
+        "signature_hash": "6a45f6d58b7ce783",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_share_or_reuse_structural_assertion_remains_unknown:6cd83ffc5a45de81",
+        "name": "FirstValueWitnessAdapterTests.test_share_or_reuse_structural_assertion_remains_unknown",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 174,
+        "end_line": 182,
+        "signature_hash": "8a0ac115b7f4a139",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_share_reuse_requires_render_and_evidence:8f48b8b295f28c8b",
+        "name": "FirstValueWitnessAdapterTests.test_share_reuse_requires_render_and_evidence",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 327,
+        "end_line": 334,
+        "signature_hash": "128a370248014de1",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_synthetic_technical_never_becomes_user_acceptance:cf5e6ecb2af56109",
+        "name": "FirstValueWitnessAdapterTests.test_synthetic_technical_never_becomes_user_acceptance",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 76,
+        "end_line": 80,
+        "signature_hash": "9898113a080bc1ce",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_tokenizer_named_capability_is_not_false_positive_secret:7f3bab2e99878fce",
+        "name": "FirstValueWitnessAdapterTests.test_tokenizer_named_capability_is_not_false_positive_secret",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 240,
+        "end_line": 242,
+        "signature_hash": "5cff1f37a7a6bddc",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_trust_is_not_completable_by_pointer_presence:bba7b52190102d33",
+        "name": "FirstValueWitnessAdapterTests.test_trust_is_not_completable_by_pointer_presence",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 259,
+        "end_line": 262,
+        "signature_hash": "22706a5b8975d892",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_unrendered_state_cannot_carry_artifact_provenance:ad8cad75a2a437ae",
+        "name": "FirstValueWitnessAdapterTests.test_unrendered_state_cannot_carry_artifact_provenance",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 351,
+        "end_line": 354,
+        "signature_hash": "73d7ee45c5021f4e",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter.py#method:FirstValueWitnessAdapterTests.test_user_acceptance_without_evidence_ref_fails_closed:11a021d2afb95b8d",
+        "name": "FirstValueWitnessAdapterTests.test_user_acceptance_without_evidence_ref_fails_closed",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter.py",
+        "line": 102,
+        "end_line": 105,
+        "signature_hash": "ffebdd62f53d667e",
+        "file_digest8": "a304f2ec99bcf4e6"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#class:FirstValueWitnessScalarPrivacyTests:aafd3b05a39cb803",
+        "name": "FirstValueWitnessScalarPrivacyTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "line": 56,
+        "end_line": 91,
+        "signature_hash": "d812c0c87d3d11dc",
+        "file_digest8": "c19d80e32faaef8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#function:compile_receipt:298473ae98971ec9",
+        "name": "compile_receipt",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "line": 41,
+        "end_line": 53,
+        "signature_hash": "4ca4842a2742f7dd",
+        "file_digest8": "c19d80e32faaef8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#function:decision:f5bc62cdfb78e170",
+        "name": "decision",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "line": 9,
+        "end_line": 23,
+        "signature_hash": "24501cc056f2b843",
+        "file_digest8": "c19d80e32faaef8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#function:observation:2217be9040b429da",
+        "name": "observation",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "line": 26,
+        "end_line": 38,
+        "signature_hash": "b6d2f925be861055",
+        "file_digest8": "c19d80e32faaef8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#method:FirstValueWitnessScalarPrivacyTests.test_consented_study_mode_is_bounded_and_does_not_authenticate_consequence:f597301e7d48e323",
+        "name": "FirstValueWitnessScalarPrivacyTests.test_consented_study_mode_is_bounded_and_does_not_authenticate_consequence",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "line": 79,
+        "end_line": 91,
+        "signature_hash": "8adc048c10a79ea7",
+        "file_digest8": "c19d80e32faaef8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#method:FirstValueWitnessScalarPrivacyTests.test_evidence_class_is_closed_vocabulary:9daf6ba52e975abd",
+        "name": "FirstValueWitnessScalarPrivacyTests.test_evidence_class_is_closed_vocabulary",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "line": 74,
+        "end_line": 77,
+        "signature_hash": "d49447944206839e",
+        "file_digest8": "c19d80e32faaef8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#method:FirstValueWitnessScalarPrivacyTests.test_mission_head_rejects_private_content:c0890e28c2a99833",
+        "name": "FirstValueWitnessScalarPrivacyTests.test_mission_head_rejects_private_content",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "line": 62,
+        "end_line": 65,
+        "signature_hash": "b27dd7c1c82b3b91",
+        "file_digest8": "c19d80e32faaef8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#method:FirstValueWitnessScalarPrivacyTests.test_privacy_telemetry_mode_is_closed_vocabulary:29cb8dc9901a9ddd",
+        "name": "FirstValueWitnessScalarPrivacyTests.test_privacy_telemetry_mode_is_closed_vocabulary",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "line": 67,
+        "end_line": 72,
+        "signature_hash": "0e77587bc06c3104",
+        "file_digest8": "c19d80e32faaef8f"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py#method:FirstValueWitnessScalarPrivacyTests.test_route_id_rejects_private_content:3ed23374bad73e0f",
+        "name": "FirstValueWitnessScalarPrivacyTests.test_route_id_rejects_private_content",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_first_value_witness_adapter_scalar_privacy.py",
+        "line": 57,
+        "end_line": 60,
+        "signature_hash": "42be007a6f89528b",
+        "file_digest8": "c19d80e32faaef8f"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -449560,7 +451147,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "0fe38f1beda6c0ad000c07799e216562",
-    "payload_hash": "0f03648df303fd60fce3f81cca403c68"
+    "record_fingerprint": "d8f3d4077491988d4e58a1002879cc4d",
+    "payload_hash": "9c34aa35a50faf4342dfdbf14dd63f33"
   }
 }
