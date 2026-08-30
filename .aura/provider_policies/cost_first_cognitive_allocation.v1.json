@@ -1,0 +1,68 @@
+{
+  "schema_version": "AURA_COST_FIRST_COGNITIVE_ALLOCATION_V1",
+  "status": "STAGED_NONPROMOTING",
+  "owner_lineage": [
+    "P0-C81 provider-dispatch accounting / cost-safety",
+    "AWJ-016 Expert Fabric",
+    "WorkCapsuleV2 autonomous execution slices"
+  ],
+  "laws": [
+    "REUSE_CURRENT_COORDINATED_COGNITION_BEFORE_RECOMPUTE",
+    "AURAOS_DETERMINISTIC_AND_SCRIPTED_WORK_BEFORE_MODEL_INFERENCE",
+    "CHATGPT_INTERACTIVE_CONTROL_PLANE_SHOULD_CARRY_TOP_LEVEL_REASONING_WHEN_AVAILABLE_WITHOUT_CREATING_A_SEPARATE_PAID_API_CALL",
+    "DEEPSEEK_IS_DEFAULT_PAID_REMOTE_SWARM_PROVIDER",
+    "NO_IMPLICIT_PAID_PROVIDER_FALLBACK",
+    "EXPENSIVE_FRONTIER_PROVIDER_REQUIRES_EARNED_REASONING_NEED_PLUS_EXPLICIT_OWNER_SPEND_AUTHORIZATION",
+    "EVERY_PAID_INFERENCE_MUST_LEAVE_REUSABLE_COORDINATED_COGNITION",
+    "UNKNOWN_COST_IS_NOT_ZERO_OR_FREE",
+    "CHEAP_TO_EXPENSIVE_FALLBACK_WITHOUT_CURRENT_COST_ADMISSION_FAILS_CLOSED",
+    "WORKER_COUNT_IS_NOT_EVIDENCE_INDEPENDENCE",
+    "AUTONOMOUS_BACKGROUND_WORK_STOPS_AT_GATE10"
+  ],
+  "execution_ladder": [
+    "L0_REUSE_CURRENT_COORDINATE_MEMORY_WORKCAPSULE_RECEIPT_CODE_OR_PROOF",
+    "L1_AURAOS_NO_MODEL_SCRIPTS_DETERMINISTIC_CHECKS_ARENA_ROUTING",
+    "L2_CHATGPT_INTERACTIVE_ORCHESTRATION_REASONING_WHEN_AVAILABLE",
+    "L3_LOCAL_MODEL_WHEN_LAWFUL_AND_LOWER_INCREMENTAL_PROVIDER_COST",
+    "L4_DEEPSEEK_SWARM_DEFAULT_PAID_REMOTE",
+    "L5_EXPENSIVE_FRONTIER_EXCEPTION_ONLY"
+  ],
+  "deepseek_default": {
+    "provider": "deepseek",
+    "applies_to": ["ordinary paid remote swarm work", "A+ Construct", "B- Challenge", "C0 Verify when same-provider independence is acceptable"],
+    "fallback": "BLOCK_AND_REQUEST_EXPLICIT_OWNER_AUTHORIZATION",
+    "must_have": ["current provider authorization", "finite cost upper bound when monetary rates are available", "command/workcapsule currentness", "idempotency binding"]
+  },
+  "bootstrap_models": {
+    "opencode_or_other_interactive_backend": "CONTROL_PLANE_ONLY_BY_DEFAULT",
+    "allowed": ["host preflight", "restore AuraOS resident", "compile/rebase WorkCapsules", "start/check/stop DeepSeek swarm", "review receipts"],
+    "forbidden_by_default": ["doing the entire substantive work order", "silent takeover after DeepSeek failure", "paid fallback without owner authorization"]
+  },
+  "expensive_frontier_gate": {
+    "requires_all": [
+      "frontier_reasoning_earned",
+      "DeepSeek/local/deterministic/reuse path judged insufficient for the bounded consequence",
+      "explicit owner authorization for the named provider/model spend",
+      "finite pre-dispatch cost ceiling or BLOCKED_ACCOUNTING_UNKNOWN",
+      "materialization plan for reusable output"
+    ]
+  },
+  "amortization_contract": {
+    "after_every_paid_call": [
+      "source/currentness-bound result receipt",
+      "WorkCapsule/result digest",
+      "Coordinate Memory placement or reopen pointer",
+      "minimum L0 successor summary",
+      "reusable code/test/equation/proof artifact where produced",
+      "counterevidence/invalidators/residuals",
+      "provider/model/attempt/cost evidence class",
+      "rebase triggers"
+    ],
+    "goal": "DO_NOT_PAY_TO_RECONSTRUCT_ALREADY_EARNED_COGNITION"
+  },
+  "cost_admission": {
+    "must_compare": ["reuse", "no-model AuraOS", "interactive ChatGPT when available", "local model", "DeepSeek", "requested expensive frontier"],
+    "selection_rule": "LOWEST_INCREMENTAL_LAWFUL_COST_THAT_SATISFIES_THE_BOUNDED_CONSEQUENCE",
+    "unknown_cost": "BLOCK_OR_REPORT_UNKNOWN_NEVER_COERCE_TO_ZERO"
+  }
+}
