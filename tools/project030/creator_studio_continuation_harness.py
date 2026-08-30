@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 from dataclasses import dataclass, field
@@ -28,6 +29,42 @@ LAWFUL_TERMINALS = {
     "SUPERSEDED_CURRENTNESS",
     "OWNER_STOP",
 }
+
+GATE_EVIDENCE_REQUIREMENTS: Mapping[int, frozenset[str]] = {
+    1: frozenset({"ARENA_ADMISSION_RECEIPT"}),
+    2: frozenset({"WORKGRAPH_PROJECTION_RECEIPT"}),
+    3: frozenset({"CONTINUATION_RECEIPT"}),
+    4: frozenset({"SUCCESSOR_COMPILATION_RECEIPT"}),
+    5: frozenset({"MULTIWORKER_DEPENDENCY_WAKE_RECEIPT"}),
+    6: frozenset({"COST_ROUTER_RECEIPT"}),
+    7: frozenset({"ADVERSARIAL_RESTART_COLLISION_RECEIPT"}),
+    8: frozenset({"INDEPENDENT_REPRODUCTION_RECEIPT", "FRESH_WORKER_PROBE_RECEIPT"}),
+    9: frozenset({"LIVE_CREATOR_STUDIO_INTEGRATION_RECEIPT"}),
+    10: frozenset({
+        "DIFFERENT_J_REVIEW_RECEIPT",
+        "REPLAY_RESTART_CURRENTNESS_RECEIPT",
+        "EXACT_RUNTIME_RECEIPT",
+        "LAWFUL_TERMINAL_PROOF_RECEIPT",
+        "DUPLICATE_COST_SWARM_MINIMIZATION_RECEIPT",
+    }),
+}
+
+
+@dataclass(frozen=True)
+class GateEvidence:
+    """One typed, current, receipt-bound gate-evidence reference."""
+
+    evidence_class: str
+    ref: str
+    verified: bool = True
+    currentness: str = "CURRENT"
+    receipt_bound: bool = True
+
+    def __post_init__(self) -> None:
+        if not self.evidence_class.strip():
+            raise ValueError("evidence_class required")
+        if not self.ref.strip():
+            raise ValueError("evidence ref required")
 
 
 @dataclass(frozen=True)
@@ -110,6 +147,9 @@ class HarnessState:
     residual_fingerprints: Set[str] = field(default_factory=set)
     currentness: str = "CURRENT"
     owner_stop: bool = False
+    external_boundary_refs: Set[str] = field(default_factory=set)
+    gate_evidence: Dict[int, Tuple[GateEvidence, ...]] = field(default_factory=dict)
+    canonical_mission_restored: bool = False
     history: List[dict] = field(default_factory=list)
     _sequence: int = 0
 
@@ -134,6 +174,10 @@ def _score(item: WorkItem) -> Tuple[float, float, float, float, int, str]:
         item.priority,
         item.work_id,
     )
+
+
+def _worker_claim_ids(state: HarnessState, worker: WorkerContext) -> List[str]:
+    return sorted(work_id for work_id, owner in state.claims.items() if owner == worker.worker_id)
 
 
 def eligible_work(
@@ -175,8 +219,20 @@ def claim_best_available(state: HarnessState, worker: WorkerContext) -> HarnessA
             mission_id=state.active_mission_id,
             recheck_trigger="currentness becomes CURRENT",
         )
-    if state.gate >= 10:
+    if state.gate >= 10 and state.temporary_mission:
         return restore_canonical_mission(state)
+
+    current_claims = _worker_claim_ids(state, worker)
+    if len(current_claims) > 1:
+        raise HarnessRefusal("WORKER_MULTIPLE_ACTIVE_CLAIMS", ",".join(current_claims))
+    if len(current_claims) == 1:
+        return HarnessAction(
+            "CONTINUE_ACTIVE_CLAIM",
+            "WORKER_ALREADY_CLAIMED",
+            work_id=current_claims[0],
+            mission_id=state.active_mission_id,
+            requires_inference=False,
+        )
 
     for stage in ("PRIORITY", "REVIEW", "BACKBURNER"):
         candidates = eligible_work(state, worker, stage=stage)
@@ -263,7 +319,7 @@ def complete_and_continue(
     *,
     residuals: Sequence[Residual] = (),
 ) -> HarnessAction:
-    """Finish -> release -> compile residuals -> scan -> claim next work."""
+    """Atomically finish, compile successors, release, scan and claim next work."""
     if state.currentness != "CURRENT":
         return HarnessAction("REBASE", "SUPERSEDED_CURRENTNESS", mission_id=state.active_mission_id)
     item = state.work.get(work_id)
@@ -272,37 +328,86 @@ def complete_and_continue(
     if state.claims.get(work_id) != worker.worker_id:
         raise HarnessRefusal("CLAIM_OWNERSHIP_MISMATCH", work_id)
 
-    item.state = "COMPLETE"
-    state.completed.add(work_id)
-    state.claims.pop(work_id, None)
-    state.history.append(
+    staged = copy.deepcopy(state)
+    staged_item = staged.work[work_id]
+    staged_item.state = "COMPLETE"
+    staged.completed.add(work_id)
+    staged.claims.pop(work_id, None)
+    staged.history.append(
         {"event": "FINISH_RELEASE", "work_id": work_id, "worker_id": worker.worker_id}
     )
-    compile_successor_work(state, work_id, residuals)
-    return claim_best_available(state, worker)
+    compile_successor_work(staged, work_id, residuals)
+    action = claim_best_available(staged, worker)
+
+    state.__dict__.clear()
+    state.__dict__.update(staged.__dict__)
+    return action
 
 
-def advance_gate(state: HarnessState, target_gate: int, evidence_refs: Iterable[str]) -> int:
-    """Advance at most one gate, and only with durable evidence references."""
-    refs = tuple(ref for ref in evidence_refs if str(ref).strip())
+def _validated_gate_evidence(
+    target_gate: int,
+    evidence_refs: Iterable[GateEvidence],
+) -> Tuple[GateEvidence, ...]:
+    evidence = tuple(evidence_refs)
+    if not evidence:
+        raise HarnessRefusal("GATE_EVIDENCE_REQUIRED", str(target_gate))
+
+    normalized: List[GateEvidence] = []
+    for entry in evidence:
+        if not isinstance(entry, GateEvidence):
+            raise HarnessRefusal("GATE_EVIDENCE_TYPE_REQUIRED", str(target_gate))
+        if not entry.verified:
+            raise HarnessRefusal("GATE_EVIDENCE_NOT_VERIFIED", entry.evidence_class)
+        if entry.currentness != "CURRENT":
+            raise HarnessRefusal("GATE_EVIDENCE_NOT_CURRENT", entry.evidence_class)
+        if not entry.receipt_bound:
+            raise HarnessRefusal("GATE_EVIDENCE_NOT_RECEIPT_BOUND", entry.evidence_class)
+        normalized.append(entry)
+
+    required = GATE_EVIDENCE_REQUIREMENTS[target_gate]
+    observed = {entry.evidence_class for entry in normalized}
+    missing = sorted(required - observed)
+    if missing:
+        raise HarnessRefusal("GATE_EVIDENCE_CLASS_MISSING", ",".join(missing))
+    return tuple(normalized)
+
+
+def advance_gate(
+    state: HarnessState,
+    target_gate: int,
+    evidence_refs: Iterable[GateEvidence],
+) -> int:
+    """Advance one gate only when its required typed evidence classes are present."""
     if target_gate != state.gate + 1:
         raise HarnessRefusal("GATE_SEQUENCE_VIOLATION", f"{state.gate}->{target_gate}")
-    if target_gate < 0 or target_gate > 10:
+    if target_gate < 1 or target_gate > 10:
         raise HarnessRefusal("INVALID_GATE", str(target_gate))
-    if not refs:
-        raise HarnessRefusal("GATE_EVIDENCE_REQUIRED", str(target_gate))
+    refs = _validated_gate_evidence(target_gate, evidence_refs)
     state.gate = target_gate
-    state.history.append({"event": "GATE_ADVANCE", "gate": target_gate, "evidence_refs": refs})
+    state.gate_evidence[target_gate] = refs
+    state.history.append(
+        {
+            "event": "GATE_ADVANCE",
+            "gate": target_gate,
+            "evidence": [
+                {"class": ref.evidence_class, "ref": ref.ref}
+                for ref in refs
+            ],
+        }
+    )
     return state.gate
 
 
 def restore_canonical_mission(state: HarnessState) -> HarnessAction:
-    """At Gate 10, infrastructure remains but temporary mission automatically releases."""
+    """At Gate 10, release the temporary mission exactly once."""
     if state.gate < 10:
         raise HarnessRefusal("GATE10_REQUIRED_FOR_MISSION_RETURN", str(state.gate))
+    if not state.temporary_mission or state.canonical_mission_restored:
+        raise HarnessRefusal("CANONICAL_MISSION_ALREADY_RESTORED", state.canonical_mission_id)
     previous = state.active_mission_id
     state.active_mission_id = state.canonical_mission_id
     state.temporary_mission = False
+    state.canonical_mission_restored = True
     state.history.append(
         {
             "event": "MISSION_RETURN",
@@ -323,15 +428,29 @@ def assert_terminal_allowed(
     worker: WorkerContext,
     requested_reason: str,
 ) -> None:
-    """Reject chat-local/premature terminal behavior while work remains."""
+    """Reject valid-looking terminal labels when their state predicate is absent."""
     if requested_reason not in LAWFUL_TERMINALS:
         if any(eligible_work(state, worker, stage=s) for s in PRIORITY_STAGE_ORDER):
             raise HarnessRefusal("PREMATURE_TERMINAL_REFUSED", requested_reason)
         raise HarnessRefusal("UNTYPED_TERMINAL_REFUSED", requested_reason)
 
-    if requested_reason == "GATE10_COMPLETE" and state.gate < 10:
-        raise HarnessRefusal("GATE10_NOT_REACHED", str(state.gate))
-    if requested_reason == "NO_ELIGIBLE_WORK_AFTER_REVIEW":
+    if requested_reason == "GATE10_COMPLETE":
+        if state.gate < 10:
+            raise HarnessRefusal("GATE10_NOT_REACHED", str(state.gate))
+        if 10 not in state.gate_evidence:
+            raise HarnessRefusal("GATE10_EVIDENCE_NOT_BOUND", requested_reason)
+    elif requested_reason == "OWNER_STOP":
+        if not state.owner_stop:
+            raise HarnessRefusal("OWNER_STOP_NOT_EVIDENCED", requested_reason)
+    elif requested_reason == "BLOCKED_EXTERNAL_BOUNDARY":
+        if not state.external_boundary_refs:
+            raise HarnessRefusal("EXTERNAL_BOUNDARY_EVIDENCE_REQUIRED", requested_reason)
+    elif requested_reason == "SUPERSEDED_CURRENTNESS":
+        if state.currentness == "CURRENT":
+            raise HarnessRefusal("CURRENTNESS_NOT_SUPERSEDED", requested_reason)
+    elif requested_reason == "NO_ELIGIBLE_WORK_AFTER_REVIEW":
+        if _worker_claim_ids(state, worker):
+            raise HarnessRefusal("ACTIVE_CLAIM_REMAINS", requested_reason)
         if any(eligible_work(state, worker, stage=s) for s in PRIORITY_STAGE_ORDER):
             raise HarnessRefusal("ELIGIBLE_WORK_REMAINS", requested_reason)
 
@@ -350,6 +469,12 @@ def continuation_snapshot(state: HarnessState, worker: WorkerContext) -> dict:
         "currentness": state.currentness,
         "eligible_counts": counts,
         "active_claim_count": len(state.claims),
+        "worker_active_claims": _worker_claim_ids(state, worker),
         "completed_count": len(state.completed),
+        "canonical_mission_restored": state.canonical_mission_restored,
+        "gate_evidence_classes": {
+            gate: sorted(entry.evidence_class for entry in entries)
+            for gate, entries in state.gate_evidence.items()
+        },
         "scheduler_requires_inference": False,
     }
