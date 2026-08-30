@@ -3,8 +3,10 @@
 This is a D0/reference composition layer. It does not interpret mission-specific
 acceptance semantics and it does not create a second scheduler or evidence owner.
 A production resolver must supply the owner policy/attestation from the mission
-evidence plane. The membrane only proves exact structural binding before delegating
-a COMPLETE transition to the existing WorkGraph owner.
+evidence plane. The membrane proves exact structural binding and emits a terminal
+transition request for the canonical WorkGraph owner; it deliberately does NOT call
+raw WorkGraph COMPLETE because the current V1 owner conflates terminal completion
+with execution_state=VERIFIED_COMPLETE.
 """
 from __future__ import annotations
 
@@ -15,11 +17,12 @@ import json
 import re
 from typing import Any, Mapping, Sequence
 
-from aura_arena_workgraph import apply_action, project_workgraph
+from aura_arena_workgraph import project_workgraph
 
 POLICY_SCHEMA = "MissionCompletionPolicyBindingV1"
 ATTESTATION_SCHEMA = "MissionCompletionAttestationV1"
 ADMISSION_SCHEMA = "MissionCompletionAdmissionV1"
+TRANSITION_REQUEST_SCHEMA = "MissionCompletionTransitionRequestV1"
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 
 
@@ -103,6 +106,7 @@ class MissionCompletionPolicyBindingV1:
     mission_ref: str
     trusted_attestation_issuer_refs: tuple[str, ...]
     allows_not_required: bool = False
+    requires_execution_verification: bool = False
     schema: str = POLICY_SCHEMA
 
     def __post_init__(self) -> None:
@@ -116,6 +120,10 @@ class MissionCompletionPolicyBindingV1:
             _refs(self.trusted_attestation_issuer_refs, "TRUSTED_ATTESTATION_ISSUERS_REQUIRED"),
         )
         _strict_bool(self.allows_not_required, "ALLOWS_NOT_REQUIRED_BOOL_REQUIRED")
+        _strict_bool(
+            self.requires_execution_verification,
+            "REQUIRES_EXECUTION_VERIFICATION_BOOL_REQUIRED",
+        )
 
     @property
     def policy_digest(self) -> str:
@@ -179,7 +187,9 @@ class MissionCompletionAttestationV1:
         return _digest("MISSION_COMPLETION_ATTESTATION_V1", value)
 
 
-def _exact_active_claim(projection: Mapping[str, Any], *, cell_id: str, worker_id: str) -> Mapping[str, Any]:
+def _exact_cell_and_claim(
+    projection: Mapping[str, Any], *, cell_id: str, worker_id: str
+) -> tuple[Mapping[str, Any], Mapping[str, Any]]:
     cells = [c for c in projection.get("cells", ()) if c.get("cell_id") == cell_id]
     if len(cells) != 1:
         raise CompletionEvidenceError("COMPLETION_CELL_NOT_EXACT")
@@ -192,7 +202,7 @@ def _exact_active_claim(projection: Mapping[str, Any], *, cell_id: str, worker_i
     ]
     if len(claims) != 1:
         raise CompletionEvidenceError("COMPLETION_ACTIVE_CLAIM_NOT_EXACT")
-    return claims[0]
+    return cell, claims[0]
 
 
 def admit_mission_completion(
@@ -216,7 +226,7 @@ def admit_mission_completion(
     cell_id = _text(cell_id, "COMPLETION_CELL_REQUIRED")
     submitted_acceptance = _refs(acceptance_refs, "COMPLETE_ACCEPTANCE_REFS_REQUIRED")
     submitted_outputs = _refs(output_refs, "COMPLETE_OUTPUT_REFS_REQUIRED")
-    claim = _exact_active_claim(projection, cell_id=cell_id, worker_id=worker_id)
+    cell, claim = _exact_cell_and_claim(projection, cell_id=cell_id, worker_id=worker_id)
 
     if policy.mission_ref != projection.get("mission_ref"):
         raise CompletionEvidenceError("COMPLETION_POLICY_MISSION_MISMATCH")
@@ -247,6 +257,8 @@ def admit_mission_completion(
         raise CompletionEvidenceError("MISSION_COMPLETION_BLOCKED")
     if attestation.disposition is CompletionDisposition.NOT_REQUIRED and not policy.allows_not_required:
         raise CompletionEvidenceError("MISSION_COMPLETION_NOT_REQUIRED_NOT_ALLOWED")
+    if policy.requires_execution_verification and cell.get("execution_state") != "VERIFIED_COMPLETE":
+        raise CompletionEvidenceError("REQUIRED_EXECUTION_VERIFICATION_MISSING")
 
     logical = {
         "schema": ADMISSION_SCHEMA,
@@ -265,8 +277,13 @@ def admit_mission_completion(
         "output_refs": submitted_outputs,
         "evidence_domain": EvidenceDomain.MISSION_COMPLETION.value,
         "disposition": attestation.disposition.value,
-        "coordination_complete_admitted": True,
-        "execution_verified": False,
+        "execution_requirement": (
+            "REQUIRED_AND_OBSERVED"
+            if policy.requires_execution_verification
+            else "NOT_REQUIRED_BY_POLICY"
+        ),
+        "coordination_complete_preflight_pass": True,
+        "execution_verified_by_this_module": False,
         "review_pass_proven": False,
         "effect_authorized": False,
         "promotion_authorized": False,
@@ -278,7 +295,7 @@ def admit_mission_completion(
     }
 
 
-def apply_complete_with_mission_evidence(
+def compile_terminal_completion_request(
     state: Mapping[str, Any],
     *,
     policy: MissionCompletionPolicyBindingV1,
@@ -288,12 +305,13 @@ def apply_complete_with_mission_evidence(
     acceptance_refs: Sequence[str],
     output_refs: Sequence[str],
     now_ms: int,
-) -> tuple[dict[str, Any], dict[str, Any], Mapping[str, Any]]:
-    """Safe reference path for COMPLETE.
+) -> Mapping[str, Any]:
+    """Compile, but do not apply, a mission-evidence-qualified COMPLETE request.
 
-    The underlying WorkGraph still owns the coordination transition. This wrapper
-    refuses to call it until mission-owned completion evidence is structurally
-    admitted. Production integration must make this membrane non-bypassable.
+    Current WorkGraph V1 raw COMPLETE still manufactures VERIFIED_COMPLETE from
+    opaque refs. This module therefore stops before mutation. The canonical owner
+    must integrate this admission and independently repair execution verification
+    semantics before the request can be applied without bypass.
     """
     projection = project_workgraph(state, now_ms=now_ms)
     admission = admit_mission_completion(
@@ -305,27 +323,25 @@ def apply_complete_with_mission_evidence(
         acceptance_refs=acceptance_refs,
         output_refs=output_refs,
     )
-    next_state, receipt = apply_action(
-        state,
-        action={
-            "action": "COMPLETE",
-            "basis_graph_digest": projection["graph_digest"],
-            "cell_id": cell_id,
-            "worker_id": worker_id,
-            "acceptance_refs": list(acceptance_refs),
-            "output_refs": list(output_refs),
-        },
-        now_ms=now_ms,
-    )
-    receipt = {
-        **receipt,
+    logical = {
+        "schema": TRANSITION_REQUEST_SCHEMA,
+        "action": "COMPLETE",
+        "basis_graph_digest": projection["graph_digest"],
+        "cell_id": cell_id,
+        "worker_id": worker_id,
+        "acceptance_refs": tuple(sorted(acceptance_refs)),
+        "output_refs": tuple(sorted(output_refs)),
         "mission_completion_admission_digest": admission["admission_digest"],
-        "mission_completion_evidence_domain": EvidenceDomain.MISSION_COMPLETION.value,
-        "mission_completion_policy_ref": policy.policy_ref,
         "mission_completion_attestation_digest": attestation.attestation_digest,
-        "mission_semantics_interpreted_by_workgraph": False,
+        "mission_completion_policy_ref": policy.policy_ref,
+        "mission_completion_evidence_domain": EvidenceDomain.MISSION_COMPLETION.value,
+        "execution_state_mutation_authorized": False,
         "review_pass_proven": False,
         "effect_authorized": False,
         "promotion_authorized": False,
+        "raw_workgraph_v1_complete_bypass_unrepaired": True,
     }
-    return next_state, receipt, admission
+    return {
+        **logical,
+        "request_digest": _digest("MISSION_COMPLETION_TRANSITION_REQUEST_V1", logical),
+    }
