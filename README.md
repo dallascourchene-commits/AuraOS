@@ -581,6 +581,70 @@ The current claim is therefore deliberately scoped:
 
 > **Current bounded evidence shows that Aura can substantially reduce provider cost in scoped workloads through provider-cache exploitation plus source-bound semantic/result reuse while maintaining explicit challenge, verification, replay, stale-state, restart, and Gate-10 controls. Several scoped witnesses return already-accepted consequences with zero additional provider tokens. Universal causal savings and universal superior output quality are not yet established; those require matched non-Aura controls with action-linked cost/quality receipts.**
 
+## Lifecycle-efficiency counterfactual and blind Gate-10 campaign
+
+Token/cache economics are now treated as a **floor**, not the complete economic unit. The lifecycle model includes provider/model work plus rehydration, rediscovery, stale work, duplicate work/effects, verification, bug escape, repair/rewrite, regression, coordination, and downstream blast radius. The full sensitivity analysis is in [`docs/AURA_LIFECYCLE_SAVINGS_COUNTERFACTUAL_2026-08-29.md`](./docs/AURA_LIFECYCLE_SAVINGS_COUNTERFACTUAL_2026-08-29.md), and the preregistered blind benchmark design is in [`docs/AURA_BLIND_GATE10_BENCHMARK_PROTOCOL_2026-08-30.md`](./docs/AURA_BLIND_GATE10_BENCHMARK_PROTOCOL_2026-08-30.md).
+
+A simple provider/rework sensitivity model uses:
+
+```text
+C_noAura_provider(f,r) = (C_A + f*S_C) * (1 + r)
+
+C_A = $27.068077 actual provider cost
+S_C = $271.515493 conservative provider-cache opportunity
+f   = fraction of cache opportunity attributable to Aura-enabled workload structure
+r   = extra model/provider rework needed without Aura to reach equal verified quality
+```
+
+| Sensitivity point | Cache attribution `f` | Extra no-Aura rework `r` | Modelled no-Aura equivalent | Saving vs actual | Saving share | No-Aura / Aura |
+|---|---:|---:|---:|---:|---:|---:|
+| Attribution-zero reference | 0% | 10% | $29.77 | $2.71 | 9.1% | 1.10x |
+| **Conservative** | 25% | 10% | **$104.44** | **$77.37** | **74.1%** | **3.86x** |
+| **Central sensitivity** | 50% | 25% | **$203.53** | **$176.46** | **86.7%** | **7.52x** |
+| **Strong** | 75% | 40% | **$322.99** | **$295.92** | **91.6%** | **11.93x** |
+| Stress / full attribution | 100% | 50% | $447.88 | $420.81 | 94.0% | 16.55x |
+
+These are **MODELLED / SENSITIVITY** values, not causal benchmark results. The conservative-to-strong 74–92% band is a hypothesis surface whose assumptions must be replaced by matched-control measurements.
+
+The semantic-reuse witness is stronger than provider-prefix caching alone: HSC-198's same-objective warm rerun returned **27/27 Coordinate Hits and 0 API tokens**. At the cheapest observed August 27 Flash rates, reconstructing the same work would still have cost about **$0.432239** even if every repeated input token got the cheapest observed provider cache-hit price, or about **$7.209174** at the cheapest observed miss rate. A current verified result hit can therefore be economically better than a cheap inference-cache hit because no inference is required.
+
+Observed repair evidence also shows why first-response token cost is incomplete. One independent challenge upheld **9/9 defects**, after which repairs passed **17/17 tests + 13/13 controller checks**. Another fold verified **6/6 repairs** while preserving four additional precision residuals. Using only those 13 sampled issues, illustrative defect-escape assumptions span **1.625 to 39 engineering hours avoided**; those hours are not monetized until a real loaded labor rate is supplied.
+
+### AWJ-028 blind A/B campaign
+
+The next claim-bearing test is a genuinely blind **Aura vs no-Aura** Gate-10 campaign. Its baseline design contains **20 logical triad swarms**: nine CONTROL triads, nine AURA triads, one blind evaluator triad, and one final Gate-10 synthesis triad. Physical expansion `3 → 9 → 27 → 81` is earned only by unresolved independent frontier and current provider/budget authorization; duplicate identical prompts are not independent evidence.
+
+The 3×3 adversarial lattice covers:
+
+1. **27-bit / 27-cell sharding and exact reconstruction** — reorder, missing/corrupt/duplicate shards, aliases, misleading near-matches, typed impossibility/UNKNOWN and exact provenance;
+2. **semantic currentness / stale-state traps** — superseded generations, same-name sources, contradictory newer evidence, invalidated coordinates and false-reuse traps;
+3. **code-generation / repair cascades** — race conditions, exception-contract mismatch, replay/idempotency bugs, leaks, stale fixtures, bad tests, hidden dependencies and tempting wrong rewrites;
+4. **hallucination / citation / provenance stress** — plausible decoys, absent facts, mixed generations and required abstention;
+5. **long-context / minimum-hydration reconstruction** — decisive sparse facts beyond useful context with high-similarity distractors;
+6. **replay / restart / duplicate-effect safety** — duplicate/reordered commands, stale revisions, restart and lease/fence timing;
+7. **multi-agent independence / dissent** — independent first-pass C/C/V versus broadcast-first debate and majority vote;
+8. **routing economics / escalation** — verified reuse/no-model, deterministic/local routes, Flash-class residuals and Pro-class escalation only when earned;
+9. **end-to-end composite torture test** — sharding, currentness, code repair, misinformation, replay, long context, exact mathematics, routing and final auditable consequence in one objective.
+
+Hallucination is not reduced to one vague number. The campaign separately scores:
+
+```text
+H_source      unsupported or source-contradicted factual claims
+H_citation    fabricated or incorrect source attribution
+H_currentness once-true but stale/wrong for the current objective
+H_inference   conclusion not justified by evidence or executable result
+```
+
+Initial hallucinations and hallucinations surviving Challenge/Verify are both retained. The blind evaluator freezes semantic scores before arm labels are revealed, reconstructs ground truth independently from immutable sources/generators/tests, retains FAIL/TIMEOUT/PARTIAL/UNKNOWN runs, and audits treatment leakage.
+
+The primary economic score is:
+
+```text
+VerifiedLifecycleEfficiency = VerifiedConsequenceValue / TotalLifecycleCost
+```
+
+but the denominator and all correctness/safety/currentness dimensions must also be published separately. Gate 10 requires preregistration integrity, blinding, reproducible scoring, exact run-to-token/cost receipts, independent source/test reconstruction, uncertainty/effect-size reporting where supported, preserved negative results, and an explicit bounded claim ceiling. `GATE10_READY` remains `READY_FOR_OWNER_PROMOTION / NONPROMOTING`; the campaign cannot self-promote universal superiority claims.
+
 ## The amortization hypothesis
 
 For a verified foundation with initial cost `F`, reusable fraction `r_t`, new work `W_t`, and lookup/revalidation/coordination cost `V_t`:
@@ -901,6 +965,7 @@ Aura uses an append-only evidence discipline:
 |---|---:|---|
 | **Latest longitudinal provider export** | **11,670 requests; 1,321,646,285 logical/model tokens; 1,277,497,600 cache-hit input tokens; 97.419025% input cache-hit share; $27.068077 billed** | Real provider accounting through Aug. 29; not a controlled attribution study. |
 | **Conservative provider-cache counterfactual** | **actual $27.068077 vs >= $298.583570 all-miss-equivalent; >= $271.515493 additional charge avoided; >= 90.9345% billed-cost reduction** | Same-day/model price-only lower-bound counterfactual; does not prove Aura uniquely caused cacheability. |
+| **Lifecycle savings sensitivity** | **$104.44 conservative / $203.53 central / $322.99 strong no-Aura provider+rework equivalent vs $27.068 actual; 74.1% / 86.7% / 91.6% modelled saving share** | MODELLED sensitivity analysis; not matched-control causal evidence. |
 | **Aug. 29 Flash vs Pro routing witness** | **Flash: 109,281,723 logical/model tokens, $2.443945, 94.1092% input-hit; Pro: 1,956,723 tokens, $2.089129, 0% hit; Pro ~47.74x higher billed cost per logical/model token under actual mix** | Task difficulty/quality not controlled; routing-economic evidence only. |
 | **Paper X provider snapshot** | **9,381 requests; 843,642,344 logical/model tokens; 97.402912% input cache-hit share; $17.772456 actual vs $209.580400 price-only all-miss counterfactual** | Not a 97% logical-token reduction; does not prove Aura uniquely caused cacheability. |
 | **HSC-196 cold task** | **43,743 prompt + 763 completion tokens; $0.01012704** | Bounded real task/provider/host measurement. |
@@ -910,6 +975,7 @@ Aura uses an append-only evidence discipline:
 | **HSC-198 warm Coordinate Store** | **27/27 COORDINATE_HIT; 0 API tokens; 31,816,596 prompt tokens avoided on scoped repeat** | Same-objective reuse only; not arbitrary-hit-rate proof. |
 | **AWJ-023 governed DeepSeek dispatch** | **real canary; ACK-before-effect; zero-duplicate replay; stale revision refused pre-effect; restart absorption; dispatcher 21/21; identity-distinct three-worker successor triad; GATE10_READY** | Strong bounded governed-execution evidence; not a matched model-quality control. |
 | **AWJ-025 outcome discipline** | **GATE10_PARTIAL / READY_FOR_OWNER_DISPOSITION** | Partial evidence preserved rather than mislabeled complete. |
+| **AWJ-028 blind benchmark campaign** | **20 logical triad baseline: 9 CONTROL + 9 AURA + blind evaluator + Gate-10 synthesis; 3×3 adversarial lattice** | ISSUED / PREREGISTERED design; execution results not yet claimed. |
 | **AutoLineage / AutoRoute HSC-193** | **38/38 selftest; 20/20 parity; 60/60 whitespace; 12/12 DryRun** | Exact tested path only. |
 | **Later navigator regressions** | **172/172 non-concurrency PASS; sector/cell parity 15/15 + live** | Strong bounded regression evidence. |
 | **Integrated upsert concurrency** | later four-way routing minted **3 distinct JIDs for one source** | Open integrated concurrency defect; prevents universal zero-collision claim. |
@@ -932,6 +998,7 @@ Aura uses an append-only evidence discipline:
 | official Tau-bench `100%` | unverified as official pass^k |
 | 40–80% local task absorption | redesign target / hypothesis |
 | universal cognitive superiority | **not established; matched controls required** |
+| AWJ-028 causal savings/hallucination delta | **PREREGISTERED / RESULTS NOT YET CLAIMED** |
 
 ## Historical repository measurements
 
@@ -950,6 +1017,8 @@ Aura uses an append-only evidence discipline:
 Repository scorecards:
 
 - [`docs/DEEPSEEK_COST_CACHE_BENCHMARK_2026-08-29.md`](./docs/DEEPSEEK_COST_CACHE_BENCHMARK_2026-08-29.md)
+- [`docs/AURA_LIFECYCLE_SAVINGS_COUNTERFACTUAL_2026-08-29.md`](./docs/AURA_LIFECYCLE_SAVINGS_COUNTERFACTUAL_2026-08-29.md)
+- [`docs/AURA_BLIND_GATE10_BENCHMARK_PROTOCOL_2026-08-30.md`](./docs/AURA_BLIND_GATE10_BENCHMARK_PROTOCOL_2026-08-30.md)
 - [`docs/INDUSTRY_BENCHMARK_SCORECARD.md`](./docs/INDUSTRY_BENCHMARK_SCORECARD.md)
 - [`docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md`](./docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md)
 - [`docs/SECURITY_AND_ACCURACY_SCORECARD.md`](./docs/SECURITY_AND_ACCURACY_SCORECARD.md)
@@ -997,7 +1066,6 @@ attribution
 economic settlement
 governance / truth / authority
 ```
-
 as distinct layers.
 
 ---
