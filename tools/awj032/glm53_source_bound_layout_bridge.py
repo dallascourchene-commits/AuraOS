@@ -3,7 +3,9 @@
 This D0 wrapper makes the #340 raw-source binding continuous through #350. It
 requires a source-bound probe report, proves that the weight_map passed to the
 bridge is exactly the map whose digest the report carries, then binds the raw
-source bundle identity into the final pager-plan identity. No weights or G2.
+source bundle identity into the final pager-plan identity. For per-expert plans,
+the representative W2 header evidence is forwarded into the inner bridge and is
+therefore covered by the inner source-plan digest. No weights or G2.
 """
 from __future__ import annotations
 
@@ -91,6 +93,7 @@ def compile_source_bound_pager_source_plan(
     headers: Mapping[str, Mapping[str, Any]] | None,
     expected_model_revision: str,
     expected_index_digest: str,
+    per_expert_header_evidence: Mapping[str, Any] | None = None,
     compile_fn: Callable[..., Any] | None = None,
 ) -> SourceBoundPagerSourcePlan:
     if report.get("source_binding_proven") is not True:
@@ -116,6 +119,7 @@ def compile_source_bound_pager_source_plan(
         headers=headers,
         expected_model_revision=expected_model_revision,
         expected_index_digest=expected_index_digest,
+        per_expert_header_evidence=per_expert_header_evidence,
     )
     inner_map_digest = _sha_field(getattr(inner, "weight_map_digest", None), "INNER_WEIGHT_MAP_DIGEST_REQUIRED")
     if inner_map_digest != observed_map_digest:
