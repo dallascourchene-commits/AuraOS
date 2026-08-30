@@ -482,16 +482,16 @@ The model/KV cache is an accelerator, **not the memory owner**. A model can be r
 
 # Real usage: the reuse curve is getting more interesting as the system is used
 
-The newest usage export extends the published Paper X telemetry.
+The newest usage export extends the published Paper X telemetry. A reproducible aggregate report is committed at [`docs/DEEPSEEK_COST_CACHE_BENCHMARK_2026-08-29.md`](./docs/DEEPSEEK_COST_CACHE_BENCHMARK_2026-08-29.md); raw account-level usage exports are not published.
 
 | Usage view | Requests | Logical/model tokens* | Cache-hit input tokens | Input cache-hit share | Billed cost | Billed cost / 1M logical tokens |
 |---|---:|---:|---:|---:|---:|---:|
 | **Paper X snapshot** | 9,381 | 843,642,344 | 814,619,776 | 97.402912% | $17.772456 | ~$0.021066 |
-| **Latest export through Aug. 28** | **11,020** | **1,210,407,839** | **1,175,105,664** | **97.828502%** | **$22.535003** | **~$0.018618** |
+| **Latest export through Aug. 29** | **11,670** | **1,321,646,285** | **1,277,497,600** | **97.419025%** | **$27.068077** | **~$0.020481** |
 
 `* logical/model tokens = cache-hit input + cache-miss input + output. This is not a claim that those logical tokens disappeared.`
 
-The cumulative billed cost per million logical/model tokens declined by about **11.6%** between those snapshots while the workload grew substantially. The input cache-hit share increased by about **0.43 percentage points**.
+Relative to the Paper X snapshot, cumulative billed cost per million logical/model tokens is about **2.78% lower** while workload volume has grown substantially. Aggregate input cache-hit share is about **0.016 percentage points higher**. The newer Aug. 29 Pro-heavy mix lowered the cumulative cache-hit percentage from the Aug. 28 snapshot, so the curve should not be read as monotonic improvement.
 
 Heavy-use daily snapshots make the pattern visible:
 
@@ -500,10 +500,86 @@ Heavy-use daily snapshots make the pattern visible:
 | 2026-08-26 | 2,844 | 371,273,502 | 97.8072% | $6.626391 | $0.017848 |
 | 2026-08-27 | 4,635 | 603,337,241 | 97.8580% | $11.679444 | $0.019358 |
 | 2026-08-28 | 1,224 | 233,748,476 | **98.3744%** | **$3.331442** | **$0.014252** |
+| 2026-08-29 | 650 | 111,238,446 | 92.9538% | $4.533074 | $0.040751 |
 
-The curve is **not monotonic every day**, so this is not evidence that each request is automatically cheaper than the one before it. Model/task mix, pricing, provider cache behavior, and workload composition can change. It is longitudinal evidence that very large repeated workloads are operating with unusually high reuse and that the cumulative effective billed cost has moved downward.
+The curve is **not monotonic every day**, so this is not evidence that each request is automatically cheaper than the one before it. Model/task mix, pricing, provider cache behavior, and workload composition can change. It is longitudinal evidence that very large repeated workloads can operate with unusually high reuse while the routing mix still matters materially.
 
-Aura also has a distinct semantic reuse layer. HSC-196 recorded a real cold call of **43,743 prompt + 763 completion tokens**, followed by an identical coordinate/result reuse requiring **0 provider tokens**. HSC-198 observed **95.9% provider cache-read** in the cold live-dispatch wave and then **27/27 coordinate hits with zero provider tokens** in the scoped same-objective warm rerun.
+## Conservative provider-cache savings
+
+Using the lowest observed cache-miss input rate in each day+model cell as a conservative counterfactual price for cached input:
+
+- actual billed cost: **$27.068077**;
+- additional cache-miss charge avoided: **>= $271.515493**;
+- conservative all-miss-equivalent bill: **>= $298.583570**;
+- conservative billed-cost reduction: **>= 90.9345%**;
+- conservative all-miss-equivalent / actual bill ratio: **>= 11.03x**.
+
+This is a **provider-pricing counterfactual**, not a causal estimate that Aura alone created the provider cache hits.
+
+## Flash first; V4 Pro only when earned
+
+The export makes the economic reason for escalation discipline visible:
+
+| Metric | DeepSeek V4 Flash | DeepSeek V4 Pro |
+|---|---:|---:|
+| Requests | 11,206 | 464 |
+| Input cache-hit share | 97.5526% | 1.2177% |
+| Billed | $24.384589 | $2.683488 |
+| Billed/request | ~$0.002176 | ~$0.005783 |
+| Effective input cost / 1M input tokens under actual cache mix | ~$0.013394 | ~$0.656326 |
+
+On **2026-08-29** specifically, Flash processed **109,281,723 logical/model tokens for $2.443945** with **94.1092% input-cache hits**. Pro processed **1,956,723 logical/model tokens for $2.089129** with **0% cache hits**. Under that actual workload/cache mix, Pro was about **47.74x more expensive per logical/model token**. Task difficulty and output quality were not controlled, so that ratio is a routing-economic witness, not a quality-adjusted verdict on the models.
+
+DeepSeek V4 Pro therefore **must not be the default remote reasoning lane merely because it is the larger/higher-priced model**. The preferred route is:
+
+```text
+REUSE / HYPERDRIVE COLLAPSE
+→ NO_MODEL / AURAOS DETERMINISTIC
+→ active authorized high-reasoning interactive endpoint where appropriate
+→ admitted LOCAL route when adequate
+→ DEEPSEEK V4 FLASH / STANDARD lower-cost remote residual
+→ DEEPSEEK V4 PRO only when earned
+→ another frontier provider only with explicit current authority
+```
+
+A Pro escalation is earned when lower-cost routes fail declared adequacy/success criteria, or when a preregistered comparison predicts/measures enough incremental correctness, repair, verification, latency, or reusable-cognition value to justify the incremental lifecycle cost.
+
+```text
+EscalateToPro(a) only if
+E[Δ VerifiedValue(a)] > Δ LifecycleCost(a) + RiskMargin(a)
+```
+
+subject to source/currentness, authority, privacy, budget, and consequence constraints. Model size or a `Pro` label is not itself evidence of value.
+
+## Cost follows the action; quality follows verification
+
+Every consequential execution path should produce or extend `CognitiveEfficiencyReceiptV1`. Provider dollars are only one component:
+
+```text
+C_action =
+    C_provider
+  + C_compute
+  + C_IO
+  + C_network
+  + C_latency
+  + C_coordination
+  + C_verification
+  + C_rework
+```
+
+Each receipt should bind the action/command/WorkCapsule/Arena identity; source generation/currentness; route and provider/model/version/rate generation; cache-hit, cache-miss, and output tokens; billed provider dollars; observable local compute/I/O/network/latency/energy; deterministic/model calls avoided; verification and repair; declared success criteria; final disposition; reusable verified state produced; and invalidators/reopen triggers.
+
+`UNKNOWN COST != ZERO COST.` A no-model route may have $0 provider spend and still consume local compute, I/O, latency, or coordination. Reuse/reconstruction avoided should be reported as a separately evidenced counterfactual rather than silently subtracted.
+
+For matched Aura/control workloads, report **provider cost per verified outcome, lifecycle cost per verified outcome, time to verified result, success/acceptance, challenged correctness, surviving defects, repair/rework, cost per repaired defect, cost per reusable verified artifact, cache savings, recomputation avoided, reusable cognition created, and quality delta versus matched control**. Do not force those into one scalar unless the weighting is preregistered and interpretable.
+
+Aura also has a distinct semantic reuse layer. **HSC-196** recorded a real cold call of **43,743 prompt + 763 completion tokens**, followed by an identical accepted coordinate/result reuse requiring **0 provider tokens**. **HSC-198** observed **95.9% provider cache-read** in the cold live-dispatch wave and then **27/27 coordinate hits with zero provider tokens** in the scoped same-objective warm rerun, but the cold wave also failed its preregistered timeout criterion (**10 PASS / 17 TIMEOUT**) and had a WorkCapsule prompt-content defect. The failure remains visible instead of being converted into a quality claim.
+
+Later **AWJ-023** governed DeepSeek dispatch evidence records a real canary, ACK-before-effect, zero-duplicate replay, stale-revision refusal before effect, restart absorption, dispatcher **21/21**, and an identity-distinct three-worker successor triad, reaching `GATE10_READY / READY_FOR_OWNER_PROMOTION / NONPROMOTING`. **AWJ-025** later returned `GATE10_PARTIAL / READY_FOR_OWNER_DISPOSITION` instead of being mislabeled complete. These are bounded workflow-quality/governance witnesses; they are not matched model-quality controls.
+
+The current claim is therefore deliberately scoped:
+
+> **Current bounded evidence shows that Aura can substantially reduce provider cost in scoped workloads through provider-cache exploitation plus source-bound semantic/result reuse while maintaining explicit challenge, verification, replay, stale-state, restart, and Gate-10 controls. Several scoped witnesses return already-accepted consequences with zero additional provider tokens. Universal causal savings and universal superior output quality are not yet established; those require matched non-Aura controls with action-linked cost/quality receipts.**
 
 ## The amortization hypothesis
 
@@ -823,13 +899,17 @@ Aura uses an append-only evidence discipline:
 
 | Surface | Latest measured result | Boundary |
 |---|---:|---|
-| **Latest longitudinal provider export** | **11,020 requests; 1,210,407,839 logical/model tokens; 1,175,105,664 cache-hit input tokens; 97.828502% input cache-hit share; $22.535003 billed** | Real provider accounting through Aug. 28; not a controlled attribution study. |
+| **Latest longitudinal provider export** | **11,670 requests; 1,321,646,285 logical/model tokens; 1,277,497,600 cache-hit input tokens; 97.419025% input cache-hit share; $27.068077 billed** | Real provider accounting through Aug. 29; not a controlled attribution study. |
+| **Conservative provider-cache counterfactual** | **actual $27.068077 vs >= $298.583570 all-miss-equivalent; >= $271.515493 additional charge avoided; >= 90.9345% billed-cost reduction** | Same-day/model price-only lower-bound counterfactual; does not prove Aura uniquely caused cacheability. |
+| **Aug. 29 Flash vs Pro routing witness** | **Flash: 109,281,723 logical/model tokens, $2.443945, 94.1092% input-hit; Pro: 1,956,723 tokens, $2.089129, 0% hit; Pro ~47.74x higher billed cost per logical/model token under actual mix** | Task difficulty/quality not controlled; routing-economic evidence only. |
 | **Paper X provider snapshot** | **9,381 requests; 843,642,344 logical/model tokens; 97.402912% input cache-hit share; $17.772456 actual vs $209.580400 price-only all-miss counterfactual** | Not a 97% logical-token reduction; does not prove Aura uniquely caused cacheability. |
 | **HSC-196 cold task** | **43,743 prompt + 763 completion tokens; $0.01012704** | Bounded real task/provider/host measurement. |
-| **HSC-196 coordinate-result reuse** | identical coordinate result: **0 provider tokens** | Aura-level reuse, separate from provider prefix/KV cache. |
+| **HSC-196 coordinate-result reuse** | identical accepted coordinate result: **0 provider tokens** | Aura-level reuse, separate from provider prefix/KV cache. |
 | **HSC-198 cold 27-objective swarm** | **27/27 receipts; 10 PASS / 17 TIMEOUT; 31,816,596 prompt + 317,459 completion; $0.709600** | Failed preregistered timeout criterion; NONPROMOTING / NOT_GATE10. |
 | **HSC-198 provider cache** | **30,514,432 / 31,816,596 prompt tokens cache-read = 95.9%** | Provider cache plane. |
 | **HSC-198 warm Coordinate Store** | **27/27 COORDINATE_HIT; 0 API tokens; 31,816,596 prompt tokens avoided on scoped repeat** | Same-objective reuse only; not arbitrary-hit-rate proof. |
+| **AWJ-023 governed DeepSeek dispatch** | **real canary; ACK-before-effect; zero-duplicate replay; stale revision refused pre-effect; restart absorption; dispatcher 21/21; identity-distinct three-worker successor triad; GATE10_READY** | Strong bounded governed-execution evidence; not a matched model-quality control. |
+| **AWJ-025 outcome discipline** | **GATE10_PARTIAL / READY_FOR_OWNER_DISPOSITION** | Partial evidence preserved rather than mislabeled complete. |
 | **AutoLineage / AutoRoute HSC-193** | **38/38 selftest; 20/20 parity; 60/60 whitespace; 12/12 DryRun** | Exact tested path only. |
 | **Later navigator regressions** | **172/172 non-concurrency PASS; sector/cell parity 15/15 + live** | Strong bounded regression evidence. |
 | **Integrated upsert concurrency** | later four-way routing minted **3 distinct JIDs for one source** | Open integrated concurrency defect; prevents universal zero-collision claim. |
@@ -869,6 +949,7 @@ Aura uses an append-only evidence discipline:
 
 Repository scorecards:
 
+- [`docs/DEEPSEEK_COST_CACHE_BENCHMARK_2026-08-29.md`](./docs/DEEPSEEK_COST_CACHE_BENCHMARK_2026-08-29.md)
 - [`docs/INDUSTRY_BENCHMARK_SCORECARD.md`](./docs/INDUSTRY_BENCHMARK_SCORECARD.md)
 - [`docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md`](./docs/MASTER_EXHAUSTIVE_BENCHMARK_SCORECARD.md)
 - [`docs/SECURITY_AND_ACCURACY_SCORECARD.md`](./docs/SECURITY_AND_ACCURACY_SCORECARD.md)
