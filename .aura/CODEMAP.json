@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788129882,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1652,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -142,6 +142,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/bughound-seedlab.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1622,6 +1623,12 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_bughound_blind_discovery.py",
+      "tests/test_bughound_blind_oracle_provenance.py",
+      "tests/test_bughound_blind_score_admission.py",
+      "tests/test_bughound_envelope_lint.py",
+      "tests/test_bughound_seedlab_benchmark.py",
+      "tests/test_bughound_trust_boundary_seed.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -1631,6 +1638,12 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/bughound/blind_discovery.py",
+      "tools/bughound/blind_oracle_provenance.py",
+      "tools/bughound/blind_score_admission.py",
+      "tools/bughound/envelope_lint.py",
+      "tools/bughound/seedlab_benchmark.py",
+      "tools/bughound/trust_boundary_seed.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1768,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1652,
+      "bytes": 26518240,
+      "tokens_est": 6619913,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 1009,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3895,6 +3908,38 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 76,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_canonical:52d5fa36170e70b7",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 47,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_canonical:b539437596a7bc63",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
+        "file": "tools/bughound/blind_score_admission.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 42,
+        "semantic_id": "tools/bughound/blind_score_admission.py#function:_canonical:a6179085d8f28ba7",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 54,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_canonical:eee86dc6f3f81ae2",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -4337,6 +4382,38 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 80,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_digest:e5aecf961e5d32ed",
+        "signature_hash": "c978f5ef05fda5cb"
+      },
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_digest:1c24d7372bae1963",
+        "signature_hash": "c978f5ef05fda5cb"
+      },
+      {
+        "file": "tools/bughound/blind_score_admission.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "tools/bughound/blind_score_admission.py#function:_digest:7fef87314c452ec0",
+        "signature_hash": "c978f5ef05fda5cb"
+      },
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_digest:f2a95c68ab11fbd1",
+        "signature_hash": "c978f5ef05fda5cb"
       }
     ],
     "_token_proxy": [
@@ -14653,6 +14730,22 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 89,
+        "end_line": 92,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_text:6cf059358589bf2f",
+        "signature_hash": "a4ea29b9a7789fe0"
+      },
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 65,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_text:e37446d8012b64f5",
+        "signature_hash": "a4ea29b9a7789fe0"
       }
     ],
     "_bounded": [
@@ -83449,6 +83542,14 @@
         "end_line": 156,
         "semantic_id": "aura_unified_memory_continuity_learning.py#function:_source_digest:6abd1d691e94fd2d",
         "signature_hash": "9380c67b5157678e"
+      },
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 86,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_source_digest:9e59545d2dd50247",
+        "signature_hash": "3b6d2c395b7388e0"
       }
     ],
     "_failure_dict": [
@@ -156881,6 +156982,986 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "BlindDiscoveryTests": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 373,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#class:BlindDiscoveryTests:f44104ab7c3c376c",
+        "signature_hash": "9da89c10e367fdbc"
+      }
+    ],
+    "BlindDiscoveryTests.setUp": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 30,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.setUp:30f040cc442eacb1",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "BlindDiscoveryTests.finding": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 39,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.finding:2d4c12d6784e136f",
+        "signature_hash": "47b8c0e2f315db45"
+      }
+    ],
+    "BlindDiscoveryTests.resolution": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 61,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.resolution:b7b58522c80ca1c7",
+        "signature_hash": "d4f28f3a5e576fb2"
+      }
+    ],
+    "BlindDiscoveryTests.test_candidate_packet_contains_no_forbidden_hidden_fields": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 70,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_candidate_packet_contains_no_forbidden_hidden_fields:83f7b118d5d8f20a",
+        "signature_hash": "d159683e542f27df"
+      }
+    ],
+    "BlindDiscoveryTests.test_hidden_binding_is_separate_from_candidate_packet": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 76,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_hidden_binding_is_separate_from_candidate_packet:6445a34e4727cbcc",
+        "signature_hash": "dbf9f58809df5737"
+      }
+    ],
+    "BlindDiscoveryTests.test_same_salt_and_case_are_deterministic": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 88,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_same_salt_and_case_are_deterministic:6bafaef05963d6c4",
+        "signature_hash": "7869530a206693fe"
+      }
+    ],
+    "BlindDiscoveryTests.test_different_salt_changes_opaque_target_not_source_semantics": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 98,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_different_salt_changes_opaque_target_not_source_semantics:086497797ca4d884",
+        "signature_hash": "c3d299ebaa41cef8"
+      }
+    ],
+    "BlindDiscoveryTests.test_candidate_case_id_injection_is_blindness_violation": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 111,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_candidate_case_id_injection_is_blindness_violation:151b64723ecf14e1",
+        "signature_hash": "bf20525917ef1857"
+      }
+    ],
+    "BlindDiscoveryTests.test_unknown_finding_field_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 124,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_unknown_finding_field_fails_closed:dd9a86b3ff8011ab",
+        "signature_hash": "13836de03467e5e7"
+      }
+    ],
+    "BlindDiscoveryTests.test_localization_alone_cannot_earn_seeded_tp": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 137,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_localization_alone_cannot_earn_seeded_tp:fa1e8eacc2f702ad",
+        "signature_hash": "5c01c4f284e7831b"
+      }
+    ],
+    "BlindDiscoveryTests.test_seeded_bug_localized_finding_with_independent_resolution_is_discovered": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 155,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_seeded_bug_localized_finding_with_independent_resolution_is_discovered:cca2e69a6092832e",
+        "signature_hash": "22b2b0ef1733d8fd"
+      }
+    ],
+    "BlindDiscoveryTests.test_seeded_bug_without_finding_is_missed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 165,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_seeded_bug_without_finding_is_missed:338bb76361630c5a",
+        "signature_hash": "b2a3b86673e9ff1e"
+      }
+    ],
+    "BlindDiscoveryTests.test_resolution_without_finding_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 176,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_resolution_without_finding_fails_closed:82e01f5b5beeab54",
+        "signature_hash": "1f0ffee844649fd2"
+      }
+    ],
+    "BlindDiscoveryTests.test_nonmatching_seeded_finding_is_novelty_unverified_even_if_resolution_claims_corroboration": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 192,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_nonmatching_seeded_finding_is_novelty_unverified_even_if_resolution_claims_corroboration:01d9d727639b20ec",
+        "signature_hash": "d327f0244acd5861"
+      }
+    ],
+    "BlindDiscoveryTests.test_negative_evaluator_resolution_does_not_credit_seeded_tp": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 194,
+        "end_line": 204,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_negative_evaluator_resolution_does_not_credit_seeded_tp:f0d4df2bea51c47e",
+        "signature_hash": "2fd76b4cbca0e573"
+      }
+    ],
+    "BlindDiscoveryTests.test_nonindependent_resolution_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 206,
+        "end_line": 216,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_nonindependent_resolution_fails_closed:3ed9318f8691c210",
+        "signature_hash": "d34304098c6fd29b"
+      }
+    ],
+    "BlindDiscoveryTests.test_wrong_oracle_resolution_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 228,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_wrong_oracle_resolution_fails_closed:76f248d7c1ae11f2",
+        "signature_hash": "164f3f878a96be20"
+      }
+    ],
+    "BlindDiscoveryTests.test_wrong_hidden_case_resolution_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 230,
+        "end_line": 240,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_wrong_hidden_case_resolution_fails_closed:8e5cc7bc52de566a",
+        "signature_hash": "14864f1475be2c06"
+      }
+    ],
+    "BlindDiscoveryTests.test_wrong_evaluator_generation_resolution_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 242,
+        "end_line": 252,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_wrong_evaluator_generation_resolution_fails_closed:bfcf35ed96def7eb",
+        "signature_hash": "5c50716d19d14170"
+      }
+    ],
+    "BlindDiscoveryTests.test_clean_control_without_finding_is_correct": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 254,
+        "end_line": 264,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_clean_control_without_finding_is_correct:f77c5690519966a9",
+        "signature_hash": "1c7139b7f7a960f6"
+      }
+    ],
+    "BlindDiscoveryTests.test_clean_control_positive_is_false_positive": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 266,
+        "end_line": 282,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_clean_control_positive_is_false_positive:07e556b76075774f",
+        "signature_hash": "95a25f9935696cd7"
+      }
+    ],
+    "BlindDiscoveryTests.test_target_binding_substitution_fails": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 284,
+        "end_line": 288,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_target_binding_substitution_fails:96bc2db67ec31f49",
+        "signature_hash": "f0ae5e3f6def9f9e"
+      }
+    ],
+    "BlindDiscoveryTests.test_hidden_case_substitution_fails": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 290,
+        "end_line": 294,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_hidden_case_substitution_fails:b21eec9ca29154b8",
+        "signature_hash": "c2b52832d3410ed5"
+      }
+    ],
+    "BlindDiscoveryTests.test_source_digest_drift_fails": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 296,
+        "end_line": 300,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_source_digest_drift_fails:d3e0121adf81ee3c",
+        "signature_hash": "fa7af325f5e2be77"
+      }
+    ],
+    "BlindDiscoveryTests.test_source_generation_drift_fails": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 302,
+        "end_line": 306,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_source_generation_drift_fails:78e66f3d7ce95f8d",
+        "signature_hash": "72768fed05c6904c"
+      }
+    ],
+    "BlindDiscoveryTests.test_evaluator_currentness_fails_closed": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 308,
+        "end_line": 312,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_evaluator_currentness_fails_closed:f9277ac47ecb0c28",
+        "signature_hash": "82f997509a4cfa83"
+      }
+    ],
+    "BlindDiscoveryTests.test_fixed_patch_leakage_invalidates_adjudication": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 314,
+        "end_line": 318,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_fixed_patch_leakage_invalidates_adjudication:525c57890eaf42bc",
+        "signature_hash": "3f7c266f112bfd5c"
+      }
+    ],
+    "BlindDiscoveryTests.test_label_leakage_invalidates_adjudication": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 320,
+        "end_line": 324,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_label_leakage_invalidates_adjudication:83deff26e9d2b58d",
+        "signature_hash": "03e7f19d22e3c4ee"
+      }
+    ],
+    "BlindDiscoveryTests.test_finding_for_another_opaque_target_fails": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 326,
+        "end_line": 335,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_finding_for_another_opaque_target_fails:38475adfbafaa13c",
+        "signature_hash": "9a820f9a52b42c48"
+      }
+    ],
+    "BlindDiscoveryTests.test_holdout_visibility_is_required": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 337,
+        "end_line": 345,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_holdout_visibility_is_required:1e280bebba086e4c",
+        "signature_hash": "c7d4d753873903f1"
+      }
+    ],
+    "BlindDiscoveryTests.test_neutral_instruction_cannot_be_replaced_with_issue_guidance": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 347,
+        "end_line": 353,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_neutral_instruction_cannot_be_replaced_with_issue_guidance:f7bbb0b063312bac",
+        "signature_hash": "5ed1648d03f767b0"
+      }
+    ],
+    "BlindDiscoveryTests.test_adjudication_identity_is_deterministic_with_resolution": [
+      {
+        "file": "tests/test_bughound_blind_discovery.py",
+        "kind": "method",
+        "line": 355,
+        "end_line": 373,
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_adjudication_identity_is_deterministic_with_resolution:a4c4845fac31ea1d",
+        "signature_hash": "626a87e64a55582f"
+      }
+    ],
+    "BlindOracleProvenanceTests": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 211,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#class:BlindOracleProvenanceTests:c43c4108d6a9f978",
+        "signature_hash": "0f0f5b2ce63f1074"
+      }
+    ],
+    "BlindOracleProvenanceTests.setUp": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 49,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.setUp:2849638912b34b11",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "BlindOracleProvenanceTests.envelope": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 57,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.envelope:4db873baae374ef9",
+        "signature_hash": "9b4e1c61b056e30d"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_exact_producer_bound_resolution_can_earn_seeded_tp": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 76,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_exact_producer_bound_resolution_can_earn_seeded_tp:91eeabb7e36ec941",
+        "signature_hash": "ab227771e2fd4d87"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_resolution_boolean_without_producer_envelope_cannot_earn_tp": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 89,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_resolution_boolean_without_producer_envelope_cannot_earn_tp:cc02e66ee664c591",
+        "signature_hash": "fa4846ec00a6a0bb"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_forged_mac_fails": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 100,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_forged_mac_fails:ec741d49219a46aa",
+        "signature_hash": "241bd8e1318bbc1a"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_wrong_secret_fails": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 110,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_wrong_secret_fails:28f3d8026bb4eb48",
+        "signature_hash": "9d0d0795d4c35b82"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_producer_ref_substitution_fails": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 121,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_producer_ref_substitution_fails:1b2560290554ed9a",
+        "signature_hash": "8732bbe799052956"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_producer_generation_substitution_fails": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 131,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_producer_generation_substitution_fails:27ee609892197ef9",
+        "signature_hash": "46d51d79c6b71a9e"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_resolution_mutation_fails_binding": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 142,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_resolution_mutation_fails_binding:37f7ff6e9b8bc77d",
+        "signature_hash": "e7481b86129d6b8f"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_nonindependent_resolution_cannot_be_issued": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 152,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_nonindependent_resolution_cannot_be_issued:2fa6471ec87f0813",
+        "signature_hash": "6ef5555c62b90a30"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_short_or_missing_secret_fails": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 161,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_short_or_missing_secret_fails:c3ac422f73e5761b",
+        "signature_hash": "29aa2dc7e409e480"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_same_resolution_and_secret_are_deterministic": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 167,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_same_resolution_and_secret_are_deterministic:0e5a415515c43de9",
+        "signature_hash": "7ed860eacd692f56"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_different_secret_changes_mac": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 176,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_different_secret_changes_mac:19bf416f06423f6a",
+        "signature_hash": "1c7ce8a2412de0fc"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_no_resolution_remains_novelty_without_producer_proof": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 191,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_no_resolution_remains_novelty_without_producer_proof:be440f384e6e3e89",
+        "signature_hash": "6d6d0f28199e9233"
+      }
+    ],
+    "BlindOracleProvenanceTests.test_clean_abstention_needs_no_oracle_envelope": [
+      {
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 211,
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_clean_abstention_needs_no_oracle_envelope:a323b9b22ab82faa",
+        "signature_hash": "55885d573a1cbe07"
+      }
+    ],
+    "BlindScoreAdmissionTests": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 158,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#class:BlindScoreAdmissionTests:4f484a7f4ff839b7",
+        "signature_hash": "0815ad50f51d9a68"
+      }
+    ],
+    "BlindScoreAdmissionTests.setUp": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 50,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.setUp:792e227cc4fcf1bb",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "BlindScoreAdmissionTests.envelope": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 57,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.envelope:d344020aa919818b",
+        "signature_hash": "9b4e1c61b056e30d"
+      }
+    ],
+    "BlindScoreAdmissionTests.score": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 71,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.score:68068b7a8abceb20",
+        "signature_hash": "a8568a3b03a15663"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_canonical_score_api_accepts_no_precomputed_adjudication": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 78,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_canonical_score_api_accepts_no_precomputed_adjudication:780e3622a108c50c",
+        "signature_hash": "74a5d8b9610347f0"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_legacy_shape_only_tp_cannot_be_laundered_into_canonical_score": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 103,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_legacy_shape_only_tp_cannot_be_laundered_into_canonical_score:26614ee41b959e04",
+        "signature_hash": "6d776a0883ef22b0"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_exact_producer_bound_path_emits_score_receipt": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 113,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_exact_producer_bound_path_emits_score_receipt:ecc838b393a369d8",
+        "signature_hash": "19a30c21d04f27a1"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_wrong_secret_cannot_score_seeded_tp": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 118,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_wrong_secret_cannot_score_seeded_tp:9f4d90f8f1a9d1f4",
+        "signature_hash": "d57d94b7c9628ff0"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_wrong_expected_producer_generation_cannot_score": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 123,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_wrong_expected_producer_generation_cannot_score:285c4334863827e3",
+        "signature_hash": "3037167e0c4853a9"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_no_resolution_novelty_remains_uncredited": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 131,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_no_resolution_novelty_remains_uncredited:e66c983d393bc327",
+        "signature_hash": "92ce74ed034a9b56"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_clean_abstention_is_scoreable_without_oracle_envelope": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 152,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_clean_abstention_is_scoreable_without_oracle_envelope:6ed36c43e511a833",
+        "signature_hash": "3065ac2590efa338"
+      }
+    ],
+    "BlindScoreAdmissionTests.test_score_receipt_is_deterministic_for_same_bound_inputs": [
+      {
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 158,
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_score_receipt_is_deterministic_for_same_bound_inputs:036ce386b65caa1a",
+        "signature_hash": "165eff4d3f7abf22"
+      }
+    ],
+    "BugHoundEnvelopeLintTests": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 103,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#class:BugHoundEnvelopeLintTests:d3944653b480574b",
+        "signature_hash": "c936925accdbb15c"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_canonical_google_doc_shape_is_structurally_parseable": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 25,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_canonical_google_doc_shape_is_structurally_parseable:9ecc1becf5440f05",
+        "signature_hash": "4d0002d1f254ed22"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_near_miss_title_is_rejected": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_near_miss_title_is_rejected:18071a88b4e410dc",
+        "signature_hash": "3ee9acd7e656b08a"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_hash_prefixed_title_is_rejected": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 33,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_hash_prefixed_title_is_rejected:c7b508e1909e0a1a",
+        "signature_hash": "9b4ed5abf2f94053"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_prose_continuation_is_line_format": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 37,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_prose_continuation_is_line_format:f3b604358fa28c42",
+        "signature_hash": "12ef04a86cfb5400"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_json_trailing_text_detected": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 41,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_json_trailing_text_detected:fcbd7f3aeaf25da1",
+        "signature_hash": "655c6dda5a6a62f5"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_json_array_is_not_object": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 45,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_json_array_is_not_object:f641bf03c30f8cf8",
+        "signature_hash": "30d8f6d4af0ae099"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_json_object_structural_parse_does_not_grant_authority": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 54,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_json_object_structural_parse_does_not_grant_authority:771dfec09bd09455",
+        "signature_hash": "c35d3e5b74145648"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_forbidden_credentials_are_reported_without_repair": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 64,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_forbidden_credentials_are_reported_without_repair:fa4bb0b162173080",
+        "signature_hash": "dacc2a8160ed8616"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_non_exact_d0_is_reported": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 75,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_non_exact_d0_is_reported:44d32a62d90d2909",
+        "signature_hash": "79e89674d7e4eae5"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_one_leading_prose_token": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 81,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_one_leading_prose_token:ffe6be12fc134d37",
+        "signature_hash": "a8dfabbc9af560e5"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_suffix_embedding": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 88,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_suffix_embedding:2f87bb246eb9b414",
+        "signature_hash": "c7cb9e18591c222f"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_bom_is_not_a_structural_failure": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 99,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_bom_is_not_a_structural_failure:f2856d16cfca4bd3",
+        "signature_hash": "6436f17878129c37"
+      }
+    ],
+    "BugHoundEnvelopeLintTests.test_receipt_digest_is_deterministic": [
+      {
+        "file": "tests/test_bughound_envelope_lint.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 103,
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_receipt_digest_is_deterministic:a037c082fa510554",
+        "signature_hash": "49954c66936facb3"
+      }
+    ],
+    "BugHoundSeedLabTests": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 136,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#class:BugHoundSeedLabTests:6f8cb762fcb0d1d6",
+        "signature_hash": "fdec4b8ce5343a2c"
+      }
+    ],
+    "BugHoundSeedLabTests.setUp": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 18,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.setUp:4ec618dd3c002de6",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "BugHoundSeedLabTests.test_canonical_topology_registry_exact": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 34,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_canonical_topology_registry_exact:f3aa0add31259659",
+        "signature_hash": "ed57d59d8900cdd4"
+      }
+    ],
+    "BugHoundSeedLabTests.test_seed_case_digests_are_deterministic_and_unique": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 40,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_seed_case_digests_are_deterministic_and_unique:732632e36b215e7d",
+        "signature_hash": "5a5fd8e1d9ef1036"
+      }
+    ],
+    "BugHoundSeedLabTests.test_ground_truth_oracles_are_consistent": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 48,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_ground_truth_oracles_are_consistent:d2447bca4c59dbac",
+        "signature_hash": "873f3f542feb0e98"
+      }
+    ],
+    "BugHoundSeedLabTests.test_matched_basis_is_topology_neutral": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 55,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_matched_basis_is_topology_neutral:f53ba4114dc4b4fb",
+        "signature_hash": "b3c9b67e3a64b613"
+      }
+    ],
+    "BugHoundSeedLabTests.test_run_plan_identity_changes_with_topology": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 59,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_run_plan_identity_changes_with_topology:a0aae0279eae0978",
+        "signature_hash": "ae2be0b14ff9b0b4"
+      }
+    ],
+    "BugHoundSeedLabTests.test_oracle_self_test_scores_perfect_but_is_not_candidate_evidence": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 75,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_oracle_self_test_scores_perfect_but_is_not_candidate_evidence:a20f25ba1a6f832e",
+        "signature_hash": "983c96e6ed8492b1"
+      }
+    ],
+    "BugHoundSeedLabTests.test_empty_candidate_has_undefined_precision_not_fabricated_zero": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 82,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_empty_candidate_has_undefined_precision_not_fabricated_zero:fdb934bb2941e5d4",
+        "signature_hash": "46dbb0e002eb9550"
+      }
+    ],
+    "BugHoundSeedLabTests.test_false_positive_is_measured_on_clean_control": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 94,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_false_positive_is_measured_on_clean_control:a3c4fa59e3e1c242",
+        "signature_hash": "41edcf31653fd8e8"
+      }
+    ],
+    "BugHoundSeedLabTests.test_holdout_patch_exposure_invalidates_comparison": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 106,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_holdout_patch_exposure_invalidates_comparison:826d00d5b1f4a20f",
+        "signature_hash": "96a2804c5f334e88"
+      }
+    ],
+    "BugHoundSeedLabTests.test_global_patch_visibility_invalidates_comparison": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 112,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_global_patch_visibility_invalidates_comparison:9d3a8a9158cc22d8",
+        "signature_hash": "4932df1f86df075b"
+      }
+    ],
+    "BugHoundSeedLabTests.test_duplicate_findings_fail_closed": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 119,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_duplicate_findings_fail_closed:24296749799f93d1",
+        "signature_hash": "a1053a29d8dfaa20"
+      }
+    ],
+    "BugHoundSeedLabTests.test_unknown_finding_case_fails_closed": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 125,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_unknown_finding_case_fails_closed:9f48326e3740919c",
+        "signature_hash": "e5662ae4ce8030c1"
+      }
+    ],
+    "BugHoundSeedLabTests.test_plan_case_set_drift_fails_closed": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 131,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_plan_case_set_drift_fails_closed:c6eb899ff646eef1",
+        "signature_hash": "97f77ccfcb3ed188"
+      }
+    ],
+    "BugHoundSeedLabTests.test_unknown_topology_fails_closed": [
+      {
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 136,
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_unknown_topology_fails_closed:fa3aa1a386074991",
+        "signature_hash": "ed317ac978b9091e"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 87,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#class:BugHoundTrustBoundarySeedTests:43210f0cf64515ed",
+        "signature_hash": "12ca7b914af3d576"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests.test_exact_scope_matches": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 28,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_exact_scope_matches:24e6eba81fb92bcc",
+        "signature_hash": "982582f0c59973de"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests.test_signed_persisted_agent_mismatch_is_distinct": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 39,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_signed_persisted_agent_mismatch_is_distinct:26e50a862183b8ab",
+        "signature_hash": "a44a62f975cc6622"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests.test_persisted_namespace_drift_is_detected": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 45,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_persisted_namespace_drift_is_detected:4e403c70f0114ada",
+        "signature_hash": "f098880f9f7214e5"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests.test_modeled_current_identity_predicate_does_not_include_namespace": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 60,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_modeled_current_identity_predicate_does_not_include_namespace:3a0684a4a328a903",
+        "signature_hash": "727cbd004acb07a7"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests.test_source_generation_and_effect_ceiling_fail_closed": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 81,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_source_generation_and_effect_ceiling_fail_closed:2220495acea162d9",
+        "signature_hash": "1c7751fb87d6ecf0"
+      }
+    ],
+    "BugHoundTrustBoundarySeedTests.test_receipt_digest_is_deterministic": [
+      {
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 87,
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_receipt_digest_is_deterministic:fa68a311169e290f",
+        "signature_hash": "49954c66936facb3"
+      }
+    ],
     "test_space_app_card_declares_public_docker_runtime": [
       {
         "file": "tests/test_huggingface_space_deployment.py",
@@ -157179,6 +158260,736 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "BlindDiscoveryError": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "class",
+        "line": 59,
+        "end_line": 63,
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindDiscoveryError:eb0b639156067150",
+        "signature_hash": "23eb99924b21f8bb"
+      }
+    ],
+    "BlindDiscoveryError.__init__": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 63,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryError.__init__:d3949da4fd9419d2",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "BlindDiscoveryPacketV1": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "class",
+        "line": 96,
+        "end_line": 138,
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindDiscoveryPacketV1:d828f551dfa0803b",
+        "signature_hash": "0611fb4a38769269"
+      }
+    ],
+    "BlindDiscoveryPacketV1.__post_init__": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 127,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryPacketV1.__post_init__:d1351be38d08f975",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "BlindDiscoveryPacketV1.to_candidate_dict": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 134,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryPacketV1.to_candidate_dict:deff1db14f329d80",
+        "signature_hash": "fa6b4e0071fd48cc"
+      }
+    ],
+    "BlindDiscoveryPacketV1.packet_digest": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 138,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryPacketV1.packet_digest:80c334573613e833",
+        "signature_hash": "9bc5db86166c6b2f"
+      }
+    ],
+    "HiddenCaseBindingV1": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "class",
+        "line": 142,
+        "end_line": 169,
+        "semantic_id": "tools/bughound/blind_discovery.py#class:HiddenCaseBindingV1:bc34ce078fbc7e70",
+        "signature_hash": "328c095b436140fe"
+      }
+    ],
+    "HiddenCaseBindingV1.__post_init__": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 163,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:HiddenCaseBindingV1.__post_init__:4a4015bf2890be84",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "HiddenCaseBindingV1.binding_digest": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 169,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:HiddenCaseBindingV1.binding_digest:2415d9ed410eb986",
+        "signature_hash": "c0adb0ca7d3bbf04"
+      }
+    ],
+    "BlindFindingV1": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "class",
+        "line": 173,
+        "end_line": 194,
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindFindingV1:fc64258db41023f6",
+        "signature_hash": "941a234bc5f323d0"
+      }
+    ],
+    "BlindFindingV1.__post_init__": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 181,
+        "end_line": 190,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindFindingV1.__post_init__:a09b4711e2b93ad7",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "BlindFindingV1.finding_digest": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 194,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindFindingV1.finding_digest:72e61a91b8175758",
+        "signature_hash": "cb1c5a56431b0d67"
+      }
+    ],
+    "EvaluatorFindingResolutionV1": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "class",
+        "line": 198,
+        "end_line": 230,
+        "semantic_id": "tools/bughound/blind_discovery.py#class:EvaluatorFindingResolutionV1:0335de42a03a0290",
+        "signature_hash": "7136966c2323d540"
+      }
+    ],
+    "EvaluatorFindingResolutionV1.__post_init__": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 226,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:EvaluatorFindingResolutionV1.__post_init__:b693f593bc697ec4",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "EvaluatorFindingResolutionV1.resolution_digest": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 229,
+        "end_line": 230,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:EvaluatorFindingResolutionV1.resolution_digest:53c6480f150956f9",
+        "signature_hash": "145995ae7659cb6c"
+      }
+    ],
+    "parse_blind_finding": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 233,
+        "end_line": 256,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:parse_blind_finding:fbf1d358683c35d2",
+        "signature_hash": "87f8b275f9472a1c"
+      }
+    ],
+    "compile_blind_case": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 259,
+        "end_line": 300,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:compile_blind_case:c75bc764ad6e9e49",
+        "signature_hash": "7bda519919ad61c6"
+      }
+    ],
+    "validate_packet_binding": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 303,
+        "end_line": 325,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:validate_packet_binding:c896fdc1678a0c92",
+        "signature_hash": "462c606838c54a7d"
+      }
+    ],
+    "validate_evaluator_resolution": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 328,
+        "end_line": 349,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:validate_evaluator_resolution:f65d8eec6dafc7c4",
+        "signature_hash": "4e6f0d7c581c8017"
+      }
+    ],
+    "BlindAdjudicationV1": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "class",
+        "line": 353,
+        "end_line": 368,
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindAdjudicationV1:cdfd4ea2d3dccc30",
+        "signature_hash": "2b0e3eff3b9baff0"
+      }
+    ],
+    "BlindAdjudicationV1.adjudication_digest": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "method",
+        "line": 367,
+        "end_line": 368,
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindAdjudicationV1.adjudication_digest:6ef49aee4467e25a",
+        "signature_hash": "211dfd30c56a6a43"
+      }
+    ],
+    "adjudicate_blind_finding": [
+      {
+        "file": "tools/bughound/blind_discovery.py",
+        "kind": "function",
+        "line": 371,
+        "end_line": 455,
+        "semantic_id": "tools/bughound/blind_discovery.py#function:adjudicate_blind_finding:e5f0e0bf62ac355e",
+        "signature_hash": "b63c1653833c86d5"
+      }
+    ],
+    "_secret_bytes": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 59,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_secret_bytes:0003965224a4a4bd",
+        "signature_hash": "2987109ef4911880"
+      }
+    ],
+    "_resolution_payload": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 96,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_resolution_payload:09cb24704b9514ac",
+        "signature_hash": "58e6ae59f2795a6a"
+      }
+    ],
+    "EvaluatorResolutionEnvelopeV1": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "class",
+        "line": 100,
+        "end_line": 117,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#class:EvaluatorResolutionEnvelopeV1:e8f4bc121aba9f64",
+        "signature_hash": "2f10bfdc5abca35a"
+      }
+    ],
+    "EvaluatorResolutionEnvelopeV1.envelope_digest": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 117,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#method:EvaluatorResolutionEnvelopeV1.envelope_digest:1551a3820d801e45",
+        "signature_hash": "beacbb57b980cab6"
+      }
+    ],
+    "issue_evaluator_resolution_envelope": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 120,
+        "end_line": 149,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:issue_evaluator_resolution_envelope:9846ce1a84d396df",
+        "signature_hash": "350b185a0cc15b8b"
+      }
+    ],
+    "verify_evaluator_resolution_envelope": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 191,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:verify_evaluator_resolution_envelope:95f0dc60f22a2da6",
+        "signature_hash": "f4efa96d2d4d4c10"
+      }
+    ],
+    "ProducerBoundBlindAdjudicationV1": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "class",
+        "line": 195,
+        "end_line": 215,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#class:ProducerBoundBlindAdjudicationV1:58114bcfc65f1487",
+        "signature_hash": "2c2239b835587cde"
+      }
+    ],
+    "ProducerBoundBlindAdjudicationV1.adjudication_digest": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 215,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#method:ProducerBoundBlindAdjudicationV1.adjudication_digest:924115c17e5f16da",
+        "signature_hash": "211dfd30c56a6a43"
+      }
+    ],
+    "adjudicate_producer_bound_blind_finding": [
+      {
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "kind": "function",
+        "line": 218,
+        "end_line": 262,
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:adjudicate_producer_bound_blind_finding:4575c45535be5eaf",
+        "signature_hash": "3c4105baa83e722c"
+      }
+    ],
+    "ProducerBoundBlindScoreReceiptV1": [
+      {
+        "file": "tools/bughound/blind_score_admission.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 65,
+        "semantic_id": "tools/bughound/blind_score_admission.py#class:ProducerBoundBlindScoreReceiptV1:da985579229ee4a5",
+        "signature_hash": "1416004ace260bbe"
+      }
+    ],
+    "ProducerBoundBlindScoreReceiptV1.score_receipt_digest": [
+      {
+        "file": "tools/bughound/blind_score_admission.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 65,
+        "semantic_id": "tools/bughound/blind_score_admission.py#method:ProducerBoundBlindScoreReceiptV1.score_receipt_digest:8a6a5f4f3a6aad58",
+        "signature_hash": "abf64ef935250496"
+      }
+    ],
+    "score_producer_bound_blind_finding": [
+      {
+        "file": "tools/bughound/blind_score_admission.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 112,
+        "semantic_id": "tools/bughound/blind_score_admission.py#function:score_producer_bound_blind_finding:f61c6ceaecfc8340",
+        "signature_hash": "d7db1b3f2c1d989c"
+      }
+    ],
+    "LintDisposition": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 31,
+        "semantic_id": "tools/bughound/envelope_lint.py#class:LintDisposition:48cfb00c65b5a6a6",
+        "signature_hash": "ec81a0e47aa3e071"
+      }
+    ],
+    "LintFindingV1": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 38,
+        "semantic_id": "tools/bughound/envelope_lint.py#class:LintFindingV1:4eef4b2f916623c0",
+        "signature_hash": "155d430396359b01"
+      }
+    ],
+    "EnvelopeLintReceiptV1": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "class",
+        "line": 42,
+        "end_line": 71,
+        "semantic_id": "tools/bughound/envelope_lint.py#class:EnvelopeLintReceiptV1:c85fe19b2b7b2cf4",
+        "signature_hash": "01f295d6be3409aa"
+      }
+    ],
+    "EnvelopeLintReceiptV1.receipt_digest": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 71,
+        "semantic_id": "tools/bughound/envelope_lint.py#method:EnvelopeLintReceiptV1.receipt_digest:a5208fcd36154142",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "_flatten_json": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 82,
+        "semantic_id": "tools/bughound/envelope_lint.py#function:_flatten_json:2d7adb56a5d14a9d",
+        "signature_hash": "2534941137a2288d"
+      }
+    ],
+    "_lint_semantics": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 109,
+        "semantic_id": "tools/bughound/envelope_lint.py#function:_lint_semantics:869c41b749604ad5",
+        "signature_hash": "5ab2d94a21f3707f"
+      }
+    ],
+    "lint_envelope": [
+      {
+        "file": "tools/bughound/envelope_lint.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 208,
+        "semantic_id": "tools/bughound/envelope_lint.py#function:lint_envelope:72a9c9fcfb3c121a",
+        "signature_hash": "8d871b696a6b8aaa"
+      }
+    ],
+    "BenchmarkError": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 20,
+        "end_line": 24,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:BenchmarkError:cac2d2d6778f17c5",
+        "signature_hash": "8ac306fda9601f0e"
+      }
+    ],
+    "BenchmarkError.__init__": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 24,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:BenchmarkError.__init__:ab56f240248ffae1",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "Visibility": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:Visibility:7c03873f6678fe1f",
+        "signature_hash": "f224481c5a6830e3"
+      }
+    ],
+    "SeedBugCaseV1": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 62,
+        "end_line": 93,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:SeedBugCaseV1:a68fc3f4cdcd8b55",
+        "signature_hash": "8a853589fabb46de"
+      }
+    ],
+    "SeedBugCaseV1.__post_init__": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 87,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:SeedBugCaseV1.__post_init__:94256d662892e1dd",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "SeedBugCaseV1.case_digest": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 93,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:SeedBugCaseV1.case_digest:c205ed1654f80972",
+        "signature_hash": "ad2e340dedb0a4a4"
+      }
+    ],
+    "seeded_cases": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 157,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:seeded_cases:6069361e6f00a4cb",
+        "signature_hash": "a53a7d6ef7371ce9"
+      }
+    ],
+    "_load_function": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 160,
+        "end_line": 169,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_load_function:93c78fbc9ad5d163",
+        "signature_hash": "6b4061ed741dfbd0"
+      }
+    ],
+    "_oracle_outcome": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 172,
+        "end_line": 183,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_oracle_outcome:5674122ab0afc74c",
+        "signature_hash": "954f3c669d19fb30"
+      }
+    ],
+    "HarnessOracleResultV1": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 187,
+        "end_line": 198,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:HarnessOracleResultV1:11aab24839d5d01b",
+        "signature_hash": "3adecb3cbda3d8ef"
+      }
+    ],
+    "HarnessOracleResultV1.digest": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 198,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:HarnessOracleResultV1.digest:3b36feaa15c34665",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "run_harness_oracle": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 201,
+        "end_line": 210,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:run_harness_oracle:9b0c0f2eecbb3a37",
+        "signature_hash": "56454200b123009d"
+      }
+    ],
+    "FindingV1": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 214,
+        "end_line": 223,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:FindingV1:42e705de67154d15",
+        "signature_hash": "ccd761045f4e1b63"
+      }
+    ],
+    "FindingV1.digest": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 222,
+        "end_line": 223,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:FindingV1.digest:713a75af31ca5e42",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "MatchedRunPlanV1": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 227,
+        "end_line": 267,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:MatchedRunPlanV1:32304bd4418e51a2",
+        "signature_hash": "4f463f544932948d"
+      }
+    ],
+    "MatchedRunPlanV1.__post_init__": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 236,
+        "end_line": 242,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:MatchedRunPlanV1.__post_init__:55b6e3e8f676e1bc",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "MatchedRunPlanV1.match_basis_digest": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 245,
+        "end_line": 255,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:MatchedRunPlanV1.match_basis_digest:aebd72cc2ac26532",
+        "signature_hash": "5ac5d8a179adeba3"
+      }
+    ],
+    "MatchedRunPlanV1.run_plan_digest": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 258,
+        "end_line": 267,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:MatchedRunPlanV1.run_plan_digest:39274d35c1dadc3c",
+        "signature_hash": "6cfdad17bbfcf4d4"
+      }
+    ],
+    "build_matched_plan": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 270,
+        "end_line": 286,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:build_matched_plan:efd7bbb8cfccf213",
+        "signature_hash": "9b0f7ef1a2c81b50"
+      }
+    ],
+    "BenchmarkScoreV1": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "class",
+        "line": 290,
+        "end_line": 310,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:BenchmarkScoreV1:f6f077127accad18",
+        "signature_hash": "e8db501febdc8f0e"
+      }
+    ],
+    "BenchmarkScoreV1.digest": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "method",
+        "line": 309,
+        "end_line": 310,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:BenchmarkScoreV1.digest:dfced6db23617c7b",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "score_findings": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 313,
+        "end_line": 376,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:score_findings:747216944fd7844b",
+        "signature_hash": "0f7d84bf0d356649"
+      }
+    ],
+    "oracle_self_test_findings": [
+      {
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "kind": "function",
+        "line": 379,
+        "end_line": 395,
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:oracle_self_test_findings:1e1529aa974befd0",
+        "signature_hash": "68f7c5a7dfd33eda"
+      }
+    ],
+    "ScopeDisposition": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 22,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#class:ScopeDisposition:319288476f249d8e",
+        "signature_hash": "47073886f27c3970"
+      }
+    ],
+    "expected_agent_namespace": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 28,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#function:expected_agent_namespace:43ef0d495131a7e9",
+        "signature_hash": "8a2a329fcef6d104"
+      }
+    ],
+    "IdentityScopeObservationV1": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 76,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#class:IdentityScopeObservationV1:e333f4346de4dbb1",
+        "signature_hash": "922a88864e6d10fa"
+      }
+    ],
+    "IdentityScopeObservationV1.__post_init__": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 56,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.__post_init__:2926dc54719da8b3",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "IdentityScopeObservationV1.expected_namespace": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.expected_namespace:f9aeb1eda9fde409",
+        "signature_hash": "0dbe3a79eb720f67"
+      }
+    ],
+    "IdentityScopeObservationV1.disposition": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 68,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.disposition:2275e5de5a2796d4",
+        "signature_hash": "4639be056d4886da"
+      }
+    ],
+    "IdentityScopeObservationV1.receipt_digest": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 76,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.receipt_digest:d1557229b41a4237",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "modeled_current_validation_accepts": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 98,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#function:modeled_current_validation_accepts:23222a608db74d28",
+        "signature_hash": "82b1545c13085b9d"
+      }
+    ],
+    "memanto_namespace_drift_seed": [
+      {
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 116,
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#function:memanto_namespace_drift_seed:feb9c3fc1ae23766",
+        "signature_hash": "75213893d5952b73"
       }
     ],
     "_coordinates": [
@@ -158298,6 +160109,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/bughound-seedlab.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -158605,6 +160417,10 @@
     ],
     "python scripts/aura_spatial_s5_s6_construction_architect_harness.py --repo-root . --base-ref \"origin/$BASE_REF\" --head-ref HEAD --observed-head \"$(git rev-parse HEAD)\" --receipt /tmp/aura-spatial-s5-s6-receipts/full.json": [
       ".github/workflows/aura-spatial-s5-s6-construction.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/bughound-seedlab.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
@@ -159293,9 +161109,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -168129,6 +169942,63 @@
         0.183493,
         0.241705,
         0.036699
+      ]
+    },
+    {
+      "path": ".github/workflows/bughound-seedlab.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1656,
+      "lines": 44,
+      "tokens_est": 414,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          42
+        ],
+        "python -m unittest": [
+          43
+        ]
+      },
+      "topology": {},
+      "digest8": "be9357e453a0f82d",
+      "vector": [
+        0.275733,
+        0.227987,
+        0.194564,
+        0.146819,
+        -0.204114,
+        0.029841,
+        0.15398,
+        -0.034616,
+        -0.227987,
+        -0.103847,
+        -0.046552,
+        -0.294831,
+        0.165917,
+        0.182628,
+        0.199339,
+        0.03939,
+        -0.132495,
+        -0.182628,
+        0.032228,
+        0.282894,
+        0.24231,
+        -0.096685,
+        -0.299605,
+        0.084749,
+        0.0752,
+        -0.175466,
+        -0.01313,
+        0.192177,
+        -0.144431,
+        0.072812,
+        0.247085,
+        0.182628
       ]
     },
     {
@@ -262225,6 +264095,288 @@
       ]
     },
     {
+      "path": "tests/test_bughound_blind_discovery.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15450,
+      "lines": 378,
+      "tokens_est": 3863,
+      "symbol_count": 33,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bb04a389acb11303",
+      "vector": [
+        0.063438,
+        -0.066138,
+        0.152522,
+        -0.085035,
+        -0.214611,
+        0.168719,
+        0.087734,
+        -0.228109,
+        -0.020246,
+        0.004049,
+        -0.079636,
+        0.174118,
+        -0.087734,
+        0.082335,
+        -0.047241,
+        0.217311,
+        -0.214611,
+        0.319892,
+        0.274,
+        -0.309094,
+        0.006749,
+        0.255104,
+        0.16602,
+        -0.263202,
+        0.174118,
+        0.193015,
+        0.16332,
+        0.033744,
+        -0.047241,
+        -0.287498,
+        0.117429,
+        0.225409
+      ]
+    },
+    {
+      "path": "tests/test_bughound_blind_oracle_provenance.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8828,
+      "lines": 216,
+      "tokens_est": 2207,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cea58190fc0c57fe",
+      "vector": [
+        -0.272965,
+        0.113424,
+        -0.280443,
+        -0.210644,
+        -0.038639,
+        -0.243051,
+        0.185716,
+        0.120902,
+        -0.011218,
+        -0.265486,
+        0.21563,
+        0.04861,
+        -0.081017,
+        0.272965,
+        0.238065,
+        0.095974,
+        0.18073,
+        0.240558,
+        0.150816,
+        -0.16328,
+        0.108438,
+        0.31285,
+        0.16328,
+        -0.043624,
+        -0.003739,
+        -0.133366,
+        0.113424,
+        -0.028668,
+        -0.188209,
+        -0.18073,
+        0.036146,
+        -0.185716
+      ]
+    },
+    {
+      "path": "tests/test_bughound_blind_score_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6479,
+      "lines": 163,
+      "tokens_est": 1620,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c98f5ca4a8c58d82",
+      "vector": [
+        -0.02368,
+        0.100953,
+        -0.23805,
+        -0.170748,
+        -0.066056,
+        0.203153,
+        0.220602,
+        -0.317816,
+        0.160777,
+        -0.165763,
+        -0.145821,
+        0.021188,
+        0.145821,
+        -0.095968,
+        0.12588,
+        0.297874,
+        0.315323,
+        -0.115909,
+        -0.076027,
+        -0.071041,
+        0.098461,
+        -0.016202,
+        0.317816,
+        -0.115909,
+        0.006232,
+        -0.068549,
+        0.028666,
+        0.300367,
+        -0.180719,
+        -0.170748,
+        0.300367,
+        0.046114
+      ]
+    },
+    {
+      "path": "tests/test_bughound_envelope_lint.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4373,
+      "lines": 108,
+      "tokens_est": 1090,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "16ed168936bc6c3c",
+      "vector": [
+        -0.202066,
+        0.236356,
+        -0.118791,
+        -0.206965,
+        0.243704,
+        -0.08695,
+        0.030616,
+        0.277994,
+        0.037964,
+        0.057558,
+        0.263299,
+        -0.192269,
+        0.160428,
+        -0.238806,
+        0.12124,
+        -0.148182,
+        0.184921,
+        -0.157979,
+        0.091848,
+        0.251052,
+        -0.270646,
+        -0.263299,
+        0.028167,
+        -0.18982,
+        -0.101645,
+        0.140834,
+        0.138385,
+        0.079602,
+        0.113892,
+        0.079602,
+        -0.229009,
+        0.182472
+      ]
+    },
+    {
+      "path": "tests/test_bughound_seedlab_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5845,
+      "lines": 141,
+      "tokens_est": 1462,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "774559d22d411cd8",
+      "vector": [
+        0.117381,
+        -0.285069,
+        -0.310867,
+        0.122541,
+        -0.274749,
+        -0.168977,
+        -0.00645,
+        0.13028,
+        -0.029668,
+        -0.323766,
+        0.13544,
+        0.243792,
+        -0.050306,
+        -0.014189,
+        0.274749,
+        -0.220573,
+        -0.228313,
+        -0.083844,
+        -0.279909,
+        -0.101902,
+        0.174137,
+        0.220573,
+        -0.187036,
+        0.096743,
+        0.058046,
+        -0.086423,
+        0.217994,
+        0.029668,
+        -0.00645,
+        0.171557,
+        -0.039987,
+        -0.019349
+      ]
+    },
+    {
+      "path": "tests/test_bughound_trust_boundary_seed.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3426,
+      "lines": 92,
+      "tokens_est": 857,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1f1abd84c3f89c24",
+      "vector": [
+        0.034499,
+        0.154689,
+        -0.125754,
+        0.136883,
+        -0.107948,
+        -0.257073,
+        -0.196978,
+        0.252622,
+        -0.277105,
+        -0.09682,
+        -0.210333,
+        0.281556,
+        -0.185849,
+        -0.283782,
+        0.052305,
+        0.085691,
+        0.043402,
+        -0.281556,
+        0.003339,
+        -0.116851,
+        -0.281556,
+        -0.250396,
+        -0.021145,
+        0.012242,
+        -0.032273,
+        -0.196978,
+        0.014467,
+        -0.210333,
+        0.034499,
+        0.24817,
+        -0.043402,
+        -0.196978
+      ]
+    },
+    {
       "path": "tests/test_huggingface_space_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +264797,288 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/bughound/blind_discovery.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 17201,
+      "lines": 456,
+      "tokens_est": 4301,
+      "symbol_count": 26,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ddb8331e73dabc61",
+      "vector": [
+        -0.012298,
+        -0.118883,
+        -0.332052,
+        0.031429,
+        -0.255529,
+        0.184473,
+        0.233666,
+        0.091553,
+        -0.220001,
+        0.028696,
+        -0.118883,
+        0.121616,
+        -0.04236,
+        0.252796,
+        -0.206337,
+        0.025963,
+        0.211802,
+        0.342983,
+        0.192672,
+        0.132547,
+        -0.184473,
+        0.203604,
+        0.132547,
+        0.045093,
+        -0.056025,
+        0.118883,
+        -0.312921,
+        -0.034162,
+        -0.034162,
+        0.066957,
+        -0.291057,
+        0.077889
+      ]
+    },
+    {
+      "path": "tools/bughound/blind_oracle_provenance.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9298,
+      "lines": 263,
+      "tokens_est": 2325,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fd2f781fc2ecac95",
+      "vector": [
+        -0.079247,
+        0.029311,
+        -0.120499,
+        -0.120499,
+        0.187805,
+        -0.113986,
+        0.274651,
+        -0.007599,
+        -0.255111,
+        -0.096616,
+        0.131355,
+        -0.248597,
+        0.265966,
+        0.203003,
+        -0.255111,
+        -0.261624,
+        -0.183463,
+        0.220372,
+        -0.224715,
+        -0.040166,
+        -0.118328,
+        0.083589,
+        -0.00977,
+        0.276822,
+        -0.172607,
+        0.001086,
+        -0.246426,
+        0.131355,
+        -0.064049,
+        -0.205174,
+        -0.189976,
+        0.137868
+      ]
+    },
+    {
+      "path": "tools/bughound/blind_score_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4189,
+      "lines": 113,
+      "tokens_est": 1048,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "87cad47957cf4532",
+      "vector": [
+        -0.153684,
+        -0.27863,
+        -0.123697,
+        -0.088712,
+        -0.108703,
+        -0.066221,
+        -0.133692,
+        -0.02374,
+        -0.128695,
+        0.083714,
+        -0.25614,
+        0.061224,
+        0.061224,
+        0.033735,
+        -0.213658,
+        -0.111202,
+        0.20866,
+        0.171176,
+        -0.286127,
+        -0.316114,
+        0.171176,
+        -0.23115,
+        -0.063723,
+        0.313615,
+        -0.213658,
+        -0.006247,
+        0.02374,
+        -0.201163,
+        0.238647,
+        0.096209,
+        0.163679,
+        -0.25614
+      ]
+    },
+    {
+      "path": "tools/bughound/envelope_lint.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8597,
+      "lines": 209,
+      "tokens_est": 2149,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2d0f6c622209ff06",
+      "vector": [
+        0.046675,
+        0.31339,
+        0.017336,
+        0.038674,
+        -0.214706,
+        -0.204037,
+        -0.254713,
+        -0.012002,
+        -0.041341,
+        -0.25738,
+        0.116021,
+        -0.337395,
+        -0.068012,
+        -0.052009,
+        -0.025338,
+        0.212038,
+        -0.172031,
+        0.14536,
+        0.060011,
+        -0.150694,
+        -0.33206,
+        0.20137,
+        0.078681,
+        -0.084015,
+        0.022671,
+        -0.009335,
+        -0.33206,
+        0.196036,
+        0.028005,
+        -0.204037,
+        0.153361,
+        0.20137
+      ]
+    },
+    {
+      "path": "tools/bughound/seedlab_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13581,
+      "lines": 396,
+      "tokens_est": 3396,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5198d115d83441f5",
+      "vector": [
+        0.187805,
+        -0.20008,
+        0.003682,
+        -0.104336,
+        -0.136251,
+        -0.286003,
+        -0.224629,
+        0.131341,
+        -0.313008,
+        0.266364,
+        -0.187805,
+        -0.096971,
+        -0.229539,
+        0.069967,
+        0.050327,
+        -0.033142,
+        0.266364,
+        0.261454,
+        -0.148525,
+        0.224629,
+        -0.025777,
+        0.15098,
+        0.261454,
+        0.042962,
+        0.19517,
+        0.163255,
+        -0.131341,
+        -0.060147,
+        -0.131341,
+        -0.006137,
+        -0.020867,
+        -0.249179
+      ]
+    },
+    {
+      "path": "tools/bughound/trust_boundary_seed.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4269,
+      "lines": 117,
+      "tokens_est": 1068,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "00509fa9e3dce30e",
+      "vector": [
+        -0.158848,
+        -0.178861,
+        0.188867,
+        0.16135,
+        0.261412,
+        -0.061288,
+        -0.16135,
+        0.276421,
+        0.213882,
+        0.236396,
+        0.218885,
+        0.116322,
+        0.008755,
+        0.106316,
+        -0.223889,
+        -0.318947,
+        -0.026266,
+        0.256409,
+        -0.106316,
+        -0.213882,
+        -0.251406,
+        0.013759,
+        -0.118824,
+        -0.031269,
+        -0.11382,
+        0.156347,
+        0.22639,
+        0.158848,
+        -0.136334,
+        -0.021263,
+        0.208879,
+        -0.041276
       ]
     },
     {
@@ -286646,16 +289080,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1652,
+    "total_bytes": 26518240,
+    "text_tokens_est": 6619913,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 1009,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286807,6 +289241,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/bughound-seedlab.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -288287,6 +290722,12 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_bughound_blind_discovery.py",
+      "tests/test_bughound_blind_oracle_provenance.py",
+      "tests/test_bughound_blind_score_admission.py",
+      "tests/test_bughound_envelope_lint.py",
+      "tests/test_bughound_seedlab_benchmark.py",
+      "tests/test_bughound_trust_boundary_seed.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -288296,6 +290737,12 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/bughound/blind_discovery.py",
+      "tools/bughound/blind_oracle_provenance.py",
+      "tools/bughound/blind_score_admission.py",
+      "tools/bughound/envelope_lint.py",
+      "tools/bughound/seedlab_benchmark.py",
+      "tools/bughound/trust_boundary_seed.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445314,6 +447761,986 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#class:BlindDiscoveryTests:f44104ab7c3c376c",
+        "name": "BlindDiscoveryTests",
+        "kind": "class",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 20,
+        "end_line": 373,
+        "signature_hash": "9da89c10e367fdbc",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.finding:2d4c12d6784e136f",
+        "name": "BlindDiscoveryTests.finding",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 32,
+        "end_line": 39,
+        "signature_hash": "47b8c0e2f315db45",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.resolution:b7b58522c80ca1c7",
+        "name": "BlindDiscoveryTests.resolution",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 41,
+        "end_line": 61,
+        "signature_hash": "d4f28f3a5e576fb2",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.setUp:30f040cc442eacb1",
+        "name": "BlindDiscoveryTests.setUp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 21,
+        "end_line": 30,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_adjudication_identity_is_deterministic_with_resolution:a4c4845fac31ea1d",
+        "name": "BlindDiscoveryTests.test_adjudication_identity_is_deterministic_with_resolution",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 355,
+        "end_line": 373,
+        "signature_hash": "626a87e64a55582f",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_candidate_case_id_injection_is_blindness_violation:151b64723ecf14e1",
+        "name": "BlindDiscoveryTests.test_candidate_case_id_injection_is_blindness_violation",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 100,
+        "end_line": 111,
+        "signature_hash": "bf20525917ef1857",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_candidate_packet_contains_no_forbidden_hidden_fields:83f7b118d5d8f20a",
+        "name": "BlindDiscoveryTests.test_candidate_packet_contains_no_forbidden_hidden_fields",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 63,
+        "end_line": 70,
+        "signature_hash": "d159683e542f27df",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_clean_control_positive_is_false_positive:07e556b76075774f",
+        "name": "BlindDiscoveryTests.test_clean_control_positive_is_false_positive",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 266,
+        "end_line": 282,
+        "signature_hash": "95a25f9935696cd7",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_clean_control_without_finding_is_correct:f77c5690519966a9",
+        "name": "BlindDiscoveryTests.test_clean_control_without_finding_is_correct",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 254,
+        "end_line": 264,
+        "signature_hash": "1c7139b7f7a960f6",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_different_salt_changes_opaque_target_not_source_semantics:086497797ca4d884",
+        "name": "BlindDiscoveryTests.test_different_salt_changes_opaque_target_not_source_semantics",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 90,
+        "end_line": 98,
+        "signature_hash": "c3d299ebaa41cef8",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_evaluator_currentness_fails_closed:f9277ac47ecb0c28",
+        "name": "BlindDiscoveryTests.test_evaluator_currentness_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 308,
+        "end_line": 312,
+        "signature_hash": "82f997509a4cfa83",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_finding_for_another_opaque_target_fails:38475adfbafaa13c",
+        "name": "BlindDiscoveryTests.test_finding_for_another_opaque_target_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 326,
+        "end_line": 335,
+        "signature_hash": "9a820f9a52b42c48",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_fixed_patch_leakage_invalidates_adjudication:525c57890eaf42bc",
+        "name": "BlindDiscoveryTests.test_fixed_patch_leakage_invalidates_adjudication",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 314,
+        "end_line": 318,
+        "signature_hash": "3f7c266f112bfd5c",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_hidden_binding_is_separate_from_candidate_packet:6445a34e4727cbcc",
+        "name": "BlindDiscoveryTests.test_hidden_binding_is_separate_from_candidate_packet",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 72,
+        "end_line": 76,
+        "signature_hash": "dbf9f58809df5737",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_hidden_case_substitution_fails:b21eec9ca29154b8",
+        "name": "BlindDiscoveryTests.test_hidden_case_substitution_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 290,
+        "end_line": 294,
+        "signature_hash": "c2b52832d3410ed5",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_holdout_visibility_is_required:1e280bebba086e4c",
+        "name": "BlindDiscoveryTests.test_holdout_visibility_is_required",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 337,
+        "end_line": 345,
+        "signature_hash": "c7d4d753873903f1",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_label_leakage_invalidates_adjudication:83deff26e9d2b58d",
+        "name": "BlindDiscoveryTests.test_label_leakage_invalidates_adjudication",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 320,
+        "end_line": 324,
+        "signature_hash": "03e7f19d22e3c4ee",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_localization_alone_cannot_earn_seeded_tp:fa1e8eacc2f702ad",
+        "name": "BlindDiscoveryTests.test_localization_alone_cannot_earn_seeded_tp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 126,
+        "end_line": 137,
+        "signature_hash": "5c01c4f284e7831b",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_negative_evaluator_resolution_does_not_credit_seeded_tp:f0d4df2bea51c47e",
+        "name": "BlindDiscoveryTests.test_negative_evaluator_resolution_does_not_credit_seeded_tp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 194,
+        "end_line": 204,
+        "signature_hash": "2fd76b4cbca0e573",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_neutral_instruction_cannot_be_replaced_with_issue_guidance:f7bbb0b063312bac",
+        "name": "BlindDiscoveryTests.test_neutral_instruction_cannot_be_replaced_with_issue_guidance",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 347,
+        "end_line": 353,
+        "signature_hash": "5ed1648d03f767b0",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_nonindependent_resolution_fails_closed:3ed9318f8691c210",
+        "name": "BlindDiscoveryTests.test_nonindependent_resolution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 206,
+        "end_line": 216,
+        "signature_hash": "d34304098c6fd29b",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_nonmatching_seeded_finding_is_novelty_unverified_even_if_resolution_claims_corroboration:01d9d727639b20ec",
+        "name": "BlindDiscoveryTests.test_nonmatching_seeded_finding_is_novelty_unverified_even_if_resolution_claims_corroboration",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 178,
+        "end_line": 192,
+        "signature_hash": "d327f0244acd5861",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_resolution_without_finding_fails_closed:82e01f5b5beeab54",
+        "name": "BlindDiscoveryTests.test_resolution_without_finding_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 167,
+        "end_line": 176,
+        "signature_hash": "1f0ffee844649fd2",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_same_salt_and_case_are_deterministic:6bafaef05963d6c4",
+        "name": "BlindDiscoveryTests.test_same_salt_and_case_are_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 78,
+        "end_line": 88,
+        "signature_hash": "7869530a206693fe",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_seeded_bug_localized_finding_with_independent_resolution_is_discovered:cca2e69a6092832e",
+        "name": "BlindDiscoveryTests.test_seeded_bug_localized_finding_with_independent_resolution_is_discovered",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 139,
+        "end_line": 155,
+        "signature_hash": "22b2b0ef1733d8fd",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_seeded_bug_without_finding_is_missed:338bb76361630c5a",
+        "name": "BlindDiscoveryTests.test_seeded_bug_without_finding_is_missed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 157,
+        "end_line": 165,
+        "signature_hash": "b2a3b86673e9ff1e",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_source_digest_drift_fails:d3e0121adf81ee3c",
+        "name": "BlindDiscoveryTests.test_source_digest_drift_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 296,
+        "end_line": 300,
+        "signature_hash": "fa7af325f5e2be77",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_source_generation_drift_fails:78e66f3d7ce95f8d",
+        "name": "BlindDiscoveryTests.test_source_generation_drift_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 302,
+        "end_line": 306,
+        "signature_hash": "72768fed05c6904c",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_target_binding_substitution_fails:96bc2db67ec31f49",
+        "name": "BlindDiscoveryTests.test_target_binding_substitution_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 284,
+        "end_line": 288,
+        "signature_hash": "f0ae5e3f6def9f9e",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_unknown_finding_field_fails_closed:dd9a86b3ff8011ab",
+        "name": "BlindDiscoveryTests.test_unknown_finding_field_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 113,
+        "end_line": 124,
+        "signature_hash": "13836de03467e5e7",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_wrong_evaluator_generation_resolution_fails_closed:bfcf35ed96def7eb",
+        "name": "BlindDiscoveryTests.test_wrong_evaluator_generation_resolution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 242,
+        "end_line": 252,
+        "signature_hash": "5c50716d19d14170",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_wrong_hidden_case_resolution_fails_closed:8e5cc7bc52de566a",
+        "name": "BlindDiscoveryTests.test_wrong_hidden_case_resolution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 230,
+        "end_line": 240,
+        "signature_hash": "14864f1475be2c06",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_discovery.py#method:BlindDiscoveryTests.test_wrong_oracle_resolution_fails_closed:76f248d7c1ae11f2",
+        "name": "BlindDiscoveryTests.test_wrong_oracle_resolution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_discovery.py",
+        "line": 218,
+        "end_line": 228,
+        "signature_hash": "164f3f878a96be20",
+        "file_digest8": "bb04a389acb11303"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#class:BlindOracleProvenanceTests:c43c4108d6a9f978",
+        "name": "BlindOracleProvenanceTests",
+        "kind": "class",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 20,
+        "end_line": 211,
+        "signature_hash": "0f0f5b2ce63f1074",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.envelope:4db873baae374ef9",
+        "name": "BlindOracleProvenanceTests.envelope",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 51,
+        "end_line": 57,
+        "signature_hash": "9b4e1c61b056e30d",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.setUp:2849638912b34b11",
+        "name": "BlindOracleProvenanceTests.setUp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 21,
+        "end_line": 49,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_clean_abstention_needs_no_oracle_envelope:a323b9b22ab82faa",
+        "name": "BlindOracleProvenanceTests.test_clean_abstention_needs_no_oracle_envelope",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 193,
+        "end_line": 211,
+        "signature_hash": "55885d573a1cbe07",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_different_secret_changes_mac:19bf416f06423f6a",
+        "name": "BlindOracleProvenanceTests.test_different_secret_changes_mac",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 169,
+        "end_line": 176,
+        "signature_hash": "1c7ce8a2412de0fc",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_exact_producer_bound_resolution_can_earn_seeded_tp:91eeabb7e36ec941",
+        "name": "BlindOracleProvenanceTests.test_exact_producer_bound_resolution_can_earn_seeded_tp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 59,
+        "end_line": 76,
+        "signature_hash": "ab227771e2fd4d87",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_forged_mac_fails:ec741d49219a46aa",
+        "name": "BlindOracleProvenanceTests.test_forged_mac_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 91,
+        "end_line": 100,
+        "signature_hash": "241bd8e1318bbc1a",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_no_resolution_remains_novelty_without_producer_proof:be440f384e6e3e89",
+        "name": "BlindOracleProvenanceTests.test_no_resolution_remains_novelty_without_producer_proof",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 178,
+        "end_line": 191,
+        "signature_hash": "6d6d0f28199e9233",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_nonindependent_resolution_cannot_be_issued:2fa6471ec87f0813",
+        "name": "BlindOracleProvenanceTests.test_nonindependent_resolution_cannot_be_issued",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 144,
+        "end_line": 152,
+        "signature_hash": "6ef5555c62b90a30",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_producer_generation_substitution_fails:27ee609892197ef9",
+        "name": "BlindOracleProvenanceTests.test_producer_generation_substitution_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 123,
+        "end_line": 131,
+        "signature_hash": "46d51d79c6b71a9e",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_producer_ref_substitution_fails:1b2560290554ed9a",
+        "name": "BlindOracleProvenanceTests.test_producer_ref_substitution_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 112,
+        "end_line": 121,
+        "signature_hash": "8732bbe799052956",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_resolution_boolean_without_producer_envelope_cannot_earn_tp:cc02e66ee664c591",
+        "name": "BlindOracleProvenanceTests.test_resolution_boolean_without_producer_envelope_cannot_earn_tp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 78,
+        "end_line": 89,
+        "signature_hash": "fa4846ec00a6a0bb",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_resolution_mutation_fails_binding:37f7ff6e9b8bc77d",
+        "name": "BlindOracleProvenanceTests.test_resolution_mutation_fails_binding",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 133,
+        "end_line": 142,
+        "signature_hash": "e7481b86129d6b8f",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_same_resolution_and_secret_are_deterministic:0e5a415515c43de9",
+        "name": "BlindOracleProvenanceTests.test_same_resolution_and_secret_are_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 163,
+        "end_line": 167,
+        "signature_hash": "7ed860eacd692f56",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_short_or_missing_secret_fails:c3ac422f73e5761b",
+        "name": "BlindOracleProvenanceTests.test_short_or_missing_secret_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 154,
+        "end_line": 161,
+        "signature_hash": "29aa2dc7e409e480",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_oracle_provenance.py#method:BlindOracleProvenanceTests.test_wrong_secret_fails:28f3d8026bb4eb48",
+        "name": "BlindOracleProvenanceTests.test_wrong_secret_fails",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_oracle_provenance.py",
+        "line": 102,
+        "end_line": 110,
+        "signature_hash": "9d0d0795d4c35b82",
+        "file_digest8": "cea58190fc0c57fe"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#class:BlindScoreAdmissionTests:4f484a7f4ff839b7",
+        "name": "BlindScoreAdmissionTests",
+        "kind": "class",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 21,
+        "end_line": 158,
+        "signature_hash": "0815ad50f51d9a68",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.envelope:d344020aa919818b",
+        "name": "BlindScoreAdmissionTests.envelope",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 52,
+        "end_line": 57,
+        "signature_hash": "9b4e1c61b056e30d",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.score:68068b7a8abceb20",
+        "name": "BlindScoreAdmissionTests.score",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 59,
+        "end_line": 71,
+        "signature_hash": "a8568a3b03a15663",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.setUp:792e227cc4fcf1bb",
+        "name": "BlindScoreAdmissionTests.setUp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 22,
+        "end_line": 50,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_canonical_score_api_accepts_no_precomputed_adjudication:780e3622a108c50c",
+        "name": "BlindScoreAdmissionTests.test_canonical_score_api_accepts_no_precomputed_adjudication",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 73,
+        "end_line": 78,
+        "signature_hash": "74a5d8b9610347f0",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_clean_abstention_is_scoreable_without_oracle_envelope:6ed36c43e511a833",
+        "name": "BlindScoreAdmissionTests.test_clean_abstention_is_scoreable_without_oracle_envelope",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 133,
+        "end_line": 152,
+        "signature_hash": "3065ac2590efa338",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_exact_producer_bound_path_emits_score_receipt:ecc838b393a369d8",
+        "name": "BlindScoreAdmissionTests.test_exact_producer_bound_path_emits_score_receipt",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 105,
+        "end_line": 113,
+        "signature_hash": "19a30c21d04f27a1",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_legacy_shape_only_tp_cannot_be_laundered_into_canonical_score:26614ee41b959e04",
+        "name": "BlindScoreAdmissionTests.test_legacy_shape_only_tp_cannot_be_laundered_into_canonical_score",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 80,
+        "end_line": 103,
+        "signature_hash": "6d776a0883ef22b0",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_no_resolution_novelty_remains_uncredited:e66c983d393bc327",
+        "name": "BlindScoreAdmissionTests.test_no_resolution_novelty_remains_uncredited",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 125,
+        "end_line": 131,
+        "signature_hash": "92ce74ed034a9b56",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_score_receipt_is_deterministic_for_same_bound_inputs:036ce386b65caa1a",
+        "name": "BlindScoreAdmissionTests.test_score_receipt_is_deterministic_for_same_bound_inputs",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 154,
+        "end_line": 158,
+        "signature_hash": "165eff4d3f7abf22",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_wrong_expected_producer_generation_cannot_score:285c4334863827e3",
+        "name": "BlindScoreAdmissionTests.test_wrong_expected_producer_generation_cannot_score",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 120,
+        "end_line": 123,
+        "signature_hash": "3037167e0c4853a9",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_blind_score_admission.py#method:BlindScoreAdmissionTests.test_wrong_secret_cannot_score_seeded_tp:9f4d90f8f1a9d1f4",
+        "name": "BlindScoreAdmissionTests.test_wrong_secret_cannot_score_seeded_tp",
+        "kind": "method",
+        "file": "tests/test_bughound_blind_score_admission.py",
+        "line": 115,
+        "end_line": 118,
+        "signature_hash": "d57d94b7c9628ff0",
+        "file_digest8": "c98f5ca4a8c58d82"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#class:BugHoundEnvelopeLintTests:d3944653b480574b",
+        "name": "BugHoundEnvelopeLintTests",
+        "kind": "class",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 9,
+        "end_line": 103,
+        "signature_hash": "c936925accdbb15c",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_bom_is_not_a_structural_failure:f2856d16cfca4bd3",
+        "name": "BugHoundEnvelopeLintTests.test_bom_is_not_a_structural_failure",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 90,
+        "end_line": 99,
+        "signature_hash": "6436f17878129c37",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_canonical_google_doc_shape_is_structurally_parseable:9ecc1becf5440f05",
+        "name": "BugHoundEnvelopeLintTests.test_canonical_google_doc_shape_is_structurally_parseable",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 10,
+        "end_line": 25,
+        "signature_hash": "4d0002d1f254ed22",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_forbidden_credentials_are_reported_without_repair:fa4bb0b162173080",
+        "name": "BugHoundEnvelopeLintTests.test_forbidden_credentials_are_reported_without_repair",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 56,
+        "end_line": 64,
+        "signature_hash": "dacc2a8160ed8616",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_hash_prefixed_title_is_rejected:c7b508e1909e0a1a",
+        "name": "BugHoundEnvelopeLintTests.test_hash_prefixed_title_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 31,
+        "end_line": 33,
+        "signature_hash": "9b4ed5abf2f94053",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_json_array_is_not_object:f641bf03c30f8cf8",
+        "name": "BugHoundEnvelopeLintTests.test_json_array_is_not_object",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 43,
+        "end_line": 45,
+        "signature_hash": "30d8f6d4af0ae099",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_json_object_structural_parse_does_not_grant_authority:771dfec09bd09455",
+        "name": "BugHoundEnvelopeLintTests.test_json_object_structural_parse_does_not_grant_authority",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 47,
+        "end_line": 54,
+        "signature_hash": "c35d3e5b74145648",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_json_trailing_text_detected:fcbd7f3aeaf25da1",
+        "name": "BugHoundEnvelopeLintTests.test_json_trailing_text_detected",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 39,
+        "end_line": 41,
+        "signature_hash": "655c6dda5a6a62f5",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_near_miss_title_is_rejected:18071a88b4e410dc",
+        "name": "BugHoundEnvelopeLintTests.test_near_miss_title_is_rejected",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "3ee9acd7e656b08a",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_non_exact_d0_is_reported:44d32a62d90d2909",
+        "name": "BugHoundEnvelopeLintTests.test_non_exact_d0_is_reported",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 66,
+        "end_line": 75,
+        "signature_hash": "79e89674d7e4eae5",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_one_leading_prose_token:ffe6be12fc134d37",
+        "name": "BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_one_leading_prose_token",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 77,
+        "end_line": 81,
+        "signature_hash": "a8dfabbc9af560e5",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_suffix_embedding:2f87bb246eb9b414",
+        "name": "BugHoundEnvelopeLintTests.test_precise_drive_id_boundary_rejects_suffix_embedding",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 83,
+        "end_line": 88,
+        "signature_hash": "c7cb9e18591c222f",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_prose_continuation_is_line_format:f3b604358fa28c42",
+        "name": "BugHoundEnvelopeLintTests.test_prose_continuation_is_line_format",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 35,
+        "end_line": 37,
+        "signature_hash": "12ef04a86cfb5400",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_envelope_lint.py#method:BugHoundEnvelopeLintTests.test_receipt_digest_is_deterministic:a037c082fa510554",
+        "name": "BugHoundEnvelopeLintTests.test_receipt_digest_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_envelope_lint.py",
+        "line": 101,
+        "end_line": 103,
+        "signature_hash": "49954c66936facb3",
+        "file_digest8": "16ed168936bc6c3c"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#class:BugHoundSeedLabTests:6f8cb762fcb0d1d6",
+        "name": "BugHoundSeedLabTests",
+        "kind": "class",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 16,
+        "end_line": 136,
+        "signature_hash": "fdec4b8ce5343a2c",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.setUp:4ec618dd3c002de6",
+        "name": "BugHoundSeedLabTests.setUp",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 17,
+        "end_line": 18,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_canonical_topology_registry_exact:f3aa0add31259659",
+        "name": "BugHoundSeedLabTests.test_canonical_topology_registry_exact",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 20,
+        "end_line": 34,
+        "signature_hash": "ed57d59d8900cdd4",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_duplicate_findings_fail_closed:24296749799f93d1",
+        "name": "BugHoundSeedLabTests.test_duplicate_findings_fail_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 114,
+        "end_line": 119,
+        "signature_hash": "a1053a29d8dfaa20",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_empty_candidate_has_undefined_precision_not_fabricated_zero:fdb934bb2941e5d4",
+        "name": "BugHoundSeedLabTests.test_empty_candidate_has_undefined_precision_not_fabricated_zero",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 77,
+        "end_line": 82,
+        "signature_hash": "46dbb0e002eb9550",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_false_positive_is_measured_on_clean_control:a3c4fa59e3e1c242",
+        "name": "BugHoundSeedLabTests.test_false_positive_is_measured_on_clean_control",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 84,
+        "end_line": 94,
+        "signature_hash": "41edcf31653fd8e8",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_global_patch_visibility_invalidates_comparison:9d3a8a9158cc22d8",
+        "name": "BugHoundSeedLabTests.test_global_patch_visibility_invalidates_comparison",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 108,
+        "end_line": 112,
+        "signature_hash": "4932df1f86df075b",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_ground_truth_oracles_are_consistent:d2447bca4c59dbac",
+        "name": "BugHoundSeedLabTests.test_ground_truth_oracles_are_consistent",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 42,
+        "end_line": 48,
+        "signature_hash": "873f3f542feb0e98",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_holdout_patch_exposure_invalidates_comparison:826d00d5b1f4a20f",
+        "name": "BugHoundSeedLabTests.test_holdout_patch_exposure_invalidates_comparison",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 96,
+        "end_line": 106,
+        "signature_hash": "96a2804c5f334e88",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_matched_basis_is_topology_neutral:f53ba4114dc4b4fb",
+        "name": "BugHoundSeedLabTests.test_matched_basis_is_topology_neutral",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 50,
+        "end_line": 55,
+        "signature_hash": "b3c9b67e3a64b613",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_oracle_self_test_scores_perfect_but_is_not_candidate_evidence:a20f25ba1a6f832e",
+        "name": "BugHoundSeedLabTests.test_oracle_self_test_scores_perfect_but_is_not_candidate_evidence",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 61,
+        "end_line": 75,
+        "signature_hash": "983c96e6ed8492b1",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_plan_case_set_drift_fails_closed:c6eb899ff646eef1",
+        "name": "BugHoundSeedLabTests.test_plan_case_set_drift_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 127,
+        "end_line": 131,
+        "signature_hash": "97f77ccfcb3ed188",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_run_plan_identity_changes_with_topology:a0aae0279eae0978",
+        "name": "BugHoundSeedLabTests.test_run_plan_identity_changes_with_topology",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 57,
+        "end_line": 59,
+        "signature_hash": "ae2be0b14ff9b0b4",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_seed_case_digests_are_deterministic_and_unique:732632e36b215e7d",
+        "name": "BugHoundSeedLabTests.test_seed_case_digests_are_deterministic_and_unique",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 36,
+        "end_line": 40,
+        "signature_hash": "5a5fd8e1d9ef1036",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_unknown_finding_case_fails_closed:9f48326e3740919c",
+        "name": "BugHoundSeedLabTests.test_unknown_finding_case_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 121,
+        "end_line": 125,
+        "signature_hash": "e5662ae4ce8030c1",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_seedlab_benchmark.py#method:BugHoundSeedLabTests.test_unknown_topology_fails_closed:fa3aa1a386074991",
+        "name": "BugHoundSeedLabTests.test_unknown_topology_fails_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_seedlab_benchmark.py",
+        "line": 133,
+        "end_line": 136,
+        "signature_hash": "ed317ac978b9091e",
+        "file_digest8": "774559d22d411cd8"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#class:BugHoundTrustBoundarySeedTests:43210f0cf64515ed",
+        "name": "BugHoundTrustBoundarySeedTests",
+        "kind": "class",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 15,
+        "end_line": 87,
+        "signature_hash": "12ca7b914af3d576",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_exact_scope_matches:24e6eba81fb92bcc",
+        "name": "BugHoundTrustBoundarySeedTests.test_exact_scope_matches",
+        "kind": "method",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 16,
+        "end_line": 28,
+        "signature_hash": "982582f0c59973de",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_modeled_current_identity_predicate_does_not_include_namespace:3a0684a4a328a903",
+        "name": "BugHoundTrustBoundarySeedTests.test_modeled_current_identity_predicate_does_not_include_namespace",
+        "kind": "method",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 47,
+        "end_line": 60,
+        "signature_hash": "727cbd004acb07a7",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_persisted_namespace_drift_is_detected:4e403c70f0114ada",
+        "name": "BugHoundTrustBoundarySeedTests.test_persisted_namespace_drift_is_detected",
+        "kind": "method",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 41,
+        "end_line": 45,
+        "signature_hash": "f098880f9f7214e5",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_receipt_digest_is_deterministic:fa68a311169e290f",
+        "name": "BugHoundTrustBoundarySeedTests.test_receipt_digest_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 83,
+        "end_line": 87,
+        "signature_hash": "49954c66936facb3",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_signed_persisted_agent_mismatch_is_distinct:26e50a862183b8ab",
+        "name": "BugHoundTrustBoundarySeedTests.test_signed_persisted_agent_mismatch_is_distinct",
+        "kind": "method",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 30,
+        "end_line": 39,
+        "signature_hash": "a44a62f975cc6622",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
+        "semantic_id": "tests/test_bughound_trust_boundary_seed.py#method:BugHoundTrustBoundarySeedTests.test_source_generation_and_effect_ceiling_fail_closed:2220495acea162d9",
+        "name": "BugHoundTrustBoundarySeedTests.test_source_generation_and_effect_ceiling_fail_closed",
+        "kind": "method",
+        "file": "tests/test_bughound_trust_boundary_seed.py",
+        "line": 62,
+        "end_line": 81,
+        "signature_hash": "1c7751fb87d6ecf0",
+        "file_digest8": "1f1abd84c3f89c24"
+      },
+      {
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "name": "test_deployment_docs_have_submission_field_and_no_localhost_url_claim",
         "kind": "function",
@@ -445632,6 +449059,846 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindAdjudicationV1:cdfd4ea2d3dccc30",
+        "name": "BlindAdjudicationV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 353,
+        "end_line": 368,
+        "signature_hash": "2b0e3eff3b9baff0",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindDiscoveryError:eb0b639156067150",
+        "name": "BlindDiscoveryError",
+        "kind": "class",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 59,
+        "end_line": 63,
+        "signature_hash": "23eb99924b21f8bb",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindDiscoveryPacketV1:d828f551dfa0803b",
+        "name": "BlindDiscoveryPacketV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 96,
+        "end_line": 138,
+        "signature_hash": "0611fb4a38769269",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#class:BlindFindingV1:fc64258db41023f6",
+        "name": "BlindFindingV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 173,
+        "end_line": 194,
+        "signature_hash": "941a234bc5f323d0",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#class:EvaluatorFindingResolutionV1:0335de42a03a0290",
+        "name": "EvaluatorFindingResolutionV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 198,
+        "end_line": 230,
+        "signature_hash": "7136966c2323d540",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#class:HiddenCaseBindingV1:bc34ce078fbc7e70",
+        "name": "HiddenCaseBindingV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 142,
+        "end_line": 169,
+        "signature_hash": "328c095b436140fe",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_canonical:52d5fa36170e70b7",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 66,
+        "end_line": 76,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_digest:e5aecf961e5d32ed",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 79,
+        "end_line": 80,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_source_digest:9e59545d2dd50247",
+        "name": "_source_digest",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 83,
+        "end_line": 86,
+        "signature_hash": "3b6d2c395b7388e0",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:_text:6cf059358589bf2f",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 89,
+        "end_line": 92,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:adjudicate_blind_finding:e5f0e0bf62ac355e",
+        "name": "adjudicate_blind_finding",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 371,
+        "end_line": 455,
+        "signature_hash": "b63c1653833c86d5",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:compile_blind_case:c75bc764ad6e9e49",
+        "name": "compile_blind_case",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 259,
+        "end_line": 300,
+        "signature_hash": "7bda519919ad61c6",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:parse_blind_finding:fbf1d358683c35d2",
+        "name": "parse_blind_finding",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 233,
+        "end_line": 256,
+        "signature_hash": "87f8b275f9472a1c",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:validate_evaluator_resolution:f65d8eec6dafc7c4",
+        "name": "validate_evaluator_resolution",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 328,
+        "end_line": 349,
+        "signature_hash": "4e6f0d7c581c8017",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#function:validate_packet_binding:c896fdc1678a0c92",
+        "name": "validate_packet_binding",
+        "kind": "function",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 303,
+        "end_line": 325,
+        "signature_hash": "462c606838c54a7d",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindAdjudicationV1.adjudication_digest:6ef49aee4467e25a",
+        "name": "BlindAdjudicationV1.adjudication_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 367,
+        "end_line": 368,
+        "signature_hash": "211dfd30c56a6a43",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryError.__init__:d3949da4fd9419d2",
+        "name": "BlindDiscoveryError.__init__",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 60,
+        "end_line": 63,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryPacketV1.__post_init__:d1351be38d08f975",
+        "name": "BlindDiscoveryPacketV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 111,
+        "end_line": 127,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryPacketV1.packet_digest:80c334573613e833",
+        "name": "BlindDiscoveryPacketV1.packet_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 137,
+        "end_line": 138,
+        "signature_hash": "9bc5db86166c6b2f",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindDiscoveryPacketV1.to_candidate_dict:deff1db14f329d80",
+        "name": "BlindDiscoveryPacketV1.to_candidate_dict",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 129,
+        "end_line": 134,
+        "signature_hash": "fa6b4e0071fd48cc",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindFindingV1.__post_init__:a09b4711e2b93ad7",
+        "name": "BlindFindingV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 181,
+        "end_line": 190,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:BlindFindingV1.finding_digest:72e61a91b8175758",
+        "name": "BlindFindingV1.finding_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 193,
+        "end_line": 194,
+        "signature_hash": "cb1c5a56431b0d67",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:EvaluatorFindingResolutionV1.__post_init__:b693f593bc697ec4",
+        "name": "EvaluatorFindingResolutionV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 213,
+        "end_line": 226,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:EvaluatorFindingResolutionV1.resolution_digest:53c6480f150956f9",
+        "name": "EvaluatorFindingResolutionV1.resolution_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 229,
+        "end_line": 230,
+        "signature_hash": "145995ae7659cb6c",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:HiddenCaseBindingV1.__post_init__:4a4015bf2890be84",
+        "name": "HiddenCaseBindingV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 154,
+        "end_line": 163,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_discovery.py#method:HiddenCaseBindingV1.binding_digest:2415d9ed410eb986",
+        "name": "HiddenCaseBindingV1.binding_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_discovery.py",
+        "line": 166,
+        "end_line": 169,
+        "signature_hash": "c0adb0ca7d3bbf04",
+        "file_digest8": "ddb8331e73dabc61"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#class:EvaluatorResolutionEnvelopeV1:e8f4bc121aba9f64",
+        "name": "EvaluatorResolutionEnvelopeV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 100,
+        "end_line": 117,
+        "signature_hash": "2f10bfdc5abca35a",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#class:ProducerBoundBlindAdjudicationV1:58114bcfc65f1487",
+        "name": "ProducerBoundBlindAdjudicationV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 195,
+        "end_line": 215,
+        "signature_hash": "2c2239b835587cde",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_canonical:b539437596a7bc63",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 37,
+        "end_line": 47,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_digest:1c24d7372bae1963",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_resolution_payload:09cb24704b9514ac",
+        "name": "_resolution_payload",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 68,
+        "end_line": 96,
+        "signature_hash": "58e6ae59f2795a6a",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_secret_bytes:0003965224a4a4bd",
+        "name": "_secret_bytes",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 54,
+        "end_line": 59,
+        "signature_hash": "2987109ef4911880",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:_text:e37446d8012b64f5",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 62,
+        "end_line": 65,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:adjudicate_producer_bound_blind_finding:4575c45535be5eaf",
+        "name": "adjudicate_producer_bound_blind_finding",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 218,
+        "end_line": 262,
+        "signature_hash": "3c4105baa83e722c",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:issue_evaluator_resolution_envelope:9846ce1a84d396df",
+        "name": "issue_evaluator_resolution_envelope",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 120,
+        "end_line": 149,
+        "signature_hash": "350b185a0cc15b8b",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#function:verify_evaluator_resolution_envelope:95f0dc60f22a2da6",
+        "name": "verify_evaluator_resolution_envelope",
+        "kind": "function",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 152,
+        "end_line": 191,
+        "signature_hash": "f4efa96d2d4d4c10",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#method:EvaluatorResolutionEnvelopeV1.envelope_digest:1551a3820d801e45",
+        "name": "EvaluatorResolutionEnvelopeV1.envelope_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 116,
+        "end_line": 117,
+        "signature_hash": "beacbb57b980cab6",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_oracle_provenance.py#method:ProducerBoundBlindAdjudicationV1.adjudication_digest:924115c17e5f16da",
+        "name": "ProducerBoundBlindAdjudicationV1.adjudication_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_oracle_provenance.py",
+        "line": 204,
+        "end_line": 215,
+        "signature_hash": "211dfd30c56a6a43",
+        "file_digest8": "fd2f781fc2ecac95"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_score_admission.py#class:ProducerBoundBlindScoreReceiptV1:da985579229ee4a5",
+        "name": "ProducerBoundBlindScoreReceiptV1",
+        "kind": "class",
+        "file": "tools/bughound/blind_score_admission.py",
+        "line": 50,
+        "end_line": 65,
+        "signature_hash": "1416004ace260bbe",
+        "file_digest8": "87cad47957cf4532"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_score_admission.py#function:_canonical:a6179085d8f28ba7",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/blind_score_admission.py",
+        "line": 35,
+        "end_line": 42,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "87cad47957cf4532"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_score_admission.py#function:_digest:7fef87314c452ec0",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/blind_score_admission.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "87cad47957cf4532"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_score_admission.py#function:score_producer_bound_blind_finding:f61c6ceaecfc8340",
+        "name": "score_producer_bound_blind_finding",
+        "kind": "function",
+        "file": "tools/bughound/blind_score_admission.py",
+        "line": 68,
+        "end_line": 112,
+        "signature_hash": "d7db1b3f2c1d989c",
+        "file_digest8": "87cad47957cf4532"
+      },
+      {
+        "semantic_id": "tools/bughound/blind_score_admission.py#method:ProducerBoundBlindScoreReceiptV1.score_receipt_digest:8a6a5f4f3a6aad58",
+        "name": "ProducerBoundBlindScoreReceiptV1.score_receipt_digest",
+        "kind": "method",
+        "file": "tools/bughound/blind_score_admission.py",
+        "line": 64,
+        "end_line": 65,
+        "signature_hash": "abf64ef935250496",
+        "file_digest8": "87cad47957cf4532"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#class:EnvelopeLintReceiptV1:c85fe19b2b7b2cf4",
+        "name": "EnvelopeLintReceiptV1",
+        "kind": "class",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 42,
+        "end_line": 71,
+        "signature_hash": "01f295d6be3409aa",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#class:LintDisposition:48cfb00c65b5a6a6",
+        "name": "LintDisposition",
+        "kind": "class",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 25,
+        "end_line": 31,
+        "signature_hash": "ec81a0e47aa3e071",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#class:LintFindingV1:4eef4b2f916623c0",
+        "name": "LintFindingV1",
+        "kind": "class",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 35,
+        "end_line": 38,
+        "signature_hash": "155d430396359b01",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#function:_flatten_json:2d7adb56a5d14a9d",
+        "name": "_flatten_json",
+        "kind": "function",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 74,
+        "end_line": 82,
+        "signature_hash": "2534941137a2288d",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#function:_lint_semantics:869c41b749604ad5",
+        "name": "_lint_semantics",
+        "kind": "function",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 85,
+        "end_line": 109,
+        "signature_hash": "5ab2d94a21f3707f",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#function:lint_envelope:72a9c9fcfb3c121a",
+        "name": "lint_envelope",
+        "kind": "function",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 112,
+        "end_line": 208,
+        "signature_hash": "8d871b696a6b8aaa",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/envelope_lint.py#method:EnvelopeLintReceiptV1.receipt_digest:a5208fcd36154142",
+        "name": "EnvelopeLintReceiptV1.receipt_digest",
+        "kind": "method",
+        "file": "tools/bughound/envelope_lint.py",
+        "line": 55,
+        "end_line": 71,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "2d0f6c622209ff06"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:BenchmarkError:cac2d2d6778f17c5",
+        "name": "BenchmarkError",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 20,
+        "end_line": 24,
+        "signature_hash": "8ac306fda9601f0e",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:BenchmarkScoreV1:f6f077127accad18",
+        "name": "BenchmarkScoreV1",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 290,
+        "end_line": 310,
+        "signature_hash": "e8db501febdc8f0e",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:FindingV1:42e705de67154d15",
+        "name": "FindingV1",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 214,
+        "end_line": 223,
+        "signature_hash": "ccd761045f4e1b63",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:HarnessOracleResultV1:11aab24839d5d01b",
+        "name": "HarnessOracleResultV1",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 187,
+        "end_line": 198,
+        "signature_hash": "3adecb3cbda3d8ef",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:MatchedRunPlanV1:32304bd4418e51a2",
+        "name": "MatchedRunPlanV1",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 227,
+        "end_line": 267,
+        "signature_hash": "4f463f544932948d",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:SeedBugCaseV1:a68fc3f4cdcd8b55",
+        "name": "SeedBugCaseV1",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 62,
+        "end_line": 93,
+        "signature_hash": "8a853589fabb46de",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#class:Visibility:7c03873f6678fe1f",
+        "name": "Visibility",
+        "kind": "class",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "f224481c5a6830e3",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_canonical:eee86dc6f3f81ae2",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 48,
+        "end_line": 54,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_digest:f2a95c68ab11fbd1",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "c978f5ef05fda5cb",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_load_function:93c78fbc9ad5d163",
+        "name": "_load_function",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 160,
+        "end_line": 169,
+        "signature_hash": "6b4061ed741dfbd0",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:_oracle_outcome:5674122ab0afc74c",
+        "name": "_oracle_outcome",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 172,
+        "end_line": 183,
+        "signature_hash": "954f3c669d19fb30",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:build_matched_plan:efd7bbb8cfccf213",
+        "name": "build_matched_plan",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 270,
+        "end_line": 286,
+        "signature_hash": "9b0f7ef1a2c81b50",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:oracle_self_test_findings:1e1529aa974befd0",
+        "name": "oracle_self_test_findings",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 379,
+        "end_line": 395,
+        "signature_hash": "68f7c5a7dfd33eda",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:run_harness_oracle:9b0c0f2eecbb3a37",
+        "name": "run_harness_oracle",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 201,
+        "end_line": 210,
+        "signature_hash": "56454200b123009d",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:score_findings:747216944fd7844b",
+        "name": "score_findings",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 313,
+        "end_line": 376,
+        "signature_hash": "0f7d84bf0d356649",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#function:seeded_cases:6069361e6f00a4cb",
+        "name": "seeded_cases",
+        "kind": "function",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 96,
+        "end_line": 157,
+        "signature_hash": "a53a7d6ef7371ce9",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:BenchmarkError.__init__:ab56f240248ffae1",
+        "name": "BenchmarkError.__init__",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 21,
+        "end_line": 24,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:BenchmarkScoreV1.digest:dfced6db23617c7b",
+        "name": "BenchmarkScoreV1.digest",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 309,
+        "end_line": 310,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:FindingV1.digest:713a75af31ca5e42",
+        "name": "FindingV1.digest",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 222,
+        "end_line": 223,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:HarnessOracleResultV1.digest:3b36feaa15c34665",
+        "name": "HarnessOracleResultV1.digest",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 197,
+        "end_line": 198,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:MatchedRunPlanV1.__post_init__:55b6e3e8f676e1bc",
+        "name": "MatchedRunPlanV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 236,
+        "end_line": 242,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:MatchedRunPlanV1.match_basis_digest:aebd72cc2ac26532",
+        "name": "MatchedRunPlanV1.match_basis_digest",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 245,
+        "end_line": 255,
+        "signature_hash": "5ac5d8a179adeba3",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:MatchedRunPlanV1.run_plan_digest:39274d35c1dadc3c",
+        "name": "MatchedRunPlanV1.run_plan_digest",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 258,
+        "end_line": 267,
+        "signature_hash": "6cfdad17bbfcf4d4",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:SeedBugCaseV1.__post_init__:94256d662892e1dd",
+        "name": "SeedBugCaseV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 77,
+        "end_line": 87,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/seedlab_benchmark.py#method:SeedBugCaseV1.case_digest:c205ed1654f80972",
+        "name": "SeedBugCaseV1.case_digest",
+        "kind": "method",
+        "file": "tools/bughound/seedlab_benchmark.py",
+        "line": 90,
+        "end_line": 93,
+        "signature_hash": "ad2e340dedb0a4a4",
+        "file_digest8": "5198d115d83441f5"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#class:IdentityScopeObservationV1:e333f4346de4dbb1",
+        "name": "IdentityScopeObservationV1",
+        "kind": "class",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 32,
+        "end_line": 76,
+        "signature_hash": "922a88864e6d10fa",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#class:ScopeDisposition:319288476f249d8e",
+        "name": "ScopeDisposition",
+        "kind": "class",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 19,
+        "end_line": 22,
+        "signature_hash": "47073886f27c3970",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#function:expected_agent_namespace:43ef0d495131a7e9",
+        "name": "expected_agent_namespace",
+        "kind": "function",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 25,
+        "end_line": 28,
+        "signature_hash": "8a2a329fcef6d104",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#function:memanto_namespace_drift_seed:feb9c3fc1ae23766",
+        "name": "memanto_namespace_drift_seed",
+        "kind": "function",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 101,
+        "end_line": 116,
+        "signature_hash": "75213893d5952b73",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#function:modeled_current_validation_accepts:23222a608db74d28",
+        "name": "modeled_current_validation_accepts",
+        "kind": "function",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 79,
+        "end_line": 98,
+        "signature_hash": "82b1545c13085b9d",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.__post_init__:2926dc54719da8b3",
+        "name": "IdentityScopeObservationV1.__post_init__",
+        "kind": "method",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 44,
+        "end_line": 56,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.disposition:2275e5de5a2796d4",
+        "name": "IdentityScopeObservationV1.disposition",
+        "kind": "method",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 63,
+        "end_line": 68,
+        "signature_hash": "4639be056d4886da",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.expected_namespace:f9aeb1eda9fde409",
+        "name": "IdentityScopeObservationV1.expected_namespace",
+        "kind": "method",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "0dbe3a79eb720f67",
+        "file_digest8": "00509fa9e3dce30e"
+      },
+      {
+        "semantic_id": "tools/bughound/trust_boundary_seed.py#method:IdentityScopeObservationV1.receipt_digest:d1557229b41a4237",
+        "name": "IdentityScopeObservationV1.receipt_digest",
+        "kind": "method",
+        "file": "tools/bughound/trust_boundary_seed.py",
+        "line": 71,
+        "end_line": 76,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "00509fa9e3dce30e"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -446884,7 +451151,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "b409baa0336de9f813f710838e12bf21",
+    "payload_hash": "45d3ce26dc43eca5b504f218afd8afe9"
   }
 }
