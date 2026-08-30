@@ -1,10 +1,12 @@
-name: AWJ032 GLM53-01A packed expert pager
+name: AWJ032 GLM53-01A expert paging
 
 on:
   pull_request:
     paths:
       - 'tools/awj032/glm53_packed_expert_pager.py'
       - 'tools/awj032/test_glm53_packed_expert_pager.py'
+      - 'tools/awj032/glm53_per_expert_index_pager.py'
+      - 'tools/awj032/test_glm53_per_expert_index_pager.py'
       - '.github/workflows/awj032-glm53-01a-pager.yml'
   workflow_dispatch:
 
@@ -12,7 +14,7 @@ permissions:
   contents: read
 
 jobs:
-  packed-expert-pager:
+  expert-paging:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,7 +22,15 @@ jobs:
         with:
           python-version: '3.11'
       - name: Compile
-        run: python -m py_compile tools/awj032/glm53_packed_expert_pager.py tools/awj032/test_glm53_packed_expert_pager.py
+        run: >-
+          python -m py_compile
+          tools/awj032/glm53_packed_expert_pager.py
+          tools/awj032/test_glm53_packed_expert_pager.py
+          tools/awj032/glm53_per_expert_index_pager.py
+          tools/awj032/test_glm53_per_expert_index_pager.py
       - name: Focused regressions
         working-directory: tools/awj032
-        run: python -m unittest -v test_glm53_packed_expert_pager.py
+        run: >-
+          python -m unittest -v
+          test_glm53_packed_expert_pager.py
+          test_glm53_per_expert_index_pager.py
