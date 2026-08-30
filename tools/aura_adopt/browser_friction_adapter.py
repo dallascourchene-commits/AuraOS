@@ -5,8 +5,9 @@ telemetry. It turns bounded browser witness observations into the canonical
 StageEvent / AcceptedValue inputs owned by adoption_friction_receipt.py and may
 delegate final receipt construction to that owner.
 
-Key law: technical success is not user acceptance, and download/save initiation
-is not observed reopen. Unknown evidence remains UNKNOWN.
+Key law: technical success is not user acceptance, download/save initiation is
+not observed reopen, and downstream evidence cannot exist without its causal
+preconditions. Unknown evidence remains UNKNOWN.
 """
 from __future__ import annotations
 
@@ -61,6 +62,15 @@ def _text(value: object, code: str, *, allow_empty: bool = False) -> str:
     return value
 
 
+def _evidence_ref(value: object, code: str, *, allow_empty: bool = False) -> str:
+    value = _text(value, code, allow_empty=allow_empty)
+    if not value:
+        return value
+    if len(value) > 256 or any(ch.isspace() for ch in value) or ":" not in value:
+        raise BrowserAdapterError(code)
+    return value
+
+
 def _tri_bool(value: object, code: str) -> bool | None:
     if value is None or isinstance(value, bool):
         return value
@@ -95,8 +105,8 @@ class BrowserWitnessObservationV1:
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "route_id", _text(self.route_id, "ROUTE_ID_REQUIRED"))
-        object.__setattr__(self, "build_ref", _text(self.build_ref, "BUILD_REF_REQUIRED"))
-        object.__setattr__(self, "recipe_ref", _text(self.recipe_ref, "RECIPE_REF_REQUIRED"))
+        object.__setattr__(self, "build_ref", _evidence_ref(self.build_ref, "BUILD_REF_REQUIRED"))
+        object.__setattr__(self, "recipe_ref", _evidence_ref(self.recipe_ref, "RECIPE_REF_REQUIRED"))
         object.__setattr__(self, "browser_opened", _tri_bool(self.browser_opened, "BROWSER_OPENED_INVALID"))
         object.__setattr__(
             self,
@@ -118,29 +128,50 @@ class BrowserWitnessObservationV1:
         object.__setattr__(
             self,
             "acceptance_evidence_ref",
-            _text(self.acceptance_evidence_ref, "ACCEPTANCE_EVIDENCE_REF_INVALID", allow_empty=True),
+            _evidence_ref(self.acceptance_evidence_ref, "ACCEPTANCE_EVIDENCE_REF_INVALID", allow_empty=True),
         )
         object.__setattr__(
             self,
             "persistence_evidence_ref",
-            _text(self.persistence_evidence_ref, "PERSISTENCE_EVIDENCE_REF_INVALID", allow_empty=True),
+            _evidence_ref(self.persistence_evidence_ref, "PERSISTENCE_EVIDENCE_REF_INVALID", allow_empty=True),
         )
         object.__setattr__(
             self,
             "browser_failure_code",
             _text(self.browser_failure_code, "BROWSER_FAILURE_CODE_INVALID", allow_empty=True),
         )
+
+        if self.render_observed is True:
+            if self.browser_opened is not True or self.capability_supported is not True or self.input_observed is not True:
+                raise BrowserAdapterError("RENDER_CAUSAL_CHAIN_INVALID")
+            if self.output_bytes is None:
+                raise BrowserAdapterError("RENDER_OUTPUT_BYTES_REQUIRED")
+        elif self.output_bytes is not None:
+            raise BrowserAdapterError("OUTPUT_BYTES_WITHOUT_RENDER")
+
+        if self.acceptance_mode in {
+            AcceptanceEvidenceMode.USER_EXPLICIT,
+            AcceptanceEvidenceMode.USER_REJECTED,
+            AcceptanceEvidenceMode.SYNTHETIC_TECHNICAL,
+        } and self.render_observed is not True:
+            raise BrowserAdapterError("ACCEPTANCE_WITHOUT_RENDER")
         if self.acceptance_mode in {AcceptanceEvidenceMode.USER_EXPLICIT, AcceptanceEvidenceMode.USER_REJECTED}:
             if not self.acceptance_evidence_ref:
                 raise BrowserAdapterError("USER_ACCEPTANCE_EVIDENCE_REQUIRED")
+
+        if self.persistence_mode in {
+            PersistenceEvidenceMode.REOPEN_OBSERVED,
+            PersistenceEvidenceMode.SAVE_OBSERVED,
+            PersistenceEvidenceMode.DOWNLOAD_INITIATED,
+            PersistenceEvidenceMode.SIMULATED,
+        } and self.render_observed is not True:
+            raise BrowserAdapterError("PERSISTENCE_WITHOUT_RENDER")
         if self.persistence_mode in {
             PersistenceEvidenceMode.REOPEN_OBSERVED,
             PersistenceEvidenceMode.SAVE_OBSERVED,
             PersistenceEvidenceMode.DOWNLOAD_INITIATED,
         } and not self.persistence_evidence_ref:
             raise BrowserAdapterError("PERSISTENCE_EVIDENCE_REQUIRED")
-        if self.render_observed is True and self.output_bytes is None:
-            raise BrowserAdapterError("RENDER_OUTPUT_BYTES_REQUIRED")
 
 
 @dataclass(frozen=True)
@@ -168,12 +199,7 @@ def _status_from_observation(
     if value is True:
         return StageEvent(stage, StageStatus.COMPLETED, reason=success_reason)
     if value is False:
-        return StageEvent(
-            stage,
-            StageStatus.BLOCKED,
-            reason=false_reason,
-            failure_code=false_code,
-        )
+        return StageEvent(stage, StageStatus.BLOCKED, reason=false_reason, failure_code=false_code)
     return StageEvent(stage, StageStatus.UNKNOWN, reason="evidence not observed")
 
 
@@ -372,6 +398,13 @@ def build_browser_friction_receipt(
         raise BrowserAdapterError("FRICTION_VECTOR_COMPONENTS_MISMATCH")
 
     projection = project_browser_observation(observation)
+    if projection.acceptance_mode is not AcceptanceEvidenceMode.USER_EXPLICIT:
+        if friction_vector.get("creation_time_to_value") is not None:
+            raise BrowserAdapterError("CREATION_VALUE_FRICTION_REQUIRES_USER_ACCEPTANCE")
+    if projection.persistence_mode is not PersistenceEvidenceMode.REOPEN_OBSERVED:
+        if friction_vector.get("reuse_recovery") is not None:
+            raise BrowserAdapterError("REUSE_RECOVERY_FRICTION_REQUIRES_REOPEN")
+
     try:
         return build_friction_receipt(
             decision,
