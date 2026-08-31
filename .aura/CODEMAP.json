@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788152851,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1644,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,8 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-github-review-triad-bootstrap-tests.yml",
+      ".github/workflows/aura-github-review-triad-gate.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1016,6 +1018,7 @@
       "docs/AURA_FORGE.md",
       "docs/AURA_FST_PROVENANCE_AND_SECURITY.md",
       "docs/AURA_GATE.md",
+      "docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md",
       "docs/AURA_HERMES_ARENA_MODE.md",
       "docs/AURA_HUMAN_AGENT_ARENA.md",
       "docs/AURA_HUMAN_AGENT_ARENA_WORKFLOW_V2.md",
@@ -1228,6 +1231,7 @@
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
       "scripts/aura_exact_head_transport.py",
       "scripts/aura_fetch_construction_demo_source.py",
+      "scripts/aura_github_review_triad_gate.py",
       "scripts/aura_global_benchmark_daemon.py",
       "scripts/aura_ifc_storey_index.py",
       "scripts/aura_industry_benchmark_validation.py",
@@ -1480,6 +1484,7 @@
       "tests/test_aura_gate_egress.py",
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
+      "tests/test_aura_github_review_triad_gate.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -1678,6 +1683,7 @@
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
       "scripts/aura_exact_head_transport.py",
       "scripts/aura_fetch_construction_demo_source.py",
+      "scripts/aura_github_review_triad_gate.py",
       "scripts/aura_global_benchmark_daemon.py",
       "scripts/aura_ifc_storey_index.py",
       "scripts/aura_industry_benchmark_validation.py",
@@ -1746,8 +1752,7 @@
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_lane_registry.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,16 +1760,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1644,
+      "bytes": 26462342,
+      "tokens_est": 6605937,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -1970,6 +1975,7 @@
         "docs/AURA_FORGE.md",
         "docs/AURA_FST_PROVENANCE_AND_SECURITY.md",
         "docs/AURA_GATE.md",
+        "docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md",
         "docs/AURA_HERMES_ARENA_MODE.md",
         "docs/AURA_HUMAN_AGENT_ARENA.md",
         "docs/AURA_HUMAN_AGENT_ARENA_WORKFLOW_V2.md",
@@ -2038,8 +2044,7 @@
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
         "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-        "docs/BENCHMARKS.md"
+        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
       ]
     },
     {
@@ -3283,6 +3288,14 @@
         "end_line": 282,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#function:main:f1b8808877b1304b",
         "signature_hash": "c3265d7d89056dc5"
+      },
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 511,
+        "end_line": 531,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:main:e36d7d5f8bed861c",
+        "signature_hash": "0a1755caa3e72448"
       },
       {
         "file": "scripts/aura_global_benchmark_daemon.py",
@@ -13691,6 +13704,14 @@
         "end_line": 115,
         "semantic_id": "aura_gate_egress.py#function:_sha256:5e52aa401f9425c2",
         "signature_hash": "3107e85a33567466"
+      },
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 83,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_sha256:92eca5837d63db59",
+        "signature_hash": "45f4748fe62799e1"
       },
       {
         "file": "scripts/aura_runtime_refactor_harness.py",
@@ -79537,6 +79558,14 @@
         "end_line": 48,
         "semantic_id": "aura_substrate_release.py#function:_canonical_bytes:165bc480b5a187a6",
         "signature_hash": "ae498563dfd7e8b1"
+      },
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 79,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_canonical_bytes:b1aa526abbc84b44",
+        "signature_hash": "5ac132afaebe3a2d"
       }
     ],
     "_bounded_json": [
@@ -100375,6 +100404,254 @@
         "end_line": 259,
         "semantic_id": "scripts/aura_fetch_construction_demo_source.py#function:acquire_source:99db9cc42f6aa56b",
         "signature_hash": "41db8ed6a02500a5"
+      }
+    ],
+    "Evidence": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "class",
+        "line": 55,
+        "end_line": 75,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#class:Evidence:3ef8e3bbc1c8b6c1",
+        "signature_hash": "c0c5bcafda1d4cef"
+      }
+    ],
+    "Evidence.as_dict": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 75,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#method:Evidence.as_dict:0893a687e0e20849",
+        "signature_hash": "c238a075b0a2259e"
+      }
+    ],
+    "_norm": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 87,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_norm:29fc89ba0318617f",
+        "signature_hash": "b00d838c205d956e"
+      }
+    ],
+    "_when": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 92,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_when:94e4f7dc25b80e6e",
+        "signature_hash": "e4f0307e14020824"
+      }
+    ],
+    "_parse_time": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 101,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_parse_time:8f00350bc2eb92c9",
+        "signature_hash": "92dd7ff707cc8d43"
+      },
+      {
+        "file": "travel_price_verifier.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 37,
+        "semantic_id": "travel_price_verifier.py#function:_parse_time:68e48e7f74100996",
+        "signature_hash": "92dd7ff707cc8d43"
+      }
+    ],
+    "_user_identity": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 104,
+        "end_line": 112,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_user_identity:fe88f4885e98c34e",
+        "signature_hash": "699bf95bdd452efc"
+      }
+    ],
+    "_app_identity": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 123,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_app_identity:8d72c2f30346cc0c",
+        "signature_hash": "cde1888cd766d872"
+      }
+    ],
+    "_trusted_provider_from_user": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 133,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_trusted_provider_from_user:ac1b106fea230c4b",
+        "signature_hash": "ac3e821bbdb59bfc"
+      }
+    ],
+    "_trusted_provider_from_app": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 136,
+        "end_line": 143,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_trusted_provider_from_app:8c70c492bbc6627a",
+        "signature_hash": "bb6c8e88522f04bb"
+      }
+    ],
+    "_actor_label_from_user": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 146,
+        "end_line": 148,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_actor_label_from_user:d0b00cfa1962335e",
+        "signature_hash": "c7dc3e2477e4876a"
+      }
+    ],
+    "_actor_label_from_app": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 151,
+        "end_line": 153,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_actor_label_from_app:27c7f7d66d3a827a",
+        "signature_hash": "c44034d7ba7f4e9e"
+      }
+    ],
+    "_is_skip_text": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 166,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_is_skip_text:2159980acebea244",
+        "signature_hash": "de53285a78921813"
+      }
+    ],
+    "_is_noncompletion_text": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 169,
+        "end_line": 181,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_is_noncompletion_text:8a61523c4191db50",
+        "signature_hash": "da96918a808c4a2a"
+      }
+    ],
+    "_comment_binds_head": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 184,
+        "end_line": 190,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_comment_binds_head:7a61ec15b536e14b",
+        "signature_hash": "7e5c9937fb9bb8eb"
+      }
+    ],
+    "_codex_clean_completion": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 193,
+        "end_line": 208,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_codex_clean_completion:ff5789dd5e2be2f8",
+        "signature_hash": "662f4a12ea70435a"
+      }
+    ],
+    "_latest": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 211,
+        "end_line": 214,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_latest:3ff247a65f3a835a",
+        "signature_hash": "f7e25f31de82ddbb"
+      }
+    ],
+    "_head_sha": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 217,
+        "end_line": 223,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_head_sha:35a431f563db2022",
+        "signature_hash": "eefc05466d4d69ac"
+      }
+    ],
+    "collect_evidence": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 226,
+        "end_line": 371,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:collect_evidence:8e8504e9f5717f03",
+        "signature_hash": "4f435d563bc4c938"
+      }
+    ],
+    "evaluate_review_triad": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 374,
+        "end_line": 428,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:evaluate_review_triad:d6ed8f991815194e",
+        "signature_hash": "a10d23046cd59855"
+      }
+    ],
+    "_api_get": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 431,
+        "end_line": 446,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_api_get:6ebe265eb1ffa7a6",
+        "signature_hash": "0bd16ecf3148273a"
+      }
+    ],
+    "_paged_list": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 449,
+        "end_line": 461,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_paged_list:e42763b3951a307f",
+        "signature_hash": "5b9d8507a002aed7"
+      }
+    ],
+    "_paged_check_runs": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 464,
+        "end_line": 478,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_paged_check_runs:0b797b2744a2c926",
+        "signature_hash": "5f9d2b034e14817f"
+      }
+    ],
+    "fetch_snapshot": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 481,
+        "end_line": 498,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:fetch_snapshot:8b957d4ebb17c43c",
+        "signature_hash": "3f9a03be78c18d5d"
+      }
+    ],
+    "_parse_args": [
+      {
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 501,
+        "end_line": 508,
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_parse_args:dc90ed799621d4a2",
+        "signature_hash": "ea0a57104b70f496"
       }
     ],
     "command_exists": [
@@ -138535,6 +138812,156 @@
         "signature_hash": "ee5f19dbb698e25c"
       }
     ],
+    "snapshot": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 62,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#function:snapshot:11be41d87cb95fb5",
+        "signature_hash": "5f012acbd37bd143"
+      }
+    ],
+    "GitHubReviewTriadGateTests": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "class",
+        "line": 65,
+        "end_line": 201,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#class:GitHubReviewTriadGateTests:0bc116415059b243",
+        "signature_hash": "1b969256c9277b05"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_all_three_clean_exact_head_pass": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 72,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_all_three_clean_exact_head_pass:e1a0ae5c399adefe",
+        "signature_hash": "84562fc7803e8708"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_missing_provider_fails_closed": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 78,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_missing_provider_fails_closed:97c391ada1759ac9",
+        "signature_hash": "cf218994efaf5144"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_head_race_fails_closed": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 85,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_head_race_fails_closed:6dbf856ae447b2a4",
+        "signature_hash": "d5c5a5033e2a7845"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_user_codex_request_is_not_completion": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 90,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_user_codex_request_is_not_completion:7f0443590eb01cf9",
+        "signature_hash": "f7fb351f0a373c0c"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_codex_queued_exact_head_is_not_completion": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 97,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_codex_queued_exact_head_is_not_completion:08df48f728cff89e",
+        "signature_hash": "12e337b9d59583ec"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_inline_current_head_finding_blocks_even_with_completion": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_inline_current_head_finding_blocks_even_with_completion:dd5f2c1a73d1eb66",
+        "signature_hash": "5197f812761c3c04"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_old_head_finding_does_not_transfer": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 120,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_old_head_finding_does_not_transfer:35030d41d00c2773",
+        "signature_hash": "5d395bdde8797bda"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_copied_bot_login_wrong_id_cannot_spoof": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 133,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_copied_bot_login_wrong_id_cannot_spoof:fdeb1958efd72bc8",
+        "signature_hash": "c72da7a33032ab16"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_success_status_that_says_skipped_is_not_completion": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 149,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_success_status_that_says_skipped_is_not_completion:20c9a49cc2672bb1",
+        "signature_hash": "7e38130addefbf1d"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_mutable_check_name_cannot_spoof_codacy": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 162,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_mutable_check_name_cannot_spoof_codacy:3050265d103615eb",
+        "signature_hash": "5f9dd7a5338e0a11"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_wrong_app_id_same_codacy_slug_cannot_spoof": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 175,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_wrong_app_id_same_codacy_slug_cannot_spoof:82f2defa183afbf7",
+        "signature_hash": "73db1801b3618e54"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_missing_app_id_same_codacy_slug_cannot_spoof": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 188,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_missing_app_id_same_codacy_slug_cannot_spoof:d9d0aa9d314709a3",
+        "signature_hash": "48a120b03a49fd60"
+      }
+    ],
+    "GitHubReviewTriadGateTests.test_wrong_slug_same_codacy_app_id_cannot_spoof": [
+      {
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "kind": "method",
+        "line": 190,
+        "end_line": 201,
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_wrong_slug_same_codacy_app_id_cannot_spoof:3f01ba09aa7e2672",
+        "signature_hash": "211a052e60e6af87"
+      }
+    ],
     "_write_minimal_codemap": [
       {
         "file": "tests/test_aura_harness_issue_capsules.py",
@@ -157679,16 +158106,6 @@
         "signature_hash": "b4c46a087d4d5110"
       }
     ],
-    "_parse_time": [
-      {
-        "file": "travel_price_verifier.py",
-        "kind": "function",
-        "line": 25,
-        "end_line": 37,
-        "semantic_id": "travel_price_verifier.py#function:_parse_time:68e48e7f74100996",
-        "signature_hash": "92dd7ff707cc8d43"
-      }
-    ],
     "TravelPriceVerification": [
       {
         "file": "travel_price_verifier.py",
@@ -158585,6 +159002,16 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-github-review-triad-gate.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/aura-github-review-triad-gate.yml"
+    ],
+    "python3 scripts/aura_github_review_triad_gate.py \\": [
+      ".github/workflows/aura-github-review-triad-gate.yml"
+    ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
     ],
@@ -159147,9 +159574,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -165816,47 +166240,47 @@
       "path": ".coderabbit.yaml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 150,
-      "lines": 7,
-      "tokens_est": 38,
+      "bytes": 182,
+      "lines": 9,
+      "tokens_est": 46,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "bc2a80cfc6622fc2",
+      "digest8": "1de553a3c6684795",
       "vector": [
-        -0.245234,
-        0.170138,
-        0.078616,
-        -0.191259,
-        0.292168,
-        0.188912,
-        0.252274,
-        -0.137284,
-        -0.235847,
-        0.186565,
-        0.149018,
-        0.069229,
-        0.109123,
-        0.193605,
-        -0.088002,
-        0.271048,
-        0.252274,
-        0.177178,
-        0.029334,
-        -0.137284,
-        0.019947,
-        -0.038721,
-        -0.212379,
-        0.052801,
-        0.036374,
-        -0.275741,
-        -0.12555,
-        0.266354,
-        0.11851,
-        0.261661,
-        0.066882,
-        0.031681
+        0.070425,
+        -0.211275,
+        0.282936,
+        0.273052,
+        0.10502,
+        -0.265639,
+        0.090194,
+        0.228573,
+        -0.045715,
+        -0.109962,
+        0.129731,
+        -0.285407,
+        -0.196449,
+        0.253283,
+        -0.233515,
+        0.218689,
+        -0.124788,
+        -0.085251,
+        0.016062,
+        -0.063012,
+        -0.19892,
+        -0.038301,
+        -0.070425,
+        0.184094,
+        -0.201391,
+        -0.159383,
+        -0.043244,
+        0.048186,
+        -0.085251,
+        0.273052,
+        0.161854,
+        0.226102
       ]
     },
     {
@@ -167737,6 +168161,114 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-github-review-triad-bootstrap-tests.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2500,
+      "lines": 55,
+      "tokens_est": 625,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2c1c832c6a4c4289",
+      "vector": [
+        -0.131777,
+        -0.284955,
+        -0.129525,
+        -0.028158,
+        0.190345,
+        0.188093,
+        -0.07321,
+        0.041673,
+        0.282702,
+        0.221882,
+        -0.116009,
+        -0.284955,
+        -0.260176,
+        0.034915,
+        -0.251166,
+        -0.192598,
+        0.167819,
+        -0.147546,
+        0.023652,
+        0.111504,
+        0.039421,
+        -0.235397,
+        0.032663,
+        0.165567,
+        -0.127272,
+        0.007884,
+        0.095736,
+        -0.093483,
+        0.260176,
+        0.278197,
+        -0.282702,
+        -0.068704
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-github-review-triad-gate.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 9301,
+      "lines": 226,
+      "tokens_est": 2326,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest",
+        "python3 scripts/aura_github_review_triad_gate.py \\"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          129
+        ],
+        "python3 -m unittest": [
+          130
+        ],
+        "python3 scripts/aura_github_review_triad_gate.py \\": [
+          140
+        ]
+      },
+      "topology": {},
+      "digest8": "a83edf274cfbd793",
+      "vector": [
+        0.020821,
+        0.084381,
+        0.272869,
+        -0.180817,
+        -0.069039,
+        -0.204926,
+        0.202734,
+        0.196159,
+        -0.255335,
+        0.226843,
+        0.1589,
+        -0.23561,
+        -0.200542,
+        -0.12164,
+        0.023013,
+        0.147941,
+        -0.204926,
+        0.005479,
+        0.150133,
+        0.077806,
+        -0.09534,
+        0.268485,
+        0.237801,
+        0.237801,
+        0.058081,
+        0.242185,
+        0.1852,
+        -0.255335,
+        -0.193967,
+        0.036163,
+        -0.126024,
+        -0.053697
       ]
     },
     {
@@ -230675,6 +231207,53 @@
       ]
     },
     {
+      "path": "docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 7550,
+      "lines": 136,
+      "tokens_est": 1887,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8adb64a7ce89a53e",
+      "vector": [
+        -0.197666,
+        -0.275725,
+        0.288315,
+        -0.069246,
+        0.278243,
+        0.285797,
+        -0.255581,
+        -0.318532,
+        -0.139751,
+        0.137233,
+        -0.290833,
+        -0.260617,
+        0.237955,
+        0.117089,
+        0.172486,
+        0.028957,
+        -0.044066,
+        0.016367,
+        0.026439,
+        0.0768,
+        -0.08939,
+        -0.109535,
+        0.132197,
+        -0.119607,
+        -0.210256,
+        0.154859,
+        0.081836,
+        -0.061692,
+        0.142269,
+        0.086872,
+        -0.104499,
+        -0.036512
+      ]
+    },
+    {
       "path": "docs/AURA_HERMES_ARENA_MODE.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -241669,6 +242248,53 @@
         0.097282,
         0.188408,
         -0.116985
+      ]
+    },
+    {
+      "path": "scripts/aura_github_review_triad_gate.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 19927,
+      "lines": 536,
+      "tokens_est": 4982,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5550ae391427010d",
+      "vector": [
+        0.13269,
+        0.182314,
+        -0.13269,
+        -0.270774,
+        0.270774,
+        -0.175841,
+        -0.001079,
+        -0.234095,
+        0.225465,
+        0.21252,
+        0.234095,
+        -0.227622,
+        0.022654,
+        0.057175,
+        0.162896,
+        -0.102484,
+        -0.078751,
+        0.130532,
+        0.236253,
+        0.057175,
+        0.108957,
+        0.184471,
+        -0.242725,
+        0.065806,
+        0.026969,
+        -0.173683,
+        0.126217,
+        -0.249198,
+        0.218992,
+        0.085224,
+        0.156423,
+        0.275089
       ]
     },
     {
@@ -255548,6 +256174,53 @@
         0.124754,
         0.075785,
         0.225024
+      ]
+    },
+    {
+      "path": "tests/test_aura_github_review_triad_gate.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7984,
+      "lines": 206,
+      "tokens_est": 1996,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d03f123b7375e77c",
+      "vector": [
+        0.281567,
+        -0.148254,
+        0.224104,
+        -0.118373,
+        -0.143657,
+        0.290761,
+        -0.111477,
+        -0.157448,
+        -0.13906,
+        0.109179,
+        -0.265477,
+        -0.283865,
+        0.024134,
+        0.235597,
+        -0.093089,
+        0.136761,
+        0.286164,
+        0.164343,
+        0.051716,
+        -0.293059,
+        0.256283,
+        0.058612,
+        0.175836,
+        0.012642,
+        0.067806,
+        0.021836,
+        -0.120671,
+        0.109179,
+        -0.16894,
+        -0.12297,
+        -0.079298,
+        0.217209
       ]
     },
     {
@@ -286646,16 +287319,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1644,
+    "total_bytes": 26462342,
+    "text_tokens_est": 6605937,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286801,6 +287474,8 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-github-review-triad-bootstrap-tests.yml",
+      ".github/workflows/aura-github-review-triad-gate.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -287681,6 +288356,7 @@
       "docs/AURA_FORGE.md",
       "docs/AURA_FST_PROVENANCE_AND_SECURITY.md",
       "docs/AURA_GATE.md",
+      "docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md",
       "docs/AURA_HERMES_ARENA_MODE.md",
       "docs/AURA_HUMAN_AGENT_ARENA.md",
       "docs/AURA_HUMAN_AGENT_ARENA_WORKFLOW_V2.md",
@@ -287893,6 +288569,7 @@
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
       "scripts/aura_exact_head_transport.py",
       "scripts/aura_fetch_construction_demo_source.py",
+      "scripts/aura_github_review_triad_gate.py",
       "scripts/aura_global_benchmark_daemon.py",
       "scripts/aura_ifc_storey_index.py",
       "scripts/aura_industry_benchmark_validation.py",
@@ -288145,6 +288822,7 @@
       "tests/test_aura_gate_egress.py",
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
+      "tests/test_aura_github_review_triad_gate.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -386524,6 +387202,276 @@
         "file_digest8": "5275fcd40fb89053"
       },
       {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#class:Evidence:3ef8e3bbc1c8b6c1",
+        "name": "Evidence",
+        "kind": "class",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 55,
+        "end_line": 75,
+        "signature_hash": "c0c5bcafda1d4cef",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_actor_label_from_app:27c7f7d66d3a827a",
+        "name": "_actor_label_from_app",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 151,
+        "end_line": 153,
+        "signature_hash": "c44034d7ba7f4e9e",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_actor_label_from_user:d0b00cfa1962335e",
+        "name": "_actor_label_from_user",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 146,
+        "end_line": 148,
+        "signature_hash": "c7dc3e2477e4876a",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_api_get:6ebe265eb1ffa7a6",
+        "name": "_api_get",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 431,
+        "end_line": 446,
+        "signature_hash": "0bd16ecf3148273a",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_app_identity:8d72c2f30346cc0c",
+        "name": "_app_identity",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 115,
+        "end_line": 123,
+        "signature_hash": "cde1888cd766d872",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_canonical_bytes:b1aa526abbc84b44",
+        "name": "_canonical_bytes",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 78,
+        "end_line": 79,
+        "signature_hash": "5ac132afaebe3a2d",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_codex_clean_completion:ff5789dd5e2be2f8",
+        "name": "_codex_clean_completion",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 193,
+        "end_line": 208,
+        "signature_hash": "662f4a12ea70435a",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_comment_binds_head:7a61ec15b536e14b",
+        "name": "_comment_binds_head",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 184,
+        "end_line": 190,
+        "signature_hash": "7e5c9937fb9bb8eb",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_head_sha:35a431f563db2022",
+        "name": "_head_sha",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 217,
+        "end_line": 223,
+        "signature_hash": "eefc05466d4d69ac",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_is_noncompletion_text:8a61523c4191db50",
+        "name": "_is_noncompletion_text",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 169,
+        "end_line": 181,
+        "signature_hash": "da96918a808c4a2a",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_is_skip_text:2159980acebea244",
+        "name": "_is_skip_text",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 156,
+        "end_line": 166,
+        "signature_hash": "de53285a78921813",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_latest:3ff247a65f3a835a",
+        "name": "_latest",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 211,
+        "end_line": 214,
+        "signature_hash": "f7e25f31de82ddbb",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_norm:29fc89ba0318617f",
+        "name": "_norm",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 86,
+        "end_line": 87,
+        "signature_hash": "b00d838c205d956e",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_paged_check_runs:0b797b2744a2c926",
+        "name": "_paged_check_runs",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 464,
+        "end_line": 478,
+        "signature_hash": "5f9d2b034e14817f",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_paged_list:e42763b3951a307f",
+        "name": "_paged_list",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 449,
+        "end_line": 461,
+        "signature_hash": "5b9d8507a002aed7",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_parse_args:dc90ed799621d4a2",
+        "name": "_parse_args",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 501,
+        "end_line": 508,
+        "signature_hash": "ea0a57104b70f496",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_parse_time:8f00350bc2eb92c9",
+        "name": "_parse_time",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 95,
+        "end_line": 101,
+        "signature_hash": "92dd7ff707cc8d43",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_sha256:92eca5837d63db59",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 82,
+        "end_line": 83,
+        "signature_hash": "45f4748fe62799e1",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_trusted_provider_from_app:8c70c492bbc6627a",
+        "name": "_trusted_provider_from_app",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 136,
+        "end_line": 143,
+        "signature_hash": "bb6c8e88522f04bb",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_trusted_provider_from_user:ac1b106fea230c4b",
+        "name": "_trusted_provider_from_user",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 126,
+        "end_line": 133,
+        "signature_hash": "ac3e821bbdb59bfc",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_user_identity:fe88f4885e98c34e",
+        "name": "_user_identity",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 104,
+        "end_line": 112,
+        "signature_hash": "699bf95bdd452efc",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:_when:94e4f7dc25b80e6e",
+        "name": "_when",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 90,
+        "end_line": 92,
+        "signature_hash": "e4f0307e14020824",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:collect_evidence:8e8504e9f5717f03",
+        "name": "collect_evidence",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 226,
+        "end_line": 371,
+        "signature_hash": "4f435d563bc4c938",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:evaluate_review_triad:d6ed8f991815194e",
+        "name": "evaluate_review_triad",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 374,
+        "end_line": 428,
+        "signature_hash": "a10d23046cd59855",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:fetch_snapshot:8b957d4ebb17c43c",
+        "name": "fetch_snapshot",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 481,
+        "end_line": 498,
+        "signature_hash": "3f9a03be78c18d5d",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#function:main:e36d7d5f8bed861c",
+        "name": "main",
+        "kind": "function",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 511,
+        "end_line": 531,
+        "signature_hash": "0a1755caa3e72448",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
+        "semantic_id": "scripts/aura_github_review_triad_gate.py#method:Evidence.as_dict:0893a687e0e20849",
+        "name": "Evidence.as_dict",
+        "kind": "method",
+        "file": "scripts/aura_github_review_triad_gate.py",
+        "line": 65,
+        "end_line": 75,
+        "signature_hash": "c238a075b0a2259e",
+        "file_digest8": "5550ae391427010d"
+      },
+      {
         "semantic_id": "scripts/aura_global_benchmark_daemon.py#function:_requirement_available:8b6c2a1537486323",
         "name": "_requirement_available",
         "kind": "function",
@@ -425814,6 +426762,156 @@
         "file_digest8": "ada41f95735768a2"
       },
       {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#class:GitHubReviewTriadGateTests:0bc116415059b243",
+        "name": "GitHubReviewTriadGateTests",
+        "kind": "class",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 65,
+        "end_line": 201,
+        "signature_hash": "1b969256c9277b05",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#function:snapshot:11be41d87cb95fb5",
+        "name": "snapshot",
+        "kind": "function",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 15,
+        "end_line": 62,
+        "signature_hash": "5f012acbd37bd143",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_all_three_clean_exact_head_pass:e1a0ae5c399adefe",
+        "name": "GitHubReviewTriadGateTests.test_all_three_clean_exact_head_pass",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 66,
+        "end_line": 72,
+        "signature_hash": "84562fc7803e8708",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_codex_queued_exact_head_is_not_completion:08df48f728cff89e",
+        "name": "GitHubReviewTriadGateTests.test_codex_queued_exact_head_is_not_completion",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 92,
+        "end_line": 97,
+        "signature_hash": "12e337b9d59583ec",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_copied_bot_login_wrong_id_cannot_spoof:fdeb1958efd72bc8",
+        "name": "GitHubReviewTriadGateTests.test_copied_bot_login_wrong_id_cannot_spoof",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 122,
+        "end_line": 133,
+        "signature_hash": "c72da7a33032ab16",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_head_race_fails_closed:6dbf856ae447b2a4",
+        "name": "GitHubReviewTriadGateTests.test_head_race_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 80,
+        "end_line": 85,
+        "signature_hash": "d5c5a5033e2a7845",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_inline_current_head_finding_blocks_even_with_completion:dd5f2c1a73d1eb66",
+        "name": "GitHubReviewTriadGateTests.test_inline_current_head_finding_blocks_even_with_completion",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 99,
+        "end_line": 113,
+        "signature_hash": "5197f812761c3c04",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_missing_app_id_same_codacy_slug_cannot_spoof:d9d0aa9d314709a3",
+        "name": "GitHubReviewTriadGateTests.test_missing_app_id_same_codacy_slug_cannot_spoof",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 177,
+        "end_line": 188,
+        "signature_hash": "48a120b03a49fd60",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_missing_provider_fails_closed:97c391ada1759ac9",
+        "name": "GitHubReviewTriadGateTests.test_missing_provider_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 74,
+        "end_line": 78,
+        "signature_hash": "cf218994efaf5144",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_mutable_check_name_cannot_spoof_codacy:3050265d103615eb",
+        "name": "GitHubReviewTriadGateTests.test_mutable_check_name_cannot_spoof_codacy",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 151,
+        "end_line": 162,
+        "signature_hash": "5f9dd7a5338e0a11",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_old_head_finding_does_not_transfer:35030d41d00c2773",
+        "name": "GitHubReviewTriadGateTests.test_old_head_finding_does_not_transfer",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 115,
+        "end_line": 120,
+        "signature_hash": "5d395bdde8797bda",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_success_status_that_says_skipped_is_not_completion:20c9a49cc2672bb1",
+        "name": "GitHubReviewTriadGateTests.test_success_status_that_says_skipped_is_not_completion",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 135,
+        "end_line": 149,
+        "signature_hash": "7e38130addefbf1d",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_user_codex_request_is_not_completion:7f0443590eb01cf9",
+        "name": "GitHubReviewTriadGateTests.test_user_codex_request_is_not_completion",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 87,
+        "end_line": 90,
+        "signature_hash": "f7fb351f0a373c0c",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_wrong_app_id_same_codacy_slug_cannot_spoof:82f2defa183afbf7",
+        "name": "GitHubReviewTriadGateTests.test_wrong_app_id_same_codacy_slug_cannot_spoof",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 164,
+        "end_line": 175,
+        "signature_hash": "73db1801b3618e54",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
+        "semantic_id": "tests/test_aura_github_review_triad_gate.py#method:GitHubReviewTriadGateTests.test_wrong_slug_same_codacy_app_id_cannot_spoof:3f01ba09aa7e2672",
+        "name": "GitHubReviewTriadGateTests.test_wrong_slug_same_codacy_app_id_cannot_spoof",
+        "kind": "method",
+        "file": "tests/test_aura_github_review_triad_gate.py",
+        "line": 190,
+        "end_line": 201,
+        "signature_hash": "211a052e60e6af87",
+        "file_digest8": "d03f123b7375e77c"
+      },
+      {
         "semantic_id": "tests/test_aura_harness_issue_capsules.py#function:_raise_secret:a2391cb47c115705",
         "name": "_raise_secret",
         "kind": "function",
@@ -446884,7 +447982,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "e681e213eca439bc6975252150495a52",
+    "payload_hash": "c3b963dd6ea6d01eb489961f37dc1f64"
   }
 }
