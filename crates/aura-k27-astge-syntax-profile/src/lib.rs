@@ -400,9 +400,7 @@ mod tests {
         nodes[2].named = false;
         assert_eq!(
             admit_syntax_graph(&g, &p, &source(), &nodes, &edges([1, 2, 3])),
-            Err(SyntaxGraphAdmissionError::AnonymousNodeForbidden {
-                local_node_id: 3
-            })
+            Err(SyntaxGraphAdmissionError::AnonymousNodeForbidden { local_node_id: 3 })
         );
     }
 
