@@ -1,0 +1,71 @@
+name: K27 ASTGE source-owned mmap execution
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - "crates/aura-k27-astge-mmap-exec/**"
+      - ".github/workflows/k27-astge-source-owned-mmap-exec.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: k27-astge-source-owned-mmap-exec-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  exact-handle-mmap-exec:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact candidate head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify toolchain and inherited source-owned admission
+        run: |
+          rustc --version
+          cargo --version
+          cargo test --locked --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets
+          cargo clippy --locked --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify exact-handle mmap execution bridge
+        run: |
+          cargo fmt --check --manifest-path crates/aura-k27-astge-mmap-exec/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-mmap-exec/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-mmap-exec/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify public admission surface has no trust override
+        run: |
+          grep -F "pub fn open_data_serving_reader(" crates/aura-k27-astge-mmap-exec/src/lib.rs
+          ! grep -E "pub fn .*capability|pub fn .*admission|pub fn .*File" crates/aura-k27-astge-mmap-exec/src/lib.rs
+          grep -F "admit_data_serving_backend(" crates/aura-k27-astge-mmap-exec/src/lib.rs
+
+      - name: Emit claim ceiling
+        run: |
+          echo "SOURCE_OWNED_ADMISSION_CONSUMED=true"
+          echo "EXACT_OPENED_HANDLES_MAPPED=true"
+          echo "POSITIVE_PATH_REOPEN_REPRESENTED=false"
+          echo "PRODUCTION_IMMUTABILITY_CAPABILITIES=0"
+          echo "PRODUCTION_BACKEND_DEFAULT=READ_SEEK_SAFE_DEFAULT"
+          echo "CALLER_CAPABILITY_OVERRIDE_ACCEPTED=false"
+          echo "MMAP_INTRINSIC_SAFETY_PROVEN=false"
+          echo "SIGBUS_IMPOSSIBLE_PROVEN=false"
+          echo "PHYSICAL_CRASH_DURABILITY_PROVEN=false"
+          echo "COLD_NVME_SUPERIORITY_PROVEN=false"
+          echo "AURAOS_RUNTIME_INTEGRATION_PROVEN=false"
+          echo "HUMAN_AUTHORITY=false"
+          echo "EXTERNAL_EFFECT=false"
