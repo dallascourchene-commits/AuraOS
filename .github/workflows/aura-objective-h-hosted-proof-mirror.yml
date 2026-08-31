@@ -5,6 +5,7 @@ on:
     branches:
       - 'feature/arena-objective-h-hosted-proof-20260831-sol'
 
+# Activation touch after workflow registration; proof semantics unchanged.
 permissions:
   contents: read
   actions: read
@@ -116,7 +117,6 @@ jobs:
           from tools.aura_fractal_k27 import K27Path, ZoomDisposition
           from tools.aura_navigator_k27_collision_router import route_k27_collision, NavigatorRouteDisposition
           h=lambda s: hashlib.sha256(s.encode()).hexdigest()
-          # Different K27, same semantics: locality distinction cannot create a new owner.
           same=h('same')
           r=route_k27_collision(
               owner=OwnerState('owner','g1',same,True),
@@ -127,7 +127,6 @@ jobs:
           assert r.locality_disposition is ZoomDisposition.DISTINGUISHED
           assert r.semantic_collision_disposition is CollisionDisposition.DUPLICATE_RETAINED_AS_LINEAGE
           assert r.route_disposition is NavigatorRouteDisposition.RETAIN_DUPLICATE_LINEAGE
-          # Same K27, orthogonal semantics: locality collision cannot manufacture semantic duplication.
           p=K27Path.parse('K27:/11.17.15')
           r=route_k27_collision(
               owner=OwnerState('owner','g1',h('owner'),True),
