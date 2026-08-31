@@ -12,9 +12,7 @@
 use aura_k27_astge::NodeIndexRecordV1;
 use aura_k27_astge_materialize::{AdmittedSourceCatalogV1, MaterializeError};
 use aura_k27_astge_scope::{AuthorizedSpanV1, ReplacementV1};
-use aura_k27_astge_scopes::{
-    index_python_nested_scopes, ScopeIndexError, ScopeKindV1,
-};
+use aura_k27_astge_scopes::{index_python_nested_scopes, ScopeIndexError, ScopeKindV1};
 use aura_k27_astge_source_review::{
     admit_source_review, SourceReviewAdmissionV1, SourceReviewError,
 };
@@ -124,8 +122,8 @@ pub fn admit_scope_aware_source_review(
         byte_end: full_len,
     };
     let full_source = catalog.materialize_node(&full_source_record)?;
-    let source_text = std::str::from_utf8(&full_source.bytes)
-        .map_err(|_| ScopeAwareReviewError::SourceUtf8)?;
+    let source_text =
+        std::str::from_utf8(&full_source.bytes).map_err(|_| ScopeAwareReviewError::SourceUtf8)?;
 
     let source_review = admit_source_review(
         catalog,
@@ -149,7 +147,11 @@ pub fn admit_scope_aware_source_review(
         })
         .collect();
     let binding = match matches.as_slice() {
-        [] => return Err(ScopeAwareReviewError::SelectedBindingMissing(record.node_id)),
+        [] => {
+            return Err(ScopeAwareReviewError::SelectedBindingMissing(
+                record.node_id,
+            ))
+        }
         [binding] => *binding,
         _ => {
             return Err(ScopeAwareReviewError::SelectedBindingAmbiguous {
@@ -306,7 +308,9 @@ mod tests {
         .unwrap()
     }
 
-    fn candidate_and_scope(state: &FixtureState) -> (Vec<u8>, Vec<AuthorizedSpanV1>, Vec<ReplacementV1>) {
+    fn candidate_and_scope(
+        state: &FixtureState,
+    ) -> (Vec<u8>, Vec<AuthorizedSpanV1>, Vec<ReplacementV1>) {
         let mut candidate = state.source.as_bytes().to_vec();
         candidate[state.selected_digit_start] = b'4';
         let start = state.selected_digit_start as u64;
