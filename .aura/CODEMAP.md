@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1696
-- **total_bytes**: 26724714
-- **text_tokens_est**: 6671584
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 13, 'operator_script': 9, 'python_module': 1035, 'schema_or_lexicon': 283, 'support_file': 49}
+- **file_count**: 1710
+- **total_bytes**: 26789944
+- **text_tokens_est**: 6687896
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 13, 'operator_script': 9, 'python_module': 1043, 'schema_or_lexicon': 287, 'support_file': 51}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1696,
+  "repo_file_count": 1710,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -175,6 +175,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
     ".github/workflows/construction-demo-asset-foundation.yml",
+    ".github/workflows/creator-studio-neutral-timeline.yml",
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
@@ -214,6 +215,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/sco-phase3-advisory-runtime.yml",
     ".github/workflows/sco-temporal-persistence-e9-e12.yml",
     ".github/workflows/source-anchor-verify.yml",
+    ".github/workflows/spatial-calibration-temporal-scope.yml",
+    ".github/workflows/spatial-eye-calibration-contract.yml",
+    ".github/workflows/spatial-optical-invariant-witness.yml",
     ".github/workflows/sync-analysis-codemap.yml",
     ".github/workflows/triad2-codemap-repair.yml",
     ".github/workflows/triad2-full-codemap-repair-v2.yml",
@@ -1668,9 +1672,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_authority_bridge.py",
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
+    "tests/test_creator_studio_neutral_timeline_contract.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
+    "tests/test_spatial_calibration_temporal_scope.py",
+    "tests/test_spatial_eye_calibration_contract.py",
+    "tests/test_spatial_optical_invariant_witness.py",
     "third_party/pascal/LICENSE",
     "third_party/pascal/package-metadata/core.package.json",
     "third_party/pascal/package-metadata/editor.package.json",
@@ -1707,7 +1715,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/thinkpad_bounded_storage_probe.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/creator_studio/neutral_timeline_contract.py",
+    "tools/creator_studio/requirements-timeline.txt",
     "tools/k27/thinkpad_portable_simd_dispatch.cpp",
+    "tools/spatial/calibration_temporal_scope.py",
+    "tools/spatial/eye_calibration_contract.py",
+    "tools/spatial/optical_invariant_witness.py",
+    "tools/spatial/requirements-optical.txt",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1836,17 +1850,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1696,
-  "bytes": 26724714,
-  "tokens_est": 6671584,
+  "files": 1710,
+  "bytes": 26789944,
+  "tokens_est": 6687896,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 13,
     "operator_script": 9,
-    "python_module": 1035,
-    "schema_or_lexicon": 283,
-    "support_file": 49
+    "python_module": 1043,
+    "schema_or_lexicon": 287,
+    "support_file": 51
   }
 }
 ```
