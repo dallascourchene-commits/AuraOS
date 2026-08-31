@@ -201,39 +201,44 @@ fn project_named_python_syntax(
 }
 
 fn project_named_preorder(
-    node: Node<'_>,
+    root: Node<'_>,
     nodes: &mut Vec<SyntaxNodeProjectionV1>,
     edges: &mut Vec<SyntaxEdgeProjectionV1>,
 ) -> Result<u64, CurrentProfiledScopeError> {
-    let local_node_id =
+    let root_local_node_id =
         u64::try_from(nodes.len()).map_err(|_| CurrentProfiledScopeError::SyntaxOrdinalOverflow)?;
-    nodes.push(SyntaxNodeProjectionV1 {
-        local_node_id,
-        grammar_kind_id: u32::from(node.kind_id()),
-        grammar_kind_name: node.kind().to_owned(),
-        named: node.is_named(),
-        start_byte: node.start_byte() as u64,
-        end_byte: node.end_byte() as u64,
-    });
+    let mut stack = vec![(root, None)];
 
-    for child_index in 0..node.named_child_count() {
-        let child = node.named_child(child_index).ok_or_else(|| {
-            CurrentProfiledScopeError::NamedChildMissing {
-                parent_kind: node.kind().to_owned(),
-                child_index,
-            }
-        })?;
-        let child_local_node_id = u64::try_from(nodes.len())
+    while let Some((node, parent_local_node_id)) = stack.pop() {
+        let local_node_id = u64::try_from(nodes.len())
             .map_err(|_| CurrentProfiledScopeError::SyntaxOrdinalOverflow)?;
-        edges.push(SyntaxEdgeProjectionV1 {
-            parent_local_node_id: local_node_id,
-            child_local_node_id,
+        if let Some(parent_local_node_id) = parent_local_node_id {
+            edges.push(SyntaxEdgeProjectionV1 {
+                parent_local_node_id,
+                child_local_node_id: local_node_id,
+            });
+        }
+        nodes.push(SyntaxNodeProjectionV1 {
+            local_node_id,
+            grammar_kind_id: u32::from(node.kind_id()),
+            grammar_kind_name: node.kind().to_owned(),
+            named: node.is_named(),
+            start_byte: node.start_byte() as u64,
+            end_byte: node.end_byte() as u64,
         });
-        if project_named_preorder(child, nodes, edges)? != child_local_node_id {
-            return Err(CurrentProfiledScopeError::ProjectionInvariant);
+
+        for child_index in (0..node.named_child_count()).rev() {
+            let child = node.named_child(child_index).ok_or_else(|| {
+                CurrentProfiledScopeError::NamedChildMissing {
+                    parent_kind: node.kind().to_owned(),
+                    child_index,
+                }
+            })?;
+            stack.push((child, Some(local_node_id)));
         }
     }
-    Ok(local_node_id)
+
+    Ok(root_local_node_id)
 }
 
 #[cfg(test)]
@@ -348,6 +353,14 @@ mod tests {
         assert!(!admitted.semantic_k27_derived);
         assert!(!admitted.human_authority);
         assert!(!admitted.external_effect);
+    }
+
+    #[test]
+    fn deep_valid_named_projection_uses_explicit_stack() {
+        let source = format!("value = {}0\n", "lambda: ".repeat(4096));
+        let (nodes, edges) = project_named_python_syntax(&source).unwrap();
+        assert!(nodes.len() > 4096);
+        assert_eq!(edges.len() + 1, nodes.len());
     }
 
     #[test]
