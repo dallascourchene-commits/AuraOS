@@ -92,6 +92,21 @@ pub fn canonical_source_generation_ref(source_generation: u64) -> String {
     format!("{GENERATION_REF_PREFIX}{source_generation}")
 }
 
+/// Exact caller-owned evidence needed to ask the composed owners for one profiled-scope review
+/// admission. Grouping these fields makes the trust boundary explicit without turning any field
+/// into authority merely because it shares one carrier.
+pub struct ProfiledScopeReviewRequest<'a> {
+    pub catalog: &'a AdmittedSourceCatalogV1,
+    pub record: &'a NodeIndexRecordV1,
+    pub original_source: &'a [u8],
+    pub candidate_source: &'a [u8],
+    pub source_owner_ref: &'a str,
+    pub selected_scope_id: u64,
+    pub semantic_handles: &'a HashMap<u64, [u8; 32]>,
+    pub authorized_spans: &'a [AuthorizedSpanV1],
+    pub replacements: &'a [ReplacementV1],
+}
+
 /// Admit one selected nested lexical scope for later semantic review.
 ///
 /// The caller does not provide a separate source-generation reference. The exact generation
@@ -100,16 +115,20 @@ pub fn canonical_source_generation_ref(source_generation: u64) -> String {
 /// independently supplied `AuthorizedSpanV1` must explicitly cover that scope before PR494's
 /// source-review owner is invoked.
 pub fn admit_profiled_scope_review(
-    catalog: &AdmittedSourceCatalogV1,
-    record: &NodeIndexRecordV1,
-    original_source: &[u8],
-    candidate_source: &[u8],
-    source_owner_ref: impl Into<String>,
-    selected_scope_id: u64,
-    semantic_handles: &HashMap<u64, [u8; 32]>,
-    authorized_spans: &[AuthorizedSpanV1],
-    replacements: &[ReplacementV1],
+    request: ProfiledScopeReviewRequest<'_>,
 ) -> Result<ProfiledScopeReviewAdmissionV1, ProfiledScopeReviewError> {
+    let ProfiledScopeReviewRequest {
+        catalog,
+        record,
+        original_source,
+        candidate_source,
+        source_owner_ref,
+        selected_scope_id,
+        semantic_handles,
+        authorized_spans,
+        replacements,
+    } = request;
+
     let source = std::str::from_utf8(original_source)
         .map_err(|_| ProfiledScopeReviewError::OriginalSourceNotUtf8)?;
     let locator =
@@ -119,7 +138,7 @@ pub fn admit_profiled_scope_review(
                 record.file_id,
             ))?;
     let source_generation_ref = canonical_source_generation_ref(locator.source_generation);
-    let source_owner_ref = source_owner_ref.into();
+    let source_owner_ref = source_owner_ref.to_owned();
 
     let profiled = build_profiled_python_scopes(
         source,
@@ -407,17 +426,35 @@ mod tests {
         }
     }
 
+    fn admit<'a>(
+        state: &'a FixtureState,
+        record: &'a NodeIndexRecordV1,
+        selected_scope_id: u64,
+        candidate_source: &'a [u8],
+        authorized_spans: &'a [AuthorizedSpanV1],
+        replacements: &'a [ReplacementV1],
+    ) -> Result<ProfiledScopeReviewAdmissionV1, ProfiledScopeReviewError> {
+        admit_profiled_scope_review(ProfiledScopeReviewRequest {
+            catalog: &state.catalog,
+            record,
+            original_source: state.source.as_bytes(),
+            candidate_source,
+            source_owner_ref: "source://fixture/current",
+            selected_scope_id,
+            semantic_handles: &state.handles,
+            authorized_spans,
+            replacements,
+        })
+    }
+
     #[test]
     fn exact_nested_scope_and_current_source_are_review_ready_only() {
         let state = setup("positive");
-        let out = admit_profiled_scope_review(
-            &state.catalog,
+        let out = admit(
+            &state,
             &state.inner_record,
-            state.source.as_bytes(),
-            state.source.as_bytes(),
-            "source://fixture/current",
             state.inner_scope_id,
-            &state.handles,
+            state.source.as_bytes(),
             &[state.inner_span],
             &[],
         )
@@ -441,14 +478,11 @@ mod tests {
     #[test]
     fn scope_span_does_not_auto_authorize_review() {
         let state = setup("no-auth");
-        let err = admit_profiled_scope_review(
-            &state.catalog,
+        let err = admit(
+            &state,
             &state.inner_record,
-            state.source.as_bytes(),
-            state.source.as_bytes(),
-            "source://fixture/current",
             state.inner_scope_id,
-            &state.handles,
+            state.source.as_bytes(),
             &[],
             &[],
         )
@@ -466,14 +500,11 @@ mod tests {
     #[test]
     fn persisted_node_must_be_the_selected_scope_anchor() {
         let state = setup("wrong-node");
-        let err = admit_profiled_scope_review(
-            &state.catalog,
+        let err = admit(
+            &state,
             &state.outer_record,
-            state.source.as_bytes(),
-            state.source.as_bytes(),
-            "source://fixture/current",
             state.inner_scope_id,
-            &state.handles,
+            state.source.as_bytes(),
             &[state.inner_span],
             &[],
         )
@@ -492,14 +523,11 @@ mod tests {
             start: 0,
             end: state.source.len() as u64,
         };
-        let out = admit_profiled_scope_review(
-            &state.catalog,
+        let out = admit(
+            &state,
             &state.inner_record,
-            state.source.as_bytes(),
-            state.source.as_bytes(),
-            "source://fixture/current",
             state.inner_scope_id,
-            &state.handles,
+            state.source.as_bytes(),
             &[wider],
             &[],
         )
@@ -523,14 +551,11 @@ mod tests {
             sentinel..sentinel + "SENTINEL".len(),
             b"CHANGED!".iter().copied(),
         );
-        let err = admit_profiled_scope_review(
-            &state.catalog,
+        let err = admit(
+            &state,
             &state.inner_record,
-            state.source.as_bytes(),
-            &candidate,
-            "source://fixture/current",
             state.inner_scope_id,
-            &state.handles,
+            &candidate,
             &[state.inner_span],
             &[replacement],
         )
@@ -547,14 +572,11 @@ mod tests {
             b"changed after admission\n",
         )
         .unwrap();
-        let err = admit_profiled_scope_review(
-            &state.catalog,
+        let err = admit(
+            &state,
             &state.inner_record,
-            state.source.as_bytes(),
-            state.source.as_bytes(),
-            "source://fixture/current",
             state.inner_scope_id,
-            &state.handles,
+            state.source.as_bytes(),
             &[state.inner_span],
             &[],
         )
@@ -579,14 +601,11 @@ mod tests {
             .iter()
             .find(|scope| scope.parent_scope_id.is_none())
             .unwrap();
-        let err = admit_profiled_scope_review(
-            &state.catalog,
+        let err = admit(
+            &state,
             &state.inner_record,
-            state.source.as_bytes(),
-            state.source.as_bytes(),
-            "source://fixture/current",
             module.scope_id,
-            &state.handles,
+            state.source.as_bytes(),
             &[state.inner_span],
             &[],
         )
