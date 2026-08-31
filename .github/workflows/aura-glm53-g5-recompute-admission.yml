@@ -29,7 +29,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Authenticate G4 and two earned semantic parents
+      - name: Authenticate repaired G4 semantics, superseded proof scar, and two semantic parents
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -66,16 +66,24 @@ jobs:
               data = get(f"https://api.github.com/repos/{repo}/contents/{encoded}?ref={ref}")
               return data.get("sha")
 
-          # G4 terminal proof.
-          prove_run(
-              33436142388,
-              99632931053,
-              "68d76cb7d08366d085be13ad68871ab3c9cf00e1",
-              "G4",
-          )
+          # G4 historical SUCCESS is real but belongs to superseded v1 semantics.
+          old_g4 = "68d76cb7d08366d085be13ad68871ab3c9cf00e1"
+          prove_run(33436142388, 99632931053, old_g4, "G4_SUPERSEDED_V1_PROOF_SCAR")
+          old_blob = blob("tools/awj032/glm53_g4_prefetch_plan_revalidation.py", old_g4)
+          if old_blob != "78e4f56bdf9c1e0c0babda24acdd2af80ce5d175":
+              raise SystemExit(f"G4_SUPERSEDED_SOURCE_BLOB_MISMATCH:{old_blob}")
 
-          # PR #754 semantic owner + proof-only mirror. The mirror may prove the
-          # owner only because source/test blobs are identical across both refs.
+          # Repaired G4 v2 semantic surface is distinct and still requires terminal proof.
+          repaired_g4 = "025d619d24d95dd6acc29981b1bd61bce92e25a3"
+          repaired_blob = blob(
+              "tools/awj032/glm53_g4_prefetch_plan_revalidation.py", repaired_g4
+          )
+          if repaired_blob != "3e5686c3fe635f59e85768e1270be98175983e03":
+              raise SystemExit(f"G4_REPAIRED_V2_SOURCE_BLOB_MISMATCH:{repaired_blob}")
+          if repaired_blob == old_blob:
+              raise SystemExit("G4_REPAIRED_SOURCE_MUST_DIFFER_FROM_SUPERSEDED_PROOF_SOURCE")
+
+          # PR #754 semantic owner + proof-only mirror.
           owner = "412e683b8a3d28bd57e4dc39059283cc823e2fb3"
           mirror = "f85135562a5975cd7ea1892ab1c221d9004d3e0d"
           prove_run(33435590114, 99631099474, mirror, "PR754_PROOF_MIRROR")
@@ -89,7 +97,7 @@ jobs:
                   if actual != expected:
                       raise SystemExit(f"PR754_{label}_BLOB_MISMATCH:{path}:{actual}")
 
-          # PR #755 EKI-4 exact-head proof and semantic blobs.
+          # PR #755 exact-head proof and semantic blobs.
           p755 = "162fdb9c69f288090845453a67d1f41da28e8a53"
           prove_run(33435683382, 99631408076, p755, "PR755_EKI4")
           expected_755 = {
@@ -102,7 +110,7 @@ jobs:
                   raise SystemExit(f"PR755_BLOB_MISMATCH:{path}:{actual}")
           PY
 
-      - name: Compile G4 and G5 proof surfaces
+      - name: Compile repaired G4 and G5 proof surfaces
         run: |
           python3 -m py_compile \
             tools/awj032/glm53_g4_prefetch_plan_revalidation.py \
@@ -110,13 +118,13 @@ jobs:
             tools/awj032/glm53_g5_recompute_admission.py \
             tools/awj032/test_glm53_g5_recompute_admission.py
 
-      - name: Reexecute inherited G4 adversarial contract
+      - name: Reexecute repaired G4 adversarial contract
         run: python3 -m unittest tools.awj032.test_glm53_g4_prefetch_plan_revalidation -v
 
-      - name: Execute G5 adversarial contract
+      - name: Execute G5 v2 adversarial contract
         run: python3 -m unittest tools.awj032.test_glm53_g5_recompute_admission -v
 
-      - name: Exhaust finite recompute lattice
+      - name: Exhaust finite recompute lattice with zero admissions
         run: |
           python3 - <<'PY'
           from tools.awj032.glm53_g5_recompute_admission import prove_finite_recompute_lattice
@@ -124,25 +132,34 @@ jobs:
           if proof.get("states") != 90:
               raise SystemExit(f"G5_FINITE_PROOF_STATE_COUNT_MISMATCH:{proof}")
           required = (
-              "ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT",
+              "CANDIDATE_G3_RECOMPUTE_EXTERNAL_TRUST_REQUIRED",
               "COLLAPSE_RECOMPUTE_CONE",
+              "HOLD_G4_OWNER_CURRENTNESS_AUTH_REQUIRED",
               "HOLD_RETRIEVAL_AXIS_CHANGE_REQUIRED",
               "HOLD_SOURCE_READ_CURRENTNESS_REQUIRED",
               "HOLD_VERSION_TRANSITION_REQUIRED",
-              "NOT_APPLICABLE_RECOMPUTE",
           )
           for disposition in required:
               if proof.get(disposition, 0) <= 0:
                   raise SystemExit(f"G5_FINITE_PROOF_MISSING_DISPOSITION:{disposition}:{proof}")
+          if proof.get("ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT", 0) != 0:
+              raise SystemExit(f"G5_V2_MUST_HAVE_ZERO_ADMISSIONS:{proof}")
           print(proof)
           PY
 
-      - name: Enforce G5 nonpromotion ceiling
+      - name: Enforce G5 trust and nonpromotion ceiling
         run: |
           python3 - <<'PY'
           from pathlib import Path
           text = Path("tools/awj032/glm53_g5_recompute_admission.py").read_text()
           required = (
+              'G4_REPAIRED_SEMANTIC_HEAD = "025d619d24d95dd6acc29981b1bd61bce92e25a3"',
+              'G4_SUPERSEDED_PROOF_HEAD = "68d76cb7d08366d085be13ad68871ab3c9cf00e1"',
+              'CANDIDATE_G3_RECOMPUTE_EXTERNAL_TRUST_REQUIRED',
+              "bounded_g3_recompute_attempt_admitted: bool = False",
+              "g4_repaired_terminal_proof_required: bool = True",
+              "g4_repaired_terminal_proof_available: bool = False",
+              "external_owner_currentness_auth_required: bool = True",
               "recompute_executed_by_this_contract: bool = False",
               "retrieval_or_provider_effect_authorized: bool = False",
               "transfer_effect_authorized: bool = False",
@@ -155,5 +172,13 @@ jobs:
           )
           for marker in required:
               if marker not in text:
-                  raise SystemExit(f"G5_CLAIM_CEILING_MARKER_MISSING:{marker}")
+                  raise SystemExit(f"G5_TRUST_CEILING_MARKER_MISSING:{marker}")
+          forbidden = (
+              'G4_REVALIDATED_UNCHANGED =',
+              'ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT =',
+              'bounded_g3_recompute_attempt_admitted=True',
+          )
+          for marker in forbidden:
+              if marker in text:
+                  raise SystemExit(f"G5_FORBIDDEN_PROMOTION_MARKER_PRESENT:{marker}")
           PY
