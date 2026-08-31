@@ -7,6 +7,7 @@ import unittest
 MODULE_PATH = pathlib.Path(__file__).parents[1] / "tools" / "quantization" / "aura_glm53_equal_rate_e8_ablation.py"
 spec = importlib.util.spec_from_file_location("equal_rate_e8", MODULE_PATH)
 q = importlib.util.module_from_spec(spec)
+# W3 loader repair: dataclasses need the dynamically loaded module registered first.
 sys.modules[spec.name] = q
 assert spec.loader is not None
 spec.loader.exec_module(q)
