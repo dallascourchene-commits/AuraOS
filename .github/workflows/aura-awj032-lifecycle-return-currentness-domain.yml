@@ -1,0 +1,169 @@
+name: Aura AWJ032 Lifecycle Return Currentness Domain
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  CONVERGENCE_SHA: d44544c853bab289b3b6bde78f96b14dbbad0cdf
+  PR590_HEAD: 3b1da2d20f633109944b416bcc27a30112706964
+  PR590_RUN: '33361708119'
+  PR590_BRIDGE_BLOB: a12cbd6bd3589f8dd3b32e1c9e8ca82edef94295
+  PR590_BRIDGE_TEST_BLOB: 8d285709eb2c5fc953d1120f664aeaca8af55f86
+  PR586_HEAD: aa3fcd9a4cefd18dbc991c3e8a450fcfbbb6726b
+  PR586_RUN: '33360529366'
+  C2_OWNER_BLOB: 91da9f6f5c9c8175fbe123634e53e14bc9ba3cbe
+  PR586_RETURN_BLOB: 8e57494c1c77eb41d6a402aa7dceb43121512863
+  PR586_RETURN_TEST_BLOB: 88d899169f8335e3822063761836391372600482
+
+jobs:
+  exact-lifecycle-return-currentness-domain:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Fetch exact child and prove PR590 x PR586 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR590_HEAD" "$PR586_HEAD"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor "$CONVERGENCE_SHA" HEAD
+          mapfile -t parents < <(git cat-file -p "$CONVERGENCE_SHA" | awk '/^parent /{print $2}')
+          test "${#parents[@]}" -eq 2
+          test "${parents[0]}" = "$PR590_HEAD"
+          test "${parents[1]}" = "$PR586_HEAD"
+          test "$(git hash-object scripts/aura_awj032_owner_host_c2_memory_bridge.py)" = "$PR590_BRIDGE_BLOB"
+          test "$(git hash-object tests/test_aura_awj032_owner_host_c2_memory_bridge.py)" = "$PR590_BRIDGE_TEST_BLOB"
+          test "$(git hash-object tools/awj032/glm53_owner_host_c2_handoff.py)" = "$C2_OWNER_BLOB"
+          test "$(git hash-object tools/awj032/glm53_owner_host_lifecycle_return_packet.py)" = "$PR586_RETURN_BLOB"
+          test "$(git hash-object tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py)" = "$PR586_RETURN_TEST_BLOB"
+          echo "TRUE_TWO_PARENT_CONVERGENCE=$CONVERGENCE_SHA"
+
+      - name: Pin exact successful parent hosted runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR590_RUN}" --jq .head_sha)" = "$PR590_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR590_RUN}" --jq .conclusion)" = success
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR586_RUN}" --jq .head_sha)" = "$PR586_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR586_RUN}" --jq .conclusion)" = success
+          echo "PR590_EXACT_HOSTED=true"
+          echo "PR586_EXACT_HOSTED=true"
+
+      - name: Re-prove exact PR590 typed currentness substrate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/aura_provenance_corroboration_memory_admission.py \
+            scripts/aura_awj032_owner_host_c2_memory_bridge.py
+          python3 -m unittest -v \
+            tests.test_aura_provenance_corroboration_memory_admission \
+            tests.test_aura_awj032_owner_host_c2_memory_bridge
+          echo "PR590_TYPED_CURRENTNESS_REPROVED=true"
+
+      - name: Re-prove exact PR586 C2 and lifecycle-return owners
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/awj032/glm53_owner_host_c2_handoff.py \
+            tools/awj032/glm53_owner_host_lifecycle_return_packet.py
+          python3 -m unittest -v \
+            tools.awj032.test_glm53_owner_host_c2_handoff \
+            tools.awj032.test_glm53_owner_host_lifecycle_return_packet
+          echo "PR586_LIFECYCLE_RETURN_REPROVED=true"
+
+      - name: Prove O49 currentness-domain adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_awj032_lifecycle_return_currentness_domain.py
+          python3 -m unittest -v tests.test_aura_awj032_lifecycle_return_currentness_domain
+          echo "O49_CURRENTNESS_DOMAIN_ADVERSARIALS=true"
+
+      - name: Prove exact return is current only in its owned generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from tests.test_aura_awj032_lifecycle_return_currentness_domain import request, receipt
+          from scripts.aura_awj032_lifecycle_return_currentness_domain import project_owner_host_lifecycle_return_memory, CROSS_DOMAIN_REJECTION
+          req = request()
+          out = project_owner_host_lifecycle_return_memory(request=req, receipt=receipt(req))
+          ref = out['evidence_node']['artifact_ref']
+          assert out['retrieval_admission']['eligible_artifact_refs'] == [ref]
+          assert out['lifecycle_return_currentness_admission']['eligible_artifact_refs'] == [ref]
+          assert out['host_observation_currentness_admission']['eligible_artifact_refs'] == []
+          assert out['w4_lifecycle_measurement_currentness_admission']['eligible_artifact_refs'] == []
+          assert out['host_observation_currentness_admission']['excluded_by_artifact_ref'][ref] == CROSS_DOMAIN_REJECTION
+          assert out['w4_lifecycle_measurement_currentness_admission']['excluded_by_artifact_ref'][ref] == CROSS_DOMAIN_REJECTION
+          assert out['physical_io_attested'] is False
+          assert out['lifecycle_registry_admitted'] is False
+          assert out['real_w4_policy_winner_proven'] is False
+          assert out['g2_admitted'] is False
+          assert out['effect_authority_proven'] is False
+          print('LIFECYCLE_RETURN_GENERATION_CURRENT=true')
+          print('HOST_OBSERVATION_CURRENT=false')
+          print('W4_LIFECYCLE_MEASUREMENT_CURRENT=false')
+          PY
+
+      - name: Assert narrow public boundary and complete consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import ast
+          import inspect
+          from scripts.aura_awj032_lifecycle_return_currentness_domain import project_owner_host_lifecycle_return_memory
+          assert list(inspect.signature(project_owner_host_lifecycle_return_memory).parameters) == ['request', 'receipt']
+          path = 'scripts/aura_awj032_lifecycle_return_currentness_domain.py'
+          tree = ast.parse(open(path, encoding='utf-8').read(), filename=path)
+          forbidden = {'sqlite3', 'redis', 'requests', 'subprocess', 'socket'}
+          for item in ast.walk(tree):
+              if isinstance(item, ast.Import):
+                  for alias in item.names:
+                      assert alias.name.split('.')[0] not in forbidden
+              elif isinstance(item, ast.ImportFrom) and item.module:
+                  assert item.module.split('.')[0] not in forbidden
+              elif isinstance(item, ast.Call) and isinstance(item.func, ast.Name) and item.func.id == 'open':
+                  raise AssertionError('O49 membrane must not open files')
+          print('PUBLIC_INPUTS=request,receipt')
+          PY
+          cat <<'EOF'
+          LIFECYCLE_RETURN_EVIDENCE_TYPE_PRESERVED=true
+          LIFECYCLE_RETURN_CURRENTNESS_DOMAIN_PRESERVED=true
+          CURRENT_TRUE_IS_AMBIENT_CURRENTNESS=false
+          LIFECYCLE_MEASUREMENT_RECEIPT_PRESENT=false
+          LIFECYCLE_MEASUREMENT_CURRENTNESS_PROVEN=false
+          HOST_OBSERVATION_CURRENTNESS_PROVEN=false
+          ATTEMPT_TELEMETRY_IS_PHYSICAL_IO_ATTESTATION=false
+          PRODUCER_AUTHENTICATED=false
+          LIFECYCLE_REGISTRY_ADMITTED=false
+          REAL_W4_POLICY_WINNER_PROVEN=false
+          FULL_MODEL_RUNTIME_PROVEN=false
+          QUALITY_PROVEN=false
+          G2_ADMITTED=false
+          HOST_RANK_TRANSITION_PERFORMED=false
+          SEMANTIC_TRUTH_PROVEN=false
+          EFFECT_AUTHORITY_PROVEN=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          SEMANTIC_K27_AUTHORITY_MINTED=false
+          MERGE_PROMOTION_AUTHORITY=false
+          GATE10_PROMOTION=false
+          EOF
