@@ -1,0 +1,134 @@
+name: Aura WorkCapsule Raw Slice Host Plane Separation
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_temporal_host_observation_admission.py'
+      - 'scripts/aura_workcapsule_raw_slice_host_plane_separation.py'
+      - 'tests/test_aura_workcapsule_temporal_host_observation_admission.py'
+      - 'tests/test_aura_workcapsule_raw_slice_host_plane_separation.py'
+      - '.github/workflows/aura-workcapsule-raw-slice-host-plane-separation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR559_SHA: 26201c63c3531bbf631ef34803c6f01ccd7499d3
+  PR560_SHA: 22414a80710d695a53f96665991c003dd889eb2c
+  CONVERGENCE_SHA: 8d83705912ea64590df5cb0eb0281291f85b02ca
+
+jobs:
+  exact-plane-separation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Fetch exact child and prove two-parent convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=220 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR559_SHA" "$PR560_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR559_SHA $PR560_SHA"
+          git merge-base --is-ancestor "$PR559_SHA" HEAD
+          git merge-base --is-ancestor "$PR560_SHA" HEAD
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+
+      - name: Re-prove exact PR559 host-observation owner
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_temporal_host_observation_admission.py
+          python3 -m unittest -v tests.test_aura_workcapsule_temporal_host_observation_admission
+
+      - name: Fetch and re-prove exact PR560 raw-slice owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr560 && mkdir -p /tmp/pr560
+          git -C /tmp/pr560 init .
+          git -C /tmp/pr560 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr560 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR560_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr560 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr560 rev-parse HEAD)" = "$PR560_SHA"
+          cd /tmp/pr560
+          cargo fmt --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml
+          cargo clippy --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml --all-targets -- -D warnings
+
+      - name: Prove closed PR560 field catalog matches Python membrane
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+          from scripts.aura_workcapsule_raw_slice_host_plane_separation import RAW_SLICE_FIELDS
+          src = Path('/tmp/pr560/crates/aura-k27-astge-portable-target-raw-slice/src/lib.rs').read_text()
+          block = src.split('pub struct PortableTargetRawSliceV1 {', 1)[1].split('\n}', 1)[0]
+          fields = tuple(re.findall(r'^\s*pub\s+([A-Za-z0-9_]+):', block, flags=re.M))
+          assert fields == RAW_SLICE_FIELDS, (fields, RAW_SLICE_FIELDS)
+          for required in (
+              'semantic_handle_derived_from_raw_slice: false',
+              'semantic_identity_proven_by_raw_slice: false',
+              'producer_authenticated: false',
+              'execution_authorized: false',
+              'provider_effect_authorized: false',
+          ):
+              assert required in src
+          print('PR560_CLOSED_FIELD_CATALOG_EXACT=true')
+          PY
+
+      - name: Prove raw-slice host-plane separation adversarials
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_raw_slice_host_plane_separation.py
+          python3 -m unittest -v tests.test_aura_workcapsule_raw_slice_host_plane_separation
+
+      - name: Assert no local evidence rank escape hatch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from pathlib import Path
+          from scripts.aura_workcapsule_raw_slice_host_plane_separation import admit_raw_slice_host_plane_separation
+          params = set(inspect.signature(admit_raw_slice_host_plane_separation).parameters)
+          for forbidden in ('raw_slice_host_pass','promote_raw_slice_to_host','host_effect_ready','execution_authorized','provider_effect_authorized'):
+              assert forbidden not in params
+          src = Path('scripts/aura_workcapsule_raw_slice_host_plane_separation.py').read_text()
+          assert 'raw_slice_promoted_to_host_rank": False' in src
+          assert 'host_resolution_required_for_rank_change": True' in src
+          assert 'host_observations=host_observations' in src
+          assert 'host_observations=raw_slice' not in src
+          print('RAW_SLICE_TO_HOST_RANK_ESCAPE_HATCH=false')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'EXACT_CURRENT_RAW_SLICE_LOCAL_EVIDENCE=true'
+          echo 'RAW_SLICE_CAN_SATISFY_HOST_GATE_WITHOUT_RESOLVER=false'
+          echo 'RAW_SLICE_CAN_IMPERSONATE_HOST_RESOLUTION=false'
+          echo 'HOST_RANK_CHANGE_REQUIRES_EXPLICIT_HOST_RESOLVER=true'
+          echo 'HOST_OBSERVATION_AUTHORITY_PROVEN=false'
+          echo 'SEMANTIC_IDENTITY_PROVEN_BY_RAW_SLICE=false'
+          echo 'PRODUCER_AUTHENTICATED=false'
+          echo 'HOST_EFFECT_READY=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false'
