@@ -24,12 +24,12 @@ jobs:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
 
-      - name: Authenticate exact G5-v2 semantic substrate at review cut
+      - name: Authenticate exact current G5-v2 semantic substrate
         run: |
-          git merge-base --is-ancestor 82f942b55cf02f3305ac2d148a41671496fbd73a HEAD
-          test "$(git rev-parse 82f942b55cf02f3305ac2d148a41671496fbd73a:tools/awj032/glm53_g5_recompute_admission.py)" = d3f1ed13a42503192ed01cdd3d6a66e34fedabd8
-          test "$(git rev-parse 82f942b55cf02f3305ac2d148a41671496fbd73a:tools/awj032/test_glm53_g5_recompute_admission.py)" = b388de02cd8f24ba063d4f323453119a0f94006f
-          test "$(git rev-parse HEAD:tools/awj032/glm53_g5_recompute_admission.py)" = d3f1ed13a42503192ed01cdd3d6a66e34fedabd8
+          git merge-base --is-ancestor cb17b979c07197765d1e38fcac0533bacce0e123 HEAD
+          test "$(git rev-parse cb17b979c07197765d1e38fcac0533bacce0e123:tools/awj032/glm53_g5_recompute_admission.py)" = 90c2a36352aafe34c65f131bfdbd1fb9ea4c4d1a
+          test "$(git rev-parse cb17b979c07197765d1e38fcac0533bacce0e123:tools/awj032/test_glm53_g5_recompute_admission.py)" = b388de02cd8f24ba063d4f323453119a0f94006f
+          test "$(git rev-parse HEAD:tools/awj032/glm53_g5_recompute_admission.py)" = 90c2a36352aafe34c65f131bfdbd1fb9ea4c4d1a
           test "$(git rev-parse HEAD:tools/awj032/test_glm53_g5_recompute_admission.py)" = b388de02cd8f24ba063d4f323453119a0f94006f
 
       - name: Authenticate exact O65 and PR769 terminal proofs
