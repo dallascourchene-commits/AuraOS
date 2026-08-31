@@ -1,0 +1,87 @@
+name: K27 ASTGE Post-Edit Profiled Scope Currentness
+
+on:
+  pull_request:
+    paths:
+      - 'crates/aura-k27-astge-current-profiled-scopes/**'
+      - 'crates/aura-k27-astge-current-syntax/**'
+      - 'crates/aura-k27-astge-profiled-scopes/**'
+      - 'crates/aura-k27-astge-syntax-profile/**'
+      - 'crates/aura-k27-astge-typed-nested-scope-review/**'
+      - 'crates/aura-k27-astge-post-edit-profiled-scope/**'
+      - 'tools/k27_astge_python_scope_oracle.py'
+      - '.github/workflows/k27-astge-post-edit-profiled-scope-currentness.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  post-edit-profiled-scope-currentness:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Fetch exact candidate head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify toolchains
+        run: |
+          rustc --version
+          cargo --version
+          python3 --version
+
+      - name: Re-prove current typed profiled-scope owner
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-current-profiled-scopes/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-current-profiled-scopes/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-current-profiled-scopes/Cargo.toml --doc
+          python3 tools/k27_astge_python_scope_oracle.py
+          cargo clippy --manifest-path crates/aura-k27-astge-current-profiled-scopes/Cargo.toml --all-targets -- -D warnings
+
+      - name: Re-prove typed nested-scope review owner
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-typed-nested-scope-review/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-typed-nested-scope-review/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-typed-nested-scope-review/Cargo.toml --doc
+          python3 tools/k27_astge_python_scope_oracle.py
+          cargo clippy --manifest-path crates/aura-k27-astge-typed-nested-scope-review/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify post-edit currentness membrane
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --all-targets -- -D warnings
+          if grep -R -nE 'unsafe[[:space:]]*\{' crates/aura-k27-astge-post-edit-profiled-scope/src; then
+            echo 'unsafe block found in post-edit currentness membrane' >&2
+            exit 1
+          fi
+
+      - name: Emit claim ceiling
+        run: |
+          echo "POST_EDIT_PROFILED_SCOPE_CURRENTNESS_EXECUTED=true"
+          echo "FRESH_CANDIDATE_BODY_WITNESS_REQUIRED=true"
+          echo "CANDIDATE_SYNTAX_GRAPH_REPROFILED=true"
+          echo "CLEAN_FULL_REPARSE_PROFILE_MATCH_REQUIRED=true"
+          echo "OLD_LOCAL_SCOPE_ID_CURRENTNESS_AUTHORITY=false"
+          echo "INCREMENTAL_PARSER_REUSE_USED=false"
+          echo "CHANGED_RANGES_CURRENTNESS_AUTHORITY=false"
+          echo "SOURCE_GENERATION_ADVANCE_REQUIRED_FOR_CHANGED_BODY=true"
+          echo "RUNTIME_NAME_RESOLUTION_PROVEN=false"
+          echo "CALL_GRAPH_PROVEN=false"
+          echo "SEMANTIC_PATCH_CORRECTNESS_PROVEN=false"
+          echo "B_MINUS_APPROVED=false"
+          echo "COMMIT_AUTHORIZED=false"
+          echo "EXECUTION_AUTHORIZED=false"
+          echo "HUMAN_AUTHORITY=false"
+          echo "EXTERNAL_EFFECT_AUTHORIZED=false"
