@@ -1,0 +1,48 @@
+name: Aura Scheme Serializable Hydration Transaction
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_scheme_serializable_hydration_transaction.py"
+      - "tests/test_aura_scheme_serializable_hydration_transaction.py"
+      - "docs/arena/ARENA_SCHEME_SERIALIZABLE_HYDRATION_TRANSACTION_V1.md"
+      - ".github/workflows/aura-scheme-serializable-hydration-transaction.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Compile exact transaction surface
+        run: |
+          python -m py_compile tools/aura_scheme_serializable_hydration_transaction.py
+          python -m py_compile tests/test_aura_scheme_serializable_hydration_transaction.py
+      - name: Run adversarial contract
+        run: python -m unittest tests.test_aura_scheme_serializable_hydration_transaction -v
+      - name: Prove Different-J finite matrix
+        run: |
+          python - <<'PY'
+          from tools.aura_scheme_serializable_hydration_transaction import prove_different_j
+          checked = prove_different_j()
+          assert checked == 80, checked
+          print(f"DIFFERENT_J_STATES={checked}")
+          PY
+      - name: Enforce nonpromotion laws
+        run: |
+          python - <<'PY'
+          from tools.aura_scheme_serializable_hydration_transaction import LAWS
+          required = {
+              "K27Path!=SemanticIdentity!=Authority",
+              "HydrationTransactionAdmission!=Materialization!=EvidenceAdmission!=EffectAuthority",
+              "CoordinateMemory!=MODEL_PREFIX_KV",
+          }
+          assert required.issubset(set(LAWS))
+          print("NONPROMOTION_LAWS_PRESENT=true")
+          PY
