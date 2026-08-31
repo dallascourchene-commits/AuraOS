@@ -1,0 +1,64 @@
+name: K27 ASTGE Post-Edit Higher-Owner Continuity
+
+on:
+  pull_request:
+    paths:
+      - 'crates/aura-k27-astge-post-edit-higher-owner-continuity/**'
+      - 'crates/aura-k27-astge-post-edit-profiled-scope/**'
+      - '.github/workflows/k27-astge-post-edit-higher-owner-continuity.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-post-edit-higher-owner-continuity:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch exact candidate head without persisted credentials
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify toolchains
+        run: |
+          rustc --version
+          cargo --version
+
+      - name: Re-prove PR515 post-edit currentness owner
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify higher-owner continuity membrane
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-post-edit-higher-owner-continuity/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-higher-owner-continuity/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-higher-owner-continuity/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-post-edit-higher-owner-continuity/Cargo.toml --all-targets -- -D warnings
+
+      - name: Safe-path unsafe scan
+        run: |
+          ! grep -R --line-number -E 'unsafe[[:space:]]*\{' crates/aura-k27-astge-post-edit-higher-owner-continuity/src
+
+      - name: Emit claim ceiling
+        run: |
+          echo 'POST_EDIT_PROFILED_SCOPE_CURRENT=true'
+          echo 'HIGHER_OWNER_SEMANTIC_HANDLE_CONTINUITY_PROVEN=true'
+          echo 'CANDIDATE_LOCAL_HANDLE_AUTHORITY=false'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'SEMANTIC_PATCH_CORRECTNESS_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'EXTERNAL_EFFECT_AUTHORIZED=false'
