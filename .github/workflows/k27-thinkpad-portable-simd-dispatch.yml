@@ -22,12 +22,21 @@ jobs:
         run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
 
       - name: Reject global build-host ISA capture
-        shell: bash
+        shell: python
         run: |
-          set -euo pipefail
-          ! grep -R --line-number --fixed-strings -- '-march=native' tools/k27/thinkpad_portable_simd_dispatch.cpp .github/workflows/k27-thinkpad-portable-simd-dispatch.yml
-          ! grep -R --line-number --fixed-strings -- '-mavx512' .github/workflows/k27-thinkpad-portable-simd-dispatch.yml
-          ! grep -R --line-number --fixed-strings -- '-mavx2' .github/workflows/k27-thinkpad-portable-simd-dispatch.yml
+          from pathlib import Path
+          workflow = Path('.github/workflows/k27-thinkpad-portable-simd-dispatch.yml').read_text()
+          compile_lines = [line.strip() for line in workflow.splitlines() if line.strip().startswith('g++ ')]
+          assert compile_lines, 'missing compile command'
+          for line in compile_lines:
+              assert '-march=native' not in line
+              assert '-mavx2' not in line
+              assert '-mavx512' not in line
+          source = Path('tools/k27/thinkpad_portable_simd_dispatch.cpp').read_text()
+          assert '__attribute__((target("avx2,popcnt")))' in source
+          assert '__attribute__((target("avx512f,avx512vpopcntdq")))' in source
+          print('GLOBAL_BUILD_HOST_ISA_CAPTURE_ACCEPTED=false')
+          print('FUNCTION_SCOPED_ISA_SPECIALIZATION=true')
 
       - name: Compile baseline translation unit with function-scoped ISA targets
         shell: bash
