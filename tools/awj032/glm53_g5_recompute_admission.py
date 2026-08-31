@@ -53,10 +53,11 @@ ALLOW_STATE_TRANSITION = "ALLOW_STATE_TRANSITION"
 CHANGE_AXIS_REQUIRED = "CHANGE_AXIS_REQUIRED"
 COLLAPSE_CONE = "COLLAPSE_CONE"
 HOLD_ALIAS_RESOLUTION_REQUIRED = "HOLD_ALIAS_RESOLUTION_REQUIRED"
-PROGRESS_DISPOSITIONS = (
+BASE_PROGRESS_DISPOSITIONS = (
     ALLOW_INITIAL, ALLOW_CHANGED_AXIS, ALLOW_STATE_TRANSITION,
-    CHANGE_AXIS_REQUIRED, COLLAPSE_CONE, HOLD_ALIAS_RESOLUTION_REQUIRED,
+    CHANGE_AXIS_REQUIRED, COLLAPSE_CONE,
 )
+PROGRESS_DISPOSITIONS = BASE_PROGRESS_DISPOSITIONS + (HOLD_ALIAS_RESOLUTION_REQUIRED,)
 PROGRESS_ADMISSIBLE = frozenset((ALLOW_INITIAL, ALLOW_CHANGED_AXIS, ALLOW_STATE_TRANSITION))
 
 READ_RESOLVED_CURRENT = "RESOLVED_CURRENT"
@@ -161,14 +162,42 @@ class AliasStableProgressProjection:
         _sha256(self.evidence_digest, "EVIDENCE_DIGEST")
         if self.decision not in PROGRESS_DISPOSITIONS:
             raise ValueError("ALIAS_PROGRESS_DECISION_INVALID")
+        if self.raw_decision is not None and self.raw_decision not in BASE_PROGRESS_DISPOSITIONS:
+            raise ValueError("ALIAS_PROGRESS_RAW_DECISION_INVALID")
+        if self.semantic_decision is not None and self.semantic_decision not in BASE_PROGRESS_DISPOSITIONS:
+            raise ValueError("ALIAS_PROGRESS_SEMANTIC_DECISION_INVALID")
+
+        # PR #759 computes this relation internally. Recompute the invariant here so a
+        # caller cannot suppress alias debt and re-label route motion as semantic progress.
+        expected_alias_required = self.route_projection_changed and self.source_sid_same
+        if self.alias_projection_required != expected_alias_required:
+            raise ValueError("ALIAS_REQUIREMENT_MUST_MATCH_SAME_SID_ROUTE_CHANGE")
         if self.alias_projection_consumed and not self.alias_projection_required:
             raise ValueError("ALIAS_PROJECTION_CONSUMED_WHEN_NOT_REQUIRED")
+
         if self.decision == HOLD_ALIAS_RESOLUTION_REQUIRED:
             if not self.alias_projection_required or self.alias_projection_consumed:
                 raise ValueError("ALIAS_HOLD_STATE_INCONSISTENT")
-        if self.route_projection_changed and self.source_sid_same and self.alias_projection_required and not self.alias_projection_consumed:
-            if self.decision != HOLD_ALIAS_RESOLUTION_REQUIRED:
+            if self.semantic_decision is not None:
+                raise ValueError("UNRESOLVED_ALIAS_CANNOT_HAVE_SEMANTIC_DECISION")
+            if self.raw_decision is None:
+                raise ValueError("UNRESOLVED_ALIAS_REQUIRES_RAW_DECISION")
+        else:
+            if self.alias_projection_required and not self.alias_projection_consumed:
                 raise ValueError("UNRESOLVED_ALIAS_CANNOT_MINT_PROGRESS")
+            if self.semantic_decision != self.decision:
+                raise ValueError("ALIAS_PROGRESS_DECISION_MUST_BIND_SEMANTIC_DECISION")
+            if self.raw_decision is None:
+                raise ValueError("ALIAS_PROGRESS_RAW_DECISION_REQUIRED")
+
+        # #759 initial retrieval has no previous view, therefore cannot claim same-SID
+        # continuity or route movement. This blocks caller-forged initial resets.
+        if self.decision == ALLOW_INITIAL:
+            if self.source_sid_same or self.route_projection_changed or self.alias_projection_required or self.alias_projection_consumed:
+                raise ValueError("INITIAL_PROGRESS_CANNOT_CLAIM_PRIOR_ROUTE_OR_SID")
+            if self.raw_decision != ALLOW_INITIAL or self.semantic_decision != ALLOW_INITIAL:
+                raise ValueError("INITIAL_PROGRESS_DECISION_SHAPE_INVALID")
+
         if any((self.source_currentness_proven, self.authority_granted,
                 self.semantic_k27_authority_minted, self.native_private_transformer_kv_accessed)):
             raise ValueError("ALIAS_PROGRESS_PROJECTION_EXCEEDS_CLAIM_CEILING")
@@ -363,6 +392,53 @@ def assess_g3_recompute_admission(*, g4: G4V2RevalidationProjection,
     return receipt
 
 
+def _progress_case(decision: str) -> AliasStableProgressProjection:
+    if decision == ALLOW_INITIAL:
+        return AliasStableProgressProjection(
+            receipt_digest="b" * 64,
+            decision=decision,
+            semantic_fingerprint_digest="c" * 64,
+            source_sid="sid::glm53",
+            provider_state_generation="provider::17",
+            evidence_digest="d" * 64,
+            route_projection_changed=False,
+            source_sid_same=False,
+            alias_projection_required=False,
+            alias_projection_consumed=False,
+            raw_decision=ALLOW_INITIAL,
+            semantic_decision=ALLOW_INITIAL,
+        )
+    if decision == HOLD_ALIAS_RESOLUTION_REQUIRED:
+        return AliasStableProgressProjection(
+            receipt_digest="b" * 64,
+            decision=decision,
+            semantic_fingerprint_digest="c" * 64,
+            source_sid="sid::glm53",
+            provider_state_generation="provider::17",
+            evidence_digest="d" * 64,
+            route_projection_changed=True,
+            source_sid_same=True,
+            alias_projection_required=True,
+            alias_projection_consumed=False,
+            raw_decision=ALLOW_CHANGED_AXIS,
+            semantic_decision=None,
+        )
+    return AliasStableProgressProjection(
+        receipt_digest="b" * 64,
+        decision=decision,
+        semantic_fingerprint_digest="c" * 64,
+        source_sid="sid::glm53",
+        provider_state_generation="provider::17",
+        evidence_digest="d" * 64,
+        route_projection_changed=False,
+        source_sid_same=True,
+        alias_projection_required=False,
+        alias_projection_consumed=False,
+        raw_decision=decision,
+        semantic_decision=decision,
+    )
+
+
 def prove_finite_recompute_lattice() -> dict[str, int]:
     """Exhaust the valid bounded control lattice through two independent classifiers."""
     counts: dict[str, int] = {"states": 0}
@@ -378,18 +454,7 @@ def prove_finite_recompute_lattice() -> dict[str, int]:
                 current_source_binding_generation="source::18" if source_changed else "source::17",
             )
             for decision in PROGRESS_DISPOSITIONS:
-                progress = AliasStableProgressProjection(
-                    receipt_digest="b" * 64,
-                    decision=decision,
-                    semantic_fingerprint_digest="c" * 64,
-                    source_sid="sid::glm53",
-                    provider_state_generation="provider::17",
-                    evidence_digest="d" * 64,
-                    route_projection_changed=(decision == HOLD_ALIAS_RESOLUTION_REQUIRED),
-                    source_sid_same=True,
-                    alias_projection_required=(decision == HOLD_ALIAS_RESOLUTION_REQUIRED),
-                    alias_projection_consumed=False,
-                )
+                progress = _progress_case(decision)
                 for version_present in (False, True):
                     version = VersionTransitionProjection(
                         receipt_digest="e" * 64,
