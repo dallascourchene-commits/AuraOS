@@ -1,0 +1,51 @@
+name: Aura K27 ASTGE Tree-Sitter ingestion
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - "crates/aura-k27-astge-ingest/**"
+      - ".github/workflows/aura-k27-astge-treesitter-ingest.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  treesitter-ingest:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Run ingestion contract
+        run: |
+          rustc --version
+          cargo --version
+          cargo fmt --manifest-path crates/aura-k27-astge-ingest/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets -- -D warnings
+
+      - name: Emit claim ceiling
+        run: |
+          echo "TREE_SITTER_PYTHON_INGEST_EXECUTED=true"
+          echo "AST_PARENT_CHILD_S_PLANE_ROUNDTRIP_REQUIRED=true"
+          echo "SEMANTIC_HANDLE_MINTED_BY_INGEST=false"
+          echo "SEMANTIC_K27_DERIVED=false"
+          echo "SYMBOL_GRAPH_PROVEN=false"
+          echo "CALL_GRAPH_PROVEN=false"
+          echo "MMAP_SAFETY_PROVEN=false"
+          echo "COLD_NVME_PERFORMANCE_PROVEN=false"
+          echo "AURAOS_RUNTIME_INTEGRATION_PROVEN=false"
+          echo "EXTERNAL_EFFECT_AUTHORIZED=false"
