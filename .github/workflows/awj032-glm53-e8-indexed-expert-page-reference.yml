@@ -1,0 +1,33 @@
+name: AWJ032 GLM53 E8 Indexed Expert Page Reference
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py"
+      - "tools/quantization/test_aura_glm53_e8_indexed_expert_page_reference.py"
+      - "docs/AWJ032_GLM53_E8_INDEXED_EXPERT_PAGE_REFERENCE_V1.md"
+      - ".github/workflows/awj032-glm53-e8-indexed-expert-page-reference.yml"
+  workflow_dispatch:
+
+jobs:
+  reference:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --disable-pip-version-check numpy==2.3.5
+      - run: python tools/quantization/test_aura_glm53_e8_indexed_expert_page_reference.py
+      - run: python tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py > /tmp/e8-receipt.json
+      - run: |
+          python - <<'PY'
+          import json
+          r=json.load(open("/tmp/e8-receipt.json"))
+          assert r["payload_bits_per_weight"] == 2.25
+          assert r["claim_ceiling"]["glm53_quality_preserved"] is False
+          assert r["claim_ceiling"]["production_quantizer_ready"] is False
+          assert r["claim_ceiling"]["kv_cache_toroidal_equivalence_proven"] is False
+          assert r["claim_ceiling"]["gate10_promoted"] is False
+          print("AURA_E8_REFERENCE_CEILING_OK=true")
+          PY
