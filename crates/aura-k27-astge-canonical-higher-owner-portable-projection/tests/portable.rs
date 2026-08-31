@@ -3,8 +3,7 @@ use aura_k27_astge_canonical_higher_owner_owner_reduction::{
     reprove_canonical_higher_owner_owner_chain, CanonicalHigherOwnerOwnerReducedV1,
 };
 use aura_k27_astge_canonical_higher_owner_portable_projection::{
-    project_reduced_higher_owner_owner_chain,
-    verify_portable_higher_owner_owner_chain_projection,
+    project_reduced_higher_owner_owner_chain, verify_portable_higher_owner_owner_chain_projection,
     CanonicalHigherOwnerPortableProjectionV1, PortableOwnerChainProjectionErrorV1,
     PORTABLE_OWNER_CHAIN_SCHEMA_V1,
 };
@@ -244,8 +243,7 @@ fn reduced_owner_chain_projects_to_stable_portable_envelope() {
     assert!(!first.payload.commit_authorized);
     verify_portable_higher_owner_owner_chain_projection(&first).unwrap();
     let bytes = serde_json::to_vec(&first).unwrap();
-    let decoded: CanonicalHigherOwnerPortableProjectionV1 =
-        serde_json::from_slice(&bytes).unwrap();
+    let decoded: CanonicalHigherOwnerPortableProjectionV1 = serde_json::from_slice(&bytes).unwrap();
     assert_eq!(decoded, first);
     verify_portable_higher_owner_owner_chain_projection(&decoded).unwrap();
     fs::remove_dir_all(setup.root).unwrap();
