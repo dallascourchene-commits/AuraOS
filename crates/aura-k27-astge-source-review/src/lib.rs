@@ -15,8 +15,8 @@ use aura_k27_astge_materialize::{
     AdmittedSourceCatalogV1, MaterializeError, MaterializedSourceSliceV1,
 };
 use aura_k27_astge_scope::{
-    AuthorizedSpanV1, ReplacementV1, ScopeError, ScopeVerificationReceiptV1, SourceBindingV1,
-    verify_candidate_scope,
+    verify_candidate_scope, AuthorizedSpanV1, ReplacementV1, ScopeError,
+    ScopeVerificationReceiptV1, SourceBindingV1,
 };
 use std::error::Error;
 use std::fmt::{Display, Formatter};
@@ -243,7 +243,10 @@ mod tests {
         assert_eq!(admission.file_id, file_id);
         assert_eq!(admission.relative_path, "src/module.py");
         assert_eq!(admission.source_generation, 12);
-        assert_eq!(admission.semantic_handle_digest, selected.semantic_handle_digest);
+        assert_eq!(
+            admission.semantic_handle_digest,
+            selected.semantic_handle_digest
+        );
         assert_eq!(admission.byte_start, selected.byte_start);
         assert_eq!(admission.byte_end, selected.byte_end);
         assert_eq!(
