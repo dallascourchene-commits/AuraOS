@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788167423,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-hyperscale-work-admission.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1488,6 +1489,7 @@
       "tests/test_aura_human_agent_tool_runtime_facade.py",
       "tests/test_aura_human_agent_wfst_live_integration.py",
       "tests/test_aura_human_agent_workflow.py",
+      "tests/test_aura_hyperscale_work_admission.py",
       "tests/test_aura_ifc_storey_index.py",
       "tests/test_aura_intent_ingestion.py",
       "tests/test_aura_intent_ingestion_bilateral.py",
@@ -1631,6 +1633,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_hyperscale_work_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26439501,
+      "tokens_est": 6600228,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3461,6 +3464,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "function",
+        "line": 316,
+        "end_line": 327,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:main:5ebd5cb4b3ef7e4b",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -3895,6 +3906,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 42,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:_canonical:567b0ca7c3e621d9",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -8067,6 +8086,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:_sha:129832bb17466225",
+        "signature_hash": "3c3bc3c037860fe9"
       }
     ],
     "_repo": [
@@ -139891,6 +139918,166 @@
         "signature_hash": "0a09155a60f7391b"
       }
     ],
+    "AuraHyperScaleWorkAdmissionTests": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 197,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#class:AuraHyperScaleWorkAdmissionTests:98371d902023ba3a",
+        "signature_hash": "4b2eb65fb2953694"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests._observations": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests._observations:84b075a26cbd8130",
+        "signature_hash": "308d67b3862b46ac"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_minimum_cover_prefers_small_exact_cone": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 50,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_minimum_cover_prefers_small_exact_cone:f4dce219ecb54add",
+        "signature_hash": "9cb8cdc2269fe8f3"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_minimum_cover_is_order_independent": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 56,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_minimum_cover_is_order_independent:5c348522f4f4cd9b",
+        "signature_hash": "6a8390948561cf42"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_uncoverable_verification_fails_closed": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 68,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_uncoverable_verification_fails_closed:77b7d1632011bd0b",
+        "signature_hash": "18035253936b0838"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_support_merge_admits_verification_when_value_beats_minimum_cover": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 84,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_support_merge_admits_verification_when_value_beats_minimum_cover:0aad506f92921eee",
+        "signature_hash": "b65d5c53910f81c8"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_support_merge_rejected_when_value_does_not_beat_cover_cost": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 95,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_support_merge_rejected_when_value_does_not_beat_cover_cost:681242346d746096",
+        "signature_hash": "be90f1039ab1c394"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_support_merge_without_unresolved_evidence_does_not_create_work": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 104,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_support_merge_without_unresolved_evidence_does_not_create_work:8f7859b2bd580651",
+        "signature_hash": "7d2e21b11c787249"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_new_sck_exploration_has_separate_value_channel": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 119,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_new_sck_exploration_has_separate_value_channel:8717322d8e488aee",
+        "signature_hash": "ee0739cfff3bfee3"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_exploration_value_must_strictly_exceed_cost": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 129,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_exploration_value_must_strictly_exceed_cost:3dd7a7c1086181fd",
+        "signature_hash": "9de51b70ece4c396"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_process_duplicate_never_schedules_more_work": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 142,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_process_duplicate_never_schedules_more_work:23d6181266074db0",
+        "signature_hash": "8017fb8a7b5e8ddc"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_failed_hard_gate_blocks_both_value_channels": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 159,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_failed_hard_gate_blocks_both_value_channels:8f185f4efc6fe0d9",
+        "signature_hash": "012e5d03eda4cf8d"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_unknown_semantic_disposition_fails_closed": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 165,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_unknown_semantic_disposition_fails_closed:e71b01cb957783c3",
+        "signature_hash": "70b7f6bab67d04a9"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_glm_fixture_selects_only_remaining_up_and_down_pairs": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 175,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_glm_fixture_selects_only_remaining_up_and_down_pairs:217aa831866eb1b4",
+        "signature_hash": "26f03ff528c6cd30"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_complete_nonpromotion_ceiling": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 191,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_complete_nonpromotion_ceiling:d6ab756348276fc9",
+        "signature_hash": "02228f66093f28df"
+      }
+    ],
+    "AuraHyperScaleWorkAdmissionTests.test_receipt_is_deterministic": [
+      {
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 197,
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_receipt_is_deterministic:31abd4f53845f631",
+        "signature_hash": "4676c27ccb236b1c"
+      }
+    ],
     "Entity": [
       {
         "file": "tests/test_aura_ifc_storey_index.py",
@@ -157181,6 +157368,116 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "_stable_unique": [
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 53,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:_stable_unique:e389d4c666f39e87",
+        "signature_hash": "05ab78b7f04d4b2c"
+      }
+    ],
+    "EvidenceObservation": [
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "class",
+        "line": 57,
+        "end_line": 77,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#class:EvidenceObservation:0c30553812fd91dd",
+        "signature_hash": "11c7decb3747b673"
+      }
+    ],
+    "EvidenceObservation.validate": [
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 77,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#method:EvidenceObservation.validate:6228e1fd89f1729f",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "MinimumEvidenceCover": [
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "class",
+        "line": 81,
+        "end_line": 90,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#class:MinimumEvidenceCover:0c353e9d66573339",
+        "signature_hash": "3a9c6f1fe71b5e68"
+      }
+    ],
+    "MinimumEvidenceCover.digest": [
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 90,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#method:MinimumEvidenceCover.digest:9473b85d0c9a892b",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "WorkAdmissionReceipt": [
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "class",
+        "line": 94,
+        "end_line": 123,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#class:WorkAdmissionReceipt:bee6773245b9e8ab",
+        "signature_hash": "e1e4571aa03aae43"
+      }
+    ],
+    "WorkAdmissionReceipt.receipt_digest": [
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 123,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#method:WorkAdmissionReceipt.receipt_digest:cea0fd74d93f468a",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "minimum_evidence_cover": [
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 179,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:minimum_evidence_cover:6077010ef33b4d0e",
+        "signature_hash": "4d03651d7c735f3f"
+      }
+    ],
+    "admit_work": [
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "function",
+        "line": 182,
+        "end_line": 269,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:admit_work:ec78afeab7121de5",
+        "signature_hash": "a985135ef513412a"
+      }
+    ],
+    "glm53_remaining_payload_verification_fixture": [
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "function",
+        "line": 272,
+        "end_line": 306,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:glm53_remaining_payload_verification_fixture:95ac2183672f0816",
+        "signature_hash": "3a9d07c38efcd8c8"
+      }
+    ],
+    "public_api_has_effect_boolean": [
+      {
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "kind": "function",
+        "line": 309,
+        "end_line": 313,
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:public_api_has_effect_boolean:c8f08abb53bf6c97",
+        "signature_hash": "41f3669c1e7f8287"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158585,6 +158882,16 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-hyperscale-work-admission.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/aura-hyperscale-work-admission.yml"
+    ],
+    "python3 -m tools.aura_hyperscale_work_admission": [
+      ".github/workflows/aura-hyperscale-work-admission.yml"
+    ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
     ],
@@ -159147,9 +159454,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -167737,6 +168041,67 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-hyperscale-work-admission.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4454,
+      "lines": 111,
+      "tokens_est": 1114,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest",
+        "python3 -m tools.aura_hyperscale_work_admission"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          73
+        ],
+        "python3 -m unittest": [
+          76
+        ],
+        "python3 -m tools.aura_hyperscale_work_admission": [
+          77
+        ]
+      },
+      "topology": {},
+      "digest8": "f8fc2631e36f483c",
+      "vector": [
+        0.028617,
+        0.031343,
+        -0.183969,
+        -0.104931,
+        -0.175793,
+        0.312067,
+        -0.064049,
+        0.222126,
+        0.24393,
+        0.023167,
+        -0.039519,
+        -0.30389,
+        -0.194871,
+        -0.24393,
+        -0.331145,
+        -0.181244,
+        0.053147,
+        -0.025892,
+        0.058598,
+        0.151264,
+        0.309341,
+        -0.312067,
+        -0.167617,
+        -0.036794,
+        -0.042245,
+        0.096754,
+        0.145813,
+        0.173068,
+        -0.039519,
+        0.219401,
+        0.104931,
+        -0.047696
       ]
     },
     {
@@ -255927,6 +256292,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_hyperscale_work_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7897,
+      "lines": 202,
+      "tokens_est": 1975,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "dd0f759f798da727",
+      "vector": [
+        -0.073433,
+        0.275674,
+        0.229929,
+        -0.172146,
+        0.006019,
+        -0.294935,
+        0.201037,
+        -0.078248,
+        -0.193814,
+        0.003611,
+        -0.227521,
+        -0.133624,
+        0.179369,
+        0.174553,
+        0.06621,
+        0.169738,
+        -0.06621,
+        0.179369,
+        -0.148069,
+        -0.29975,
+        -0.186592,
+        -0.244375,
+        0.06621,
+        -0.186592,
+        -0.133624,
+        -0.162515,
+        0.083063,
+        -0.078248,
+        -0.304566,
+        0.133624,
+        -0.090286,
+        -0.203445
+      ]
+    },
+    {
       "path": "tests/test_aura_ifc_storey_index.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +263057,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_hyperscale_work_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12102,
+      "lines": 332,
+      "tokens_est": 3026,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "16da0c0a0d66c59b",
+      "vector": [
+        0.245206,
+        -0.2478,
+        0.066167,
+        -0.037624,
+        0.278938,
+        -0.071356,
+        0.146604,
+        0.081735,
+        0.055788,
+        -0.25299,
+        -0.102493,
+        0.086925,
+        0.294506,
+        -0.149199,
+        -0.110278,
+        -0.112872,
+        -0.203689,
+        -0.068761,
+        0.006487,
+        -0.1985,
+        0.240016,
+        -0.097304,
+        0.224448,
+        0.271153,
+        0.237421,
+        0.060977,
+        0.13882,
+        0.035029,
+        0.063572,
+        -0.240016,
+        0.297101,
+        0.188121
       ]
     },
     {
@@ -286646,16 +287105,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26439501,
+    "text_tokens_est": 6600228,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286801,6 +287260,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-hyperscale-work-admission.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -288153,6 +288613,7 @@
       "tests/test_aura_human_agent_tool_runtime_facade.py",
       "tests/test_aura_human_agent_wfst_live_integration.py",
       "tests/test_aura_human_agent_workflow.py",
+      "tests/test_aura_hyperscale_work_admission.py",
       "tests/test_aura_ifc_storey_index.py",
       "tests/test_aura_intent_ingestion.py",
       "tests/test_aura_intent_ingestion_bilateral.py",
@@ -288296,6 +288757,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_hyperscale_work_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -427224,6 +427686,166 @@
         "file_digest8": "37fdebfb0758a4e2"
       },
       {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#class:AuraHyperScaleWorkAdmissionTests:98371d902023ba3a",
+        "name": "AuraHyperScaleWorkAdmissionTests",
+        "kind": "class",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 22,
+        "end_line": 197,
+        "signature_hash": "4b2eb65fb2953694",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests._observations:84b075a26cbd8130",
+        "name": "AuraHyperScaleWorkAdmissionTests._observations",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 23,
+        "end_line": 43,
+        "signature_hash": "308d67b3862b46ac",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_complete_nonpromotion_ceiling:d6ab756348276fc9",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_complete_nonpromotion_ceiling",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 177,
+        "end_line": 191,
+        "signature_hash": "02228f66093f28df",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_exploration_value_must_strictly_exceed_cost:3dd7a7c1086181fd",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_exploration_value_must_strictly_exceed_cost",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 121,
+        "end_line": 129,
+        "signature_hash": "9de51b70ece4c396",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_failed_hard_gate_blocks_both_value_channels:8f185f4efc6fe0d9",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_failed_hard_gate_blocks_both_value_channels",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 144,
+        "end_line": 159,
+        "signature_hash": "012e5d03eda4cf8d",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_glm_fixture_selects_only_remaining_up_and_down_pairs:217aa831866eb1b4",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_glm_fixture_selects_only_remaining_up_and_down_pairs",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 167,
+        "end_line": 175,
+        "signature_hash": "26f03ff528c6cd30",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_minimum_cover_is_order_independent:5c348522f4f4cd9b",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_minimum_cover_is_order_independent",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 52,
+        "end_line": 56,
+        "signature_hash": "6a8390948561cf42",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_minimum_cover_prefers_small_exact_cone:f4dce219ecb54add",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_minimum_cover_prefers_small_exact_cone",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 45,
+        "end_line": 50,
+        "signature_hash": "9cb8cdc2269fe8f3",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_new_sck_exploration_has_separate_value_channel:8717322d8e488aee",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_new_sck_exploration_has_separate_value_channel",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 106,
+        "end_line": 119,
+        "signature_hash": "ee0739cfff3bfee3",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_process_duplicate_never_schedules_more_work:23d6181266074db0",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_process_duplicate_never_schedules_more_work",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 131,
+        "end_line": 142,
+        "signature_hash": "8017fb8a7b5e8ddc",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_receipt_is_deterministic:31abd4f53845f631",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_receipt_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 193,
+        "end_line": 197,
+        "signature_hash": "4676c27ccb236b1c",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_support_merge_admits_verification_when_value_beats_minimum_cover:0aad506f92921eee",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_support_merge_admits_verification_when_value_beats_minimum_cover",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 70,
+        "end_line": 84,
+        "signature_hash": "b65d5c53910f81c8",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_support_merge_rejected_when_value_does_not_beat_cover_cost:681242346d746096",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_support_merge_rejected_when_value_does_not_beat_cover_cost",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 86,
+        "end_line": 95,
+        "signature_hash": "be90f1039ab1c394",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_support_merge_without_unresolved_evidence_does_not_create_work:8f7859b2bd580651",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_support_merge_without_unresolved_evidence_does_not_create_work",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 97,
+        "end_line": 104,
+        "signature_hash": "7d2e21b11c787249",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_uncoverable_verification_fails_closed:77b7d1632011bd0b",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_uncoverable_verification_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 58,
+        "end_line": 68,
+        "signature_hash": "18035253936b0838",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
+        "semantic_id": "tests/test_aura_hyperscale_work_admission.py#method:AuraHyperScaleWorkAdmissionTests.test_unknown_semantic_disposition_fails_closed:e71b01cb957783c3",
+        "name": "AuraHyperScaleWorkAdmissionTests.test_unknown_semantic_disposition_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_hyperscale_work_admission.py",
+        "line": 161,
+        "end_line": 165,
+        "signature_hash": "70b7f6bab67d04a9",
+        "file_digest8": "dd0f759f798da727"
+      },
+      {
         "semantic_id": "tests/test_aura_ifc_storey_index.py#class:Entity:5a410b89e84c264c",
         "name": "Entity",
         "kind": "class",
@@ -445634,6 +446256,146 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#class:EvidenceObservation:0c30553812fd91dd",
+        "name": "EvidenceObservation",
+        "kind": "class",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 57,
+        "end_line": 77,
+        "signature_hash": "11c7decb3747b673",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#class:MinimumEvidenceCover:0c353e9d66573339",
+        "name": "MinimumEvidenceCover",
+        "kind": "class",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 81,
+        "end_line": 90,
+        "signature_hash": "3a9c6f1fe71b5e68",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#class:WorkAdmissionReceipt:bee6773245b9e8ab",
+        "name": "WorkAdmissionReceipt",
+        "kind": "class",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 94,
+        "end_line": 123,
+        "signature_hash": "e1e4571aa03aae43",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:_canonical:567b0ca7c3e621d9",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 39,
+        "end_line": 42,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:_sha:129832bb17466225",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "3c3bc3c037860fe9",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:_stable_unique:e389d4c666f39e87",
+        "name": "_stable_unique",
+        "kind": "function",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 49,
+        "end_line": 53,
+        "signature_hash": "05ab78b7f04d4b2c",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:admit_work:ec78afeab7121de5",
+        "name": "admit_work",
+        "kind": "function",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 182,
+        "end_line": 269,
+        "signature_hash": "a985135ef513412a",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:glm53_remaining_payload_verification_fixture:95ac2183672f0816",
+        "name": "glm53_remaining_payload_verification_fixture",
+        "kind": "function",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 272,
+        "end_line": 306,
+        "signature_hash": "3a9d07c38efcd8c8",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:main:5ebd5cb4b3ef7e4b",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 316,
+        "end_line": 327,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:minimum_evidence_cover:6077010ef33b4d0e",
+        "name": "minimum_evidence_cover",
+        "kind": "function",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 126,
+        "end_line": 179,
+        "signature_hash": "4d03651d7c735f3f",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#function:public_api_has_effect_boolean:c8f08abb53bf6c97",
+        "name": "public_api_has_effect_boolean",
+        "kind": "function",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 309,
+        "end_line": 313,
+        "signature_hash": "41f3669c1e7f8287",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#method:EvidenceObservation.validate:6228e1fd89f1729f",
+        "name": "EvidenceObservation.validate",
+        "kind": "method",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 64,
+        "end_line": 77,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#method:MinimumEvidenceCover.digest:9473b85d0c9a892b",
+        "name": "MinimumEvidenceCover.digest",
+        "kind": "method",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 89,
+        "end_line": 90,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
+        "semantic_id": "tools/aura_hyperscale_work_admission.py#method:WorkAdmissionReceipt.receipt_digest:cea0fd74d93f468a",
+        "name": "WorkAdmissionReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/aura_hyperscale_work_admission.py",
+        "line": 122,
+        "end_line": 123,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "16da0c0a0d66c59b"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447646,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "5e25375f8bc450df24136d4e66e7f273",
+    "payload_hash": "079f7f59bd76dbf832a27cfc496398e9"
   }
 }
