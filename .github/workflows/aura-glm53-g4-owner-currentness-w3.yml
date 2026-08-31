@@ -1,0 +1,111 @@
+name: Aura GLM53 G4 Owner Currentness W3
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g4-owner-currentness-w3:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify pull-request exact head
+        if: github.event_name == 'pull_request'
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Authenticate O65 serializable owner-state proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = "dallascourchene-commits/AuraOS"
+          head = "7efca33d95f6dc39c4e159250d45373b260060ed"
+          run_id = 33410032496
+          job_id = 99546999922
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/actions/runs/{run_id}", headers=headers
+          )
+          with urllib.request.urlopen(req, timeout=20) as response:
+              run = json.load(response)
+          if run.get("conclusion") != "success":
+              raise SystemExit("O65_RUN_NOT_SUCCESS")
+          if run.get("head_sha") != head:
+              raise SystemExit(f"O65_HEAD_MISMATCH:{run.get('head_sha')}")
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/actions/jobs/{job_id}", headers=headers
+          )
+          with urllib.request.urlopen(req, timeout=20) as response:
+              job = json.load(response)
+          if job.get("conclusion") != "success":
+              raise SystemExit("O65_JOB_NOT_SUCCESS")
+          PY
+
+      - name: Compile G4 and W3 addendum
+        run: |
+          python3 -m py_compile \
+            tools/awj032/glm53_g4_prefetch_plan_revalidation.py \
+            tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py \
+            tools/awj032/glm53_g4_owner_currentness_addendum.py \
+            tools/awj032/test_glm53_g4_owner_currentness_addendum.py
+
+      - name: Reexecute G4 adversarial contract
+        run: python3 -m unittest tools.awj032.test_glm53_g4_prefetch_plan_revalidation -v
+
+      - name: Execute owner-currentness W3 adversarial contract
+        run: python3 -m unittest tools.awj032.test_glm53_g4_owner_currentness_addendum -v
+
+      - name: Enforce no raw current context on W3 public API
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from tools.awj032.glm53_g4_owner_currentness_addendum import (
+              revalidate_g3_plan_owner_resolved,
+          )
+          sig = inspect.signature(revalidate_g3_plan_owner_resolved)
+          if tuple(sig.parameters) != ("plan", "owner_resolver"):
+              raise SystemExit(f"G4_W3_PUBLIC_API_WIDENED:{sig}")
+          PY
+
+      - name: Enforce nonpromotion ceiling in source
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path("tools/awj032/glm53_g4_owner_currentness_addendum.py").read_text()
+          required = (
+              "revalidation_required_at_effect_boundary: bool = True",
+              "plan_executed_by_this_contract: bool = False",
+              "transfer_effect_authorized: bool = False",
+              "physical_io_proven: bool = False",
+              "semantic_k27_authority_minted: bool = False",
+              "native_private_transformer_kv_accessed: bool = False",
+              "gate10_promoted: bool = False",
+          )
+          for marker in required:
+              if marker not in text:
+                  raise SystemExit(f"G4_W3_CLAIM_CEILING_MARKER_MISSING:{marker}")
+          PY
