@@ -5,6 +5,7 @@ on:
     paths:
       - 'tools/quantization/aura_glm53_source_bound_quantization_evidence_gate.py'
       - 'tools/quantization/test_aura_glm53_source_bound_quantization_evidence_gate.py'
+      - 'tools/quantization/aura_glm53_official_source_admission.py'
       - 'tools/quantization/aura_glm53_quantization_evidence_transfer.py'
       - '.github/workflows/glm53-source-bound-quantization-evidence-gate.yml'
   workflow_dispatch:
@@ -21,11 +22,24 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Assert exact Q6 base generation
+      - name: Assert exact Q6 base and materialized Q5 producer
         run: |
           set -euo pipefail
           Q6=4137aabd972feff9c4412bb4786ef8fd4de207e0
+          Q5_BLOB=7ed09c57699fe303f555a3b6bdaadb791c64223f
           git merge-base --is-ancestor "$Q6" HEAD
+          test "$(git rev-parse HEAD:tools/quantization/aura_glm53_official_source_admission.py)" = "$Q5_BLOB"
+          python - <<'PY'
+          from tools.quantization.aura_glm53_official_source_admission import current_public_state
+          from tools.quantization.aura_glm53_source_bound_quantization_evidence_gate import (
+              Q5_CURRENT_SOURCE_STATE_DIGEST, Q5_OWNER_BLOB_SHA, VERSION,
+          )
+          source = current_public_state()
+          assert source.digest() == Q5_CURRENT_SOURCE_STATE_DIGEST
+          assert Q5_OWNER_BLOB_SHA == '7ed09c57699fe303f555a3b6bdaadb791c64223f'
+          assert VERSION == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V2'
+          print('Q5_EXACT_PRODUCER_TRAVERSAL=true')
+          PY
 
       - name: Revalidate exact Q5 and Q6 hosted runs
         env:
@@ -79,6 +93,8 @@ jobs:
           python - <<'PY'
           import json
           x = json.load(open('/tmp/q7.json'))
+          assert x['version'] == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V2'
+          assert x['q5_source_owner_blob'] == '7ed09c57699fe303f555a3b6bdaadb791c64223f'
           assert x['disposition'] == 'HOLD_SOURCE_TRANSPORT_AND_REPRESENTATION_EVIDENCE'
           assert x['independent_source_transport_residual'] is True
           assert x['independent_representation_evidence_residual'] is True
@@ -95,6 +111,7 @@ jobs:
               'gate10_promoted',
           ):
               assert x[key] is False, key
+          print('COPIED_PARENT_STATE_NE_PRODUCER_TRAVERSAL=true')
           print('SOURCE_IDENTITY_NE_SOURCE_BYTES=true')
           print('REPRESENTATION_IDENTITY_NE_EVIDENCE_SCOPE=true')
           print('SOURCE_BOUND_TRIAL_REQUIRES_BOTH_PLANES=true')
