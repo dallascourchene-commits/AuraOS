@@ -1,0 +1,105 @@
+name: Aura WorkCapsule Raw-Owner HOLD-to-CLOSED Transition
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_raw_owner_end_to_end_stale_lifecycle.py'
+      - 'tests/test_aura_workcapsule_raw_owner_end_to_end_stale_lifecycle.py'
+      - 'scripts/aura_workcapsule_exact_hold_to_closed_transition.py'
+      - 'tests/test_aura_workcapsule_exact_hold_to_closed_transition.py'
+      - 'scripts/aura_workcapsule_raw_owner_hold_to_closed_transition.py'
+      - 'tests/test_aura_workcapsule_raw_owner_hold_to_closed_transition.py'
+      - '.github/workflows/aura-workcapsule-raw-owner-hold-to-closed-transition.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  raw-owner-hold-to-closed:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR527 no-caller-O8 raw-owner stale lifecycle
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_source_bound_exact_reentry.py
+          python3 -m py_compile scripts/aura_workcapsule_stale_exact_reentry.py
+          python3 -m py_compile scripts/aura_workcapsule_raw_owner_stale_safe_reentry.py
+          python3 -m py_compile scripts/aura_workcapsule_stale_observation_closure_exact_verifier.py
+          python3 -m py_compile scripts/aura_workcapsule_raw_owner_end_to_end_stale_lifecycle.py
+          python3 -m unittest -v tests.test_aura_workcapsule_source_bound_exact_reentry
+          python3 -m unittest -v tests.test_aura_workcapsule_raw_owner_stale_safe_reentry
+          python3 -m unittest -v tests.test_aura_workcapsule_stale_observation_closure_exact_verifier
+          python3 -m unittest -v tests.test_aura_workcapsule_raw_owner_end_to_end_stale_lifecycle
+
+      - name: Re-prove PR531 exact temporal transition
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_two_phase_source_bound_closure.py
+          python3 -m py_compile scripts/aura_workcapsule_observation_bound_exact_verifier.py
+          python3 -m py_compile scripts/aura_workcapsule_exact_hold_to_closed_transition.py
+          python3 -m unittest -v tests.test_aura_workcapsule_two_phase_source_bound_closure
+          python3 -m unittest -v tests.test_aura_workcapsule_observation_bound_exact_verifier
+          python3 -m unittest -v tests.test_aura_workcapsule_exact_hold_to_closed_transition
+
+      - name: Prove raw-owner exact HOLD-to-CLOSED transition
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_raw_owner_hold_to_closed_transition.py
+          python3 -m unittest -v tests.test_aura_workcapsule_raw_owner_hold_to_closed_transition
+
+      - name: Assert PRE intermediate escape hatches are absent
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_raw_owner_hold_to_closed_transition import verify_raw_owner_hold_to_closed_transition
+          params = inspect.signature(verify_raw_owner_hold_to_closed_transition).parameters
+          for forbidden in ('reentry_receipt','pre_observation_closure_receipt','source_observation_receipt','observed_source_witnesses','candidate_binding'):
+              assert forbidden not in params, forbidden
+          assert 'post_closure_receipt' in params
+          print('CALLER_REENTRY_RECEIPT_ACCEPTED=false')
+          print('CALLER_PRE_OBSERVATION_RECEIPT_ACCEPTED=false')
+          print('POST_CLOSURE_RECEIPT_PINNED=true')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'PRE_O8_DERIVED_FROM_RAW_OWNER=true'
+          echo 'PRE_HOLD_DERIVED_FROM_RAW_OWNER=true'
+          echo 'CALLER_REENTRY_RECEIPT_ACCEPTED=false'
+          echo 'CALLER_PRE_OBSERVATION_RECEIPT_ACCEPTED=false'
+          echo 'CALLER_SOURCE_OBSERVATION_RECEIPT_ACCEPTED=false'
+          echo 'CALLER_SOURCE_WITNESSES_ACCEPTED=false'
+          echo 'CALLER_CANDIDATE_BINDING_ACCEPTED=false'
+          echo 'POST_CLOSURE_RECEIPT_PINNED=true'
+          echo 'EXACT_HOLD_TO_CLOSED_TRANSITION=true'
+          echo 'PRE_POST_EVIDENCE_COLLAPSE_ALLOWED=false'
+          echo 'SOURCE_CURRENTNESS_MINTED=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_MINTED=false'
+          echo 'PRODUCER_IDENTITY_AUTHENTICATED=false'
+          echo 'PRE_GRAPH_PRODUCER_AUTHENTICATED=false'
+          echo 'POST_GRAPH_PRODUCER_AUTHENTICATED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_INVALIDATION_CONE_PROVEN=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
