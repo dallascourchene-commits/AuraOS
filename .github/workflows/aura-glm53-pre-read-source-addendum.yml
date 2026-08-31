@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Exact checkout
+      - name: Exact immutable checkout
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -25,13 +25,11 @@ jobs:
           git init .
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
-            REF="refs/pull/${{ github.event.pull_request.number }}/head"
             EXPECTED="${{ github.event.pull_request.head.sha }}"
           else
-            REF="${GITHUB_REF_NAME}"
             EXPECTED="${GITHUB_SHA}"
           fi
-          git fetch --no-tags --depth=1 origin "${REF}"
+          git fetch --no-tags --depth=1 origin "${EXPECTED}"
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "${EXPECTED}"
 
