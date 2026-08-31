@@ -10,8 +10,8 @@
 //! field that diverges from the canonical inner verifier.
 
 use aura_k27_astge_post_edit_canonical_higher_owner::{
-    require_post_edit_canonical_higher_owner_continuity, PostEditCanonicalHigherOwnerContinuityV1,
-    PostEditCanonicalHigherOwnerErrorV1,
+    PostEditCanonicalHigherOwnerContinuityV1, PostEditCanonicalHigherOwnerErrorV1,
+    require_post_edit_canonical_higher_owner_continuity,
 };
 use aura_k27_astge_post_edit_canonical_target_handle_continuity::PostEditCanonicalDefinitionTargetHandleContinuityV1;
 use std::error::Error;
@@ -40,10 +40,7 @@ pub enum CanonicalHigherOwnerOwnerReductionErrorV1 {
     OuterContinuityNotProven,
     Inner(PostEditCanonicalHigherOwnerErrorV1),
     SelectedCandidateHandleMissing,
-    OuterInnerHandleMismatch {
-        outer: [u8; 32],
-        inner: [u8; 32],
-    },
+    OuterInnerHandleMismatch { outer: [u8; 32], inner: [u8; 32] },
     OuterAuthorityWidened,
     InnerAuthorityWidened,
 }
@@ -62,9 +59,7 @@ impl From<PostEditCanonicalHigherOwnerErrorV1> for CanonicalHigherOwnerOwnerRedu
     }
 }
 
-fn outer_authority_is_false(
-    receipt: &PostEditCanonicalDefinitionTargetHandleContinuityV1,
-) -> bool {
+fn outer_authority_is_false(receipt: &PostEditCanonicalDefinitionTargetHandleContinuityV1) -> bool {
     !receipt.runtime_name_resolution_proven
         && !receipt.call_graph_proven
         && !receipt.semantic_patch_correctness_proven
@@ -120,10 +115,12 @@ pub fn reprove_canonical_higher_owner_owner_chain(
         .semantic_handle_digest
         .ok_or(CanonicalHigherOwnerOwnerReductionErrorV1::SelectedCandidateHandleMissing)?;
     if outer.continuous_semantic_handle_digest != inner_handle {
-        return Err(CanonicalHigherOwnerOwnerReductionErrorV1::OuterInnerHandleMismatch {
-            outer: outer.continuous_semantic_handle_digest,
-            inner: inner_handle,
-        });
+        return Err(
+            CanonicalHigherOwnerOwnerReductionErrorV1::OuterInnerHandleMismatch {
+                outer: outer.continuous_semantic_handle_digest,
+                inner: inner_handle,
+            },
+        );
     }
 
     Ok(CanonicalHigherOwnerOwnerReducedV1 {
@@ -154,7 +151,7 @@ mod tests {
     use aura_k27_astge_post_edit_profiled_scope::CandidateProfiledScopeSelectorV1;
     use aura_k27_astge_profiled_scopes::build_profiled_python_scopes;
     use aura_k27_astge_scope::{AuthorizedSpanV1, ReplacementV1};
-    use aura_k27_astge_scopes::{index_python_nested_scopes, PythonLexicalScopeIndexV1};
+    use aura_k27_astge_scopes::{PythonLexicalScopeIndexV1, index_python_nested_scopes};
     use serde_json::json;
     use sha2::{Digest, Sha256};
     use std::collections::HashMap;
