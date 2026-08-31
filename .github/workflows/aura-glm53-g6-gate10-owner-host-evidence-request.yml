@@ -48,7 +48,13 @@ jobs:
           test "$(git rev-parse "$REUSE_HEAD:tools/aura_generation_bound_admission_reuse.py")" = "$REUSE_SOURCE_BLOB"
           test "$(git rev-parse "$REUSE_HEAD:tests/test_aura_generation_bound_admission_reuse.py")" = "$REUSE_TEST_BLOB"
           test "$(git rev-parse "$PROV_HEAD:tools/awj032/airllm_secure_fixture_observation_envelope.py")" = "$PROV_SOURCE_BLOB"
-          echo "G6_V2_EXACT_PARENT_BLOBS=true"
+          grep -q 'GLM53_BOUNDED_C2_PROPOSAL' <(git show "$REUSE_HEAD:tools/aura_generation_bound_admission_reuse.py")
+          grep -q 'subject_identity' <(git show "$REUSE_HEAD:tools/aura_generation_bound_admission_reuse.py")
+          grep -q 'source_generation_key' <(git show "$REUSE_HEAD:tools/aura_generation_bound_admission_reuse.py")
+          grep -q 'evidence_generation_key' <(git show "$REUSE_HEAD:tools/aura_generation_bound_admission_reuse.py")
+          grep -q 'owner_context_key' <(git show "$REUSE_HEAD:tools/aura_generation_bound_admission_reuse.py")
+          grep -q 'decision_context_key' <(git show "$REUSE_HEAD:tools/aura_generation_bound_admission_reuse.py")
+          echo "G6_V3_EXACT_PARENT_BLOBS_AND_IDENTITY_SURFACE=true"
 
       - name: Revalidate terminal hosted parent proofs
         env:
@@ -67,7 +73,7 @@ jobs:
             req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}',headers=headers)
             with urllib.request.urlopen(req,timeout=30) as r: job=json.load(r)
             assert job['head_sha']==head and job['status']=='completed' and job['conclusion']=='success',job
-          print('G6_V2_TERMINAL_PARENTS_REVALIDATED=true')
+          print('G6_V3_TERMINAL_PARENTS_REVALIDATED=true')
           PY
 
       - name: Compile and execute G6 W3 adversarials
@@ -82,17 +88,23 @@ jobs:
           python3 - <<'PY'
           from tools.awj032.glm53_g6_gate10_owner_host_evidence_request import prove_different_j
           assert prove_different_j()==512
-          print('G6_V2_DIFFERENT_J_512=PASS')
+          print('G6_V3_DIFFERENT_J_512=PASS')
           PY
 
-      - name: Enforce Gate10 and provenance nonpromotion laws
+      - name: Enforce identity preservation and Gate10 nonpromotion laws
         run: |
           set -euo pipefail
-          grep -q 'AdmissionValidAtProduce!=AdmissionReusableAtUse' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
-          grep -q 'CallerWitness!=BackendObservationProvenance' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
-          grep -q 'PhysicalAttestationBoolean!=PhysicalObservationProvenance' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
-          grep -q 'Gate10DebtMustRemainExplicitUntilObserved' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
-          grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          target=tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          grep -q 'AdmissionValidAtProduce!=AdmissionReusableAtUse' "$target"
+          grep -q 'ReuseSummaryBoolean!=AdmissionReceiptIdentity' "$target"
+          grep -q 'GLM53AdmissionFamilyMustRemainExact' "$target"
+          grep -q 'AdmissionReceiptDigest+Subject+Source+Evidence+Owner+DecisionMustSurviveProjection' "$target"
+          grep -q 'CallerWitness!=BackendObservationProvenance' "$target"
+          grep -q 'PhysicalAttestationBoolean!=PhysicalObservationProvenance' "$target"
+          grep -q 'RepoHeadChanged!=TensorSourceGenerationChanged' "$target"
+          grep -q 'Gate10DebtMustRemainExplicitUntilObserved' "$target"
+          grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' "$target"
+          echo "REUSE_RECEIPT_AUTHENTICATED_BY_G6=false"
           echo "OWNER_HOST_EXECUTION_OBSERVED=false"
           echo "AUTHENTICATED_PHYSICAL_OBSERVATION=false"
           echo "FULL_FLAGSHIP_MODEL_LOADED=false"
