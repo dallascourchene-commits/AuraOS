@@ -1,0 +1,86 @@
+name: Aura Spatial Optics Software Verification Bundle
+
+on:
+  pull_request:
+    paths:
+      - 'tools/spatial_optics_software_verification_bundle.py'
+      - 'tools/spatial/optical_invariant_witness.py'
+      - 'tools/spatial/requirements-optical.txt'
+      - 'tools/k27_optics_independent_conformance.py'
+      - 'tests/test_spatial_optics_software_verification_bundle.py'
+      - 'tests/test_spatial_optical_invariant_witness.py'
+      - 'tests/test_k27_optics_independent_conformance.py'
+      - '.github/workflows/aura-spatial-optics-software-verification-bundle.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-spatial-optics-software-verification-bundle:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 20
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Bind repaired PR620 source generation and unchanged PR619 lane
+        shell: bash
+        run: |
+          set -euo pipefail
+          PR620_REPAIR=5a5878eace5974ff6a3f1dbf676fed8295bb457a
+          PR619=c74239e79244b877d63f4952cea590ea6e122e78
+          git fetch --no-tags origin "$PR620_REPAIR" "$PR619"
+          test "$(git hash-object tools/k27_optics_independent_conformance.py)" = 533c9e3926ff027367adef907b47bc01c74a6d4b
+          test "$(git hash-object tests/test_k27_optics_independent_conformance.py)" = 4aa6b9f8430a1e7e06723063553905e0d88fa5f7
+          test "$(git show "$PR620_REPAIR:tools/k27_optics_independent_conformance.py" | git hash-object --stdin)" = 533c9e3926ff027367adef907b47bc01c74a6d4b
+          test "$(git show "$PR620_REPAIR:tests/test_k27_optics_independent_conformance.py" | git hash-object --stdin)" = 4aa6b9f8430a1e7e06723063553905e0d88fa5f7
+          test "$(git hash-object tools/spatial/optical_invariant_witness.py)" = ffa5f427ace5badf506bd45378f9b278bf9eb228
+          echo 'PR620_REPAIR_MATERIALIZED=true'
+          echo 'PR620_REPAIR_HISTORICAL_GREEN_CURRENTNESS_CLAIMED=false'
+      - name: Preserve exact successful PR619 hosted proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/${GITHUB_REPOSITORY}/actions/runs/33365613764 --jq .head_sha)" = c74239e79244b877d63f4952cea590ea6e122e78
+          test "$(gh api repos/${GITHUB_REPOSITORY}/actions/runs/33365613764 --jq .conclusion)" = success
+      - name: Install exact optical dependency
+        run: python -m pip install -r tools/spatial/requirements-optical.txt
+      - name: Reprove repaired conformance producer and invariant owner
+        env:
+          PYTHONPATH: tools
+        run: |
+          python -m unittest -v tests.test_k27_optics_independent_conformance
+          python -m unittest -v tests.test_spatial_optical_invariant_witness
+      - name: Prove V2 bundle adversarials
+        env:
+          PYTHONPATH: tools
+        run: python -m unittest -v tests.test_spatial_optics_software_verification_bundle
+      - name: Enforce currentness and nonpromotion ceiling
+        env:
+          PYTHONPATH: tools
+        run: |
+          python - <<'PY'
+          import k27_optics_independent_conformance as conf
+          import spatial_optics_software_verification_bundle as bundle
+          from spatial import optical_invariant_witness as inv
+          invariant = inv.measure_invariants(
+              inv.deterministic_fixture(), dx_m=8e-6, dy_m=8e-6,
+              wavelength_m=532e-9, distance_m=0.03,
+          )
+          result = bundle.build_software_verification_bundle(invariant, conf.build_conformance_receipt())
+          assert result.conformance_producer_traversed is True
+          assert result.historical_conformance_green_is_current_proof is False
+          assert result.conformance_semantic_generation == 'PR620:5a5878eace5974ff6a3f1dbf676fed8295bb457a'
+          assert result.physical_optics_validation_proven is False
+          assert result.effect_authority_proven is False
+          print('CURRENT_CONFORMANCE_PRODUCER_TRAVERSED=true')
+          print('HISTORICAL_GREEN_NE_CURRENT_PROOF=true')
+          print('VERIFICATION_BUNDLE_NE_PHYSICAL_VALIDATION=true')
+          PY

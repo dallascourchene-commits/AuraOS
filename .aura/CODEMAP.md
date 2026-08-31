@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1639
-- **total_bytes**: 26415048
-- **text_tokens_est**: 6594113
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1663
+- **total_bytes**: 26538003
+- **text_tokens_est**: 6624860
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1013, 'schema_or_lexicon': 278, 'support_file': 50}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1639,
+  "repo_file_count": 1663,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -156,6 +156,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
+    ".github/workflows/aura-spatial-optics-software-verification-bundle.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
     ".github/workflows/aura-spatial-s3-s4a.yml",
     ".github/workflows/aura-spatial-s4.yml",
@@ -167,6 +168,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
+    ".github/workflows/k27-eye-pose-common-cut.yml",
+    ".github/workflows/k27-optics-candidate-falsifier.yml",
+    ".github/workflows/k27-optics-independent-conformance.yml",
+    ".github/workflows/k27-phase-mask-artifact-identity.yml",
+    ".github/workflows/k27-spatial-display-sim-benchmark.yml",
+    ".github/workflows/k27-spatial-frame-transition.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
     ".github/workflows/model-cognome-governed-routing.yml",
     ".github/workflows/model-cognome-replay-probes.yml",
@@ -1641,8 +1648,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_huggingface_space_deployment.py",
+    "tests/test_k27_eye_pose_observation_contract.py",
+    "tests/test_k27_optics_candidate_falsifier.py",
+    "tests/test_k27_optics_independent_conformance.py",
+    "tests/test_k27_phase_mask_artifact_contract.py",
+    "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+    "tests/test_k27_spatial_frame_transition_contract.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
+    "tests/test_spatial_optical_invariant_witness.py",
+    "tests/test_spatial_optics_software_verification_bundle.py",
     "third_party/pascal/LICENSE",
     "third_party/pascal/package-metadata/core.package.json",
     "third_party/pascal/package-metadata/editor.package.json",
@@ -1651,6 +1666,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/k27_eye_pose_observation_contract.py",
+    "tools/k27_optics_candidate_falsifier.py",
+    "tools/k27_optics_independent_conformance.py",
+    "tools/k27_phase_mask_artifact_contract.py",
+    "tools/k27_spatial_display_sim_benchmark_contract.py",
+    "tools/k27_spatial_frame_transition_contract.py",
+    "tools/spatial/optical_invariant_witness.py",
+    "tools/spatial/requirements-optical.txt",
+    "tools/spatial_optics_software_verification_bundle.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1779,17 +1803,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1639,
-  "bytes": 26415048,
-  "tokens_est": 6594113,
+  "files": 1663,
+  "bytes": 26538003,
+  "tokens_est": 6624860,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 997,
-    "schema_or_lexicon": 271,
-    "support_file": 49
+    "python_module": 1013,
+    "schema_or_lexicon": 278,
+    "support_file": 50
   }
 }
 ```
