@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788183933,
+  "generated_at_unix": 1788184996,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1658,
+    "repo_file_count": 1661,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -148,6 +148,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-bounded-official-e8-page-materialization-canary.yml",
       ".github/workflows/glm53-full-representative-canonical-source-set.yml",
       ".github/workflows/glm53-lattice-quantization-feasibility.yml",
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
@@ -1631,6 +1632,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
       "tests/test_glm53_full_representative_canonical_source_set.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -1643,6 +1645,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
       "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
       "tools/quantization/aura_glm53_full_representative_canonical_source_set.py",
       "tools/quantization/aura_glm53_lattice_quantization_feasibility.py",
@@ -1774,16 +1777,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1658,
-      "bytes": 26567188,
-      "tokens_est": 6632153,
+      "files": 1661,
+      "bytes": 26600083,
+      "tokens_est": 6640378,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1009,
-        "schema_or_lexicon": 277,
+        "python_module": 1011,
+        "schema_or_lexicon": 278,
         "support_file": 49
       }
     },
@@ -3480,6 +3483,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "function",
+        "line": 343,
+        "end_line": 355,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:main:0ce88f6055b8a1d6",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "tools/quantization/aura_glm53_full_representative_canonical_source_set.py",
         "kind": "function",
         "line": 303,
@@ -3954,6 +3965,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 74,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_canonical:85b74c860cf16081",
+        "signature_hash": "707d518dafca1a42"
       },
       {
         "file": "tools/quantization/aura_glm53_full_representative_canonical_source_set.py",
@@ -13814,6 +13833,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 68,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_sha256:91a997cf3f12053b",
+        "signature_hash": "f9c2d48c5f8c2866"
       },
       {
         "file": "tools/quantization/aura_glm53_full_representative_canonical_source_set.py",
@@ -157250,6 +157277,116 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "BoundedOfficialE8PageMaterializationTests": [
+      {
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 123,
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#class:BoundedOfficialE8PageMaterializationTests:2b54bc2562d9acbf",
+        "signature_hash": "5d4f4102b7366aca"
+      }
+    ],
+    "BoundedOfficialE8PageMaterializationTests.test_exact_fresh_parent_generations_and_convergence": [
+      {
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 19,
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_exact_fresh_parent_generations_and_convergence:44fb73eb5902df91",
+        "signature_hash": "6da87c12745f1714"
+      }
+    ],
+    "BoundedOfficialE8PageMaterializationTests.test_q13_full_source_generation_is_exact": [
+      {
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 25,
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_q13_full_source_generation_is_exact:c0eb79f9aef44fa4",
+        "signature_hash": "b8cf391f58a00bcb"
+      }
+    ],
+    "BoundedOfficialE8PageMaterializationTests.test_minimum_materialization_cone_is_exactly_136_payload_bytes": [
+      {
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_minimum_materialization_cone_is_exactly_136_payload_bytes:c00ef59de684fc5c",
+        "signature_hash": "3c9020e805987a38"
+      }
+    ],
+    "BoundedOfficialE8PageMaterializationTests.test_first64_fp8_decode_uses_one_exact_scale_cell": [
+      {
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 40,
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_first64_fp8_decode_uses_one_exact_scale_cell:affd365e5de3d88b",
+        "signature_hash": "4b99dcd8231f6101"
+      }
+    ],
+    "BoundedOfficialE8PageMaterializationTests.test_nan_code_and_bad_scale_fail_closed": [
+      {
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 49,
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_nan_code_and_bad_scale_fail_closed:80b0bf1a5c32563f",
+        "signature_hash": "5a5c01d7e09723a5"
+      }
+    ],
+    "BoundedOfficialE8PageMaterializationTests.test_real_page_payload_binds_slice_identity_not_full_tensor_identity": [
+      {
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 66,
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_real_page_payload_binds_slice_identity_not_full_tensor_identity:2cecd75c24fa6c03",
+        "signature_hash": "a858d2a7783e88cb"
+      }
+    ],
+    "BoundedOfficialE8PageMaterializationTests.test_page_materialization_is_deterministic_and_tamper_sensitive": [
+      {
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 93,
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_page_materialization_is_deterministic_and_tamper_sensitive:8e364aa90aaf05c5",
+        "signature_hash": "fc80a65378bb7dff"
+      }
+    ],
+    "BoundedOfficialE8PageMaterializationTests.test_parent_full_source_substitution_fails_closed": [
+      {
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 103,
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_parent_full_source_substitution_fails_closed:688deb5eeefa1a08",
+        "signature_hash": "c681719f995ac192"
+      }
+    ],
+    "BoundedOfficialE8PageMaterializationTests.test_public_live_api_has_no_promotion_inputs": [
+      {
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 106,
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_public_live_api_has_no_promotion_inputs:9842cc08d76ccada",
+        "signature_hash": "c3f2b9634b454730"
+      }
+    ],
+    "BoundedOfficialE8PageMaterializationTests.test_claim_ceiling_keeps_full_materialization_execution_and_authority_open": [
+      {
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 123,
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_claim_ceiling_keeps_full_materialization_execution_and_authority_open:7e5b652693a03dec",
+        "signature_hash": "a3421b67c00c2cb1"
+      }
+    ],
     "FullRepresentativeCanonicalSourceSetTests": [
       {
         "file": "tests/test_glm53_full_representative_canonical_source_set.py",
@@ -157650,6 +157787,142 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "BoundedMaterializationError": [
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#class:BoundedMaterializationError:bcc542d92cc74b89",
+        "signature_hash": "adec72eff16c2b82"
+      }
+    ],
+    "_object_sha": [
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 78,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_object_sha:6b86b064b12d1052",
+        "signature_hash": "5c79de6e67c08494"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_full_representative_canonical_source_set.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 96,
+        "semantic_id": "tools/quantization/aura_glm53_full_representative_canonical_source_set.py#function:_object_sha:ca6151984f620ab8",
+        "signature_hash": "5c79de6e67c08494"
+      }
+    ],
+    "_validate_sha256": [
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "function",
+        "line": 81,
+        "end_line": 87,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_validate_sha256:7ac36e759b16a1b5",
+        "signature_hash": "d9fbade789e56532"
+      }
+    ],
+    "MaterializedSlicePage": [
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "class",
+        "line": 91,
+        "end_line": 132,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#class:MaterializedSlicePage:eaaba7a5fd9247a3",
+        "signature_hash": "50e08514199da67f"
+      }
+    ],
+    "MaterializedSlicePage.validate": [
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 132,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#method:MaterializedSlicePage.validate:35f1076e6fff7b57",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "BoundedOfficialE8PageMaterializationReceipt": [
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "class",
+        "line": 136,
+        "end_line": 178,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#class:BoundedOfficialE8PageMaterializationReceipt:6c11c14ab9196846",
+        "signature_hash": "d1c1593164ee0282"
+      }
+    ],
+    "BoundedOfficialE8PageMaterializationReceipt.receipt_digest": [
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 178,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationReceipt.receipt_digest:5c32a69010b4d99e",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "_decode_first64": [
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "function",
+        "line": 181,
+        "end_line": 195,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_decode_first64:58d42d64b13dcb4a",
+        "signature_hash": "7930d256b391b99c"
+      }
+    ],
+    "_materialize_slice_page": [
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "function",
+        "line": 198,
+        "end_line": 242,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_materialize_slice_page:966d90da7f4cd3f9",
+        "signature_hash": "7c7fe83cf789fbbb"
+      }
+    ],
+    "_fetch_current_source_slices": [
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "function",
+        "line": 245,
+        "end_line": 274,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_fetch_current_source_slices:8f2d32fca68282ab",
+        "signature_hash": "3255912f6c67fc1a"
+      }
+    ],
+    "current_bounded_materialization": [
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "function",
+        "line": 277,
+        "end_line": 336,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:current_bounded_materialization:c55fed8a3ee9dc8d",
+        "signature_hash": "db7c7658b50e9655"
+      }
+    ],
+    "public_api_has_promotion_inputs": [
+      {
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "kind": "function",
+        "line": 339,
+        "end_line": 340,
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:public_api_has_promotion_inputs:bde07ee193e18212",
+        "signature_hash": "e9d90fbfd9a71e67"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_live_payload_coverage_delta.py",
+        "kind": "function",
+        "line": 235,
+        "end_line": 236,
+        "semantic_id": "tools/quantization/aura_glm53_live_payload_coverage_delta.py#function:public_api_has_promotion_inputs:435d8f56181ec1b0",
+        "signature_hash": "e9d90fbfd9a71e67"
+      }
+    ],
     "_half_away": [
       {
         "file": "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
@@ -157918,16 +158191,6 @@
         "end_line": 84,
         "semantic_id": "tools/quantization/aura_glm53_full_representative_canonical_source_set.py#class:CanonicalSourceSetError:5575698ae4e8be00",
         "signature_hash": "c7f9b81939e01f7b"
-      }
-    ],
-    "_object_sha": [
-      {
-        "file": "tools/quantization/aura_glm53_full_representative_canonical_source_set.py",
-        "kind": "function",
-        "line": 95,
-        "end_line": 96,
-        "semantic_id": "tools/quantization/aura_glm53_full_representative_canonical_source_set.py#function:_object_sha:ca6151984f620ab8",
-        "signature_hash": "5c79de6e67c08494"
       }
     ],
     "decode_e4m3fn_table": [
@@ -158314,16 +158577,6 @@
         "end_line": 232,
         "semantic_id": "tools/quantization/aura_glm53_live_payload_coverage_delta.py#function:current_live_payload_coverage_delta:5780ee572609178e",
         "signature_hash": "84262338a90ff40f"
-      }
-    ],
-    "public_api_has_promotion_inputs": [
-      {
-        "file": "tools/quantization/aura_glm53_live_payload_coverage_delta.py",
-        "kind": "function",
-        "line": 235,
-        "end_line": 236,
-        "semantic_id": "tools/quantization/aura_glm53_live_payload_coverage_delta.py#function:public_api_has_promotion_inputs:435d8f56181ec1b0",
-        "signature_hash": "e9d90fbfd9a71e67"
       }
     ],
     "MinimumCoverObservationError": [
@@ -160134,19 +160387,20 @@
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/glm53-bounded-official-e8-page-materialization-canary.yml",
+      ".github/workflows/glm53-lattice-quantization-feasibility.yml",
+      ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
+      ".github/workflows/glm53-live-payload-coverage-delta.yml",
+      ".github/workflows/glm53-minimum-live-payload-cover-verification.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
     "python -m unittest": [
       ".github/workflows/glm53-full-representative-canonical-source-set.yml",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python -m tools.quantization.aura_glm53_full_representative_canonical_source_set": [
       ".github/workflows/glm53-full-representative-canonical-source-set.yml"
-    ],
-    "python3 -m py_compile": [
-      ".github/workflows/glm53-lattice-quantization-feasibility.yml",
-      ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
-      ".github/workflows/glm53-live-payload-coverage-delta.yml",
-      ".github/workflows/glm53-minimum-live-payload-cover-verification.yml",
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
@@ -169987,6 +170241,59 @@
         0.151989,
         -0.198544,
         0.335472
+      ]
+    },
+    {
+      "path": ".github/workflows/glm53-bounded-official-e8-page-materialization-canary.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 10631,
+      "lines": 204,
+      "tokens_est": 2658,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          87
+        ]
+      },
+      "topology": {},
+      "digest8": "340e28113376bf06",
+      "vector": [
+        0.028783,
+        -0.27657,
+        0.02628,
+        -0.036292,
+        -0.319119,
+        -0.166443,
+        -0.033789,
+        -0.281576,
+        -0.063824,
+        0.156431,
+        -0.08635,
+        0.12139,
+        -0.06883,
+        -0.284079,
+        0.08635,
+        -0.18146,
+        0.211495,
+        0.211495,
+        0.146419,
+        0.141414,
+        0.249038,
+        -0.001251,
+        0.186466,
+        -0.226512,
+        0.096361,
+        -0.274067,
+        0.038795,
+        0.006257,
+        0.261553,
+        0.2165,
+        -0.191472,
+        -0.131402
       ]
     },
     {
@@ -264231,6 +264538,53 @@
       ]
     },
     {
+      "path": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6215,
+      "lines": 128,
+      "tokens_est": 1554,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "450cb39d384a453f",
+      "vector": [
+        0.254599,
+        0.231348,
+        -0.15927,
+        -0.152294,
+        -0.105792,
+        0.284825,
+        -0.284825,
+        -0.28715,
+        0.05464,
+        -0.022088,
+        0.247624,
+        0.103467,
+        0.280175,
+        0.215072,
+        0.129043,
+        0.026739,
+        0.108117,
+        0.122068,
+        -0.17322,
+        0.101142,
+        -0.031389,
+        0.16392,
+        -0.094167,
+        -0.149969,
+        0.056965,
+        0.06394,
+        -0.022088,
+        -0.222047,
+        -0.205772,
+        -0.259249,
+        -0.226698,
+        0.124393
+      ]
+    },
+    {
       "path": "tests/test_glm53_full_representative_canonical_source_set.py",
       "role": "python_module",
       "binary": false,
@@ -264792,6 +265146,53 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 16049,
+      "lines": 360,
+      "tokens_est": 4013,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5cce8713453773a7",
+      "vector": [
+        0.237432,
+        -0.069573,
+        0.102703,
+        0.27498,
+        -0.15792,
+        -0.226389,
+        -0.204302,
+        -0.171172,
+        -0.032026,
+        0.266145,
+        0.005522,
+        0.24185,
+        0.146877,
+        0.226389,
+        -0.131416,
+        0.230806,
+        -0.104912,
+        -0.131416,
+        0.230806,
+        -0.036443,
+        -0.277189,
+        -0.096077,
+        0.120373,
+        -0.144668,
+        0.00773,
+        -0.133625,
+        -0.266145,
+        0.22418,
+        0.080617,
+        -0.129207,
+        0.202094,
+        -0.155711
       ]
     },
     {
@@ -289122,16 +289523,16 @@
     }
   },
   "summary": {
-    "file_count": 1658,
-    "total_bytes": 26567188,
-    "text_tokens_est": 6632153,
+    "file_count": 1661,
+    "total_bytes": 26600083,
+    "text_tokens_est": 6640378,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1009,
-      "schema_or_lexicon": 277,
+      "python_module": 1011,
+      "schema_or_lexicon": 278,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -289289,6 +289690,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-bounded-official-e8-page-materialization-canary.yml",
       ".github/workflows/glm53-full-representative-canonical-source-set.yml",
       ".github/workflows/glm53-lattice-quantization-feasibility.yml",
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
@@ -290772,6 +291174,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
       "tests/test_glm53_full_representative_canonical_source_set.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
@@ -290784,6 +291187,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
       "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
       "tools/quantization/aura_glm53_full_representative_canonical_source_set.py",
       "tools/quantization/aura_glm53_lattice_quantization_feasibility.py",
@@ -448039,6 +448443,116 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#class:BoundedOfficialE8PageMaterializationTests:2b54bc2562d9acbf",
+        "name": "BoundedOfficialE8PageMaterializationTests",
+        "kind": "class",
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 10,
+        "end_line": 123,
+        "signature_hash": "5d4f4102b7366aca",
+        "file_digest8": "450cb39d384a453f"
+      },
+      {
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_claim_ceiling_keeps_full_materialization_execution_and_authority_open:7e5b652693a03dec",
+        "name": "BoundedOfficialE8PageMaterializationTests.test_claim_ceiling_keeps_full_materialization_execution_and_authority_open",
+        "kind": "method",
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 108,
+        "end_line": 123,
+        "signature_hash": "a3421b67c00c2cb1",
+        "file_digest8": "450cb39d384a453f"
+      },
+      {
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_exact_fresh_parent_generations_and_convergence:44fb73eb5902df91",
+        "name": "BoundedOfficialE8PageMaterializationTests.test_exact_fresh_parent_generations_and_convergence",
+        "kind": "method",
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 11,
+        "end_line": 19,
+        "signature_hash": "6da87c12745f1714",
+        "file_digest8": "450cb39d384a453f"
+      },
+      {
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_first64_fp8_decode_uses_one_exact_scale_cell:affd365e5de3d88b",
+        "name": "BoundedOfficialE8PageMaterializationTests.test_first64_fp8_decode_uses_one_exact_scale_cell",
+        "kind": "method",
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 33,
+        "end_line": 40,
+        "signature_hash": "4b99dcd8231f6101",
+        "file_digest8": "450cb39d384a453f"
+      },
+      {
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_minimum_materialization_cone_is_exactly_136_payload_bytes:c00ef59de684fc5c",
+        "name": "BoundedOfficialE8PageMaterializationTests.test_minimum_materialization_cone_is_exactly_136_payload_bytes",
+        "kind": "method",
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "3c9020e805987a38",
+        "file_digest8": "450cb39d384a453f"
+      },
+      {
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_nan_code_and_bad_scale_fail_closed:80b0bf1a5c32563f",
+        "name": "BoundedOfficialE8PageMaterializationTests.test_nan_code_and_bad_scale_fail_closed",
+        "kind": "method",
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 42,
+        "end_line": 49,
+        "signature_hash": "5a5c01d7e09723a5",
+        "file_digest8": "450cb39d384a453f"
+      },
+      {
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_page_materialization_is_deterministic_and_tamper_sensitive:8e364aa90aaf05c5",
+        "name": "BoundedOfficialE8PageMaterializationTests.test_page_materialization_is_deterministic_and_tamper_sensitive",
+        "kind": "method",
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 68,
+        "end_line": 93,
+        "signature_hash": "fc80a65378bb7dff",
+        "file_digest8": "450cb39d384a453f"
+      },
+      {
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_parent_full_source_substitution_fails_closed:688deb5eeefa1a08",
+        "name": "BoundedOfficialE8PageMaterializationTests.test_parent_full_source_substitution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 95,
+        "end_line": 103,
+        "signature_hash": "c681719f995ac192",
+        "file_digest8": "450cb39d384a453f"
+      },
+      {
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_public_live_api_has_no_promotion_inputs:9842cc08d76ccada",
+        "name": "BoundedOfficialE8PageMaterializationTests.test_public_live_api_has_no_promotion_inputs",
+        "kind": "method",
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 105,
+        "end_line": 106,
+        "signature_hash": "c3f2b9634b454730",
+        "file_digest8": "450cb39d384a453f"
+      },
+      {
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_q13_full_source_generation_is_exact:c0eb79f9aef44fa4",
+        "name": "BoundedOfficialE8PageMaterializationTests.test_q13_full_source_generation_is_exact",
+        "kind": "method",
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 21,
+        "end_line": 25,
+        "signature_hash": "b8cf391f58a00bcb",
+        "file_digest8": "450cb39d384a453f"
+      },
+      {
+        "semantic_id": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationTests.test_real_page_payload_binds_slice_identity_not_full_tensor_identity:2cecd75c24fa6c03",
+        "name": "BoundedOfficialE8PageMaterializationTests.test_real_page_payload_binds_slice_identity_not_full_tensor_identity",
+        "kind": "method",
+        "file": "tests/test_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 51,
+        "end_line": 66,
+        "signature_hash": "a858d2a7783e88cb",
+        "file_digest8": "450cb39d384a453f"
+      },
+      {
         "semantic_id": "tests/test_glm53_full_representative_canonical_source_set.py#class:FullRepresentativeCanonicalSourceSetTests:6cd8fc40177bc1ef",
         "name": "FullRepresentativeCanonicalSourceSetTests",
         "kind": "class",
@@ -448457,6 +448971,156 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#class:BoundedMaterializationError:bcc542d92cc74b89",
+        "name": "BoundedMaterializationError",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "adec72eff16c2b82",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#class:BoundedOfficialE8PageMaterializationReceipt:6c11c14ab9196846",
+        "name": "BoundedOfficialE8PageMaterializationReceipt",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 136,
+        "end_line": 178,
+        "signature_hash": "d1c1593164ee0282",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#class:MaterializedSlicePage:eaaba7a5fd9247a3",
+        "name": "MaterializedSlicePage",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 91,
+        "end_line": 132,
+        "signature_hash": "50e08514199da67f",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_canonical:85b74c860cf16081",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 71,
+        "end_line": 74,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_decode_first64:58d42d64b13dcb4a",
+        "name": "_decode_first64",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 181,
+        "end_line": 195,
+        "signature_hash": "7930d256b391b99c",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_fetch_current_source_slices:8f2d32fca68282ab",
+        "name": "_fetch_current_source_slices",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 245,
+        "end_line": 274,
+        "signature_hash": "3255912f6c67fc1a",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_materialize_slice_page:966d90da7f4cd3f9",
+        "name": "_materialize_slice_page",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 198,
+        "end_line": 242,
+        "signature_hash": "7c7fe83cf789fbbb",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_object_sha:6b86b064b12d1052",
+        "name": "_object_sha",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 77,
+        "end_line": 78,
+        "signature_hash": "5c79de6e67c08494",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_sha256:91a997cf3f12053b",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 67,
+        "end_line": 68,
+        "signature_hash": "f9c2d48c5f8c2866",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:_validate_sha256:7ac36e759b16a1b5",
+        "name": "_validate_sha256",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 81,
+        "end_line": 87,
+        "signature_hash": "d9fbade789e56532",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:current_bounded_materialization:c55fed8a3ee9dc8d",
+        "name": "current_bounded_materialization",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 277,
+        "end_line": 336,
+        "signature_hash": "db7c7658b50e9655",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:main:0ce88f6055b8a1d6",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 343,
+        "end_line": 355,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#function:public_api_has_promotion_inputs:bde07ee193e18212",
+        "name": "public_api_has_promotion_inputs",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 339,
+        "end_line": 340,
+        "signature_hash": "e9d90fbfd9a71e67",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#method:BoundedOfficialE8PageMaterializationReceipt.receipt_digest:5c32a69010b4d99e",
+        "name": "BoundedOfficialE8PageMaterializationReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 177,
+        "end_line": 178,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "5cce8713453773a7"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py#method:MaterializedSlicePage.validate:35f1076e6fff7b57",
+        "name": "MaterializedSlicePage.validate",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py",
+        "line": 109,
+        "end_line": 132,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "5cce8713453773a7"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py#class:Compressed:82229872a12fce78",
@@ -450899,7 +451563,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "d11ccfaa8492a8a1771805feaa7fb868",
-    "payload_hash": "b51a0706b64510ed631b3cca8c376c9f"
+    "record_fingerprint": "770269bec2e53ce44fe366b491bbe00b",
+    "payload_hash": "10b75d424409fafc2ea0cd87a76b6d14"
   }
 }
