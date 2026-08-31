@@ -1,0 +1,107 @@
+name: K27 HDV1024 Cross-ISA Consequence Corpus
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-corpus-replay:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR608_ARTIFACT_SHA: bb7d8849112c1c992c64b3078f3df0d84b8ff60b
+      PR608_RUN_ID: '33365196299'
+      PR608_IMPL_BLOB: 96e523682b7d6a0b3e2c3d850bc4d8bafa58b97c
+      CORPUS_SHA256: 30014dc3d6e16454a41c91599460dddb2b72aa947fbf297f7b6985e543884b85
+    steps:
+      - name: Fetch exact child head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)" \
+            fetch --no-tags --depth=128 origin "$TARGET_SHA"
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor "$PR608_ARTIFACT_SHA" HEAD
+          test "$(git hash-object tools/k27/thinkpad_portable_simd_dispatch.cpp)" = "$PR608_IMPL_BLOB"
+
+      - name: Pin exact green PR608 artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${PR608_RUN_ID}" > /tmp/pr608-run.json
+          python - <<'PY'
+          import json, os
+          run = json.load(open('/tmp/pr608-run.json', encoding='utf-8'))
+          assert run['head_sha'] == os.environ['PR608_ARTIFACT_SHA'], (run['head_sha'], os.environ['PR608_ARTIFACT_SHA'])
+          assert run['status'] == 'completed'
+          assert run['conclusion'] == 'success'
+          PY
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          check-latest: false
+
+      - name: Verify frozen logical corpus
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/k27_hdv1024_consequence_corpus.py tests/test_k27_hdv1024_consequence_corpus.py
+          python -m unittest -v tests.test_k27_hdv1024_consequence_corpus
+          python tools/k27_hdv1024_consequence_corpus.py > /tmp/logical.json
+          python - <<'PY'
+          import json, os
+          r = json.load(open('/tmp/logical.json', encoding='utf-8'))
+          assert r['corpus_sha256'] == os.environ['CORPUS_SHA256']
+          assert r['expected_distances'] == [0, 1024, 1, 1, 1024, 4, 472, 510]
+          assert r['byte_endianness_bound'] is False
+          assert r['architectural_register_mapping_bound'] is False
+          PY
+
+      - name: Replay corpus through actual PR608 scalar and selected SIMD
+        shell: bash
+        run: |
+          set -euo pipefail
+          g++ -std=c++20 -O2 tests/k27_hdv1024_pr608_replay.cpp -o /tmp/k27-hdv1024-pr608-replay
+          python tools/k27_hdv1024_consequence_corpus.py \
+            --pr608-adapter /tmp/k27-hdv1024-pr608-replay | tee /tmp/replay.json
+          python - <<'PY'
+          import json, os
+          r = json.load(open('/tmp/replay.json', encoding='utf-8'))
+          assert r['corpus_sha256'] == os.environ['CORPUS_SHA256']
+          assert r['pr608_actual_implementation_replayed'] is True
+          assert r['pr608_replay_distances'] == [0, 1024, 1, 1, 1024, 4, 472, 510]
+          assert r['byte_endianness_bound'] is False
+          assert r['architectural_register_mapping_bound'] is False
+          assert r['compiler_abi_bound'] is False
+          assert r['riscv_simulator_semantics_proven'] is False
+          assert r['rtl_implementation_proven'] is False
+          assert r['hardware_performance_proven'] is False
+          assert r['semantic_k27_authority'] is False
+          assert r['native_transformer_kv_accessed'] is False
+          PY
+
+      - name: Emit consequence ceiling
+        shell: bash
+        run: |
+          echo 'FROZEN_LOGICAL_CONSEQUENCE_NE_BYTE_REPRESENTATION=true'
+          echo 'PR608_REPLAY_PASS_NE_CROSS_ISA_ABI=true'
+          echo 'PR608_REPLAY_PASS_NE_RISCV_SIMULATOR_PASS=true'
+          echo 'LOGICAL_WORD_INDEX_NE_ARCHITECTURAL_REGISTER_ORDER=true'
+          echo 'HAMMING_EQUALITY_NE_PERFORMANCE_EQUALITY=true'
+          echo 'K27_COORDINATE_NE_SEMANTIC_AUTHORITY=true'
