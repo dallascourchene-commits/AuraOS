@@ -1,0 +1,87 @@
+name: WorkCapsule post-world-bound scoped rebind exact
+
+# W3 exact-head transport: manual fetch avoids malformed legacy submodule cleanup in actions/checkout.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_*.py'
+      - 'scripts/aura_astge_anchor_hydration.py'
+      - 'tests/test_aura_workcapsule_*.py'
+      - 'tests/test_aura_astge_anchor_hydration.py'
+      - '.github/workflows/workcapsule-post-world-bound-scoped-rebind-exact.yml'
+
+permissions:
+  contents: read
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Fetch exact event head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Assert exact event head
+        shell: bash
+        run: |
+          set -euo pipefail
+          actual="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$TARGET_SHA"
+          echo "ACTUAL_HEAD=$actual"
+          test "$actual" = "$TARGET_SHA"
+
+      - name: Compile Objective 28 membrane
+        run: |
+          python -m py_compile \
+            scripts/aura_workcapsule_post_world_bound_scoped_rebind.py \
+            scripts/aura_workcapsule_scoped_post_repair_rebind.py \
+            scripts/aura_workcapsule_two_phase_observation_bound_exact.py \
+            scripts/aura_workcapsule_two_phase_source_bound_closure.py
+
+      - name: Re-prove PR529 two-phase exact POST-world owner
+        run: python -m unittest tests.test_aura_workcapsule_two_phase_observation_bound_exact
+
+      - name: Re-prove PR532 scoped post-repair rebind owner
+        run: python -m unittest tests.test_aura_workcapsule_scoped_post_repair_rebind
+
+      - name: Prove Objective 28 cross-world membrane
+        run: python -m unittest tests.test_aura_workcapsule_post_world_bound_scoped_rebind
+
+      - name: Emit D0 consequence ceiling
+        shell: bash
+        run: |
+          cat <<'EOF'
+          OBJECTIVE_28=POST_WORLD_BOUND_SCOPED_REBIND
+          POST_RAW_WORLD_EXACT_REPRODUCTION=PROVEN_BY_PARENT_REPLAY
+          POST_DEPENDENCY_GENERATION_BODY_LENGTH_BOUND=TRUE
+          CALLER_CLOSURE_ADMISSION_ACCEPTED=FALSE
+          CALLER_POST_SOURCE_WITNESS_ACCEPTED=FALSE
+          REENTRY_CLOSED=FALSE
+          REENTRY_SCOPE_NARROWED=FALSE
+          POST_EDIT_SCOPE_PRODUCER_AUTHENTICATED=FALSE
+          POST_EDIT_SCOPE_HANDLE_BOUND_TO_RAW_BYTES=FALSE
+          SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=FALSE
+          NODE_LEVEL_INVALIDATION_CONE_PROVEN=FALSE
+          SEMANTIC_PATCH_CORRECTNESS_PROVEN=FALSE
+          SEMANTIC_TRUTH_MINTED=FALSE
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_EFFECT_AUTHORITY=FALSE
+          GATE10_PROMOTION=FALSE
+          EOF
