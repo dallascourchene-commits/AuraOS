@@ -1,0 +1,108 @@
+name: K27 ASTGE Portable Target Raw-Slice Binding
+
+on:
+  pull_request:
+    paths:
+      - 'crates/aura-k27-astge-portable-target-raw-slice/**'
+      - 'crates/aura-k27-astge-post-edit-canonical-projection/**'
+      - 'crates/aura-k27-astge-materialize/**'
+      - '.github/workflows/k27-astge-portable-target-raw-slice.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR537_SHA: 1bbd390ea8378bdfe1f59f4903928b40ff960fe0
+      PR480_SHA: b9a0d1ebe419efe170679113a598cccb9e054690
+    steps:
+      - name: Fetch exact child and prove inherited owner ancestry
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=220 origin "$TARGET_SHA" "$PR537_SHA" "$PR480_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor "$PR537_SHA" HEAD
+          git merge-base --is-ancestor "$PR480_SHA" "$PR537_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'PR537_PORTABLE_OWNER_ANCESTOR_BOUND=true'
+          echo 'PR480_SOURCE_MATERIALIZER_INHERITED_BY_PR537=true'
+
+      - name: Re-prove PR537 canonical portable projection
+        run: |
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml
+          cargo clippy --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --all-targets -- -D warnings
+
+      - name: Fetch and re-prove exact PR480 source materializer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf /tmp/pr480 && mkdir -p /tmp/pr480
+          git -C /tmp/pr480 init .
+          git -C /tmp/pr480 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr480 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR480_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr480 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr480 rev-parse HEAD)" = "$PR480_SHA"
+          (cd /tmp/pr480 && cargo test --manifest-path crates/aura-k27-astge-materialize/Cargo.toml)
+          (cd /tmp/pr480 && cargo clippy --manifest-path crates/aura-k27-astge-materialize/Cargo.toml --all-targets -- -D warnings)
+
+      - name: Prove O35 exact current raw-slice binding
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml
+          cargo clippy --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml --all-targets -- -D warnings
+
+      - name: Assert narrow owner boundary
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          src = Path('crates/aura-k27-astge-portable-target-raw-slice/src/lib.rs').read_text()
+          assert 'catalog: &AdmittedSourceCatalogV1' in src
+          assert 'projection: &CanonicalDefinitionTargetProjectionV1' in src
+          assert 'semantic_handle_derived_from_raw_slice: false' in src
+          assert 'storage_node_identity_minted: false' in src
+          assert 'catalog.materialize_node(&coordinate)?' in src
+          assert 'target_slice_sha256_hex' in src
+          print('CALLER_RAW_SOURCE_BYTES_ACCEPTED=false')
+          print('CALLER_FILESYSTEM_PATH_ACCEPTED=false')
+          print('SEMANTIC_HANDLE_DERIVED_FROM_RAW_SLICE=false')
+          print('STORAGE_NODE_IDENTITY_MINTED=false')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'PORTABLE_TARGET_BOUND_TO_EXACT_CURRENT_RAW_SLICE=true'
+          echo 'SOURCE_CURRENTNESS_REVALIDATED_AT_MATERIALIZATION=true'
+          echo 'TARGET_SLICE_DIGEST_EMITTED=true'
+          echo 'SEMANTIC_HANDLE_CARRIED_FROM_PORTABLE_OWNER=true'
+          echo 'SEMANTIC_HANDLE_DERIVED_FROM_RAW_SLICE=false'
+          echo 'SEMANTIC_IDENTITY_PROVEN_BY_RAW_SLICE=false'
+          echo 'STORAGE_NODE_IDENTITY_MINTED=false'
+          echo 'PRODUCER_AUTHENTICATED=false'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'SEMANTIC_PATCH_CORRECTNESS_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
