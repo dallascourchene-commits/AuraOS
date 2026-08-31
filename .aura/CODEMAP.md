@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1651
-- **total_bytes**: 26513988
-- **text_tokens_est**: 6618852
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1006, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1655
+- **total_bytes**: 26547956
+- **text_tokens_est**: 6627342
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1651,
+  "repo_file_count": 1655,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -151,6 +151,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/architect-real-refactor-hardening.yml",
     ".github/workflows/architect-real-refactor-trial.yml",
     ".github/workflows/aura-architecture-harness-export.yml",
+    ".github/workflows/aura-archive-versioned-chunk-dag.yml",
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -1117,6 +1118,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
     "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+    "docs/arena/AURA_ARCHIVE_VERSIONED_CHUNK_DAG_ADDENDUM_V1.md",
     "docs/arena/EXTERNAL_KNOWLEDGE_INGRESS_V1.md",
     "docs/aura_substrate_manifest.files.01.json",
     "docs/aura_substrate_manifest.files.02.json",
@@ -1373,6 +1375,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_architecture_harness_export_workflow.py",
     "tests/test_aura_architecture_harness_git_tree_routing.py",
     "tests/test_aura_architecture_harness_original_github_routing.py",
+    "tests/test_aura_archive_versioned_chunk_dag.py",
     "tests/test_aura_arena_connector_hardening.py",
     "tests/test_aura_arena_experience_ledger.py",
     "tests/test_aura_arena_live_cli.py",
@@ -1656,6 +1659,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/aura_archive_versioned_chunk_dag.py",
     "tools/aura_external_discovery.py",
     "tools/aura_external_discovery_cli.py",
     "tools/aura_external_discovery_ingress_bridge.py",
@@ -1760,6 +1764,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_architecture_harness_export_workflow.py",
     "tests/test_aura_architecture_harness_git_tree_routing.py",
     "tests/test_aura_architecture_harness_original_github_routing.py",
+    "tests/test_aura_archive_versioned_chunk_dag.py",
     "tests/test_aura_arena_connector_hardening.py",
     "tests/test_aura_arena_experience_ledger.py",
     "tests/test_aura_arena_live_cli.py",
@@ -1776,8 +1781,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_blind_gate10_benchmark.py",
     "tests/test_aura_capability_connectome.py",
     "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py"
+    "tests/test_aura_capability_lane_registry.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1791,16 +1795,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1651,
-  "bytes": 26513988,
-  "tokens_est": 6618852,
+  "files": 1655,
+  "bytes": 26547956,
+  "tokens_est": 6627342,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 238,
+    "knowledge_artifact": 239,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1006,
-    "schema_or_lexicon": 273,
+    "python_module": 1008,
+    "schema_or_lexicon": 274,
     "support_file": 49
   }
 }

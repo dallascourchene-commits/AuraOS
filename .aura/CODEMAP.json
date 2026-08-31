@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788197737,
+  "generated_at_unix": 1788198110,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1651,
+    "repo_file_count": 1655,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -133,6 +133,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-archive-versioned-chunk-dag.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -1099,6 +1100,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/AURA_ARCHIVE_VERSIONED_CHUNK_DAG_ADDENDUM_V1.md",
       "docs/arena/EXTERNAL_KNOWLEDGE_INGRESS_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
@@ -1355,6 +1357,7 @@
       "tests/test_aura_architecture_harness_export_workflow.py",
       "tests/test_aura_architecture_harness_git_tree_routing.py",
       "tests/test_aura_architecture_harness_original_github_routing.py",
+      "tests/test_aura_archive_versioned_chunk_dag.py",
       "tests/test_aura_arena_connector_hardening.py",
       "tests/test_aura_arena_experience_ledger.py",
       "tests/test_aura_arena_live_cli.py",
@@ -1638,6 +1641,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_archive_versioned_chunk_dag.py",
       "tools/aura_external_discovery.py",
       "tools/aura_external_discovery_cli.py",
       "tools/aura_external_discovery_ingress_bridge.py",
@@ -1742,6 +1746,7 @@
       "tests/test_aura_architecture_harness_export_workflow.py",
       "tests/test_aura_architecture_harness_git_tree_routing.py",
       "tests/test_aura_architecture_harness_original_github_routing.py",
+      "tests/test_aura_archive_versioned_chunk_dag.py",
       "tests/test_aura_arena_connector_hardening.py",
       "tests/test_aura_arena_experience_ledger.py",
       "tests/test_aura_arena_live_cli.py",
@@ -1758,8 +1763,7 @@
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_lane_registry.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1767,16 +1771,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1651,
-      "bytes": 26513988,
-      "tokens_est": 6618852,
+      "files": 1655,
+      "bytes": 26547956,
+      "tokens_est": 6627342,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 238,
+        "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1006,
-        "schema_or_lexicon": 273,
+        "python_module": 1008,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -8095,6 +8099,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 101,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:_sha:3a87784f62e7489f",
+        "signature_hash": "ef2d11bf40f6dca1"
       },
       {
         "file": "tools/aura_external_knowledge_ingress.py",
@@ -116893,6 +116905,206 @@
         "signature_hash": "f2f63b76ed979c84"
       }
     ],
+    "art": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 45,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#function:art:c87bdd2df349e019",
+        "signature_hash": "1864a94b35722301"
+      }
+    ],
+    "VersionedChunkDagTests": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 208,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#class:VersionedChunkDagTests:86044faa36da88d5",
+        "signature_hash": "0de9dac294d662b5"
+      }
+    ],
+    "VersionedChunkDagTests.test_exact_roundtrip": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 53,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_exact_roundtrip:0ccaddcde1aa9a2c",
+        "signature_hash": "96fc34472c705566"
+      }
+    ],
+    "VersionedChunkDagTests.test_cross_generation_exact_chunk_dedup": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 64,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_cross_generation_exact_chunk_dedup:46fc177539d88625",
+        "signature_hash": "17d0f7da97827474"
+      }
+    ],
+    "VersionedChunkDagTests.test_identical_bytes_share_chunks_but_not_generation_manifest": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 82,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_identical_bytes_share_chunks_but_not_generation_manifest:4f14a2c0e9ef92b8",
+        "signature_hash": "aca2bad5b241a12b"
+      }
+    ],
+    "VersionedChunkDagTests.test_index_changes_do_not_change_exact_source": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 91,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_index_changes_do_not_change_exact_source:57311f802b94e797",
+        "signature_hash": "71e9106e39c19db0"
+      }
+    ],
+    "VersionedChunkDagTests.test_semantic_similarity_is_not_dedup_authority": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 102,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_semantic_similarity_is_not_dedup_authority:afa5ad36b8b38c13",
+        "signature_hash": "280266d05a86f7be"
+      }
+    ],
+    "VersionedChunkDagTests.test_small_insertion_retains_most_cdc_boundaries": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 111,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_small_insertion_retains_most_cdc_boundaries:e576af76851718df",
+        "signature_hash": "a08f04fdbf875988"
+      }
+    ],
+    "VersionedChunkDagTests.test_chunk_corruption_fails_closed": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 118,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_chunk_corruption_fails_closed:26ea18bbf81e0010",
+        "signature_hash": "5755b1febcb6c84d"
+      }
+    ],
+    "VersionedChunkDagTests.test_ordered_chunk_refs_preserve_source_order": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 123,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_ordered_chunk_refs_preserve_source_order:55eb73e1b4c6e3ad",
+        "signature_hash": "a88b284eeb7dc351"
+      }
+    ],
+    "VersionedChunkDagTests.test_k27_projection_does_not_change_source_identity": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 132,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_k27_projection_does_not_change_source_identity:0b09151c9ea40711",
+        "signature_hash": "bc3899fc54248b2c"
+      }
+    ],
+    "VersionedChunkDagTests.test_time_metadata_does_not_change_source_identity_or_mint_causality": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 142,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_time_metadata_does_not_change_source_identity_or_mint_causality:b96d273616efb5fb",
+        "signature_hash": "2c669168bc5e035c"
+      }
+    ],
+    "VersionedChunkDagTests.test_d13_validation_and_nonauthority": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 149,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_d13_validation_and_nonauthority:9ff4e19e63826ba9",
+        "signature_hash": "9d662852a6af82f8"
+      }
+    ],
+    "VersionedChunkDagTests.test_l4_cannot_be_smuggled_into_lossy_index_plane": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 157,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_l4_cannot_be_smuggled_into_lossy_index_plane:37e7954eba110a91",
+        "signature_hash": "348b74939817c71b"
+      }
+    ],
+    "VersionedChunkDagTests.test_structural_codec_owner_is_used_for_unique_chunks": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 166,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_structural_codec_owner_is_used_for_unique_chunks:d78fe6050dbab5e8",
+        "signature_hash": "80d62444dc153eb2"
+      }
+    ],
+    "VersionedChunkDagTests.test_random_already_unfriendly_data_gets_no_superiority_claim": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 175,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_random_already_unfriendly_data_gets_no_superiority_claim:b4fc41afb78c0295",
+        "signature_hash": "f709add602106373"
+      }
+    ],
+    "VersionedChunkDagTests.test_exact_reversible_transform_gate": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 183,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_exact_reversible_transform_gate:ac804e1d03dc56f7",
+        "signature_hash": "46ce8333814da22f"
+      }
+    ],
+    "VersionedChunkDagTests.test_archive_is_deterministic": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 185,
+        "end_line": 189,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_archive_is_deterministic:ec292a56c49e4a1c",
+        "signature_hash": "c2608a265fd4a51f"
+      }
+    ],
+    "VersionedChunkDagTests.test_40_rack_structural_corpus_roundtrips": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 191,
+        "end_line": 202,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_40_rack_structural_corpus_roundtrips:e9523f099b6d5bcb",
+        "signature_hash": "caff1c4eb1cecd7e"
+      }
+    ],
+    "VersionedChunkDagTests.test_k27_exact_url_rule": [
+      {
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 208,
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_k27_exact_url_rule:11321bf65f6cd40e",
+        "signature_hash": "311aef049e803372"
+      }
+    ],
     "test_connector_record_is_redacted_and_digest_bound": [
       {
         "file": "tests/test_aura_arena_connector_hardening.py",
@@ -157681,6 +157893,194 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "VersionedArchiveError": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 39,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#class:VersionedArchiveError:121884efcc4cbd6e",
+        "signature_hash": "d22b56ad183c65b9"
+      }
+    ],
+    "ChunkingPolicy": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "class",
+        "line": 43,
+        "end_line": 57,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#class:ChunkingPolicy:74ae3998dfbc9f52",
+        "signature_hash": "03ee1f6c51703430"
+      }
+    ],
+    "ChunkingPolicy.validate": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 52,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#method:ChunkingPolicy.validate:4cc9dea96a361ac1",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ChunkingPolicy.boundary_mask": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 57,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#method:ChunkingPolicy.boundary_mask:5881d0bf21973858",
+        "signature_hash": "a24233f08469fe7d"
+      }
+    ],
+    "VersionedArtifact": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 73,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#class:VersionedArtifact:116258b11ee63eaf",
+        "signature_hash": "5123d246e1e447bd"
+      }
+    ],
+    "VersionedArchiveStats": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "class",
+        "line": 77,
+        "end_line": 97,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#class:VersionedArchiveStats:5878edf3146994da",
+        "signature_hash": "f53096c6b10694c4"
+      }
+    ],
+    "VersionedArchiveStats.exact_dedup_savings_fraction": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 91,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#method:VersionedArchiveStats.exact_dedup_savings_fraction:1f1cc174a9299bb4",
+        "signature_hash": "a8e7c32faea61d67"
+      }
+    ],
+    "VersionedArchiveStats.final_archive_savings_fraction": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 97,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#method:VersionedArchiveStats.final_archive_savings_fraction:37be1509745630f5",
+        "signature_hash": "111e77c29cb756b1"
+      }
+    ],
+    "_canon": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "function",
+        "line": 104,
+        "end_line": 114,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:_canon:7b9e9bc493d87ae5",
+        "signature_hash": "d5d7db36e0808d24"
+      },
+      {
+        "file": "tools/aura_structural_archive_probe.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 74,
+        "semantic_id": "tools/aura_structural_archive_probe.py#function:_canon:af4640d512bab505",
+        "signature_hash": "d5d7db36e0808d24"
+      }
+    ],
+    "_validate_index": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 148,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:_validate_index:5a857d5449d2cdd3",
+        "signature_hash": "7fb7636f2a81274a"
+      }
+    ],
+    "content_defined_chunks": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "function",
+        "line": 151,
+        "end_line": 172,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:content_defined_chunks:0d045ad5ef1db94c",
+        "signature_hash": "6eb0397165069587"
+      }
+    ],
+    "_artifact_row": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "function",
+        "line": 175,
+        "end_line": 199,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:_artifact_row:eb4d3a676ba6463b",
+        "signature_hash": "c8e7ac5bf50464c7"
+      }
+    ],
+    "pack_versioned_archive": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "function",
+        "line": 202,
+        "end_line": 300,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:pack_versioned_archive:bec6c89b8dd3239e",
+        "signature_hash": "3f586a5f18025856"
+      }
+    ],
+    "_parse": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "function",
+        "line": 303,
+        "end_line": 359,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:_parse:040ac799b5144f1e",
+        "signature_hash": "8c2f0b74e1d09c5d"
+      }
+    ],
+    "unpack_versioned_archive": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "function",
+        "line": 362,
+        "end_line": 387,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:unpack_versioned_archive:a9859fd88f840314",
+        "signature_hash": "987426cf3191e464"
+      }
+    ],
+    "inspect_versioned_archive": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "function",
+        "line": 390,
+        "end_line": 401,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:inspect_versioned_archive:ed295545bdcfe05c",
+        "signature_hash": "85356a634bdb094b"
+      }
+    ],
+    "k27_url_coordinate": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "function",
+        "line": 404,
+        "end_line": 406,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:k27_url_coordinate:077d23ca4831d624",
+        "signature_hash": "93c4399ab7838efb"
+      }
+    ],
+    "require_exact_reversible_transform": [
+      {
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "kind": "function",
+        "line": 409,
+        "end_line": 413,
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:require_exact_reversible_transform:75729af7cce15bf4",
+        "signature_hash": "55b1288a75b16546"
+      }
+    ],
     "_sha_text": [
       {
         "file": "tools/aura_external_discovery.py",
@@ -158149,16 +158549,6 @@
         "end_line": 64,
         "semantic_id": "tools/aura_structural_archive_probe.py#method:ArchiveReceipt.ratio:d2570201105c91ab",
         "signature_hash": "f4f0b4dc6793ebd8"
-      }
-    ],
-    "_canon": [
-      {
-        "file": "tools/aura_structural_archive_probe.py",
-        "kind": "function",
-        "line": 67,
-        "end_line": 74,
-        "semantic_id": "tools/aura_structural_archive_probe.py#function:_canon:af4640d512bab505",
-        "signature_hash": "d5d7db36e0808d24"
       }
     ],
     "_structured_columns_payload": [
@@ -159349,6 +159739,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-archive-versioned-chunk-dag.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -159634,6 +160025,10 @@
     ],
     "python aura_agent_arena_mcp_architect.py --list-tools > architect-mcp-tools.json": [
       ".github/workflows/architect-real-refactor-trial.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/aura-archive-versioned-chunk-dag.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python aura_spatial_cli.py --repo-root . construction-video-demo \\": [
       ".github/workflows/aura-construction-demo-g7-g8.yml"
@@ -160357,9 +160752,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -168612,6 +169004,67 @@
         0.083353,
         0.128562,
         -0.241583
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-archive-versioned-chunk-dag.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4395,
+      "lines": 108,
+      "tokens_est": 1099,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          37,
+          38,
+          39,
+          40
+        ],
+        "python -m unittest": [
+          45,
+          50
+        ]
+      },
+      "topology": {},
+      "digest8": "3842fb8cafef6e90",
+      "vector": [
+        -0.105942,
+        -0.079754,
+        -0.189266,
+        -0.251165,
+        -0.196409,
+        0.072612,
+        -0.005952,
+        0.30116,
+        0.024997,
+        -0.158317,
+        0.077373,
+        -0.058327,
+        -0.294018,
+        0.232119,
+        -0.215454,
+        -0.060708,
+        -0.044043,
+        -0.198789,
+        -0.029759,
+        0.115464,
+        0.165459,
+        0.151175,
+        -0.253546,
+        0.208312,
+        -0.005952,
+        0.260688,
+        0.224977,
+        0.229738,
+        0.177363,
+        -0.165459,
+        0.141652,
+        0.244023
       ]
     },
     {
@@ -235988,6 +236441,53 @@
       ]
     },
     {
+      "path": "docs/arena/AURA_ARCHIVE_VERSIONED_CHUNK_DAG_ADDENDUM_V1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4695,
+      "lines": 134,
+      "tokens_est": 1171,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "10f42c77a0a85f95",
+      "vector": [
+        -0.158803,
+        -0.266422,
+        0.003937,
+        0.161428,
+        0.059059,
+        -0.271671,
+        0.150929,
+        -0.313669,
+        -0.077433,
+        0.053809,
+        -0.095807,
+        0.284796,
+        -0.140429,
+        0.169302,
+        -0.093182,
+        -0.056434,
+        -0.051184,
+        -0.316294,
+        -0.069558,
+        0.219174,
+        0.077433,
+        -0.237548,
+        0.200801,
+        -0.237548,
+        0.045935,
+        -0.164053,
+        0.266422,
+        0.240173,
+        0.059059,
+        -0.187676,
+        0.03806,
+        -0.085307
+      ]
+    },
+    {
       "path": "docs/arena/EXTERNAL_KNOWLEDGE_INGRESS_V1.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -250750,6 +251250,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_archive_versioned_chunk_dag.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9152,
+      "lines": 213,
+      "tokens_est": 2288,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "383d399b5d9248bd",
+      "vector": [
+        0.160258,
+        0.078471,
+        -0.016578,
+        0.032052,
+        -0.253097,
+        -0.213309,
+        -0.096155,
+        -0.259728,
+        -0.17131,
+        -0.21773,
+        0.012157,
+        0.250886,
+        0.135943,
+        0.118259,
+        -0.049735,
+        -0.116049,
+        -0.036472,
+        0.246466,
+        -0.253097,
+        -0.138153,
+        -0.093944,
+        0.078471,
+        0.184573,
+        -0.213309,
+        -0.197836,
+        -0.242045,
+        0.047525,
+        0.182362,
+        0.224361,
+        -0.228782,
+        0.257518,
+        0.224361
+      ]
+    },
+    {
       "path": "tests/test_aura_arena_connector_hardening.py",
       "role": "python_module",
       "binary": false,
@@ -264048,6 +264595,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_archive_versioned_chunk_dag.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15726,
+      "lines": 428,
+      "tokens_est": 3932,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1659b609abc9c3b5",
+      "vector": [
+        -0.255567,
+        0.003814,
+        -0.049588,
+        0.087732,
+        -0.029244,
+        -0.212337,
+        0.12079,
+        0.006357,
+        0.209794,
+        -0.006357,
+        0.105533,
+        -0.174193,
+        0.296255,
+        0.186907,
+        -0.222509,
+        -0.052131,
+        -0.184364,
+        -0.062302,
+        -0.207251,
+        -0.108076,
+        0.115705,
+        -0.28354,
+        0.021615,
+        -0.016529,
+        0.044502,
+        0.113162,
+        0.298797,
+        0.235224,
+        -0.286083,
+        0.03433,
+        -0.293712,
+        0.296255
       ]
     },
     {
@@ -288284,16 +288878,16 @@
     }
   },
   "summary": {
-    "file_count": 1651,
-    "total_bytes": 26513988,
-    "text_tokens_est": 6618852,
+    "file_count": 1655,
+    "total_bytes": 26547956,
+    "text_tokens_est": 6627342,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 238,
+      "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1006,
-      "schema_or_lexicon": 273,
+      "python_module": 1008,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288436,6 +289030,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-archive-versioned-chunk-dag.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -289402,6 +289997,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/AURA_ARCHIVE_VERSIONED_CHUNK_DAG_ADDENDUM_V1.md",
       "docs/arena/EXTERNAL_KNOWLEDGE_INGRESS_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
@@ -289658,6 +290254,7 @@
       "tests/test_aura_architecture_harness_export_workflow.py",
       "tests/test_aura_architecture_harness_git_tree_routing.py",
       "tests/test_aura_architecture_harness_original_github_routing.py",
+      "tests/test_aura_archive_versioned_chunk_dag.py",
       "tests/test_aura_arena_connector_hardening.py",
       "tests/test_aura_arena_experience_ledger.py",
       "tests/test_aura_arena_live_cli.py",
@@ -289941,6 +290538,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_archive_versioned_chunk_dag.py",
       "tools/aura_external_discovery.py",
       "tools/aura_external_discovery_cli.py",
       "tools/aura_external_discovery_ingress_bridge.py",
@@ -405444,6 +406042,206 @@
         "file_digest8": "4478d3f233974cfb"
       },
       {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#class:VersionedChunkDagTests:86044faa36da88d5",
+        "name": "VersionedChunkDagTests",
+        "kind": "class",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 48,
+        "end_line": 208,
+        "signature_hash": "0de9dac294d662b5",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#function:art:c87bdd2df349e019",
+        "name": "art",
+        "kind": "function",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 20,
+        "end_line": 45,
+        "signature_hash": "1864a94b35722301",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_40_rack_structural_corpus_roundtrips:e9523f099b6d5bcb",
+        "name": "VersionedChunkDagTests.test_40_rack_structural_corpus_roundtrips",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 191,
+        "end_line": 202,
+        "signature_hash": "caff1c4eb1cecd7e",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_archive_is_deterministic:ec292a56c49e4a1c",
+        "name": "VersionedChunkDagTests.test_archive_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 185,
+        "end_line": 189,
+        "signature_hash": "c2608a265fd4a51f",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_chunk_corruption_fails_closed:26ea18bbf81e0010",
+        "name": "VersionedChunkDagTests.test_chunk_corruption_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 113,
+        "end_line": 118,
+        "signature_hash": "5755b1febcb6c84d",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_cross_generation_exact_chunk_dedup:46fc177539d88625",
+        "name": "VersionedChunkDagTests.test_cross_generation_exact_chunk_dedup",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 55,
+        "end_line": 64,
+        "signature_hash": "17d0f7da97827474",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_d13_validation_and_nonauthority:9ff4e19e63826ba9",
+        "name": "VersionedChunkDagTests.test_d13_validation_and_nonauthority",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 144,
+        "end_line": 149,
+        "signature_hash": "9d662852a6af82f8",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_exact_reversible_transform_gate:ac804e1d03dc56f7",
+        "name": "VersionedChunkDagTests.test_exact_reversible_transform_gate",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 177,
+        "end_line": 183,
+        "signature_hash": "46ce8333814da22f",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_exact_roundtrip:0ccaddcde1aa9a2c",
+        "name": "VersionedChunkDagTests.test_exact_roundtrip",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 49,
+        "end_line": 53,
+        "signature_hash": "96fc34472c705566",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_identical_bytes_share_chunks_but_not_generation_manifest:4f14a2c0e9ef92b8",
+        "name": "VersionedChunkDagTests.test_identical_bytes_share_chunks_but_not_generation_manifest",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 66,
+        "end_line": 82,
+        "signature_hash": "aca2bad5b241a12b",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_index_changes_do_not_change_exact_source:57311f802b94e797",
+        "name": "VersionedChunkDagTests.test_index_changes_do_not_change_exact_source",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 84,
+        "end_line": 91,
+        "signature_hash": "71e9106e39c19db0",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_k27_exact_url_rule:11321bf65f6cd40e",
+        "name": "VersionedChunkDagTests.test_k27_exact_url_rule",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 204,
+        "end_line": 208,
+        "signature_hash": "311aef049e803372",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_k27_projection_does_not_change_source_identity:0b09151c9ea40711",
+        "name": "VersionedChunkDagTests.test_k27_projection_does_not_change_source_identity",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 125,
+        "end_line": 132,
+        "signature_hash": "bc3899fc54248b2c",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_l4_cannot_be_smuggled_into_lossy_index_plane:37e7954eba110a91",
+        "name": "VersionedChunkDagTests.test_l4_cannot_be_smuggled_into_lossy_index_plane",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 151,
+        "end_line": 157,
+        "signature_hash": "348b74939817c71b",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_ordered_chunk_refs_preserve_source_order:55eb73e1b4c6e3ad",
+        "name": "VersionedChunkDagTests.test_ordered_chunk_refs_preserve_source_order",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 120,
+        "end_line": 123,
+        "signature_hash": "a88b284eeb7dc351",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_random_already_unfriendly_data_gets_no_superiority_claim:b4fc41afb78c0295",
+        "name": "VersionedChunkDagTests.test_random_already_unfriendly_data_gets_no_superiority_claim",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 168,
+        "end_line": 175,
+        "signature_hash": "f709add602106373",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_semantic_similarity_is_not_dedup_authority:afa5ad36b8b38c13",
+        "name": "VersionedChunkDagTests.test_semantic_similarity_is_not_dedup_authority",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 93,
+        "end_line": 102,
+        "signature_hash": "280266d05a86f7be",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_small_insertion_retains_most_cdc_boundaries:e576af76851718df",
+        "name": "VersionedChunkDagTests.test_small_insertion_retains_most_cdc_boundaries",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 104,
+        "end_line": 111,
+        "signature_hash": "a08f04fdbf875988",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_structural_codec_owner_is_used_for_unique_chunks:d78fe6050dbab5e8",
+        "name": "VersionedChunkDagTests.test_structural_codec_owner_is_used_for_unique_chunks",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 159,
+        "end_line": 166,
+        "signature_hash": "80d62444dc153eb2",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
+        "semantic_id": "tests/test_aura_archive_versioned_chunk_dag.py#method:VersionedChunkDagTests.test_time_metadata_does_not_change_source_identity_or_mint_causality:b96d273616efb5fb",
+        "name": "VersionedChunkDagTests.test_time_metadata_does_not_change_source_identity_or_mint_causality",
+        "kind": "method",
+        "file": "tests/test_aura_archive_versioned_chunk_dag.py",
+        "line": 134,
+        "end_line": 142,
+        "signature_hash": "2c669168bc5e035c",
+        "file_digest8": "383d399b5d9248bd"
+      },
+      {
         "semantic_id": "tests/test_aura_arena_connector_hardening.py#function:_candidate:9aa359336cf1610e",
         "name": "_candidate",
         "kind": "function",
@@ -447684,6 +448482,196 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#class:ChunkingPolicy:74ae3998dfbc9f52",
+        "name": "ChunkingPolicy",
+        "kind": "class",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 43,
+        "end_line": 57,
+        "signature_hash": "03ee1f6c51703430",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#class:VersionedArchiveError:121884efcc4cbd6e",
+        "name": "VersionedArchiveError",
+        "kind": "class",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 38,
+        "end_line": 39,
+        "signature_hash": "d22b56ad183c65b9",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#class:VersionedArchiveStats:5878edf3146994da",
+        "name": "VersionedArchiveStats",
+        "kind": "class",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 77,
+        "end_line": 97,
+        "signature_hash": "f53096c6b10694c4",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#class:VersionedArtifact:116258b11ee63eaf",
+        "name": "VersionedArtifact",
+        "kind": "class",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 61,
+        "end_line": 73,
+        "signature_hash": "5123d246e1e447bd",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:_artifact_row:eb4d3a676ba6463b",
+        "name": "_artifact_row",
+        "kind": "function",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 175,
+        "end_line": 199,
+        "signature_hash": "c8e7ac5bf50464c7",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:_canon:7b9e9bc493d87ae5",
+        "name": "_canon",
+        "kind": "function",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 104,
+        "end_line": 114,
+        "signature_hash": "d5d7db36e0808d24",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:_parse:040ac799b5144f1e",
+        "name": "_parse",
+        "kind": "function",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 303,
+        "end_line": 359,
+        "signature_hash": "8c2f0b74e1d09c5d",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:_sha:3a87784f62e7489f",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 100,
+        "end_line": 101,
+        "signature_hash": "ef2d11bf40f6dca1",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:_validate_index:5a857d5449d2cdd3",
+        "name": "_validate_index",
+        "kind": "function",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 117,
+        "end_line": 148,
+        "signature_hash": "7fb7636f2a81274a",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:content_defined_chunks:0d045ad5ef1db94c",
+        "name": "content_defined_chunks",
+        "kind": "function",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 151,
+        "end_line": 172,
+        "signature_hash": "6eb0397165069587",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:inspect_versioned_archive:ed295545bdcfe05c",
+        "name": "inspect_versioned_archive",
+        "kind": "function",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 390,
+        "end_line": 401,
+        "signature_hash": "85356a634bdb094b",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:k27_url_coordinate:077d23ca4831d624",
+        "name": "k27_url_coordinate",
+        "kind": "function",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 404,
+        "end_line": 406,
+        "signature_hash": "93c4399ab7838efb",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:pack_versioned_archive:bec6c89b8dd3239e",
+        "name": "pack_versioned_archive",
+        "kind": "function",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 202,
+        "end_line": 300,
+        "signature_hash": "3f586a5f18025856",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:require_exact_reversible_transform:75729af7cce15bf4",
+        "name": "require_exact_reversible_transform",
+        "kind": "function",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 409,
+        "end_line": 413,
+        "signature_hash": "55b1288a75b16546",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#function:unpack_versioned_archive:a9859fd88f840314",
+        "name": "unpack_versioned_archive",
+        "kind": "function",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 362,
+        "end_line": 387,
+        "signature_hash": "987426cf3191e464",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#method:ChunkingPolicy.boundary_mask:5881d0bf21973858",
+        "name": "ChunkingPolicy.boundary_mask",
+        "kind": "method",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 55,
+        "end_line": 57,
+        "signature_hash": "a24233f08469fe7d",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#method:ChunkingPolicy.validate:4cc9dea96a361ac1",
+        "name": "ChunkingPolicy.validate",
+        "kind": "method",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 48,
+        "end_line": 52,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#method:VersionedArchiveStats.exact_dedup_savings_fraction:1f1cc174a9299bb4",
+        "name": "VersionedArchiveStats.exact_dedup_savings_fraction",
+        "kind": "method",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 88,
+        "end_line": 91,
+        "signature_hash": "a8e7c32faea61d67",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
+        "semantic_id": "tools/aura_archive_versioned_chunk_dag.py#method:VersionedArchiveStats.final_archive_savings_fraction:37be1509745630f5",
+        "name": "VersionedArchiveStats.final_archive_savings_fraction",
+        "kind": "method",
+        "file": "tools/aura_archive_versioned_chunk_dag.py",
+        "line": 94,
+        "end_line": 97,
+        "signature_hash": "111e77c29cb756b1",
+        "file_digest8": "1659b609abc9c3b5"
+      },
+      {
         "semantic_id": "tools/aura_external_discovery.py#class:DiscoveryError:0377c9e8bbf5ccc4",
         "name": "DiscoveryError",
         "kind": "class",
@@ -449604,7 +450592,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "336ef4c2a57d64d5d7fd7e4f42dea165",
-    "payload_hash": "5550fa7b51451bff39508b92923359fb"
+    "record_fingerprint": "8626b6161f2a3fc27ace266e472b3a7e",
+    "payload_hash": "a97336f96667edf3506404f6cddcad82"
   }
 }
