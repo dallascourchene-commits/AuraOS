@@ -52,9 +52,9 @@ jobs:
           echo "COMPILE_STATUS=${compile_status}" >>eki3-test.log
           test_status=${compile_status}
           if [ "${compile_status}" -eq 0 ]; then
-            python -m pytest -q tests/test_aura_external_subject_lineage_bridge.py --junitxml=eki3-junit.xml >>eki3-test.log 2>&1
+            python -m unittest discover -s tests -p 'test_aura_external_subject_lineage_bridge.py' -v >>eki3-test.log 2>&1
             test_status=$?
-            echo "PYTEST_STATUS=${test_status}" >>eki3-test.log
+            echo "UNITTEST_STATUS=${test_status}" >>eki3-test.log
           fi
           cat eki3-test.log
           exit "${test_status}"
@@ -64,9 +64,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: eki3-adversarial-receipt-${{ github.event.pull_request.head.sha }}
-          path: |
-            eki3-test.log
-            eki3-junit.xml
+          path: eki3-test.log
           if-no-files-found: error
 
       - name: Validate bounded external coordinate map
