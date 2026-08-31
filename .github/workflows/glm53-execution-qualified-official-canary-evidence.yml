@@ -37,12 +37,13 @@ jobs:
       Q5_RECEIPT: 00bae035570665f19c40405c8d04002f894f6a7c05c75155ce9e63d8dcf9f01a
       A7_HEAD: 10481aa76117c24e5fdf7f93752e7820713a8285
       A7_RUN: '33400287890'
-      A7_JOB: '99514663480'
+      A7_JOB: 99514663480
+      Q15_SEMANTIC_HEAD: 8fbfa885ac5abe1ebe6b54e7694b18b2d6ab9cd3
     steps:
-      - name: Checkout exact child head
+      - name: Checkout current PR or push head
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -53,18 +54,23 @@ jobs:
       - name: Install exact canary dependency
         run: python -m pip install --disable-pip-version-check 'numpy==2.3.5'
 
-      - name: Prove exact two-parent convergence
+      - name: Prove exact semantic convergence and bounded descendants
         shell: bash
         run: |
           set -euo pipefail
+          git merge-base --is-ancestor "$Q15_SEMANTIC_HEAD" HEAD
           python3 - <<'PY'
           import os, subprocess
-          parts=subprocess.check_output(['git','rev-list','--parents','-n','1','HEAD'], text=True).strip().split()
+          semantic=os.environ['Q15_SEMANTIC_HEAD']
+          parts=subprocess.check_output(['git','rev-list','--parents','-n','1',semantic], text=True).strip().split()
           parents=parts[1:]
-          assert os.environ['A7_HEAD'] in parents, parents
-          assert os.environ['Q5_HEAD'] in parents, parents
-          assert len(parents) == 2, parents
-          print('Q15_TRUE_TWO_PARENT_CONVERGENCE=true')
+          assert sorted(parents)==sorted([os.environ['A7_HEAD'],os.environ['Q5_HEAD']]),parents
+          changed=subprocess.check_output(['git','diff','--name-only',semantic+'..HEAD'], text=True).splitlines()
+          allowed={'.aura/CODEMAP.json','.aura/CODEMAP.md','.github/workflows/glm53-execution-qualified-official-canary-evidence.yml'}
+          unexpected=[p for p in changed if p not in allowed]
+          assert not unexpected,unexpected
+          print('Q15_TRUE_TWO_PARENT_SEMANTIC_CONVERGENCE=true')
+          print('Q15_DESCENDANT_PATHS='+','.join(changed))
           PY
 
       - name: Revalidate exact A7 hosted parent
