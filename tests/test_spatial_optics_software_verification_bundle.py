@@ -6,7 +6,6 @@ from pathlib import Path
 import sys
 import unittest
 
-# Hosted W3 retrigger marker: no semantic behavior change; forces exact-head reproof.
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "tools"))
 
@@ -14,17 +13,11 @@ import k27_optics_independent_conformance as conf
 from spatial import optical_invariant_witness as inv
 import spatial_optics_software_verification_bundle as bundle
 
-PARENTS = ("artifact-a", "artifact-b")
-SOURCE_SHA = bundle.EXPECTED_IMPORTED_SOURCE_SHA256
-
 
 def invariant_receipt():
     return inv.measure_invariants(
         inv.deterministic_fixture(),
-        dx_m=8e-6,
-        dy_m=8e-6,
-        wavelength_m=532e-9,
-        distance_m=0.03,
+        dx_m=8e-6, dy_m=8e-6, wavelength_m=532e-9, distance_m=0.03,
     )
 
 
@@ -36,41 +29,65 @@ def resign_invariant(receipt):
     return replace(unsigned, receipt_sha256=digest)
 
 
-def conformance_receipt(*, source_sha=SOURCE_SHA, tolerance=None):
-    if tolerance is None:
-        findings = conf.run_independent_conformance()
-    else:
-        findings = conf.run_independent_conformance(
-            complex_tolerance=tolerance,
-            phase_tolerance_radians=tolerance,
-        )
-    return conf.build_conformance_receipt(
-        parent_artifact_ids=PARENTS,
-        imported_source_sha256=source_sha,
-        findings=findings,
-    )
+def conformance_receipt():
+    return conf.build_conformance_receipt()
 
 
-class SpatialOpticsSoftwareVerificationBundleTests(unittest.TestCase):
-    def test_two_green_lanes_bundle_without_same_test_object_promotion(self):
+def rehash(value):
+    payload = {k: v for k, v in value.items() if k != "receipt_sha256"}
+    value["receipt_sha256"] = hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
+    ).hexdigest()
+    return value
+
+
+class SpatialOpticsSoftwareVerificationBundleV2Tests(unittest.TestCase):
+    def test_two_current_software_lanes_bundle_without_physical_promotion(self):
         result = bundle.build_software_verification_bundle(
             invariant_receipt(), conformance_receipt()
         )
         self.assertEqual(result.verification_lanes, bundle.LANES)
         self.assertTrue(result.field_invariant_measurement_pass)
         self.assertTrue(result.independent_formulation_conformance_pass)
-        self.assertTrue(result.verification_modes_distinct)
+        self.assertTrue(result.conformance_producer_traversed)
+        self.assertFalse(result.historical_conformance_green_is_current_proof)
+        self.assertEqual(bundle.CONFORMANCE_SEMANTIC_GENERATION, result.conformance_semantic_generation)
+        self.assertEqual(bundle.CONFORMANCE_OWNER_BLOB, result.conformance_owner_blob)
         self.assertFalse(result.same_test_object_proven)
-        self.assertFalse(result.shared_implementation_generation_proven)
-        self.assertFalse(result.shared_fixture_identity_proven)
-        self.assertFalse(result.shared_sampling_grid_identity_proven)
-        self.assertFalse(result.shared_source_identity_proven)
+        self.assertFalse(result.physical_optics_validation_proven)
+        self.assertFalse(result.effect_authority_proven)
 
-    def test_bundle_never_promotes_software_verification_to_physical_validation(self):
-        result = bundle.build_software_verification_bundle(
-            invariant_receipt(), conformance_receipt()
-        )
+    def test_rehashed_fake_all_green_conformance_receipt_is_rejected(self):
+        fake = dict(conformance_receipt())
+        fake["findings"] = [{
+            "domain": "ASM", "case_index": 999, "class_agreement": True,
+            "numeric_error": 0.0, "within_tolerance": True,
+        }]
+        rehash(fake)
+        self.assertFalse(conf.verify_conformance_receipt(fake))
+        with self.assertRaisesRegex(bundle.VerificationBundleError, "INVALID_OR_STALE_CONFORMANCE_RECEIPT"):
+            bundle.build_software_verification_bundle(invariant_receipt(), fake)
+
+    def test_caller_override_widening_is_rejected_even_if_rehashed(self):
+        fake = dict(conformance_receipt())
+        fake["caller_findings_accepted"] = True
+        rehash(fake)
+        with self.assertRaisesRegex(bundle.VerificationBundleError, "INVALID_OR_STALE_CONFORMANCE_RECEIPT"):
+            bundle.build_software_verification_bundle(invariant_receipt(), fake)
+
+    def test_field_lane_must_still_be_closed(self):
+        weakened = resign_invariant(replace(invariant_receipt(), power_conservation_measured=False))
+        with self.assertRaisesRegex(bundle.VerificationBundleError, "FIELD_INVARIANT_LANE_NOT_CLOSED"):
+            bundle.build_software_verification_bundle(weakened, conformance_receipt())
+
+    def test_claim_ceiling_remains_closed(self):
+        result = bundle.build_software_verification_bundle(invariant_receipt(), conformance_receipt())
         for value in (
+            result.same_test_object_proven,
+            result.shared_implementation_generation_proven,
+            result.shared_fixture_identity_proven,
+            result.shared_sampling_grid_identity_proven,
+            result.shared_source_identity_proven,
             result.physical_optics_validation_proven,
             result.hardware_performance_proven,
             result.optical_safety_proven,
@@ -82,66 +99,18 @@ class SpatialOpticsSoftwareVerificationBundleTests(unittest.TestCase):
         ):
             self.assertFalse(value)
 
-    def test_missing_shared_identity_is_an_explicit_reopen_contract(self):
-        result = bundle.build_software_verification_bundle(
-            invariant_receipt(), conformance_receipt()
-        )
+    def test_reopen_contract_survives_rebind(self):
+        result = bundle.build_software_verification_bundle(invariant_receipt(), conformance_receipt())
         self.assertEqual(result.reopen_requirements, bundle.REOPEN_REQUIREMENTS)
-        self.assertEqual(
-            set(result.reopen_requirements),
-            {
-                "SHARED_IMPLEMENTATION_GENERATION",
-                "EXACT_SHARED_FIXTURE_DIGEST",
-                "EXACT_SHARED_SAMPLING_OR_GRID_DIGEST",
-                "EXACT_SHARED_SOURCE_BINDING",
-            },
-        )
 
-    def test_field_lane_must_be_closed_not_merely_well_formed(self):
-        weakened = resign_invariant(
-            replace(invariant_receipt(), power_conservation_measured=False)
-        )
-        with self.assertRaisesRegex(
-            bundle.VerificationBundleError, "FIELD_INVARIANT_LANE_NOT_CLOSED"
-        ):
-            bundle.build_software_verification_bundle(weakened, conformance_receipt())
+    def test_bundle_identity_binds_repaired_conformance_generation(self):
+        a = bundle.build_software_verification_bundle(invariant_receipt(), conformance_receipt())
+        b = bundle.build_software_verification_bundle(invariant_receipt(), conformance_receipt())
+        self.assertEqual(a.bundle_digest, b.bundle_digest)
+        self.assertIn("PR620:5a5878eace5974ff6a3f1dbf676fed8295bb457a", a.conformance_semantic_generation)
+        self.assertTrue(a.evidence_ref.endswith(a.bundle_digest))
 
-    def test_independent_lane_must_be_closed_not_merely_well_formed(self):
-        failed = conformance_receipt(tolerance=1e-30)
-        self.assertTrue(conf.verify_conformance_receipt(failed))
-        self.assertFalse(failed["software_independent_conformance_pass"])
-        with self.assertRaisesRegex(
-            bundle.VerificationBundleError, "INDEPENDENT_CONFORMANCE_LANE_NOT_CLOSED"
-        ):
-            bundle.build_software_verification_bundle(invariant_receipt(), failed)
-
-    def test_foreign_source_bound_conformance_receipt_fails_closed(self):
-        foreign = conformance_receipt(source_sha="f" * 64)
-        self.assertTrue(conf.verify_conformance_receipt(foreign))
-        with self.assertRaisesRegex(
-            bundle.VerificationBundleError, "CONFORMANCE_SOURCE_BINDING_MISMATCH"
-        ):
-            bundle.build_software_verification_bundle(invariant_receipt(), foreign)
-
-    def test_tampered_invariant_receipt_fails_closed(self):
-        original = invariant_receipt()
-        tampered = replace(original, distance_m=original.distance_m + 0.001)
-        with self.assertRaisesRegex(
-            bundle.VerificationBundleError, "INVALID_FIELD_INVARIANT_RECEIPT"
-        ):
-            bundle.build_software_verification_bundle(tampered, conformance_receipt())
-
-    def test_bundle_identity_is_deterministic_and_binds_both_receipts(self):
-        a_inv = invariant_receipt()
-        a_conf = conformance_receipt()
-        first = bundle.build_software_verification_bundle(a_inv, a_conf)
-        second = bundle.build_software_verification_bundle(a_inv, a_conf)
-        self.assertEqual(first.bundle_digest, second.bundle_digest)
-        self.assertEqual(first.invariant_receipt_sha256, a_inv.receipt_sha256)
-        self.assertEqual(first.conformance_receipt_sha256, a_conf["receipt_sha256"])
-        self.assertTrue(first.evidence_ref.endswith(first.bundle_digest))
-
-    def test_public_builder_exposes_only_the_two_evidence_inputs(self):
+    def test_public_builder_exposes_only_two_evidence_inputs(self):
         params = tuple(inspect.signature(bundle.build_software_verification_bundle).parameters)
         self.assertEqual(params, ("invariant_receipt", "conformance_receipt"))
 

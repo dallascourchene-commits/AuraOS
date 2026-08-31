@@ -1,15 +1,11 @@
 """Two-lane software-verification bundle for bounded Aura spatial-optics evidence.
 
-This module joins two independently earned software evidence modes without
-pretending that they exercised one identical experiment:
+V2 rebinds the independent-conformance lane to the repaired PR620 producer
+semantics. A historical green receipt is not enough: every bundle construction
+re-executes the current canonical PR620 conformance producer through its verifier.
+The PR619 field-invariant lane remains independently scoped.
 
-* field-level invariant measurement (PR619), and
-* independent-formulation conformance (PR620).
-
-The bundle is deliberately non-promoting.  It binds exact receipt identities,
-records what each lane establishes, and keeps shared-test-object identity,
-physical validation, hardware performance, semantic K27 authority and effects
-false until separately owned evidence exists.
+This bundle is software verification only, not physical validation.
 """
 from __future__ import annotations
 
@@ -25,10 +21,11 @@ from spatial.optical_invariant_witness import (
 )
 import k27_optics_independent_conformance as conformance
 
-SCHEMA = "AURA_SPATIAL_OPTICS_SOFTWARE_VERIFICATION_BUNDLE_V1"
-EXPECTED_IMPORTED_SOURCE_SHA256 = (
-    "56d8593284d37ce03a2762dedc2390878ee6d271a0f1f100a5e245ad01080d6d"
-)
+SCHEMA = "AURA_SPATIAL_OPTICS_SOFTWARE_VERIFICATION_BUNDLE_V2"
+CONFORMANCE_SEMANTIC_GENERATION = "PR620:5a5878eace5974ff6a3f1dbf676fed8295bb457a"
+CONFORMANCE_OWNER_BLOB = "533c9e3926ff027367adef907b47bc01c74a6d4b"
+INVARIANT_SEMANTIC_GENERATION = "PR619:c74239e79244b877d63f4952cea590ea6e122e78"
+EXPECTED_IMPORTED_SOURCE_SHA256 = conformance.IMPORTED_SOURCE_SHA256
 LANES = (
     "FIELD_INVARIANT_MEASUREMENT",
     "INDEPENDENT_FORMULATION_CONFORMANCE",
@@ -47,11 +44,7 @@ class VerificationBundleError(ValueError):
 
 def _canonical(value: object) -> bytes:
     return json.dumps(
-        value,
-        sort_keys=True,
-        separators=(",", ":"),
-        ensure_ascii=True,
-        allow_nan=False,
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False
     ).encode("utf-8")
 
 
@@ -70,16 +63,12 @@ def _verify_invariant_receipt(receipt: OpticalInvariantReceiptV1) -> bool:
         int(receipt.receipt_sha256, 16)
     except ValueError:
         return False
-
-    # PR619 hashes the exact dataclass payload with receipt_sha256 blank.
     unsigned = replace(receipt, receipt_sha256="")
     expected = hashlib.sha256(
         json.dumps(asdict(unsigned), sort_keys=True, separators=(",", ":")).encode()
     ).hexdigest()
     if receipt.receipt_sha256 != expected:
         return False
-
-    # Preserve the exact PR619 negative ceiling.
     if (
         receipt.phase_only_full_field_fidelity_proven
         or receipt.speckle_elimination_proven
@@ -103,23 +92,39 @@ def _require_closed_invariant_lane(receipt: OpticalInvariantReceiptV1) -> None:
         raise VerificationBundleError("FIELD_INVARIANT_LANE_NOT_CLOSED")
 
 
-def _require_closed_conformance_lane(receipt: Mapping[str, object]) -> None:
+def _require_current_conformance_lane(receipt: Mapping[str, object]) -> None:
+    # Repaired PR620 verification re-executes the canonical producer and requires
+    # exact consequence equality. A fresh hash over caller-authored findings fails.
     if not conformance.verify_conformance_receipt(receipt):
-        raise VerificationBundleError("INVALID_CONFORMANCE_RECEIPT")
+        raise VerificationBundleError("INVALID_OR_STALE_CONFORMANCE_RECEIPT")
     if receipt.get("imported_source_sha256") != EXPECTED_IMPORTED_SOURCE_SHA256:
         raise VerificationBundleError("CONFORMANCE_SOURCE_BINDING_MISMATCH")
+    if receipt.get("producer_schema") != "AURA_K27_OPTICS_CANONICAL_CONFORMANCE_PRODUCER_V1":
+        raise VerificationBundleError("CONFORMANCE_PRODUCER_GENERATION_REQUIRED")
     if receipt.get("software_independent_conformance_pass") is not True:
         raise VerificationBundleError("INDEPENDENT_CONFORMANCE_LANE_NOT_CLOSED")
+    for key in (
+        "caller_findings_accepted",
+        "caller_source_sha_accepted",
+        "caller_parent_ids_accepted",
+    ):
+        if receipt.get(key) is not False:
+            raise VerificationBundleError("CONFORMANCE_CALLER_OVERRIDE_CEILING_WIDENED")
 
 
 @dataclass(frozen=True)
-class SpatialOpticsSoftwareVerificationBundleV1:
+class SpatialOpticsSoftwareVerificationBundleV2:
     invariant_receipt_sha256: str
     conformance_receipt_sha256: str
+    invariant_semantic_generation: str
+    conformance_semantic_generation: str
+    conformance_owner_blob: str
     conformance_imported_source_sha256: str
     verification_lanes: tuple[str, str]
     field_invariant_measurement_pass: bool
     independent_formulation_conformance_pass: bool
+    conformance_producer_traversed: bool
+    historical_conformance_green_is_current_proof: bool
     verification_modes_distinct: bool
     same_test_object_proven: bool
     shared_implementation_generation_proven: bool
@@ -152,27 +157,25 @@ class SpatialOpticsSoftwareVerificationBundleV1:
 def build_software_verification_bundle(
     invariant_receipt: OpticalInvariantReceiptV1,
     conformance_receipt: Mapping[str, object],
-) -> SpatialOpticsSoftwareVerificationBundleV1:
-    """Bind two green software lanes while preserving their non-equivalence.
-
-    There are intentionally only two public inputs.  No caller can supply a
-    truth/currentness/trust/rank/effect/K27 flag or claim that the receipts came
-    from one shared experiment.
-    """
+) -> SpatialOpticsSoftwareVerificationBundleV2:
     _require_closed_invariant_lane(invariant_receipt)
-    _require_closed_conformance_lane(conformance_receipt)
-
+    _require_current_conformance_lane(conformance_receipt)
     conformance_digest = conformance_receipt.get("receipt_sha256")
     if type(conformance_digest) is not str or len(conformance_digest) != 64:
         raise VerificationBundleError("CONFORMANCE_RECEIPT_IDENTITY_REQUIRED")
 
-    return SpatialOpticsSoftwareVerificationBundleV1(
+    return SpatialOpticsSoftwareVerificationBundleV2(
         invariant_receipt_sha256=invariant_receipt.receipt_sha256,
         conformance_receipt_sha256=conformance_digest,
+        invariant_semantic_generation=INVARIANT_SEMANTIC_GENERATION,
+        conformance_semantic_generation=CONFORMANCE_SEMANTIC_GENERATION,
+        conformance_owner_blob=CONFORMANCE_OWNER_BLOB,
         conformance_imported_source_sha256=EXPECTED_IMPORTED_SOURCE_SHA256,
         verification_lanes=LANES,
         field_invariant_measurement_pass=True,
         independent_formulation_conformance_pass=True,
+        conformance_producer_traversed=True,
+        historical_conformance_green_is_current_proof=False,
         verification_modes_distinct=True,
         same_test_object_proven=False,
         shared_implementation_generation_proven=False,
