@@ -1,0 +1,89 @@
+name: K27 ASTGE Profiled Nested Scope Convergence
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge-ingest/**"
+      - "crates/aura-k27-astge-scopes/**"
+      - "crates/aura-k27-astge-syntax-profile/**"
+      - "crates/aura-k27-astge-profiled-scopes/**"
+      - "tools/k27_astge_python_scope_oracle.py"
+      - ".github/workflows/k27-astge-profiled-nested-scopes.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  profiled-nested-scopes:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove SyntaxGraph profile parent
+        shell: bash
+        run: |
+          rustc --version
+          cargo --version
+          python3 --version
+          cargo fmt --manifest-path crates/aura-k27-astge-syntax-profile/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-syntax-profile/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-syntax-profile/Cargo.toml --all-targets -- -D warnings
+
+      - name: Re-prove nested-scope parent and CPython oracle
+        shell: bash
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-scopes/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-scopes/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-scopes/Cargo.toml --all-targets -- -D warnings
+          python3 tools/k27_astge_python_scope_oracle.py
+
+      - name: Verify profiled scope composition
+        shell: bash
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-profiled-scopes/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-profiled-scopes/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-profiled-scopes/Cargo.toml --all-targets -- -D warnings
+
+      - name: Safe-path unsafe scan
+        shell: bash
+        run: |
+          if grep -R --line-number -E 'unsafe\s*\{' \
+            crates/aura-k27-astge-syntax-profile/src \
+            crates/aura-k27-astge-scopes/src \
+            crates/aura-k27-astge-profiled-scopes/src; then
+            echo 'unsafe block found in profiled-scope safe path' >&2
+            exit 1
+          fi
+
+      - name: Emit claim ceiling
+        shell: bash
+        run: |
+          echo 'PROFILED_NESTED_SCOPE_CONVERGENCE_EXECUTED=true'
+          echo 'SYNTAX_GRAPH_PROFILE_BOUND=true'
+          echo 'CPYTHON_SYMTABLE_SCOPE_TREE_CONFORMANT=true'
+          echo 'LOCAL_AST_NODE_ID_IS_SEMANTIC_ID=false'
+          echo 'LOCAL_SCOPE_ID_IS_SEMANTIC_ID=false'
+          echo 'GRAMMAR_PROFILE_SOURCE_GENERATION_BOUND=true'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'GLOBAL_NONLOCAL_RESOLUTION_PROVEN=false'
+          echo 'IMPORT_GRAPH_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'SEMANTIC_K27_DERIVED=false'
+          echo 'HUMAN_AUTHORITY=false'
+          echo 'EXTERNAL_EFFECT=false'
