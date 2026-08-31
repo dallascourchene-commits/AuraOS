@@ -1,0 +1,80 @@
+name: K27 ASTGE V4 lease mmap execution
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - "crates/aura-k27-astge-v4-mmap-exec/**"
+      - ".github/workflows/k27-astge-v4-lease-mmap-exec.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: k27-astge-v4-lease-mmap-exec-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  v4-lease-mmap-exec:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact candidate head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Reprove V4 source-owned selector
+        run: |
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify lease consumer
+        run: |
+          cargo fmt --check --manifest-path crates/aura-k27-astge-v4-mmap-exec/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-v4-mmap-exec/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-v4-mmap-exec/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify canonical trust boundary
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('crates/aura-k27-astge-v4-mmap-exec/src/lib.rs').read_text()
+          sig = text.split('pub fn open_canonical_data_serving_reader_v2(', 1)[1].split(') -> Result<', 1)[0]
+          forbidden = ('MmapCandidateLeaseV2', 'BackingFileImmutabilityCapability', 'File', 'registry', 'trusted', 'authority')
+          for token in forbidden:
+              assert token not in sig, (token, sig)
+          assert 'DataServingBackendAdmissionV2::MmapCapabilityGated(lease)' in text
+          assert 'lease.into_verified_files()' in text
+          positive = text.split('DataServingBackendAdmissionV2::MmapCapabilityGated(lease)', 1)[1].split('fn require_safe_receipt', 1)[0]
+          assert 'File::open' not in positive
+          print('CALLER_CAPABILITY_OVERRIDE_ACCEPTED=false')
+          print('OPAQUE_V4_LEASE_CONSUMED=true')
+          print('POSITIVE_PATH_REOPEN_REPRESENTED=false')
+          PY
+
+      - name: Emit claim ceiling
+        run: |
+          echo "V4_SELECTOR_SNAPSHOT_PLACEMENT_INDEPENDENT=true"
+          echo "V4_EXACT_HANDLES_REVALIDATED_AT_HANDOFF=true"
+          echo "PRODUCTION_IMMUTABILITY_CAPABILITIES_V2=0"
+          echo "PRODUCTION_BACKEND=READ_SEEK_SAFE_DEFAULT"
+          echo "POSITIVE_PRODUCTION_MMAP_EXECUTION_EXERCISED=false"
+          echo "MAPPER_SAME_BYTES_READSEEK_EQUIVALENCE_TESTED=true"
+          echo "MAPPER_NO_PATH_REOPEN_TESTED=true"
+          echo "SIGBUS_IMPOSSIBLE_PROVEN=false"
+          echo "PHYSICAL_CRASH_DURABILITY_PROVEN=false"
+          echo "PERFORMANCE_SUPERIORITY_PROVEN=false"
+          echo "HUMAN_AUTHORITY=false"
+          echo "EXTERNAL_EFFECT=false"
