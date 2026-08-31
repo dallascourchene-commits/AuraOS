@@ -1,0 +1,203 @@
+name: GLM53 Source-Bound Quantization Evidence Gate
+
+on:
+  pull_request:
+    paths:
+      - 'tools/quantization/aura_glm53_source_bound_quantization_evidence_gate.py'
+      - 'tools/quantization/test_aura_glm53_source_bound_quantization_evidence_gate.py'
+      - 'tools/quantization/aura_glm53_historical_official_w2_bridge.py'
+      - 'tests/test_aura_glm53_historical_official_w2_bridge.py'
+      - 'tools/quantization/aura_glm53_official_source_admission.py'
+      - 'tools/quantization/aura_glm53_quantization_evidence_transfer.py'
+      - '.github/workflows/glm53-source-bound-quantization-evidence-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q7-source-bound-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Assert exact parent and materialized owner generations
+        run: |
+          set -euo pipefail
+          Q6=4137aabd972feff9c4412bb4786ef8fd4de207e0
+          Q5_BLOB=7ed09c57699fe303f555a3b6bdaadb791c64223f
+          BRIDGE_BLOB=77a90ea9f5a438aa438103acd4de05432fe7875a
+          git merge-base --is-ancestor "$Q6" HEAD
+          test "$(git rev-parse HEAD:tools/quantization/aura_glm53_official_source_admission.py)" = "$Q5_BLOB"
+          test "$(git rev-parse HEAD:tools/quantization/aura_glm53_historical_official_w2_bridge.py)" = "$BRIDGE_BLOB"
+          python - <<'PY'
+          from tools.quantization.aura_glm53_official_source_admission import current_public_state
+          from tools.quantization.aura_glm53_source_bound_quantization_evidence_gate import (
+              HISTORICAL_BRIDGE_OWNER_BLOB_SHA,
+              HISTORICAL_BRIDGE_OWNER_HEAD,
+              HISTORICAL_BRIDGE_OWNER_RUN,
+              HISTORICAL_BRIDGE_VERSION,
+              Q5_CURRENT_SOURCE_STATE_DIGEST,
+              Q5_OWNER_BLOB_SHA,
+              VERSION,
+              _current_historical_bridge,
+          )
+          source = current_public_state()
+          bridge = _current_historical_bridge()
+          assert source.digest() == Q5_CURRENT_SOURCE_STATE_DIGEST
+          assert Q5_OWNER_BLOB_SHA == '7ed09c57699fe303f555a3b6bdaadb791c64223f'
+          assert HISTORICAL_BRIDGE_OWNER_HEAD == '71d4816cf0702a39b57ecf7d6bae6298ec239800'
+          assert HISTORICAL_BRIDGE_OWNER_RUN == 33371459229
+          assert HISTORICAL_BRIDGE_OWNER_BLOB_SHA == '77a90ea9f5a438aa438103acd4de05432fe7875a'
+          assert bridge.version == HISTORICAL_BRIDGE_VERSION
+          assert VERSION == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V5'
+          print('Q5_EXACT_PRODUCER_TRAVERSAL=true')
+          print('PR646_EXACT_GREEN_OWNER_TRAVERSAL=true')
+          PY
+
+      - name: Revalidate exact Q5 Q6 and PR646 hosted runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          expected = {
+              33369967425: ('730426b82235b0ff4e75fef1cff00707877a84ad', 'GLM53 Official Quantization Source Admission'),
+              33370305329: ('4137aabd972feff9c4412bb4786ef8fd4de207e0', 'GLM53 Quantization Evidence Transfer'),
+              33371459229: ('71d4816cf0702a39b57ecf7d6bae6298ec239800', 'GLM53 Historical Official W2 Quant Source Bridge'),
+          }
+          for run_id, (sha, name) in expected.items():
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json'},
+              )
+              with urllib.request.urlopen(req) as r:
+                  data = json.load(r)
+              assert data['head_sha'] == sha, (run_id, data['head_sha'], sha)
+              assert data['name'] == name, (run_id, data['name'], name)
+              assert data['status'] == 'completed', data['status']
+              assert data['conclusion'] == 'success', data['conclusion']
+          print('Q5_Q6_PR646_EXACT_HOSTED_SUCCESS=true')
+          PY
+
+      - name: Revalidate historical official zero-payload producer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          run_id = 33336508527
+          job_id = 99324255699
+          headers = {'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json'}
+          req = urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}', headers=headers)
+          with urllib.request.urlopen(req) as r:
+              run = json.load(r)
+          assert run['head_sha'] == '131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8'
+          assert run['status'] == 'completed' and run['conclusion'] == 'success'
+          req = urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}', headers=headers)
+          with urllib.request.urlopen(req) as r:
+              job = json.load(r)
+          assert job['run_id'] == run_id
+          assert job['status'] == 'completed' and job['conclusion'] == 'success'
+          steps = {step['name']: step for step in job.get('steps', [])}
+          step = steps['Observe official GLM-5.3 header evidence without payload']
+          assert step['status'] == 'completed' and step['conclusion'] == 'success'
+          print('HISTORICAL_OFFICIAL_HEADER_PRODUCER_SUCCESS=true')
+          PY
+
+      - name: Re-prove Q5 exact source admission in isolation
+        run: |
+          set -euo pipefail
+          Q5=730426b82235b0ff4e75fef1cff00707877a84ad
+          git fetch origin "$Q5"
+          git worktree add --detach /tmp/q5 "$Q5"
+          cd /tmp/q5
+          python -m unittest tests.test_aura_glm53_official_source_admission -v
+          python tools/quantization/aura_glm53_official_source_admission.py | tee /tmp/q5-state.json
+          grep -q 'OFFICIAL_INDEX_BYTES_AND_REPRESENTATIVE_HEADERS_NOT_MATERIALIZED' /tmp/q5-state.json
+          grep -q '"header_trial_eligible": false' /tmp/q5-state.json
+
+      - name: Re-prove exact-green PR646 bridge owner
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:tools/quantization/aura_glm53_historical_official_w2_bridge.py)" = '77a90ea9f5a438aa438103acd4de05432fe7875a'
+          python -m unittest tests.test_aura_glm53_historical_official_w2_bridge -v
+          python tools/quantization/aura_glm53_historical_official_w2_bridge.py | tee /tmp/historical-bridge.json
+          python - <<'PY'
+          import json
+          x = json.load(open('/tmp/historical-bridge.json'))
+          assert x['historical_raw_index_verification_observed'] is True
+          assert x['historical_representative_headers_observed'] is True
+          assert x['historical_fp8_companions_bound'] is True
+          assert x['current_consumer_raw_index_bytes_materialized'] is False
+          assert x['current_consumer_raw_header_prefixes_materialized'] is False
+          assert x['all_layers_experts_uniformity_proven'] is False
+          assert x['source_tensor_payload_bound'] is False
+          print('PR646_EXACT_GREEN_BRIDGE_REPROVED=true')
+          PY
+
+      - name: Re-prove Q6 and Q7 adversarials
+        run: |
+          set -euo pipefail
+          python -m unittest tools.quantization.test_aura_glm53_quantization_evidence_transfer -v
+          python -m unittest tools.quantization.test_aura_glm53_source_bound_quantization_evidence_gate -v
+
+      - name: Emit and assert exact Q7 consequence
+        run: |
+          set -euo pipefail
+          python tools/quantization/aura_glm53_source_bound_quantization_evidence_gate.py | tee /tmp/q7.json
+          python - <<'PY'
+          import json
+          x = json.load(open('/tmp/q7.json'))
+          assert x['version'] == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V5'
+          assert x['q5_source_owner_blob'] == '7ed09c57699fe303f555a3b6bdaadb791c64223f'
+          assert x['historical_bridge_owner_head'] == '71d4816cf0702a39b57ecf7d6bae6298ec239800'
+          assert x['historical_bridge_owner_run'] == 33371459229
+          assert x['historical_bridge_owner_blob'] == '77a90ea9f5a438aa438103acd4de05432fe7875a'
+          assert len(x['historical_bridge_digest']) == 64
+          assert x['disposition'] == 'HOLD_CURRENT_SOURCE_TRANSPORT_AND_REPRESENTATION_EVIDENCE'
+          assert x['historical_official_index_relation_observed'] is True
+          assert x['historical_official_headers_observed'] is True
+          assert x['historical_official_fp8_companions_bound'] is True
+          assert x['historical_observation_representative_only'] is True
+          assert x['historical_entry_count'] == 6
+          assert x['historical_payload_bytes_read'] == 0
+          assert x['historical_evidence_implies_current_raw_bytes'] is False
+          assert x['historical_evidence_implies_global_layout_uniformity'] is False
+          assert x['current_source_index_bytes_verified'] is False
+          assert x['current_source_headers_observed'] is False
+          assert x['current_source_header_trial_eligible'] is False
+          assert x['independent_current_source_transport_residual'] is True
+          assert x['independent_representation_evidence_residual'] is True
+          assert x['source_bound_evidence_admitted'] is False
+          assert x['geometry_family_label_match'] is True
+          assert x['exact_representation_identity_match'] is False
+          assert x['source_evidence_scope'] == 'SYNTHETIC_DISTORTION_ONLY'
+          for key in (
+              'glm53_tensor_evidence_admitted',
+              'coding_quality_evidence_admitted',
+              'runtime_evidence_admitted',
+              'semantic_k27_authority_minted',
+              'native_transformer_kv_accessed',
+              'gate10_promoted',
+          ):
+              assert x[key] is False, key
+          print('COPIED_PARENT_STATE_NE_PRODUCER_TRAVERSAL=true')
+          print('SEMANTICALLY_SIMILAR_OWNER_NE_EXACT_GREEN_OWNER_GENERATION=true')
+          print('Q7_TRAVERSES_EXACT_GREEN_PR646_OWNER=true')
+          print('HISTORICAL_HEADER_PROOF_NE_CURRENT_BYTE_RESIDENCY=true')
+          print('REPRESENTATIVE_HEADER_PROOF_NE_GLOBAL_LAYOUT_UNIFORMITY=true')
+          print('SOURCE_IDENTITY_NE_CURRENT_SOURCE_BYTES=true')
+          print('REPRESENTATION_IDENTITY_NE_EVIDENCE_SCOPE=true')
+          print('SOURCE_BOUND_TRIAL_REQUIRES_BOTH_CURRENT_SOURCE_AND_EXACT_REPRESENTATION_EVIDENCE=true')
+          print('Q7_D0_NONPROMOTING=true')
+          PY

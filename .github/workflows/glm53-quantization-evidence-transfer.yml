@@ -1,0 +1,145 @@
+name: GLM53 Quantization Evidence Transfer
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-representation-evidence-transfer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      SEMANTIC_SHA: 1fbecaada5ccf8cc58930064b2529e33dddf049b
+      Q5_SHA: e342b5c1ab1dc51cb0c3d9b79b8fa3b83cae7192
+      Q5_RUN: "33369222880"
+      Q4_SHA: 0330ee6c19d903f7e3d079996b5b87794b423411
+      Q4_RUN: "33369336878"
+      Q4_SOURCE_BLOB: 8c35c47f6b162bf03324f509dc1b820b6eb689f9
+    steps:
+      - name: Checkout exact child head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - name: Prove semantic two-parent convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/git/commits/{os.environ['SEMANTIC_SHA']}",
+              headers={
+                  'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+                  'Accept': 'application/vnd.github+json',
+                  'X-GitHub-Api-Version': '2022-11-28',
+              },
+          )
+          with urllib.request.urlopen(req) as response:
+              data = json.load(response)
+          parents = [p['sha'] for p in data['parents']]
+          expected = [os.environ['Q5_SHA'], os.environ['Q4_SHA']]
+          assert parents == expected, (parents, expected)
+          print('TRUE_Q5_Q4_CONVERGENCE=true')
+          PY
+
+      - name: Revalidate exact hosted parent generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          headers = {
+              'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          for sha_key, run_key in (('Q5_SHA','Q5_RUN'), ('Q4_SHA','Q4_RUN')):
+              run = os.environ[run_key]
+              req = urllib.request.Request(f"https://api.github.com/repos/{repo}/actions/runs/{run}", headers=headers)
+              with urllib.request.urlopen(req) as response:
+                  data = json.load(response)
+              assert data['head_sha'] == os.environ[sha_key], (run, data['head_sha'], os.environ[sha_key])
+              assert data['status'] == 'completed' and data['conclusion'] == 'success', data
+              print(f"PARENT_RUN_OK={run}:{os.environ[sha_key]}")
+          PY
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          check-latest: false
+
+      - name: Install exact numeric dependency
+        run: python3 -m pip install --disable-pip-version-check numpy==2.3.5
+
+      - name: Verify exact Q4 source identity and constants
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$Q4_SHA"
+          test "$(git ls-tree "$Q4_SHA" tools/quantization/aura_glm53_equal_rate_e8_ablation.py | awk '{print $3}')" = "$Q4_SOURCE_BLOB"
+          git show "$Q4_SHA":tools/quantization/aura_glm53_equal_rate_e8_ablation.py > /tmp/q4.py
+          python3 - <<'PY'
+          import importlib.util, sys
+          spec = importlib.util.spec_from_file_location('q4_exact', '/tmp/q4.py')
+          mod = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = mod
+          spec.loader.exec_module(mod)
+          assert mod.E8_SCHEME == 'E8_ROOT_240_U8_V1'
+          assert mod.E8_CODEBOOK_SHA256 == 'cc0261db332ac098bcfbed0a75a05c450eb24cc4e1daa81f1fa84be8356e24b3'
+          assert mod.INDEX_BITS == 8
+          assert mod.CODEC_BPW == 1.25
+          print('Q4_EXACT_REPRESENTATION_IDENTITY=true')
+          PY
+
+      - name: Run Q6 adversarial evidence-transfer proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_quantization_evidence_transfer.py \
+            tools/quantization/test_aura_glm53_quantization_evidence_transfer.py
+          python3 -m unittest -v tools.quantization.test_aura_glm53_quantization_evidence_transfer
+          python3 -m tools.quantization.aura_glm53_quantization_evidence_transfer | tee /tmp/q6.json
+          python3 - <<'PY'
+          import json
+          r = json.load(open('/tmp/q6.json', encoding='utf-8'))
+          assert r['exact_representation_identity_match'] is False
+          assert r['geometry_family_label_match'] is True
+          assert r['disposition'] == 'DIFFERENT_REPRESENTATION_NO_EVIDENCE_TRANSFER'
+          assert r['synthetic_distortion_evidence_transferable'] is False
+          assert r['glm53_tensor_gain_inherited'] is False
+          assert r['coding_quality_inherited'] is False
+          assert r['runtime_performance_inherited'] is False
+          assert r['semantic_k27_authority_minted'] is False
+          assert r['gate10_promoted'] is False
+          print('E8_FAMILY_NE_EXACT_REPRESENTATION=true')
+          print('Q4_SYNTHETIC_WIN_NE_Q5_QUALITY=true')
+          PY
+
+      - name: Emit claim ceiling
+        run: |
+          cat <<'EOF'
+          GEOMETRY_FAMILY_LABEL_NE_REPRESENTATION_IDENTITY=true
+          SAME_E8_NAME_NE_SAME_CODEBOOK=true
+          SYNTHETIC_DISTORTION_NE_GLM53_TENSOR_GAIN=true
+          SYNTHETIC_DISTORTION_NE_CODING_QUALITY=true
+          SYNTHETIC_DISTORTION_NE_RUNTIME_WIN=true
+          K27_COORDINATE_NE_EVIDENCE_AUTHORITY=true
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTED=false
+          DEPLOYMENT_AUTHORIZED=false
+          EOF
