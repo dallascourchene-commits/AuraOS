@@ -1,0 +1,151 @@
+name: Aura WorkCapsule Corroboration Memory Identity
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR587_SHA: 406b16b347965f82d79afa1fe3700fa5d1381ef0
+  PR581_SHA: 4b0cdcef93bfaf09d8bb4545a9e022f922067dc7
+  CONVERGENCE_SHA: 0f38aaab9c5cccdd2b8c38791330166063f14e64
+  PR587_OWNER_BLOB: aa5159a312ff80dc3d4c07cba874a4341a86f373
+  PR587_TEST_BLOB: cb12ee2a4f24d7db8e0028f432cee58ac87f963e
+  PR581_OWNER_BLOB: d2831fceadeb6abc4855943c0615fe84be5bd879
+  PR581_TEST_BLOB: 8360b18e0ab958f7908bddecc89e8fb08fd6b366
+
+jobs:
+  exact-corroboration-memory-identity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact child and prove PR587 x PR581 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=360 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR587_SHA" "$PR581_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR587_SHA $PR581_SHA"
+          git merge-base --is-ancestor "$PR587_SHA" HEAD
+          git merge-base --is-ancestor "$PR581_SHA" HEAD
+          test "$(git hash-object scripts/aura_workcapsule_corroboration_preserves_evidence_classes.py)" = "$PR587_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_workcapsule_corroboration_preserves_evidence_classes.py)" = "$PR587_TEST_BLOB"
+          test "$(git hash-object scripts/aura_provenance_corroboration_memory_admission.py)" = "$PR581_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_provenance_corroboration_memory_admission.py)" = "$PR581_TEST_BLOB"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_PR587_PR581_CONVERGENCE=true'
+
+      - name: Re-prove exact PR587 evidence-class corroboration owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_corroboration_preserves_evidence_classes.py
+          python3 -m unittest -v tests.test_aura_workcapsule_corroboration_preserves_evidence_classes
+
+      - name: Re-prove exact PR581 V2 memory owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_provenance_corroboration_memory_admission.py
+          python3 -m unittest -v tests.test_aura_provenance_corroboration_memory_admission
+
+      - name: Prove O48 identity-preserving memory adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_corroboration_memory_identity.py
+          python3 -m unittest -v tests.test_aura_workcapsule_corroboration_memory_identity
+
+      - name: Prove owner reuse and fixed public boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_workcapsule_corroboration_memory_identity.py
+          grep -q 'admit_corroboration_preserves_evidence_classes' "$child"
+          grep -q 'admit_evidence_nodes' "$child"
+          if grep -q '^def admit_corroboration_preserves_evidence_classes' "$child"; then
+            echo 'child duplicated PR587 owner' >&2
+            exit 1
+          fi
+          if grep -q '^def admit_evidence_nodes' "$child"; then
+            echo 'child duplicated PR581 owner' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_corroboration_memory_identity import admit_corroboration_memory_identity
+          assert set(inspect.signature(admit_corroboration_memory_identity).parameters) == {
+              'live_artifact_host_receipt',
+              'causal_raw_slice_host_separation_receipt',
+              'pr568_receipt',
+              'pr572_receipt',
+          }
+          PY
+
+      - name: Execute one exact PR587 fixture through PR581 V2
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts.aura_workcapsule_corroboration_memory_identity import admit_corroboration_memory_identity
+          from tests.test_aura_workcapsule_corroboration_preserves_evidence_classes import exact_inputs
+          live, raw, a, b = exact_inputs()
+          out = admit_corroboration_memory_identity(
+              live_artifact_host_receipt=live,
+              causal_raw_slice_host_separation_receipt=raw,
+              pr568_receipt=a,
+              pr572_receipt=b,
+          )
+          admission = out['memory_admission']
+          assert out['two_proof_artifacts_preserved'] is True
+          assert out['artifact_identity_collapse_performed'] is False
+          assert len(admission['eligible_artifact_refs']) == 2
+          edges = [r for r in admission['relations'] if r['kind'] == 'CORROBORATES']
+          assert len(edges) == 1
+          assert edges[0]['dependency_distinct'] is True
+          assert edges[0]['proof_artifacts_interchangeable'] is False
+          assert edges[0]['rank_transition_credit'] is False
+          assert admission['corroboration_groups'][0]['kappa'] == 2
+          assert admission['corroboration_rank_transition_performed'] is False
+          assert out['ambient_currentness_reproved'] is False
+          assert out['producer_authenticated'] is False
+          assert out['semantic_truth_proven'] is False
+          assert out['effect_authority_proven'] is False
+          print('TWO_CORROBORATING_MEMORY_ARTIFACTS_PRESERVED=true')
+          print('CORROBORATION_KAPPA=2')
+          print('RANK_TRANSITION_CREDIT=false')
+          PY
+
+      - name: Emit consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat <<'EOF'
+          TWO_PROOF_ARTIFACTS_PRESERVED=true
+          ONE_CORROBORATION_EDGE_PRESERVED=true
+          DEPENDENCY_DISTINCT_KAPPA=2
+          ARTIFACT_IDENTITY_COLLAPSE=false
+          EVIDENCE_CLASS_CONVERSION=false
+          CURRENTNESS_DOMAIN_CROSS_CAST=false
+          CORROBORATION_RANK_TRANSITION=false
+          AMBIENT_CURRENTNESS_REPROVED=false
+          PRODUCER_AUTHENTICATED=false
+          SEMANTIC_TRUTH_PROVEN=false
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          EFFECT_AUTHORITY_PROVEN=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          SEMANTIC_K27_AUTHORITY=false
+          MERGE_PROMOTION_AUTHORITY=false
+          GATE10_PROMOTION=false
+          EOF
