@@ -74,9 +74,7 @@ impl From<PostEditCanonicalScopeErrorV1> for PostEditCanonicalTargetHandleContin
     }
 }
 
-impl From<PostEditHigherOwnerContinuityErrorV1>
-    for PostEditCanonicalTargetHandleContinuityErrorV1
-{
+impl From<PostEditHigherOwnerContinuityErrorV1> for PostEditCanonicalTargetHandleContinuityErrorV1 {
     fn from(value: PostEditHigherOwnerContinuityErrorV1) -> Self {
         Self::HandleContinuity(value)
     }
@@ -94,14 +92,10 @@ fn require_same_consequence_and_target(
         );
     }
     if !handle_continuity.higher_owner_semantic_handle_continuity_proven {
-        return Err(
-            PostEditCanonicalTargetHandleContinuityErrorV1::HigherOwnerContinuityNotProven,
-        );
+        return Err(PostEditCanonicalTargetHandleContinuityErrorV1::HigherOwnerContinuityNotProven);
     }
     if canonical_target.post_edit_current != handle_continuity.post_edit {
-        return Err(
-            PostEditCanonicalTargetHandleContinuityErrorV1::ParentPostEditReceiptMismatch,
-        );
+        return Err(PostEditCanonicalTargetHandleContinuityErrorV1::ParentPostEditReceiptMismatch);
     }
 
     let selected_scope_id = canonical_target
