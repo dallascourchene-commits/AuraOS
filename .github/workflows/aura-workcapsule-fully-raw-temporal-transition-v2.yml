@@ -1,0 +1,193 @@
+name: Aura WorkCapsule Fully Raw Temporal Transition V2
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_astge_anchor_hydration.py'
+      - 'scripts/aura_workcapsule_context_binding.py'
+      - 'scripts/aura_workcapsule_reentry_invalidation.py'
+      - 'scripts/aura_workcapsule_source_reentry_observation.py'
+      - 'scripts/aura_workcapsule_source_bound_exact_reentry.py'
+      - 'scripts/aura_workcapsule_raw_owner_stale_safe_reentry.py'
+      - 'scripts/aura_workcapsule_reentry_closure.py'
+      - 'scripts/aura_workcapsule_observation_bound_closure.py'
+      - 'scripts/aura_workcapsule_observation_bound_exact_verifier.py'
+      - 'scripts/aura_workcapsule_stale_observation_closure_exact_verifier.py'
+      - 'scripts/aura_workcapsule_raw_owner_end_to_end_stale_lifecycle.py'
+      - 'scripts/aura_workcapsule_two_phase_source_bound_closure.py'
+      - 'scripts/aura_workcapsule_exact_hold_to_closed_transition.py'
+      - 'scripts/aura_workcapsule_fully_raw_temporal_transition_v2.py'
+      - 'tests/test_aura_workcapsule_raw_owner_end_to_end_stale_lifecycle.py'
+      - 'tests/test_aura_workcapsule_observation_bound_closure.py'
+      - 'tests/test_aura_workcapsule_exact_hold_to_closed_transition.py'
+      - 'tests/test_aura_workcapsule_fully_raw_temporal_transition_v2.py'
+      - '.github/workflows/aura-workcapsule-fully-raw-temporal-transition-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  CONVERGENCE_SHA: cbff3482cf4590e420ad334baebe3003c077aab5
+  PR527_SHA: a9002cbcea32640f54218aa68dc374d134a3055a
+  PR516_SHA: 130a01e7e8109d8ce76b1b3210c830c45f0af719
+  PR531_SHA: 8ff148d60c419059d4c7d19baeb915533d4409f2
+  PR531_ORACLE_BLOB: c40d7b0ff2502fe07f28acc29acba57531255ec8
+  PR531_TEST_BLOB: 0fe3d11d36844ed4d1fdb3784e5fecf3c1d8c273
+
+jobs:
+  fully-raw-temporal-transition-v2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Fetch exact child head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=64 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Prove true PR527 plus PR516 convergence ancestry
+        run: |
+          set -euo pipefail
+          git cat-file -e "$CONVERGENCE_SHA^{commit}"
+          mapfile -t parents < <(git cat-file -p "$CONVERGENCE_SHA" | awk '/^parent /{print $2}')
+          test "${#parents[@]}" -eq 2
+          test "${parents[0]}" = "$PR527_SHA"
+          test "${parents[1]}" = "$PR516_SHA"
+          git merge-base --is-ancestor "$CONVERGENCE_SHA" HEAD
+          test "$(git rev-parse "$PR527_SHA^{tree}")" = "$(git rev-parse "$CONVERGENCE_SHA^{tree}")"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+
+      - name: Re-prove exact PR527 PRE raw-owner lifecycle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr527
+          mkdir -p /tmp/pr527
+          git -C /tmp/pr527 init .
+          git -C /tmp/pr527 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr527 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR527_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr527 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr527 rev-parse HEAD)" = "$PR527_SHA"
+          test -z "$(git -C /tmp/pr527 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr527
+          PYTHONPATH=. python3 -m unittest -v tests.test_aura_workcapsule_raw_owner_end_to_end_stale_lifecycle
+
+      - name: Re-prove exact PR516 POST observation-bound closure owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr516
+          mkdir -p /tmp/pr516
+          git -C /tmp/pr516 init .
+          git -C /tmp/pr516 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr516 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR516_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr516 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr516 rev-parse HEAD)" = "$PR516_SHA"
+          test -z "$(git -C /tmp/pr516 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr516
+          PYTHONPATH=. python3 -m unittest -v tests.test_aura_workcapsule_observation_bound_closure
+
+      - name: Prove PR531 oracle is exact semantic materialization
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          current_oracle="$(git hash-object scripts/aura_workcapsule_exact_hold_to_closed_transition.py)"
+          current_test="$(git hash-object tests/test_aura_workcapsule_exact_hold_to_closed_transition.py)"
+          test "$current_oracle" = "$PR531_ORACLE_BLOB"
+          test "$current_test" = "$PR531_TEST_BLOB"
+          rm -rf /tmp/pr531
+          mkdir -p /tmp/pr531
+          git -C /tmp/pr531 init .
+          git -C /tmp/pr531 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr531 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR531_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr531 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr531 rev-parse HEAD)" = "$PR531_SHA"
+          cd /tmp/pr531
+          PYTHONPATH=. python3 -m unittest -v tests.test_aura_workcapsule_exact_hold_to_closed_transition
+          echo 'PR531_ORACLE_BYTE_IDENTICAL=true'
+
+      - name: Prove fully raw temporal transition V2
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/aura_workcapsule_fully_raw_temporal_transition_v2.py \
+            scripts/aura_workcapsule_exact_hold_to_closed_transition.py
+          PYTHONPATH=. python3 -m unittest -v tests.test_aura_workcapsule_fully_raw_temporal_transition_v2
+
+      - name: Assert no caller lifecycle intermediate escape hatch
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from pathlib import Path
+          from scripts.aura_workcapsule_fully_raw_temporal_transition_v2 import verify_fully_raw_temporal_transition_v2
+          params = inspect.signature(verify_fully_raw_temporal_transition_v2).parameters
+          for forbidden in (
+              'reentry_receipt',
+              'pre_observation_closure_receipt',
+              'post_closure_receipt',
+              'source_observation_receipt',
+              'observed_source_witnesses',
+              'source_witnesses',
+              'candidate_binding',
+          ):
+              assert forbidden not in params, forbidden
+          source = Path('scripts/aura_workcapsule_fully_raw_temporal_transition_v2.py').read_text()
+          assert 'compile_raw_owner_end_to_end_stale_lifecycle' in source
+          assert 'compile_observation_bound_reentry_closure' in source
+          assert 'verify_exact_hold_to_closed_transition' in source
+          assert 'compile_owner_bound_reentry_closure' not in source
+          print('CALLER_LIFECYCLE_INTERMEDIATES_ACCEPTED=false')
+          print('POST_WORLD_O8_REDERIVATION_USED=false')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'PRE_RAW_OWNER_LIFECYCLE_REPROVED=true'
+          echo 'POST_OBSERVATION_BOUND_OWNER_REPROVED=true'
+          echo 'TEMPORAL_ORACLE_REPROVED=true'
+          echo 'SAME_PRE_REJECTED_O8_DRIVES_POST_CLOSURE=true'
+          echo 'PRE_POST_EVIDENCE_DISTINCT=true'
+          echo 'CALLER_REENTRY_RECEIPT_ACCEPTED=false'
+          echo 'CALLER_PRE_OBSERVATION_RECEIPT_ACCEPTED=false'
+          echo 'CALLER_POST_CLOSURE_RECEIPT_ACCEPTED=false'
+          echo 'CALLER_SOURCE_OBSERVATION_RECEIPT_ACCEPTED=false'
+          echo 'CALLER_SOURCE_WITNESSES_ACCEPTED=false'
+          echo 'CALLER_CANDIDATE_BINDING_ACCEPTED=false'
+          echo 'SOURCE_CURRENTNESS_MINTED=false'
+          echo 'PRODUCER_IDENTITY_AUTHENTICATED=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_MINTED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_DEPENDENCY_CONE_PROVEN=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
+          echo 'GATE10_PROMOTION=false'
