@@ -29,7 +29,7 @@ class WorkCapsuleLiveCausalRawSliceJoinTests(
     def setUp(self) -> None:
         super().setUp()
         self.causal = WorkCapsuleTwoPhaseSourceBoundClosureTests(
-            "test_two_phase_raw_source_bound_exact_closed_lifecycle"
+            "test_two_phase_raw_owner_bound_exact_closed_lifecycle"
         )
         self.causal.setUp()
         self.assertEqual(self.repaired, self.causal.repaired)
