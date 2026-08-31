@@ -219,19 +219,19 @@ def admit_pre_attempt(
     """
 
     capsule.validate_integrity()
+    if owner_resolver is None:
+        return _hold(
+            capsule=capsule,
+            reason_code="OWNER_RESOLVER_UNAVAILABLE",
+            cone=("proposal_currentness", "pre_attempt_policy", "concurrency"),
+        )
+
     currentness = revalidate_proposal_capsule(capsule=capsule, owner_resolver=owner_resolver)
     if currentness.state != "CURRENT_NONEXECUTABLE":
         return _hold(
             capsule=capsule,
             reason_code="PROPOSAL_NOT_CURRENT",
             cone=("proposal_currentness",),
-        )
-    if owner_resolver is None:
-        return _hold(
-            capsule=capsule,
-            reason_code="OWNER_RESOLVER_UNAVAILABLE",
-            cone=("pre_attempt_policy", "concurrency"),
-            proposal_current=True,
         )
 
     b = capsule.basis
@@ -262,7 +262,6 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code="POLICY_INVALID",
             cone=("pre_attempt_policy",),
-            policy=policy,
             proposal_current=True,
         )
 
