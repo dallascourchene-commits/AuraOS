@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
+          fetch-depth: 12
 
       - name: Prove exact PR628 x PR398 convergence and green runs
         env:
