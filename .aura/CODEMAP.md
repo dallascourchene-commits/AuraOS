@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1689
-- **total_bytes**: 26677193
-- **text_tokens_est**: 6659698
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 247, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 281, 'support_file': 49}
+- **file_count**: 1690
+- **total_bytes**: 26684852
+- **text_tokens_est**: 6661613
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 248, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 281, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1689,
+  "repo_file_count": 1690,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1134,6 +1134,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/arena/AWJ032_G3_COLLISION_SCAN_20260831.md",
     "docs/arena/AWJ032_G3_EXTERNAL_COORDINATE_DELTA_20260831.md",
     "docs/arena/AWJ032_G3_HOSTED_PROOF_EXPECTATIONS_20260831.md",
+    "docs/arena/AWJ032_G4_PREFETCH_PLAN_REVALIDATION_20260831.md",
     "docs/aura_substrate_manifest.files.01.json",
     "docs/aura_substrate_manifest.files.02.json",
     "docs/aura_substrate_manifest.files.03.json",
@@ -1829,12 +1830,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1689,
-  "bytes": 26677193,
-  "tokens_est": 6659698,
+  "files": 1690,
+  "bytes": 26684852,
+  "tokens_est": 6661613,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 247,
+    "knowledge_artifact": 248,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1027,
