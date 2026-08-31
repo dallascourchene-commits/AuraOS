@@ -4,13 +4,16 @@
 D0 / HS1 / NONPROMOTING.
 
 This membrane does not run a benchmark, model, quantizer, source fetch, or provider.
-It binds already-produced evidence to the exact authority, source, representation,
-and accounting domain under which that evidence may carry bounded score/proposal mass.
+It binds already-produced evidence to the exact trusted authority, source,
+representation, accounting domain, bounded scope, and admission-policy generation
+under which that evidence may carry bounded score/proposal mass.
 
 Core laws:
     ReceiptFieldsPresent != HostAuthority
     SameOutcome != SameRepresentation
     SameNominalRate != SameAccountingDomain
+    EquivalentRationalRate == OneCanonicalRateIdentity
+    AdmissionPolicyGenerationIsPartOfEvidenceIdentity
     PositiveAndNegativeScoreMassShareTheSameHardGates
 """
 from __future__ import annotations
@@ -18,6 +21,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import hashlib
 import json
+from math import gcd
 from typing import Any
 
 AUTHORITY_SCHEMA = "AURA-EVIDENCE-AUTHORITY-BINDING-v1"
@@ -31,7 +35,9 @@ HEX = frozenset("0123456789abcdef")
 
 
 def _canonical(value: Any) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("ascii")
+    return json.dumps(
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False
+    ).encode("ascii")
 
 
 def _sha(value: Any) -> str:
@@ -46,6 +52,15 @@ def _required(value: str, name: str) -> None:
 def _sha256(value: str, name: str) -> None:
     if not isinstance(value, str) or len(value) != 64 or any(c not in HEX for c in value):
         raise ValueError(f"{name}_MUST_BE_SHA256_HEX")
+
+
+def _reduced_positive_rational(numerator: int, denominator: int) -> tuple[int, int]:
+    if type(numerator) is not int or type(denominator) is not int:
+        raise ValueError("REPRESENTATION_RATE_MUST_BE_INTEGER_RATIONAL")
+    if numerator <= 0 or denominator <= 0:
+        raise ValueError("REPRESENTATION_RATE_MUST_BE_POSITIVE")
+    divisor = gcd(numerator, denominator)
+    return numerator // divisor, denominator // divisor
 
 
 @dataclass(frozen=True)
@@ -88,7 +103,7 @@ class AuthorityBindingRef:
     @property
     def fingerprint(self) -> str:
         self.validate()
-        return _sha({"domain": "AURA-EVIDENCE-AUTHORITY-BINDING-v1", **asdict(self)})
+        return _sha({"domain": AUTHORITY_SCHEMA, **asdict(self)})
 
 
 @dataclass(frozen=True)
@@ -110,15 +125,28 @@ class RepresentationIdentity:
         _required(self.accounting_domain, "ACCOUNTING_DOMAIN")
         _sha256(self.accounting_contract_digest, "ACCOUNTING_CONTRACT_DIGEST")
         _sha256(self.bounded_scope_digest, "REPRESENTATION_BOUNDED_SCOPE_DIGEST")
-        if type(self.rate_numerator) is not int or type(self.rate_denominator) is not int:
-            raise ValueError("REPRESENTATION_RATE_MUST_BE_INTEGER_RATIONAL")
-        if self.rate_numerator <= 0 or self.rate_denominator <= 0:
-            raise ValueError("REPRESENTATION_RATE_MUST_BE_POSITIVE")
+        _reduced_positive_rational(self.rate_numerator, self.rate_denominator)
+
+    @property
+    def reduced_rate(self) -> tuple[int, int]:
+        return _reduced_positive_rational(self.rate_numerator, self.rate_denominator)
 
     @property
     def fingerprint(self) -> str:
         self.validate()
-        return _sha({"domain": "AURA-REPRESENTATION-IDENTITY-v1", **asdict(self)})
+        rate_numerator, rate_denominator = self.reduced_rate
+        return _sha(
+            {
+                "domain": REPRESENTATION_SCHEMA,
+                "representation_family": self.representation_family,
+                "representation_digest": self.representation_digest,
+                "accounting_domain": self.accounting_domain,
+                "accounting_contract_digest": self.accounting_contract_digest,
+                "rate_numerator": rate_numerator,
+                "rate_denominator": rate_denominator,
+                "bounded_scope_digest": self.bounded_scope_digest,
+            }
+        )
 
 
 @dataclass(frozen=True)
@@ -161,7 +189,9 @@ class EvidenceAdmissionCandidate:
         if self.outcome not in OUTCOMES:
             raise ValueError("UNKNOWN_EVIDENCE_OUTCOME")
         self.representation.validate()
-        if not self.currentness_roots or any(not isinstance(x, str) or not x.strip() for x in self.currentness_roots):
+        if not self.currentness_roots or any(
+            not isinstance(x, str) or not x.strip() for x in self.currentness_roots
+        ):
             raise ValueError("EVIDENCE_CURRENTNESS_ROOTS_REQUIRED")
         if len(set(self.currentness_roots)) != len(self.currentness_roots):
             raise ValueError("DUPLICATE_EVIDENCE_CURRENTNESS_ROOT")
@@ -170,6 +200,8 @@ class EvidenceAdmissionCandidate:
 @dataclass(frozen=True)
 class EvidenceAdmissionPolicy:
     schema_version: str
+    policy_owner_ref: str
+    policy_generation_ref: str
     expected_authority_owner_ref: str
     expected_authority_policy_generation_ref: str
     expected_authority_scope: str
@@ -181,6 +213,8 @@ class EvidenceAdmissionPolicy:
         if self.schema_version != POLICY_SCHEMA:
             raise ValueError("EVIDENCE_ADMISSION_POLICY_SCHEMA_MISMATCH")
         for value, name in (
+            (self.policy_owner_ref, "ADMISSION_POLICY_OWNER_REF"),
+            (self.policy_generation_ref, "ADMISSION_POLICY_GENERATION_REF"),
             (self.expected_authority_owner_ref, "EXPECTED_AUTHORITY_OWNER_REF"),
             (self.expected_authority_policy_generation_ref, "EXPECTED_AUTHORITY_POLICY_GENERATION_REF"),
             (self.expected_authority_scope, "EXPECTED_AUTHORITY_SCOPE"),
@@ -188,10 +222,35 @@ class EvidenceAdmissionPolicy:
             _required(value, name)
         if type(self.require_execution_authority) is not bool:
             raise ValueError("REQUIRE_EXECUTION_AUTHORITY_MUST_BE_BOOL")
-        if not self.allowed_accounting_domains or any(not isinstance(x, str) or not x.strip() for x in self.allowed_accounting_domains):
+        if not self.allowed_accounting_domains or any(
+            not isinstance(x, str) or not x.strip() for x in self.allowed_accounting_domains
+        ):
             raise ValueError("ALLOWED_ACCOUNTING_DOMAINS_REQUIRED")
-        if not self.allowed_representation_families or any(not isinstance(x, str) or not x.strip() for x in self.allowed_representation_families):
+        if len(set(self.allowed_accounting_domains)) != len(self.allowed_accounting_domains):
+            raise ValueError("DUPLICATE_ALLOWED_ACCOUNTING_DOMAIN")
+        if not self.allowed_representation_families or any(
+            not isinstance(x, str) or not x.strip() for x in self.allowed_representation_families
+        ):
             raise ValueError("ALLOWED_REPRESENTATION_FAMILIES_REQUIRED")
+        if len(set(self.allowed_representation_families)) != len(self.allowed_representation_families):
+            raise ValueError("DUPLICATE_ALLOWED_REPRESENTATION_FAMILY")
+
+    @property
+    def fingerprint(self) -> str:
+        self.validate()
+        return _sha(
+            {
+                "domain": POLICY_SCHEMA,
+                "policy_owner_ref": self.policy_owner_ref,
+                "policy_generation_ref": self.policy_generation_ref,
+                "expected_authority_owner_ref": self.expected_authority_owner_ref,
+                "expected_authority_policy_generation_ref": self.expected_authority_policy_generation_ref,
+                "expected_authority_scope": self.expected_authority_scope,
+                "require_execution_authority": self.require_execution_authority,
+                "allowed_accounting_domains": sorted(self.allowed_accounting_domains),
+                "allowed_representation_families": sorted(self.allowed_representation_families),
+            }
+        )
 
 
 @dataclass(frozen=True)
@@ -200,6 +259,7 @@ class EvidenceAdmissionDecision:
     disposition: str
     reason_code: str
     authority_fingerprint: str | None
+    admission_policy_fingerprint: str | None
     representation_fingerprint: str | None
     evidence_admission_fingerprint: str | None
     score_mass_eligible: bool
@@ -214,6 +274,7 @@ def _decision(
     disposition: str,
     reason_code: str,
     authority_fingerprint: str | None = None,
+    admission_policy_fingerprint: str | None = None,
     representation_fingerprint: str | None = None,
     evidence_admission_fingerprint: str | None = None,
     eligible: bool = False,
@@ -223,6 +284,7 @@ def _decision(
         disposition=disposition,
         reason_code=reason_code,
         authority_fingerprint=authority_fingerprint,
+        admission_policy_fingerprint=admission_policy_fingerprint,
         representation_fingerprint=representation_fingerprint,
         evidence_admission_fingerprint=evidence_admission_fingerprint,
         score_mass_eligible=eligible,
@@ -231,42 +293,51 @@ def _decision(
 
 
 def admit_evidence(
-    *, candidate: EvidenceAdmissionCandidate,
-    authority: AuthorityBindingRef,
-    policy: EvidenceAdmissionPolicy,
+    *, candidate: EvidenceAdmissionCandidate, authority: AuthorityBindingRef, policy: EvidenceAdmissionPolicy
 ) -> EvidenceAdmissionDecision:
-    """Bind source/host authority and representation identity before evidence mass exists."""
+    """Bind authority/source/representation/policy before evidence mass exists."""
     candidate.validate()
     authority.validate()
     policy.validate()
     af = authority.fingerprint
+    pf = policy.fingerprint
     rf = candidate.representation.fingerprint
+    base = {
+        "authority_fingerprint": af,
+        "admission_policy_fingerprint": pf,
+        "representation_fingerprint": rf,
+    }
 
     if authority.authority_state != "VERIFIED_BOUNDED":
-        return _decision(disposition="HOLD", reason_code="AUTHORITY_BINDING_NOT_VERIFIED", authority_fingerprint=af, representation_fingerprint=rf)
+        return _decision(disposition="HOLD", reason_code="AUTHORITY_BINDING_NOT_VERIFIED", **base)
     if authority.owner_ref != policy.expected_authority_owner_ref:
-        return _decision(disposition="REVIEW", reason_code="AUTHORITY_OWNER_MISMATCH", authority_fingerprint=af, representation_fingerprint=rf)
+        return _decision(disposition="REVIEW", reason_code="AUTHORITY_OWNER_MISMATCH", **base)
     if authority.policy_generation_ref != policy.expected_authority_policy_generation_ref:
-        return _decision(disposition="HOLD", reason_code="AUTHORITY_POLICY_GENERATION_MISMATCH", authority_fingerprint=af, representation_fingerprint=rf)
+        return _decision(disposition="HOLD", reason_code="AUTHORITY_POLICY_GENERATION_MISMATCH", **base)
     if authority.authority_scope != policy.expected_authority_scope:
-        return _decision(disposition="HOLD", reason_code="AUTHORITY_SCOPE_MISMATCH", authority_fingerprint=af, representation_fingerprint=rf)
+        return _decision(disposition="HOLD", reason_code="AUTHORITY_SCOPE_MISMATCH", **base)
     if authority.execution_required != policy.require_execution_authority:
-        return _decision(disposition="HOLD", reason_code="EXECUTION_AUTHORITY_REQUIREMENT_MISMATCH", authority_fingerprint=af, representation_fingerprint=rf)
+        return _decision(disposition="HOLD", reason_code="EXECUTION_AUTHORITY_REQUIREMENT_MISMATCH", **base)
     if candidate.source_verifier_identity != authority.expected_source_verifier_identity:
-        return _decision(disposition="HOLD", reason_code="SOURCE_VERIFIER_IDENTITY_MISMATCH", authority_fingerprint=af, representation_fingerprint=rf)
+        return _decision(disposition="HOLD", reason_code="SOURCE_VERIFIER_IDENTITY_MISMATCH", **base)
     if authority.execution_required:
         if candidate.route_fingerprint != authority.expected_route_fingerprint:
-            return _decision(disposition="HOLD", reason_code="HOST_ROUTE_FINGERPRINT_MISMATCH", authority_fingerprint=af, representation_fingerprint=rf)
+            return _decision(disposition="HOLD", reason_code="HOST_ROUTE_FINGERPRINT_MISMATCH", **base)
         if candidate.observer_identity != authority.expected_observer_identity:
-            return _decision(disposition="HOLD", reason_code="HOST_OBSERVER_IDENTITY_MISMATCH", authority_fingerprint=af, representation_fingerprint=rf)
-    else:
-        if candidate.route_fingerprint != "NONE" or candidate.observer_identity != "NONE":
-            return _decision(disposition="REVIEW", reason_code="NONEXECUTION_EVIDENCE_CANNOT_CLAIM_HOST_ROUTE_OR_OBSERVER", authority_fingerprint=af, representation_fingerprint=rf)
+            return _decision(disposition="HOLD", reason_code="HOST_OBSERVER_IDENTITY_MISMATCH", **base)
+    elif candidate.route_fingerprint != "NONE" or candidate.observer_identity != "NONE":
+        return _decision(
+            disposition="REVIEW",
+            reason_code="NONEXECUTION_EVIDENCE_CANNOT_CLAIM_HOST_ROUTE_OR_OBSERVER",
+            **base,
+        )
 
+    if candidate.representation.bounded_scope_digest != candidate.evidence_scope_digest:
+        return _decision(disposition="REVIEW", reason_code="REPRESENTATION_SCOPE_DOES_NOT_MATCH_EVIDENCE_SCOPE", **base)
     if candidate.representation.accounting_domain not in policy.allowed_accounting_domains:
-        return _decision(disposition="REVIEW", reason_code="ACCOUNTING_DOMAIN_NOT_ADMITTED", authority_fingerprint=af, representation_fingerprint=rf)
+        return _decision(disposition="REVIEW", reason_code="ACCOUNTING_DOMAIN_NOT_ADMITTED", **base)
     if candidate.representation.representation_family not in policy.allowed_representation_families:
-        return _decision(disposition="REVIEW", reason_code="REPRESENTATION_FAMILY_NOT_ADMITTED", authority_fingerprint=af, representation_fingerprint=rf)
+        return _decision(disposition="REVIEW", reason_code="REPRESENTATION_FAMILY_NOT_ADMITTED", **base)
 
     admission = _sha(
         {
@@ -280,15 +351,15 @@ def admit_evidence(
             "source_scope_digest": candidate.source_scope_digest,
             "outcome": candidate.outcome,
             "authority_fingerprint": af,
+            "admission_policy_fingerprint": pf,
             "representation_fingerprint": rf,
             "currentness_roots": sorted(candidate.currentness_roots),
         }
     )
     return _decision(
         disposition="VERIFIED_BOUNDED",
-        reason_code="AUTHORITY_SOURCE_REPRESENTATION_AND_ACCOUNTING_BOUND",
-        authority_fingerprint=af,
-        representation_fingerprint=rf,
+        reason_code="AUTHORITY_SOURCE_REPRESENTATION_ACCOUNTING_AND_POLICY_BOUND",
         evidence_admission_fingerprint=admission,
         eligible=True,
+        **base,
     )
