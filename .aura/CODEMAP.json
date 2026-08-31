@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788198506,
+  "generated_at_unix": 1788198609,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1772,8 +1772,8 @@
     {
       "ring": "repo",
       "files": 1655,
-      "bytes": 26548033,
-      "tokens_est": 6627361,
+      "bytes": 26551326,
+      "tokens_est": 6628184,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
@@ -159749,6 +159749,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/aura-structural-archive-probe.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
@@ -169709,47 +169710,54 @@
       "path": ".github/workflows/aura-structural-archive-probe.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 2498,
-      "lines": 66,
-      "tokens_est": 625,
+      "bytes": 5791,
+      "lines": 137,
+      "tokens_est": 1448,
       "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          35,
+          36
+        ]
+      },
       "topology": {},
-      "digest8": "252570ce15c4efa3",
+      "digest8": "8a29bceb0d84d98f",
       "vector": [
-        0.243482,
-        -0.202722,
-        -0.138366,
-        -0.260643,
-        0.097607,
-        0.084736,
-        -0.097607,
-        -0.155528,
-        -0.228465,
-        0.245627,
-        0.005363,
-        -0.080445,
-        0.245627,
-        -0.12764,
-        0.164109,
-        0.063284,
-        0.140511,
-        -0.262788,
-        0.149092,
-        0.17698,
-        -0.252062,
-        0.048267,
-        -0.247772,
-        0.12335,
-        -0.039686,
-        -0.168399,
-        0.17698,
-        -0.067574,
-        0.168399,
-        -0.260643,
-        -0.151237,
-        0.256353
+        0.126896,
+        0.06403,
+        -0.175792,
+        0.082657,
+        0.271255,
+        0.168807,
+        -0.054717,
+        0.227016,
+        -0.189762,
+        -0.101284,
+        -0.231672,
+        0.129224,
+        -0.289882,
+        -0.289882,
+        -0.119911,
+        0.166478,
+        0.029105,
+        0.26427,
+        -0.180448,
+        0.143195,
+        -0.154836,
+        0.057045,
+        0.075672,
+        -0.234001,
+        0.038418,
+        0.266598,
+        -0.008149,
+        0.122239,
+        0.245643,
+        -0.199075,
+        0.115254,
+        -0.215374
       ]
     },
     {
@@ -288879,8 +288887,8 @@
   },
   "summary": {
     "file_count": 1655,
-    "total_bytes": 26548033,
-    "text_tokens_est": 6627361,
+    "total_bytes": 26551326,
+    "text_tokens_est": 6628184,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
@@ -450593,6 +450601,6 @@
       }
     ],
     "record_fingerprint": "8626b6161f2a3fc27ace266e472b3a7e",
-    "payload_hash": "c8d263e8e9a20f222092bbc05ba4a388"
+    "payload_hash": "6f20b1934d22106d8ab8f4b8120c5690"
   }
 }
