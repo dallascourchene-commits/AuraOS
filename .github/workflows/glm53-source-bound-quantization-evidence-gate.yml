@@ -37,7 +37,7 @@ jobs:
           source = current_public_state()
           assert source.digest() == Q5_CURRENT_SOURCE_STATE_DIGEST
           assert Q5_OWNER_BLOB_SHA == '7ed09c57699fe303f555a3b6bdaadb791c64223f'
-          assert VERSION == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V2'
+          assert VERSION == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V3'
           print('Q5_EXACT_PRODUCER_TRAVERSAL=true')
           PY
 
@@ -68,6 +68,34 @@ jobs:
           print('Q5_Q6_EXACT_HOSTED_SUCCESS=true')
           PY
 
+      - name: Revalidate historical official zero-payload producer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          run_id = 33336508527
+          job_id = 99324255699
+          headers = {'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json'}
+          req = urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}', headers=headers)
+          with urllib.request.urlopen(req) as r:
+              run = json.load(r)
+          assert run['head_sha'] == '131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8'
+          assert run['status'] == 'completed' and run['conclusion'] == 'success'
+          req = urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}', headers=headers)
+          with urllib.request.urlopen(req) as r:
+              job = json.load(r)
+          assert job['run_id'] == run_id
+          assert job['status'] == 'completed' and job['conclusion'] == 'success'
+          steps = {step['name']: step for step in job.get('steps', [])}
+          step = steps['Observe official GLM-5.3 header evidence without payload']
+          assert step['status'] == 'completed' and step['conclusion'] == 'success'
+          print('HISTORICAL_OFFICIAL_HEADER_PRODUCER_SUCCESS=true')
+          PY
+
       - name: Re-prove Q5 exact source admission in isolation
         run: |
           set -euo pipefail
@@ -93,10 +121,21 @@ jobs:
           python - <<'PY'
           import json
           x = json.load(open('/tmp/q7.json'))
-          assert x['version'] == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V2'
+          assert x['version'] == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V3'
           assert x['q5_source_owner_blob'] == '7ed09c57699fe303f555a3b6bdaadb791c64223f'
-          assert x['disposition'] == 'HOLD_SOURCE_TRANSPORT_AND_REPRESENTATION_EVIDENCE'
-          assert x['independent_source_transport_residual'] is True
+          assert x['disposition'] == 'HOLD_CURRENT_SOURCE_TRANSPORT_AND_REPRESENTATION_EVIDENCE'
+          assert x['historical_official_index_relation_observed'] is True
+          assert x['historical_official_headers_observed'] is True
+          assert x['historical_official_fp8_companions_bound'] is True
+          assert x['historical_observation_representative_only'] is True
+          assert x['historical_entry_count'] == 6
+          assert x['historical_payload_bytes_read'] == 0
+          assert x['historical_evidence_implies_current_raw_bytes'] is False
+          assert x['historical_evidence_implies_global_layout_uniformity'] is False
+          assert x['current_source_index_bytes_verified'] is False
+          assert x['current_source_headers_observed'] is False
+          assert x['current_source_header_trial_eligible'] is False
+          assert x['independent_current_source_transport_residual'] is True
           assert x['independent_representation_evidence_residual'] is True
           assert x['source_bound_evidence_admitted'] is False
           assert x['geometry_family_label_match'] is True
@@ -112,9 +151,10 @@ jobs:
           ):
               assert x[key] is False, key
           print('COPIED_PARENT_STATE_NE_PRODUCER_TRAVERSAL=true')
-          print('SOURCE_IDENTITY_NE_SOURCE_BYTES=true')
+          print('HISTORICAL_HEADER_PROOF_NE_CURRENT_BYTE_RESIDENCY=true')
+          print('REPRESENTATIVE_HEADER_PROOF_NE_GLOBAL_LAYOUT_UNIFORMITY=true')
+          print('SOURCE_IDENTITY_NE_CURRENT_SOURCE_BYTES=true')
           print('REPRESENTATION_IDENTITY_NE_EVIDENCE_SCOPE=true')
-          print('SOURCE_BOUND_TRIAL_REQUIRES_BOTH_PLANES=true')
-          print('GEOMETRY_FAMILY_NE_EVIDENCE_TRANSFER=true')
+          print('SOURCE_BOUND_TRIAL_REQUIRES_BOTH_CURRENT_SOURCE_AND_EXACT_REPRESENTATION_EVIDENCE=true')
           print('Q7_D0_NONPROMOTING=true')
           PY
