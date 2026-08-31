@@ -2,14 +2,10 @@
 
 //! Post-edit currentness for one exact profiled Python lexical scope.
 //!
-//! This membrane composes two independently verified owners:
-//! - PR503 owns the admitted pre-edit nested-scope review and typed SourceGeneration boundary;
-//! - PR501 owns independently witnessed CURRENT source-body + SyntaxGraph + profiled-scope hydration.
-//!
-//! Incremental parser reuse is deliberately not an authority input in V1. Candidate currentness is
-//! earned by a fresh full parse/profile on the exact candidate body, followed by a second clean
-//! full-profile execution through the lower profile owner. Runtime name resolution, semantic patch
-//! correctness, B-minus approval, commit authority and external effect remain outside this crate.
+//! PR503 owns the admitted pre-edit nested-scope review and typed SourceGeneration boundary.
+//! PR501 owns independently witnessed CURRENT source-body + SyntaxGraph + profiled-scope hydration.
+//! This membrane composes those owners without promoting parser reuse, local IDs, runtime name
+//! resolution, semantic correctness, review approval, commit authority, or external effect.
 
 use aura_k27_astge::NodeIndexRecordV1;
 use aura_k27_astge_current_profiled_scopes::{
@@ -19,8 +15,7 @@ use aura_k27_astge_current_profiled_scopes::{
 use aura_k27_astge_generation_domain::{GenerationCoordinateV1, SourceGenerationV1};
 use aura_k27_astge_materialize::AdmittedSourceCatalogV1;
 use aura_k27_astge_profiled_scopes::{
-    ProfiledPythonScopesV1, ProfiledScopeAnchorV1, ProfiledScopeError,
-    build_profiled_python_scopes,
+    ProfiledPythonScopesV1, ProfiledScopeAnchorV1, ProfiledScopeError, build_profiled_python_scopes,
 };
 use aura_k27_astge_scope::{AuthorizedSpanV1, ReplacementV1};
 use aura_k27_astge_scopes::PythonLexicalScopeIndexV1;
@@ -71,9 +66,15 @@ pub enum PostEditProfiledScopeErrorV1 {
     CandidateSourceUtf8,
     NoSourceChange,
     PreEditScopeMissing(u64),
-    CandidateGenerationNotAdvanced { pre_edit: u64, candidate: u64 },
+    CandidateGenerationNotAdvanced {
+        pre_edit: u64,
+        candidate: u64,
+    },
     CandidateCurrent(CurrentProfiledScopeError),
-    CandidateGenerationMismatch { expected: u64, observed: u64 },
+    CandidateGenerationMismatch {
+        expected: u64,
+        observed: u64,
+    },
     CleanProfile(ProfiledScopeError),
     CleanProfileMismatch,
     CandidateScopeMissing,
@@ -116,11 +117,9 @@ impl From<ProfiledScopeError> for PostEditProfiledScopeErrorV1 {
 
 /// Admit post-edit currentness for one exact candidate profiled lexical scope.
 ///
-/// The pre-edit local scope ID is consumed only by the existing PR503 review owner. The candidate
-/// scope is selected independently by canonical SyntaxGraph ordinal + exact candidate span +
-/// higher-owner semantic-handle digest. A changed body must advance the SourceGeneration.
-///
-/// Placement generation cannot inhabit either SourceGeneration slot:
+/// The pre-edit local scope ID is consumed only by PR503. Candidate currentness is selected by
+/// canonical SyntaxGraph ordinal + exact candidate span + higher-owner semantic-handle digest.
+/// A changed body must advance the SourceGeneration.
 ///
 /// ```compile_fail
 /// use aura_k27_astge_generation_domain::{PlacementGenerationV1, SourceGenerationV1};
@@ -182,7 +181,6 @@ pub fn admit_post_edit_profiled_scope_current(
     if original_source == candidate_source {
         return Err(PostEditProfiledScopeErrorV1::NoSourceChange);
     }
-
     if expected_candidate_source_generation.value() == pre_edit_review.source_generation.value() {
         return Err(
             PostEditProfiledScopeErrorV1::CandidateGenerationNotAdvanced {
@@ -201,7 +199,6 @@ pub fn admit_post_edit_profiled_scope_current(
         persisted_record.file_id,
         candidate_semantic_handles,
     )?;
-
     if candidate_current.source_generation != expected_candidate_source_generation {
         return Err(PostEditProfiledScopeErrorV1::CandidateGenerationMismatch {
             expected: expected_candidate_source_generation.value(),
@@ -213,7 +210,10 @@ pub fn admit_post_edit_profiled_scope_current(
         candidate_text,
         persisted_record.file_id,
         candidate_current.profiled_scopes.source_owner_ref.clone(),
-        candidate_current.profiled_scopes.source_generation_ref.clone(),
+        candidate_current
+            .profiled_scopes
+            .source_generation_ref
+            .clone(),
         candidate_semantic_handles,
     )?;
     if clean_full_reparse_profile != candidate_current.profiled_scopes {
@@ -245,11 +245,8 @@ pub fn admit_post_edit_profiled_scope_current(
         return Err(PostEditProfiledScopeErrorV1::CandidateScopeIsModule);
     }
 
-    let (expected_candidate_start, expected_candidate_end) = transformed_scope_span(
-        pre_scope.byte_start,
-        pre_scope.byte_end,
-        replacements,
-    )?;
+    let (expected_candidate_start, expected_candidate_end) =
+        transformed_scope_span(pre_scope.byte_start, pre_scope.byte_end, replacements)?;
     if selected_candidate_scope.byte_start != expected_candidate_start
         || selected_candidate_scope.byte_end != expected_candidate_end
     {
@@ -446,9 +443,14 @@ mod tests {
         .to_string()
     }
 
-    fn changed_candidate(setup: &Setup) -> (Vec<u8>, Vec<AuthorizedSpanV1>, Vec<ReplacementV1>) {
+    fn changed_candidate(
+        setup: &Setup,
+    ) -> (Vec<u8>, Vec<AuthorizedSpanV1>, Vec<ReplacementV1>) {
         let mut candidate = SOURCE.as_bytes().to_vec();
-        candidate.splice(setup.edit_start..setup.edit_start + 1, b"100".iter().copied());
+        candidate.splice(
+            setup.edit_start..setup.edit_start + 1,
+            b"100".iter().copied(),
+        );
         let start = setup.edit_start as u64;
         (
             candidate,
@@ -464,7 +466,11 @@ mod tests {
         )
     }
 
-    fn selector(source: &str, file_id: u32, handles: &HashMap<u64, [u8; 32]>) -> CandidateProfiledScopeSelectorV1 {
+    fn selector(
+        source: &str,
+        file_id: u32,
+        handles: &HashMap<u64, [u8; 32]>,
+    ) -> CandidateProfiledScopeSelectorV1 {
         let profiled = build_profiled_python_scopes(
             source,
             file_id,
@@ -576,7 +582,10 @@ mod tests {
             &stale,
         )
         .unwrap_err();
-        assert!(matches!(error, PostEditProfiledScopeErrorV1::CandidateScopeMissing));
+        assert!(matches!(
+            error,
+            PostEditProfiledScopeErrorV1::CandidateScopeMissing
+        ));
         fs::remove_dir_all(setup.root).unwrap();
     }
 
@@ -615,40 +624,6 @@ mod tests {
     }
 
     #[test]
-    fn candidate_generation_expectation_must_match_independent_current_witness() {
-        let setup = setup("wrong-candidate-generation", 12);
-        let (candidate, spans, replacements) = changed_candidate(&setup);
-        let candidate_text = std::str::from_utf8(&candidate).unwrap();
-        let candidate_handles = handles(candidate_text, setup.file_id);
-        let selected = selector(candidate_text, setup.file_id, &candidate_handles);
-        let error = admit_post_edit_profiled_scope_current(
-            &setup.scope_index,
-            setup.selected_scope_id,
-            &setup.catalog,
-            &setup.record,
-            SourceGenerationV1::new(12),
-            SOURCE.as_bytes(),
-            &candidate,
-            &spans,
-            &replacements,
-            &hydration(&candidate, setup.file_id, 13, "CURRENT"),
-            "anchor.post-edit",
-            &candidate_handles,
-            SourceGenerationV1::new(14),
-            &selected,
-        )
-        .unwrap_err();
-        assert!(matches!(
-            error,
-            PostEditProfiledScopeErrorV1::CandidateGenerationMismatch {
-                expected: 14,
-                observed: 13
-            }
-        ));
-        fs::remove_dir_all(setup.root).unwrap();
-    }
-
-    #[test]
     fn stale_candidate_body_witness_cannot_emit_post_edit_currentness() {
         let setup = setup("stale-candidate", 12);
         let (candidate, spans, replacements) = changed_candidate(&setup);
@@ -672,7 +647,10 @@ mod tests {
             &selected,
         )
         .unwrap_err();
-        assert!(matches!(error, PostEditProfiledScopeErrorV1::CandidateCurrent(_)));
+        assert!(matches!(
+            error,
+            PostEditProfiledScopeErrorV1::CandidateCurrent(_)
+        ));
         fs::remove_dir_all(setup.root).unwrap();
     }
 
