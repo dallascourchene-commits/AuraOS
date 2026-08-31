@@ -91,6 +91,8 @@ jobs:
           assert receipt.useful_prefetch_experts == (3, 4)
           assert receipt.wasted_prefetch_experts == (1,)
           assert receipt.demand_load_experts == (5,)
+          assert receipt.native_route_required_for_execution_selection is True
+          assert receipt.native_route_observed is False
           assert receipt.prediction_can_change_native_route is False
           assert receipt.demand_load_observed is False
           assert receipt.execution_authorized is False
@@ -101,6 +103,7 @@ jobs:
           assert receipt.physical_bytes_read is None
           assert len(receipt.receipt_digest) == 64
           print("GLM53_PREFETCH_ROUTE_SEPARATION=PASS")
+          print("GLM53_NATIVE_ROUTE_OBSERVED=FALSE")
           print("GLM53_PREFETCH_MISS_DEMAND_LOAD_RESIDUAL=PASS")
           print("GLM53_PREFETCH_PHYSICAL_BYTES_UNKNOWN=PASS")
           print("GLM53_PREFETCH_RECEIPT=" + receipt.receipt_digest)
@@ -111,6 +114,7 @@ jobs:
         run: |
           set -euo pipefail
           echo "Prediction != native router authority"
+          echo "Supplied native-route operand != host-observed router output"
           echo "Logical staged rows != physical NVMe bytes"
           echo "Prediction miss => exact native-route demand-load residual"
           echo "No model/provider execution, G2 admission, K27 authority, or native/private transformer KV access claimed"
