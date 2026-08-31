@@ -1,0 +1,61 @@
+name: Aura Representative Canary Evidence Admission
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_representative_canary_evidence_admission.py"
+      - "tests/test_aura_representative_canary_evidence_admission.py"
+      - ".github/workflows/aura-representative-canary-evidence-admission.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  representative-canary-evidence-admission:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Revalidate exact other-agent parent generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+
+          q13_head="eb09b5ffd14577d1676f57bb908e5ddd81125605"
+          q13_run="33397035043"
+          q13_blob="5d3b365911ecd78bb2698a9423807dbf13f1b5ad"
+          q13_path="tools/quantization/aura_glm53_full_representative_canonical_source_set.py"
+
+          a4_head="26e377fe543b8c1906832b8c1e968dfe63480005"
+          a4_run="33375530171"
+          a4_blob="0b6a53612d4d2d9993da49180cfc74d5f4996548"
+          a4_path="tools/aura_hyperscale_work_admission.py"
+
+          for sha in "$q13_head" "$a4_head"; do
+            git fetch --no-tags --depth=1 origin "$sha"
+            git cat-file -e "$sha^{commit}"
+          done
+
+          test "$(git show "$q13_head:$q13_path" | git hash-object --stdin)" = "$q13_blob"
+          test "$(git show "$a4_head:$a4_path" | git hash-object --stdin)" = "$a4_blob"
+
+          test "$(gh api "repos/$repo/actions/runs/$q13_run" --jq '.head_sha')" = "$q13_head"
+          test "$(gh api "repos/$repo/actions/runs/$q13_run" --jq '.conclusion')" = "success"
+          test "$(gh api "repos/$repo/actions/runs/$a4_run" --jq '.head_sha')" = "$a4_head"
+          test "$(gh api "repos/$repo/actions/runs/$a4_run" --jq '.conclusion')" = "success"
+
+      - name: Run focused adversarial suite
+        run: |
+          python -m pip install --disable-pip-version-check pytest
+          python -m pytest -q tests/test_aura_representative_canary_evidence_admission.py
