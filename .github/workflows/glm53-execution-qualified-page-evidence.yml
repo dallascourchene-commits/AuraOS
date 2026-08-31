@@ -1,0 +1,151 @@
+name: GLM53 Execution Qualified Page Evidence
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_execution_qualified_page_evidence.py"
+      - "tests/test_aura_glm53_execution_qualified_page_evidence.py"
+      - ".github/workflows/glm53-execution-qualified-page-evidence.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  execution-qualified-page-evidence:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact Q15 head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prove exact Q14 and A7 owner generations
+        shell: bash
+        run: |
+          set -euo pipefail
+          Q14=ee70934e0c45572588829e742e512a897b23863f
+          A7=10481aa76117c24e5fdf7f93752e7820713a8285
+          git cat-file -e "$Q14^{commit}"
+          git cat-file -e "$A7^{commit}"
+          test "$(git rev-parse "$Q14:tools/quantization/aura_glm53_official_source_e8_materialization_canary.py")" = "ef26cf18731b2f6dfc3c63d08260fb64aded96f6"
+          test "$(git rev-parse "$A7:tools/aura_execution_qualified_portable_evidence_admission.py")" = "4ea62a80e6146ea47feb02bd22f545a933268a98"
+          echo Q15_EXACT_Q14_AND_A7_SOURCE_OWNERS=true
+
+      - name: Revalidate exact parent hosted generations and Q14 receipt artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+
+          headers = {
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          repo = os.environ["GH_REPO"]
+
+          def get(path):
+              req = urllib.request.Request(f"https://api.github.com/repos/{repo}{path}", headers=headers)
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  return json.load(r)
+
+          expected = [
+              (33399560819, "ee70934e0c45572588829e742e512a897b23863f", "GLM53 Official Source E8 Materialization Canary", 99512247000, "q14-official-source-e8-canary"),
+              (33400287890, "10481aa76117c24e5fdf7f93752e7820713a8285", "Aura Execution-Qualified Portable Evidence Admission", 99514663480, "execution-qualified-portable-evidence"),
+          ]
+          for run_id, head, workflow, job_id, job_name in expected:
+              run = get(f"/actions/runs/{run_id}")
+              assert run["head_sha"] == head, (run_id, run["head_sha"], head)
+              assert run["name"] == workflow, (run_id, run["name"], workflow)
+              assert run["status"] == "completed" and run["conclusion"] == "success", run
+              jobs = get(f"/actions/runs/{run_id}/jobs")["jobs"]
+              exact = [j for j in jobs if j["id"] == job_id]
+              assert len(exact) == 1, (run_id, job_id, len(exact))
+              assert exact[0]["name"] == job_name, exact[0]
+              assert exact[0]["status"] == "completed" and exact[0]["conclusion"] == "success", exact[0]
+
+          artifacts = get("/actions/runs/33399560819/artifacts")["artifacts"]
+          exact = [a for a in artifacts if a["name"] == "q14-official-source-e8-materialization-canary"]
+          assert len(exact) == 1, exact
+          assert exact[0]["digest"] == "sha256:edc22355df8bfeff25f469f11b54d7948b10bbf72a831b769857068c63c77276", exact[0]
+          assert exact[0]["expired"] is False, exact[0]
+          print("Q15_EXACT_PARENT_EXECUTION_AND_ARTIFACT=true")
+          PY
+
+      - name: Run Q15 adversarial contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/quantization/aura_glm53_execution_qualified_page_evidence.py tests/test_aura_glm53_execution_qualified_page_evidence.py
+          PYTHONPATH=. python3 -m unittest -v tests.test_aura_glm53_execution_qualified_page_evidence
+
+      - name: Bind Q14 semantic artifact to live provider execution
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          from dataclasses import asdict
+          from tools.quantization import aura_glm53_execution_qualified_page_evidence as q15
+
+          headers = {
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          repo = os.environ["GH_REPO"]
+
+          def get(path):
+              req = urllib.request.Request(f"https://api.github.com/repos/{repo}{path}", headers=headers)
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  return json.load(r)
+
+          run = get(f"/actions/runs/{q15.Q14_RUN}")
+          jobs = get(f"/actions/runs/{q15.Q14_RUN}/jobs")["jobs"]
+          artifacts = get(f"/actions/runs/{q15.Q14_RUN}/artifacts")["artifacts"]
+          receipt = q15.classify_execution_qualified_page_evidence(
+              descriptor=q15.q14_descriptor(),
+              run=run,
+              jobs=jobs,
+              artifacts=artifacts,
+          )
+          assert receipt.execution_qualified_official_source_page_evidence is True, receipt
+          assert receipt.producer_execution_observed is True, receipt
+          assert receipt.q14_page_set_digest == q15.Q14_PAGE_SET_DIGEST
+          assert receipt.q14_artifact_digest == q15.Q14_ARTIFACT_DIGEST
+          for field in (
+              "execution_qualification_mints_page_semantics",
+              "execution_qualification_mints_semantic_truth",
+              "full_role_page_materialization_proven",
+              "whole_model_quantization_proven",
+              "model_execution_observed",
+              "generalized_quality_proven",
+              "runtime_performance_proven",
+              "native_private_transformer_kv_accessed",
+              "semantic_k27_authority_minted",
+              "gate10_promoted",
+              "merge_or_deployment_authorized",
+          ):
+              assert getattr(receipt, field) is False, field
+          body = asdict(receipt)
+          body["receipt_digest"] = receipt.receipt_digest
+          with open("/tmp/q15-execution-qualified-page-evidence.json", "w", encoding="utf-8") as f:
+              json.dump(body, f, sort_keys=True, indent=2)
+              f.write("\n")
+          print(json.dumps(body, sort_keys=True, indent=2))
+          PY
+
+      - name: Preserve Q15 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: q15-execution-qualified-page-evidence
+          path: /tmp/q15-execution-qualified-page-evidence.json
+          if-no-files-found: error
