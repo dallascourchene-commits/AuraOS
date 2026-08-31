@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1657
-- **total_bytes**: 26546542
-- **text_tokens_est**: 6626989
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 274, 'support_file': 56}
+- **file_count**: 1658
+- **total_bytes**: 26557088
+- **text_tokens_est**: 6629627
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 275, 'support_file': 56}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1657,
+  "repo_file_count": 1658,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -157,6 +157,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-eki-subject-identity-bridge.yml",
     ".github/workflows/aura-external-knowledge-ingress.yml",
     ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+    ".github/workflows/aura-objective-f-proof-mirror.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1797,16 +1798,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1657,
-  "bytes": 26546542,
-  "tokens_est": 6626989,
+  "files": 1658,
+  "bytes": 26557088,
+  "tokens_est": 6629627,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1004,
-    "schema_or_lexicon": 274,
+    "schema_or_lexicon": 275,
     "support_file": 56
   }
 }
