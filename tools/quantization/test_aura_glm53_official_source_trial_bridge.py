@@ -7,7 +7,10 @@ from tools.quantization.aura_glm53_official_source_admission import (
 )
 from tools.quantization.aura_glm53_official_source_trial_bridge import (
     VERSION,
-    classify_official_source_trial,
+    PR639_SOURCE_BLOB_SHA,
+    SOURCE_EVIDENCE_VECTOR_ORDER,
+    _classify_source_state_for_test,
+    current_official_source_trial_hold,
 )
 from tools.quantization.aura_glm53_quantized_representation_trial import (
     FULL_MODEL_STATIC,
@@ -73,12 +76,15 @@ def comparison(req: QuantizedTrialRequest) -> QuantizedRepresentationComparison:
 
 
 class OfficialSourceTrialBridgeTests(unittest.TestCase):
-    def test_current_official_source_state_holds_even_for_exact_revision_and_trial_domain(self):
+    def test_current_public_bridge_traverses_q5_producer(self):
         req = request()
-        out = classify_official_source_trial(
-            source_state=current_public_state(), request=req, comparison=comparison(req)
-        )
+        out = current_official_source_trial_hold(request=req, comparison=comparison(req))
         self.assertEqual(out.schema, VERSION)
+        self.assertTrue(out.source_producer_traversed)
+        self.assertFalse(out.source_state_synthetic)
+        self.assertEqual(out.q5_source_blob_sha, PR639_SOURCE_BLOB_SHA)
+        self.assertEqual(out.source_evidence_vector_order, SOURCE_EVIDENCE_VECTOR_ORDER)
+        self.assertFalse(out.hold_disposition_is_evidence)
         self.assertTrue(out.model_revision_matches_official_source)
         self.assertTrue(out.trial_internal_byte_domain_bound)
         self.assertFalse(out.official_source_headers_trial_eligible)
@@ -87,15 +93,15 @@ class OfficialSourceTrialBridgeTests(unittest.TestCase):
         self.assertFalse(out.official_source_trial_admissible)
         self.assertEqual(out.disposition, "HOLD_OFFICIAL_INDEX_HEADER_EVIDENCE")
 
-    def test_exact_model_revision_label_is_not_official_source_provenance(self):
+    def test_exact_current_source_vector_is_explicit(self):
         req = request()
-        out = classify_official_source_trial(
-            source_state=current_public_state(), request=req, comparison=comparison(req)
+        out = current_official_source_trial_hold(request=req, comparison=comparison(req))
+        self.assertEqual(
+            out.source_evidence_vector,
+            (True, True, False, False, False, False, False),
         )
-        self.assertTrue(out.model_revision_matches_official_source)
-        self.assertFalse(out.official_source_trial_admissible)
 
-    def test_even_future_source_ready_state_cannot_self_mint_cross_domain_relation(self):
+    def test_synthetic_future_state_may_move_hold_but_is_not_evidence(self):
         ready = replace(
             current_public_state(),
             index_bytes_verified=True,
@@ -108,27 +114,51 @@ class OfficialSourceTrialBridgeTests(unittest.TestCase):
             blocker="",
         )
         req = request()
-        out = classify_official_source_trial(
+        out = _classify_source_state_for_test(
             source_state=ready, request=req, comparison=comparison(req)
         )
-        self.assertFalse(out.official_source_byte_domain_bound_to_trial)
-        self.assertFalse(out.candidate_materialization_owner_bound)
-        self.assertFalse(out.official_source_trial_admissible)
         self.assertEqual(out.disposition, "HOLD_OFFICIAL_SOURCE_TO_TRIAL_BYTE_DOMAIN_RELATION")
+        self.assertFalse(out.source_producer_traversed)
+        self.assertTrue(out.source_state_synthetic)
+        self.assertFalse(out.hold_disposition_is_evidence)
+        self.assertEqual(out.source_evidence_vector, (True, True, True, True, True, True, True))
+        self.assertFalse(out.official_source_trial_admissible)
 
-    def test_inconsistent_source_admission_boolean_cannot_bypass_prerequisites(self):
+    def test_synthetic_deeper_hold_ne_current_evidence_advance(self):
+        req = request()
+        current = current_official_source_trial_hold(request=req, comparison=comparison(req))
+        synthetic = _classify_source_state_for_test(
+            source_state=replace(
+                current_public_state(),
+                index_bytes_verified=True,
+                representative_key_to_shard_bound=True,
+                representative_headers_observed=True,
+                fp8_companions_bound=True,
+                header_trial_eligible=True,
+                source_tensor_payload_bound=True,
+                real_tensor_quantization_eligible=True,
+                blocker="",
+            ),
+            request=req,
+            comparison=comparison(req),
+        )
+        self.assertNotEqual(current.disposition, synthetic.disposition)
+        self.assertTrue(current.source_producer_traversed)
+        self.assertFalse(synthetic.source_producer_traversed)
+        self.assertFalse(current.hold_disposition_is_evidence)
+        self.assertFalse(synthetic.hold_disposition_is_evidence)
+
+    def test_inconsistent_source_boolean_cannot_bypass_prerequisites(self):
         forged = replace(current_public_state(), header_trial_eligible=True)
         req = request()
         with self.assertRaisesRegex(ValueError, "HEADER_ELIGIBILITY_PREREQUISITE_MISMATCH"):
-            classify_official_source_trial(
+            _classify_source_state_for_test(
                 source_state=forged, request=req, comparison=comparison(req)
             )
 
     def test_foreign_model_revision_is_not_official_source_trial(self):
         req = request("foreign-revision")
-        out = classify_official_source_trial(
-            source_state=current_public_state(), request=req, comparison=comparison(req)
-        )
+        out = current_official_source_trial_hold(request=req, comparison=comparison(req))
         self.assertFalse(out.model_revision_matches_official_source)
         self.assertEqual(out.disposition, "HOLD_MODEL_REVISION_NOT_OFFICIAL_SOURCE")
         self.assertFalse(out.official_source_trial_admissible)
@@ -137,15 +167,11 @@ class OfficialSourceTrialBridgeTests(unittest.TestCase):
         req = request()
         bad = replace(comparison(req), static_weight_byte_domain_digest="e" * 64)
         with self.assertRaisesRegex(ValueError, "TRIAL_BYTE_DOMAIN_MANIFEST_MISMATCH"):
-            classify_official_source_trial(
-                source_state=current_public_state(), request=req, comparison=bad
-            )
+            current_official_source_trial_hold(request=req, comparison=bad)
 
     def test_bridge_never_promotes_unearned_authority_planes(self):
         req = request()
-        out = classify_official_source_trial(
-            source_state=current_public_state(), request=req, comparison=comparison(req)
-        )
+        out = current_official_source_trial_hold(request=req, comparison=comparison(req))
         for field in (
             "generalized_quality_proven", "runtime_performance_proven",
             "owner_host_authenticated", "physical_io_proven",
