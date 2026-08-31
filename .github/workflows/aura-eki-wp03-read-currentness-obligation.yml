@@ -1,0 +1,109 @@
+name: Aura EKI WP03 Read Currentness Obligation
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_external_knowledge_coordinate_memory_candidate.py"
+      - "tools/aura_external_cognition_resolve_adapter.py"
+      - "tools/aura_external_knowledge_coordinate_memory_read_guard.py"
+      - "tests/test_aura_external_knowledge_coordinate_memory_candidate.py"
+      - "tests/test_aura_external_cognition_resolve_adapter.py"
+      - "tests/test_aura_external_knowledge_coordinate_memory_read_guard.py"
+      - ".github/workflows/aura-eki-wp03-read-currentness-obligation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  eki-wp03-read-currentness-obligation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Immutable exact-head checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            EXPECTED="${{ github.event.pull_request.head.sha }}"
+          else
+            EXPECTED="${GITHUB_SHA}"
+          fi
+          git fetch --no-tags --depth=1 origin "${EXPECTED}"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${EXPECTED}"
+          echo "EKIR1_HEAD=${EXPECTED}" >> "$GITHUB_ENV"
+
+      - name: Authenticate exact parent semantic surfaces
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/aura_external_knowledge_coordinate_memory_candidate.py)" = "fed7003630487af41586ce07a00b83b8fbf66835"
+          test "$(git hash-object tests/test_aura_external_knowledge_coordinate_memory_candidate.py)" = "dd25d52385c147d97242a43efb3487e2f3cdec38"
+          test "$(git hash-object .github/workflows/aura-eki-coordinate-memory-candidate.yml)" = "d80f310e32a912173d3663993dd3eac471fa303c"
+          test "$(git hash-object tools/aura_external_cognition_resolve_adapter.py)" = "53de9d551c81a0eb495eb180294c0aba5eb359d0"
+          test "$(git hash-object tests/test_aura_external_cognition_resolve_adapter.py)" = "577b96492b090a6c7fb19b0c92add007e594d57c"
+          echo "EKIR1_PARENT_BLOBS=PASS"
+
+      - name: Revalidate exact-green PR735 and WP03 proof generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          expected = (
+              (33417664825, "89a66cdb972d3eab19c9408356b7061d1529947d", "Aura EKI Coordinate Memory Candidate"),
+              (33416056653, "9865c42f3ada2520141bd2fe30a439ce160ce2f8", "Aura External Cognition Resolve Adapter"),
+          )
+
+          def get(path):
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/{path}",
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  return json.load(response)
+
+          for run_id, head, name in expected:
+              run = get(f"actions/runs/{run_id}")
+              assert run["head_sha"] == head, (run_id, run["head_sha"], head)
+              assert run["name"] == name, (run_id, run["name"], name)
+              assert run["status"] == "completed" and run["conclusion"] == "success", (run_id, run["status"], run["conclusion"])
+          print("EKIR1_EXACT_GREEN_PARENTS=PASS")
+          PY
+
+      - name: Compile and replay parents plus EKI-R1 adversarials
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_external_knowledge_coordinate_memory_candidate.py \
+            tools/aura_external_cognition_resolve_adapter.py \
+            tools/aura_external_knowledge_coordinate_memory_read_guard.py \
+            tests/test_aura_external_knowledge_coordinate_memory_read_guard.py
+          python3 -m unittest \
+            tests.test_aura_external_knowledge_coordinate_memory_candidate \
+            tests.test_aura_external_cognition_resolve_adapter \
+            tests.test_aura_external_knowledge_coordinate_memory_read_guard
+
+      - name: Prove temporal currentness and authority separation
+        run: |
+          set -euo pipefail
+          grep -q 'CURRENT_REFERENCE@Projection!=Current@Read' tools/aura_external_knowledge_coordinate_memory_read_guard.py
+          grep -q 'PersistedKnowledgeState!=CurrentnessWitness' tools/aura_external_knowledge_coordinate_memory_read_guard.py
+          grep -q 'EKIDerivedRead=>RequiredCurrentnessAxis(source)' tools/aura_external_knowledge_coordinate_memory_read_guard.py
+          grep -q 'Required(source)+NOT_REQUIRED(source)=>FailClosed' tools/aura_external_knowledge_coordinate_memory_read_guard.py
+          grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' tools/aura_external_knowledge_coordinate_memory_read_guard.py
+          echo "EKIR1_TEMPORAL_CURRENTNESS=PASS"
+          echo "EKIR1_HEAD=${EKIR1_HEAD}"
