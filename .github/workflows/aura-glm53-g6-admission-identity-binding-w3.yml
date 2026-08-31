@@ -1,0 +1,159 @@
+name: Aura GLM53 G6 Admission Identity Binding W3
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py"
+      - "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py"
+      - "tools/awj032/glm53_g6_admission_identity_binding_addendum.py"
+      - "tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py"
+      - ".github/workflows/aura-glm53-g6-admission-identity-binding-w3.yml"
+  push:
+    branches: ["arena/glm53-g6-gate10-owner-host-evidence-request-v2-20260831-sol"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g6-admission-identity-binding-w3:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      G6_BASE_SOURCE_BLOB: "d92f6115120431082ed43a3023729654d8a4cdb7"
+      G6_BASE_TEST_BLOB: "e1f905b04b6daea9119fa6e6f751cd0cc721819e"
+      REUSE_HEAD: "d1a0f94255527835a59a70a0af7dc417ba1d023d"
+      REUSE_SOURCE_BLOB: "d171d0938e469a4383490d1a691750c2068f21e7"
+      REUSE_TEST_BLOB: "58fad37a0f89853098fa3dbbe2f2a1771574e449"
+      REUSE_RUN: "33437612722"
+      REUSE_JOB: "99637780915"
+      PROV_HEAD: "293c59d7260372ccd3b9e8130b12979b052c3ed9"
+      PROV_SOURCE_BLOB: "98db548b6e8f7443b79d979eb0e177ac6aa68534"
+      PROV_RUN: "33416248604"
+      PROV_JOB: "99567478616"
+
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify pull-request exact head
+        if: github.event_name == 'pull_request'
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Pin exact G6 base request generation
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py)" = "$G6_BASE_SOURCE_BLOB"
+          test "$(git rev-parse HEAD:tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py)" = "$G6_BASE_TEST_BLOB"
+          echo "G6_W3_BASE_REQUEST_GENERATION_PINNED=true"
+
+      - name: Authenticate exact PR769 and PR727 parent blobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$REUSE_HEAD" "$PROV_HEAD"
+          test "$(git rev-parse "$REUSE_HEAD:tools/aura_generation_bound_admission_reuse.py")" = "$REUSE_SOURCE_BLOB"
+          test "$(git rev-parse "$REUSE_HEAD:tests/test_aura_generation_bound_admission_reuse.py")" = "$REUSE_TEST_BLOB"
+          test "$(git rev-parse "$PROV_HEAD:tools/awj032/airllm_secure_fixture_observation_envelope.py")" = "$PROV_SOURCE_BLOB"
+          git show "$REUSE_HEAD:tools/aura_generation_bound_admission_reuse.py" | grep -q 'GLM53_BOUNDED_C2_PROPOSAL'
+          for marker in admission_receipt_digest subject_identity source_generation_key evidence_generation_key owner_context_key decision_context_key reuse_digest; do
+            git show "$REUSE_HEAD:tools/aura_generation_bound_admission_reuse.py" | grep -q "$marker"
+          done
+
+      - name: Revalidate terminal parent hosted proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {token}",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          for prefix in ("REUSE", "PROV"):
+              run_id = int(os.environ[f"{prefix}_RUN"])
+              job_id = int(os.environ[f"{prefix}_JOB"])
+              head = os.environ[f"{prefix}_HEAD"]
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{run_id}", headers=headers
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  run = json.load(response)
+              if not (
+                  run.get("head_sha") == head
+                  and run.get("status") == "completed"
+                  and run.get("conclusion") == "success"
+              ):
+                  raise SystemExit(f"{prefix}_RUN_NOT_EXACT_GREEN:{run}")
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/jobs/{job_id}", headers=headers
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  job = json.load(response)
+              if not (
+                  job.get("head_sha") == head
+                  and job.get("status") == "completed"
+                  and job.get("conclusion") == "success"
+              ):
+                  raise SystemExit(f"{prefix}_JOB_NOT_EXACT_GREEN:{job}")
+          print("G6_W3_TWO_TERMINAL_PARENT_PROOFS_REVALIDATED=true")
+          PY
+
+      - name: Compile G6 base and identity-binding addendum
+        run: |
+          python3 -m py_compile \
+            tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py \
+            tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py \
+            tools/awj032/glm53_g6_admission_identity_binding_addendum.py \
+            tools/awj032/test_glm53_g6_admission_identity_binding_addendum.py
+
+      - name: Reexecute G6 base adversarials
+        run: python3 -m unittest tools.awj032.test_glm53_g6_gate10_owner_host_evidence_request -v
+
+      - name: Execute G6 identity-binding W3 adversarials
+        run: python3 -m unittest tools.awj032.test_glm53_g6_admission_identity_binding_addendum -v
+
+      - name: Exhaust base 512-state and W3 16-state lattices
+        run: |
+          python3 - <<'PY'
+          from tools.awj032.glm53_g6_gate10_owner_host_evidence_request import prove_different_j
+          from tools.awj032.glm53_g6_admission_identity_binding_addendum import prove_identity_binding_lattice
+          assert prove_different_j() == 512
+          assert prove_identity_binding_lattice() == 16
+          print("G6_BASE_DIFFERENT_J_512=PASS")
+          print("G6_IDENTITY_BINDING_W3_16=PASS")
+          PY
+
+      - name: Enforce anti-collapse and nonpromotion laws
+        run: |
+          set -euo pipefail
+          target=tools/awj032/glm53_g6_admission_identity_binding_addendum.py
+          grep -q 'ReuseCandidateSummary!=AdmissionReuseReceiptIdentity' "$target"
+          grep -q 'GLM53AdmissionFamilyMustRemainExact' "$target"
+          grep -q 'AdmissionReceiptDigest+Subject+Source+Evidence+Owner+Decision+ReuseDigestMustSurviveProjection' "$target"
+          grep -q 'IdentityBinding!=ReceiptProducerAuthentication' "$target"
+          grep -q 'IdentityBinding!=SourceCurrentnessTruth' "$target"
+          grep -q 'RepoHeadChanged!=TensorSourceGenerationChanged' "$target"
+          grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' "$target"
+          echo "REUSE_RECEIPT_AUTHENTICATED_BY_THIS_CONTRACT=false"
+          echo "SOURCE_CURRENTNESS_PROVEN_BY_THIS_CONTRACT=false"
+          echo "MODEL_OR_PROVIDER_EXECUTION_OBSERVED=false"
+          echo "PHYSICAL_IO_PROVEN=false"
+          echo "AURAOS_RESIDENT_ROUTING_PROVEN=false"
+          echo "GATE10_PROMOTED=false"
