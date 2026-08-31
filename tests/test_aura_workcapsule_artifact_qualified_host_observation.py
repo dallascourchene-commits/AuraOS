@@ -6,7 +6,9 @@ import json
 
 from scripts.aura_workcapsule_artifact_qualified_host_observation import (
     GATES,
+    GATE_PROBES,
     HOST_PREFIX,
+    PROBE_ORDER,
     TARGET_REF_MISMATCH,
     admit_artifact_qualified_host_observation,
     artifact_target_ref,
@@ -78,6 +80,19 @@ def _disposition(fail_mask: int, unknown_mask: int) -> str:
     return "HOST_OBSERVATIONS_COMPLETE_NONAUTHORIZING"
 
 
+def _candidate_probes(states: dict[str, str]) -> dict[str, list[str]]:
+    return {
+        gate: list(GATE_PROBES[gate])
+        for gate in GATES
+        if states[gate] == "UNKNOWN"
+    }
+
+
+def _ordered_required_probes(candidate_probes: dict[str, list[str]]) -> list[str]:
+    probe_union = {probe for probes in candidate_probes.values() for probe in probes}
+    return [probe for probe in PROBE_ORDER if probe in probe_union]
+
+
 def _seal(receipt: dict) -> dict:
     receipt["receipt_identity"] = {
         "kind": "DIGEST",
@@ -114,6 +129,7 @@ class WorkCapsuleArtifactQualifiedHostObservationTests(
         reasons = {gate: _gate_reason(gate_states[gate]) for gate in GATES}
         fail_mask = _mask(gate_states, "FAIL")
         unknown_mask = _mask(gate_states, "UNKNOWN")
+        candidate_probes = _candidate_probes(gate_states)
         receipt = {
             "version": "AURA_WORKCAPSULE_TEMPORAL_HOST_OBSERVATION_ADMISSION_V1",
             "disposition": _disposition(fail_mask, unknown_mask),
@@ -128,10 +144,8 @@ class WorkCapsuleArtifactQualifiedHostObservationTests(
             "host_gate_reasons": reasons,
             "fail_mask": fail_mask,
             "unknown_mask": unknown_mask,
-            "candidate_probes_by_unknown_gate": {
-                gate: [] for gate in GATES if gate_states[gate] == "UNKNOWN"
-            },
-            "ordered_required_probes": [],
+            "candidate_probes_by_unknown_gate": candidate_probes,
+            "ordered_required_probes": _ordered_required_probes(candidate_probes),
             "minimum_cover_computed": False,
             "minimum_cover_reason": "PROBE_COSTS_AND_WORLD_PAIR_SEPARATION_NOT_MEASURED",
             "host_observation_set_complete": fail_mask == 0 and unknown_mask == 0,
@@ -226,6 +240,62 @@ class WorkCapsuleArtifactQualifiedHostObservationTests(
             **self.child_kwargs(host=host)
         )
         self.assertIn(HOST_PREFIX + "HOST_RECEIPT_IDENTITY_MISMATCH", violations)
+
+    def test_resealed_completion_lie_rejects(self) -> None:
+        host = self.host_receipt()
+        host["host_observation_set_complete"] = True
+        _reseal(host)
+        violations = verify_artifact_qualified_host_observation(
+            **self.child_kwargs(host=host)
+        )
+        self.assertIn(
+            HOST_PREFIX + "HOST_OBSERVATION_COMPLETENESS_MISMATCH",
+            violations,
+        )
+
+    def test_resealed_masks_and_disposition_lie_reject(self) -> None:
+        host = self.host_receipt()
+        host["fail_mask"] = 1
+        host["unknown_mask"] = 0
+        host["disposition"] = "FAIL_CLOSED"
+        _reseal(host)
+        violations = verify_artifact_qualified_host_observation(
+            **self.child_kwargs(host=host)
+        )
+        self.assertIn(HOST_PREFIX + "HOST_FAIL_MASK_MISMATCH", violations)
+        self.assertIn(HOST_PREFIX + "HOST_UNKNOWN_MASK_MISMATCH", violations)
+        self.assertIn(HOST_PREFIX + "HOST_DISPOSITION_MISMATCH", violations)
+
+    def test_resealed_probe_plan_lie_rejects(self) -> None:
+        host = self.host_receipt()
+        host["candidate_probes_by_unknown_gate"] = {"U_ROUTE": ["P_CANARY"]}
+        host["ordered_required_probes"] = ["P_CANARY"]
+        _reseal(host)
+        violations = verify_artifact_qualified_host_observation(
+            **self.child_kwargs(host=host)
+        )
+        self.assertIn(HOST_PREFIX + "HOST_CANDIDATE_PROBES_MISMATCH", violations)
+        self.assertIn(
+            HOST_PREFIX + "HOST_ORDERED_REQUIRED_PROBES_MISMATCH",
+            violations,
+        )
+
+    def test_resealed_minimum_cover_claim_rejects(self) -> None:
+        host = self.host_receipt()
+        host["minimum_cover_computed"] = True
+        host["minimum_cover_reason"] = "CLAIMED_OPTIMUM"
+        _reseal(host)
+        violations = verify_artifact_qualified_host_observation(
+            **self.child_kwargs(host=host)
+        )
+        self.assertIn(
+            HOST_PREFIX + "HOST_MINIMUM_COVER_COMPUTED_INVALID",
+            violations,
+        )
+        self.assertIn(
+            HOST_PREFIX + "HOST_MINIMUM_COVER_REASON_MISMATCH",
+            violations,
+        )
 
     def test_unknown_gates_need_no_target_binding_and_remain_unknown(self) -> None:
         host = self.host_receipt(states={gate: "UNKNOWN" for gate in GATES})
