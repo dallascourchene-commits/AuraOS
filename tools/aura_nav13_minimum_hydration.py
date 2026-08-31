@@ -23,6 +23,7 @@ Core laws:
 - CurrentReference + VerifiedReader != SemanticTruth.
 - SemanticHydrationNeed != K27PlacementHint.
 - HydrationPlan != Materialization != EffectAuthority.
+- ExactSourceOptionalForSatisfiedEvidence != ExactSourceOptionalForNewHydration.
 - CoordinateMemory != MODEL_PREFIX_KV.
 """
 from __future__ import annotations
@@ -31,7 +32,7 @@ from dataclasses import asdict, dataclass
 from enum import Enum, IntEnum
 import hashlib
 import json
-from typing import Iterable, Mapping, Sequence
+from typing import Mapping, Sequence
 from urllib.parse import urlparse
 
 from tools.aura_nav13_lawfield import EffectiveLawField
@@ -130,13 +131,6 @@ def _exact_uri(value: str | None, code: str) -> str | None:
     if parsed.scheme in {"http", "https"} and not parsed.netloc:
         raise ValueError(code)
     return value
-
-
-def _unique_sorted(values: Iterable[str], code: str) -> tuple[str, ...]:
-    items = tuple(_text(v, code) for v in values)
-    if len(items) != len(set(items)):
-        raise ValueError(code)
-    return tuple(sorted(items))
 
 
 @dataclass(frozen=True)
@@ -402,6 +396,11 @@ def _source_gate(
         )
     if requirement.exact_source_required and source.exact_source_uri is None:
         return PlanDisposition.HOLD_EXACT_SOURCE_UNRESOLVED, "EXACT_SOURCE_REQUIRED"
+    if source.available_level < requirement.minimum_level and source.exact_source_uri is None:
+        return (
+            PlanDisposition.HOLD_EXACT_SOURCE_UNRESOLVED,
+            "HYDRATION_DEFICIT_REQUIRES_EXACT_SOURCE",
+        )
     return None, None
 
 
@@ -424,7 +423,6 @@ def _compile_requirement_first(
     target_by_source: dict[str, HydrationLevel] = {}
     req_ids_by_source: dict[str, list[str]] = {}
     for req in sorted(requirements, key=lambda item: item.requirement_id):
-        source = sources[req.semantic_key]
         target_by_source[req.semantic_key] = max(
             target_by_source.get(req.semantic_key, HydrationLevel.L0),
             req.minimum_level,
@@ -691,6 +689,7 @@ LAWS = (
     "PersistedCurrentLabel!=ReadCurrentnessWitness",
     "NOT_REQUIREDCannotPayRequiredCurrentnessDebt",
     "ContiguousL0ToL4MeansSharedSourceTargetUsesMaximumRequiredLevel",
+    "ExactSourceOptionalForSatisfiedEvidence!=ExactSourceOptionalForNewHydration",
     "CoordinateMemory!=MODEL_PREFIX_KV",
 )
 
