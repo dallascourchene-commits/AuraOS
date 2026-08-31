@@ -14,17 +14,21 @@ permissions:
 
 env:
   SEMANTIC_HEAD: fff1e38f78c54c387c1131543ce332d115ad7f5c
-  SEMANTIC_CUT: "2026-08-31T15:43:13+00:00"
+  PARENT_CUT: "2026-08-31T15:28:01+00:00"
   SOURCE_BLOB: bdaa9b0338cdab05c48dc0337ab46522b40ac42f
   TEST_BLOB: d71563cbfa3e0a29b86056fbd5ac27916e039624
   Q20_RUN: "33408333739"
   Q20_JOB: "99541395341"
   Q20_HEAD: 8122131047477c65030af8a3dce97a7881a42c28
   Q20_WORKFLOW: GLM53 Q20 Materialization Bound Proposal
+  Q20_SOURCE_BLOB: 0aa60aadcc73522aa124e8a36628ff1bbbbbb0ac
+  Q20_TEST_BLOB: 8501a3e31704c2425527368915d10ee7f17eccdd
   O64_RUN: "33408498622"
   O64_JOB: "99541935417"
   O64_HEAD: 860b6cb41774e31c1f1ba1942d2f5c91914af0c3
   O64_WORKFLOW: Aura O64 Authority Representation Evidence Proof
+  O64_SOURCE_BLOB: f4874e53b80987da8d3248778d64e419d676309e
+  O64_TEST_BLOB: b0e57c12c10c02d5fe40cc7275261c10694a4e31
 
 jobs:
   o65r-authority-materialization-proposal-conformance-proof:
@@ -36,13 +40,23 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Authenticate post-cut semantic generation and immutable blobs
+      - name: Authenticate semantic generation and materialize immutable parent code
         shell: bash
         run: |
           set -euo pipefail
           git merge-base --is-ancestor "$SEMANTIC_HEAD" HEAD
           test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_authority_materialization_proposal_conformance.py")" = "$SOURCE_BLOB"
           test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_authority_materialization_proposal_conformance.py")" = "$TEST_BLOB"
+          # Semantic source/test must remain unchanged on the workflow-only descendant.
+          test "$(git rev-parse HEAD:tools/aura_authority_materialization_proposal_conformance.py)" = "$SOURCE_BLOB"
+          test "$(git rev-parse HEAD:tests/test_aura_authority_materialization_proposal_conformance.py)" = "$TEST_BLOB"
+          git fetch -q --no-tags origin "$Q20_HEAD" "$O64_HEAD"
+          test "$(git rev-parse "$Q20_HEAD:tools/quantization/aura_glm53_q20_materialization_bound_proposal.py")" = "$Q20_SOURCE_BLOB"
+          test "$(git rev-parse "$Q20_HEAD:tests/test_aura_glm53_q20_materialization_bound_proposal.py")" = "$Q20_TEST_BLOB"
+          test "$(git rev-parse "$O64_HEAD:tools/aura_authority_scoped_evidence_admission.py")" = "$O64_SOURCE_BLOB"
+          test "$(git rev-parse "$O64_HEAD:tests/test_aura_authority_scoped_evidence_admission.py")" = "$O64_TEST_BLOB"
+          git show "$Q20_HEAD:tools/quantization/aura_glm53_q20_materialization_bound_proposal.py" > /tmp/q20_parent.py
+          git show "$O64_HEAD:tools/aura_authority_scoped_evidence_admission.py" > /tmp/o64_parent.py
           python - <<'PY'
           import datetime as dt
           import os
@@ -51,9 +65,9 @@ jobs:
               ["git", "show", "-s", "--format=%cI", os.environ["SEMANTIC_HEAD"]], text=True
           ).strip()
           observed_dt = dt.datetime.fromisoformat(observed.replace("Z", "+00:00"))
-          cut_dt = dt.datetime.fromisoformat(os.environ["SEMANTIC_CUT"])
+          cut_dt = dt.datetime.fromisoformat(os.environ["PARENT_CUT"])
           assert observed_dt > cut_dt, (observed_dt, cut_dt)
-          print(f"O65R_POST_CUT_SEMANTIC_GENERATION={observed_dt.isoformat()}")
+          print(f"O65R_POST_PARENT_CUT_SEMANTIC_GENERATION={observed_dt.isoformat()}")
           PY
 
       - name: Revalidate exact hosted Q20 and O64 parent jobs
@@ -70,127 +84,216 @@ jobs:
           repo = os.environ["REPOSITORY"]
           token = os.environ["GH_TOKEN"]
 
-          def jobs(run_id: str):
-              req = urllib.request.Request(
-                  f"https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs?per_page=100",
-                  headers={
-                      "Authorization": f"Bearer {token}",
-                      "Accept": "application/vnd.github+json",
-                      "X-GitHub-Api-Version": "2022-11-28",
-                  },
-              )
+          def get(url):
+              req = urllib.request.Request(url, headers={
+                  "Authorization": f"Bearer {token}",
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+              })
               with urllib.request.urlopen(req, timeout=30) as response:
-                  return json.load(response)["jobs"]
+                  return json.load(response)
 
           for prefix in ("Q20", "O64"):
+              run_id = os.environ[f"{prefix}_RUN"]
               expected_job = int(os.environ[f"{prefix}_JOB"])
               expected_head = os.environ[f"{prefix}_HEAD"]
               expected_workflow = os.environ[f"{prefix}_WORKFLOW"]
-              candidates = jobs(os.environ[f"{prefix}_RUN"])
-              matched = [job for job in candidates if job["id"] == expected_job]
-              assert len(matched) == 1, (prefix, expected_job, [j["id"] for j in candidates])
+              run = get(f"https://api.github.com/repos/{repo}/actions/runs/{run_id}")
+              assert run["status"] == "completed" and run["conclusion"] == "success", run
+              assert run["head_sha"] == expected_head, (prefix, run["head_sha"], expected_head)
+              assert run["name"] == expected_workflow, (prefix, run["name"], expected_workflow)
+              jobs = get(f"https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs?per_page=100")["jobs"]
+              matched = [job for job in jobs if job["id"] == expected_job]
+              assert len(matched) == 1, (prefix, expected_job, [j["id"] for j in jobs])
               job = matched[0]
-              assert job["status"] == "completed", (prefix, job["status"])
-              assert job["conclusion"] == "success", (prefix, job["conclusion"])
+              assert job["status"] == "completed" and job["conclusion"] == "success", job
               assert job["head_sha"] == expected_head, (prefix, job["head_sha"], expected_head)
               assert job["workflow_name"] == expected_workflow, (prefix, job["workflow_name"], expected_workflow)
               print(f"{prefix}_EXACT_HOSTED_PARENT_SUCCESS=true")
           PY
 
-      - name: Compile O65-R semantic surface
+      - name: Compile semantic and exact parent surfaces
         run: |
           set -euo pipefail
           python -m py_compile \
             tools/aura_authority_materialization_proposal_conformance.py \
-            tests/test_aura_authority_materialization_proposal_conformance.py
+            tests/test_aura_authority_materialization_proposal_conformance.py \
+            /tmp/q20_parent.py /tmp/o64_parent.py
 
       - name: Run O65-R adversarial suite
         run: |
           set -euo pipefail
           python -m unittest tests.test_aura_authority_materialization_proposal_conformance -v
 
-      - name: Independently prove bounded conformance and nonpromotion
+      - name: Execute exact parent implementations through O65-R conformance
         run: |
           set -euo pipefail
           python - <<'PY'
+          import hashlib
+          import importlib.util
           import json
-          from dataclasses import replace
-          from tools.aura_authority_materialization_proposal_conformance import (
-              O64_JOB, O64_PROOF_HEAD, O64_RUN, O64_SEMANTIC_HEAD, O64_WORKFLOW,
-              Q20_ACCOUNTING_DOMAIN, Q20_Q19_REPRESENTATION_IDENTITY,
-              Q20_REPRESENTATION_FAMILY,
-              AuthorityScopedEvidenceProjection,
-              exact_q20_projection,
-              prove_proposal_evidence_conformance,
-              q20_accounting_contract_digest,
-              q20_representation_fingerprint,
-              q20_scope_digest,
-          )
+          import sys
+          from tools import aura_authority_materialization_proposal_conformance as o65
 
-          evidence = AuthorityScopedEvidenceProjection(
-              proof_head=O64_PROOF_HEAD,
-              semantic_head=O64_SEMANTIC_HEAD,
-              run_id=O64_RUN,
-              job_id=O64_JOB,
-              workflow_name=O64_WORKFLOW,
-              authority_fingerprint="a" * 64,
-              admission_policy_fingerprint="b" * 64,
-              evidence_admission_fingerprint="c" * 64,
-              representation_fingerprint=q20_representation_fingerprint(),
-              representation_family=Q20_REPRESENTATION_FAMILY,
-              representation_digest=Q20_Q19_REPRESENTATION_IDENTITY,
-              accounting_domain=Q20_ACCOUNTING_DOMAIN,
-              accounting_contract_digest=q20_accounting_contract_digest(),
+          def load(name, path):
+              spec = importlib.util.spec_from_file_location(name, path)
+              mod = importlib.util.module_from_spec(spec)
+              sys.modules[name] = mod
+              spec.loader.exec_module(mod)
+              return mod
+
+          def h(label):
+              return hashlib.sha256(label.encode("utf-8")).hexdigest()
+
+          q20 = load("q20_parent", "/tmp/q20_parent.py")
+          o64 = load("o64_parent", "/tmp/o64_parent.py")
+
+          q20_receipt = q20.exact_terminal_fixture()
+          assert q20_receipt.materialization_relation_digest == o65.q20_materialization_relation_digest()
+          assert q20_receipt.materialization_bound_proposal_basis_digest == o65.q20_materialization_bound_basis_digest()
+          assert q20_receipt.execution_authority_granted is False
+          assert q20_receipt.effect_authority_granted is False
+
+          rep = o64.RepresentationIdentity(
+              schema_version=o64.REPRESENTATION_SCHEMA,
+              representation_family=o65.Q20_REPRESENTATION_FAMILY,
+              representation_digest=o65.Q20_Q19_REPRESENTATION_IDENTITY,
+              accounting_domain=o65.Q20_ACCOUNTING_DOMAIN,
+              accounting_contract_digest=o65.q20_accounting_contract_digest(),
               rate_numerator=225,
               rate_denominator=100,
-              bounded_scope_digest=q20_scope_digest(),
-              evidence_scope_digest=q20_scope_digest(),
-              currentness_roots=("authority:exact", "source:exact", "policy:exact", "science:exact"),
-              disposition="VERIFIED_BOUNDED",
-              score_mass_eligible=True,
-              proposal_mass_eligible=True,
+              bounded_scope_digest=o65.q20_scope_digest(),
           )
-          exact = prove_proposal_evidence_conformance(proposal=exact_q20_projection(), evidence=evidence)
-          assert exact.disposition == "CONFORMANT_BOUNDED_SUPPORT"
-          assert exact.bounded_evidence_supports_exact_proposal is True
-          assert exact.proposal_evidence_support_digest
-          assert exact.live_proposal_currentness_resolved is False
-          assert exact.execution_authorized is False
-          assert exact.provider_effect_authorized is False
-          assert exact.semantic_k27_authority is False
-          assert exact.native_private_transformer_kv_accessed is False
-          assert exact.gate10_promoted is False
-          assert exact.merge_or_deployment_authorized is False
+          route = h("o65r:host-route")
+          authority = o64.AuthorityBindingRef(
+              schema_version=o64.AUTHORITY_SCHEMA,
+              owner_ref="owner:o65r-evidence-host:v1",
+              policy_generation_ref="authority-policy:o65r:v1",
+              binding_receipt_digest=h("o65r:authority-binding"),
+              authority_state="VERIFIED_BOUNDED",
+              authority_scope="D0_O65R_BOUNDED_EVIDENCE",
+              execution_required=True,
+              expected_route_fingerprint=route,
+              expected_observer_identity="O65R_HOST_OBSERVER",
+              expected_source_verifier_identity="O65R_SOURCE_VERIFIER",
+          )
+          policy = o64.EvidenceAdmissionPolicy(
+              schema_version=o64.POLICY_SCHEMA,
+              policy_owner_ref="owner:o65r-evidence-admission:v1",
+              policy_generation_ref="admission-policy:o65r:v1",
+              expected_authority_owner_ref=authority.owner_ref,
+              expected_authority_policy_generation_ref=authority.policy_generation_ref,
+              expected_authority_scope=authority.authority_scope,
+              require_execution_authority=True,
+              allowed_accounting_domains=(o65.Q20_ACCOUNTING_DOMAIN,),
+              allowed_representation_families=(o65.Q20_REPRESENTATION_FAMILY,),
+          )
+          candidate = o64.EvidenceAdmissionCandidate(
+              schema_version=o64.CANDIDATE_SCHEMA,
+              evidence_id="evidence:q20:materialization-bound:2p25",
+              evidence_generation=o65.Q20_PROOF_HEAD,
+              evidence_receipt_digest=h("o65r:q20-evidence"),
+              evidence_scope_digest=o65.q20_scope_digest(),
+              source_generation=o65.Q20_Q19_SOURCE_GATE_GENERATION,
+              source_receipt_digest=h("o65r:q20-source"),
+              source_scope_digest=h("o65r:q20-source-scope"),
+              route_fingerprint=route,
+              observer_identity="O65R_HOST_OBSERVER",
+              source_verifier_identity="O65R_SOURCE_VERIFIER",
+              outcome="SUPPORTS",
+              representation=rep,
+              currentness_roots=(
+                  f"q20-proof:{o65.Q20_PROOF_HEAD}",
+                  f"q20-source:{o65.Q20_Q19_SOURCE_GATE_GENERATION}",
+                  f"o64-proof:{o65.O64_PROOF_HEAD}",
+                  "authority-policy:o65r:v1",
+                  "admission-policy:o65r:v1",
+              ),
+          )
+          admitted = o64.admit_evidence(candidate=candidate, authority=authority, policy=policy)
+          assert admitted.disposition == "VERIFIED_BOUNDED"
+          assert admitted.score_mass_eligible and admitted.proposal_mass_eligible
+          assert admitted.execution_authorized is False
+          assert admitted.provider_effect_authorized is False
+          assert admitted.gate10_promoted is False
+          assert admitted.representation_fingerprint == o65.q20_representation_fingerprint()
 
-          crosscast = prove_proposal_evidence_conformance(
-              proposal=exact_q20_projection(),
-              evidence=replace(evidence, accounting_domain="SERIALIZED_CONTAINER_ONLY"),
+          evidence = o65.AuthorityScopedEvidenceProjection(
+              proof_head=o65.O64_PROOF_HEAD,
+              semantic_head=o65.O64_SEMANTIC_HEAD,
+              run_id=o65.O64_RUN,
+              job_id=o65.O64_JOB,
+              workflow_name=o65.O64_WORKFLOW,
+              authority_fingerprint=admitted.authority_fingerprint,
+              admission_policy_fingerprint=admitted.admission_policy_fingerprint,
+              evidence_admission_fingerprint=admitted.evidence_admission_fingerprint,
+              representation_fingerprint=admitted.representation_fingerprint,
+              representation_family=rep.representation_family,
+              representation_digest=rep.representation_digest,
+              accounting_domain=rep.accounting_domain,
+              accounting_contract_digest=rep.accounting_contract_digest,
+              rate_numerator=rep.rate_numerator,
+              rate_denominator=rep.rate_denominator,
+              bounded_scope_digest=rep.bounded_scope_digest,
+              evidence_scope_digest=candidate.evidence_scope_digest,
+              currentness_roots=candidate.currentness_roots,
+              disposition=admitted.disposition,
+              score_mass_eligible=admitted.score_mass_eligible,
+              proposal_mass_eligible=admitted.proposal_mass_eligible,
           )
-          assert crosscast.disposition == "REVIEW"
-          assert crosscast.reason_code == "ACCOUNTING_DOMAIN_DIVERGENCE"
+          result = o65.prove_proposal_evidence_conformance(
+              proposal=o65.exact_q20_projection(), evidence=evidence
+          )
+          assert result.disposition == "CONFORMANT_BOUNDED_SUPPORT"
+          assert result.bounded_evidence_supports_exact_proposal is True
+          assert result.live_proposal_currentness_resolved is False
+          assert not any((result.execution_authorized, result.provider_effect_authorized,
+                          result.semantic_k27_authority, result.native_private_transformer_kv_accessed,
+                          result.gate10_promoted, result.merge_or_deployment_authorized))
+
+          # Different-J: sign/opinion and nominal-rate aliases do not bypass representation/accounting identity.
+          opposed = o64.admit_evidence(
+              candidate=o64.EvidenceAdmissionCandidate(**{**candidate.__dict__, "outcome": "OPPOSES"}),
+              authority=authority, policy=policy,
+          )
+          assert opposed.disposition == "VERIFIED_BOUNDED"
+          assert opposed.representation_fingerprint == admitted.representation_fingerprint
+          assert opposed.evidence_admission_fingerprint != admitted.evidence_admission_fingerprint
 
           receipt = {
-              "schema": "AURA-O65R-HOSTED-PROOF-v1",
-              "semantic_head": "fff1e38f78c54c387c1131543ce332d115ad7f5c",
-              "q20_parent_exact_success": True,
-              "o64_parent_exact_success": True,
-              "bounded_conformance": True,
-              "rational_alias_collapsed": True,
-              "accounting_crosscast_rejected": True,
-              "live_proposal_currentness_resolved": False,
-              "execution_authorized": False,
-              "provider_effect_authorized": False,
-              "semantic_k27_authority": False,
-              "native_private_transformer_kv_accessed": False,
-              "gate10_promoted": False,
-              "merge_or_deployment_authorized": False,
-              "proposal_evidence_support_digest": exact.proposal_evidence_support_digest,
-              "receipt_digest": exact.receipt_digest,
+              "schema": "AURA-O65R-HOSTED-PROOF-v2",
+              "semantic_head": o65.__dict__["__file__"] and "fff1e38f78c54c387c1131543ce332d115ad7f5c",
+              "parents": {
+                  "q20": {"head": o65.Q20_PROOF_HEAD, "run": o65.Q20_RUN, "job": o65.Q20_JOB},
+                  "o64_evidence": {"head": o65.O64_PROOF_HEAD, "run": o65.O64_RUN, "job": o65.O64_JOB},
+              },
+              "q20_parent_code_executed": True,
+              "o64_parent_admission_code_executed": True,
+              "q20_receipt_digest": q20_receipt.receipt_digest,
+              "authority_fingerprint": admitted.authority_fingerprint,
+              "admission_policy_fingerprint": admitted.admission_policy_fingerprint,
+              "evidence_admission_fingerprint": admitted.evidence_admission_fingerprint,
+              "representation_fingerprint": admitted.representation_fingerprint,
+              "accounting_contract_digest": o65.q20_accounting_contract_digest(),
+              "materialization_relation_digest": result.materialization_relation_digest,
+              "materialization_bound_proposal_basis_digest": result.proposal_basis_digest,
+              "proposal_evidence_support_digest": result.proposal_evidence_support_digest,
+              "conformance_receipt_digest": result.receipt_digest,
+              "claim_ceiling": {
+                  "live_proposal_currentness_resolved": False,
+                  "execution_authorized": False,
+                  "provider_effect_authorized": False,
+                  "semantic_k27_authority": False,
+                  "native_private_transformer_kv_accessed": False,
+                  "gate10_promoted": False,
+                  "merge_or_deployment_authorized": False,
+              },
           }
           with open("/tmp/o65r-proof.json", "w", encoding="utf-8") as handle:
               json.dump(receipt, handle, sort_keys=True, indent=2)
               handle.write("\n")
-          print("O65R_AUTHORITY_MATERIALIZATION_CONFORMANCE_PROVEN=true")
+          print(json.dumps(receipt, sort_keys=True, indent=2))
+          print("O65R_EXACT_PARENT_CODE_REPLAY_AND_CONFORMANCE=true")
           PY
 
       - name: Preserve O65-R proof receipt
