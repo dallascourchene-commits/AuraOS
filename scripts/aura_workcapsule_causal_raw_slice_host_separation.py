@@ -25,6 +25,7 @@ from scripts.aura_workcapsule_raw_slice_host_plane_separation import verify_raw_
 VERSION = "AURA_WORKCAPSULE_CAUSAL_RAW_SLICE_HOST_SEPARATION_V1"
 RAW_SLICE_OWNER = "PR566.verify_raw_slice_receipt"
 CAUSAL_HOST_OWNER = "PR567.admit_causal_temporal_host_observation_admission"
+RAW_SLICE_SNAPSHOT_FAILED = "RAW_SLICE_SNAPSHOT_FAILED"
 
 
 def _canonical_bytes(value: Any) -> bytes:
@@ -40,6 +41,36 @@ def _sha256(value: Any) -> str:
     return hashlib.sha256(_canonical_bytes(value)).hexdigest()
 
 
+def _snapshot_raw_slice_receipt(
+    raw_slice_receipt: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    """Create one detached JSON snapshot before any untrusted host-owner callback."""
+    try:
+        encoded = _canonical_bytes(dict(raw_slice_receipt))
+        decoded = json.loads(encoded.decode("utf-8"))
+    except (TypeError, ValueError, UnicodeError):
+        return None
+    return decoded if isinstance(decoded, dict) else None
+
+
+def _verify_snapshot_and_causal_host(
+    *,
+    raw_snapshot: Mapping[str, Any],
+    host_observations: Mapping[str, Any] | None,
+    host_observation_resolver: Any,
+    temporal_kwargs: Mapping[str, Any],
+) -> list[str]:
+    raw_violations = verify_raw_slice_receipt(raw_snapshot)
+    if raw_violations:
+        return list(raw_violations)
+    causal_violations = verify_causal_temporal_host_observation_admission(
+        host_observations=host_observations,
+        host_observation_resolver=host_observation_resolver,
+        **dict(temporal_kwargs),
+    )
+    return ["CAUSAL_HOST_" + item for item in causal_violations]
+
+
 def verify_causal_raw_slice_host_separation(
     *,
     raw_slice_receipt: Mapping[str, Any],
@@ -47,16 +78,16 @@ def verify_causal_raw_slice_host_separation(
     host_observation_resolver: Any = None,
     **temporal_kwargs: Any,
 ) -> list[str]:
-    """Verify local raw-slice evidence and causal host evidence on separate planes."""
-    raw_violations = verify_raw_slice_receipt(raw_slice_receipt)
-    if raw_violations:
-        return list(raw_violations)
-    causal_violations = verify_causal_temporal_host_observation_admission(
+    """Verify one snapshotted raw-evidence object and the causal host plane."""
+    raw_snapshot = _snapshot_raw_slice_receipt(raw_slice_receipt)
+    if raw_snapshot is None:
+        return [RAW_SLICE_SNAPSHOT_FAILED]
+    return _verify_snapshot_and_causal_host(
+        raw_snapshot=raw_snapshot,
         host_observations=host_observations,
         host_observation_resolver=host_observation_resolver,
-        **temporal_kwargs,
+        temporal_kwargs=temporal_kwargs,
     )
-    return ["CAUSAL_HOST_" + item for item in causal_violations]
 
 
 def _authority_ceiling() -> dict[str, bool]:
@@ -73,13 +104,13 @@ def _authority_ceiling() -> dict[str, bool]:
 
 
 def _admission_payload(
-    *, host: Mapping[str, Any], raw_slice_receipt: Mapping[str, Any]
+    *, host: Mapping[str, Any], raw_snapshot: Mapping[str, Any]
 ) -> dict[str, Any]:
     return {
         "version": VERSION,
         "raw_slice_contract_owner": RAW_SLICE_OWNER,
         "causal_host_owner": CAUSAL_HOST_OWNER,
-        "raw_slice_receipt_digest": _sha256(dict(raw_slice_receipt)),
+        "raw_slice_receipt_digest": _sha256(dict(raw_snapshot)),
         "raw_slice_exact_current_local_evidence_validated": True,
         "causal_temporal_owner_reproved": bool(host["causal_temporal_owner_reproved"]),
         "pre_reentry_receipt_reused_for_post_o10": bool(
@@ -125,11 +156,14 @@ def admit_causal_raw_slice_host_separation(
     **temporal_kwargs: Any,
 ) -> dict[str, Any]:
     """Emit a causal-host/current-raw-slice conjunction without rank promotion."""
-    violations = verify_causal_raw_slice_host_separation(
-        raw_slice_receipt=raw_slice_receipt,
+    raw_snapshot = _snapshot_raw_slice_receipt(raw_slice_receipt)
+    if raw_snapshot is None:
+        raise ValueError("causal raw-slice host separation failed: " + RAW_SLICE_SNAPSHOT_FAILED)
+    violations = _verify_snapshot_and_causal_host(
+        raw_snapshot=raw_snapshot,
         host_observations=host_observations,
         host_observation_resolver=host_observation_resolver,
-        **temporal_kwargs,
+        temporal_kwargs=temporal_kwargs,
     )
     if violations:
         raise ValueError(
@@ -140,6 +174,4 @@ def admit_causal_raw_slice_host_separation(
         host_observation_resolver=host_observation_resolver,
         **temporal_kwargs,
     )
-    return _seal(
-        _admission_payload(host=host, raw_slice_receipt=raw_slice_receipt)
-    )
+    return _seal(_admission_payload(host=host, raw_snapshot=raw_snapshot))
