@@ -42,6 +42,7 @@ def _sha256(value: str, name: str) -> None:
 @dataclass(frozen=True)
 class GateEvidenceState:
     gate_id: str
+    owner_ref: str
     gate_scope_digest: str
     evidence_generation: str
     receipt_digest: str
@@ -51,6 +52,7 @@ class GateEvidenceState:
 
     def validate(self) -> None:
         _required(self.gate_id, "GATE_ID")
+        _required(self.owner_ref, "GATE_OWNER_REF")
         _sha256(self.gate_scope_digest, "GATE_SCOPE_DIGEST")
         _required(self.evidence_generation, "GATE_EVIDENCE_GENERATION")
         _sha256(self.receipt_digest, "GATE_RECEIPT_DIGEST")
@@ -63,8 +65,11 @@ class GateEvidenceState:
                 raise ValueError("PASSED_GATE_REQUIRES_EXACT_GREEN")
             if self.blocker is not None:
                 raise ValueError("PASSED_GATE_CANNOT_HAVE_BLOCKER")
-        elif self.blocker is None or not self.blocker.strip():
-            raise ValueError("FAILED_GATE_REQUIRES_BLOCKER")
+        else:
+            if self.verification_state == "EXACT_GREEN":
+                raise ValueError("EXACT_GREEN_GATE_MUST_BE_PASSED")
+            if self.blocker is None or not self.blocker.strip():
+                raise ValueError("FAILED_GATE_REQUIRES_BLOCKER")
 
 
 @dataclass(frozen=True)
@@ -182,6 +187,13 @@ def evaluate_hard_gate_transition(request: TransitionRequest) -> TransitionDecis
     changed: list[str] = []
     for gate_id in sorted(before):
         b, a = before[gate_id], after[gate_id]
+        if b.owner_ref != a.owner_ref:
+            return _decision(
+                request=request,
+                disposition="REVIEW",
+                reason_code="GATE_OWNER_CHANGED_REQUIRES_REBIND",
+                changed=tuple(changed + [gate_id]),
+            )
         if b.gate_scope_digest != a.gate_scope_digest:
             return _decision(
                 request=request,
@@ -252,6 +264,7 @@ def evaluate_hard_gate_transition(request: TransitionRequest) -> TransitionDecis
             "transition_id": request.transition_id,
             "domain_id": request.domain_id,
             "target_gate_id": request.target_gate_id,
+            "gate_owner_ref": a.owner_ref,
             "gate_scope_digest": a.gate_scope_digest,
             "before_gate_generation": b.evidence_generation,
             "after_gate_generation": a.evidence_generation,
