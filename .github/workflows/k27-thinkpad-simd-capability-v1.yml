@@ -1,0 +1,62 @@
+name: K27 ThinkPad SIMD Capability Contract
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  capability-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch exact head without submodule traversal
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          ! git config --local --get-regexp '^http\..*\.extraheader$'
+
+      - name: Compile portable baseline plus target-specific variants
+        run: |
+          uname -a
+          g++ --version
+          g++ -std=c++20 -O2 -Wall -Wextra -Werror -pedantic \
+            tools/k27_thinkpad_simd_capability.cpp \
+            -o /tmp/k27_thinkpad_simd_capability
+
+      - name: Prove synthetic gating and same-input SIMD equivalence
+        run: |
+          /tmp/k27_thinkpad_simd_capability --self-test
+
+      - name: Emit bounded hosted observation receipt
+        run: |
+          /tmp/k27_thinkpad_simd_capability | tee /tmp/receipt.json
+          python - <<'PY'
+          import json
+          r = json.load(open('/tmp/receipt.json', encoding='utf-8'))
+          assert r['schema'] == 'AuraK27ThinkPadSimdCapabilityObservationV1'
+          assert r['active_backend'] in {'SCALAR_PORTABLE', 'AVX2_POPCNT', 'AVX512F_VPOPCNTDQ'}
+          assert r['l2_residency_proven'] is False
+          assert r['p_core_only_proven'] is False
+          assert r['thermal_reduction_proven'] is False
+          assert r['performance_superiority_proven'] is False
+          assert r['real_owner_thinkpad_benchmark_proven'] is False
+          assert r['effect_authority'] is False
+          assert r['sample_distance_1024'] == 1024
+          PY
+
+      - name: Assert portability and claim ceiling
+        run: |
+          ! grep -R -- '-march=native' tools/k27_thinkpad_simd_capability.cpp .github/workflows/k27-thinkpad-simd-capability-v1.yml
+          grep -F 'required_xcr0 = 0xE6ULL' tools/k27_thinkpad_simd_capability.cpp
+          grep -F 'l2_residency_proven\\\": false' tools/k27_thinkpad_simd_capability.cpp
+          grep -F 'performance_superiority_proven\\\": false' tools/k27_thinkpad_simd_capability.cpp
