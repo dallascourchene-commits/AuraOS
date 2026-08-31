@@ -1,0 +1,117 @@
+name: GLM53 Q20 Materialization Bound Proposal
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q20-materialization-bound-proposal:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      Q19_HEAD: e54a4fba9a4b54e3afd4b0eb19124250183a1304
+      Q19_RUN: '33407053398'
+      Q19_JOB: '99537108141'
+      Q19_SOURCE_BLOB: 3cf1f9341e576bf718ef9b174f753d509d1b8fb0
+      Q15_HEAD: b4791c47f7e1b1a8078688b2721957fc4c863a90
+      Q15_RUN: '33406119920'
+      Q15_JOB: '99534015610'
+      Q15_ARTIFACT_ID: '9763246083'
+      Q15_ARTIFACT_DIGEST: sha256:812aee1771143c2c598c2610c8387f9540af7341ed778377181c8e036db5116e
+    steps:
+      - name: Exact authenticated checkout without mutable actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Revalidate exact-current Q19 and Q15 semantic parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'}
+          def get(url):
+              req=urllib.request.Request(url,headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: return json.load(r)
+          for run_id,job_id,head in (
+              (int(os.environ['Q19_RUN']),int(os.environ['Q19_JOB']),os.environ['Q19_HEAD']),
+              (int(os.environ['Q15_RUN']),int(os.environ['Q15_JOB']),os.environ['Q15_HEAD']),
+          ):
+              run=get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}')
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              job=get(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}')
+              assert job['run_id']==run_id and job['status']=='completed' and job['conclusion']=='success',job_id
+          artifact_payload=get(f"https://api.github.com/repos/{repo}/actions/runs/{os.environ['Q15_RUN']}/artifacts")
+          hits=[a for a in artifact_payload['artifacts'] if a['id']==int(os.environ['Q15_ARTIFACT_ID'])]
+          assert len(hits)==1
+          assert hits[0]['digest']==os.environ['Q15_ARTIFACT_DIGEST'],hits[0]['digest']
+          assert hits[0]['expired'] is False
+
+          allowed={'.aura/CODEMAP.json','.aura/CODEMAP.md'}
+          for pr_number,semantic_head in ((698,os.environ['Q19_HEAD']),(683,os.environ['Q15_HEAD'])):
+              pr=get(f'https://api.github.com/repos/{repo}/pulls/{pr_number}')
+              current=pr['head']['sha']
+              if current != semantic_head:
+                  cmp=get(f'https://api.github.com/repos/{repo}/compare/{semantic_head}...{current}')
+                  assert cmp['status']=='ahead',(pr_number,cmp['status'])
+                  changed={f['filename'] for f in cmp.get('files',[])}
+                  assert changed <= allowed,(pr_number,current,sorted(changed))
+          print('Q20_EXACT_CURRENT_PARENT_GENERATIONS=true')
+          PY
+          test "$(git rev-parse HEAD:tools/quantization/aura_glm53_q19_representation_scoped_conformed_proposal.py)" = "$Q19_SOURCE_BLOB"
+
+      - name: Run Q20 adversarial contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_q20_materialization_bound_proposal.py \
+            tests/test_aura_glm53_q20_materialization_bound_proposal.py
+          python3 -m unittest -v tests.test_aura_glm53_q20_materialization_bound_proposal
+
+      - name: Materialize exact bounded Q20 receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m tools.quantization.aura_glm53_q20_materialization_bound_proposal | tee /tmp/q20.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q20.json',encoding='utf-8'))
+          assert r['schema']=='AURA_GLM53_Q20_MATERIALIZATION_BOUND_PROPOSAL_V1'
+          assert r['q19_head']=='e54a4fba9a4b54e3afd4b0eb19124250183a1304'
+          assert r['q15_head']=='b4791c47f7e1b1a8078688b2721957fc4c863a90'
+          assert r['same_materialized_page_set_bound'] is True
+          assert r['execution_qualified_materialization_bound'] is True
+          assert r['q19_proposal_basis_preserved'] is True
+          assert r['q18_proposal_identity_preserved'] is True
+          assert r['q15_provider_execution_is_proposal_execution_authority'] is False
+          assert r['q15_page_set_digest']==r['q6_page_set_digest']=='4811719dd71a1c8b3258000286955a7ae31895c46a0a34bbfcf5fec3717bdf41'
+          assert len(r['materialization_relation_digest'])==64
+          assert len(r['materialization_bound_proposal_basis_digest'])==64
+          assert len(r['receipt_digest'])==64
+          for key in (
+              'full_representative_page_set_proven','model_execution_proven','inference_proven',
+              'model_quality_or_runtime_proven','execution_authority_granted','effect_authority_granted',
+              'semantic_k27_authority','native_private_transformer_kv_accessed','gate10_promoted',
+              'merge_or_deployment_authorized'):
+              assert r[key] is False,key
+          print('Q20_MATERIALIZATION_BOUND_PROPOSAL_EXACT=true')
+          PY
