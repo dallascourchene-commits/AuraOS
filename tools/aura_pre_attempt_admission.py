@@ -4,10 +4,12 @@
 D0 / HS1 / NONPROMOTING.
 
 A current bounded proposal is still not an execution credential. This membrane composes
-O64 owner-resolved proposal currentness with a separately owner-resolved pre-attempt
-policy and concurrency state. It may mint only a deterministic PRE_ATTEMPT_ENVELOPE
-identity. It never mints an execution lease, starts a provider effect, or grants effect
-or Gate-10 authority.
+O64 owner-resolved proposal currentness with separately owner-resolved pre-attempt
+policy and concurrency state. All consequence-changing reads are enclosed by one
+owner-state epoch check so a pre-attempt identity cannot be minted from a torn view of
+concurrent state. It may mint only a deterministic PRE_ATTEMPT_ENVELOPE identity. It
+never mints an execution lease, starts a provider effect, or grants effect/Gate-10
+authority.
 """
 from __future__ import annotations
 
@@ -102,7 +104,15 @@ class PreAttemptPolicyState:
 
 
 class PreAttemptOwnerResolver(ProposalOwnerResolver, Protocol):
-    """Owner-controlled truth required beyond proposal currentness."""
+    """Owner-controlled truth required beyond proposal currentness.
+
+    ``resolve_pre_attempt_state_epoch`` is a read-epoch/validation-generation witness
+    spanning the proposal, policy, route/observer, resource and concurrency owners
+    represented by this resolver. The same nonempty epoch must be returned immediately
+    before and after an otherwise-successful admission read set. A changed, unavailable,
+    malformed or exceptional epoch fails closed. This prevents a successful receipt from
+    being assembled from individually valid values that never coexisted.
+    """
 
     def resolve_pre_attempt_policy(
         self, *, proposal_id: str, domain_id: str, action_kind: str
@@ -111,6 +121,8 @@ class PreAttemptOwnerResolver(ProposalOwnerResolver, Protocol):
     def concurrent_live_attempt_exists(
         self, *, proposal_id: str, concurrency_scope_digest: str
     ) -> bool | None: ...
+
+    def resolve_pre_attempt_state_epoch(self, *, proposal_id: str) -> str | None: ...
 
 
 @dataclass(frozen=True)
@@ -121,6 +133,7 @@ class PreAttemptAdmissionReceipt:
     proposal_id: str
     proposal_basis_digest: str
     pre_attempt_id: str | None
+    owner_state_epoch: str | None
     policy_generation: str | None
     policy_digest: str | None
     expected_route_fingerprint: str | None
@@ -144,6 +157,27 @@ class PreAttemptAdmissionReceipt:
     merge_deploy_spend_public_financial_human_effect: bool = False
 
     def validate_claim_ceiling(self) -> None:
+        if self.schema_version != RECEIPT_SCHEMA:
+            raise ValueError("PRE_ATTEMPT_RECEIPT_SCHEMA_MISMATCH")
+        _sha256(self.proposal_id, "RECEIPT_PROPOSAL_ID")
+        _sha256(self.proposal_basis_digest, "RECEIPT_PROPOSAL_BASIS_DIGEST")
+        if self.pre_attempt_id is not None:
+            _sha256(self.pre_attempt_id, "PRE_ATTEMPT_ID")
+        if self.disposition == ELIGIBLE:
+            if self.pre_attempt_id is None:
+                raise ValueError("ELIGIBLE_PRE_ATTEMPT_ID_REQUIRED")
+            _required(self.owner_state_epoch or "", "OWNER_STATE_EPOCH")
+            if not (
+                self.proposal_current
+                and self.policy_current
+                and self.authority_scope_matches
+                and self.action_matches_proposal
+                and self.resource_envelope_matches
+                and self.concurrent_live_attempt_conflict is False
+            ):
+                raise ValueError("ELIGIBLE_PRE_ATTEMPT_REQUIRES_ALL_GATES")
+        elif self.pre_attempt_id is not None:
+            raise ValueError("HOLD_PRE_ATTEMPT_ID_MUST_BE_NONE")
         if self.revalidation_required_at_effect_boundary is not True:
             raise ValueError("EFFECT_BOUNDARY_REVALIDATION_REQUIRED")
         forbidden = (
@@ -176,6 +210,7 @@ def _hold(
     capsule: ProposalCapsule,
     reason_code: str,
     cone: tuple[str, ...],
+    epoch: str | None = None,
     policy: PreAttemptPolicyState | None = None,
     proposal_current: bool = False,
     policy_current: bool = False,
@@ -191,6 +226,7 @@ def _hold(
         proposal_id=capsule.proposal_id,
         proposal_basis_digest=capsule.proposal_basis_digest,
         pre_attempt_id=None,
+        owner_state_epoch=epoch,
         policy_generation=policy.policy_generation if policy else None,
         policy_digest=policy.policy_digest if policy else None,
         expected_route_fingerprint=policy.expected_route_fingerprint if policy else None,
@@ -208,14 +244,31 @@ def _hold(
     return receipt
 
 
+def _resolve_epoch(
+    *, owner_resolver: PreAttemptOwnerResolver, proposal_id: str
+) -> tuple[str | None, str | None]:
+    """Return ``(epoch, error_reason)`` without converting owner failure into truth."""
+    try:
+        epoch = owner_resolver.resolve_pre_attempt_state_epoch(proposal_id=proposal_id)
+    except Exception:
+        return None, "OWNER_STATE_EPOCH_RESOLVER_ERROR"
+    if epoch is None:
+        return None, "OWNER_STATE_EPOCH_UNAVAILABLE_OR_UNKNOWN"
+    if not isinstance(epoch, str) or not epoch.strip():
+        return None, "OWNER_STATE_EPOCH_INVALID"
+    return epoch, None
+
+
 def admit_pre_attempt(
     *, capsule: ProposalCapsule, owner_resolver: PreAttemptOwnerResolver | None
 ) -> PreAttemptAdmissionReceipt:
-    """Admit one semantic pre-attempt envelope from owner-resolved current state.
+    """Admit one semantic pre-attempt envelope from one stable owner-state epoch.
 
     No caller-supplied policy/currentness/route/observer/concurrency booleans are accepted.
-    The proposal producer identity is deliberately absent from pre_attempt_id: identical
-    content-addressed proposal bases must collapse to the same semantic envelope.
+    The proposal producer identity is deliberately absent from ``pre_attempt_id``:
+    identical content-addressed proposal bases collapse to one semantic envelope. The
+    final epoch recheck is a fail-closed optimistic-serializability barrier; it does not
+    grant execution authority and must be revalidated again at the effect boundary.
     """
 
     capsule.validate_integrity()
@@ -223,7 +276,17 @@ def admit_pre_attempt(
         return _hold(
             capsule=capsule,
             reason_code="OWNER_RESOLVER_UNAVAILABLE",
-            cone=("proposal_currentness", "pre_attempt_policy", "concurrency"),
+            cone=("proposal_currentness", "pre_attempt_policy", "concurrency", "owner_state_epoch"),
+        )
+
+    epoch_before, epoch_error = _resolve_epoch(
+        owner_resolver=owner_resolver, proposal_id=capsule.proposal_id
+    )
+    if epoch_error is not None:
+        return _hold(
+            capsule=capsule,
+            reason_code=epoch_error,
+            cone=("owner_state_epoch",),
         )
 
     currentness = revalidate_proposal_capsule(capsule=capsule, owner_resolver=owner_resolver)
@@ -232,6 +295,7 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code="PROPOSAL_NOT_CURRENT",
             cone=("proposal_currentness",),
+            epoch=epoch_before,
         )
 
     b = capsule.basis
@@ -246,6 +310,7 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code="POLICY_RESOLVER_ERROR",
             cone=("pre_attempt_policy",),
+            epoch=epoch_before,
             proposal_current=True,
         )
     if policy is None:
@@ -253,6 +318,7 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code="POLICY_UNAVAILABLE_OR_UNKNOWN",
             cone=("pre_attempt_policy",),
+            epoch=epoch_before,
             proposal_current=True,
         )
     try:
@@ -262,6 +328,7 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code="POLICY_INVALID",
             cone=("pre_attempt_policy",),
+            epoch=epoch_before,
             proposal_current=True,
         )
 
@@ -270,6 +337,7 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code="POLICY_PROPOSAL_MISMATCH",
             cone=("pre_attempt_policy",),
+            epoch=epoch_before,
             policy=policy,
             proposal_current=True,
             policy_current=policy.policy_current,
@@ -279,6 +347,7 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code="POLICY_NOT_CURRENT",
             cone=("pre_attempt_policy",),
+            epoch=epoch_before,
             policy=policy,
             proposal_current=True,
         )
@@ -287,6 +356,7 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code="POLICY_DOMAIN_OR_ACTION_MISMATCH",
             cone=("pre_attempt_policy",),
+            epoch=epoch_before,
             policy=policy,
             proposal_current=True,
             policy_current=True,
@@ -300,6 +370,7 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code="AUTHORITY_SCOPE_MISMATCH",
             cone=("authority_scope",),
+            epoch=epoch_before,
             policy=policy,
             proposal_current=True,
             policy_current=True,
@@ -309,6 +380,7 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code="ACTION_PARAMETERS_MISMATCH",
             cone=("action_parameters",),
+            epoch=epoch_before,
             policy=policy,
             proposal_current=True,
             policy_current=True,
@@ -319,6 +391,7 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code="RESOURCE_ENVELOPE_MISMATCH",
             cone=("resource_envelope",),
+            epoch=epoch_before,
             policy=policy,
             proposal_current=True,
             policy_current=True,
@@ -336,6 +409,7 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code="CONCURRENCY_RESOLVER_ERROR",
             cone=("concurrency",),
+            epoch=epoch_before,
             policy=policy,
             proposal_current=True,
             policy_current=True,
@@ -348,6 +422,7 @@ def admit_pre_attempt(
             capsule=capsule,
             reason_code=("CONCURRENT_LIVE_ATTEMPT" if conflict is True else "CONCURRENCY_UNKNOWN"),
             cone=("concurrency",),
+            epoch=epoch_before,
             policy=policy,
             proposal_current=True,
             policy_current=True,
@@ -357,9 +432,42 @@ def admit_pre_attempt(
             concurrent_live_attempt_conflict=conflict,
         )
 
+    epoch_after, final_epoch_error = _resolve_epoch(
+        owner_resolver=owner_resolver, proposal_id=capsule.proposal_id
+    )
+    if final_epoch_error is not None:
+        return _hold(
+            capsule=capsule,
+            reason_code=final_epoch_error,
+            cone=("owner_state_epoch",),
+            epoch=epoch_before,
+            policy=policy,
+            proposal_current=True,
+            policy_current=True,
+            authority_scope_matches=True,
+            action_matches_proposal=True,
+            resource_envelope_matches=True,
+            concurrent_live_attempt_conflict=False,
+        )
+    if epoch_after != epoch_before:
+        return _hold(
+            capsule=capsule,
+            reason_code="OWNER_STATE_EPOCH_CHANGED_DURING_ADMISSION",
+            cone=("proposal_currentness", "pre_attempt_policy", "concurrency", "owner_state_epoch"),
+            epoch=epoch_after,
+            policy=policy,
+            proposal_current=True,
+            policy_current=True,
+            authority_scope_matches=True,
+            action_matches_proposal=True,
+            resource_envelope_matches=True,
+            concurrent_live_attempt_conflict=False,
+        )
+
     identity_payload = {
         "proposal_id": capsule.proposal_id,
         "proposal_basis_digest": capsule.proposal_basis_digest,
+        "owner_state_epoch": epoch_before,
         "policy_generation": policy.policy_generation,
         "policy_digest": policy.policy_digest,
         "authority_scope": policy.authority_scope,
@@ -373,10 +481,11 @@ def admit_pre_attempt(
     receipt = PreAttemptAdmissionReceipt(
         schema_version=RECEIPT_SCHEMA,
         disposition=ELIGIBLE,
-        reason_code="ALL_OWNER_RESOLVED_PRE_ATTEMPT_GATES_SATISFIED",
+        reason_code="ALL_OWNER_RESOLVED_PRE_ATTEMPT_GATES_SATISFIED_IN_ONE_EPOCH",
         proposal_id=capsule.proposal_id,
         proposal_basis_digest=capsule.proposal_basis_digest,
         pre_attempt_id=_sha({"domain": "AURA-PRE-ATTEMPT-ID-v1", "basis": identity_payload}),
+        owner_state_epoch=epoch_before,
         policy_generation=policy.policy_generation,
         policy_digest=policy.policy_digest,
         expected_route_fingerprint=policy.expected_route_fingerprint,
