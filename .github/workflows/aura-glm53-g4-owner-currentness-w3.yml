@@ -91,7 +91,7 @@ jobs:
               raise SystemExit(f"G4_W3_PUBLIC_API_WIDENED:{sig}")
           PY
 
-      - name: Enforce nonpromotion and non-self-authentication ceiling
+      - name: Enforce nonpromotion and external-trust ceilings
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -99,6 +99,8 @@ jobs:
           required = (
               "owner_resolver_authenticated_by_this_contract: bool = False",
               "owner_currentness_truth_proven_by_this_contract: bool = False",
+              "owner_epoch_change_complete_required: bool = True",
+              "owner_epoch_change_complete_proven_by_this_contract: bool = False",
               "revalidation_required_at_effect_boundary: bool = True",
               "plan_executed_by_this_contract: bool = False",
               "transfer_effect_authorized: bool = False",
