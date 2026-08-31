@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788160951,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -149,6 +149,7 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-xhdv-riscv-candidate-falsifier.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -1326,6 +1327,7 @@
       "tests/fixtures/amd_track3/demo_one.py",
       "tests/fixtures/amd_track3/demo_three.py",
       "tests/fixtures/amd_track3/demo_two.py",
+      "tests/fixtures/k27_xhdv_candidate_inline_asm.c",
       "tests/fixtures/relationship_atlas/relational_index_fixture.json",
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
@@ -1623,6 +1625,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -1633,6 +1636,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/k27_xhdv_riscv_candidate_falsifier.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1755,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1643,
+      "bytes": 26433497,
+      "tokens_est": 6598727,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
-        "native_accelerator": 12,
+        "native_accelerator": 13,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3458,6 +3462,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 235,
+        "end_line": 237,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:main:33ec1244a53e6a22",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -21647,6 +21659,14 @@
         "end_line": 109,
         "semantic_id": "aura_vsa_encoding_profile.py#function:bind:2d20904dbe815ba2",
         "signature_hash": "5cd660891da3ff69"
+      },
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 87,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:bind:8063b154f1f2a286",
+        "signature_hash": "9412f39b4cce75ed"
       }
     ],
     "unbind": [
@@ -156921,6 +156941,136 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "XhdvCandidateFalsifierTests": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 94,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#class:XhdvCandidateFalsifierTests:2724e878c9f433a7",
+        "signature_hash": "fcd35da815ab6c14"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_custom0_and_r_encoding_roundtrip": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 26,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_custom0_and_r_encoding_roundtrip:6510d5d403eb1ab6",
+        "signature_hash": "ddd7a120c99a7fb3"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_register_fields_are_strict_five_bit_ids": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 32,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_register_fields_are_strict_five_bit_ids:1605206584568cd9",
+        "signature_hash": "d28ee652af131bee"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_bind_is_exact_xor_and_hamming_extrema_fit_11_bits": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 40,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_bind_is_exact_xor_and_hamming_extrema_fit_11_bits:503a3bea032048c9",
+        "signature_hash": "0f9c3c0078b9a2ff"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_rotate_roundtrip_edge_and_random_shifts": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 47,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_rotate_roundtrip_edge_and_random_shifts:778e3b39f4486ffd",
+        "signature_hash": "a57143142cd99e38"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_i_type_128byte_alignment_has_only_32_direct_displacements": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 54,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_i_type_128byte_alignment_has_only_32_direct_displacements:2cdac875e7053b06",
+        "signature_hash": "63a833793058cdf4"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_pasted_dataset_recovers_target_but_threshold_rejects_nothing": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 60,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_pasted_dataset_recovers_target_but_threshold_rejects_nothing:60df202f9eda8fa0",
+        "signature_hash": "84fd07bf9927e4a2"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_pasted_threshold_is_not_discriminative": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_pasted_threshold_is_not_discriminative:75df0f33216e0625",
+        "signature_hash": "0422c043a5c2d1d2"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_shown_inline_asm_does_not_establish_hidden_h_register_abi": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 68,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_shown_inline_asm_does_not_establish_hidden_h_register_abi:e406efe2db58e485",
+        "signature_hash": "d507b3bc51040607"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_supplied_alu_is_not_the_claimed_six_instruction_architecture": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 75,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_supplied_alu_is_not_the_claimed_six_instruction_architecture:8072cad9a6530cdf",
+        "signature_hash": "8f30d228cd3e1303"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_architectural_state_and_128byte_memory_semantics_are_unowned": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 82,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_architectural_state_and_128byte_memory_semantics_are_unowned:69e451513f309d80",
+        "signature_hash": "eb9ffa7f78a20930"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_rtl_and_two_cycle_timing_remain_unproven": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 88,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_rtl_and_two_cycle_timing_remain_unproven:3b5c075b36f89213",
+        "signature_hash": "aff33ef43e84f3ed"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_performance_and_k27_authority_remain_false": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 94,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_performance_and_k27_authority_remain_false:a04561758342ed4e",
+        "signature_hash": "49ecdcd71feb57ee"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -157179,6 +157329,196 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "XhdvError": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 25,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#class:XhdvError:7c34c85a1ad9b3c3",
+        "signature_hash": "5aafdad87ad4a512"
+      }
+    ],
+    "_strict_u5": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 31,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u5:f6305af9b22bae73",
+        "signature_hash": "1d2c4b3d000ca5b5"
+      }
+    ],
+    "_strict_u3": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 37,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u3:a894f4879e6da1d8",
+        "signature_hash": "fb33be0bc00ea2b8"
+      }
+    ],
+    "_strict_u7": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 43,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u7:990606cc383e955f",
+        "signature_hash": "f19b770d420add7a"
+      }
+    ],
+    "encode_r": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 54,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:encode_r:9c1d6903e712edd0",
+        "signature_hash": "f65dc6d2672b5e00"
+      }
+    ],
+    "decode_r": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 67,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:decode_r:fc27e7eda4e024d4",
+        "signature_hash": "6dc34b4fdee51bb7"
+      }
+    ],
+    "aligned_i_type_displacements": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 72,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:aligned_i_type_displacements:8896d77020797d2d",
+        "signature_hash": "c6c7bebc5b8fc18c"
+      }
+    ],
+    "_words": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 75,
+        "end_line": 81,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_words:de0f6babdc114fe5",
+        "signature_hash": "0de3832501cca684"
+      }
+    ],
+    "popcnt": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 91,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:popcnt:c5587374ec6ec42a",
+        "signature_hash": "434dda8e57bffe82"
+      }
+    ],
+    "hdist": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 95,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:hdist:fcea4835db3f0226",
+        "signature_hash": "e504eb10a5c40010"
+      }
+    ],
+    "_to_int": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 99,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_to_int:a7a861113a1266cf",
+        "signature_hash": "1f1bd39f49b24aa6"
+      }
+    ],
+    "_from_int": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 102,
+        "end_line": 104,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_from_int:202a79685d5f7dad",
+        "signature_hash": "7177122ac6d4b414"
+      }
+    ],
+    "perm": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 107,
+        "end_line": 115,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:perm:cce177bbf741819c",
+        "signature_hash": "af16675f8cda24e5"
+      }
+    ],
+    "pasted_centroid_word": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 118,
+        "end_line": 121,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:pasted_centroid_word:38fa02eb1d282b4c",
+        "signature_hash": "2b0a6019c1c535a1"
+      }
+    ],
+    "pasted_scan_falsifier": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 124,
+        "end_line": 147,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:pasted_scan_falsifier:1a40629c8fdb6336",
+        "signature_hash": "96e92dd86707d1a9"
+      }
+    ],
+    "XhdvCandidateDisposition": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "class",
+        "line": 151,
+        "end_line": 189,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#class:XhdvCandidateDisposition:60c84d34f6212fe5",
+        "signature_hash": "4494db9fefe25a3d"
+      }
+    ],
+    "XhdvCandidateDisposition.to_dict": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 184,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateDisposition.to_dict:72c166a106d95885",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "XhdvCandidateDisposition.digest": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 189,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateDisposition.digest:b5aef3ef80fc0adb",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "disposition": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 192,
+        "end_line": 232,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:disposition:e2d1b92a2f011265",
+        "signature_hash": "b75f037b7138c920"
       }
     ],
     "_coordinates": [
@@ -158302,6 +158642,7 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-xhdv-riscv-candidate-falsifier.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -158627,6 +158968,13 @@
     ],
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/k27-xhdv-riscv-candidate-falsifier.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
+    "python tools/k27_xhdv_riscv_candidate_falsifier.py | tee /tmp/xhdv.json": [
+      ".github/workflows/k27-xhdv-riscv-candidate-falsifier.yml"
     ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
@@ -159293,9 +159641,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -168530,6 +168875,67 @@
         0.193092,
         -0.001409,
         -0.102888
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-xhdv-riscv-candidate-falsifier.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4651,
+      "lines": 105,
+      "tokens_est": 1163,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest",
+        "python tools/k27_xhdv_riscv_candidate_falsifier.py | tee /tmp/xhdv.json"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          39
+        ],
+        "python -m unittest": [
+          40
+        ],
+        "python tools/k27_xhdv_riscv_candidate_falsifier.py | tee /tmp/xhdv.json": [
+          63
+        ]
+      },
+      "topology": {},
+      "digest8": "74735d9663eb1ebd",
+      "vector": [
+        -0.091155,
+        -0.082189,
+        -0.273465,
+        -0.324272,
+        -0.085178,
+        0.153917,
+        -0.070234,
+        0.210702,
+        0.186793,
+        -0.207714,
+        0.156906,
+        -0.067245,
+        0.303352,
+        -0.055291,
+        -0.085178,
+        0.082189,
+        -0.082189,
+        0.171849,
+        -0.016438,
+        0.094144,
+        -0.348182,
+        -0.327261,
+        0.180815,
+        0.174838,
+        -0.03437,
+        0.037359,
+        -0.210702,
+        0.19277,
+        0.001494,
+        0.019426,
+        -0.288408,
+        0.061268
       ]
     },
     {
@@ -248313,6 +248719,53 @@
       ]
     },
     {
+      "path": "tests/fixtures/k27_xhdv_candidate_inline_asm.c",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 541,
+      "lines": 23,
+      "tokens_est": 136,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "79f3d3cfce796190",
+      "vector": [
+        0.219245,
+        -0.00102,
+        -0.235561,
+        -0.213127,
+        -0.096876,
+        0.260035,
+        0.253917,
+        -0.243719,
+        0.202929,
+        0.147863,
+        -0.188653,
+        -0.225364,
+        -0.098915,
+        -0.166219,
+        0.052007,
+        0.213127,
+        -0.231482,
+        0.170298,
+        -0.037731,
+        -0.1601,
+        -0.158061,
+        0.066283,
+        -0.037731,
+        -0.058126,
+        0.111152,
+        -0.184574,
+        0.186613,
+        0.166219,
+        -0.196811,
+        -0.211087,
+        -0.249838,
+        0.129508
+      ]
+    },
+    {
       "path": "tests/fixtures/relationship_atlas/relational_index_fixture.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -262272,6 +262725,53 @@
       ]
     },
     {
+      "path": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4071,
+      "lines": 99,
+      "tokens_est": 1018,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c36c9a7a30d9fd80",
+      "vector": [
+        -0.174011,
+        -0.060371,
+        -0.218994,
+        -0.001184,
+        -0.003551,
+        -0.093516,
+        0.039064,
+        0.235566,
+        -0.261609,
+        0.216626,
+        0.065106,
+        -0.131396,
+        0.235566,
+        0.214259,
+        0.169276,
+        0.147969,
+        0.159806,
+        -0.150336,
+        0.081679,
+        -0.216626,
+        -0.301857,
+        -0.024859,
+        -0.221361,
+        -0.228464,
+        0.290019,
+        -0.046166,
+        0.174011,
+        0.197686,
+        0.249771,
+        -0.223729,
+        0.020124,
+        -0.020124
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -262739,6 +263239,53 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9186,
+      "lines": 242,
+      "tokens_est": 2297,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "486b24fedbb9eeb2",
+      "vector": [
+        -0.297042,
+        0.161047,
+        0.046525,
+        -0.087085,
+        -0.175362,
+        -0.261254,
+        0.163433,
+        -0.261254,
+        0.132416,
+        -0.301814,
+        -0.14196,
+        0.125259,
+        -0.005965,
+        -0.091856,
+        0.187292,
+        0.29227,
+        0.010736,
+        0.158661,
+        0.02028,
+        -0.180134,
+        0.256482,
+        -0.1014,
+        -0.056068,
+        -0.096628,
+        -0.015508,
+        -0.25171,
+        -0.039367,
+        0.053682,
+        -0.242167,
+        -0.213536,
+        -0.053682,
+        -0.294656
       ]
     },
     {
@@ -286646,16 +287193,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1643,
+    "total_bytes": 26433497,
+    "text_tokens_est": 6598727,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
-      "native_accelerator": 12,
+      "native_accelerator": 13,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286814,6 +287361,7 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-xhdv-riscv-candidate-falsifier.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -287991,6 +288539,7 @@
       "tests/fixtures/amd_track3/demo_one.py",
       "tests/fixtures/amd_track3/demo_three.py",
       "tests/fixtures/amd_track3/demo_two.py",
+      "tests/fixtures/k27_xhdv_candidate_inline_asm.c",
       "tests/fixtures/relationship_atlas/relational_index_fixture.json",
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
@@ -288288,6 +288837,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -288298,6 +288848,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/k27_xhdv_riscv_candidate_falsifier.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -445354,6 +445905,136 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#class:XhdvCandidateFalsifierTests:2724e878c9f433a7",
+        "name": "XhdvCandidateFalsifierTests",
+        "kind": "class",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 22,
+        "end_line": 94,
+        "signature_hash": "fcd35da815ab6c14",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_architectural_state_and_128byte_memory_semantics_are_unowned:69e451513f309d80",
+        "name": "XhdvCandidateFalsifierTests.test_architectural_state_and_128byte_memory_semantics_are_unowned",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 77,
+        "end_line": 82,
+        "signature_hash": "eb9ffa7f78a20930",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_bind_is_exact_xor_and_hamming_extrema_fit_11_bits:503a3bea032048c9",
+        "name": "XhdvCandidateFalsifierTests.test_bind_is_exact_xor_and_hamming_extrema_fit_11_bits",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 34,
+        "end_line": 40,
+        "signature_hash": "0f9c3c0078b9a2ff",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_custom0_and_r_encoding_roundtrip:6510d5d403eb1ab6",
+        "name": "XhdvCandidateFalsifierTests.test_custom0_and_r_encoding_roundtrip",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 23,
+        "end_line": 26,
+        "signature_hash": "ddd7a120c99a7fb3",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_i_type_128byte_alignment_has_only_32_direct_displacements:2cdac875e7053b06",
+        "name": "XhdvCandidateFalsifierTests.test_i_type_128byte_alignment_has_only_32_direct_displacements",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 49,
+        "end_line": 54,
+        "signature_hash": "63a833793058cdf4",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_pasted_dataset_recovers_target_but_threshold_rejects_nothing:60df202f9eda8fa0",
+        "name": "XhdvCandidateFalsifierTests.test_pasted_dataset_recovers_target_but_threshold_rejects_nothing",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 56,
+        "end_line": 60,
+        "signature_hash": "84fd07bf9927e4a2",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_pasted_threshold_is_not_discriminative:75df0f33216e0625",
+        "name": "XhdvCandidateFalsifierTests.test_pasted_threshold_is_not_discriminative",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 62,
+        "end_line": 63,
+        "signature_hash": "0422c043a5c2d1d2",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_performance_and_k27_authority_remain_false:a04561758342ed4e",
+        "name": "XhdvCandidateFalsifierTests.test_performance_and_k27_authority_remain_false",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 90,
+        "end_line": 94,
+        "signature_hash": "49ecdcd71feb57ee",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_register_fields_are_strict_five_bit_ids:1605206584568cd9",
+        "name": "XhdvCandidateFalsifierTests.test_register_fields_are_strict_five_bit_ids",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 28,
+        "end_line": 32,
+        "signature_hash": "d28ee652af131bee",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_rotate_roundtrip_edge_and_random_shifts:778e3b39f4486ffd",
+        "name": "XhdvCandidateFalsifierTests.test_rotate_roundtrip_edge_and_random_shifts",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 42,
+        "end_line": 47,
+        "signature_hash": "a57143142cd99e38",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_rtl_and_two_cycle_timing_remain_unproven:3b5c075b36f89213",
+        "name": "XhdvCandidateFalsifierTests.test_rtl_and_two_cycle_timing_remain_unproven",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 84,
+        "end_line": 88,
+        "signature_hash": "aff33ef43e84f3ed",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_shown_inline_asm_does_not_establish_hidden_h_register_abi:e406efe2db58e485",
+        "name": "XhdvCandidateFalsifierTests.test_shown_inline_asm_does_not_establish_hidden_h_register_abi",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 65,
+        "end_line": 68,
+        "signature_hash": "d507b3bc51040607",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_supplied_alu_is_not_the_claimed_six_instruction_architecture:8072cad9a6530cdf",
+        "name": "XhdvCandidateFalsifierTests.test_supplied_alu_is_not_the_claimed_six_instruction_architecture",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 70,
+        "end_line": 75,
+        "signature_hash": "8f30d228cd3e1303",
+        "file_digest8": "c36c9a7a30d9fd80"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -445632,6 +446313,216 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#class:XhdvCandidateDisposition:60c84d34f6212fe5",
+        "name": "XhdvCandidateDisposition",
+        "kind": "class",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 151,
+        "end_line": 189,
+        "signature_hash": "4494db9fefe25a3d",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#class:XhdvError:7c34c85a1ad9b3c3",
+        "name": "XhdvError",
+        "kind": "class",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 24,
+        "end_line": 25,
+        "signature_hash": "5aafdad87ad4a512",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_from_int:202a79685d5f7dad",
+        "name": "_from_int",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 102,
+        "end_line": 104,
+        "signature_hash": "7177122ac6d4b414",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u3:a894f4879e6da1d8",
+        "name": "_strict_u3",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 34,
+        "end_line": 37,
+        "signature_hash": "fb33be0bc00ea2b8",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u5:f6305af9b22bae73",
+        "name": "_strict_u5",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 28,
+        "end_line": 31,
+        "signature_hash": "1d2c4b3d000ca5b5",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u7:990606cc383e955f",
+        "name": "_strict_u7",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 40,
+        "end_line": 43,
+        "signature_hash": "f19b770d420add7a",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_to_int:a7a861113a1266cf",
+        "name": "_to_int",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 98,
+        "end_line": 99,
+        "signature_hash": "1f1bd39f49b24aa6",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_words:de0f6babdc114fe5",
+        "name": "_words",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 75,
+        "end_line": 81,
+        "signature_hash": "0de3832501cca684",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:aligned_i_type_displacements:8896d77020797d2d",
+        "name": "aligned_i_type_displacements",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 70,
+        "end_line": 72,
+        "signature_hash": "c6c7bebc5b8fc18c",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:bind:8063b154f1f2a286",
+        "name": "bind",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 84,
+        "end_line": 87,
+        "signature_hash": "9412f39b4cce75ed",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:decode_r:fc27e7eda4e024d4",
+        "name": "decode_r",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 57,
+        "end_line": 67,
+        "signature_hash": "6dc34b4fdee51bb7",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:disposition:e2d1b92a2f011265",
+        "name": "disposition",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 192,
+        "end_line": 232,
+        "signature_hash": "b75f037b7138c920",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:encode_r:9c1d6903e712edd0",
+        "name": "encode_r",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 46,
+        "end_line": 54,
+        "signature_hash": "f65dc6d2672b5e00",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:hdist:fcea4835db3f0226",
+        "name": "hdist",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 94,
+        "end_line": 95,
+        "signature_hash": "e504eb10a5c40010",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:main:33ec1244a53e6a22",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 235,
+        "end_line": 237,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:pasted_centroid_word:38fa02eb1d282b4c",
+        "name": "pasted_centroid_word",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 118,
+        "end_line": 121,
+        "signature_hash": "2b0a6019c1c535a1",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:pasted_scan_falsifier:1a40629c8fdb6336",
+        "name": "pasted_scan_falsifier",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 124,
+        "end_line": 147,
+        "signature_hash": "96e92dd86707d1a9",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:perm:cce177bbf741819c",
+        "name": "perm",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 107,
+        "end_line": 115,
+        "signature_hash": "af16675f8cda24e5",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:popcnt:c5587374ec6ec42a",
+        "name": "popcnt",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 90,
+        "end_line": 91,
+        "signature_hash": "434dda8e57bffe82",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateDisposition.digest:b5aef3ef80fc0adb",
+        "name": "XhdvCandidateDisposition.digest",
+        "kind": "method",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 187,
+        "end_line": 189,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "486b24fedbb9eeb2"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateDisposition.to_dict:72c166a106d95885",
+        "name": "XhdvCandidateDisposition.to_dict",
+        "kind": "method",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 183,
+        "end_line": 184,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "486b24fedbb9eeb2"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -446884,7 +447775,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "9f3860705b6711f9daa45f08c82c8776",
+    "payload_hash": "167b689f61937aa2ba682bf48bf148c0"
   }
 }
