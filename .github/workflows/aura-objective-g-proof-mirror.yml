@@ -1,0 +1,127 @@
+name: Aura Objective G Hosted Proof Mirror
+
+on:
+  push:
+    branches:
+      - 'feature/arena-objective-g-hosted-proof-20260831-sol'
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  CONVERGENCE_COMMIT: a2d5f26521320a19ebc7fba677af6cc5f7baa03b
+  WRITER_HEAD: 5ed2489b93c8a039ebc372fdf2f4a6c80eed6ebd
+  WRITER_RUN: '33419848006'
+  WRITER_SOURCE_BLOB: 668b6736a527cae99a9272d174c69ac415caad4a
+  READ_GUARD_HEAD: 55ae020ae1c06501935a45f3ade45eeff532d905
+  READ_GUARD_SOURCE_BLOB: 7dfaaf755a802e0a20a23ce06ba520fe47028f56
+  READ_GUARD_PROOF_RUN: '33422235195'
+  READ_GUARD_PROOF_JOB: '99587232912'
+  RESOLVER_SOURCE_BLOB: a4edfc1074af5e514ac192bde6881c6a53e03285
+  RESOLVER_TEST_BLOB: c239160ebb7d9354f9019a727137096b38be4cd2
+
+jobs:
+  objective-g:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact mirror head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Authenticate true writer x read-currentness Diamond
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$CONVERGENCE_COMMIT" HEAD
+          test "$(git show -s --format=%P "$CONVERGENCE_COMMIT")" = "$WRITER_HEAD $READ_GUARD_HEAD"
+          test "$(git rev-parse "$WRITER_HEAD:tools/aura_external_knowledge_store_writer.py")" = "$WRITER_SOURCE_BLOB"
+          test "$(git rev-parse "$READ_GUARD_HEAD:tools/aura_external_knowledge_coordinate_memory_read_guard.py")" = "$READ_GUARD_SOURCE_BLOB"
+          test "$(git hash-object tools/aura_external_cognition_subject_version_resolver.py)" = "$RESOLVER_SOURCE_BLOB"
+          test "$(git hash-object tests/test_aura_external_cognition_subject_version_resolver.py)" = "$RESOLVER_TEST_BLOB"
+          echo 'OBJECTIVE_G_TRUE_DIAMOND=true'
+          echo 'OBJECTIVE_G_EXACT_SEMANTIC_SURFACES=true'
+
+      - name: Revalidate exact writer and read-currentness hosted proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          req=urllib.request.Request(f"https://api.github.com/repos/{repo}/actions/runs/{os.environ['WRITER_RUN']}",headers=headers)
+          with urllib.request.urlopen(req,timeout=30) as response: writer=json.load(response)
+          assert writer['head_sha']==os.environ['WRITER_HEAD']
+          assert writer['status']=='completed' and writer['conclusion']=='success'
+          req=urllib.request.Request(f"https://api.github.com/repos/{repo}/actions/runs/{os.environ['READ_GUARD_PROOF_RUN']}/jobs?per_page=100",headers=headers)
+          with urllib.request.urlopen(req,timeout=30) as response: jobs=json.load(response)['jobs']
+          target=[j for j in jobs if str(j['id'])==os.environ['READ_GUARD_PROOF_JOB']]
+          assert len(target)==1
+          job=target[0]
+          assert job['name']=='EKI read currentness exact proof'
+          assert job['status']=='completed' and job['conclusion']=='success'
+          print('WRITER_EXACT_HOSTED_SUCCESS=true')
+          print('READ_CURRENTNESS_EXACT_JOB_SUCCESS=true')
+          PY
+
+      - name: Replay exact EKI2 writer and Objective G adversarials
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/aura_external_knowledge_ingress.py \
+            tools/aura_external_knowledge_store_writer.py \
+            tools/aura_external_cognition_subject_version_resolver.py \
+            tests/test_aura_external_knowledge_store_writer.py \
+            tests/test_aura_external_cognition_subject_version_resolver.py
+          python -m unittest \
+            tests.test_aura_external_knowledge_store_writer \
+            tests.test_aura_external_cognition_subject_version_resolver -v
+
+      - name: Independently prove version candidate selection keeps freshness debt
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from tests.test_aura_external_knowledge_store_reader_integration import _card, _generation
+          from tools import aura_external_knowledge_store_writer as writer
+          from tools.aura_external_cognition_subject_version_resolver import SubjectVersionDisposition, resolve_subject_version
+
+          old=writer.compile_row(_card(generation=_generation('rev-a','a'*64)))
+          new=writer.compile_row(_card(generation=_generation('rev-b','b'*64)))
+          compiled=writer.compile_store((old,new),supersession_edges=((old.key,new.key),))
+          r=resolve_subject_version(snapshot_bytes=compiled.snapshot_bytes,semantic_subject_id=old.semantic_id,expected_store_sha256=compiled.receipt.store_sha256,expected_store_generation=compiled.receipt.store_generation)
+          assert r.disposition is SubjectVersionDisposition.SELECTED_VERSION_CANDIDATE
+          assert r.candidate_record_key==new.key
+          assert r.historical_record_keys==(old.key,)
+          assert r.source_currentness_proven is False
+          assert r.selected_head_is_currentness_witness is False
+          assert r.chronology_inferred is False
+          assert r.k27_used_for_version_selection is False
+          assert r.read_authority is False and r.write_authority is False and r.effect_authority is False
+
+          ambiguous=writer.compile_store((old,new))
+          a=resolve_subject_version(snapshot_bytes=ambiguous.snapshot_bytes,semantic_subject_id=old.semantic_id,expected_store_sha256=ambiguous.receipt.store_sha256,expected_store_generation=ambiguous.receipt.store_generation)
+          assert a.disposition is SubjectVersionDisposition.HOLD_AMBIGUOUS_HEAD
+          print('UNIQUE_EXPLICIT_HEAD_IS_VERSION_CANDIDATE_ONLY=true')
+          print('MULTIPLE_UNSUPERSEDED_VERSIONS_HOLD=true')
+          print('VERSION_SELECTION_NE_SOURCE_CURRENTNESS=true')
+          print('K27_NE_VERSION_SELECTION=true')
+          print('HISTORICAL_VERSION_REMAINS_ADDRESSABLE=true')
+          PY
+
+      - name: Consequence ceiling
+        run: |
+          echo 'StableSubject!=VersionRecordKey'
+          echo 'SubjectVersionSelection!=SourceCurrentness'
+          echo 'UniqueUnsupersededHead!=FreshnessWitness'
+          echo 'ExplicitSupersessionEdge!=InferredChronology'
+          echo 'MultipleHeads=>HOLD_AMBIGUOUS_HEAD'
+          echo 'StoreGenerationBindsVersionSelection'
+          echo 'HistoricalVersionsRemainAddressable'
+          echo 'K27Placement!=SubjectIdentity!=VersionIdentity!=Currentness'
+          echo 'VersionCandidate+ReadTimeSourceRevalidationRequiredBeforeUse'
+          echo 'SelectionReceipt!=ReadAuthority!=WriteAuthority!=EffectAuthority'
+          echo 'NativePrivateTransformerKVAccessed=false'
