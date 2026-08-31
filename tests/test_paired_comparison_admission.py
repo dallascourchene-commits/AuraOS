@@ -39,16 +39,29 @@ def prereg():
     )
 
 
-def report(pre, *, label, generation, command_digest, provenance="UNKNOWN", startup="PASS", campaign="PASS"):
+def report(
+    pre,
+    *,
+    label,
+    generation,
+    command_digest,
+    provenance="UNKNOWN",
+    metric_values=None,
+    startup="PASS",
+    campaign="PASS",
+):
     turns = []
     if startup == "PASS":
+        telemetry = {"provenance": provenance}
+        if metric_values:
+            telemetry.update(metric_values)
         turns = [
             {
                 "turn": turn,
                 "disposition": "PASS",
                 "expected_state_digest": "e" * 64,
                 "observed_state_digest": "e" * 64,
-                "telemetry": {"provenance": provenance},
+                "telemetry": dict(telemetry),
                 "wall_time_ms": 1.0,
             }
             for turn in range(pre["rounds"])
@@ -77,10 +90,24 @@ def report(pre, *, label, generation, command_digest, provenance="UNKNOWN", star
     return {"blinded_label": label, "report": payload}
 
 
-def matched_pair(pre, provenance="UNKNOWN"):
+def matched_pair(pre, provenance="UNKNOWN", metric_values=None):
     return [
-        report(pre, label="arm-01", generation="gen-a", command_digest="a" * 64, provenance=provenance),
-        report(pre, label="arm-02", generation="gen-b", command_digest="b" * 64, provenance=provenance),
+        report(
+            pre,
+            label="arm-01",
+            generation="gen-a",
+            command_digest="a" * 64,
+            provenance=provenance,
+            metric_values=metric_values,
+        ),
+        report(
+            pre,
+            label="arm-02",
+            generation="gen-b",
+            command_digest="b" * 64,
+            provenance=provenance,
+            metric_values=metric_values,
+        ),
     ]
 
 
@@ -90,20 +117,60 @@ def test_exact_pair_is_admitted_but_remains_blinded_without_winner():
     assert result["pair_disposition"] == "PAIR_ADMITTED"
     assert result["state_outcomes_comparable"] is True
     assert result["telemetry_comparison_allowed"] is False
+    assert result["comparable_observed_metrics"] == []
     assert result["winner"] is None
     assert result["claim_ceiling"] == "BLINDED_PAIR_EVIDENCE_ONLY_NO_WINNER"
     assert [arm["blinded_label"] for arm in result["arms"]] == ["arm-01", "arm-02"]
 
 
-def test_observed_telemetry_must_be_present_on_both_arms_before_metric_comparison():
+def test_observed_label_without_values_does_not_mint_metric_comparability():
     pre = prereg()
     result = admit_blinded_pair(pre, matched_pair(pre, provenance="OBSERVED"))
-    assert result["telemetry_comparison_allowed"] is True
-
-    mixed = matched_pair(pre, provenance="OBSERVED")
-    mixed[1] = report(pre, label="arm-02", generation="gen-b", command_digest="b" * 64, provenance="ESTIMATED")
-    result = admit_blinded_pair(pre, mixed)
     assert result["telemetry_comparison_allowed"] is False
+    assert result["comparable_observed_metrics"] == []
+
+
+def test_only_metrics_observed_on_every_turn_in_both_arms_are_comparable():
+    pre = prereg()
+    pair = matched_pair(
+        pre,
+        provenance="OBSERVED",
+        metric_values={"input_tokens": 10, "output_tokens": 5, "cost_usd": 0.01},
+    )
+    result = admit_blinded_pair(pre, pair)
+    assert result["telemetry_comparison_allowed"] is True
+    assert result["comparable_observed_metrics"] == ["cost_usd", "input_tokens", "output_tokens"]
+
+    mixed = matched_pair(
+        pre,
+        provenance="OBSERVED",
+        metric_values={"input_tokens": 10, "output_tokens": 5, "cost_usd": 0.01},
+    )
+    for turn in mixed[1]["report"]["turns"]:
+        turn["telemetry"].pop("cost_usd")
+    mixed[1]["report"]["evidence_digest"] = digest(
+        {k: v for k, v in mixed[1]["report"].items() if k != "evidence_digest"}
+    )
+    result = admit_blinded_pair(pre, mixed)
+    assert result["telemetry_comparison_allowed"] is True
+    assert result["comparable_observed_metrics"] == ["input_tokens", "output_tokens"]
+
+    estimated = matched_pair(
+        pre,
+        provenance="OBSERVED",
+        metric_values={"input_tokens": 10},
+    )
+    estimated[1] = report(
+        pre,
+        label="arm-02",
+        generation="gen-b",
+        command_digest="b" * 64,
+        provenance="ESTIMATED",
+        metric_values={"input_tokens": 10},
+    )
+    result = admit_blinded_pair(pre, estimated)
+    assert result["telemetry_comparison_allowed"] is False
+    assert result["comparable_observed_metrics"] == []
 
 
 def test_pair_rejects_workload_command_and_generation_substitution():
@@ -142,6 +209,7 @@ def test_startup_failure_is_retained_as_matched_inconclusive_evidence():
     assert result["pair_disposition"] == "PAIR_ADMITTED_INCONCLUSIVE"
     assert result["state_outcomes_comparable"] is False
     assert result["telemetry_comparison_allowed"] is False
+    assert result["comparable_observed_metrics"] == []
     arm_02 = next(arm for arm in result["arms"] if arm["blinded_label"] == "arm-02")
     assert arm_02["identity_status"] == "COMMAND_MATCH_GENERATION_UNOBSERVED"
 
