@@ -1,0 +1,182 @@
+name: WorkCapsule scoped higher-owner portable continuity exact
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_*.py'
+      - 'tests/test_aura_workcapsule_*.py'
+      - 'tests/fixtures/o29_pr541_portable_higher_owner_vector.json'
+      - '.github/workflows/workcapsule-scoped-higher-owner-portable-continuity-exact.yml'
+
+permissions:
+  contents: read
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR541_SHA: 12e9d4ad114faa08230cbbffc2f8bea40e0a2bfe
+  CONVERGENCE_SHA: a8dc7cd5f260ad8e8d624cb0ee9e394ba60c737c
+  PR548_SHA: c10eb7316e76c75df6a4f04b933536f99f310702
+
+jobs:
+  exact-cross-runtime-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Fetch exact child head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$CONVERGENCE_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          parents="$(git show -s --format=%P "$CONVERGENCE_SHA")"
+          test "$parents" = "$PR548_SHA $PR541_SHA"
+          echo "TRUE_TWO_PARENT_CONVERGENCE=$CONVERGENCE_SHA"
+
+      - name: Compile O29 and re-prove PR548 scoped target owner
+        run: |
+          python -m py_compile \
+            scripts/aura_workcapsule_scoped_portable_target_identity.py \
+            scripts/aura_workcapsule_scoped_higher_owner_portable_continuity.py
+          python -m unittest tests.test_aura_workcapsule_scoped_portable_target_identity
+
+      - name: Prove O29 recursive canonicalization and target continuity
+        run: python -m unittest tests.test_aura_workcapsule_scoped_higher_owner_portable_continuity
+
+      - name: Build Python canonical and HSC-243 negative shared vectors
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import copy, hashlib, json, pathlib, sys
+          from scripts.aura_workcapsule_scoped_higher_owner_portable_continuity import (
+              OUTER_PAYLOAD_FIELDS,
+              OUTER_DIGEST_MISMATCH,
+              canonical_portable_higher_owner_payload_bytes,
+              verify_portable_higher_owner_projection,
+          )
+          src = pathlib.Path('tests/fixtures/o29_pr541_portable_higher_owner_vector.json')
+          obj = json.loads(src.read_text())
+          canonical = canonical_portable_higher_owner_payload_bytes(obj['payload'])
+          expected = hashlib.sha256(canonical).hexdigest()
+          assert expected == obj['payload_sha256']
+          pathlib.Path('/tmp/python-canonical.json').write_bytes(canonical)
+
+          negative = copy.deepcopy(obj)
+          nested = negative['payload']['canonical_target_projection']
+          nested['payload'] = dict(reversed(list(nested['payload'].items())))
+          # This is the exact bug class from HSC-243: reseal the OUTER digest over caller map order.
+          caller_outer = {field: negative['payload'][field] for field in OUTER_PAYLOAD_FIELDS}
+          negative['payload_sha256'] = hashlib.sha256(
+              json.dumps(caller_outer, separators=(',', ':'), ensure_ascii=False).encode('utf-8')
+          ).hexdigest()
+          assert OUTER_DIGEST_MISMATCH in verify_portable_higher_owner_projection(negative)
+          pathlib.Path('/tmp/o29-reordered-resealed.json').write_text(
+              json.dumps(negative, separators=(',', ':'), ensure_ascii=False)
+          )
+          print('PYTHON_CANONICAL_DIGEST=' + expected)
+          print('PYTHON_REORDER_RESEAL_REJECTED=true')
+          PY
+
+      - name: Fetch and re-prove exact PR541 Rust owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr541
+          mkdir /tmp/pr541
+          cd /tmp/pr541
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR541_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$PR541_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-canonical-higher-owner-owner-reduction/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-canonical-higher-owner-portable-projection/Cargo.toml --all-targets
+
+      - name: Prove one shared vector has identical Rust and Python canonical bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/pr541/crates/aura-k27-astge-canonical-higher-owner-portable-projection/examples
+          cat >/tmp/pr541/crates/aura-k27-astge-canonical-higher-owner-portable-projection/examples/o29_vector_probe.rs <<'RS'
+          use aura_k27_astge_canonical_higher_owner_portable_projection::{
+              CanonicalHigherOwnerPortableProjectionV1,
+              canonical_portable_payload_bytes,
+              verify_portable_higher_owner_owner_chain_projection,
+          };
+          use std::{env, fs};
+          fn main() {
+              let path = env::args().nth(1).expect("fixture path");
+              let raw = fs::read_to_string(path).expect("read fixture");
+              let projection: CanonicalHigherOwnerPortableProjectionV1 =
+                  serde_json::from_str(&raw).expect("typed PR541 projection");
+              verify_portable_higher_owner_owner_chain_projection(&projection)
+                  .expect("PR541 projection verifies");
+              let bytes = canonical_portable_payload_bytes(&projection.payload)
+                  .expect("PR541 canonical bytes");
+              print!("{}", String::from_utf8(bytes).expect("utf8 JSON"));
+          }
+          RS
+          cd /tmp/pr541
+          cargo run --quiet \
+            --manifest-path crates/aura-k27-astge-canonical-higher-owner-portable-projection/Cargo.toml \
+            --example o29_vector_probe -- \
+            "$GITHUB_WORKSPACE/tests/fixtures/o29_pr541_portable_higher_owner_vector.json" \
+            >/tmp/rust-canonical.json
+          cmp /tmp/python-canonical.json /tmp/rust-canonical.json
+          echo 'RUST_PYTHON_CANONICAL_BYTES_EQUAL=true'
+
+          if cargo run --quiet \
+            --manifest-path crates/aura-k27-astge-canonical-higher-owner-portable-projection/Cargo.toml \
+            --example o29_vector_probe -- /tmp/o29-reordered-resealed.json >/tmp/negative.out 2>/tmp/negative.err; then
+            echo 'reordered/resealed HSC-243 vector unexpectedly passed Rust verifier' >&2
+            exit 1
+          fi
+          echo 'RUST_REORDER_RESEAL_REJECTED=true'
+
+      - name: Assert O29 public boundary and emit D0 ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_scoped_higher_owner_portable_continuity import verify_scoped_higher_owner_portable_continuity
+          assert set(inspect.signature(verify_scoped_higher_owner_portable_continuity).parameters) == {
+              'scoped_target_inputs', 'higher_owner_projection'
+          }
+          print('CALLER_POST_EDIT_WITNESS_ACCEPTED=false')
+          print('SECOND_TARGET_PROJECTION_ACCEPTED=false')
+          PY
+          cat <<'EOF'
+          OBJECTIVE_29=SCOPED_HIGHER_OWNER_PORTABLE_CONTINUITY
+          SAME_SCOPED_TARGET_AS_HIGHER_OWNER_PROJECTION=PROVEN
+          RECURSIVE_CROSS_RUNTIME_CANONICALIZATION=PROVEN_SHARED_VECTOR
+          PYTHON_ORDER_DEPENDENT_RESEAL=REJECTED
+          PRODUCER_AUTHENTICATED=false
+          SEMANTIC_REPAIR_CORRECTNESS_PROVEN=false
+          REENTRY_CLOSED=false
+          INVALIDATION_NARROWED=false
+          SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false
+          NODE_LEVEL_DEPENDENCY_CONE_PROVEN=false
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_EFFECT_AUTHORITY=false
+          GATE10_PROMOTION=false
+          EOF
