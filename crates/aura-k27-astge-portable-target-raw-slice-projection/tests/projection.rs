@@ -56,7 +56,11 @@ fn exact_raw_slice_projects_deterministically_without_authority_widening() {
     );
     assert_eq!(6, projection.payload.target_slice_byte_len);
     assert_eq!("33".repeat(32), projection.payload.target_slice_sha256_hex);
-    assert!(projection.payload.semantic_handle_carried_from_portable_owner);
+    assert!(
+        projection
+            .payload
+            .semantic_handle_carried_from_portable_owner
+    );
     assert!(!projection.payload.semantic_handle_derived_from_raw_slice);
     assert!(!projection.payload.semantic_identity_proven_by_raw_slice);
     assert!(!projection.payload.producer_authenticated);
