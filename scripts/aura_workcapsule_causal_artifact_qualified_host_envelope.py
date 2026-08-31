@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 """Bind a PR567 causal host-admission envelope to one exact PR565 local artifact.
 
-PR565 remains the local current-recursive/raw-slice artifact owner. PR567 remains the causal
-PRE->POST O10 + five-gate host owner. This membrane validates only the closed transport form of
-a PR567 admission, then reuses PR565's exact-artifact reference and target-binding relation.
+PR565 remains the local current-recursive/raw-slice artifact owner and now also owns the
+canonical derived host-state summary relation. PR567 remains the causal PRE->POST O10 +
+five-gate host owner. This membrane validates only the closed transport form of a PR567
+admission, delegates generic host-state derivation and target binding to current PR565, and
+keeps causal-scar validation local to this causal transport generation.
+
 It does not re-run or authenticate PR567; exact PR567 is independently re-proved in hosted CI.
 """
 from __future__ import annotations
 
 from typing import Any
 
+from scripts import aura_workcapsule_artifact_qualified_host_observation as artifact_host_owner
 from scripts.aura_workcapsule_artifact_qualified_host_observation import (
     GATES,
     _admit_local,
@@ -59,17 +63,22 @@ _CAUSAL_FALSE = (
     "semantic_repair_correctness_minted", "producer_identity_authenticated",
 )
 
+_CURRENT_OWNER_DIAGNOSTIC_COMPAT = {
+    "HOST_FAIL_MASK_MISMATCH": "FAIL_MASK_MISMATCH",
+    "HOST_UNKNOWN_MASK_MISMATCH": "UNKNOWN_MASK_MISMATCH",
+    "HOST_DISPOSITION_MISMATCH": "DISPOSITION_MISMATCH",
+    "HOST_OBSERVATION_COMPLETENESS_MISMATCH": "HOST_COMPLETENESS_MISMATCH",
+}
 
-def _mask(states: dict[str, Any], wanted: str) -> int:
-    return sum(1 << index for index, gate in enumerate(GATES) if states.get(gate) == wanted)
 
-
-def _expected_disposition(*, fail_mask: int, unknown_mask: int) -> str:
-    if fail_mask:
-        return "FAIL_CLOSED"
-    if unknown_mask:
-        return "HOST_OBSERVATION_REQUIRED"
-    return "HOST_OBSERVATIONS_COMPLETE_NONAUTHORIZING"
+def _current_host_summary_violations(
+    receipt: dict[str, Any], states: dict[str, Any]
+) -> list[str]:
+    """Delegate generic host-state derivation to current PR565 without changing O32 ABI."""
+    return [
+        _CURRENT_OWNER_DIAGNOSTIC_COMPAT.get(item, item)
+        for item in artifact_host_owner._derived_host_state_violations(receipt, states)
+    ]
 
 
 def verify_causal_host_admission_envelope(receipt: dict[str, Any]) -> list[str]:
@@ -90,17 +99,7 @@ def verify_causal_host_admission_envelope(receipt: dict[str, Any]) -> list[str]:
     violations.extend(gate_violations)
     if not gate_violations:
         violations.extend(_gate_shape_violations(states, resolutions))
-        fail_mask = _mask(states, "FAIL")
-        unknown_mask = _mask(states, "UNKNOWN")
-        if type(receipt.get("fail_mask")) is not int or receipt["fail_mask"] != fail_mask:
-            violations.append("FAIL_MASK_MISMATCH")
-        if type(receipt.get("unknown_mask")) is not int or receipt["unknown_mask"] != unknown_mask:
-            violations.append("UNKNOWN_MASK_MISMATCH")
-        if receipt.get("disposition") != _expected_disposition(fail_mask=fail_mask, unknown_mask=unknown_mask):
-            violations.append("DISPOSITION_MISMATCH")
-        expected_complete = fail_mask == 0 and unknown_mask == 0
-        if receipt.get("host_observation_set_complete") is not expected_complete:
-            violations.append("HOST_COMPLETENESS_MISMATCH")
+        violations.extend(_current_host_summary_violations(receipt, states))
     violations.extend(_ceiling_violations(receipt))
     violations.extend(_identity_violations(receipt))
     identity = receipt.get("receipt_identity")
@@ -109,25 +108,51 @@ def verify_causal_host_admission_envelope(receipt: dict[str, Any]) -> list[str]:
     return list(dict.fromkeys(violations))
 
 
-def verify_causal_artifact_qualified_host_envelope(*, scoped_target_inputs: dict[str, Any], higher_owner_projection: dict[str, Any], raw_slice_receipt: dict[str, Any], causal_host_admission_receipt: dict[str, Any]) -> list[str]:
-    local_kwargs = {"scoped_target_inputs": scoped_target_inputs, "higher_owner_projection": higher_owner_projection, "raw_slice_receipt": raw_slice_receipt}
+def verify_causal_artifact_qualified_host_envelope(
+    *,
+    scoped_target_inputs: dict[str, Any],
+    higher_owner_projection: dict[str, Any],
+    raw_slice_receipt: dict[str, Any],
+    causal_host_admission_receipt: dict[str, Any],
+) -> list[str]:
+    local_kwargs = {
+        "scoped_target_inputs": scoped_target_inputs,
+        "higher_owner_projection": higher_owner_projection,
+        "raw_slice_receipt": raw_slice_receipt,
+    }
     violations = _local_violations(**local_kwargs)
-    violations.extend(HOST_PREFIX + item for item in verify_causal_host_admission_envelope(causal_host_admission_receipt))
+    violations.extend(
+        HOST_PREFIX + item
+        for item in verify_causal_host_admission_envelope(causal_host_admission_receipt)
+    )
     if violations:
         return list(dict.fromkeys(violations))
     expected_ref = artifact_target_ref(_admit_local(**local_kwargs))
-    violations.extend(_target_binding_violations(host_receipt=causal_host_admission_receipt, expected_ref=expected_ref))
+    violations.extend(
+        _target_binding_violations(
+            host_receipt=causal_host_admission_receipt,
+            expected_ref=expected_ref,
+        )
+    )
     return list(dict.fromkeys(violations))
 
 
 def admit_causal_artifact_qualified_host_envelope(**kwargs: Any) -> dict[str, Any]:
     violations = verify_causal_artifact_qualified_host_envelope(**kwargs)
     if violations:
-        raise ValueError("causal artifact-qualified host envelope failed: " + ",".join(violations))
-    local = _admit_local(scoped_target_inputs=kwargs["scoped_target_inputs"], higher_owner_projection=kwargs["higher_owner_projection"], raw_slice_receipt=kwargs["raw_slice_receipt"])
+        raise ValueError(
+            "causal artifact-qualified host envelope failed: " + ",".join(violations)
+        )
+    local = _admit_local(
+        scoped_target_inputs=kwargs["scoped_target_inputs"],
+        higher_owner_projection=kwargs["higher_owner_projection"],
+        raw_slice_receipt=kwargs["raw_slice_receipt"],
+    )
     host = kwargs["causal_host_admission_receipt"]
     states = dict(host["host_gate_states"])
     resolved, unknown = _host_gate_partition(states)
+    derived = artifact_host_owner._derived_host_state(states)
+    assert derived is not None
     return {
         "version": VERSION,
         "current_recursive_raw_target_reproved": True,
@@ -138,19 +163,24 @@ def admit_causal_artifact_qualified_host_envelope(**kwargs: Any) -> dict[str, An
         "causal_temporal_owner_claim_carried": True,
         "pre_reentry_receipt_reused_for_post_o10": True,
         "fresh_post_reentry_receipt_substituted": False,
+        "current_pr565_host_summary_owner_reused": True,
         "resolved_host_gates_bound_to_exact_artifact": True,
         "resolved_host_gate_count": len(resolved),
         "resolved_host_gates": resolved,
         "unknown_host_gates": unknown,
         "host_gate_states": states,
-        "host_observation_set_complete": bool(host["host_observation_set_complete"]),
-        "all_host_gates_pass_for_exact_artifact": all(states[gate] == "PASS" for gate in GATES),
+        "host_observation_set_complete": derived["host_observation_set_complete"],
+        "all_host_gates_pass_for_exact_artifact": all(
+            states[gate] == "PASS" for gate in GATES
+        ),
         "target_slice_sha256_hex": local["target_slice_sha256_hex"],
         "target_slice_byte_len": local["target_slice_byte_len"],
         "dependency_key": dict(local["dependency_key"]),
         "source_generation": local["source_generation"],
         "full_source_sha256_hex": local["full_source_sha256_hex"],
-        "selected_target_semantic_handle_digest_hex": local["selected_target_semantic_handle_digest_hex"],
+        "selected_target_semantic_handle_digest_hex": local[
+            "selected_target_semantic_handle_digest_hex"
+        ],
         "semantic_handle_derived_from_raw_slice": False,
         "semantic_identity_proven_by_raw_slice": False,
         "host_resolver_trust_proven": False,
@@ -159,5 +189,15 @@ def admit_causal_artifact_qualified_host_envelope(**kwargs: Any) -> dict[str, An
         "host_effect_ready": False,
         "semantic_repair_correctness_proven": False,
         "producer_authenticated": False,
-        "authority": {"review_authorized": False, "mutation_authorized": False, "execution_authorized": False, "commit_authorized": False, "merge_authorized": False, "promotion_authorized": False, "provider_effect_authorized": False, "public_effect_authorized": False, "human_authority": False},
+        "authority": {
+            "review_authorized": False,
+            "mutation_authorized": False,
+            "execution_authorized": False,
+            "commit_authorized": False,
+            "merge_authorized": False,
+            "promotion_authorized": False,
+            "provider_effect_authorized": False,
+            "public_effect_authorized": False,
+            "human_authority": False,
+        },
     }
