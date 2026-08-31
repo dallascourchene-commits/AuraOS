@@ -1,0 +1,161 @@
+name: Aura K27 Optics Import Currentness Domain
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  CONVERGENCE_SHA: e88d9cb9713461eabda00be14840a8253c82c5f7
+  PR606_HEAD: 91a591d7208ff66b679cbb03ee9adc2118f29cc3
+  PR606_RUN: '33364662491'
+  PR606_OWNER_BLOB: daaf8d816328dc122341ca25331497781ffdc513
+  PR606_TEST_BLOB: 7a7e15f86b100b29b5dbe871b6240411ce40b442
+  PR607_HEAD: deef7bf05dd0bc3274f6a79d56ba22654c343208
+  PR607_RUN: '33364700766'
+  PR607_OWNER_BLOB: 076080018f586bb10a0d9e18561d17db79c71f5a
+  PR607_TEST_BLOB: b90b311c694e9c92ef0b7a7d54a699b403bae5d4
+
+jobs:
+  exact-k27-optics-import-currentness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Fetch exact child and prove PR606 x PR607 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR606_HEAD" "$PR607_HEAD"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor "$CONVERGENCE_SHA" HEAD
+          mapfile -t parents < <(git cat-file -p "$CONVERGENCE_SHA" | awk '/^parent /{print $2}')
+          test "${#parents[@]}" -eq 2
+          test "${parents[0]}" = "$PR606_HEAD"
+          test "${parents[1]}" = "$PR607_HEAD"
+          test "$(git hash-object scripts/aura_awj032_storage_probe_currentness_domain.py)" = "$PR606_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_awj032_storage_probe_currentness_domain.py)" = "$PR606_TEST_BLOB"
+          test "$(git hash-object tools/k27_optics_candidate_falsifier.py)" = "$PR607_OWNER_BLOB"
+          test "$(git hash-object tests/test_k27_optics_candidate_falsifier.py)" = "$PR607_TEST_BLOB"
+          echo "TRUE_TWO_PARENT_CONVERGENCE=$CONVERGENCE_SHA"
+
+      - name: Pin exact successful parent hosted runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR606_RUN}" --jq .head_sha)" = "$PR606_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR606_RUN}" --jq .conclusion)" = success
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR607_RUN}" --jq .head_sha)" = "$PR607_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR607_RUN}" --jq .conclusion)" = success
+          echo "PR606_EXACT_HOSTED=true"
+          echo "PR607_EXACT_HOSTED=true"
+
+      - name: Re-prove PR606 generation-scoped currentness owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_awj032_storage_probe_currentness_domain.py
+          python3 -m unittest -v tests.test_aura_awj032_storage_probe_currentness_domain
+          echo "PR606_CURRENTNESS_DISCIPLINE_REPROVED=true"
+
+      - name: Re-prove PR607 exact source-bound optics falsifier
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/k27_optics_candidate_falsifier.py
+          python3 -m unittest -v tests.test_k27_optics_candidate_falsifier
+          echo "PR607_OPTICS_REFERENCE_REPROVED=true"
+
+      - name: Prove O53 optics currentness adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_k27_optics_import_currentness_domain.py
+          python3 -m unittest -v tests.test_aura_k27_optics_import_currentness_domain
+          echo "O53_OPTICS_CURRENTNESS_ADVERSARIALS=true"
+
+      - name: Prove import-generation currentness does not become measured optics or deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts.aura_k27_optics_import_currentness_domain import (
+              CROSS_DOMAIN_REJECTION,
+              project_k27_optics_import_currentness,
+          )
+          out = project_k27_optics_import_currentness()
+          ref = out['evidence_node']['artifact_ref']
+          assert out['retrieval_admission']['eligible_artifact_refs'] == [ref]
+          assert out['optics_import_currentness_admission']['eligible_artifact_refs'] == [ref]
+          for key in ('measured_optical_system_currentness_admission','display_deployment_currentness_admission'):
+              admission = out[key]
+              assert admission['eligible_artifact_refs'] == []
+              assert admission['excluded_by_artifact_ref'][ref] == CROSS_DOMAIN_REJECTION
+          assert out['measured_optical_system_currentness_proven'] is False
+          assert out['display_deployment_currentness_proven'] is False
+          assert out['eye_pose_calibration_owned_by_this_module'] is False
+          assert out['effect_authority_proven'] is False
+          print('OPTICS_IMPORT_GENERATION_CURRENT=true')
+          print('MEASURED_OPTICAL_SYSTEM_CURRENT=false')
+          print('DISPLAY_DEPLOYMENT_CURRENT=false')
+          print('EYE_POSE_CALIBRATION_OWNED_HERE=false')
+          PY
+
+      - name: Assert zero-input public boundary and complete consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import ast
+          import inspect
+          from scripts.aura_k27_optics_import_currentness_domain import project_k27_optics_import_currentness
+          assert list(inspect.signature(project_k27_optics_import_currentness).parameters) == []
+          path='scripts/aura_k27_optics_import_currentness_domain.py'
+          tree=ast.parse(open(path,encoding='utf-8').read(),filename=path)
+          forbidden={'sqlite3','redis','requests','subprocess','socket'}
+          for item in ast.walk(tree):
+              if isinstance(item,ast.Import):
+                  for alias in item.names:
+                      assert alias.name.split('.')[0] not in forbidden
+              elif isinstance(item,ast.ImportFrom) and item.module:
+                  assert item.module.split('.')[0] not in forbidden
+              elif isinstance(item,ast.Call) and isinstance(item.func,ast.Name) and item.func.id=='open':
+                  raise AssertionError('O53 membrane must not open files')
+          print('PUBLIC_INPUTS=none')
+          PY
+          cat <<'EOF'
+          SOURCE_BOUND_OPTICS_REFERENCE_CURRENT=true
+          CURRENT_TRUE_IS_IMPORT_GENERATION_SCOPED=true
+          MEASURED_OPTICAL_SYSTEM_CURRENTNESS_PROVEN=false
+          DISPLAY_DEPLOYMENT_CURRENTNESS_PROVEN=false
+          CALIBRATED_EYE_POSE_CURRENTNESS_PROVEN=false
+          EYE_POSE_CALIBRATION_OWNED_BY_THIS_MODULE=false
+          OPTICAL_ENERGY_CONSERVATION_PROVEN=false
+          SPECKLE_FREE_PROVEN=false
+          ZERO_LIGHT_LEAKAGE_PROVEN=false
+          METRIC_EYE_POSE_PROVEN=false
+          EXACT_SCENE_UNBINDING_PROVEN=false
+          VARIFOCAL_CORRECTNESS_PROVEN=false
+          HARDWARE_LATENCY_PROVEN=false
+          DISPLAY_SAFETY_PROVEN=false
+          DEPLOYMENT_READY=false
+          PRODUCER_AUTHENTICATED=false
+          SEMANTIC_TRUTH_PROVEN=false
+          EFFECT_AUTHORITY_PROVEN=false
+          SEMANTIC_K27_AUTHORITY_MINTED=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTED=false
+          EOF
