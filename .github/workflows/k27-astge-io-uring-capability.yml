@@ -1,0 +1,41 @@
+name: K27 ASTGE io_uring Capability Observation
+
+on:
+  pull_request:
+    paths:
+      - "tools/k27_astge_io_uring_capability_probe.py"
+      - "tests/test_k27_astge_io_uring_capability_probe.py"
+      - ".github/workflows/k27-astge-io-uring-capability.yml"
+  workflow_dispatch:
+
+jobs:
+  exact-capability-observation:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Assert exact PR head
+        if: github.event_name == 'pull_request'
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+      - name: Run focused tests
+        run: python -m unittest -v tests.test_k27_astge_io_uring_capability_probe
+      - name: Observe CI host capability
+        run: python tools/k27_astge_io_uring_capability_probe.py --output "${RUNNER_TEMP}/io-uring.json"
+      - name: Enforce claim ceiling
+        shell: python
+        run: |
+          import json, os
+          from pathlib import Path
+          r = json.loads(Path(os.environ['RUNNER_TEMP'], 'io-uring.json').read_text())
+          assert r['direct_io_file_read_observed'] is False
+          assert r['io_uring_direct_performance_proven'] is False
+          assert r['production_backend_promotion_authorized'] is False
+          assert r['native_transformer_kv_accessed'] is False
+          assert r['semantic_k27_authority'] is False
+          print('IO_URING_CAPABILITY_OBSERVATION_EXECUTED=true')
+          print('CI_CAPABILITY_OBSERVATION_IS_THINKPAD_PROOF=false')
+          print('DIRECT_IO_FILE_READ_OBSERVED=false')
+          print('IO_URING_DIRECT_PERFORMANCE_PROVEN=false')
+          print('PRODUCTION_BACKEND_PROMOTION_AUTHORIZED=false')
