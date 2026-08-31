@@ -1,0 +1,177 @@
+name: Aura GLM53 G6 Gate10 Owner Host Evidence Request
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py"
+      - "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py"
+      - "docs/arena/AWJ032_G6_GATE10_OWNER_HOST_EVIDENCE_REQUEST_20260831.md"
+      - "docs/arena/AWJ032_G6_EXTERNAL_COORDINATE_DELTA_20260831.md"
+      - ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml"
+  push:
+    branches:
+      - "arena/glm53-g6-gate10-owner-host-evidence-request-v1-20260831-sol"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g6-owner-host-evidence-request-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      Q18_SEMANTIC_HEAD: "87fde6b21675c7876acc63f4ca30b2dda89970d0"
+      Q18_SOURCE_BLOB: "4cee26edaf0759fc80d31889ab9e4e268f9a4fbe"
+      Q18_TEST_BLOB: "95d590fe20604b1930279e68c58adb5b4345fd5c"
+      Q18_PROOF_HEAD: "69b720efb3b6de704bab51f59179d1e258f33a06"
+      Q18_PROOF_RUN: "33436970079"
+      Q18_PROOF_JOB: "99635635152"
+      G5_HEAD: "8b1f38a6c917a9e7f1af941273164ca0db69821b"
+      G5_SOURCE_BLOB: "ae70cdfe60e20e544a9cbf0af3b4ac5bd365b205"
+      G5_TEST_BLOB: "e66980d879c1fe3d497c3a62a1fa75fb6ca83ccc"
+      G5_PROOF_RUN: "33437182779"
+      G5_PROOF_JOB: "99636328991"
+    steps:
+      - name: Fetch exact candidate and parent generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "$TARGET_SHA" "$Q18_SEMANTIC_HEAD" "$Q18_PROOF_HEAD" "$G5_HEAD"
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Authenticate exact semantic parent blobs
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$Q18_SEMANTIC_HEAD:tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py")" = "$Q18_SOURCE_BLOB"
+          test "$(git rev-parse "$Q18_SEMANTIC_HEAD:tests/test_aura_glm53_current_generation_bounded_c2_proposal.py")" = "$Q18_TEST_BLOB"
+          test "$(git rev-parse "$G5_HEAD:tools/awj032/glm53_g5_recompute_admission.py")" = "$G5_SOURCE_BLOB"
+          test "$(git rev-parse "$G5_HEAD:tools/awj032/test_glm53_g5_recompute_admission.py")" = "$G5_TEST_BLOB"
+          test "$(git hash-object tools/awj032/glm53_g5_recompute_admission.py)" = "$G5_SOURCE_BLOB"
+          test "$(git hash-object tools/awj032/test_glm53_g5_recompute_admission.py)" = "$G5_TEST_BLOB"
+          echo "G6_EXACT_PARENT_BLOBS=true"
+
+      - name: Revalidate independent hosted parent proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          headers = {
+              "Authorization": f"Bearer {token}",
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          expected = (
+              (
+                  int(os.environ["Q18_PROOF_RUN"]),
+                  int(os.environ["Q18_PROOF_JOB"]),
+                  os.environ["Q18_PROOF_HEAD"],
+                  "GLM53 Current Generation Bounded C2 Proposal",
+                  "current-generation-bounded-c2-proposal",
+              ),
+              (
+                  int(os.environ["G5_PROOF_RUN"]),
+                  int(os.environ["G5_PROOF_JOB"]),
+                  os.environ["G5_HEAD"],
+                  "Aura GLM53 G5 Recompute Admission",
+                  "g5-recompute-admission",
+              ),
+          )
+          for run_id, job_id, head, workflow_name, job_name in expected:
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{run_id}", headers=headers
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  run = json.load(response)
+              assert run["head_sha"] == head, (run_id, run["head_sha"], head)
+              assert run["name"] == workflow_name, (run_id, run["name"], workflow_name)
+              assert run["status"] == "completed" and run["conclusion"] == "success", run
+
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/jobs/{job_id}", headers=headers
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  job = json.load(response)
+              assert job["head_sha"] == head, (job_id, job["head_sha"], head)
+              assert job["name"] == job_name, (job_id, job["name"], job_name)
+              assert job["status"] == "completed" and job["conclusion"] == "success", job
+              print(f"G6_PARENT_SUCCESS run={run_id} job={job_id} head={head}")
+          PY
+
+      - name: Compile and execute inherited G5 plus G6 adversarials
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/awj032/glm53_g5_recompute_admission.py \
+            tools/awj032/test_glm53_g5_recompute_admission.py \
+            tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py \
+            tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py
+          python3 -m unittest -v \
+            tools.awj032.test_glm53_g5_recompute_admission \
+            tools.awj032.test_glm53_g6_gate10_owner_host_evidence_request
+
+      - name: Exhaust 512-state Different-J request lattice
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from tools.awj032.glm53_g6_gate10_owner_host_evidence_request import prove_different_j
+          assert prove_different_j() == 512
+          print("G6_GATE10_OWNER_HOST_REQUEST_DIFFERENT_J_512=PASS")
+          PY
+
+      - name: Reproduce deterministic nonexecuting request receipt
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from tools.awj032.test_glm53_g6_gate10_owner_host_evidence_request import q18, g5, owner, evidence
+          from tools.awj032.glm53_g6_gate10_owner_host_evidence_request import (
+              COMPILED,
+              compile_gate10_owner_host_evidence_request,
+          )
+          a = compile_gate10_owner_host_evidence_request(q18=q18(), g5=g5(), owner=owner(), evidence=evidence())
+          b = compile_gate10_owner_host_evidence_request(q18=q18(), g5=g5(), owner=owner(), evidence=evidence())
+          assert a == b
+          assert a.disposition == COMPILED and a.request_envelope_compiled
+          assert a.official_revision_revalidation_required
+          for key in (
+              "tensor_payload_bound",
+              "real_tensor_quantization_observed",
+              "owner_host_execution_observed",
+              "full_flagship_model_loaded",
+              "physical_io_proven",
+              "auraos_resident_routing_proven",
+              "replay_recovery_proven",
+              "execution_authorized",
+              "semantic_k27_authority_minted",
+              "native_private_transformer_kv_accessed",
+              "gate10_promoted",
+              "merge_deploy_spend_public_financial_human_effect",
+          ):
+              assert getattr(a, key) is False, key
+          print(f"G6_DETERMINISTIC_REQUEST_DIGEST={a.request_digest}")
+          PY
+
+      - name: Enforce Gate10 and coordinate nonpromotion laws
+        run: |
+          set -euo pipefail
+          grep -q 'RequestEnvelopeCompiled!=TensorPayloadBound!=ExecutionObserved' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          grep -q 'PinnedOfficialRevision!=CurrentOfficialRevisionUntilRevalidated' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          grep -q 'FullFlagshipIdentity!=FullFlagshipExecution' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          grep -q 'Gate10DebtMustRemainExplicitUntilObserved' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          echo "OWNER_HOST_EXECUTION_OBSERVED=false"
+          echo "FULL_FLAGSHIP_MODEL_LOADED=false"
+          echo "AURAOS_RESIDENT_ROUTING_PROVEN=false"
+          echo "REPLAY_RECOVERY_PROVEN=false"
+          echo "GATE10_PROMOTED=false"
+          echo "NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false"
