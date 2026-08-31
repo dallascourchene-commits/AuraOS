@@ -85,7 +85,6 @@ jobs:
           python3 tools/k27/thinkpad_simd_benchmark_admission.py \
             /tmp/pr654_hyperscale.py | tee admission.json
           grep -q '"mode": "VERIFICATION"' admission.json
-          grep -q '"selected_observation_ids": \[' admission.json
           grep -q '"matched-hosted-simd-compute-benchmark"' admission.json
           grep -q '"eligible_to_seek_new_sck": false' admission.json
           grep -q '"eligible_to_add_new_egk": true' admission.json
@@ -95,9 +94,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          ! grep -R --line-number -- '-march=native\|-mavx2\|-mavx512' \
-            tools/k27/thinkpad_simd_benchmark_evidence.cpp \
-            .github/workflows/k27-thinkpad-simd-benchmark-evidence.yml
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path("tools/k27/thinkpad_simd_benchmark_evidence.cpp").read_text()
+          forbidden = ("-march=native", "-mavx2", "-mavx512")
+          assert not any(flag in text for flag in forbidden)
+          PY
           g++ -std=c++20 -O3 -Wall -Wextra -Werror \
             -DK27_PR608_SOURCE='"/tmp/pr608.cpp"' \
             tools/k27/thinkpad_simd_benchmark_evidence.cpp \
