@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788196935,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1648,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,9 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-eki2-persistent-candidate-projection.yml",
+      ".github/workflows/aura-external-cognition-resolve-adapter.yml",
+      ".github/workflows/aura-external-knowledge-ingress.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1444,6 +1447,7 @@
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
+      "tests/test_aura_eki_persistent_candidate_projection.py",
       "tests/test_aura_emergent_agent_bridge.py",
       "tests/test_aura_emergent_agent_bridge_mcp.py",
       "tests/test_aura_emergent_capability_auditor.py",
@@ -1465,6 +1469,8 @@
       "tests/test_aura_event_contracts.py",
       "tests/test_aura_event_privacy_hardening.py",
       "tests/test_aura_exact_head_transport.py",
+      "tests/test_aura_external_cognition_resolve_adapter.py",
+      "tests/test_aura_external_knowledge_ingress.py",
       "tests/test_aura_external_llm_session.py",
       "tests/test_aura_fetch_construction_demo_source.py",
       "tests/test_aura_financial_contracts.py",
@@ -1631,6 +1637,9 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_eki_persistent_candidate_projection.py",
+      "tools/aura_external_cognition_resolve_adapter.py",
+      "tools/aura_external_knowledge_ingress.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1764,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1648,
+      "bytes": 26513939,
+      "tokens_est": 6618838,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 1003,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -3461,6 +3470,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 735,
+        "end_line": 752,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:main:2c893e74f86bec39",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -3895,6 +3912,22 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 46,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_canonical:8ff453546ef90ce5",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 103,
+        "end_line": 110,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_canonical:af142ecd08e466a2",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -8057,6 +8090,14 @@
         "end_line": 161,
         "semantic_id": "aura_review_lessons_contracts.py#function:_canonical_json:986e3ee6617aeebf",
         "signature_hash": "caa6df7371712507"
+      },
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 119,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#function:_canonical_json:19cceac6d3f7f4b8",
+        "signature_hash": "caa6df7371712507"
       }
     ],
     "_sha": [
@@ -8067,6 +8108,22 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_sha:31b0fd92e483c462",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 113,
+        "end_line": 114,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_sha:b4005b85f666993e",
+        "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
     "_repo": [
@@ -15765,6 +15822,22 @@
         "end_line": 81,
         "semantic_id": "aura_unified_memory_continuity_toolchain.py#function:_required:fd9913556df96604",
         "signature_hash": "8b28cfce6f68b96b"
+      },
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 62,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_required:baaa4aff638719d3",
+        "signature_hash": "8b28cfce6f68b96b"
+      },
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 126,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_required:9420577552ae8be6",
+        "signature_hash": "9737d32c1db83273"
       }
     ],
     "_hash": [
@@ -130005,6 +130078,174 @@
         "signature_hash": "d03cc355c44900c3"
       }
     ],
+    "make_card": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 66,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#function:make_card:44f5b2a7d0ff6999",
+        "signature_hash": "6a3bd692e1ddb497"
+      }
+    ],
+    "build_reader": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 92,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#function:build_reader:ca86c8d67a04b50b",
+        "signature_hash": "55286b5c41f88e48"
+      }
+    ],
+    "context": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 101,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#function:context:21f72a61f105b0bf",
+        "signature_hash": "d10fbef67e38e6cc"
+      },
+      {
+        "file": "tests/test_aura_shadow_model_router.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 39,
+        "semantic_id": "tests/test_aura_shadow_model_router.py#function:context:5df706d8ad1c9d52",
+        "signature_hash": "5aa7478988a5dfbf"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "class",
+        "line": 104,
+        "end_line": 229,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#class:EKIPersistentCandidateProjectionTests:08dc284bfa333ba7",
+        "signature_hash": "b79e39723e392532"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests.test_exact_l4_projects_and_reads_only_with_fresh_runtime_currentness": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 115,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_exact_l4_projects_and_reads_only_with_fresh_runtime_currentness:989dde30ded0fb38",
+        "signature_hash": "420e38ef2d9faade"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests.test_persisted_current_ingress_does_not_self_mint_future_currentness": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 130,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_persisted_current_ingress_does_not_self_mint_future_currentness:3f56aed1f8529240",
+        "signature_hash": "29e8b4e02a5d582a"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests.test_same_semantic_source_new_generation_gets_distinct_key_even_with_same_k27": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 141,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_same_semantic_source_new_generation_gets_distinct_key_even_with_same_k27:eeeabba54100a64e",
+        "signature_hash": "8fa0c2b6475f55cf"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests.test_non_l4_or_noncurrent_cards_do_not_enter_persistent_candidate_plane": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 148,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_non_l4_or_noncurrent_cards_do_not_enter_persistent_candidate_plane:bbcd38732e211a2e",
+        "signature_hash": "e6d059b3fd338d3b"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests.test_generation_and_reopen_cross_casts_fail_closed": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 159,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_generation_and_reopen_cross_casts_fail_closed:b745843fc1f82d2d",
+        "signature_hash": "47eb74e58421499d"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests.test_k27_is_routing_metadata_not_semantic_identity_or_authority": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 174,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_k27_is_routing_metadata_not_semantic_identity_or_authority:cd9a8fb63ee5f419",
+        "signature_hash": "fdfe56426e1a2742"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests.test_poisoned_external_text_remains_evidence_only_after_persistence": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 185,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_poisoned_external_text_remains_evidence_only_after_persistence:3a4a46b6b41deb1a",
+        "signature_hash": "2a34faa1c7bb61ed"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests.test_model_prefix_kv_remains_wrong_responsibility_owner": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 193,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_model_prefix_kv_remains_wrong_responsibility_owner:51dfe35af20d23a7",
+        "signature_hash": "e3ef148e18d5cea2"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests.test_standing_overflow_refuses_instead_of_truncating": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 195,
+        "end_line": 197,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_standing_overflow_refuses_instead_of_truncating:ab2810cbb1f6c70e",
+        "signature_hash": "4d595a74f3d1bb5d"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests.test_snapshot_and_value_digests_bind_reader_request": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 199,
+        "end_line": 219,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_snapshot_and_value_digests_bind_reader_request:c9bc8ede82d0848b",
+        "signature_hash": "2bd58f618c5acf95"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests.test_duplicate_generation_bound_key_rejects": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 221,
+        "end_line": 224,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_duplicate_generation_bound_key_rejects:2c41e61026a05727",
+        "signature_hash": "1aebfc7b33cbbca1"
+      }
+    ],
+    "EKIPersistentCandidateProjectionTests.test_authority_widening_on_ingress_card_rejects": [
+      {
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 226,
+        "end_line": 229,
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_authority_widening_on_ingress_card_rejects:e44c4b5c55976c0b",
+        "signature_hash": "4a0ad908555d8f0b"
+      }
+    ],
     "FakeEmergentSpine": [
       {
         "file": "tests/test_aura_emergent_agent_bridge.py",
@@ -135365,6 +135606,386 @@
         "end_line": 163,
         "semantic_id": "tests/test_aura_exact_head_transport.py#function:test_out_of_scope_symlink_publishes_nothing:ea2b913ecc03d914",
         "signature_hash": "4f651f8817bf26f1"
+      }
+    ],
+    "make_store": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 21,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#function:make_store:60fc9f21b667947b",
+        "signature_hash": "c5c094140a14b2ff"
+      }
+    ],
+    "row": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 28,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#function:row:2e06f7812e16613a",
+        "signature_hash": "117d47d4c7b5a69e"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 151,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#class:ExternalCognitionResolveAdapterTests:6de8462d1dad7fc9",
+        "signature_hash": "b76e545e8783e45e"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.setUp": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 50,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.setUp:190c77680b2edcfd",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.request": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 69,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.request:7ff24df3e8114cf2",
+        "signature_hash": "117503179b4d27ee"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_exact_key_wrong_digest_fails_closed": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 74,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_exact_key_wrong_digest_fails_closed:654b46148f8aff0d",
+        "signature_hash": "a49e2efa8bb09694"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_stale_store_generation_fails_before_row_use": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 78,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_stale_store_generation_fails_before_row_use:7cf2193e68cd4adb",
+        "signature_hash": "15366580063a861a"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_unknown_required_source_currentness_reopens": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_unknown_required_source_currentness_reopens:61a5fb1fef86c70b",
+        "signature_hash": "6481571409939d4a"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_k27_collision_does_not_merge_semantic_keys": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 95,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_k27_collision_does_not_merge_semantic_keys:921d9f00db2a4d1f",
+        "signature_hash": "6abc80e22bc058c5"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_successor_returns_history_only_candidate": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 101,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_successor_returns_history_only_candidate:935353d311f311bc",
+        "signature_hash": "7c32d00d40104784"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_context_flood_bound_refuses_instead_of_silent_truncation": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 106,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_context_flood_bound_refuses_instead_of_silent_truncation:9bf6b877b6b8e17c",
+        "signature_hash": "7a5b817fba06c7e4"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_poisoned_imperative_is_evidence_only": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_poisoned_imperative_is_evidence_only:8f8412735d5d382d",
+        "signature_hash": "93fbb08e3c220bd4"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_wrong_evidence_domain_refuses": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 118,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_wrong_evidence_domain_refuses:031f5c5edab93337",
+        "signature_hash": "3266f436b037c56a"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_model_prefix_kv_is_wrong_owner": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 123,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_model_prefix_kv_is_wrong_owner:20aed7230969a520",
+        "signature_hash": "cd91ff661abdf497"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_resolve_many_has_one_snapshot_boundary": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 133,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_resolve_many_has_one_snapshot_boundary:8fda23ecce746f39",
+        "signature_hash": "c25b1fc0e856d37b"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_principal_private_scope_does_not_cross": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 137,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_principal_private_scope_does_not_cross:05be7c36f0a4ad65",
+        "signature_hash": "5fe235dadab60a4b"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_receipt_identity_changes_when_request_changes": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 146,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_receipt_identity_changes_when_request_changes:a8859284cdbdb7ce",
+        "signature_hash": "e1a8f59c117098df"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_legacy_sha16_binds_snapshot_prefix_without_becoming_authority": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 151,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_legacy_sha16_binds_snapshot_prefix_without_becoming_authority:736052b4349489a9",
+        "signature_hash": "07e9b093d7588e62"
+      }
+    ],
+    "current_generation": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 9,
+        "end_line": 17,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#function:current_generation:ba44a28055e6728f",
+        "signature_hash": "016443e7aa121b12"
+      }
+    ],
+    "material": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 25,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#function:material:89dbeb50fd83d2c9",
+        "signature_hash": "79599300aba042c3"
+      }
+    ],
+    "ExternalKnowledgeIngressTests": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 28,
+        "end_line": 366,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#class:ExternalKnowledgeIngressTests:b14421d54a96df10",
+        "signature_hash": "b0e08bbb032dc62b"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_unknown_discovery_is_cacheable_but_heavy_hydration_and_execution_are_withheld": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 46,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_unknown_discovery_is_cacheable_but_heavy_hydration_and_execution_are_withheld:e16ed1e46158d5e9",
+        "signature_hash": "06af6413cf4853a9"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_current_exact_arxiv_can_reach_l4_with_generation_bound_materials": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 82,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_current_exact_arxiv_can_reach_l4_with_generation_bound_materials:bcc16b5c1bd9dff3",
+        "signature_hash": "41be157bcdd6e7ca"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_l4_without_content_digest_degrades_to_l3_not_fake_exactness": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 112,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_l4_without_content_digest_degrades_to_l3_not_fake_exactness:15aa786eca59a81f",
+        "signature_hash": "ed461901ec39df3c"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_generation_mismatch_rejects_heavy_material": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 131,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_generation_mismatch_rejects_heavy_material:6aa4bce1e8005ee4",
+        "signature_hash": "7abbc8b702679283"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_stale_source_preserves_orientation_but_requires_reverification": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 150,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_stale_source_preserves_orientation_but_requires_reverification:7430e069657844e5",
+        "signature_hash": "c8ae380546e954cb"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_tool_with_unknown_rights_or_security_is_metadata_review_required": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 168,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_tool_with_unknown_rights_or_security_is_metadata_review_required:13c0c0545cfa9013",
+        "signature_hash": "173566c3d5ad86d1"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_tool_with_declared_rights_and_security_is_inspection_ready_never_execution_ready": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 170,
+        "end_line": 202,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_tool_with_declared_rights_and_security_is_inspection_ready_never_execution_ready:def8a8f1c3d77d44",
+        "signature_hash": "c66c47ac422dbeba"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_unknown_security_facts_remain_null_not_sanitized_false": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 219,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_unknown_security_facts_remain_null_not_sanitized_false:7277aa692339223c",
+        "signature_hash": "fde3ba6b709417bb"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_scholar_discovery_cannot_self_mint_primary_source_currentness": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 221,
+        "end_line": 233,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_scholar_discovery_cannot_self_mint_primary_source_currentness:8b7478458dc2b25c",
+        "signature_hash": "1bc91d5c5efec98f"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_13d_projection_is_exactly_thirteen_trits_and_never_authority": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 235,
+        "end_line": 248,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_13d_projection_is_exactly_thirteen_trits_and_never_authority:7600b4e3b2ca9293",
+        "signature_hash": "39a3834f42242bf3"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_k27_locality_preserves_13d_prefix_and_is_routing_only": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 250,
+        "end_line": 265,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_k27_locality_preserves_13d_prefix_and_is_routing_only:2fb8fb762351777e",
+        "signature_hash": "af176c2af2273915"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_coordinate_changes_do_not_change_semantic_identity": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 267,
+        "end_line": 281,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_coordinate_changes_do_not_change_semantic_identity:59e67e37f0094a06",
+        "signature_hash": "77a8022107267884"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_generation_change_preserves_semantic_id_but_changes_generation_id": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 283,
+        "end_line": 296,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_generation_change_preserves_semantic_id_but_changes_generation_id:4bc06bf7f495abed",
+        "signature_hash": "3ec3d1f7820f6960"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_toroidal_refresh_phase_is_deterministic_scheduler_hint_not_currentness": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 298,
+        "end_line": 313,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_toroidal_refresh_phase_is_deterministic_scheduler_hint_not_currentness:4f6808b271a4d22e",
+        "signature_hash": "7c8fd57f48b2d058"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_missing_l2_material_does_not_hallucinate_requested_depth": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 315,
+        "end_line": 333,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_missing_l2_material_does_not_hallucinate_requested_depth:3f7d0371a5d6ef50",
+        "signature_hash": "4ce0463fed837e2f"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_receipt_is_deterministic_for_identical_inputs": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 335,
+        "end_line": 350,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_receipt_is_deterministic_for_identical_inputs:9b0f593f10cad1a4",
+        "signature_hash": "a1b16f49102bfe81"
+      }
+    ],
+    "ExternalKnowledgeIngressTests.test_provider_json_preserves_unknown_security_and_currentness": [
+      {
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 352,
+        "end_line": 366,
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_provider_json_preserves_unknown_security_and_currentness:1bba4e3192f68a0c",
+        "signature_hash": "a52bc966f978be3a"
       }
     ],
     "FakeBridge.aura_get_micro_context": [
@@ -149759,16 +150380,6 @@
         "signature_hash": "de706d016aa5115a"
       }
     ],
-    "context": [
-      {
-        "file": "tests/test_aura_shadow_model_router.py",
-        "kind": "function",
-        "line": 26,
-        "end_line": 39,
-        "semantic_id": "tests/test_aura_shadow_model_router.py#function:context:5df706d8ad1c9d52",
-        "signature_hash": "5aa7478988a5dfbf"
-      }
-    ],
     "test_store_projects_complete_graph_pinned_candidate": [
       {
         "file": "tests/test_aura_shadow_model_router.py",
@@ -157181,6 +157792,760 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "_sha256_hex": [
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 56,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_sha256_hex:aae7bc41f3efeee8",
+        "signature_hash": "45262a88238d30c7"
+      },
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 123,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#function:_sha256_hex:c02a5b72b071adab",
+        "signature_hash": "635cdca712c9c619"
+      },
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 120,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_sha256_hex:0ee7628fd71ed423",
+        "signature_hash": "45262a88238d30c7"
+      }
+    ],
+    "_http_uri": [
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 70,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_http_uri:6edb7c8b4b734121",
+        "signature_hash": "bcbcc30363f34f64"
+      },
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 129,
+        "end_line": 134,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_http_uri:bdfe578883b7bc84",
+        "signature_hash": "bcbcc30363f34f64"
+      }
+    ],
+    "_validate_nonpromotion": [
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 85,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_validate_nonpromotion:60ccfa82fd8c57db",
+        "signature_hash": "38b3114c9c97cf11"
+      }
+    ],
+    "_validate_k27": [
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 105,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_validate_k27:32cf4b1adeb0308a",
+        "signature_hash": "8428a2e18e7ccc23"
+      }
+    ],
+    "_validate_exact_l4": [
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 137,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_validate_exact_l4:45c56f5f2d991708",
+        "signature_hash": "16298fbd67c34e94"
+      }
+    ],
+    "PersistentCandidateProjection": [
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "class",
+        "line": 141,
+        "end_line": 222,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#class:PersistentCandidateProjection:4607829404f7c13f",
+        "signature_hash": "bb5bc7a394eae767"
+      }
+    ],
+    "PersistentCandidateProjection.validate": [
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 217,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#method:PersistentCandidateProjection.validate:04891dd74f5450d1",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "PersistentCandidateProjection.projection_digest": [
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "method",
+        "line": 220,
+        "end_line": 222,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#method:PersistentCandidateProjection.projection_digest:6e3462839684caac",
+        "signature_hash": "adbbf6f578ff20ea"
+      }
+    ],
+    "project_eki_l4_to_candidate": [
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 225,
+        "end_line": 308,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:project_eki_l4_to_candidate:3199a23de1db4187",
+        "signature_hash": "0b77ba94e299dcf6"
+      }
+    ],
+    "build_coordinate_store_snapshot": [
+      {
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "kind": "function",
+        "line": 311,
+        "end_line": 333,
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:build_coordinate_store_snapshot:ec17c9624c7674f0",
+        "signature_hash": "eecc590aa8735858"
+      }
+    ],
+    "ResolveDisposition": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 27,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ResolveDisposition:1a0b316f0f08f0b7",
+        "signature_hash": "43b918428f127609"
+      }
+    ],
+    "CurrentnessStatus": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CurrentnessStatus:f8ad77246260b531",
+        "signature_hash": "d23a19aea559196f"
+      }
+    ],
+    "ExternalCognitionReadRequestV1": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 51,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ExternalCognitionReadRequestV1:3e5f48bad39afee6",
+        "signature_hash": "d1157224428339b5"
+      }
+    ],
+    "ReadValidationContextV1": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 55,
+        "end_line": 59,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ReadValidationContextV1:b954eed13a1dd49c",
+        "signature_hash": "a0bf16e215043b40"
+      }
+    ],
+    "CoordinateMemoryReadCandidateV1": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 76,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CoordinateMemoryReadCandidateV1:0dc876aa62fbcf1b",
+        "signature_hash": "0b047bad6356bf7b"
+      }
+    ],
+    "CoordinateMemoryReadReceiptV1": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 96,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CoordinateMemoryReadReceiptV1:47dc09b12dc4dd11",
+        "signature_hash": "259509dce664ba5c"
+      }
+    ],
+    "CoordinateMemoryBatchReceiptV1": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 100,
+        "end_line": 109,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CoordinateMemoryBatchReceiptV1:1cabe5d676cc3c7e",
+        "signature_hash": "b9949bb1c81da746"
+      }
+    ],
+    "_normalize_expected_sha256": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 130,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#function:_normalize_expected_sha256:5cbd648c0f74c6c8",
+        "signature_hash": "952d6900577bbbe9"
+      }
+    ],
+    "ExternalCognitionResolveAdapterV1": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 133,
+        "end_line": 373,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ExternalCognitionResolveAdapterV1:51ed90d84bb7ee45",
+        "signature_hash": "e17544af5d648e88"
+      }
+    ],
+    "ExternalCognitionResolveAdapterV1.__init__": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 141,
+        "end_line": 183,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1.__init__:b7d35a5624b621d9",
+        "signature_hash": "1cf4294fec8f1026"
+      }
+    ],
+    "ExternalCognitionResolveAdapterV1._request_digest": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 185,
+        "end_line": 186,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1._request_digest:ae75878236358056",
+        "signature_hash": "7536a24ae166d7ac"
+      }
+    ],
+    "ExternalCognitionResolveAdapterV1._receipt": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 227,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1._receipt:ef431eddef5e32dd",
+        "signature_hash": "4d04dd52e9be7fb3"
+      }
+    ],
+    "ExternalCognitionResolveAdapterV1.resolve": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 229,
+        "end_line": 357,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1.resolve:f2ff68d8edb4c839",
+        "signature_hash": "4358c733dc1eaf5d"
+      }
+    ],
+    "ExternalCognitionResolveAdapterV1.resolve_many": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 359,
+        "end_line": 373,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1.resolve_many:8e232a4500d1f93a",
+        "signature_hash": "8c0a21ffb486f184"
+      }
+    ],
+    "SourceKind": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 45,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:SourceKind:89d41764af7288a5",
+        "signature_hash": "0f5da0a9075ecedd"
+      }
+    ],
+    "ArtifactClass": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 54,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:ArtifactClass:f82bc6c83041bc7a",
+        "signature_hash": "ee715bb5a46a8e05"
+      }
+    ],
+    "Currentness": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 57,
+        "end_line": 60,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:Currentness:85f0afad2b7a2d0a",
+        "signature_hash": "7415138dda46e741"
+      }
+    ],
+    "RightsState": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 66,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:RightsState:34bb5b43a58e4430",
+        "signature_hash": "08dd3f816119bb0b"
+      }
+    ],
+    "SecurityState": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 69,
+        "end_line": 72,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:SecurityState:4f278d81c01b40a5",
+        "signature_hash": "28e309203c7a9a4e"
+      }
+    ],
+    "Volatility": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 75,
+        "end_line": 78,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:Volatility:5424c1369cceed93",
+        "signature_hash": "da827c8a83a102f3"
+      }
+    ],
+    "RelevanceBand": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 81,
+        "end_line": 84,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:RelevanceBand:46c36c5cf22a79de",
+        "signature_hash": "1efef0b2bf9e915f"
+      }
+    ],
+    "Availability": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 87,
+        "end_line": 92,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:Availability:01c6b2fccd60952b",
+        "signature_hash": "8ed2be8497caadfa"
+      }
+    ],
+    "HydrationLevel": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 95,
+        "end_line": 100,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:HydrationLevel:3b5a8f7c5eab568d",
+        "signature_hash": "2018483ec6e62e51"
+      }
+    ],
+    "_bool_trit": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 137,
+        "end_line": 141,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_bool_trit:ac9dcbc90c61838e",
+        "signature_hash": "dc46e275d04ab6bd"
+      }
+    ],
+    "SourceGeneration": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 145,
+        "end_line": 170,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:SourceGeneration:c48dab29c27098ed",
+        "signature_hash": "f9f9348202b6674a"
+      }
+    ],
+    "SourceGeneration.validate": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 165,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:SourceGeneration.validate:8e00f5cd6b4efb74",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SourceGeneration.generation_id": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 170,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:SourceGeneration.generation_id:0f51ccdd803034ff",
+        "signature_hash": "235a483c049b96a9"
+      }
+    ],
+    "RightsMetadata": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 174,
+        "end_line": 187,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:RightsMetadata:a8033b761c63c593",
+        "signature_hash": "aeab05d5d25ae94b"
+      }
+    ],
+    "RightsMetadata.validate": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 187,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:RightsMetadata.validate:3cb826ea09ef9947",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SecurityMetadata": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 191,
+        "end_line": 213,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:SecurityMetadata:d403d61db18e8a9c",
+        "signature_hash": "f1f22f7c104b4eaf"
+      }
+    ],
+    "SecurityMetadata.validate": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 199,
+        "end_line": 213,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:SecurityMetadata.validate:dfbb6817d8a643bd",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "HydrationMaterial": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 217,
+        "end_line": 237,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:HydrationMaterial:db983d2b3bc0ce8c",
+        "signature_hash": "9962ee5e1f9d154d"
+      }
+    ],
+    "HydrationMaterial.validate": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 223,
+        "end_line": 229,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:HydrationMaterial.validate:42f4f4f4c513bb0d",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "HydrationMaterial.material_digest": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 232,
+        "end_line": 237,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:HydrationMaterial.material_digest:be91e3457fff13da",
+        "signature_hash": "24c2c26edc69050f"
+      }
+    ],
+    "ExternalDiscoveryObservation": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 241,
+        "end_line": 291,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:ExternalDiscoveryObservation:5d3a027ca44decc7",
+        "signature_hash": "79f3b9350500844a"
+      }
+    ],
+    "ExternalDiscoveryObservation.validate": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 258,
+        "end_line": 280,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:ExternalDiscoveryObservation.validate:ac37d99ddb59942f",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ExternalDiscoveryObservation.semantic_id": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 283,
+        "end_line": 291,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:ExternalDiscoveryObservation.semantic_id:be2f7685a4aaac95",
+        "signature_hash": "1cbb4c86c2e5e2a7"
+      }
+    ],
+    "OperationalProjection13D": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 312,
+        "end_line": 331,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:OperationalProjection13D:5ee1d9c3b7b16ce9",
+        "signature_hash": "915f279efc539ee1"
+      }
+    ],
+    "OperationalProjection13D.validate": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 318,
+        "end_line": 326,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:OperationalProjection13D.validate:b1c69e3324c276d2",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "OperationalProjection13D.projection_digest": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 329,
+        "end_line": 331,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:OperationalProjection13D.projection_digest:aed5b7c46817099f",
+        "signature_hash": "adbbf6f578ff20ea"
+      }
+    ],
+    "K27Locality": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 335,
+        "end_line": 356,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:K27Locality:4ad83b246fe07457",
+        "signature_hash": "b908ae35a5c1970d"
+      }
+    ],
+    "K27Locality.validate": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 343,
+        "end_line": 351,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:K27Locality.validate:87d4352bcaedc404",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "K27Locality.key": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 354,
+        "end_line": 356,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:K27Locality.key:f53f28c16d3216cb",
+        "signature_hash": "4174f89734aa61d2"
+      }
+    ],
+    "ToroidalRefreshPhase": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 360,
+        "end_line": 375,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:ToroidalRefreshPhase:bd0b6201ffda6dd1",
+        "signature_hash": "629bf963f1c88948"
+      }
+    ],
+    "ToroidalRefreshPhase.validate": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 367,
+        "end_line": 375,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:ToroidalRefreshPhase.validate:e754e25afbdc6382",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ExternalKnowledgeCard": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "class",
+        "line": 379,
+        "end_line": 415,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:ExternalKnowledgeCard:874ac9464d85cda9",
+        "signature_hash": "a916fd6cb15d8953"
+      }
+    ],
+    "ExternalKnowledgeCard.receipt_digest": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 409,
+        "end_line": 410,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:ExternalKnowledgeCard.receipt_digest:5803cbcd46c5603a",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "ExternalKnowledgeCard.to_dict": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "method",
+        "line": 412,
+        "end_line": 415,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:ExternalKnowledgeCard.to_dict:ee453bbf34ff9f50",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "_artifact_consequence_trit": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 418,
+        "end_line": 423,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_artifact_consequence_trit:9051334417475001",
+        "signature_hash": "8b7e85203f7b4afd"
+      }
+    ],
+    "_volatility_trit": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 426,
+        "end_line": 427,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_volatility_trit:f06be9b838adbefb",
+        "signature_hash": "114fe633b7dcbbe8"
+      }
+    ],
+    "_relevance_trit": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 430,
+        "end_line": 431,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_relevance_trit:f4b38bf95ad7cc5f",
+        "signature_hash": "626afb140987be0b"
+      }
+    ],
+    "_rights_trit": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 434,
+        "end_line": 435,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_rights_trit:13b987f0574a1f89",
+        "signature_hash": "3cd736ed44981753"
+      }
+    ],
+    "_security_trit": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 438,
+        "end_line": 443,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_security_trit:7c6c08da2edb5e68",
+        "signature_hash": "21132446d040c862"
+      }
+    ],
+    "_freshness_trit": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 446,
+        "end_line": 447,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_freshness_trit:4cf1cf1e67c5dc4a",
+        "signature_hash": "f3bbc2d5897f70ce"
+      }
+    ],
+    "_to_base3_digits": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 450,
+        "end_line": 455,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_to_base3_digits:91b1615d42c95948",
+        "signature_hash": "2d31be2d1a03b089"
+      }
+    ],
+    "build_projection_13d": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 458,
+        "end_line": 487,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:build_projection_13d:3d52bb63e66169c4",
+        "signature_hash": "5135fdf3a230ab1b"
+      }
+    ],
+    "build_k27_locality": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 490,
+        "end_line": 515,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:build_k27_locality:50a9b85aabf5f604",
+        "signature_hash": "5d937cf8c384fd91"
+      }
+    ],
+    "build_refresh_phase": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 518,
+        "end_line": 533,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:build_refresh_phase:2e73f32c0ab98f94",
+        "signature_hash": "8eeb7ba8fbb62ea6"
+      }
+    ],
+    "_tool_like": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 536,
+        "end_line": 539,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_tool_like:f635718148cd4c00",
+        "signature_hash": "4368703a94e2407e"
+      }
+    ],
+    "_availability": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 542,
+        "end_line": 558,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_availability:84e6c6a6cddba389",
+        "signature_hash": "3fe35b8330041f53"
+      }
+    ],
+    "_max_level": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 561,
+        "end_line": 570,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_max_level:455d28ed5e7a0ae7",
+        "signature_hash": "f73402dffbc73f51"
+      }
+    ],
+    "admit_external_knowledge": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 573,
+        "end_line": 680,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:admit_external_knowledge:5cedf15812ea45e6",
+        "signature_hash": "36e24320c652e61f"
+      }
+    ],
+    "observation_from_provider_metadata": [
+      {
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "kind": "function",
+        "line": 683,
+        "end_line": 732,
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:observation_from_provider_metadata:b6bb7592518aee25",
+        "signature_hash": "cd4e11b2062a86ff"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158585,6 +159950,18 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-eki2-persistent-candidate-projection.yml",
+      ".github/workflows/aura-external-knowledge-ingress.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/aura-eki2-persistent-candidate-projection.yml",
+      ".github/workflows/aura-external-knowledge-ingress.yml"
+    ],
+    "python3 -m tools.aura_external_knowledge_ingress": [
+      ".github/workflows/aura-external-knowledge-ingress.yml"
+    ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
     ],
@@ -159147,9 +160524,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -167737,6 +169111,171 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-eki2-persistent-candidate-projection.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5519,
+      "lines": 118,
+      "tokens_est": 1380,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          98
+        ],
+        "python3 -m unittest": [
+          103
+        ]
+      },
+      "topology": {},
+      "digest8": "ca5a388a62f5c926",
+      "vector": [
+        -0.169105,
+        0.012484,
+        0.055612,
+        -0.121438,
+        0.194074,
+        0.203153,
+        -0.041993,
+        0.005675,
+        -0.048802,
+        -0.244011,
+        -0.037453,
+        0.021564,
+        0.155486,
+        0.203153,
+        -0.246281,
+        0.282599,
+        -0.171375,
+        -0.232661,
+        0.212233,
+        0.0942,
+        -0.125978,
+        0.096469,
+        0.273519,
+        -0.2599,
+        -0.221312,
+        -0.26444,
+        -0.244011,
+        0.189534,
+        0.007945,
+        -0.232661,
+        -0.171375,
+        0.005675
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-external-cognition-resolve-adapter.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 764,
+      "lines": 25,
+      "tokens_est": 191,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "81ff990e9fc4fb2c",
+      "vector": [
+        0.186792,
+        -0.295423,
+        0.25303,
+        -0.038418,
+        0.067563,
+        0.258329,
+        -0.009273,
+        0.181493,
+        -0.295423,
+        -0.035769,
+        0.165596,
+        -0.154997,
+        0.181493,
+        0.157647,
+        -0.051666,
+        0.25568,
+        0.189441,
+        0.109955,
+        -0.070213,
+        -0.287474,
+        0.147049,
+        -0.316619,
+        0.147049,
+        0.038418,
+        0.059614,
+        -0.033119,
+        -0.186792,
+        -0.189441,
+        -0.017222,
+        -0.128502,
+        0.245081,
+        -0.096708
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-external-knowledge-ingress.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3087,
+      "lines": 77,
+      "tokens_est": 772,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest",
+        "python3 -m tools.aura_external_knowledge_ingress"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          43
+        ],
+        "python3 -m unittest": [
+          46
+        ],
+        "python3 -m tools.aura_external_knowledge_ingress": [
+          52
+        ]
+      },
+      "topology": {},
+      "digest8": "dd111d5a95ab6a30",
+      "vector": [
+        0.101431,
+        -0.193253,
+        0.267991,
+        -0.169763,
+        0.227419,
+        -0.225283,
+        0.221013,
+        -0.253043,
+        -0.133462,
+        0.071535,
+        0.04164,
+        -0.171899,
+        -0.120649,
+        0.056588,
+        -0.233825,
+        0.048046,
+        -0.188982,
+        0.075806,
+        -0.065129,
+        0.26372,
+        -0.065129,
+        0.270127,
+        -0.238096,
+        0.257314,
+        0.148409,
+        -0.092889,
+        -0.174034,
+        -0.054452,
+        0.035234,
+        -0.191117,
+        -0.188982,
+        -0.233825
       ]
     },
     {
@@ -253859,6 +255398,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_eki_persistent_candidate_projection.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10512,
+      "lines": 234,
+      "tokens_est": 2628,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3169c9289963c3cf",
+      "vector": [
+        -0.195647,
+        0.258161,
+        -0.191016,
+        0.070618,
+        -0.160917,
+        -0.107664,
+        0.255846,
+        -0.07988,
+        -0.160917,
+        0.202593,
+        0.005788,
+        -0.156286,
+        0.035888,
+        0.278999,
+        -0.216485,
+        -0.035888,
+        0.18407,
+        -0.105348,
+        0.140079,
+        0.255846,
+        -0.244269,
+        0.186386,
+        0.133133,
+        -0.260477,
+        -0.11461,
+        -0.21417,
+        0.142394,
+        -0.2188,
+        0.133133,
+        -0.165547,
+        0.204908,
+        -0.035888
+      ]
+    },
+    {
       "path": "tests/test_aura_emergent_agent_bridge.py",
       "role": "python_module",
       "binary": false,
@@ -254843,6 +256429,100 @@
         0.041634,
         0.278009,
         -0.165194
+      ]
+    },
+    {
+      "path": "tests/test_aura_external_cognition_resolve_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7343,
+      "lines": 156,
+      "tokens_est": 1836,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d2473a862fa40cba",
+      "vector": [
+        -0.048085,
+        -0.250819,
+        0.040287,
+        0.269014,
+        0.102667,
+        -0.131258,
+        -0.115663,
+        -0.167646,
+        0.066279,
+        -0.09227,
+        -0.03249,
+        -0.292406,
+        -0.172845,
+        0.15465,
+        0.263815,
+        0.146853,
+        0.131258,
+        0.300204,
+        -0.024692,
+        -0.178043,
+        -0.198836,
+        -0.06108,
+        0.006498,
+        0.271613,
+        0.042886,
+        -0.198836,
+        -0.084473,
+        -0.152051,
+        0.320997,
+        0.318398,
+        -0.079275,
+        -0.089671
+      ]
+    },
+    {
+      "path": "tests/test_aura_external_knowledge_ingress.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 16064,
+      "lines": 371,
+      "tokens_est": 4016,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fa46dadc7dae6407",
+      "vector": [
+        -0.237786,
+        -0.039073,
+        0.144011,
+        0.204295,
+        -0.041306,
+        -0.03684,
+        0.050236,
+        0.231088,
+        0.188666,
+        -0.126149,
+        0.114986,
+        0.030142,
+        0.284673,
+        0.005582,
+        -0.264579,
+        0.074797,
+        -0.251182,
+        0.119451,
+        -0.275742,
+        -0.043538,
+        -0.005582,
+        -0.17527,
+        0.210993,
+        0.222157,
+        0.152942,
+        -0.231088,
+        -0.253415,
+        -0.063633,
+        -0.219924,
+        -0.195364,
+        0.119451,
+        0.269044
       ]
     },
     {
@@ -262645,6 +264325,147 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_eki_persistent_candidate_projection.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14101,
+      "lines": 345,
+      "tokens_est": 3526,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "879594a20ccd48f8",
+      "vector": [
+        -0.233745,
+        -0.265475,
+        -0.149132,
+        -0.214707,
+        0.144901,
+        0.225284,
+        -0.180862,
+        0.178746,
+        -0.138555,
+        0.020096,
+        -0.244322,
+        0.166054,
+        0.147016,
+        -0.252783,
+        0.022211,
+        0.180862,
+        0.225284,
+        -0.039134,
+        -0.043365,
+        0.147016,
+        -0.106825,
+        -0.157593,
+        -0.244322,
+        0.121632,
+        -0.235861,
+        -0.058172,
+        0.225284,
+        -0.161824,
+        -0.223169,
+        -0.159708,
+        -0.115286,
+        -0.182977
+      ]
+    },
+    {
+      "path": "tools/aura_external_cognition_resolve_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14893,
+      "lines": 374,
+      "tokens_est": 3724,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "01550b6c1ec5886e",
+      "vector": [
+        0.207241,
+        0.22536,
+        0.236685,
+        -0.24348,
+        -0.118909,
+        -0.161942,
+        -0.193651,
+        -0.139293,
+        -0.198181,
+        -0.252539,
+        -0.057756,
+        0.284248,
+        -0.279718,
+        0.053226,
+        -0.279718,
+        -0.039636,
+        -0.121174,
+        -0.202711,
+        -0.177797,
+        0.164207,
+        -0.245744,
+        0.016987,
+        -0.105319,
+        -0.150618,
+        -0.143823,
+        -0.150618,
+        0.098524,
+        0.279718,
+        -0.060021,
+        0.028312,
+        -0.032841,
+        0.003397
+      ]
+    },
+    {
+      "path": "tools/aura_external_knowledge_ingress.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 26608,
+      "lines": 757,
+      "tokens_est": 6652,
+      "symbol_count": 55,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "01e987ed186da875",
+      "vector": [
+        0.114043,
+        0.165983,
+        0.057586,
+        -0.256314,
+        -0.281155,
+        -0.071136,
+        -0.269864,
+        0.186308,
+        -0.120818,
+        -0.224698,
+        0.204374,
+        0.1705,
+        -0.145659,
+        -0.233731,
+        -0.016937,
+        -0.053069,
+        0.019195,
+        -0.215665,
+        -0.098235,
+        0.132109,
+        0.129851,
+        -0.27438,
+        -0.147917,
+        -0.27438,
+        0.145659,
+        -0.193082,
+        0.1705,
+        -0.012421,
+        0.231473,
+        0.231473,
+        -0.062103,
+        -0.147917
       ]
     },
     {
@@ -286646,16 +288467,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1648,
+    "total_bytes": 26513939,
+    "text_tokens_est": 6618838,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 1003,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286801,6 +288622,9 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-eki2-persistent-candidate-projection.yml",
+      ".github/workflows/aura-external-cognition-resolve-adapter.yml",
+      ".github/workflows/aura-external-knowledge-ingress.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -288109,6 +289933,7 @@
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
       "tests/test_aura_efficiency_benchmark.py",
+      "tests/test_aura_eki_persistent_candidate_projection.py",
       "tests/test_aura_emergent_agent_bridge.py",
       "tests/test_aura_emergent_agent_bridge_mcp.py",
       "tests/test_aura_emergent_capability_auditor.py",
@@ -288130,6 +289955,8 @@
       "tests/test_aura_event_contracts.py",
       "tests/test_aura_event_privacy_hardening.py",
       "tests/test_aura_exact_head_transport.py",
+      "tests/test_aura_external_cognition_resolve_adapter.py",
+      "tests/test_aura_external_knowledge_ingress.py",
       "tests/test_aura_external_llm_session.py",
       "tests/test_aura_fetch_construction_demo_source.py",
       "tests/test_aura_financial_contracts.py",
@@ -288296,6 +290123,9 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_eki_persistent_candidate_projection.py",
+      "tools/aura_external_cognition_resolve_adapter.py",
+      "tools/aura_external_knowledge_ingress.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -417134,6 +418964,166 @@
         "file_digest8": "351f01d7b45a4809"
       },
       {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#class:EKIPersistentCandidateProjectionTests:08dc284bfa333ba7",
+        "name": "EKIPersistentCandidateProjectionTests",
+        "kind": "class",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 104,
+        "end_line": 229,
+        "signature_hash": "b79e39723e392532",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#function:build_reader:ca86c8d67a04b50b",
+        "name": "build_reader",
+        "kind": "function",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 69,
+        "end_line": 92,
+        "signature_hash": "55286b5c41f88e48",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#function:context:21f72a61f105b0bf",
+        "name": "context",
+        "kind": "function",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 95,
+        "end_line": 101,
+        "signature_hash": "d10fbef67e38e6cc",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#function:make_card:44f5b2a7d0ff6999",
+        "name": "make_card",
+        "kind": "function",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 34,
+        "end_line": 66,
+        "signature_hash": "6a3bd692e1ddb497",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_authority_widening_on_ingress_card_rejects:e44c4b5c55976c0b",
+        "name": "EKIPersistentCandidateProjectionTests.test_authority_widening_on_ingress_card_rejects",
+        "kind": "method",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 226,
+        "end_line": 229,
+        "signature_hash": "4a0ad908555d8f0b",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_duplicate_generation_bound_key_rejects:2c41e61026a05727",
+        "name": "EKIPersistentCandidateProjectionTests.test_duplicate_generation_bound_key_rejects",
+        "kind": "method",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 221,
+        "end_line": 224,
+        "signature_hash": "1aebfc7b33cbbca1",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_exact_l4_projects_and_reads_only_with_fresh_runtime_currentness:989dde30ded0fb38",
+        "name": "EKIPersistentCandidateProjectionTests.test_exact_l4_projects_and_reads_only_with_fresh_runtime_currentness",
+        "kind": "method",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 105,
+        "end_line": 115,
+        "signature_hash": "420e38ef2d9faade",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_generation_and_reopen_cross_casts_fail_closed:b745843fc1f82d2d",
+        "name": "EKIPersistentCandidateProjectionTests.test_generation_and_reopen_cross_casts_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 150,
+        "end_line": 159,
+        "signature_hash": "47eb74e58421499d",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_k27_is_routing_metadata_not_semantic_identity_or_authority:cd9a8fb63ee5f419",
+        "name": "EKIPersistentCandidateProjectionTests.test_k27_is_routing_metadata_not_semantic_identity_or_authority",
+        "kind": "method",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 161,
+        "end_line": 174,
+        "signature_hash": "fdfe56426e1a2742",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_model_prefix_kv_remains_wrong_responsibility_owner:51dfe35af20d23a7",
+        "name": "EKIPersistentCandidateProjectionTests.test_model_prefix_kv_remains_wrong_responsibility_owner",
+        "kind": "method",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 187,
+        "end_line": 193,
+        "signature_hash": "e3ef148e18d5cea2",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_non_l4_or_noncurrent_cards_do_not_enter_persistent_candidate_plane:bbcd38732e211a2e",
+        "name": "EKIPersistentCandidateProjectionTests.test_non_l4_or_noncurrent_cards_do_not_enter_persistent_candidate_plane",
+        "kind": "method",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 143,
+        "end_line": 148,
+        "signature_hash": "e6d059b3fd338d3b",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_persisted_current_ingress_does_not_self_mint_future_currentness:3f56aed1f8529240",
+        "name": "EKIPersistentCandidateProjectionTests.test_persisted_current_ingress_does_not_self_mint_future_currentness",
+        "kind": "method",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 117,
+        "end_line": 130,
+        "signature_hash": "29e8b4e02a5d582a",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_poisoned_external_text_remains_evidence_only_after_persistence:3a4a46b6b41deb1a",
+        "name": "EKIPersistentCandidateProjectionTests.test_poisoned_external_text_remains_evidence_only_after_persistence",
+        "kind": "method",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 176,
+        "end_line": 185,
+        "signature_hash": "2a34faa1c7bb61ed",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_same_semantic_source_new_generation_gets_distinct_key_even_with_same_k27:eeeabba54100a64e",
+        "name": "EKIPersistentCandidateProjectionTests.test_same_semantic_source_new_generation_gets_distinct_key_even_with_same_k27",
+        "kind": "method",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 132,
+        "end_line": 141,
+        "signature_hash": "8fa0c2b6475f55cf",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_snapshot_and_value_digests_bind_reader_request:c9bc8ede82d0848b",
+        "name": "EKIPersistentCandidateProjectionTests.test_snapshot_and_value_digests_bind_reader_request",
+        "kind": "method",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 199,
+        "end_line": 219,
+        "signature_hash": "2bd58f618c5acf95",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
+        "semantic_id": "tests/test_aura_eki_persistent_candidate_projection.py#method:EKIPersistentCandidateProjectionTests.test_standing_overflow_refuses_instead_of_truncating:ab2810cbb1f6c70e",
+        "name": "EKIPersistentCandidateProjectionTests.test_standing_overflow_refuses_instead_of_truncating",
+        "kind": "method",
+        "file": "tests/test_aura_eki_persistent_candidate_projection.py",
+        "line": 195,
+        "end_line": 197,
+        "signature_hash": "4d595a74f3d1bb5d",
+        "file_digest8": "3169c9289963c3cf"
+      },
+      {
         "semantic_id": "tests/test_aura_emergent_agent_bridge.py#class:FakeEmergentSpine:01f2426306c69248",
         "name": "FakeEmergentSpine",
         "kind": "class",
@@ -422472,6 +424462,386 @@
         "end_line": 95,
         "signature_hash": "77483784246582e2",
         "file_digest8": "84ce96843c918333"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#class:ExternalCognitionResolveAdapterTests:6de8462d1dad7fc9",
+        "name": "ExternalCognitionResolveAdapterTests",
+        "kind": "class",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 31,
+        "end_line": 151,
+        "signature_hash": "b76e545e8783e45e",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#function:make_store:60fc9f21b667947b",
+        "name": "make_store",
+        "kind": "function",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 16,
+        "end_line": 21,
+        "signature_hash": "c5c094140a14b2ff",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#function:row:2e06f7812e16613a",
+        "name": "row",
+        "kind": "function",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 24,
+        "end_line": 28,
+        "signature_hash": "117d47d4c7b5a69e",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.request:7ff24df3e8114cf2",
+        "name": "ExternalCognitionResolveAdapterTests.request",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 52,
+        "end_line": 69,
+        "signature_hash": "117503179b4d27ee",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.setUp:190c77680b2edcfd",
+        "name": "ExternalCognitionResolveAdapterTests.setUp",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 32,
+        "end_line": 50,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_context_flood_bound_refuses_instead_of_silent_truncation:9bf6b877b6b8e17c",
+        "name": "ExternalCognitionResolveAdapterTests.test_context_flood_bound_refuses_instead_of_silent_truncation",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 103,
+        "end_line": 106,
+        "signature_hash": "7a5b817fba06c7e4",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_exact_key_wrong_digest_fails_closed:654b46148f8aff0d",
+        "name": "ExternalCognitionResolveAdapterTests.test_exact_key_wrong_digest_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 71,
+        "end_line": 74,
+        "signature_hash": "a49e2efa8bb09694",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_k27_collision_does_not_merge_semantic_keys:921d9f00db2a4d1f",
+        "name": "ExternalCognitionResolveAdapterTests.test_k27_collision_does_not_merge_semantic_keys",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 89,
+        "end_line": 95,
+        "signature_hash": "6abc80e22bc058c5",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_legacy_sha16_binds_snapshot_prefix_without_becoming_authority:736052b4349489a9",
+        "name": "ExternalCognitionResolveAdapterTests.test_legacy_sha16_binds_snapshot_prefix_without_becoming_authority",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 148,
+        "end_line": 151,
+        "signature_hash": "07e9b093d7588e62",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_model_prefix_kv_is_wrong_owner:20aed7230969a520",
+        "name": "ExternalCognitionResolveAdapterTests.test_model_prefix_kv_is_wrong_owner",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 120,
+        "end_line": 123,
+        "signature_hash": "cd91ff661abdf497",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_poisoned_imperative_is_evidence_only:8f8412735d5d382d",
+        "name": "ExternalCognitionResolveAdapterTests.test_poisoned_imperative_is_evidence_only",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 108,
+        "end_line": 114,
+        "signature_hash": "93fbb08e3c220bd4",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_principal_private_scope_does_not_cross:05be7c36f0a4ad65",
+        "name": "ExternalCognitionResolveAdapterTests.test_principal_private_scope_does_not_cross",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 135,
+        "end_line": 137,
+        "signature_hash": "5fe235dadab60a4b",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_receipt_identity_changes_when_request_changes:a8859284cdbdb7ce",
+        "name": "ExternalCognitionResolveAdapterTests.test_receipt_identity_changes_when_request_changes",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 139,
+        "end_line": 146,
+        "signature_hash": "e1a8f59c117098df",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_resolve_many_has_one_snapshot_boundary:8fda23ecce746f39",
+        "name": "ExternalCognitionResolveAdapterTests.test_resolve_many_has_one_snapshot_boundary",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 125,
+        "end_line": 133,
+        "signature_hash": "c25b1fc0e856d37b",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_stale_store_generation_fails_before_row_use:7cf2193e68cd4adb",
+        "name": "ExternalCognitionResolveAdapterTests.test_stale_store_generation_fails_before_row_use",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 76,
+        "end_line": 78,
+        "signature_hash": "15366580063a861a",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_successor_returns_history_only_candidate:935353d311f311bc",
+        "name": "ExternalCognitionResolveAdapterTests.test_successor_returns_history_only_candidate",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 97,
+        "end_line": 101,
+        "signature_hash": "7c32d00d40104784",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_unknown_required_source_currentness_reopens:61a5fb1fef86c70b",
+        "name": "ExternalCognitionResolveAdapterTests.test_unknown_required_source_currentness_reopens",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 80,
+        "end_line": 87,
+        "signature_hash": "6481571409939d4a",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_wrong_evidence_domain_refuses:031f5c5edab93337",
+        "name": "ExternalCognitionResolveAdapterTests.test_wrong_evidence_domain_refuses",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 116,
+        "end_line": 118,
+        "signature_hash": "3266f436b037c56a",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#class:ExternalKnowledgeIngressTests:b14421d54a96df10",
+        "name": "ExternalKnowledgeIngressTests",
+        "kind": "class",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 28,
+        "end_line": 366,
+        "signature_hash": "b0e08bbb032dc62b",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#function:current_generation:ba44a28055e6728f",
+        "name": "current_generation",
+        "kind": "function",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 9,
+        "end_line": 17,
+        "signature_hash": "016443e7aa121b12",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#function:material:89dbeb50fd83d2c9",
+        "name": "material",
+        "kind": "function",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 20,
+        "end_line": 25,
+        "signature_hash": "79599300aba042c3",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_13d_projection_is_exactly_thirteen_trits_and_never_authority:7600b4e3b2ca9293",
+        "name": "ExternalKnowledgeIngressTests.test_13d_projection_is_exactly_thirteen_trits_and_never_authority",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 235,
+        "end_line": 248,
+        "signature_hash": "39a3834f42242bf3",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_coordinate_changes_do_not_change_semantic_identity:59e67e37f0094a06",
+        "name": "ExternalKnowledgeIngressTests.test_coordinate_changes_do_not_change_semantic_identity",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 267,
+        "end_line": 281,
+        "signature_hash": "77a8022107267884",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_current_exact_arxiv_can_reach_l4_with_generation_bound_materials:bcc16b5c1bd9dff3",
+        "name": "ExternalKnowledgeIngressTests.test_current_exact_arxiv_can_reach_l4_with_generation_bound_materials",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 48,
+        "end_line": 82,
+        "signature_hash": "41be157bcdd6e7ca",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_generation_change_preserves_semantic_id_but_changes_generation_id:4bc06bf7f495abed",
+        "name": "ExternalKnowledgeIngressTests.test_generation_change_preserves_semantic_id_but_changes_generation_id",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 283,
+        "end_line": 296,
+        "signature_hash": "3ec3d1f7820f6960",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_generation_mismatch_rejects_heavy_material:6aa4bce1e8005ee4",
+        "name": "ExternalKnowledgeIngressTests.test_generation_mismatch_rejects_heavy_material",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 114,
+        "end_line": 131,
+        "signature_hash": "7abbc8b702679283",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_k27_locality_preserves_13d_prefix_and_is_routing_only:2fb8fb762351777e",
+        "name": "ExternalKnowledgeIngressTests.test_k27_locality_preserves_13d_prefix_and_is_routing_only",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 250,
+        "end_line": 265,
+        "signature_hash": "af176c2af2273915",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_l4_without_content_digest_degrades_to_l3_not_fake_exactness:15aa786eca59a81f",
+        "name": "ExternalKnowledgeIngressTests.test_l4_without_content_digest_degrades_to_l3_not_fake_exactness",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 84,
+        "end_line": 112,
+        "signature_hash": "ed461901ec39df3c",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_missing_l2_material_does_not_hallucinate_requested_depth:3f7d0371a5d6ef50",
+        "name": "ExternalKnowledgeIngressTests.test_missing_l2_material_does_not_hallucinate_requested_depth",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 315,
+        "end_line": 333,
+        "signature_hash": "4ce0463fed837e2f",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_provider_json_preserves_unknown_security_and_currentness:1bba4e3192f68a0c",
+        "name": "ExternalKnowledgeIngressTests.test_provider_json_preserves_unknown_security_and_currentness",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 352,
+        "end_line": 366,
+        "signature_hash": "a52bc966f978be3a",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_receipt_is_deterministic_for_identical_inputs:9b0f593f10cad1a4",
+        "name": "ExternalKnowledgeIngressTests.test_receipt_is_deterministic_for_identical_inputs",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 335,
+        "end_line": 350,
+        "signature_hash": "a1b16f49102bfe81",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_scholar_discovery_cannot_self_mint_primary_source_currentness:8b7478458dc2b25c",
+        "name": "ExternalKnowledgeIngressTests.test_scholar_discovery_cannot_self_mint_primary_source_currentness",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 221,
+        "end_line": 233,
+        "signature_hash": "1bc91d5c5efec98f",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_stale_source_preserves_orientation_but_requires_reverification:7430e069657844e5",
+        "name": "ExternalKnowledgeIngressTests.test_stale_source_preserves_orientation_but_requires_reverification",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 133,
+        "end_line": 150,
+        "signature_hash": "c8ae380546e954cb",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_tool_with_declared_rights_and_security_is_inspection_ready_never_execution_ready:def8a8f1c3d77d44",
+        "name": "ExternalKnowledgeIngressTests.test_tool_with_declared_rights_and_security_is_inspection_ready_never_execution_ready",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 170,
+        "end_line": 202,
+        "signature_hash": "c66c47ac422dbeba",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_tool_with_unknown_rights_or_security_is_metadata_review_required:13c0c0545cfa9013",
+        "name": "ExternalKnowledgeIngressTests.test_tool_with_unknown_rights_or_security_is_metadata_review_required",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 152,
+        "end_line": 168,
+        "signature_hash": "173566c3d5ad86d1",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_toroidal_refresh_phase_is_deterministic_scheduler_hint_not_currentness:4f6808b271a4d22e",
+        "name": "ExternalKnowledgeIngressTests.test_toroidal_refresh_phase_is_deterministic_scheduler_hint_not_currentness",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 298,
+        "end_line": 313,
+        "signature_hash": "7c8fd57f48b2d058",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_unknown_discovery_is_cacheable_but_heavy_hydration_and_execution_are_withheld:e16ed1e46158d5e9",
+        "name": "ExternalKnowledgeIngressTests.test_unknown_discovery_is_cacheable_but_heavy_hydration_and_execution_are_withheld",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 29,
+        "end_line": 46,
+        "signature_hash": "06af6413cf4853a9",
+        "file_digest8": "fa46dadc7dae6407"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_knowledge_ingress.py#method:ExternalKnowledgeIngressTests.test_unknown_security_facts_remain_null_not_sanitized_false:7277aa692339223c",
+        "name": "ExternalKnowledgeIngressTests.test_unknown_security_facts_remain_null_not_sanitized_false",
+        "kind": "method",
+        "file": "tests/test_aura_external_knowledge_ingress.py",
+        "line": 204,
+        "end_line": 219,
+        "signature_hash": "fde3ba6b709417bb",
+        "file_digest8": "fa46dadc7dae6407"
       },
       {
         "semantic_id": "tests/test_aura_external_llm_session.py#class:FakeBridge:40165af0c5492060",
@@ -445634,6 +448004,846 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#class:PersistentCandidateProjection:4607829404f7c13f",
+        "name": "PersistentCandidateProjection",
+        "kind": "class",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 141,
+        "end_line": 222,
+        "signature_hash": "bb5bc7a394eae767",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_canonical:8ff453546ef90ce5",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 38,
+        "end_line": 46,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_http_uri:6edb7c8b4b734121",
+        "name": "_http_uri",
+        "kind": "function",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 65,
+        "end_line": 70,
+        "signature_hash": "bcbcc30363f34f64",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_required:baaa4aff638719d3",
+        "name": "_required",
+        "kind": "function",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 59,
+        "end_line": 62,
+        "signature_hash": "8b28cfce6f68b96b",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_sha256_hex:aae7bc41f3efeee8",
+        "name": "_sha256_hex",
+        "kind": "function",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 53,
+        "end_line": 56,
+        "signature_hash": "45262a88238d30c7",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_sha:31b0fd92e483c462",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_validate_exact_l4:45c56f5f2d991708",
+        "name": "_validate_exact_l4",
+        "kind": "function",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 108,
+        "end_line": 137,
+        "signature_hash": "16298fbd67c34e94",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_validate_k27:32cf4b1adeb0308a",
+        "name": "_validate_k27",
+        "kind": "function",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 88,
+        "end_line": 105,
+        "signature_hash": "8428a2e18e7ccc23",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:_validate_nonpromotion:60ccfa82fd8c57db",
+        "name": "_validate_nonpromotion",
+        "kind": "function",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 73,
+        "end_line": 85,
+        "signature_hash": "38b3114c9c97cf11",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:build_coordinate_store_snapshot:ec17c9624c7674f0",
+        "name": "build_coordinate_store_snapshot",
+        "kind": "function",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 311,
+        "end_line": 333,
+        "signature_hash": "eecc590aa8735858",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#function:project_eki_l4_to_candidate:3199a23de1db4187",
+        "name": "project_eki_l4_to_candidate",
+        "kind": "function",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 225,
+        "end_line": 308,
+        "signature_hash": "0b77ba94e299dcf6",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#method:PersistentCandidateProjection.projection_digest:6e3462839684caac",
+        "name": "PersistentCandidateProjection.projection_digest",
+        "kind": "method",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 220,
+        "end_line": 222,
+        "signature_hash": "adbbf6f578ff20ea",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_eki_persistent_candidate_projection.py#method:PersistentCandidateProjection.validate:04891dd74f5450d1",
+        "name": "PersistentCandidateProjection.validate",
+        "kind": "method",
+        "file": "tools/aura_eki_persistent_candidate_projection.py",
+        "line": 165,
+        "end_line": 217,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "879594a20ccd48f8"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CoordinateMemoryBatchReceiptV1:1cabe5d676cc3c7e",
+        "name": "CoordinateMemoryBatchReceiptV1",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 100,
+        "end_line": 109,
+        "signature_hash": "b9949bb1c81da746",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CoordinateMemoryReadCandidateV1:0dc876aa62fbcf1b",
+        "name": "CoordinateMemoryReadCandidateV1",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 63,
+        "end_line": 76,
+        "signature_hash": "0b047bad6356bf7b",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CoordinateMemoryReadReceiptV1:47dc09b12dc4dd11",
+        "name": "CoordinateMemoryReadReceiptV1",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 80,
+        "end_line": 96,
+        "signature_hash": "259509dce664ba5c",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CurrentnessStatus:f8ad77246260b531",
+        "name": "CurrentnessStatus",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "d23a19aea559196f",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ExternalCognitionReadRequestV1:3e5f48bad39afee6",
+        "name": "ExternalCognitionReadRequestV1",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 38,
+        "end_line": 51,
+        "signature_hash": "d1157224428339b5",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ExternalCognitionResolveAdapterV1:51ed90d84bb7ee45",
+        "name": "ExternalCognitionResolveAdapterV1",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 133,
+        "end_line": 373,
+        "signature_hash": "e17544af5d648e88",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ReadValidationContextV1:b954eed13a1dd49c",
+        "name": "ReadValidationContextV1",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 55,
+        "end_line": 59,
+        "signature_hash": "a0bf16e215043b40",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ResolveDisposition:1a0b316f0f08f0b7",
+        "name": "ResolveDisposition",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 15,
+        "end_line": 27,
+        "signature_hash": "43b918428f127609",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#function:_canonical_json:19cceac6d3f7f4b8",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 112,
+        "end_line": 119,
+        "signature_hash": "caa6df7371712507",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#function:_normalize_expected_sha256:5cbd648c0f74c6c8",
+        "name": "_normalize_expected_sha256",
+        "kind": "function",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 126,
+        "end_line": 130,
+        "signature_hash": "952d6900577bbbe9",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#function:_sha256_hex:c02a5b72b071adab",
+        "name": "_sha256_hex",
+        "kind": "function",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 122,
+        "end_line": 123,
+        "signature_hash": "635cdca712c9c619",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1.__init__:b7d35a5624b621d9",
+        "name": "ExternalCognitionResolveAdapterV1.__init__",
+        "kind": "method",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 141,
+        "end_line": 183,
+        "signature_hash": "1cf4294fec8f1026",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1._receipt:ef431eddef5e32dd",
+        "name": "ExternalCognitionResolveAdapterV1._receipt",
+        "kind": "method",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 188,
+        "end_line": 227,
+        "signature_hash": "4d04dd52e9be7fb3",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1._request_digest:ae75878236358056",
+        "name": "ExternalCognitionResolveAdapterV1._request_digest",
+        "kind": "method",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 185,
+        "end_line": 186,
+        "signature_hash": "7536a24ae166d7ac",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1.resolve:f2ff68d8edb4c839",
+        "name": "ExternalCognitionResolveAdapterV1.resolve",
+        "kind": "method",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 229,
+        "end_line": 357,
+        "signature_hash": "4358c733dc1eaf5d",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1.resolve_many:8e232a4500d1f93a",
+        "name": "ExternalCognitionResolveAdapterV1.resolve_many",
+        "kind": "method",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 359,
+        "end_line": 373,
+        "signature_hash": "8c0a21ffb486f184",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:ArtifactClass:f82bc6c83041bc7a",
+        "name": "ArtifactClass",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 48,
+        "end_line": 54,
+        "signature_hash": "ee715bb5a46a8e05",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:Availability:01c6b2fccd60952b",
+        "name": "Availability",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 87,
+        "end_line": 92,
+        "signature_hash": "8ed2be8497caadfa",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:Currentness:85f0afad2b7a2d0a",
+        "name": "Currentness",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 57,
+        "end_line": 60,
+        "signature_hash": "7415138dda46e741",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:ExternalDiscoveryObservation:5d3a027ca44decc7",
+        "name": "ExternalDiscoveryObservation",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 241,
+        "end_line": 291,
+        "signature_hash": "79f3b9350500844a",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:ExternalKnowledgeCard:874ac9464d85cda9",
+        "name": "ExternalKnowledgeCard",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 379,
+        "end_line": 415,
+        "signature_hash": "a916fd6cb15d8953",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:HydrationLevel:3b5a8f7c5eab568d",
+        "name": "HydrationLevel",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 95,
+        "end_line": 100,
+        "signature_hash": "2018483ec6e62e51",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:HydrationMaterial:db983d2b3bc0ce8c",
+        "name": "HydrationMaterial",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 217,
+        "end_line": 237,
+        "signature_hash": "9962ee5e1f9d154d",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:K27Locality:4ad83b246fe07457",
+        "name": "K27Locality",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 335,
+        "end_line": 356,
+        "signature_hash": "b908ae35a5c1970d",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:OperationalProjection13D:5ee1d9c3b7b16ce9",
+        "name": "OperationalProjection13D",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 312,
+        "end_line": 331,
+        "signature_hash": "915f279efc539ee1",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:RelevanceBand:46c36c5cf22a79de",
+        "name": "RelevanceBand",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 81,
+        "end_line": 84,
+        "signature_hash": "1efef0b2bf9e915f",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:RightsMetadata:a8033b761c63c593",
+        "name": "RightsMetadata",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 174,
+        "end_line": 187,
+        "signature_hash": "aeab05d5d25ae94b",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:RightsState:34bb5b43a58e4430",
+        "name": "RightsState",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 63,
+        "end_line": 66,
+        "signature_hash": "08dd3f816119bb0b",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:SecurityMetadata:d403d61db18e8a9c",
+        "name": "SecurityMetadata",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 191,
+        "end_line": 213,
+        "signature_hash": "f1f22f7c104b4eaf",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:SecurityState:4f278d81c01b40a5",
+        "name": "SecurityState",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 69,
+        "end_line": 72,
+        "signature_hash": "28e309203c7a9a4e",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:SourceGeneration:c48dab29c27098ed",
+        "name": "SourceGeneration",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 145,
+        "end_line": 170,
+        "signature_hash": "f9f9348202b6674a",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:SourceKind:89d41764af7288a5",
+        "name": "SourceKind",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 37,
+        "end_line": 45,
+        "signature_hash": "0f5da0a9075ecedd",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:ToroidalRefreshPhase:bd0b6201ffda6dd1",
+        "name": "ToroidalRefreshPhase",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 360,
+        "end_line": 375,
+        "signature_hash": "629bf963f1c88948",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#class:Volatility:5424c1369cceed93",
+        "name": "Volatility",
+        "kind": "class",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 75,
+        "end_line": 78,
+        "signature_hash": "da827c8a83a102f3",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_artifact_consequence_trit:9051334417475001",
+        "name": "_artifact_consequence_trit",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 418,
+        "end_line": 423,
+        "signature_hash": "8b7e85203f7b4afd",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_availability:84e6c6a6cddba389",
+        "name": "_availability",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 542,
+        "end_line": 558,
+        "signature_hash": "3fe35b8330041f53",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_bool_trit:ac9dcbc90c61838e",
+        "name": "_bool_trit",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 137,
+        "end_line": 141,
+        "signature_hash": "dc46e275d04ab6bd",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_canonical:af142ecd08e466a2",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 103,
+        "end_line": 110,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_freshness_trit:4cf1cf1e67c5dc4a",
+        "name": "_freshness_trit",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 446,
+        "end_line": 447,
+        "signature_hash": "f3bbc2d5897f70ce",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_http_uri:bdfe578883b7bc84",
+        "name": "_http_uri",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 129,
+        "end_line": 134,
+        "signature_hash": "bcbcc30363f34f64",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_max_level:455d28ed5e7a0ae7",
+        "name": "_max_level",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 561,
+        "end_line": 570,
+        "signature_hash": "f73402dffbc73f51",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_relevance_trit:f4b38bf95ad7cc5f",
+        "name": "_relevance_trit",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 430,
+        "end_line": 431,
+        "signature_hash": "626afb140987be0b",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_required:9420577552ae8be6",
+        "name": "_required",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 123,
+        "end_line": 126,
+        "signature_hash": "9737d32c1db83273",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_rights_trit:13b987f0574a1f89",
+        "name": "_rights_trit",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 434,
+        "end_line": 435,
+        "signature_hash": "3cd736ed44981753",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_security_trit:7c6c08da2edb5e68",
+        "name": "_security_trit",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 438,
+        "end_line": 443,
+        "signature_hash": "21132446d040c862",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_sha256_hex:0ee7628fd71ed423",
+        "name": "_sha256_hex",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 117,
+        "end_line": 120,
+        "signature_hash": "45262a88238d30c7",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_sha:b4005b85f666993e",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 113,
+        "end_line": 114,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_to_base3_digits:91b1615d42c95948",
+        "name": "_to_base3_digits",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 450,
+        "end_line": 455,
+        "signature_hash": "2d31be2d1a03b089",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_tool_like:f635718148cd4c00",
+        "name": "_tool_like",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 536,
+        "end_line": 539,
+        "signature_hash": "4368703a94e2407e",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_volatility_trit:f06be9b838adbefb",
+        "name": "_volatility_trit",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 426,
+        "end_line": 427,
+        "signature_hash": "114fe633b7dcbbe8",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:admit_external_knowledge:5cedf15812ea45e6",
+        "name": "admit_external_knowledge",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 573,
+        "end_line": 680,
+        "signature_hash": "36e24320c652e61f",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:build_k27_locality:50a9b85aabf5f604",
+        "name": "build_k27_locality",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 490,
+        "end_line": 515,
+        "signature_hash": "5d937cf8c384fd91",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:build_projection_13d:3d52bb63e66169c4",
+        "name": "build_projection_13d",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 458,
+        "end_line": 487,
+        "signature_hash": "5135fdf3a230ab1b",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:build_refresh_phase:2e73f32c0ab98f94",
+        "name": "build_refresh_phase",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 518,
+        "end_line": 533,
+        "signature_hash": "8eeb7ba8fbb62ea6",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:main:2c893e74f86bec39",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 735,
+        "end_line": 752,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#function:observation_from_provider_metadata:b6bb7592518aee25",
+        "name": "observation_from_provider_metadata",
+        "kind": "function",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 683,
+        "end_line": 732,
+        "signature_hash": "cd4e11b2062a86ff",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:ExternalDiscoveryObservation.semantic_id:be2f7685a4aaac95",
+        "name": "ExternalDiscoveryObservation.semantic_id",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 283,
+        "end_line": 291,
+        "signature_hash": "1cbb4c86c2e5e2a7",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:ExternalDiscoveryObservation.validate:ac37d99ddb59942f",
+        "name": "ExternalDiscoveryObservation.validate",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 258,
+        "end_line": 280,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:ExternalKnowledgeCard.receipt_digest:5803cbcd46c5603a",
+        "name": "ExternalKnowledgeCard.receipt_digest",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 409,
+        "end_line": 410,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:ExternalKnowledgeCard.to_dict:ee453bbf34ff9f50",
+        "name": "ExternalKnowledgeCard.to_dict",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 412,
+        "end_line": 415,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:HydrationMaterial.material_digest:be91e3457fff13da",
+        "name": "HydrationMaterial.material_digest",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 232,
+        "end_line": 237,
+        "signature_hash": "24c2c26edc69050f",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:HydrationMaterial.validate:42f4f4f4c513bb0d",
+        "name": "HydrationMaterial.validate",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 223,
+        "end_line": 229,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:K27Locality.key:f53f28c16d3216cb",
+        "name": "K27Locality.key",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 354,
+        "end_line": 356,
+        "signature_hash": "4174f89734aa61d2",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:K27Locality.validate:87d4352bcaedc404",
+        "name": "K27Locality.validate",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 343,
+        "end_line": 351,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:OperationalProjection13D.projection_digest:aed5b7c46817099f",
+        "name": "OperationalProjection13D.projection_digest",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 329,
+        "end_line": 331,
+        "signature_hash": "adbbf6f578ff20ea",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:OperationalProjection13D.validate:b1c69e3324c276d2",
+        "name": "OperationalProjection13D.validate",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 318,
+        "end_line": 326,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:RightsMetadata.validate:3cb826ea09ef9947",
+        "name": "RightsMetadata.validate",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 179,
+        "end_line": 187,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:SecurityMetadata.validate:dfbb6817d8a643bd",
+        "name": "SecurityMetadata.validate",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 199,
+        "end_line": 213,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:SourceGeneration.generation_id:0f51ccdd803034ff",
+        "name": "SourceGeneration.generation_id",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 168,
+        "end_line": 170,
+        "signature_hash": "235a483c049b96a9",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:SourceGeneration.validate:8e00f5cd6b4efb74",
+        "name": "SourceGeneration.validate",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 154,
+        "end_line": 165,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
+        "semantic_id": "tools/aura_external_knowledge_ingress.py#method:ToroidalRefreshPhase.validate:e754e25afbdc6382",
+        "name": "ToroidalRefreshPhase.validate",
+        "kind": "method",
+        "file": "tools/aura_external_knowledge_ingress.py",
+        "line": 367,
+        "end_line": 375,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "01e987ed186da875"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +450094,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "7ad58dc3fd3a2e6b31d4ba3d592dbd96",
+    "payload_hash": "4bc726f640c042610a2e15bbad29d8a6"
   }
 }
