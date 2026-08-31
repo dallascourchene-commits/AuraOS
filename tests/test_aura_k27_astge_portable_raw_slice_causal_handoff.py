@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 from pathlib import Path
 import unittest
 
 from scripts.aura_k27_astge_portable_raw_slice_causal_handoff import (
     admit_raw_slice_causal_handoff,
+    canonical_raw_slice_payload_bytes,
     verify_portable_raw_slice_projection,
     verify_raw_slice_against_causal_post_source,
 )
@@ -16,6 +18,13 @@ FIXTURE = Path("tests/fixtures/o30_portable_raw_slice_projection.json")
 
 def projection() -> dict:
     return json.loads(FIXTURE.read_text())
+
+
+def reseal(item: dict) -> dict:
+    item["payload_sha256"] = hashlib.sha256(
+        canonical_raw_slice_payload_bytes(item["payload"])
+    ).hexdigest()
+    return item
 
 
 def witness(**overrides) -> dict:
@@ -78,6 +87,16 @@ class PortableRawSliceCausalHandoffTests(unittest.TestCase):
         item["payload"]["source_generation"] = True
         self.assertIn(
             "INVALID_INTEGER:source_generation",
+            verify_portable_raw_slice_projection(item),
+        )
+
+    def test_resealed_span_beyond_full_source_is_rejected(self) -> None:
+        item = projection()
+        item["payload"]["target_byte_end"] = 19
+        item["payload"]["target_slice_byte_len"] = 15
+        reseal(item)
+        self.assertIn(
+            "TARGET_SPAN_OUT_OF_SOURCE_BOUNDS",
             verify_portable_raw_slice_projection(item),
         )
 
