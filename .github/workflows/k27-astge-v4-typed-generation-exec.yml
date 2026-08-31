@@ -1,0 +1,95 @@
+name: K27 ASTGE V4 typed generation execution
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - "crates/aura-k27-astge-generation-domain/**"
+      - "crates/aura-k27-astge-v4-mmap-exec/**"
+      - "crates/aura-k27-astge-v4-typed-exec/**"
+      - ".github/workflows/k27-astge-v4-typed-generation-exec.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: k27-astge-v4-typed-generation-exec-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  v4-typed-generation-exec:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact candidate head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Reprove V4 selector and execution owner
+        run: |
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+          cargo fmt --check --manifest-path crates/aura-k27-astge-v4-mmap-exec/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-v4-mmap-exec/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-v4-mmap-exec/Cargo.toml --all-targets -- -D warnings
+
+      - name: Reprove typed generation owner
+        run: |
+          cargo fmt --check --manifest-path crates/aura-k27-astge-generation-domain/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-generation-domain/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-generation-domain/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-generation-domain/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify typed V4 composition membrane
+        run: |
+          cargo fmt --check --manifest-path crates/aura-k27-astge-v4-typed-exec/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-v4-typed-exec/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-v4-typed-exec/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-v4-typed-exec/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify typed public boundary
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('crates/aura-k27-astge-v4-typed-exec/src/lib.rs').read_text()
+          sig = text.split('pub fn open_typed_canonical_data_serving_reader_v1(', 1)[1].split(') -> Result<', 1)[0]
+          assert 'MmapGenerationAxesV1' in sig, sig
+          assert 'snapshot_generation: u64' not in sig, sig
+          assert 'placement_generation: u64' not in sig, sig
+          assert 'require_placement_generation(axes.placement, binding.placement_generation)?' in text
+          assert 'expected_snapshot.value()' in text
+          assert 'open_canonical_data_serving_reader_v2(' in text
+          print('TYPED_MMAP_AXES_REQUIRED=true')
+          print('RAW_SNAPSHOT_PARAMETER_AT_TYPED_BOUNDARY=false')
+          print('RAW_PLACEMENT_PARAMETER_AT_TYPED_BOUNDARY=false')
+          print('CROSS_AXIS_SWAP_COMPILES=false')
+          PY
+
+      - name: Emit claim ceiling
+        run: |
+          echo "PR493_V4_EXECUTION_OWNER_REUSED=true"
+          echo "PR490_TYPED_GENERATION_OWNER_REUSED=true"
+          echo "SNAPSHOT_PLACEMENT_TYPES_DISTINCT_AT_COMPOSITION_BOUNDARY=true"
+          echo "EQUAL_NUMERIC_VALUES_IMPLY_SAME_DOMAIN=false"
+          echo "PLACEMENT_MISMATCH_FAILS_BEFORE_OWNER_FILESYSTEM_EXECUTION=true"
+          echo "PRODUCTION_IMMUTABILITY_CAPABILITIES_V2=0"
+          echo "PRODUCTION_BACKEND=READ_SEEK_SAFE_DEFAULT"
+          echo "POSITIVE_PRODUCTION_MMAP_EXECUTION_EXERCISED=false"
+          echo "SIGBUS_IMPOSSIBLE_PROVEN=false"
+          echo "PHYSICAL_CRASH_DURABILITY_PROVEN=false"
+          echo "PERFORMANCE_SUPERIORITY_PROVEN=false"
+          echo "SEMANTIC_AUTHORITY=false"
+          echo "HUMAN_AUTHORITY=false"
+          echo "EXTERNAL_EFFECT=false"
