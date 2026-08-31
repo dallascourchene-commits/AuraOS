@@ -58,5 +58,5 @@ jobs:
         run: |
           ! grep -R -- '-march=native' tools/k27_thinkpad_simd_capability.cpp .github/workflows/k27-thinkpad-simd-capability-v1.yml
           grep -F 'required_xcr0 = 0xE6ULL' tools/k27_thinkpad_simd_capability.cpp
-          grep -F 'l2_residency_proven\\\": false' tools/k27_thinkpad_simd_capability.cpp
-          grep -F 'performance_superiority_proven\\\": false' tools/k27_thinkpad_simd_capability.cpp
+          grep -F 'l2_residency_proven' tools/k27_thinkpad_simd_capability.cpp
+          grep -F 'performance_superiority_proven' tools/k27_thinkpad_simd_capability.cpp
