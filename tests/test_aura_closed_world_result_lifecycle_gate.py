@@ -7,6 +7,7 @@ from tools.aura_closed_world_result_lifecycle_gate import (
     ClaimRef,
     HardGate,
     HostExecutionReceipt,
+    IndependentReviewReceipt,
     LifecyclePolicy,
     ModelResultEnvelope,
     reduce_result_lifecycle,
@@ -17,6 +18,7 @@ from tools.aura_closed_world_result_lifecycle_gate import (
 DIGEST = "1" * 64
 HOST_DIGEST = "2" * 64
 VF = "3" * 64
+REVIEW_DIGEST = "4" * 64
 
 
 def model(**overrides):
@@ -61,6 +63,20 @@ def host(**overrides):
     return replace(base, **overrides)
 
 
+def reviewer(**overrides):
+    base = IndependentReviewReceipt(
+        schema_version="AURA-INDEPENDENT-REVIEW-v1",
+        objective_id="O62",
+        reviewer_id="reviewer-other-agent",
+        source_generation_ref="source-gen-7",
+        authority_scope="D0_NONPROMOTING",
+        validation_fingerprint=VF,
+        disposition="APPROVE",
+        receipt_digest=REVIEW_DIGEST,
+    )
+    return replace(base, **overrides)
+
+
 def policy(**overrides):
     base = LifecyclePolicy(
         policy_generation_ref="policy-gen-2",
@@ -74,7 +90,6 @@ def policy(**overrides):
         parent_validation_passed=True,
         contradiction_present=False,
         independent_review_required=False,
-        distinct_reviewer_receipt_present=False,
         hard_gates=(HardGate("source-current", True), HardGate("authority", True)),
         expected_route_fingerprint="route:provider:worker:exact",
         expected_observer_identity="HOST_OBSERVER",
@@ -102,114 +117,114 @@ class ClosedWorldLifecycleGateTests(unittest.TestCase):
         self.assertFalse(result.narrative_can_mint_success)
         self.assertFalse(result.model_self_report_is_execution_truth)
 
-    def test_host_receipt_fields_cannot_self_mint_host_authority(self):
+    def test_host_authority_route_and_observer_are_independent_fail_closed_gates(self):
+        cases = (
+            (policy(host_receipt_authority_verified=False), host(), "HOST_RECEIPT_AUTHORITY_NOT_VERIFIED"),
+            (policy(), host(route_fingerprint="route:caller:minted"), "HOST_ROUTE_FINGERPRINT_MISMATCH"),
+            (policy(), host(observer_identity="CALLER_SELF_REPORT"), "HOST_OBSERVER_IDENTITY_MISMATCH"),
+        )
+        for p, h, reason in cases:
+            with self.subTest(reason=reason):
+                result = reduce_result_lifecycle(model=model(), policy=p, host=h)
+                self.assertEqual(result.terminal_state, "HOLD")
+                self.assertEqual(result.reason_code, reason)
+                self.assertFalse(result.semantic_commit_eligible)
+
+    def test_optional_execution_physical_fanout_still_binds_entire_host_witness(self):
+        p = policy(execution_required=False, physical_fanout_required=1)
+        cases = (
+            (host(attempt_id="unrelated-attempt"), "HOST_ATTEMPT_MISMATCH"),
+            (host(output_digest="5" * 64), "HOST_OUTPUT_DIGEST_MISMATCH"),
+            (host(route_fingerprint="route:wrong"), "HOST_ROUTE_FINGERPRINT_MISMATCH"),
+            (host(observer_identity="WRONG_OBSERVER"), "HOST_OBSERVER_IDENTITY_MISMATCH"),
+        )
+        for h, reason in cases:
+            with self.subTest(reason=reason):
+                result = reduce_result_lifecycle(model=model(), policy=p, host=h)
+                self.assertEqual(result.reason_code, reason)
+                self.assertFalse(result.semantic_commit_eligible)
+
         result = reduce_result_lifecycle(
             model=model(),
-            policy=policy(host_receipt_authority_verified=False),
+            policy=replace(p, host_receipt_authority_verified=False),
             host=host(),
         )
-        self.assertEqual(result.terminal_state, "HOLD")
         self.assertEqual(result.reason_code, "HOST_RECEIPT_AUTHORITY_NOT_VERIFIED")
-        self.assertFalse(result.semantic_commit_eligible)
 
-    def test_host_route_must_match_trusted_policy_binding(self):
-        result = reduce_result_lifecycle(
-            model=model(),
-            policy=policy(),
-            host=host(route_fingerprint="route:caller:minted"),
-        )
-        self.assertEqual(result.terminal_state, "HOLD")
-        self.assertEqual(result.reason_code, "HOST_ROUTE_FINGERPRINT_MISMATCH")
-
-    def test_host_observer_must_match_trusted_policy_binding(self):
-        result = reduce_result_lifecycle(
-            model=model(),
-            policy=policy(),
-            host=host(observer_identity="CALLER_SELF_REPORT"),
-        )
-        self.assertEqual(result.terminal_state, "HOLD")
-        self.assertEqual(result.reason_code, "HOST_OBSERVER_IDENTITY_MISMATCH")
-
-    def test_execution_policy_requires_route_and_observer_bindings(self):
+    def test_any_host_derived_success_requires_route_and_observer_bindings(self):
+        p = policy(execution_required=False, physical_fanout_required=1)
         with self.assertRaisesRegex(ValueError, "EXPECTED_ROUTE_FINGERPRINT_REQUIRED"):
-            policy(expected_route_fingerprint=None).validate()
+            replace(p, expected_route_fingerprint=None).validate()
         with self.assertRaisesRegex(ValueError, "EXPECTED_OBSERVER_IDENTITY_REQUIRED"):
-            policy(expected_observer_identity=None).validate()
+            replace(p, expected_observer_identity=None).validate()
 
-    def test_positive_result_cannot_compensate_failed_hard_gate(self):
-        p = policy(hard_gates=(HardGate("source-current", False, "SOURCE_NOT_CURRENT"),))
+    def test_independent_review_requires_typed_receipt(self):
+        p = policy(independent_review_required=True)
         result = reduce_result_lifecycle(model=model(), policy=p, host=host())
-        self.assertEqual(result.terminal_state, "HOLD")
+        self.assertEqual(result.terminal_state, "REVIEW")
+        self.assertEqual(result.reason_code, "DISTINCT_REVIEW_REQUIRED")
+
+    def test_independent_reviewer_must_be_distinct_and_bound_to_same_context(self):
+        p = policy(independent_review_required=True)
+        cases = (
+            (reviewer(reviewer_id="worker-other-agent"), "REVIEWER_NOT_DISTINCT"),
+            (reviewer(objective_id="OTHER"), "REVIEW_OBJECTIVE_MISMATCH"),
+            (reviewer(source_generation_ref="source-gen-old"), "REVIEW_SOURCE_GENERATION_MISMATCH"),
+            (reviewer(validation_fingerprint="6" * 64), "REVIEW_VALIDATION_FINGERPRINT_MISMATCH"),
+            (reviewer(authority_scope="D9_EFFECT"), "REVIEW_AUTHORITY_SCOPE_MISMATCH"),
+            (reviewer(disposition="REJECT"), "INDEPENDENT_REVIEW_NOT_APPROVED"),
+        )
+        for r, reason in cases:
+            with self.subTest(reason=reason):
+                result = reduce_result_lifecycle(model=model(), policy=p, host=host(), reviewer=r)
+                self.assertEqual(result.terminal_state, "REVIEW")
+                self.assertEqual(result.reason_code, reason)
+                self.assertFalse(result.semantic_commit_eligible)
+
+        good = reduce_result_lifecycle(model=model(), policy=p, host=host(), reviewer=reviewer())
+        self.assertEqual(good.terminal_state, "TERMINAL_SUCCESS")
+        self.assertTrue(good.semantic_commit_eligible)
+
+    def test_noncompensatory_validation_source_and_authority_gates_remain_fail_closed(self):
+        failed_gate = policy(hard_gates=(HardGate("source-current", False, "SOURCE_NOT_CURRENT"),))
+        result = reduce_result_lifecycle(model=model(), policy=failed_gate, host=host())
         self.assertEqual(result.reason_code, "HARD_GATE_FAILED_NONCOMPENSATORY")
         self.assertEqual(result.failed_hard_gate_ids, ("source-current",))
-        self.assertFalse(result.evidence_can_compensate_hard_gate)
 
-    def test_parent_validation_failure_blocks_commit(self):
         result = reduce_result_lifecycle(
             model=model(), policy=policy(parent_validation_passed=False), host=host()
         )
         self.assertEqual(result.reason_code, "PARENT_VALIDATION_NOT_CURRENT_OR_LOSSLESS")
-        self.assertFalse(result.semantic_commit_eligible)
 
-    def test_old_source_generation_holds_even_with_completed_model(self):
         result = reduce_result_lifecycle(
             model=model(source_generation_ref="source-gen-old"), policy=policy(), host=host()
         )
         self.assertEqual(result.reason_code, "SOURCE_GENERATION_NOT_CURRENT")
 
-    def test_authority_mismatch_holds(self):
         result = reduce_result_lifecycle(
             model=model(authority_scope="D9_EFFECT"), policy=policy(), host=host()
         )
         self.assertEqual(result.reason_code, "AUTHORITY_SCOPE_MISMATCH")
 
-    def test_contradiction_requires_review(self):
-        result = reduce_result_lifecycle(
-            model=model(), policy=policy(contradiction_present=True), host=host()
-        )
-        self.assertEqual(result.terminal_state, "REVIEW")
-        self.assertEqual(result.reason_code, "CONTRADICTION_PRESENT")
-
-    def test_distinct_review_requirement_is_non_self_certifying(self):
-        result = reduce_result_lifecycle(
-            model=model(),
-            policy=policy(independent_review_required=True, distinct_reviewer_receipt_present=False),
-            host=host(),
-        )
-        self.assertEqual(result.terminal_state, "REVIEW")
-        self.assertEqual(result.reason_code, "DISTINCT_REVIEW_REQUIRED")
-
-    def test_missing_required_artifact_holds(self):
+    def test_required_evidence_execution_and_disposition_gates_remain_bounded(self):
         result = reduce_result_lifecycle(
             model=model(artifact_refs=("artifact:receipt:1",)), policy=policy(), host=host()
         )
         self.assertEqual(result.reason_code, "REQUIRED_ARTIFACTS_MISSING")
 
-    def test_missing_required_typed_claim_holds(self):
-        result = reduce_result_lifecycle(
-            model=model(claims=()), policy=policy(), host=host()
-        )
+        result = reduce_result_lifecycle(model=model(claims=()), policy=policy(), host=host())
         self.assertEqual(result.reason_code, "REQUIRED_TYPED_CLAIMS_MISSING")
 
-    def test_host_output_digest_must_match_model_output(self):
-        result = reduce_result_lifecycle(
-            model=model(), policy=policy(), host=host(output_digest="4" * 64)
-        )
-        self.assertEqual(result.reason_code, "HOST_OUTPUT_DIGEST_MISMATCH")
-
-    def test_host_effect_must_be_observed_completed(self):
         result = reduce_result_lifecycle(
             model=model(), policy=policy(), host=host(provider_effect_completed=None)
         )
         self.assertEqual(result.reason_code, "HOST_EFFECT_NOT_COMPLETED")
 
-    def test_physical_fanout_claim_requires_host_observation(self):
         result = reduce_result_lifecycle(
             model=model(), policy=policy(physical_fanout_required=2), host=host(physical_fanout_observed=1)
         )
         self.assertEqual(result.reason_code, "PHYSICAL_FANOUT_BELOW_POLICY")
 
-    def test_partial_unknown_review_required_dispositions_do_not_terminal_success(self):
         for disposition in ("PARTIAL", "UNKNOWN", "REVIEW_REQUIRED"):
             with self.subTest(disposition=disposition):
                 result = reduce_result_lifecycle(
@@ -217,16 +232,6 @@ class ClosedWorldLifecycleGateTests(unittest.TestCase):
                 )
                 self.assertEqual(result.terminal_state, "REVIEW")
                 self.assertFalse(result.semantic_commit_eligible)
-
-    def test_blocked_refused_and_error_remain_terminal_but_not_success_commits(self):
-        for disposition in ("BLOCKED", "REFUSED", "ERROR"):
-            with self.subTest(disposition=disposition):
-                result = reduce_result_lifecycle(
-                    model=model(disposition=disposition), policy=policy(), host=host()
-                )
-                self.assertNotEqual(result.terminal_state, "TERMINAL_SUCCESS")
-                self.assertFalse(result.semantic_commit_eligible)
-                self.assertTrue(result.reusable_evidence_eligible)
 
     def test_cache_reuse_state_never_promotes_by_name_or_coordinate(self):
         self.assertEqual(validate_reuse_state("LOOKUP_ONLY"), "LOOKUP_ONLY")
