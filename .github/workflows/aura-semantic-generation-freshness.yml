@@ -1,0 +1,137 @@
+name: Aura Semantic Generation Freshness
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  semantic-generation-freshness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact A5 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 8
+
+      - name: Prove post-cut CODEMAP falsifier is derived-only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from datetime import datetime, timezone
+          import subprocess
+
+          codemap='c9739c9a7d8c3c4329f10df93d4cc4afe8c4dee7'
+          semantic='202a742de6919b51fac8ec4fb33312290337f907'
+          cut=datetime.fromisoformat('2026-08-31T09:01:32+00:00')
+
+          parents=subprocess.check_output(
+              ['git','rev-list','--parents','-n','1',codemap], text=True
+          ).strip().split()
+          assert parents == [codemap, semantic], parents
+
+          def commit_time(sha: str) -> datetime:
+              raw=subprocess.check_output(['git','show','-s','--format=%cI',sha], text=True).strip()
+              parsed=datetime.fromisoformat(raw.replace('Z','+00:00'))
+              return parsed.astimezone(timezone.utc)
+
+          codemap_time=commit_time(codemap)
+          semantic_time=commit_time(semantic)
+          assert codemap_time > cut, (codemap_time, cut)
+          assert semantic_time <= cut, (semantic_time, cut)
+
+          path='tools/aura_semantic_sibling_admission.py'
+          blob_new=subprocess.check_output(['git','rev-parse',f'{codemap}:{path}'], text=True).strip()
+          blob_old=subprocess.check_output(['git','rev-parse',f'{semantic}:{path}'], text=True).strip()
+          assert blob_new == blob_old == '29c7517645b9af6410ad92ed151d908744902101', (blob_new, blob_old)
+
+          changed=subprocess.check_output(
+              ['git','diff-tree','--no-commit-id','--name-only','-r',codemap], text=True
+          ).splitlines()
+          assert changed, changed
+          assert all(p.startswith('.aura/CODEMAP.') for p in changed), changed
+          assert '.aura/CODEMAP.json' in changed, changed
+          assert '.aura/CODEMAP.md' in changed, changed
+          print('CODEMAP_TIME_UTC='+codemap_time.isoformat())
+          print('SEMANTIC_TIME_UTC='+semantic_time.isoformat())
+          print('DERIVED_HEAD_ADVANCE_WITHOUT_A3_SOURCE_CHANGE=true')
+          PY
+
+      - name: Revalidate exact A3 hosted semantic generation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          run_id=33374140559
+          head='202a742de6919b51fac8ec4fb33312290337f907'
+          req=urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}",
+              headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}", 'Accept':'application/vnd.github+json', 'X-GitHub-Api-Version':'2022-11-28'},
+          )
+          with urllib.request.urlopen(req, timeout=30) as response:
+              run=json.load(response)
+          assert run['status']=='completed'
+          assert run['conclusion']=='success'
+          assert run['head_sha']==head
+          print('A3_EXACT_SEMANTIC_GENERATION_REVALIDATED=true')
+          PY
+
+      - name: Compile and run generation-freshness adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_dual_key_evidence_generation.py \
+            tools/aura_semantic_sibling_admission.py \
+            tools/aura_semantic_generation_freshness.py \
+            tests/test_aura_semantic_generation_freshness.py
+          python3 -m unittest -v \
+            tests.test_aura_semantic_sibling_admission \
+            tests.test_aura_semantic_generation_freshness
+
+      - name: Emit cross-plane false-freshness receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m tools.aura_semantic_generation_freshness | tee /tmp/a5.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/a5.json', encoding='utf-8'))
+          assert r['schema']=='AURA_SEMANTIC_GENERATION_FRESHNESS_V1'
+          assert r['cut']=='2026-08-31T09:01:32Z'
+          assert r['successor_admissible'] is False
+          assert len(r['classifications'])==2
+          assert {x['disposition'] for x in r['classifications']}=={'PRE_CUT_SEMANTIC_GENERATION'}
+          by_kind={x['derivation_kind']:x for x in r['classifications']}
+          assert by_kind['DERIVED_CODEMAP_HEAD']['artifact_observed_at']=='2026-08-31T09:05:07Z'
+          assert by_kind['DERIVED_CODEMAP_HEAD']['semantic_generated_at']=='2026-08-31T08:42:01Z'
+          assert by_kind['K27_L0_REPLICA']['artifact_observed_at']=='2026-08-31T11:22:56.132Z'
+          assert by_kind['K27_L0_REPLICA']['semantic_generated_at']=='2026-08-20T05:58:52.140Z'
+          for key in (
+              'artifact_time_counts_as_semantic_generation','head_advance_counts_as_semantic_generation',
+              'replica_creation_counts_as_semantic_generation','coordinate_growth_counts_as_semantic_generation',
+              'semantic_truth_minted','effect_authority_granted','native_private_transformer_kv_accessed',
+              'gate10_promoted','merge_or_deployment_authorized'):
+              assert r[key] is False, key
+          print('A5_FALSE_FRESHNESS_FAIL_CLOSED=true')
+          PY
+
+      - name: Drive parent evidence boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'DRIVE_PARENT_CONNECTOR_OBSERVED=true'
+          echo 'DRIVE_PARENT_GITHUB_REFETCHED=false'
+          echo 'DRIVE_REPLICA_ID=1LCli2EFCD1gFMwUwugjSn2K0GBWxHwgc'
+          echo 'DRIVE_SOURCE_ID=1BraKYQ8m7_pGFhX_9s-uNc2pToHUfiq_'
+          echo 'Replica observation cannot be promoted beyond the connector-observed metadata fixture.'
