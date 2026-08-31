@@ -1,0 +1,110 @@
+name: Aura Progress Bound Generation Reuse Preflight
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_progress_bound_generation_reuse_preflight.py'
+      - 'tests/test_aura_progress_bound_generation_reuse_preflight.py'
+      - '.github/workflows/aura-progress-bound-generation-reuse-preflight.yml'
+      - 'docs/arena/PROGRESS_BOUND_GENERATION_REUSE_PREFLIGHT_V1.md'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-preflight-proof:
+    runs-on: ubuntu-latest
+    env:
+      NAV14_HEAD: 6cdd1be40428250bffba20e924f664c7be585469
+      NAV14_RUN: '33437542974'
+      NAV14_JOB: '99637538062'
+      NAV14_BLOB: b1bdfb4c65281c314e658a6fb6fc8727a4b54245
+      REUSE_HEAD: d1a0f94255527835a59a70a0af7dc417ba1d023d
+      REUSE_RUN: '33437612722'
+      REUSE_JOB: '99637780915'
+      REUSE_BLOB: d171d0938e469a4383490d1a691750c2068f21e7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Verify exact workflow head
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Authenticate exact parent source blobs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          checks = [
+              (os.environ['NAV14_HEAD'], 'tools/aura_nav14_progress_bound_hydrated_version_handoff.py', os.environ['NAV14_BLOB']),
+              (os.environ['REUSE_HEAD'], 'tools/aura_generation_bound_admission_reuse.py', os.environ['REUSE_BLOB']),
+          ]
+          for head, path, expected in checks:
+              url = f'https://api.github.com/repos/{repo}/contents/{path}?ref={head}'
+              req = urllib.request.Request(url, headers={'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json'})
+              with urllib.request.urlopen(req) as r:
+                  payload = json.load(r)
+              assert payload['sha'] == expected, (path, payload['sha'], expected)
+          print('PARENT_SOURCE_BLOBS_AUTHENTICATED=true')
+          PY
+
+      - name: Revalidate exact terminal parent runs and jobs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          pairs = [
+              (int(os.environ['NAV14_RUN']), int(os.environ['NAV14_JOB']), os.environ['NAV14_HEAD']),
+              (int(os.environ['REUSE_RUN']), int(os.environ['REUSE_JOB']), os.environ['REUSE_HEAD']),
+          ]
+          def get(url):
+              req = urllib.request.Request(url, headers={'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json'})
+              with urllib.request.urlopen(req) as r:
+                  return json.load(r)
+          for run_id, job_id, head in pairs:
+              run = get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}')
+              job = get(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}')
+              assert run['conclusion'] == 'success', run
+              assert run['head_sha'] == head, (run['head_sha'], head)
+              assert job['conclusion'] == 'success', job
+              assert job['run_id'] == run_id, (job['run_id'], run_id)
+          print('EXACT_PARENT_PROOFS_REVALIDATED=true')
+          PY
+
+      - name: Compile and run adversarial contract
+        run: |
+          python -m py_compile tools/aura_progress_bound_generation_reuse_preflight.py tests/test_aura_progress_bound_generation_reuse_preflight.py
+          python -m unittest discover -s tests -p 'test_aura_progress_bound_generation_reuse_preflight.py' -v
+
+      - name: Enforce nonpromotion laws
+        run: |
+          python - <<'PY'
+          from tools.aura_progress_bound_generation_reuse_preflight import LAWS, REQUIRED_DEBTS
+          required = {
+              'ProgressBoundHandoff!=ReusableCurrentAdmission',
+              'SameSubjectAndEvidenceGeneration!=SourceRelation',
+              'ProgressCannotRefreshHistoricalAdmission',
+              'CurrentAdmissionCannotBorrowUnrelatedProgress',
+              'PreflightCandidate!=PersistentUseReady',
+          }
+          assert required.issubset(set(LAWS))
+          assert REQUIRED_DEBTS == ('SOURCE_URI_TO_SOURCE_GENERATION_RELATION', 'FUTURE_READ_CURRENTNESS')
+          print('PGR01_NONPROMOTION_CEILING=true')
+          PY
