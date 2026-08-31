@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import inspect
 from pathlib import Path
 from unittest import mock
@@ -179,15 +180,50 @@ class WorkCapsulePortableHigherOwnerOwnerReductionTests(
             "scripts/aura_workcapsule_post_repair_portable_higher_owner_continuity.py"
         ).read_text()
         self.assertIn("aura_workcapsule_post_source_portable_higher_owner_continuity", source)
-        for forbidden in (
+        tree = ast.parse(source)
+
+        imported_modules = {
+            node.module
+            for node in ast.walk(tree)
+            if isinstance(node, ast.ImportFrom) and node.module is not None
+        }
+        self.assertNotIn(
+            "scripts.aura_workcapsule_post_repair_source_projection_continuity",
+            imported_modules,
+        )
+
+        called_names: set[str] = set()
+        for node in ast.walk(tree):
+            if not isinstance(node, ast.Call):
+                continue
+            if isinstance(node.func, ast.Name):
+                called_names.add(node.func.id)
+            elif isinstance(node.func, ast.Attribute):
+                called_names.add(node.func.attr)
+        for forbidden_call in (
             "verify_portable_canonical_target_projection",
             "verify_post_repair_source_projection_continuity",
             "admit_post_repair_source_projection_continuity",
+        ):
+            self.assertNotIn(forbidden_call, called_names)
+
+        assigned_names = {
+            target.id
+            for node in ast.walk(tree)
+            if isinstance(node, (ast.Assign, ast.AnnAssign))
+            for target in (
+                node.targets if isinstance(node, ast.Assign) else [node.target]
+            )
+            if isinstance(target, ast.Name)
+        }
+        for forbidden_owner_state in (
             "_OWNER_CHAIN_FIELDS",
             "_TARGET_PAYLOAD_FIELDS",
-            "_owner_chain_payload_bytes",
+            "_OWNER_CHAIN_POSITIVE_FIELDS",
+            "_OWNER_CHAIN_NEGATIVE_FIELDS",
         ):
-            self.assertNotIn(forbidden, source)
+            self.assertNotIn(forbidden_owner_state, assigned_names)
+        self.assertNotIn("_owner_chain_payload_bytes", called_names)
 
     def test_legacy_public_boundary_is_preserved_without_second_projection_slot(self) -> None:
         params = inspect.signature(
