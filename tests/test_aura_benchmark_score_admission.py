@@ -100,29 +100,47 @@ def test_scoring_result_requires_observed_execution():
 
 def test_receipt_booleans_cannot_self_mint_execution_authority():
     with pytest.raises(ValueError, match="EXECUTION_AUTHORITY_NOT_VERIFIED"):
-        admit_score([fixture()], policy=policy(execution_authority_verified=False))
+        admit_score(
+            [fixture()],
+            policy=policy(execution_authority_verified=False),
+        )
 
 
 def test_receipt_route_must_match_trusted_policy():
     with pytest.raises(ValueError, match="EXECUTION_ROUTE_FINGERPRINT_MISMATCH"):
-        admit_score([fixture(execution_route_fingerprint="route:caller:minted")], policy=policy())
+        admit_score(
+            [fixture(execution_route_fingerprint="route:caller:minted")],
+            policy=policy(),
+        )
 
 
 def test_receipt_observer_must_match_trusted_policy():
     with pytest.raises(ValueError, match="EXECUTION_OBSERVER_IDENTITY_MISMATCH"):
-        admit_score([fixture(execution_observer_identity="CALLER_SELF_REPORT")], policy=policy())
+        admit_score(
+            [fixture(execution_observer_identity="CALLER_SELF_REPORT")],
+            policy=policy(),
+        )
 
 
 def test_source_verifier_must_be_authorized_and_match_trusted_policy():
     with pytest.raises(ValueError, match="SOURCE_VERIFIER_AUTHORITY_NOT_VERIFIED"):
-        admit_score([fixture()], policy=policy(source_verifier_authority_verified=False))
+        admit_score(
+            [fixture()],
+            policy=policy(source_verifier_authority_verified=False),
+        )
     with pytest.raises(ValueError, match="SOURCE_VERIFIER_IDENTITY_MISMATCH"):
-        admit_score([fixture(source_verifier_identity="CALLER_SOURCE_LABEL")], policy=policy())
+        admit_score(
+            [fixture(source_verifier_identity="CALLER_SOURCE_LABEL")],
+            policy=policy(),
+        )
 
 
 def test_authority_scope_must_match_policy():
     with pytest.raises(ValueError, match="BENCHMARK_AUTHORITY_SCOPE_MISMATCH"):
-        admit_score([fixture(authority_scope="LEADERBOARD_AUTHORITY")], policy=policy())
+        admit_score(
+            [fixture(authority_scope="LEADERBOARD_AUTHORITY")],
+            policy=policy(),
+        )
 
 
 def test_unknown_measurement_cannot_launder_zero_or_estimates():
