@@ -1,8 +1,8 @@
 """Executable falsifier/rebase for the supplied Xhdv 1024-bit RISC-V proposal.
 
 This module validates encoding math and functional HDV operations while keeping
-compiler integration, RTL synthesis/timing, hardware performance and semantic K27
-authority explicitly unproven.
+compiler integration, architectural state, RTL integration/synthesis/timing,
+hardware performance and semantic K27 authority explicitly unproven.
 """
 from __future__ import annotations
 
@@ -16,6 +16,9 @@ SOURCE_SHA256 = "98bc8189027158a2cfbc0cb8eaf443836dd9e6ec125ac3fcadaeee9bcc8ba41
 CUSTOM_0 = 0x0B
 MASK64 = (1 << 64) - 1
 MASK1024 = (1 << 1024) - 1
+HDV_BYTES = 128
+I_IMMEDIATE_MIN = -(1 << 11)
+I_IMMEDIATE_MAX = (1 << 11) - 1
 
 
 class XhdvError(ValueError):
@@ -62,6 +65,11 @@ def decode_r(word: int) -> dict[str, int]:
         "rd": (word >> 7) & 0x1F,
         "opcode": word & 0x7F,
     }
+
+
+def aligned_i_type_displacements() -> tuple[int, ...]:
+    """All 128-byte-aligned byte displacements representable by signed I-immediate."""
+    return tuple(range(I_IMMEDIATE_MIN, I_IMMEDIATE_MAX + 1, HDV_BYTES))
 
 
 def _words(value: tuple[int, ...]) -> tuple[int, ...]:
@@ -148,11 +156,21 @@ class XhdvCandidateDisposition:
     rotate_functional: bool
     popcount_hamming_functional: bool
     eleven_bit_distance_width_sufficient: bool
+    i_type_aligned_displacement_count: int
+    i_type_aligned_min_displacement: int
+    i_type_aligned_max_displacement: int
     pasted_emulator_target_recovered: bool
     pasted_threshold_discriminative: bool
     pasted_scan_is_parallel_hardware_evidence: bool
     hidden_h_register_file_modeled_by_shown_gnu_insn: bool
     shown_inline_asm_compiler_sound_for_hidden_h_registers: bool
+    rtl_hidden_h_register_file_implemented: bool
+    rtl_hdv_load_store_implemented: bool
+    rtl_decode_and_hazards_integrated: bool
+    architectural_context_switch_semantics_defined: bool
+    debugger_and_abi_state_defined: bool
+    precise_128byte_memory_exception_semantics_defined: bool
+    full_six_instruction_isa_implemented: bool
     rtl_synthesized: bool
     rtl_timing_closed: bool
     two_cycle_popcount_latency_proven: bool
@@ -176,6 +194,7 @@ def disposition() -> XhdvCandidateDisposition:
     b = tuple(((0xFEDCBA9876543210 ^ (i * 0x0101010101010101)) & MASK64) for i in range(16))
     encoded = encode_r(funct7=0, rs2=7, rs1=5, funct3=2, rd=3)
     scan = pasted_scan_falsifier()
+    displacements = aligned_i_type_displacements()
     return XhdvCandidateDisposition(
         source_sha256=SOURCE_SHA256,
         custom_0_opcode_valid=(CUSTOM_0 == 0x0B),
@@ -184,11 +203,21 @@ def disposition() -> XhdvCandidateDisposition:
         rotate_functional=(perm(a, 0) == a and perm(perm(a, 1), 1023) == a and perm(a, 64)[1] == a[0]),
         popcount_hamming_functional=(hdist(a, a) == 0 and hdist(tuple([0] * 16), tuple([MASK64] * 16)) == 1024),
         eleven_bit_distance_width_sufficient=(1024 < (1 << 11)),
+        i_type_aligned_displacement_count=len(displacements),
+        i_type_aligned_min_displacement=displacements[0],
+        i_type_aligned_max_displacement=displacements[-1],
         pasted_emulator_target_recovered=(scan["minimum_index"] == 777_777 and scan["minimum_distance"] == 4),
         pasted_threshold_discriminative=(scan["vectors_below_threshold"] < scan["vector_count"]),
         pasted_scan_is_parallel_hardware_evidence=False,
         hidden_h_register_file_modeled_by_shown_gnu_insn=False,
         shown_inline_asm_compiler_sound_for_hidden_h_registers=False,
+        rtl_hidden_h_register_file_implemented=False,
+        rtl_hdv_load_store_implemented=False,
+        rtl_decode_and_hazards_integrated=False,
+        architectural_context_switch_semantics_defined=False,
+        debugger_and_abi_state_defined=False,
+        precise_128byte_memory_exception_semantics_defined=False,
+        full_six_instruction_isa_implemented=False,
         rtl_synthesized=False,
         rtl_timing_closed=False,
         two_cycle_popcount_latency_proven=False,
@@ -196,9 +225,9 @@ def disposition() -> XhdvCandidateDisposition:
         hardware_speedup_proven=False,
         semantic_k27_authority=False,
         recommended_v0=(
-            "Keep CUSTOM_0 + exact 1024-bit XOR/rotate/Hamming semantics, but treat h0-h31 as an unimplemented ISA/toolchain contract. "
-            "For first hardware bring-up, prefer a compiler-visible pointer-based hdist instruction over hidden HDV registers; "
-            "add dedicated h-register syntax/ABI only after assembler/compiler/simulator support exists."
+            "Keep CUSTOM_0 + exact 1024-bit XOR/rotate/Hamming semantics as a golden functional reference. "
+            "Treat h0-h31, hdv.ld/st, decode/hazards, context-switch/debugger state and precise 128-byte memory behavior as unimplemented ISA/toolchain contracts. "
+            "For first hardware bring-up, prefer a compiler-visible pointer-based hdist primitive; add architectural HDV registers only after assembler/compiler/simulator/OS ABI ownership exists."
         ),
     )
 
