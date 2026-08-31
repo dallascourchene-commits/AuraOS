@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1639
-- **total_bytes**: 26415048
-- **text_tokens_est**: 6594113
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1645
+- **total_bytes**: 26456020
+- **text_tokens_est**: 6604359
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1001, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1639,
+  "repo_file_count": 1645,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -154,7 +154,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-dual-key-evidence-generation.yml",
     ".github/workflows/aura-review-learning.yml",
+    ".github/workflows/aura-semantic-sibling-admission.yml",
     ".github/workflows/aura-showcase.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
     ".github/workflows/aura-spatial-s3-s4a.yml",
@@ -1461,6 +1463,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_continuity_packet_merge_gate.py",
     "tests/test_aura_crucible_phase_b.py",
     "tests/test_aura_dikwp_router_pipeline.py",
+    "tests/test_aura_dual_key_evidence_generation.py",
     "tests/test_aura_efficiency_benchmark.py",
     "tests/test_aura_emergent_agent_bridge.py",
     "tests/test_aura_emergent_agent_bridge_mcp.py",
@@ -1567,6 +1570,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_review_lessons_codex_regressions.py",
     "tests/test_aura_runtime_profile_v2_adapter.py",
     "tests/test_aura_runtime_refactor_harness.py",
+    "tests/test_aura_semantic_sibling_admission.py",
     "tests/test_aura_shadow_model_router.py",
     "tests/test_aura_shadow_tool_observability.py",
     "tests/test_aura_showcase_attempt_archive.py",
@@ -1649,6 +1653,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/aura_dual_key_evidence_generation.py",
+    "tools/aura_semantic_sibling_admission.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1779,16 +1785,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1639,
-  "bytes": 26415048,
-  "tokens_est": 6594113,
+  "files": 1645,
+  "bytes": 26456020,
+  "tokens_est": 6604359,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 997,
-    "schema_or_lexicon": 271,
+    "python_module": 1001,
+    "schema_or_lexicon": 273,
     "support_file": 49
   }
 }
