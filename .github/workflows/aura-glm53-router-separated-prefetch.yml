@@ -1,0 +1,89 @@
+name: Aura GLM53 Router Separated Expert Prefetch
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_router_separated_prefetch.py"
+      - "tools/awj032/test_glm53_router_separated_prefetch.py"
+      - ".github/workflows/aura-glm53-router-separated-prefetch.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  router-separated-prefetch:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      PR333_HEAD: "815ec64338114d8d3947af6c295b28f8f401287e"
+      PR338_HEAD: "7f33d2e8f6e53b8862f8ecf0ddc28e0564fb388a"
+    steps:
+      - name: Exact authenticated checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Rebind exact current PR333 and PR338 owner heads
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          token=os.environ['GH_TOKEN']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json'}
+          for pr, expected in ((333,os.environ['PR333_HEAD']),(338,os.environ['PR338_HEAD'])):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/pulls/{pr}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: body=json.load(r)
+              assert body['head']['sha']==expected,(pr,body['head']['sha'],expected)
+              assert body['state']=='open',(pr,body['state'])
+          print('PARENT_OWNER_HEADS_EXACT_CURRENT=true')
+          PY
+
+      - name: Compile parent pager and G1 membrane
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/awj032/glm53_packed_expert_pager.py \
+            tools/awj032/glm53_router_separated_prefetch.py \
+            tools/awj032/test_glm53_router_separated_prefetch.py
+
+      - name: Run G1 adversarial contract
+        run: |
+          set -euo pipefail
+          python3 -m unittest -v tools.awj032.test_glm53_router_separated_prefetch
+
+      - name: Prove routing and authority ceiling
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from tools.awj032.glm53_router_separated_prefetch import LAWS
+          required={
+              'PrefetchPrediction!=NativeExecutionRoute',
+              'PredictionMiss=>DemandLoadExactNativeExpertsNotRouteMutation',
+              'PredictionWasteMayIncreaseIOWithoutChangingExecutedExperts',
+              'LogicalPrefetchBytes!=PhysicalNVMeBytesAbsentAttestation',
+              'FullShardLoad!=SelectivePrefetch',
+              'CoordinateMemory!=TransformerKVCache',
+              'K27Coordinate!=RoutingAuthority!=ExecutionAuthority',
+          }
+          assert required <= set(LAWS), required-set(LAWS)
+          print('ROUTER_SEPARATED_PREFETCH_CONTRACT=true')
+          print('MODEL_PROVIDER_EXECUTION=false')
+          print('PHYSICAL_IO_OBSERVED=false')
+          print('G2_ADMITTED=false')
+          print('NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false')
+          print('SEMANTIC_K27_AUTHORITY=false')
+          print('GATE10=false')
+          PY
