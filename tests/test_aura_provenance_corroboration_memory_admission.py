@@ -59,8 +59,11 @@ class ProvenanceCorroborationMemoryAdmissionTests(unittest.TestCase):
         self.assertTrue(out["hard_eligibility_precedes_ranking"])
         self.assertTrue(out["typed_artifact_reference_schemes_preserved"])
         self.assertTrue(out["typed_evidence_objects_preserved"])
+        self.assertTrue(out["type_partitioned_corroboration_accounting"])
+        self.assertTrue(out["explicit_resolver_required_for_host_rank_transition"])
         self.assertFalse(out["reference_scheme_aliasing_performed"])
         self.assertFalse(out["proof_type_cross_cast_performed"])
+        self.assertFalse(out["corroboration_rank_transition_performed"])
         self.assertFalse(out["input_currentness_reproved_by_this_module"])
         self.assertFalse(out["claim_world_semantics_reproved_by_this_module"])
         self.assertFalse(out["semantic_truth_proven"])
@@ -102,7 +105,7 @@ class ProvenanceCorroborationMemoryAdmissionTests(unittest.TestCase):
         self.assertEqual(["EVIDENCE_TYPE_NOT_ACCEPTED"], out["excluded_by_artifact_ref"]["artifact:raw"])
         self.assertEqual([], [r for r in out["relations"] if r["kind"] == "CORROBORATES"])
 
-    def test_cross_type_corroboration_preserves_noninterchangeability_when_policy_accepts_both(self) -> None:
+    def test_cross_type_corroboration_is_partitioned_and_rank_neutral(self) -> None:
         context = {
             "scope": "arena",
             "use_class": "retrieval",
@@ -112,9 +115,22 @@ class ProvenanceCorroborationMemoryAdmissionTests(unittest.TestCase):
         host = node("artifact:host", evidence_type="host-admission-envelope", dependency_class_ref="dep:host")
         out = admit_evidence_nodes([raw, host], context)
         edge = [r for r in out["relations"] if r["kind"] == "CORROBORATES"][0]
+        group = out["corroboration_groups"][0]
         self.assertTrue(edge["evidence_types_distinct"])
         self.assertFalse(edge["proof_artifacts_interchangeable"])
-        self.assertEqual(["causal-raw-slice-evidence", "host-admission-envelope"], out["corroboration_groups"][0]["evidence_types"])
+        self.assertFalse(edge["rank_transition_credit"])
+        self.assertEqual(["causal-raw-slice-evidence", "host-admission-envelope"], group["evidence_types"])
+        self.assertEqual(2, group["kappa"])
+        self.assertEqual(
+            [
+                {"evidence_type": "causal-raw-slice-evidence", "dependency_class_refs": ["dep:raw"], "kappa": 1},
+                {"evidence_type": "host-admission-envelope", "dependency_class_refs": ["dep:host"], "kappa": 1},
+            ],
+            group["kappa_by_evidence_type"],
+        )
+        self.assertTrue(group["cross_type_kappa_is_rank_neutral"])
+        self.assertFalse(group["corroboration_count_grants_host_rank"])
+        self.assertFalse(out["corroboration_rank_transition_performed"])
 
     def test_same_lineage_corroborates_without_increasing_kappa(self) -> None:
         out = admit_evidence_nodes(
@@ -124,17 +140,47 @@ class ProvenanceCorroborationMemoryAdmissionTests(unittest.TestCase):
         edge = [r for r in out["relations"] if r["kind"] == "CORROBORATES"][0]
         self.assertFalse(edge["dependency_distinct"])
         self.assertEqual(1, out["corroboration_groups"][0]["kappa"])
+        self.assertEqual(
+            [{"evidence_type": "generic-evidence", "dependency_class_refs": ["dep:shared"], "kappa": 1}],
+            out["corroboration_groups"][0]["kappa_by_evidence_type"],
+        )
         self.assertFalse(out["artifact_identity_collapse_performed"])
 
-    def test_dependency_distinct_corroborator_increases_kappa_without_node_merge(self) -> None:
+    def test_dependency_distinct_corroborator_increases_type_partition_without_node_merge(self) -> None:
         out = admit_evidence_nodes(
             [node("artifact:a", dependency_class_ref="dep:a"), node("artifact:b", dependency_class_ref="dep:b")],
             CONTEXT,
         )
         edge = [r for r in out["relations"] if r["kind"] == "CORROBORATES"][0]
         self.assertTrue(edge["dependency_distinct"])
-        self.assertEqual(2, out["corroboration_groups"][0]["kappa"])
+        group = out["corroboration_groups"][0]
+        self.assertEqual(2, group["kappa"])
+        self.assertEqual(
+            [{"evidence_type": "generic-evidence", "dependency_class_refs": ["dep:a", "dep:b"], "kappa": 2}],
+            group["kappa_by_evidence_type"],
+        )
         self.assertEqual(2, len(out["verified_artifact_refs"]))
+
+    def test_same_dependency_class_across_two_types_does_not_make_types_interchangeable(self) -> None:
+        context = {
+            "scope": "arena",
+            "use_class": "retrieval",
+            "accepted_evidence_types": ["raw", "host"],
+        }
+        raw = node("artifact:raw", evidence_type="raw", dependency_class_ref="dep:shared")
+        host = node("artifact:host", evidence_type="host", dependency_class_ref="dep:shared")
+        out = admit_evidence_nodes([raw, host], context)
+        group = out["corroboration_groups"][0]
+        self.assertEqual(1, group["kappa"])
+        self.assertEqual(
+            [
+                {"evidence_type": "host", "dependency_class_refs": ["dep:shared"], "kappa": 1},
+                {"evidence_type": "raw", "dependency_class_refs": ["dep:shared"], "kappa": 1},
+            ],
+            group["kappa_by_evidence_type"],
+        )
+        self.assertTrue(group["cross_type_kappa_is_rank_neutral"])
+        self.assertFalse(group["corroboration_count_grants_host_rank"])
 
     def test_same_reference_value_across_schemes_remains_distinct_identity(self) -> None:
         digest = "a" * 64

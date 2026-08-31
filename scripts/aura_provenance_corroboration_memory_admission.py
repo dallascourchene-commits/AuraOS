@@ -192,7 +192,22 @@ def _relation(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any] | None:
         "reference_values_equal": a["artifact_ref_value"] == b["artifact_ref_value"],
         "evidence_types_distinct": a["evidence_type"] != b["evidence_type"],
         "proof_artifacts_interchangeable": False,
+        "rank_transition_credit": False,
     }
+
+
+def _type_partition(members: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    by_type: dict[str, set[str]] = {}
+    for member in members:
+        by_type.setdefault(member["evidence_type"], set()).add(member["dependency_class_ref"])
+    return [
+        {
+            "evidence_type": evidence_type,
+            "dependency_class_refs": sorted(by_type[evidence_type]),
+            "kappa": len(by_type[evidence_type]),
+        }
+        for evidence_type in sorted(by_type)
+    ]
 
 
 def admit_evidence_nodes(nodes: list[dict[str, Any]], context: dict[str, Any]) -> dict[str, Any]:
@@ -245,7 +260,11 @@ def admit_evidence_nodes(nodes: list[dict[str, Any]], context: dict[str, Any]) -
             "eligible_artifact_refs": sorted(m["artifact_ref"] for m in members),
             "artifact_reference_schemes": sorted({m["artifact_ref_scheme"] for m in members}),
             "evidence_types": sorted({m["evidence_type"] for m in members}),
-            "dependency_class_refs": deps, "kappa": len(deps),
+            "dependency_class_refs": deps,
+            "kappa": len(deps),
+            "kappa_by_evidence_type": _type_partition(members),
+            "cross_type_kappa_is_rank_neutral": True,
+            "corroboration_count_grants_host_rank": False,
         })
     contradictory = sorted({(r["claim_key"], r["world_ref"]) for r in relations if r["kind"] == "CONTRADICTS"})
 
@@ -263,6 +282,9 @@ def admit_evidence_nodes(nodes: list[dict[str, Any]], context: dict[str, Any]) -
         "reference_scheme_aliasing_performed": False,
         "typed_evidence_objects_preserved": True,
         "proof_type_cross_cast_performed": False,
+        "type_partitioned_corroboration_accounting": True,
+        "corroboration_rank_transition_performed": False,
+        "explicit_resolver_required_for_host_rank_transition": True,
         "input_currentness_reproved_by_this_module": False,
         "claim_world_semantics_reproved_by_this_module": False,
         "artifact_identity_collapse_performed": False,
