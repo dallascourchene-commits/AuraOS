@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788156764,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1649,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -20,6 +20,8 @@
       ".aura/SECURITY.md",
       ".aura/amd_track3_demo_tasks.json",
       ".aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md",
+      ".aura/arena/README.md",
+      ".aura/arena/awj032-thinkpad-nvme-residency-plan.md",
       ".aura/arena_routes/coding.v1.json",
       ".aura/arena_routes/construction.v1.json",
       ".aura/arena_routes/human_agent.v1.json",
@@ -142,6 +144,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-thinkpad-nvme-residency-plan.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1631,6 +1634,13 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/__init__.py",
+      "tools/awj032/.gitkeep",
+      "tools/awj032/README.md",
+      "tools/awj032/THINKPAD_NVME_RESIDENCY_PLAN.md",
+      "tools/awj032/__init__.py",
+      "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+      "tools/awj032/thinkpad_nvme_residency_plan.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,17 +1765,17 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1649,
+      "bytes": 26442228,
+      "tokens_est": 6600912,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 241,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
-        "support_file": 49
+        "python_module": 1001,
+        "schema_or_lexicon": 272,
+        "support_file": 50
       }
     },
     {
@@ -1848,6 +1858,8 @@
         ".aura/ROLES.md",
         ".aura/SECURITY.md",
         ".aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md",
+        ".aura/arena/README.md",
+        ".aura/arena/awj032-thinkpad-nvme-residency-plan.md",
         ".aura/intents/example.aura.md",
         ".aura/research/AURA_CODING_WABOOSE_RESEARCH_2026-07-17.md",
         ".aura/research/AURA_SPATIAL_COUNCIL_V3_BREADBOARD_2026-07-19.md",
@@ -2037,9 +2049,7 @@
         "docs/AURA_TOKEN_ECONOMY_STACK.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
-        "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-        "docs/BENCHMARKS.md"
+        "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md"
       ]
     },
     {
@@ -3895,6 +3905,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_canonical:3bd93d568cdcc172",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4337,6 +4355,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_digest:220141ec659887f4",
+        "signature_hash": "514f786724465716"
       }
     ],
     "_token_proxy": [
@@ -14653,6 +14679,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_text:0a1450e8f10d7fd2",
+        "signature_hash": "a4ea29b9a7789fe0"
       }
     ],
     "_bounded": [
@@ -26327,6 +26361,14 @@
         "end_line": 68,
         "semantic_id": "aura_spatial_importers/contracts.py#function:_positive_int:cb9f2b4384fccde6",
         "signature_hash": "5cca323f428421e2"
+      },
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 68,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_positive_int:2ee9d62f801b962e",
+        "signature_hash": "9fa9d0d235d67d55"
       }
     ],
     "_span_line_bounds": [
@@ -30695,6 +30737,14 @@
         "end_line": 388,
         "semantic_id": "aura_spatial_projection.py#function:_nonnegative_int:268b62b5575eb7c0",
         "signature_hash": "da3b10c24c5b5036"
+      },
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 74,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_nonnegative_int:5040bed87108aa00",
+        "signature_hash": "b8739218d7c73d0c"
       }
     ],
     "WorkbenchState": [
@@ -157181,6 +157231,326 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "ThinkPadNVMeResidencyPlanTests": [
+      {
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 200,
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#class:ThinkPadNVMeResidencyPlanTests:7754e173bc3d0b22",
+        "signature_hash": "90a5d7c6d9023993"
+      }
+    ],
+    "ThinkPadNVMeResidencyPlanTests.host": [
+      {
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.host:4d8bda005851a4bc",
+        "signature_hash": "0891f7fd5d90a139"
+      }
+    ],
+    "ThinkPadNVMeResidencyPlanTests.policy": [
+      {
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.policy:03cc94fc77439ea5",
+        "signature_hash": "9a8ca884a8eb7cb6"
+      }
+    ],
+    "ThinkPadNVMeResidencyPlanTests.test_hot_reused_slice_is_ram_resident_without_overcommit": [
+      {
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 81,
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_hot_reused_slice_is_ram_resident_without_overcommit:bdd18bd2ddb1f998",
+        "signature_hash": "2059bb94e31cb759"
+      }
+    ],
+    "ThinkPadNVMeResidencyPlanTests.test_io_uring_prefetch_uses_compute_slack_and_double_buffer_slot": [
+      {
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 104,
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_io_uring_prefetch_uses_compute_slack_and_double_buffer_slot:b5265f31da9e197d",
+        "signature_hash": "3fe738c6885b0350"
+      }
+    ],
+    "ThinkPadNVMeResidencyPlanTests.test_prefetch_falls_back_to_mmap_when_deadline_cannot_be_hidden": [
+      {
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 123,
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_prefetch_falls_back_to_mmap_when_deadline_cannot_be_hidden:b0ed9f5715c9df00",
+        "signature_hash": "100894881099ec95"
+      }
+    ],
+    "ThinkPadNVMeResidencyPlanTests.test_adjacent_async_reads_are_coalesced_only_within_same_lane": [
+      {
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 144,
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_adjacent_async_reads_are_coalesced_only_within_same_lane:1c6ec37fce1f4f13",
+        "signature_hash": "80b495ba96b1d6ef"
+      }
+    ],
+    "ThinkPadNVMeResidencyPlanTests.test_page_alignment_is_explicit": [
+      {
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 158,
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_page_alignment_is_explicit:91387eda15ee4aa5",
+        "signature_hash": "75ed2069ca11cd81"
+      }
+    ],
+    "ThinkPadNVMeResidencyPlanTests.test_no_storage_backend_fails_closed": [
+      {
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 174,
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_no_storage_backend_fails_closed:c1afd68fa033132f",
+        "signature_hash": "02d871e733c495f0"
+      }
+    ],
+    "ThinkPadNVMeResidencyPlanTests.test_bool_int_confusion_is_rejected": [
+      {
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 178,
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_bool_int_confusion_is_rejected:0fc07e7f860000e6",
+        "signature_hash": "0ba1829cc7f25c4a"
+      }
+    ],
+    "ThinkPadNVMeResidencyPlanTests.test_plan_digest_is_deterministic_and_nonauthorizing": [
+      {
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 180,
+        "end_line": 200,
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_plan_digest_is_deterministic_and_nonauthorizing:434e4539e5fb6dce",
+        "signature_hash": "3bb58b741ec54c0c"
+      }
+    ],
+    "ThinkPadResidencyPlanError": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:ThinkPadResidencyPlanError:812ee1813c2d6333",
+        "signature_hash": "5d512dc4c5216f58"
+      }
+    ],
+    "ThinkPadResidencyPlanError.__init__": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:ThinkPadResidencyPlanError.__init__:aeae5b698173c121",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_exact_bool": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 62,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_exact_bool:8ccd34128186a093",
+        "signature_hash": "65ab86c1839d5551"
+      }
+    ],
+    "_positive_float": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 83,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_positive_float:45f959fee9a686d1",
+        "signature_hash": "b2fece0b5243771f"
+      }
+    ],
+    "_page_aligned_span": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 90,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_page_aligned_span:9c01a93890d2b653",
+        "signature_hash": "4f1544c42bb90026"
+      }
+    ],
+    "HostStorageProfile": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "class",
+        "line": 94,
+        "end_line": 118,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:HostStorageProfile:80398196a417b6e0",
+        "signature_hash": "7af9ebebed9b2494"
+      }
+    ],
+    "HostStorageProfile.__post_init__": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 118,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:HostStorageProfile.__post_init__:8ba53b9522576ff6",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "TensorSlice": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "class",
+        "line": 122,
+        "end_line": 144,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:TensorSlice:4a3234ec890921df",
+        "signature_hash": "2f92927004e1413a"
+      }
+    ],
+    "TensorSlice.__post_init__": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 144,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:TensorSlice.__post_init__:b5d3ca2a4ea11689",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ResidencyPolicy": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "class",
+        "line": 148,
+        "end_line": 162,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:ResidencyPolicy:0861eadc6b47c5c3",
+        "signature_hash": "139d38e30460e98e"
+      }
+    ],
+    "ResidencyPolicy.__post_init__": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 162,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:ResidencyPolicy.__post_init__:43a40db61a0b37cc",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ResidencyDecision": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "class",
+        "line": 166,
+        "end_line": 179,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:ResidencyDecision:8be11abbdc6dbc3f",
+        "signature_hash": "55476f85fbb255f0"
+      }
+    ],
+    "PrefetchBatch": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "class",
+        "line": 183,
+        "end_line": 190,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:PrefetchBatch:375a8b3b4dcb876d",
+        "signature_hash": "ae658904ce991647"
+      }
+    ],
+    "ThinkPadResidencyPlan": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "class",
+        "line": 194,
+        "end_line": 219,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:ThinkPadResidencyPlan:e40914cc8f792d44",
+        "signature_hash": "55ed3bbf3ace88be"
+      }
+    ],
+    "ThinkPadResidencyPlan.to_dict": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 209,
+        "end_line": 210,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:ThinkPadResidencyPlan.to_dict:c78e4c757401e343",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "ThinkPadResidencyPlan.plan_digest": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 214,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:ThinkPadResidencyPlan.plan_digest:b644c9f814e76821",
+        "signature_hash": "7a8f4ade6ad4e027"
+      }
+    ],
+    "ThinkPadResidencyPlan.storage_plan_digest": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 217,
+        "end_line": 219,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:ThinkPadResidencyPlan.storage_plan_digest:095e24141a599f4c",
+        "signature_hash": "7c0db83ec53bf702"
+      }
+    ],
+    "_ram_priority": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "function",
+        "line": 222,
+        "end_line": 227,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_ram_priority:14e97a28f4ef5296",
+        "signature_hash": "4dfa5b6971991cf0"
+      }
+    ],
+    "_coalesce_prefetch_batches": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "function",
+        "line": 230,
+        "end_line": 306,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_coalesce_prefetch_batches:07e8bbd0f20978dc",
+        "signature_hash": "06a60cb329ab93f1"
+      }
+    ],
+    "_coalesce_prefetch_batches.flush": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "method",
+        "line": 247,
+        "end_line": 260,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:_coalesce_prefetch_batches.flush:da0d3966810dbabb",
+        "signature_hash": "f70ce389b3a776a8"
+      }
+    ],
+    "build_thinkpad_residency_plan": [
+      {
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "kind": "function",
+        "line": 309,
+        "end_line": 434,
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:build_thinkpad_residency_plan:4d5ef890fbff7566",
+        "signature_hash": "62798cc83c227254"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158606,6 +158976,13 @@
     "python scripts/aura_spatial_s5_s6_construction_architect_harness.py --repo-root . --base-ref \"origin/$BASE_REF\" --head-ref HEAD --observed-head \"$(git rev-parse HEAD)\" --receipt /tmp/aura-spatial-s5-s6-receipts/full.json": [
       ".github/workflows/aura-spatial-s5-s6-construction.yml"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/awj032-thinkpad-nvme-residency-plan.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/awj032-thinkpad-nvme-residency-plan.yml"
+    ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
@@ -159147,9 +159524,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -162050,6 +162424,100 @@
         0.075319,
         -0.142527,
         -0.198147
+      ]
+    },
+    {
+      "path": ".aura/arena/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 131,
+      "lines": 2,
+      "tokens_est": 33,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "475bfefcc77848e5",
+      "vector": [
+        -0.024953,
+        0.259297,
+        0.250617,
+        0.198541,
+        0.111747,
+        -0.231089,
+        -0.037972,
+        0.003255,
+        0.21373,
+        -0.192031,
+        -0.202881,
+        -0.202881,
+        0.096558,
+        0.265806,
+        0.020614,
+        0.137785,
+        0.220239,
+        0.116087,
+        -0.246278,
+        -0.06618,
+        0.20939,
+        -0.276655,
+        0.224579,
+        0.137785,
+        0.226749,
+        -0.027123,
+        -0.174673,
+        0.248447,
+        -0.061841,
+        -0.024953,
+        -0.06618,
+        -0.168163
+      ]
+    },
+    {
+      "path": ".aura/arena/awj032-thinkpad-nvme-residency-plan.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 435,
+      "lines": 8,
+      "tokens_est": 109,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a54f885f7abfb17b",
+      "vector": [
+        0.2118,
+        -0.240333,
+        0.224969,
+        -0.007682,
+        0.130592,
+        0.200826,
+        0.185462,
+        -0.238138,
+        0.268865,
+        -0.134981,
+        0.077916,
+        -0.016461,
+        -0.106449,
+        -0.020851,
+        -0.154735,
+        0.260086,
+        0.224969,
+        -0.071332,
+        0.08889,
+        -0.194242,
+        -0.095475,
+        0.159124,
+        0.2118,
+        -0.121813,
+        0.27984,
+        0.200826,
+        -0.137176,
+        0.181073,
+        -0.159124,
+        -0.165709,
+        -0.277645,
+        -0.049383
       ]
     },
     {
@@ -168129,6 +168597,63 @@
         0.183493,
         0.241705,
         0.036699
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-thinkpad-nvme-residency-plan.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2406,
+      "lines": 69,
+      "tokens_est": 602,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          38
+        ],
+        "python3 -m unittest": [
+          39
+        ]
+      },
+      "topology": {},
+      "digest8": "e78158b4e67dcc68",
+      "vector": [
+        -0.092742,
+        -0.196919,
+        -0.08512,
+        -0.323963,
+        0.138478,
+        -0.049547,
+        -0.222328,
+        -0.318881,
+        0.02922,
+        -0.006352,
+        -0.036843,
+        -0.232491,
+        0.227409,
+        -0.196919,
+        -0.034302,
+        0.166428,
+        -0.14356,
+        -0.110529,
+        -0.036843,
+        0.250277,
+        -0.235032,
+        -0.146101,
+        0.034302,
+        -0.298554,
+        0.166428,
+        -0.227409,
+        0.110529,
+        0.245196,
+        0.204541,
+        0.141019,
+        -0.097824,
+        0.072415
       ]
     },
     {
@@ -262648,6 +263173,335 @@
       ]
     },
     {
+      "path": "tools/__init__.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 31,
+      "lines": 2,
+      "tokens_est": 8,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f1e3d34d461967bb",
+      "vector": [
+        0.228006,
+        -0.016746,
+        0.01417,
+        0.04251,
+        -0.217701,
+        -0.310449,
+        -0.117224,
+        -0.04251,
+        -0.155869,
+        -0.310449,
+        -0.142987,
+        0.01417,
+        0.313026,
+        0.228006,
+        0.027052,
+        0.204819,
+        0.228006,
+        0.024475,
+        -0.313026,
+        0.106918,
+        -0.135258,
+        0.150716,
+        0.094037,
+        0.17648,
+        0.106918,
+        0.191938,
+        0.037357,
+        -0.297568,
+        -0.106918,
+        0.171327,
+        -0.163598,
+        0.060544
+      ]
+    },
+    {
+      "path": "tools/awj032/.gitkeep",
+      "role": "support_file",
+      "binary": false,
+      "bytes": 0,
+      "lines": 0,
+      "tokens_est": 0,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e4a6a0577479b2b4",
+      "vector": [
+        -0.097321,
+        0.086355,
+        -0.261806,
+        0.256323,
+        0.067165,
+        0.020561,
+        0.242616,
+        -0.078131,
+        -0.25084,
+        0.094579,
+        -0.130218,
+        0.100062,
+        -0.017819,
+        0.190529,
+        -0.023302,
+        -0.179563,
+        -0.311152,
+        -0.264547,
+        0.053458,
+        0.020561,
+        -0.047975,
+        -0.160373,
+        -0.091838,
+        0.283737,
+        -0.152149,
+        0.100062,
+        0.19327,
+        0.157632,
+        -0.261806,
+        0.198753,
+        0.086355,
+        -0.335824
+      ]
+    },
+    {
+      "path": "tools/awj032/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 215,
+      "lines": 4,
+      "tokens_est": 54,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e4f1055b59ba2545",
+      "vector": [
+        -0.089187,
+        -0.151024,
+        -0.110592,
+        0.148645,
+        -0.134375,
+        -0.11297,
+        0.25567,
+        0.024972,
+        0.200968,
+        -0.18432,
+        -0.303236,
+        -0.21286,
+        0.189077,
+        0.103457,
+        0.136754,
+        -0.217617,
+        -0.060647,
+        -0.082052,
+        -0.048756,
+        0.29848,
+        0.222373,
+        -0.162915,
+        -0.029729,
+        0.162915,
+        0.286588,
+        0.203347,
+        -0.010702,
+        0.29848,
+        -0.048756,
+        -0.267562,
+        -0.067782,
+        -0.131997
+      ]
+    },
+    {
+      "path": "tools/awj032/THINKPAD_NVME_RESIDENCY_PLAN.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1297,
+      "lines": 28,
+      "tokens_est": 325,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0001187f1ef42e5e",
+      "vector": [
+        0.03117,
+        -0.109671,
+        -0.248204,
+        0.257439,
+        0.139687,
+        -0.294381,
+        -0.15354,
+        -0.128142,
+        -0.008081,
+        0.148922,
+        -0.178938,
+        0.086583,
+        -0.262057,
+        0.151231,
+        -0.137378,
+        0.049641,
+        -0.054258,
+        0.262057,
+        0.27591,
+        0.248204,
+        -0.125834,
+        0.160467,
+        -0.148922,
+        0.178938,
+        -0.084274,
+        -0.273601,
+        0.109671,
+        0.245895,
+        0.178938,
+        -0.139687,
+        0.065803,
+        -0.151231
+      ]
+    },
+    {
+      "path": "tools/awj032/__init__.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 63,
+      "lines": 2,
+      "tokens_est": 16,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "170f3d06ceece731",
+      "vector": [
+        -0.231633,
+        -0.213729,
+        -0.050355,
+        0.274156,
+        0.039165,
+        0.236109,
+        -0.048117,
+        -0.030213,
+        -0.28087,
+        0.222681,
+        -0.117495,
+        -0.229395,
+        0.2473,
+        0.139875,
+        -0.162255,
+        -0.010071,
+        0.155541,
+        0.182397,
+        -0.041403,
+        0.043641,
+        0.057069,
+        -0.155541,
+        0.265204,
+        0.2473,
+        0.034689,
+        -0.177921,
+        0.238347,
+        -0.054831,
+        -0.245062,
+        -0.104067,
+        0.137637,
+        0.240586
+      ]
+    },
+    {
+      "path": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6857,
+      "lines": 205,
+      "tokens_est": 1715,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "49266ca6d2dc2683",
+      "vector": [
+        -0.369611,
+        -0.045288,
+        0.074507,
+        0.197223,
+        -0.162162,
+        0.147552,
+        0.097881,
+        0.135865,
+        -0.246895,
+        -0.04821,
+        -0.021914,
+        0.04821,
+        0.2878,
+        -0.156318,
+        -0.153396,
+        -0.372533,
+        0.249816,
+        0.135865,
+        0.092038,
+        0.279035,
+        -0.021914,
+        0.121256,
+        -0.018992,
+        0.132943,
+        -0.214754,
+        -0.013148,
+        -0.281957,
+        0.176771,
+        -0.100803,
+        -0.11249,
+        0.130021,
+        -0.089116
+      ]
+    },
+    {
+      "path": "tools/awj032/thinkpad_nvme_residency_plan.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15745,
+      "lines": 435,
+      "tokens_est": 3937,
+      "symbol_count": 26,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c6d546d1db2dcbd9",
+      "vector": [
+        -0.138528,
+        -0.149977,
+        0.184323,
+        -0.049229,
+        -0.111052,
+        -0.269043,
+        -0.108762,
+        -0.184323,
+        0.168295,
+        0.120211,
+        0.117921,
+        -0.04236,
+        -0.285071,
+        0.214089,
+        -0.008014,
+        -0.026332,
+        0.184323,
+        -0.179744,
+        0.159136,
+        -0.085865,
+        0.218669,
+        -0.269043,
+        -0.152267,
+        0.12479,
+        0.111052,
+        0.166005,
+        -0.021752,
+        0.216379,
+        -0.266753,
+        -0.255305,
+        0.257594,
+        0.239276
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -286646,17 +287500,17 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1649,
+    "total_bytes": 26442228,
+    "text_tokens_est": 6600912,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 241,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
-      "support_file": 49
+      "python_module": 1001,
+      "schema_or_lexicon": 272,
+      "support_file": 50
     },
     "topology_nodes": 11478,
     "topology_edges": 28068,
@@ -286685,6 +287539,8 @@
       ".aura/SECURITY.md",
       ".aura/amd_track3_demo_tasks.json",
       ".aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md",
+      ".aura/arena/README.md",
+      ".aura/arena/awj032-thinkpad-nvme-residency-plan.md",
       ".aura/arena_routes/coding.v1.json",
       ".aura/arena_routes/construction.v1.json",
       ".aura/arena_routes/human_agent.v1.json",
@@ -286807,6 +287663,7 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/awj032-thinkpad-nvme-residency-plan.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -288296,6 +289153,13 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/__init__.py",
+      "tools/awj032/.gitkeep",
+      "tools/awj032/README.md",
+      "tools/awj032/THINKPAD_NVME_RESIDENCY_PLAN.md",
+      "tools/awj032/__init__.py",
+      "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+      "tools/awj032/thinkpad_nvme_residency_plan.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445634,6 +446498,376 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#class:ThinkPadNVMeResidencyPlanTests:7754e173bc3d0b22",
+        "name": "ThinkPadNVMeResidencyPlanTests",
+        "kind": "class",
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "line": 21,
+        "end_line": 200,
+        "signature_hash": "90a5d7c6d9023993",
+        "file_digest8": "49266ca6d2dc2683"
+      },
+      {
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.host:4d8bda005851a4bc",
+        "name": "ThinkPadNVMeResidencyPlanTests.host",
+        "kind": "method",
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "line": 22,
+        "end_line": 34,
+        "signature_hash": "0891f7fd5d90a139",
+        "file_digest8": "49266ca6d2dc2683"
+      },
+      {
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.policy:03cc94fc77439ea5",
+        "name": "ThinkPadNVMeResidencyPlanTests.policy",
+        "kind": "method",
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "line": 36,
+        "end_line": 46,
+        "signature_hash": "9a8ca884a8eb7cb6",
+        "file_digest8": "49266ca6d2dc2683"
+      },
+      {
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_adjacent_async_reads_are_coalesced_only_within_same_lane:1c6ec37fce1f4f13",
+        "name": "ThinkPadNVMeResidencyPlanTests.test_adjacent_async_reads_are_coalesced_only_within_same_lane",
+        "kind": "method",
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "line": 125,
+        "end_line": 144,
+        "signature_hash": "80b495ba96b1d6ef",
+        "file_digest8": "49266ca6d2dc2683"
+      },
+      {
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_bool_int_confusion_is_rejected:0fc07e7f860000e6",
+        "name": "ThinkPadNVMeResidencyPlanTests.test_bool_int_confusion_is_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "line": 176,
+        "end_line": 178,
+        "signature_hash": "0ba1829cc7f25c4a",
+        "file_digest8": "49266ca6d2dc2683"
+      },
+      {
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_hot_reused_slice_is_ram_resident_without_overcommit:bdd18bd2ddb1f998",
+        "name": "ThinkPadNVMeResidencyPlanTests.test_hot_reused_slice_is_ram_resident_without_overcommit",
+        "kind": "method",
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "line": 48,
+        "end_line": 81,
+        "signature_hash": "2059bb94e31cb759",
+        "file_digest8": "49266ca6d2dc2683"
+      },
+      {
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_io_uring_prefetch_uses_compute_slack_and_double_buffer_slot:b5265f31da9e197d",
+        "name": "ThinkPadNVMeResidencyPlanTests.test_io_uring_prefetch_uses_compute_slack_and_double_buffer_slot",
+        "kind": "method",
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "line": 83,
+        "end_line": 104,
+        "signature_hash": "3fe738c6885b0350",
+        "file_digest8": "49266ca6d2dc2683"
+      },
+      {
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_no_storage_backend_fails_closed:c1afd68fa033132f",
+        "name": "ThinkPadNVMeResidencyPlanTests.test_no_storage_backend_fails_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "line": 160,
+        "end_line": 174,
+        "signature_hash": "02d871e733c495f0",
+        "file_digest8": "49266ca6d2dc2683"
+      },
+      {
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_page_alignment_is_explicit:91387eda15ee4aa5",
+        "name": "ThinkPadNVMeResidencyPlanTests.test_page_alignment_is_explicit",
+        "kind": "method",
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "line": 146,
+        "end_line": 158,
+        "signature_hash": "75ed2069ca11cd81",
+        "file_digest8": "49266ca6d2dc2683"
+      },
+      {
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_plan_digest_is_deterministic_and_nonauthorizing:434e4539e5fb6dce",
+        "name": "ThinkPadNVMeResidencyPlanTests.test_plan_digest_is_deterministic_and_nonauthorizing",
+        "kind": "method",
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "line": 180,
+        "end_line": 200,
+        "signature_hash": "3bb58b741ec54c0c",
+        "file_digest8": "49266ca6d2dc2683"
+      },
+      {
+        "semantic_id": "tools/awj032/test_thinkpad_nvme_residency_plan.py#method:ThinkPadNVMeResidencyPlanTests.test_prefetch_falls_back_to_mmap_when_deadline_cannot_be_hidden:b0ed9f5715c9df00",
+        "name": "ThinkPadNVMeResidencyPlanTests.test_prefetch_falls_back_to_mmap_when_deadline_cannot_be_hidden",
+        "kind": "method",
+        "file": "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+        "line": 106,
+        "end_line": 123,
+        "signature_hash": "100894881099ec95",
+        "file_digest8": "49266ca6d2dc2683"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:HostStorageProfile:80398196a417b6e0",
+        "name": "HostStorageProfile",
+        "kind": "class",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 94,
+        "end_line": 118,
+        "signature_hash": "7af9ebebed9b2494",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:PrefetchBatch:375a8b3b4dcb876d",
+        "name": "PrefetchBatch",
+        "kind": "class",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 183,
+        "end_line": 190,
+        "signature_hash": "ae658904ce991647",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:ResidencyDecision:8be11abbdc6dbc3f",
+        "name": "ResidencyDecision",
+        "kind": "class",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 166,
+        "end_line": 179,
+        "signature_hash": "55476f85fbb255f0",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:ResidencyPolicy:0861eadc6b47c5c3",
+        "name": "ResidencyPolicy",
+        "kind": "class",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 148,
+        "end_line": 162,
+        "signature_hash": "139d38e30460e98e",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:TensorSlice:4a3234ec890921df",
+        "name": "TensorSlice",
+        "kind": "class",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 122,
+        "end_line": 144,
+        "signature_hash": "2f92927004e1413a",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:ThinkPadResidencyPlan:e40914cc8f792d44",
+        "name": "ThinkPadResidencyPlan",
+        "kind": "class",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 194,
+        "end_line": 219,
+        "signature_hash": "55ed3bbf3ace88be",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#class:ThinkPadResidencyPlanError:812ee1813c2d6333",
+        "name": "ThinkPadResidencyPlanError",
+        "kind": "class",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 29,
+        "end_line": 33,
+        "signature_hash": "5d512dc4c5216f58",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_canonical:3bd93d568cdcc172",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 36,
+        "end_line": 46,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_coalesce_prefetch_batches:07e8bbd0f20978dc",
+        "name": "_coalesce_prefetch_batches",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 230,
+        "end_line": 306,
+        "signature_hash": "06a60cb329ab93f1",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_digest:220141ec659887f4",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_exact_bool:8ccd34128186a093",
+        "name": "_exact_bool",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 59,
+        "end_line": 62,
+        "signature_hash": "65ab86c1839d5551",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_nonnegative_int:5040bed87108aa00",
+        "name": "_nonnegative_int",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 71,
+        "end_line": 74,
+        "signature_hash": "b8739218d7c73d0c",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_page_aligned_span:9c01a93890d2b653",
+        "name": "_page_aligned_span",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 86,
+        "end_line": 90,
+        "signature_hash": "4f1544c42bb90026",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_positive_float:45f959fee9a686d1",
+        "name": "_positive_float",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 77,
+        "end_line": 83,
+        "signature_hash": "b2fece0b5243771f",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_positive_int:2ee9d62f801b962e",
+        "name": "_positive_int",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 65,
+        "end_line": 68,
+        "signature_hash": "9fa9d0d235d67d55",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_ram_priority:14e97a28f4ef5296",
+        "name": "_ram_priority",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 222,
+        "end_line": 227,
+        "signature_hash": "4dfa5b6971991cf0",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:_text:0a1450e8f10d7fd2",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 53,
+        "end_line": 56,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#function:build_thinkpad_residency_plan:4d5ef890fbff7566",
+        "name": "build_thinkpad_residency_plan",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 309,
+        "end_line": 434,
+        "signature_hash": "62798cc83c227254",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:HostStorageProfile.__post_init__:8ba53b9522576ff6",
+        "name": "HostStorageProfile.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 104,
+        "end_line": 118,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:ResidencyPolicy.__post_init__:43a40db61a0b37cc",
+        "name": "ResidencyPolicy.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 156,
+        "end_line": 162,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:TensorSlice.__post_init__:b5d3ca2a4ea11689",
+        "name": "TensorSlice.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 133,
+        "end_line": 144,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:ThinkPadResidencyPlan.plan_digest:b644c9f814e76821",
+        "name": "ThinkPadResidencyPlan.plan_digest",
+        "kind": "method",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 213,
+        "end_line": 214,
+        "signature_hash": "7a8f4ade6ad4e027",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:ThinkPadResidencyPlan.storage_plan_digest:095e24141a599f4c",
+        "name": "ThinkPadResidencyPlan.storage_plan_digest",
+        "kind": "method",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 217,
+        "end_line": 219,
+        "signature_hash": "7c0db83ec53bf702",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:ThinkPadResidencyPlan.to_dict:c78e4c757401e343",
+        "name": "ThinkPadResidencyPlan.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 209,
+        "end_line": 210,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:ThinkPadResidencyPlanError.__init__:aeae5b698173c121",
+        "name": "ThinkPadResidencyPlanError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_nvme_residency_plan.py#method:_coalesce_prefetch_batches.flush:da0d3966810dbabb",
+        "name": "_coalesce_prefetch_batches.flush",
+        "kind": "method",
+        "file": "tools/awj032/thinkpad_nvme_residency_plan.py",
+        "line": 247,
+        "end_line": 260,
+        "signature_hash": "f70ce389b3a776a8",
+        "file_digest8": "c6d546d1db2dcbd9"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +448118,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "3004c0e17184fda2466cdda45b9df05e",
+    "payload_hash": "91603bf5a98ff2fcd220be67e1c4784f"
   }
 }
