@@ -1,4 +1,6 @@
-use aura_k27_astge_portable_target_raw_slice::{PortableTargetRawSliceV1, VERSION as RAW_SLICE_VERSION};
+use aura_k27_astge_portable_target_raw_slice::{
+    PortableTargetRawSliceV1, VERSION as RAW_SLICE_VERSION,
+};
 use aura_k27_astge_portable_target_raw_slice_projection::{
     canonical_payload_bytes, project_portable_target_raw_slice,
     verify_portable_target_raw_slice_projection, RawSliceProjectionErrorV1,
@@ -89,14 +91,25 @@ fn semantic_or_effect_authority_widening_fails_before_projection() {
 }
 
 #[test]
-fn malformed_span_or_digest_fails_closed() {
-    let mut bad_span = receipt();
-    bad_span.target_slice_byte_len = 5;
+fn malformed_or_out_of_bounds_span_fails_closed() {
+    let mut bad_len = receipt();
+    bad_len.target_slice_byte_len = 5;
     assert!(matches!(
-        project_portable_target_raw_slice(&bad_span),
+        project_portable_target_raw_slice(&bad_len),
         Err(RawSliceProjectionErrorV1::InvalidSpan)
     ));
 
+    let mut out_of_bounds = receipt();
+    out_of_bounds.target_byte_end = 19;
+    out_of_bounds.target_slice_byte_len = 15;
+    assert!(matches!(
+        project_portable_target_raw_slice(&out_of_bounds),
+        Err(RawSliceProjectionErrorV1::InvalidSpan)
+    ));
+}
+
+#[test]
+fn malformed_digest_fails_closed() {
     let mut bad_digest = receipt();
     bad_digest.target_slice_sha256_hex = "zz".repeat(32);
     assert!(matches!(
