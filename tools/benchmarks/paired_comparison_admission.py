@@ -5,7 +5,7 @@ import json
 import re
 from typing import Any
 
-from tools.benchmarks.long_horizon_preregistration import SCHEMA_ID as PREREG_SCHEMA_ID
+from tools.benchmarks.long_horizon_preregistration import SCHEMA_ID as PREREG_SCHEMA_ID, validate_preregistration
 from tools.benchmarks.persistent_adapter_runner import RUNNER_SCHEMA_ID
 
 
@@ -52,7 +52,7 @@ def admit_blinded_pair(
 ) -> dict[str, Any]:
     if preregistration.get("schema_id") != PREREG_SCHEMA_ID:
         raise ValueError("INVALID_PREREGISTRATION_SCHEMA")
-    _verify_embedded_digest(preregistration, "preregistration_digest")
+    preregistration = validate_preregistration(preregistration)
     arms = preregistration.get("arms")
     if not isinstance(arms, list) or len(arms) != 2:
         raise ValueError("EXACTLY_TWO_PREREGISTERED_ARMS_REQUIRED")
@@ -82,12 +82,20 @@ def admit_blinded_pair(
         if not isinstance(report, dict) or report.get("schema_id") != RUNNER_SCHEMA_ID:
             raise ValueError("INVALID_RUNNER_REPORT")
         _verify_embedded_digest(report, "evidence_digest")
+        if report.get("preregistration_digest") != preregistration["preregistration_digest"]:
+            raise ValueError("RUN_PREREGISTRATION_DIGEST_MISMATCH")
+        if report.get("blinded_label") != label:
+            raise ValueError("RUN_BLINDED_LABEL_MISMATCH")
+        if report.get("condition_commitment") != arm.get("condition_commitment"):
+            raise ValueError("CONDITION_COMMITMENT_MISMATCH")
         if report.get("workload_digest") != preregistration.get("workload_digest"):
             raise ValueError("WORKLOAD_DIGEST_MISMATCH")
         if report.get("rounds") != preregistration.get("rounds"):
             raise ValueError("ROUND_COUNT_MISMATCH")
         if report.get("seed") != preregistration.get("seed"):
             raise ValueError("SEED_MISMATCH")
+        if report.get("startup_timeout_seconds") != preregistration.get("startup_timeout_seconds"):
+            raise ValueError("STARTUP_TIMEOUT_MISMATCH")
         if report.get("turn_timeout_seconds") != preregistration.get("timeout_seconds"):
             raise ValueError("TURN_TIMEOUT_MISMATCH")
         if report.get("adapter_command_digest") != arm.get("adapter_command_digest"):
