@@ -1,0 +1,125 @@
+name: Aura GLM53 G2 Abstention Neutral Admission
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_g2_abstention_neutral_admission.py"
+      - "tools/awj032/test_glm53_g2_abstention_neutral_admission.py"
+      - ".github/workflows/aura-glm53-g2-abstention-neutral-admission.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  g2-abstention-neutral-admission:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Immutable exact-head checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            EXPECTED="${{ github.event.pull_request.head.sha }}"
+          else
+            EXPECTED="${GITHUB_SHA}"
+          fi
+          git fetch --no-tags --depth=1 origin "${EXPECTED}"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${EXPECTED}"
+          echo "G2A_HEAD=${EXPECTED}" >> "$GITHUB_ENV"
+
+      - name: Authenticate exact-green parent semantics and live source stability
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/awj032/glm53_prefetch_transfer_admission.py)" = "eba980416b47fb3b4c2391a915ebe3d9db9bebb4"
+          python3 - <<'PY'
+          import json, os, urllib.parse, urllib.request
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          parents = (
+              (722, 33414707814, 99562465599, "44831fd5454d08a97bd0b172337cf4c48a339dfe", "tools/awj032/glm53_prefetch_transfer_admission.py", "eba980416b47fb3b4c2391a915ebe3d9db9bebb4"),
+              (723, 33414653661, 99562295582, "83d47da6f19b42d42d1bbcfd26bce8620d2b42fb", "tools/awj032/glm53_router_separated_prefetch.py", "a19609c986faa7212e364890df901d2ff73ad231"),
+          )
+
+          def get(path):
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/{path}",
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  return json.load(response)
+
+          for pr, run_id, job_id, proof_head, path, source_blob in parents:
+              run = get(f"actions/runs/{run_id}")
+              assert run["head_sha"] == proof_head, (pr, run["head_sha"], proof_head)
+              assert run["status"] == "completed" and run["conclusion"] == "success", (pr, run["status"], run["conclusion"])
+              jobs = get(f"actions/runs/{run_id}/jobs?per_page=100")["jobs"]
+              job = [x for x in jobs if x["id"] == job_id]
+              assert len(job) == 1 and job[0]["status"] == "completed" and job[0]["conclusion"] == "success", (pr, job)
+
+              live = get(f"pulls/{pr}")["head"]["sha"]
+              encoded = urllib.parse.quote(path, safe="/")
+              meta = get(f"contents/{encoded}?ref={live}")
+              assert meta["sha"] == source_blob, (pr, live, meta["sha"], source_blob)
+              print(f"G2A_PARENT_SOURCE_STABLE pr={pr} proof={proof_head} live={live}")
+
+          print("G2A_EXACT_GREEN_PARENT_SEMANTICS=PASS")
+          PY
+
+      - name: Compile and replay G2 plus G2-A adversarial contracts
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/awj032/glm53_prefetch_transfer_admission.py \
+            tools/awj032/glm53_g2_abstention_neutral_admission.py \
+            tools/awj032/test_glm53_g2_abstention_neutral_admission.py
+          python3 -m unittest \
+            tools.awj032.test_glm53_prefetch_transfer_admission \
+            tools.awj032.test_glm53_g2_abstention_neutral_admission
+
+      - name: Prove zero-byte domain separation and nonpromotion
+        run: |
+          set -euo pipefail
+          python3 -m tools.awj032.glm53_g2_abstention_neutral_admission > /tmp/g2a.json
+          python3 - <<'PY'
+          import json, os
+          with open("/tmp/g2a.json", "r", encoding="utf-8") as f:
+              r = json.load(f)
+          assert r["schema"] == "AURA-GLM53-G2-ABSTENTION-NEUTRAL-ADMISSION-v1"
+          assert r["predicted_experts"] == [] and r["admitted_experts"] == []
+          assert r["cold_predicted_logical_bytes"] == 0
+          assert r["cold_required_reuse_for_window"] is None
+          assert r["cold_required_reuse_disposition"] == "NOT_APPLICABLE_ZERO_LOGICAL_BYTES"
+          assert r["admitted_estimated_energy_joules"] is None
+          assert r["physical_io_attested"] is False
+          assert r["physical_storage_budget_proven"] is False
+          assert r["transfer_effect_authorized"] is False
+          assert r["g2_admitted"] is False
+          assert r["semantic_k27_authority_minted"] is False
+          assert len(r["receipt_digest"]) == 64
+          print("G2A_ZERO_BYTE_REUSE_DOMAIN=PASS")
+          print("G2A_NONPROMOTION=PASS")
+          print("G2A_HEAD=" + os.environ["G2A_HEAD"])
+          PY
+
+      - name: Enforce HyperDrive laws
+        run: |
+          set -euo pipefail
+          grep -q 'ZeroPredictedBytes=>RequiredReuseNotApplicable' tools/awj032/glm53_g2_abstention_neutral_admission.py
+          grep -q 'RequiredReuseNotApplicable!=ZeroReuseRequirement' tools/awj032/glm53_g2_abstention_neutral_admission.py
+          grep -q 'NoTransferPlan!=PhysicalIOSavingsProof' tools/awj032/glm53_g2_abstention_neutral_admission.py
+          echo "G2A_HYPERDRIVE_LAWS=PASS"
