@@ -151,15 +151,18 @@ class ExecutionQualifiedPortableEvidenceAdmissionTests(unittest.TestCase):
         )
 
     def test_caller_supplied_generation_time_never_authenticates_generation(self):
-        for producer_time in (
-            "2026-08-31T13:20:00Z",
-            "2026-09-01T00:00:00Z",
-            "2030-01-01T00:00:00Z",
-        ):
-            r = classify(producer_time=producer_time)
-            self.assertFalse(r.producer_generation_authenticated)
-            self.assertFalse(r.semantic_sibling_credit)
-            self.assertFalse(r.fresh_semantic_sibling_execution_qualified)
+        # A causally possible caller-supplied time can be a structural freshness
+        # candidate, but A7 never authenticates that clock by itself.
+        r = classify(producer_time="2026-08-31T13:20:00Z")
+        self.assertFalse(r.producer_generation_authenticated)
+        self.assertFalse(r.semantic_sibling_credit)
+        self.assertFalse(r.fresh_semantic_sibling_execution_qualified)
+
+        # A producer time after the observation is not a weaker candidate; it is
+        # an impossible causal record and must preserve A5's fail-closed rejection.
+        for producer_time in ("2026-09-01T00:00:00Z", "2030-01-01T00:00:00Z"):
+            with self.assertRaisesRegex(ValueError, "SEMANTIC_GENERATION_AFTER_OBSERVATION"):
+                classify(producer_time=producer_time)
 
     def test_receipt_is_deterministic(self):
         self.assertEqual(classify().receipt_digest, classify().receipt_digest)
