@@ -6,13 +6,19 @@ Q7 is derived from exactly two fresh exact-green other-agent artifacts:
 - Q6 / PR640 representation-exact quantization evidence transfer.
 
 The gate prevents either parent from laundering the other's missing evidence.
-A known official model/index object is not an observed source tensor, and valid
+A known official model/index object is not current raw-byte residency, and valid
 quantization evidence is not transferable merely because two schemes share an
-E8-family label. The current public path is intentionally zero-input and HOLD.
+E8-family label.
 
 Q5's exact source owner is materialized byte-for-byte into this tree. Q7 calls
 that producer's ``current_public_state()`` instead of maintaining a parallel
-source-state schema, so producer drift cannot be hidden by a copied snapshot.
+source-state schema.
+
+A historical exact-green producer (PR398) independently observed the exact
+official index relation and six representative layer-3/expert-0 safetensors
+header entries with zero tensor-payload bytes. Q7 binds that historical evidence
+as a separate temporal plane. Historical producer evidence constrains current
+reasoning but never impersonates current Q5 raw-byte residency.
 """
 from __future__ import annotations
 
@@ -36,7 +42,7 @@ from tools.quantization.aura_glm53_quantization_evidence_transfer import (
     q4_to_q5_disposition,
 )
 
-VERSION = "AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V2"
+VERSION = "AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V3"
 
 Q5_EXACT_HEAD = "730426b82235b0ff4e75fef1cff00707877a84ad"
 Q5_EXACT_RUN = 33369967425
@@ -50,6 +56,20 @@ Q5_CANDIDATE_PARENT_SHA = PR628_E8_PAGE_ARTIFACT_SHA
 Q5_CANDIDATE_SCHEME = PR628_E8_PAGE_SCHEME
 Q5_CURRENT_SOURCE_STATE_DIGEST = "583965be30974da13e1bc0cc895cdd2307afc3650fb34ea30e28c45c403094b0"
 Q5_CURRENT_BLOCKER = "OFFICIAL_INDEX_BYTES_AND_REPRESENTATIVE_HEADERS_NOT_MATERIALIZED"
+
+# Historical exact official producer evidence. These identifiers are evidence
+# coordinates, not a copy of raw source bytes and not current-residency claims.
+HISTORICAL_W2_PRODUCER_HEAD = "131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8"
+HISTORICAL_W2_RUN = 33336508527
+HISTORICAL_W2_JOB = 99324255699
+HISTORICAL_W2_DRIVE_OBSERVATION = "1FIz2aGHogE32scM4pmxDkHT7MiGfr2UbUkWlIDfpI_w"
+HISTORICAL_W2_RECEIPT_DIGEST = "736f0a117eb02c486736e7224c4e0f5363ae60b9"
+HISTORICAL_W2_LAYER_ID = 3
+HISTORICAL_W2_EXPERT_ID = 0
+HISTORICAL_W2_SHARD = "model-00038-of-00141.safetensors"
+HISTORICAL_W2_HEADER_SHA256 = "8607b1b281f5ca8c7b166376e8f6d7eb9ca07f79200f6095f0f55ca35149ba56"
+HISTORICAL_W2_PAYLOAD_BYTES_READ = 0
+HISTORICAL_W2_ENTRY_COUNT = 6
 
 
 def _canonical(value: object) -> bytes:
@@ -74,17 +94,34 @@ class SourceBoundEvidenceGate:
     official_index_size: int
     official_index_xet_hash: str
     source_state_digest: str
-    source_index_bytes_verified: bool
-    source_headers_observed: bool
-    source_header_trial_eligible: bool
-    source_tensor_payload_bound: bool
+    current_source_index_bytes_verified: bool
+    current_source_headers_observed: bool
+    current_source_header_trial_eligible: bool
+    current_source_tensor_payload_bound: bool
+    historical_official_index_relation_observed: bool
+    historical_official_headers_observed: bool
+    historical_official_fp8_companions_bound: bool
+    historical_observation_representative_only: bool
+    historical_producer_head: str
+    historical_producer_run: int
+    historical_producer_job: int
+    historical_drive_observation: str
+    historical_receipt_digest: str
+    historical_layer_id: int
+    historical_expert_id: int
+    historical_shard: str
+    historical_header_sha256: str
+    historical_entry_count: int
+    historical_payload_bytes_read: int
+    historical_evidence_implies_current_raw_bytes: bool
+    historical_evidence_implies_global_layout_uniformity: bool
     transfer_disposition_digest: str
     source_evidence_scope: str
     exact_representation_identity_match: bool
     geometry_family_label_match: bool
     source_bound_evidence_admitted: bool
     disposition: str
-    independent_source_transport_residual: bool
+    independent_current_source_transport_residual: bool
     independent_representation_evidence_residual: bool
     glm53_tensor_evidence_admitted: bool
     coding_quality_evidence_admitted: bool
@@ -144,18 +181,18 @@ def _evaluate(source: AdmissionState) -> SourceBoundEvidenceGate:
     _validate_source_snapshot(source)
     transfer = q4_to_q5_disposition()
 
-    source_transport_residual = not (
+    current_source_transport_residual = not (
         source.index_bytes_verified
         and source.representative_headers_observed
         and source.header_trial_eligible
     )
     representation_residual = not transfer.exact_representation_identity_match
-    admitted = not source_transport_residual and not representation_residual
+    admitted = not current_source_transport_residual and not representation_residual
 
-    if source_transport_residual and representation_residual:
-        disposition = "HOLD_SOURCE_TRANSPORT_AND_REPRESENTATION_EVIDENCE"
-    elif source_transport_residual:
-        disposition = "HOLD_OFFICIAL_SOURCE_TRANSPORT"
+    if current_source_transport_residual and representation_residual:
+        disposition = "HOLD_CURRENT_SOURCE_TRANSPORT_AND_REPRESENTATION_EVIDENCE"
+    elif current_source_transport_residual:
+        disposition = "HOLD_CURRENT_OFFICIAL_SOURCE_TRANSPORT"
     elif representation_residual:
         disposition = "HOLD_REPRESENTATION_EXACT_EVIDENCE"
     else:
@@ -176,17 +213,34 @@ def _evaluate(source: AdmissionState) -> SourceBoundEvidenceGate:
         official_index_size=OFFICIAL_INDEX_SIZE,
         official_index_xet_hash=OFFICIAL_INDEX_XET_HASH,
         source_state_digest=source.digest(),
-        source_index_bytes_verified=source.index_bytes_verified,
-        source_headers_observed=source.representative_headers_observed,
-        source_header_trial_eligible=source.header_trial_eligible,
-        source_tensor_payload_bound=source.source_tensor_payload_bound,
+        current_source_index_bytes_verified=source.index_bytes_verified,
+        current_source_headers_observed=source.representative_headers_observed,
+        current_source_header_trial_eligible=source.header_trial_eligible,
+        current_source_tensor_payload_bound=source.source_tensor_payload_bound,
+        historical_official_index_relation_observed=True,
+        historical_official_headers_observed=True,
+        historical_official_fp8_companions_bound=True,
+        historical_observation_representative_only=True,
+        historical_producer_head=HISTORICAL_W2_PRODUCER_HEAD,
+        historical_producer_run=HISTORICAL_W2_RUN,
+        historical_producer_job=HISTORICAL_W2_JOB,
+        historical_drive_observation=HISTORICAL_W2_DRIVE_OBSERVATION,
+        historical_receipt_digest=HISTORICAL_W2_RECEIPT_DIGEST,
+        historical_layer_id=HISTORICAL_W2_LAYER_ID,
+        historical_expert_id=HISTORICAL_W2_EXPERT_ID,
+        historical_shard=HISTORICAL_W2_SHARD,
+        historical_header_sha256=HISTORICAL_W2_HEADER_SHA256,
+        historical_entry_count=HISTORICAL_W2_ENTRY_COUNT,
+        historical_payload_bytes_read=HISTORICAL_W2_PAYLOAD_BYTES_READ,
+        historical_evidence_implies_current_raw_bytes=False,
+        historical_evidence_implies_global_layout_uniformity=False,
         transfer_disposition_digest=transfer.disposition_digest,
         source_evidence_scope=transfer.source_evidence_scope,
         exact_representation_identity_match=transfer.exact_representation_identity_match,
         geometry_family_label_match=transfer.geometry_family_label_match,
         source_bound_evidence_admitted=admitted,
         disposition=disposition,
-        independent_source_transport_residual=source_transport_residual,
+        independent_current_source_transport_residual=current_source_transport_residual,
         independent_representation_evidence_residual=representation_residual,
         glm53_tensor_evidence_admitted=False,
         coding_quality_evidence_admitted=False,
