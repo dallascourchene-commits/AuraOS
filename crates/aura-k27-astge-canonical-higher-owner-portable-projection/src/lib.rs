@@ -237,7 +237,9 @@ fn require_portable_ceiling(
 fn digest_payload(
     payload: &CanonicalHigherOwnerPortablePayloadV1,
 ) -> Result<String, PortableOwnerChainProjectionErrorV1> {
-    Ok(hex(&Sha256::digest(canonical_portable_payload_bytes(payload)?)))
+    Ok(hex(&Sha256::digest(canonical_portable_payload_bytes(
+        payload,
+    )?)))
 }
 
 fn hex(bytes: &[u8]) -> String {
