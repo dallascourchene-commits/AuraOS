@@ -47,7 +47,15 @@ jobs:
         run: |
           set -euo pipefail
           python -m py_compile tools/aura_external_subject_lineage_bridge.py
-          python -m pytest -q tests/test_aura_external_subject_lineage_bridge.py
+          python -m pytest -q tests/test_aura_external_subject_lineage_bridge.py --junitxml=eki3-junit.xml
+
+      - name: Upload EKI-3 adversarial receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: eki3-adversarial-receipt-${{ github.event.pull_request.head.sha }}
+          path: eki3-junit.xml
+          if-no-files-found: warn
 
       - name: Validate bounded external coordinate map
         shell: bash
