@@ -1,15 +1,10 @@
 #!/usr/bin/env python3
 """Materialize the minimum exact official GLM-5.3 source/header evidence cone.
 
-This is an evidence producer, not an execution authorizer.  It downloads the exact
+This is an evidence producer, not an execution authorizer. It downloads the exact
 pinned index object plus only the bounded safetensors header prefixes required for
 layer-3/expert-0 source admission, then feeds those raw bytes through the existing
 Q7 source->C2 admission owner.
-
-The objective is derived from two consequence-distinct exact-green agents:
-- Q5 / PR671: equal-rate E8 distortion evidence on official source canaries;
-- Q7 / PR672: source-bound C2 request admission, currently HOLD only below exact
-  index bytes and representative safetensors headers.
 
 No tensor payload bytes beyond safetensors headers are read by this tool.
 """
@@ -18,6 +13,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import hashlib
 import json
+import re
 import struct
 import urllib.request
 from typing import Mapping
@@ -37,10 +33,13 @@ CONVERGENCE_COMMIT = "63a411a0eaea18bfbdf60346fe19bdc7fa93d397"
 EXPERT_PREFIX = "model.layers.3.mlp.experts.0"
 MAX_HEADER_PREFIX_BYTES = 2 * 1024 * 1024
 USER_AGENT = "AuraOS-S1-SourceHeaderMaterializer/1"
+_CONTENT_RANGE = re.compile(r"^bytes (?P<start>[0-9]+)-(?P<end>[0-9]+)/(?P<complete>[0-9]+)$")
 
 
 def _canonical(value: object) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("ascii")
+    return json.dumps(
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False
+    ).encode("ascii")
 
 
 def _sha(data: bytes) -> str:
@@ -58,7 +57,10 @@ def k27_coordinate(identity: str) -> tuple[int, int, int]:
 
 
 def hf_resolve_url(filename: str) -> str:
-    return f"https://huggingface.co/{source.OFFICIAL_REPO}/resolve/{source.OFFICIAL_COMMIT}/{filename}?download=true"
+    return (
+        f"https://huggingface.co/{source.OFFICIAL_REPO}/resolve/"
+        f"{source.OFFICIAL_COMMIT}/{filename}?download=true"
+    )
 
 
 def official_config_profile() -> Mapping[str, object]:
@@ -82,12 +84,33 @@ def official_config_profile() -> Mapping[str, object]:
 
 
 def urllib_read_exact(url: str, *, max_bytes: int) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept-Encoding": "identity"})
+    req = urllib.request.Request(
+        url, headers={"User-Agent": USER_AGENT, "Accept-Encoding": "identity"}
+    )
     with urllib.request.urlopen(req, timeout=120) as response:
         raw = response.read(max_bytes + 1)
     if len(raw) > max_bytes:
         raise ValueError("REMOTE_OBJECT_EXCEEDS_BOUND")
     return raw
+
+
+def _validate_content_range(value: str, *, start: int, end: int) -> int:
+    """Validate the exact RFC 9110 byte range form required by this producer.
+
+    S1 intentionally refuses unknown complete length (`*`) because exact bounded
+    source identity is part of its admission contract.
+    """
+    match = _CONTENT_RANGE.fullmatch(value)
+    if match is None:
+        raise ValueError("CONTENT_RANGE_MISMATCH")
+    observed_start = int(match.group("start"))
+    observed_end = int(match.group("end"))
+    complete_length = int(match.group("complete"))
+    if observed_start != start or observed_end != end:
+        raise ValueError("CONTENT_RANGE_MISMATCH")
+    if complete_length <= observed_end:
+        raise ValueError("CONTENT_RANGE_INVALID_COMPLETE_LENGTH")
+    return complete_length
 
 
 def urllib_read_range(url: str, start: int, length: int) -> bytes:
@@ -107,8 +130,7 @@ def urllib_read_range(url: str, start: int, length: int) -> bytes:
         if status != 206:
             raise ValueError("RANGE_RESPONSE_NOT_PARTIAL")
         content_range = str(response.headers.get("Content-Range", ""))
-        if not content_range.startswith(f"bytes {start}-{end}/"):
-            raise ValueError("CONTENT_RANGE_MISMATCH")
+        _validate_content_range(content_range, start=start, end=end)
         raw = response.read(length + 1)
     if len(raw) != length:
         raise ValueError("RANGE_LENGTH_MISMATCH")
