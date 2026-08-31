@@ -1,0 +1,115 @@
+name: Aura Hard Gate Transition Admission
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_hard_gate_transition_admission.py"
+      - "tests/test_aura_hard_gate_transition_admission.py"
+      - ".github/workflows/aura-hard-gate-transition-admission.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  hard-gate-transition:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact PR head without mutable actions
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "$HEAD_SHA" \
+            9c0c548235397ab0cd774038468c8fe4c770d9fe \
+            9f3f37097b3e076b77f197728301c599074e2a3b \
+            eb3c1beedab41521754fbdf955957777c260d5fd
+          git checkout --detach "$HEAD_SHA"
+
+      - name: Prove exact N1 x Q15 convergence and hosted parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence='eb3c1beedab41521754fbdf955957777c260d5fd'
+          n1='9c0c548235397ab0cd774038468c8fe4c770d9fe'
+          q15='9f3f37097b3e076b77f197728301c599074e2a3b'
+          parents=subprocess.check_output(['git','rev-list','--parents','-n','1',convergence],text=True).strip().split()
+          assert parents == [convergence,n1,q15], parents
+          expected=(
+              (33402556317,99522161582,n1,'Aura Non-Compensatory Evidence Product Gate'),
+              (33402644106,99522457067,q15,'GLM53 Minimum Official Metadata Admission Closure'),
+          )
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          for run_id, job_id, head, name in expected:
+              req=urllib.request.Request(f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}",headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as response: run=json.load(response)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['name']==name,(run_id,run['name'],name)
+              req=urllib.request.Request(f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}/jobs?per_page=100",headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as response: jobs=json.load(response)['jobs']
+              exact=[j for j in jobs if j['id']==job_id]
+              assert len(exact)==1,(run_id,job_id,len(exact))
+              assert exact[0]['status']=='completed' and exact[0]['conclusion']=='success',exact[0]
+          print('N2_EXACT_N1_Q15_PARENTS_GREEN=true')
+          PY
+
+      - name: Compile and run N2 adversarial suite
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/aura_noncompensatory_evidence_product_gate.py tools/aura_hard_gate_transition_admission.py tests/test_aura_hard_gate_transition_admission.py
+          PYTHONPATH=. python3 -m unittest -v tests.test_aura_hard_gate_transition_admission
+
+      - name: Prove exact transition and consequence ceiling
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 tools/aura_hard_gate_transition_admission.py | tee /tmp/n2-hard-gate-transition.json
+          PYTHONPATH=. python3 - <<'PY'
+          from tools import aura_hard_gate_transition_admission as t
+          from tools import aura_noncompensatory_evidence_product_gate as n1
+          r=t.current_n1_q15_fixture()
+          assert r.before_product_feasible is False
+          assert r.before_disposition==n1.HOLD_HARD_GATE
+          assert r.evidence_policy_evaluated_before is False
+          assert r.after_product_feasible is True
+          assert r.after_disposition==n1.ELIGIBLE_BOUNDED_PROPOSAL
+          assert r.evidence_policy_evaluated_after is True
+          assert r.bounded_proposal_eligible_after is True
+          assert r.evidence_unchanged is True
+          assert r.changed_hard_gate_ids==('pr672-official-source-header-admission',)
+          forbidden=(
+              r.proposal_eligibility_grants_execution_authority,
+              r.gate_closure_grants_tensor_payload_evidence,
+              r.evidence_replay_counts_as_gate_closure,
+              r.currentness_observation_counts_as_semantic_generation,
+              r.k27_coordinate_affects_feasibility,
+              r.semantic_truth_minted,r.effect_authority_granted,
+              r.native_private_transformer_kv_accessed,r.gate10_promoted,
+              r.merge_or_deployment_authorized,
+          )
+          assert not any(forbidden),forbidden
+          print('N2_HARD_GATE_TRANSITION_PROVEN=true')
+          print('N2_RECEIPT_DIGEST='+r.receipt_digest)
+          PY
+
+      - name: Publish receipt digest to job summary
+        run: |
+          set -euo pipefail
+          echo '## Aura hard-gate transition admission' >> "$GITHUB_STEP_SUMMARY"
+          echo 'Exact N1 x Q15 transition proof passed.' >> "$GITHUB_STEP_SUMMARY"
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          r=json.load(open('/tmp/n2-hard-gate-transition.json',encoding='utf-8'))
+          print(f"Receipt: `{r['receipt_digest']}`")
+          print(f"Before: `{r['before_disposition']}`")
+          print(f"After: `{r['after_disposition']}`")
+          print('Execution/effect/K27 semantic authority: `false`.')
+          PY
