@@ -1,0 +1,92 @@
+name: Aura O65 Owner-Resolved Pre-Attempt Admission
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  o65-owner-resolved-pre-attempt:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      O64_HEAD: 70aa3db4f11d035b52a81992c05c052f59683377
+      O64_RUN: '33407842585'
+      O64_JOB: '99539248065'
+      O64_CAPSULE_BLOB: 11ac9fd37aede4902b3c1029eddcbad96a828f45
+    steps:
+      - name: Exact authenticated checkout without mutable actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Revalidate exact hosted O64 owner generation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'}
+          def get(url):
+              req=urllib.request.Request(url,headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: return json.load(r)
+          run=get(f"https://api.github.com/repos/{repo}/actions/runs/{os.environ['O64_RUN']}")
+          assert run['status']=='completed' and run['conclusion']=='success',run
+          assert run['head_sha']==os.environ['O64_HEAD'],(run['head_sha'],os.environ['O64_HEAD'])
+          job=get(f"https://api.github.com/repos/{repo}/actions/jobs/{os.environ['O64_JOB']}")
+          assert str(job['run_id'])==os.environ['O64_RUN']
+          assert job['status']=='completed' and job['conclusion']=='success',job
+          print('O64_EXACT_HOSTED_OWNER_CURRENT=true')
+          PY
+          test "$(git rev-parse "$O64_HEAD:tools/aura_bounded_proposal_capsule.py")" = "$O64_CAPSULE_BLOB"
+
+      - name: Compile and run O65 adversarial contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_bounded_proposal_capsule.py \
+            tools/aura_pre_attempt_admission.py \
+            tests/test_aura_pre_attempt_admission.py
+          python3 -m unittest -v tests.test_aura_pre_attempt_admission
+
+      - name: Materialize exact non-executable pre-attempt receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from tests.test_aura_pre_attempt_admission import capsule_and_resolver
+          from tools.aura_pre_attempt_admission import ELIGIBLE, admit_pre_attempt
+          capsule,resolver=capsule_and_resolver(producer='hosted-o65-worker')
+          receipt=admit_pre_attempt(capsule=capsule,owner_resolver=resolver)
+          body=receipt.to_dict()
+          assert body['disposition']==ELIGIBLE
+          assert len(body['pre_attempt_id'])==64
+          assert body['proposal_current'] is True
+          assert body['policy_current'] is True
+          assert body['concurrent_live_attempt_conflict'] is False
+          for key in (
+              'execution_authorized','execution_lease_minted','provider_effect_authorized',
+              'provider_effect_started','semantic_k27_authority',
+              'native_private_transformer_kv_accessed','gate10_promoted',
+              'merge_deploy_spend_public_financial_human_effect'):
+              assert body[key] is False,key
+          print(json.dumps(body,sort_keys=True))
+          print('O65_OWNER_RESOLVED_PRE_ATTEMPT_EXACT=true')
+          PY
