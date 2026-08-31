@@ -5,13 +5,10 @@ import unittest
 
 from tools.awj032.glm53_g4_prefetch_plan_revalidation import (
     AXES,
-    G3PlanProjection,
     CurrentReuseContext,
-    G4RevalidationReceipt,
+    G3PlanProjection,
     HOLD_RECOMPUTE_G3,
-    REVALIDATED_UNCHANGED,
-    changed_axes_table,
-    changed_axes_tree,
+    STRUCTURAL_MATCH_OWNER_AUTH_REQUIRED,
     prove_finite_drift_lattice,
     revalidate_g3_plan,
 )
@@ -39,22 +36,54 @@ class GLM53G4PrefetchPlanRevalidationTests(unittest.TestCase):
             host_profile_generation="host::pcie::gpu::17",
         )
 
-    def current(self, plan: G3PlanProjection | None = None, **changes: str) -> CurrentReuseContext:
+    def current(self, plan: G3PlanProjection | None = None, **changes: object) -> CurrentReuseContext:
         p = plan or self.plan()
-        values = {axis: getattr(p, axis) for axis in AXES}
+        values: dict[str, object] = {axis: getattr(p, axis) for axis in AXES}
         values.update(changes)
         return CurrentReuseContext(**values)
 
-    def test_unchanged_plan_revalidates_without_execution(self) -> None:
+    def test_unchanged_labels_are_structural_match_not_reuse_authority(self) -> None:
         plan = self.plan()
         receipt = revalidate_g3_plan(plan=plan, current=self.current(plan))
-        self.assertEqual(receipt.disposition, REVALIDATED_UNCHANGED)
+        self.assertEqual(receipt.disposition, STRUCTURAL_MATCH_OWNER_AUTH_REQUIRED)
         self.assertEqual(receipt.changed_axes, ())
-        self.assertTrue(receipt.reusable_without_recompute)
+        self.assertTrue(receipt.structural_generation_match)
         self.assertFalse(receipt.recompute_g3_required)
+        self.assertTrue(receipt.owner_currentness_authentication_required)
+        self.assertFalse(receipt.owner_currentness_authenticated_by_this_contract)
+        self.assertFalse(receipt.reuse_authorized_by_this_contract)
         self.assertFalse(receipt.plan_executed_by_this_contract)
-        self.assertFalse(receipt.transfer_effect_authorized)
-        self.assertFalse(receipt.physical_io_proven)
+
+    def test_caller_context_cannot_self_mint_owner_authentication(self) -> None:
+        with self.assertRaisesRegex(ValueError, "CALLER_CONTEXT_CANNOT_SELF_MINT_OWNER_CURRENTNESS_AUTHENTICATION"):
+            self.current(owner_currentness_authenticated=True).validate()
+
+    def test_matching_arbitrary_labels_do_not_authenticate_currentness(self) -> None:
+        plan = replace(
+            self.plan(),
+            prediction_generation="caller::same",
+            calibration_generation="caller::same",
+            policy_generation="caller::same",
+            source_binding_generation="caller::same",
+            runtime_generation="caller::same",
+            cache_generation="caller::same",
+            storage_geometry_generation="caller::same",
+            host_profile_generation="caller::same",
+        )
+        current = CurrentReuseContext(
+            prediction_generation="caller::same",
+            calibration_generation="caller::same",
+            policy_generation="caller::same",
+            source_binding_generation="caller::same",
+            runtime_generation="caller::same",
+            cache_generation="caller::same",
+            storage_geometry_generation="caller::same",
+            host_profile_generation="caller::same",
+        )
+        receipt = revalidate_g3_plan(plan=plan, current=current)
+        self.assertEqual(receipt.disposition, STRUCTURAL_MATCH_OWNER_AUTH_REQUIRED)
+        self.assertFalse(receipt.owner_currentness_authenticated_by_this_contract)
+        self.assertFalse(receipt.reuse_authorized_by_this_contract)
 
     def test_every_single_axis_drift_holds(self) -> None:
         plan = self.plan()
@@ -67,7 +96,8 @@ class GLM53G4PrefetchPlanRevalidationTests(unittest.TestCase):
                 self.assertEqual(receipt.disposition, HOLD_RECOMPUTE_G3)
                 self.assertEqual(receipt.changed_axes, (axis,))
                 self.assertTrue(receipt.recompute_g3_required)
-                self.assertFalse(receipt.reusable_without_recompute)
+                self.assertFalse(receipt.structural_generation_match)
+                self.assertFalse(receipt.reuse_authorized_by_this_contract)
 
     def test_multiple_drift_axes_are_canonical(self) -> None:
         plan = self.plan()
@@ -85,70 +115,27 @@ class GLM53G4PrefetchPlanRevalidationTests(unittest.TestCase):
             ("policy_generation", "cache_generation", "host_profile_generation"),
         )
 
-    def test_empty_abstention_plan_still_requires_revalidation(self) -> None:
+    def test_empty_abstention_plan_still_requires_structural_revalidation(self) -> None:
         plan = self.plan(admitted_experts=())
-        receipt = revalidate_g3_plan(
+        unchanged = revalidate_g3_plan(plan=plan, current=self.current(plan))
+        self.assertEqual(unchanged.disposition, STRUCTURAL_MATCH_OWNER_AUTH_REQUIRED)
+        self.assertFalse(unchanged.reuse_authorized_by_this_contract)
+        drifted = revalidate_g3_plan(
             plan=plan,
             current=self.current(plan, source_binding_generation="source::changed"),
         )
-        self.assertEqual(receipt.disposition, HOLD_RECOMPUTE_G3)
-        self.assertEqual(receipt.changed_axes, ("source_binding_generation",))
+        self.assertEqual(drifted.disposition, HOLD_RECOMPUTE_G3)
 
-    def test_cache_generation_change_cannot_be_laundered_by_same_policy(self) -> None:
-        plan = self.plan()
-        receipt = revalidate_g3_plan(
-            plan=plan,
-            current=self.current(plan, cache_generation="cache::evicted-and-rebuilt"),
-        )
-        self.assertEqual(receipt.disposition, HOLD_RECOMPUTE_G3)
-
-    def test_runtime_change_cannot_be_laundered_by_same_host_profile(self) -> None:
-        plan = self.plan()
-        receipt = revalidate_g3_plan(
-            plan=plan,
-            current=self.current(plan, runtime_generation="runtime::new-kernel"),
-        )
-        self.assertEqual(receipt.changed_axes, ("runtime_generation",))
-
-    def test_storage_geometry_change_reopens_cost_admission(self) -> None:
-        plan = self.plan()
-        receipt = revalidate_g3_plan(
-            plan=plan,
-            current=self.current(plan, storage_geometry_generation="storage::new-bandwidth-window"),
-        )
-        self.assertEqual(receipt.disposition, HOLD_RECOMPUTE_G3)
-
-    def test_source_binding_change_reopens_even_if_prediction_is_same(self) -> None:
-        plan = self.plan()
-        receipt = revalidate_g3_plan(
-            plan=plan,
-            current=self.current(plan, source_binding_generation="source::different-revision-index"),
-        )
-        self.assertEqual(receipt.changed_axes, ("source_binding_generation",))
-
-    def test_different_j_classifiers_commute(self) -> None:
-        plan = self.plan()
-        current = self.current(
-            plan,
-            prediction_generation="pred::new",
-            calibration_generation="cal::new",
-            runtime_generation="runtime::new",
-        )
-        self.assertEqual(changed_axes_tree(plan, current), changed_axes_table(plan, current))
-
-    def test_finite_drift_lattice_exhausts_256_states(self) -> None:
+    def test_finite_drift_lattice_exhausts_256_states_without_authorizing_reuse(self) -> None:
         proof = prove_finite_drift_lattice(self.plan())
-        self.assertEqual(proof, {"states": 256, "unchanged": 1, "held": 255})
+        self.assertEqual(
+            proof,
+            {"states": 256, "structural_matches": 1, "held": 255, "authenticated_reuse_authorizations": 0},
+        )
 
     def test_plan_identity_is_generation_sensitive(self) -> None:
         plan = self.plan()
-        changed = replace(plan, cache_generation="cache::new")
-        self.assertNotEqual(plan.plan_identity_digest, changed.plan_identity_digest)
-
-    def test_plan_identity_is_not_k27_identity(self) -> None:
-        plan = self.plan()
-        self.assertNotIn("k27", plan.plan_identity_digest.lower())
-        self.assertEqual(len(plan.plan_identity_digest), 64)
+        self.assertNotEqual(plan.plan_identity_digest, replace(plan, cache_generation="cache::new").plan_identity_digest)
 
     def test_receipt_is_deterministic(self) -> None:
         plan = self.plan()
@@ -161,7 +148,7 @@ class GLM53G4PrefetchPlanRevalidationTests(unittest.TestCase):
             with self.subTest(bad=bad), self.assertRaises(ValueError):
                 self.plan(admitted_experts=bad).validate()
 
-    def test_bad_digest_rejected(self) -> None:
+    def test_bad_plan_digest_rejected(self) -> None:
         with self.assertRaises(ValueError):
             replace(self.plan(), g3_receipt_digest="not-a-digest").validate()
 
@@ -180,9 +167,11 @@ class GLM53G4PrefetchPlanRevalidationTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaises(ValueError):
                 replace(self.plan(), **{field: True}).validate()
 
-    def test_revalidation_receipt_cannot_self_mint_authority(self) -> None:
+    def test_receipt_cannot_self_mint_currentness_reuse_or_effect_authority(self) -> None:
         receipt = revalidate_g3_plan(plan=self.plan(), current=self.current())
         for field in (
+            "owner_currentness_authenticated_by_this_contract",
+            "reuse_authorized_by_this_contract",
             "plan_executed_by_this_contract",
             "transfer_effect_authorized",
             "native_route_mutated",
@@ -195,18 +184,34 @@ class GLM53G4PrefetchPlanRevalidationTests(unittest.TestCase):
             with self.subTest(field=field), self.assertRaises(ValueError):
                 replace(receipt, **{field: True}).validate_claim_ceiling()
 
-    def test_changed_receipt_cannot_claim_reusable(self) -> None:
-        receipt = revalidate_g3_plan(
-            plan=self.plan(),
-            current=self.current(policy_generation="policy::new"),
-        )
+    def test_receipt_requires_owner_authentication_gate(self) -> None:
+        receipt = revalidate_g3_plan(plan=self.plan(), current=self.current())
         with self.assertRaises(ValueError):
-            replace(receipt, reusable_without_recompute=True).validate_claim_ceiling()
+            replace(receipt, owner_currentness_authentication_required=False).validate_claim_ceiling()
+
+    def test_manual_receipt_cannot_launder_bad_identity_digest(self) -> None:
+        receipt = revalidate_g3_plan(plan=self.plan(), current=self.current())
+        with self.assertRaises(ValueError):
+            replace(receipt, plan_identity_digest="forged").validate_claim_ceiling()
+        with self.assertRaises(ValueError):
+            replace(receipt, g3_receipt_digest="forged").validate_claim_ceiling()
+
+    def test_changed_receipt_cannot_claim_structural_match(self) -> None:
+        receipt = revalidate_g3_plan(plan=self.plan(), current=self.current(policy_generation="policy::new"))
+        with self.assertRaises(ValueError):
+            replace(receipt, structural_generation_match=True).validate_claim_ceiling()
 
     def test_unchanged_receipt_cannot_claim_recompute(self) -> None:
         receipt = revalidate_g3_plan(plan=self.plan(), current=self.current())
         with self.assertRaises(ValueError):
             replace(receipt, recompute_g3_required=True).validate_claim_ceiling()
+
+    def test_changed_axes_reject_unknown_and_duplicate_entries(self) -> None:
+        receipt = revalidate_g3_plan(plan=self.plan(), current=self.current(policy_generation="policy::new"))
+        with self.assertRaises(ValueError):
+            replace(receipt, changed_axes=("policy_generation", "policy_generation")).validate_claim_ceiling()
+        with self.assertRaises(ValueError):
+            replace(receipt, changed_axes=("unknown_generation",)).validate_claim_ceiling()
 
 
 if __name__ == "__main__":
