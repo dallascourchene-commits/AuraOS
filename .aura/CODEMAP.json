@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788185742,
+  "generated_at_unix": 1788187224,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1642,
+    "repo_file_count": 1645,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -148,6 +148,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-representative-equal-rate-admission.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -1481,6 +1482,7 @@
       "tests/test_aura_gate_egress.py",
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
+      "tests/test_aura_glm53_representative_equal_rate_admission.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -1635,6 +1637,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
       "tools/quantization/aura_representative_canary_evidence_admission.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -1758,16 +1761,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1642,
-      "bytes": 26429460,
-      "tokens_est": 6597717,
+      "files": 1645,
+      "bytes": 26450592,
+      "tokens_est": 6603002,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
-        "schema_or_lexicon": 272,
+        "python_module": 1001,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -3898,6 +3901,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 50,
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#function:_canonical:b078503aa533fadb",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -8070,6 +8081,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#function:_sha:32e655ead771f43d",
+        "signature_hash": "3c3bc3c037860fe9"
       }
     ],
     "_repo": [
@@ -138570,6 +138589,106 @@
         "signature_hash": "ee5f19dbb698e25c"
       }
     ],
+    "synthetic_q5": [
+      {
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 47,
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#function:synthetic_q5:4e0c156436db0758",
+        "signature_hash": "363d51c2d104bef9"
+      }
+    ],
+    "admit_authorized_synthetic": [
+      {
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 56,
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#function:admit_authorized_synthetic:a73b682f49cf3367",
+        "signature_hash": "14ec35b438fad676"
+      }
+    ],
+    "RepresentativeEqualRateAdmissionTests": [
+      {
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "kind": "class",
+        "line": 59,
+        "end_line": 129,
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#class:RepresentativeEqualRateAdmissionTests:712718206f41afff",
+        "signature_hash": "f815d0d9ac9a7ff3"
+      }
+    ],
+    "RepresentativeEqualRateAdmissionTests.test_complete_eight_tile_scope_is_admitted_but_not_promoted": [
+      {
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 80,
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_complete_eight_tile_scope_is_admitted_but_not_promoted:c19c62236f1979f4",
+        "signature_hash": "3c8dea9528913a7b"
+      }
+    ],
+    "RepresentativeEqualRateAdmissionTests.test_body_mutation_cannot_reuse_old_receipt_digest": [
+      {
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_body_mutation_cannot_reuse_old_receipt_digest:432218de35391ea6",
+        "signature_hash": "70100e27d63166ee"
+      }
+    ],
+    "RepresentativeEqualRateAdmissionTests.test_rate_drift_fails_after_authenticated_body": [
+      {
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 96,
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_rate_drift_fails_after_authenticated_body:3174af507266cfdf",
+        "signature_hash": "23958e4464425d25"
+      }
+    ],
+    "RepresentativeEqualRateAdmissionTests.test_unregistered_tile_fails_after_authenticated_body": [
+      {
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 104,
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_unregistered_tile_fails_after_authenticated_body:d10dadb45950b46c",
+        "signature_hash": "ed4635c325c23185"
+      }
+    ],
+    "RepresentativeEqualRateAdmissionTests.test_declared_outcome_mse_contradiction_fails_in_scope_owner": [
+      {
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_declared_outcome_mse_contradiction_fails_in_scope_owner:04775492571dd5c6",
+        "signature_hash": "18b63392188821c1"
+      }
+    ],
+    "RepresentativeEqualRateAdmissionTests.test_missing_tile_cannot_hide_behind_repeated_tile": [
+      {
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 121,
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_missing_tile_cannot_hide_behind_repeated_tile:c65daf9a2ef967f8",
+        "signature_hash": "df2d040716bafb28"
+      }
+    ],
+    "RepresentativeEqualRateAdmissionTests.test_exact_parent_generations_are_frozen": [
+      {
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 129,
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_exact_parent_generations_are_frozen:202736d0d9b5e565",
+        "signature_hash": "1737ea2d5e1bea6f"
+      }
+    ],
     "_write_minimal_codemap": [
       {
         "file": "tests/test_aura_harness_issue_capsules.py",
@@ -157346,6 +157465,56 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "RepresentativeEqualRateAdmissionError": [
+      {
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "kind": "class",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#class:RepresentativeEqualRateAdmissionError:2a46efefaca68d73",
+        "signature_hash": "bd25bb7ecb3966e3"
+      }
+    ],
+    "_receipt_body": [
+      {
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#function:_receipt_body:16aad64750378a90",
+        "signature_hash": "23a3000b66827d00"
+      }
+    ],
+    "validate_exact_q5_receipt": [
+      {
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 103,
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#function:validate_exact_q5_receipt:a0e419add18ee9e0",
+        "signature_hash": "6c89bb29e22db08c"
+      }
+    ],
+    "_translate_tiles": [
+      {
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "kind": "function",
+        "line": 106,
+        "end_line": 122,
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#function:_translate_tiles:af4bdcfe5c8a1bdf",
+        "signature_hash": "6d9e3b5f80fb492e"
+      }
+    ],
+    "admit_exact_q5_representative_evidence": [
+      {
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "kind": "function",
+        "line": 125,
+        "end_line": 189,
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#function:admit_exact_q5_representative_evidence:44cf6a51645f7a22",
+        "signature_hash": "4c727d4045b89889"
+      }
+    ],
     "RegisteredCanaryScope": [
       {
         "file": "tools/quantization/aura_representative_canary_evidence_admission.py",
@@ -158525,6 +158694,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-representative-equal-rate-admission.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -168699,6 +168869,59 @@
         0.151989,
         -0.198544,
         0.335472
+      ]
+    },
+    {
+      "path": ".github/workflows/glm53-representative-equal-rate-admission.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6221,
+      "lines": 127,
+      "tokens_est": 1556,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          75
+        ]
+      },
+      "topology": {},
+      "digest8": "3854276c1c58d006",
+      "vector": [
+        -0.210047,
+        -0.20143,
+        -0.026929,
+        -0.25098,
+        0.115257,
+        -0.274677,
+        0.110948,
+        -0.011849,
+        -0.26606,
+        -0.218665,
+        -0.154035,
+        -0.257443,
+        -0.095868,
+        -0.080787,
+        0.130337,
+        0.26606,
+        0.091559,
+        0.031238,
+        0.106639,
+        0.270369,
+        0.061398,
+        -0.126028,
+        0.263906,
+        -0.095868,
+        0.240208,
+        0.134646,
+        -0.171269,
+        0.233745,
+        -0.207893,
+        0.113102,
+        0.119565,
+        0.126028
       ]
     },
     {
@@ -255835,6 +256058,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6229,
+      "lines": 134,
+      "tokens_est": 1558,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "76d469e1362ece9d",
+      "vector": [
+        0.184957,
+        -0.214893,
+        -0.071631,
+        0.082322,
+        -0.251243,
+        -0.086599,
+        0.131502,
+        0.249105,
+        0.041696,
+        0.127225,
+        -0.007484,
+        -0.161437,
+        -0.071631,
+        0.135778,
+        -0.184957,
+        0.236275,
+        -0.251243,
+        0.178543,
+        0.189234,
+        -0.238413,
+        0.217031,
+        -0.19351,
+        -0.227722,
+        0.270487,
+        0.174266,
+        -0.227722,
+        0.125087,
+        0.214893,
+        0.131502,
+        0.182819,
+        -0.054525,
+        -0.071631
+      ]
+    },
+    {
       "path": "tests/test_aura_harness_issue_capsules.py",
       "role": "python_module",
       "binary": false,
@@ -263070,6 +263340,53 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8682,
+      "lines": 198,
+      "tokens_est": 2171,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6f3b7b128ec74997",
+      "vector": [
+        -0.003579,
+        0.225491,
+        0.175382,
+        0.094253,
+        -0.127659,
+        -0.268442,
+        -0.180155,
+        -0.099025,
+        0.23265,
+        -0.199244,
+        -0.010738,
+        0.182541,
+        -0.001193,
+        0.199244,
+        -0.254125,
+        0.01551,
+        -0.304234,
+        -0.10857,
+        0.063233,
+        0.044144,
+        -0.053688,
+        -0.161065,
+        0.23265,
+        0.151521,
+        -0.125273,
+        0.235036,
+        0.249353,
+        0.192085,
+        -0.144362,
+        -0.273214,
+        0.106184,
+        0.23265
       ]
     },
     {
@@ -287024,16 +287341,16 @@
     }
   },
   "summary": {
-    "file_count": 1642,
-    "total_bytes": 26429460,
-    "text_tokens_est": 6597717,
+    "file_count": 1645,
+    "total_bytes": 26450592,
+    "text_tokens_est": 6603002,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
-      "schema_or_lexicon": 272,
+      "python_module": 1001,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287191,6 +287508,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-representative-equal-rate-admission.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -288524,6 +288842,7 @@
       "tests/test_aura_gate_egress.py",
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
+      "tests/test_aura_glm53_representative_equal_rate_admission.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -288678,6 +288997,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
       "tools/quantization/aura_representative_canary_evidence_admission.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -426195,6 +426515,106 @@
         "file_digest8": "ada41f95735768a2"
       },
       {
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#class:RepresentativeEqualRateAdmissionTests:712718206f41afff",
+        "name": "RepresentativeEqualRateAdmissionTests",
+        "kind": "class",
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "line": 59,
+        "end_line": 129,
+        "signature_hash": "f815d0d9ac9a7ff3",
+        "file_digest8": "76d469e1362ece9d"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#function:admit_authorized_synthetic:a73b682f49cf3367",
+        "name": "admit_authorized_synthetic",
+        "kind": "function",
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "line": 50,
+        "end_line": 56,
+        "signature_hash": "14ec35b438fad676",
+        "file_digest8": "76d469e1362ece9d"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#function:synthetic_q5:4e0c156436db0758",
+        "name": "synthetic_q5",
+        "kind": "function",
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "line": 10,
+        "end_line": 47,
+        "signature_hash": "363d51c2d104bef9",
+        "file_digest8": "76d469e1362ece9d"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_body_mutation_cannot_reuse_old_receipt_digest:432218de35391ea6",
+        "name": "RepresentativeEqualRateAdmissionTests.test_body_mutation_cannot_reuse_old_receipt_digest",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "line": 82,
+        "end_line": 88,
+        "signature_hash": "70100e27d63166ee",
+        "file_digest8": "76d469e1362ece9d"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_complete_eight_tile_scope_is_admitted_but_not_promoted:c19c62236f1979f4",
+        "name": "RepresentativeEqualRateAdmissionTests.test_complete_eight_tile_scope_is_admitted_but_not_promoted",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "line": 60,
+        "end_line": 80,
+        "signature_hash": "3c8dea9528913a7b",
+        "file_digest8": "76d469e1362ece9d"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_declared_outcome_mse_contradiction_fails_in_scope_owner:04775492571dd5c6",
+        "name": "RepresentativeEqualRateAdmissionTests.test_declared_outcome_mse_contradiction_fails_in_scope_owner",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "line": 106,
+        "end_line": 113,
+        "signature_hash": "18b63392188821c1",
+        "file_digest8": "76d469e1362ece9d"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_exact_parent_generations_are_frozen:202736d0d9b5e565",
+        "name": "RepresentativeEqualRateAdmissionTests.test_exact_parent_generations_are_frozen",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "line": 123,
+        "end_line": 129,
+        "signature_hash": "1737ea2d5e1bea6f",
+        "file_digest8": "76d469e1362ece9d"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_missing_tile_cannot_hide_behind_repeated_tile:c65daf9a2ef967f8",
+        "name": "RepresentativeEqualRateAdmissionTests.test_missing_tile_cannot_hide_behind_repeated_tile",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "line": 115,
+        "end_line": 121,
+        "signature_hash": "df2d040716bafb28",
+        "file_digest8": "76d469e1362ece9d"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_rate_drift_fails_after_authenticated_body:3174af507266cfdf",
+        "name": "RepresentativeEqualRateAdmissionTests.test_rate_drift_fails_after_authenticated_body",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "line": 90,
+        "end_line": 96,
+        "signature_hash": "23958e4464425d25",
+        "file_digest8": "76d469e1362ece9d"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_representative_equal_rate_admission.py#method:RepresentativeEqualRateAdmissionTests.test_unregistered_tile_fails_after_authenticated_body:d10dadb45950b46c",
+        "name": "RepresentativeEqualRateAdmissionTests.test_unregistered_tile_fails_after_authenticated_body",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_representative_equal_rate_admission.py",
+        "line": 98,
+        "end_line": 104,
+        "signature_hash": "ed4635c325c23185",
+        "file_digest8": "76d469e1362ece9d"
+      },
+      {
         "semantic_id": "tests/test_aura_harness_issue_capsules.py#function:_raise_secret:a2391cb47c115705",
         "name": "_raise_secret",
         "kind": "function",
@@ -446155,6 +446575,76 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#class:RepresentativeEqualRateAdmissionError:2a46efefaca68d73",
+        "name": "RepresentativeEqualRateAdmissionError",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "line": 43,
+        "end_line": 44,
+        "signature_hash": "bd25bb7ecb3966e3",
+        "file_digest8": "6f3b7b128ec74997"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#function:_canonical:b078503aa533fadb",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "line": 47,
+        "end_line": 50,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "6f3b7b128ec74997"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#function:_receipt_body:16aad64750378a90",
+        "name": "_receipt_body",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "23a3000b66827d00",
+        "file_digest8": "6f3b7b128ec74997"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#function:_sha:32e655ead771f43d",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "3c3bc3c037860fe9",
+        "file_digest8": "6f3b7b128ec74997"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#function:_translate_tiles:af4bdcfe5c8a1bdf",
+        "name": "_translate_tiles",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "line": 106,
+        "end_line": 122,
+        "signature_hash": "6d9e3b5f80fb492e",
+        "file_digest8": "6f3b7b128ec74997"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#function:admit_exact_q5_representative_evidence:44cf6a51645f7a22",
+        "name": "admit_exact_q5_representative_evidence",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "line": 125,
+        "end_line": 189,
+        "signature_hash": "4c727d4045b89889",
+        "file_digest8": "6f3b7b128ec74997"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_representative_equal_rate_admission.py#function:validate_exact_q5_receipt:a0e419add18ee9e0",
+        "name": "validate_exact_q5_receipt",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_representative_equal_rate_admission.py",
+        "line": 61,
+        "end_line": 103,
+        "signature_hash": "6c89bb29e22db08c",
+        "file_digest8": "6f3b7b128ec74997"
+      },
+      {
         "semantic_id": "tools/quantization/aura_representative_canary_evidence_admission.py#class:CanaryObservation:47a5a7c0cef5857b",
         "name": "CanaryObservation",
         "kind": "class",
@@ -447495,7 +447985,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "a5bdd1c90d722252ee00577b1a5f8df4",
-    "payload_hash": "49fd773a127748be3d71d5cafe7ef6d6"
+    "record_fingerprint": "0e631672086b74c037facfd1efc9ad8b",
+    "payload_hash": "8ecfd6cc801c07c6419b99112d041f78"
   }
 }
