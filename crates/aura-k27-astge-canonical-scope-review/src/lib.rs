@@ -14,8 +14,8 @@ use aura_k27_astge_materialize::AdmittedSourceCatalogV1;
 use aura_k27_astge_scope::{AuthorizedSpanV1, ReplacementV1};
 use aura_k27_astge_scopes::{PythonLexicalScopeIndexV1, ScopeKindV1};
 use aura_k27_astge_typed_nested_scope_review::{
-    TypedNestedScopeReviewErrorV1, TypedNestedScopeSourceReviewAdmissionV1,
-    admit_typed_nested_scope_source_review,
+    admit_typed_nested_scope_source_review, TypedNestedScopeReviewErrorV1,
+    TypedNestedScopeSourceReviewAdmissionV1,
 };
 use std::error::Error;
 use std::fmt::{Display, Formatter};
