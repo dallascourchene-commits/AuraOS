@@ -1,0 +1,93 @@
+name: Arena Workflow Execution Evidence
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  classify-execution-evidence:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact classifier head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          check-latest: false
+
+      - name: Run classifier adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/arena_workflow_execution_evidence.py tests/test_arena_workflow_execution_evidence.py
+          python -m unittest -v tests.test_arena_workflow_execution_evidence
+
+      - name: Revalidate pinned independent pre-job gates through GitHub API
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for spec in \
+            '33367487413:618145eafb1ef0869d5a2e3fe659ed83104a04dd' \
+            '33368786512:65a945f7dd2413dcffdbc5abcb33db095780b465'
+          do
+            run_id="${spec%%:*}"
+            expected_sha="${spec##*:}"
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}" > "/tmp/run-${run_id}.json"
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${run_id}/jobs" > "/tmp/jobs-${run_id}.json"
+            RUN_ID="$run_id" EXPECTED_SHA="$expected_sha" python - <<'PY'
+          import json, os
+          run_id = os.environ['RUN_ID']
+          expected_sha = os.environ['EXPECTED_SHA']
+          run = json.load(open(f'/tmp/run-{run_id}.json', encoding='utf-8'))
+          jobs = json.load(open(f'/tmp/jobs-{run_id}.json', encoding='utf-8'))
+          assert run['head_sha'] == expected_sha
+          assert run['status'] == 'completed'
+          assert run['conclusion'] == 'action_required'
+          assert jobs['total_count'] == 0
+          assert jobs['jobs'] == []
+          PY
+            python tools/arena_workflow_execution_evidence.py \
+              "/tmp/run-${run_id}.json" "/tmp/jobs-${run_id}.json" > "/tmp/evidence-${run_id}.json"
+            RUN_ID="$run_id" python - <<'PY'
+          import json, os
+          run_id = os.environ['RUN_ID']
+          e = json.load(open(f'/tmp/evidence-{run_id}.json', encoding='utf-8'))
+          assert e['classification'] == 'PRE_JOB_ACTION_REQUIRED'
+          assert e['provider_pre_job_gate_observed'] is True
+          assert e['job_count'] == 0
+          assert e['executed_job_failure_observed'] is False
+          assert e['semantic_test_failure_proven'] is False
+          PY
+          done
+
+      - name: Emit evidence-domain ceiling
+        shell: bash
+        run: |
+          echo 'ACTION_REQUIRED_ZERO_JOBS_NE_TEST_FAILURE=true'
+          echo 'RUN_CONCLUSION_NE_SEMANTIC_TEST_RESULT=true'
+          echo 'JOB_EXECUTION_EVIDENCE_NE_SEMANTIC_AUTHORITY=true'
+          echo 'QUEUED_NE_FAILURE=true'
+          echo 'PROVIDER_GATE_NE_CODE_REGRESSION=true'
+          echo 'EFFECT_AUTHORITY=false'
