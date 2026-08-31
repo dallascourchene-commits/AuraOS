@@ -1,4 +1,4 @@
-name: Aura GLM53 G7 Progress Current Admission Handoff
+name: Aura GLM53 G7 Progress Admission Structural Handoff
 
 on:
   pull_request:
@@ -12,7 +12,7 @@ permissions:
   actions: read
 
 jobs:
-  g7-progress-current-admission-handoff:
+  g7-progress-admission-structural-handoff:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout exact candidate
@@ -111,7 +111,7 @@ jobs:
       - name: Reexecute generation-bound admission reuse adversarials
         run: python3 -m unittest tests.test_aura_generation_bound_admission_reuse -v
 
-      - name: Execute G7 adversarial contract
+      - name: Execute G7 v2 adversarial contract
         run: python3 -m unittest tools.awj032.test_glm53_g7_progress_current_admission_handoff -v
 
       - name: Exhaust complete 512-state Different-J lattice
@@ -124,14 +124,20 @@ jobs:
           print({"states": checked})
           PY
 
-      - name: Enforce G7 currentness and nonpromotion ceiling
+      - name: Enforce G7 external-auth and nonpromotion ceiling
         run: |
           python3 - <<'PY'
           from pathlib import Path
           text = Path("tools/awj032/glm53_g7_progress_current_admission_handoff.py").read_text()
           required = (
+              'STRUCTURAL_PROGRESS_ADMISSION_MATCH_EXTERNAL_AUTH_REQUIRED = (',
+              "parent_projection_authentication_required: bool = True",
+              "parent_projection_authenticated_by_this_contract: bool = False",
+              "presented_currentness_authentication_required: bool = True",
+              "presented_currentness_authenticated_by_this_contract: bool = False",
               "future_read_currentness_required: bool = True",
               "future_read_currentness_proven: bool = False",
+              "reuse_authorized_by_this_contract: bool = False",
               "tensor_payload_bound: bool = False",
               "source_truth_proven: bool = False",
               "evidence_admitted: bool = False",
@@ -142,16 +148,22 @@ jobs:
               "gate10_promoted: bool = False",
               "semantic_k27_authority: bool = False",
               "native_private_transformer_kv_accessed: bool = False",
+              "def _expected_nav14_positive_digest(",
+              "def _expected_admission_reuse_positive_digest(",
           )
           for marker in required:
               if marker not in text:
                   raise SystemExit(f"G7_CLAIM_CEILING_MARKER_MISSING:{marker}")
           forbidden = (
+              "CURRENT_PROGRESS_BOUND_ADMISSION_HANDOFF_CANDIDATE",
               "gate10_promoted: bool = True",
               "execution_authorized: bool = True",
               "provider_effect_authorized: bool = True",
+              "reuse_authorized_by_this_contract: bool = True",
               "tensor_payload_bound: bool = True",
               "future_read_currentness_proven: bool = True",
+              "parent_projection_authenticated_by_this_contract: bool = True",
+              "presented_currentness_authenticated_by_this_contract: bool = True",
           )
           for marker in forbidden:
               if marker in text:
