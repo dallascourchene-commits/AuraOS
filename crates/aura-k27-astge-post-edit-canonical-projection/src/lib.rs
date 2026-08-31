@@ -104,7 +104,11 @@ pub fn project_canonical_definition_target(
     let coordinate = receipt.source_generation.coordinate();
     if coordinate.domain != GenerationDomainV1::Source
         || receipt.source_generation != receipt.post_edit_current.candidate_source_generation
-        || receipt.source_generation != receipt.post_edit_current.candidate_current.source_generation
+        || receipt.source_generation
+            != receipt
+                .post_edit_current
+                .candidate_current
+                .source_generation
     {
         return Err(ProjectionErrorV1::GenerationMismatch);
     }
@@ -114,8 +118,12 @@ pub fn project_canonical_definition_target(
         return Err(ProjectionErrorV1::MissingPath);
     }
     let selected = &receipt.post_edit_current.selected_candidate_scope;
-    let parent = selected.parent_scope_id.ok_or(ProjectionErrorV1::MissingParent)?;
-    let ordinal = selected.syntax_ordinal.ok_or(ProjectionErrorV1::MissingSyntaxOrdinal)?;
+    let parent = selected
+        .parent_scope_id
+        .ok_or(ProjectionErrorV1::MissingParent)?;
+    let ordinal = selected
+        .syntax_ordinal
+        .ok_or(ProjectionErrorV1::MissingSyntaxOrdinal)?;
     let handle = selected
         .semantic_handle_digest
         .ok_or(ProjectionErrorV1::MissingSemanticHandle)?;
@@ -174,7 +182,10 @@ pub fn project_canonical_definition_target(
         human_authority: false,
     };
     let payload_sha256 = digest_payload(&payload)?;
-    Ok(CanonicalDefinitionTargetProjectionV1 { payload, payload_sha256 })
+    Ok(CanonicalDefinitionTargetProjectionV1 {
+        payload,
+        payload_sha256,
+    })
 }
 
 pub fn canonical_payload_bytes(
@@ -183,7 +194,9 @@ pub fn canonical_payload_bytes(
     serde_json::to_vec(payload).map_err(|_| ProjectionErrorV1::Serialization)
 }
 
-pub fn verify_projection(projection: &CanonicalDefinitionTargetProjectionV1) -> Result<(), ProjectionErrorV1> {
+pub fn verify_projection(
+    projection: &CanonicalDefinitionTargetProjectionV1,
+) -> Result<(), ProjectionErrorV1> {
     let payload = &projection.payload;
     if payload.schema != PROJECTION_SCHEMA_V1 || payload.version != 1 {
         return Err(ProjectionErrorV1::WrongSchema);
@@ -198,16 +211,27 @@ pub fn verify_projection(projection: &CanonicalDefinitionTargetProjectionV1) -> 
     Ok(())
 }
 
-fn require_owner_ceiling(receipt: &PostEditCanonicalDefinitionTargetCurrentV1) -> Result<(), ProjectionErrorV1> {
+fn require_owner_ceiling(
+    receipt: &PostEditCanonicalDefinitionTargetCurrentV1,
+) -> Result<(), ProjectionErrorV1> {
     let values = [
-        (receipt.runtime_name_resolution_proven, "runtime_name_resolution_proven"),
+        (
+            receipt.runtime_name_resolution_proven,
+            "runtime_name_resolution_proven",
+        ),
         (receipt.call_graph_proven, "call_graph_proven"),
-        (receipt.semantic_patch_correctness_proven, "semantic_patch_correctness_proven"),
+        (
+            receipt.semantic_patch_correctness_proven,
+            "semantic_patch_correctness_proven",
+        ),
         (receipt.b_minus_approved, "b_minus_approved"),
         (receipt.commit_authorized, "commit_authorized"),
         (receipt.execution_authorized, "execution_authorized"),
         (receipt.human_authority, "human_authority"),
-        (receipt.external_effect_authorized, "external_effect_authorized"),
+        (
+            receipt.external_effect_authorized,
+            "external_effect_authorized",
+        ),
     ];
     if let Some((_, name)) = values.into_iter().find(|(value, _)| *value) {
         return Err(ProjectionErrorV1::CeilingViolation(name));
@@ -215,7 +239,9 @@ fn require_owner_ceiling(receipt: &PostEditCanonicalDefinitionTargetCurrentV1) -
     Ok(())
 }
 
-fn require_payload_ceiling(payload: &CanonicalDefinitionTargetPayloadV1) -> Result<(), ProjectionErrorV1> {
+fn require_payload_ceiling(
+    payload: &CanonicalDefinitionTargetPayloadV1,
+) -> Result<(), ProjectionErrorV1> {
     if !payload.selected_current_scope_is_binding_target
         || !payload.binding_owner_is_selected_parent
         || payload.local_scope_id_is_semantic_identity
@@ -225,9 +251,15 @@ fn require_payload_ceiling(payload: &CanonicalDefinitionTargetPayloadV1) -> Resu
         return Err(ProjectionErrorV1::CurrentnessNotProven);
     }
     let values = [
-        (payload.runtime_name_resolution_proven, "runtime_name_resolution_proven"),
+        (
+            payload.runtime_name_resolution_proven,
+            "runtime_name_resolution_proven",
+        ),
         (payload.call_graph_proven, "call_graph_proven"),
-        (payload.semantic_patch_correctness_proven, "semantic_patch_correctness_proven"),
+        (
+            payload.semantic_patch_correctness_proven,
+            "semantic_patch_correctness_proven",
+        ),
         (payload.b_minus_approved, "b_minus_approved"),
         (payload.producer_authenticated, "producer_authenticated"),
         (payload.review_authorized, "review_authorized"),
@@ -236,7 +268,10 @@ fn require_payload_ceiling(payload: &CanonicalDefinitionTargetPayloadV1) -> Resu
         (payload.commit_authorized, "commit_authorized"),
         (payload.merge_authorized, "merge_authorized"),
         (payload.promotion_authorized, "promotion_authorized"),
-        (payload.provider_effect_authorized, "provider_effect_authorized"),
+        (
+            payload.provider_effect_authorized,
+            "provider_effect_authorized",
+        ),
         (payload.public_effect_authorized, "public_effect_authorized"),
         (payload.human_authority, "human_authority"),
     ];
@@ -246,7 +281,9 @@ fn require_payload_ceiling(payload: &CanonicalDefinitionTargetPayloadV1) -> Resu
     Ok(())
 }
 
-fn digest_payload(payload: &CanonicalDefinitionTargetPayloadV1) -> Result<String, ProjectionErrorV1> {
+fn digest_payload(
+    payload: &CanonicalDefinitionTargetPayloadV1,
+) -> Result<String, ProjectionErrorV1> {
     Ok(hex(&Sha256::digest(canonical_payload_bytes(payload)?)))
 }
 
