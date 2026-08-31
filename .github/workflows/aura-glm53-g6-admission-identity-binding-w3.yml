@@ -32,6 +32,8 @@ jobs:
       PROV_SOURCE_BLOB: "98db548b6e8f7443b79d979eb0e177ac6aa68534"
       PROV_RUN: "33416248604"
       PROV_JOB: "99567478616"
+      Q18_SOURCE_BLOB: "4cee26edaf0759fc80d31889ab9e4e268f9a4fbe"
+      Q18_RECEIPT_DIGEST: "c53acb3ff471dbe3971ee4e7a75b28c4316b50fba88a414f406b93c271c90230"
 
     steps:
       - name: Checkout exact candidate
@@ -51,12 +53,34 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Pin exact G6 base request generation
+      - name: Pin exact G6 base and inherited Q18 generation
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD:tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py)" = "$G6_BASE_SOURCE_BLOB"
           test "$(git rev-parse HEAD:tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py)" = "$G6_BASE_TEST_BLOB"
-          echo "G6_W3_BASE_REQUEST_GENERATION_PINNED=true"
+          test "$(git rev-parse HEAD:tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py)" = "$Q18_SOURCE_BLOB"
+          echo "G6_W3_BASE_AND_TRANSITIVE_Q18_GENERATIONS_PINNED=true"
+
+      - name: Reproduce transitive Q18 admission receipt
+        run: |
+          python3 - <<'PY'
+          import os
+          from tools.quantization.aura_glm53_current_generation_bounded_c2_proposal import (
+              admit_current_generation_bounded_c2_proposal,
+              current_q16_fixture,
+              current_s1_fixture,
+          )
+          receipt = admit_current_generation_bounded_c2_proposal(
+              current_q16_fixture(), current_s1_fixture()
+          )
+          if receipt.get("receipt_digest") != os.environ["Q18_RECEIPT_DIGEST"]:
+              raise SystemExit(f"Q18_RECEIPT_REPRODUCTION_MISMATCH:{receipt.get('receipt_digest')}")
+          if receipt.get("disposition") != "BOUNDED_REPRESENTATIVE_E8_C2_REQUEST_PROPOSAL_ELIGIBLE":
+              raise SystemExit(f"Q18_DISPOSITION_MISMATCH:{receipt.get('disposition')}")
+          if receipt.get("gate10_promoted") is not False:
+              raise SystemExit("Q18_CANNOT_PROMOTE_GATE10")
+          print("G6_W3_TRANSITIVE_Q18_RECEIPT_REPRODUCED=true")
+          PY
 
       - name: Authenticate exact PR769 and PR727 parent blobs
         env:
@@ -145,15 +169,15 @@ jobs:
           print("G6_W3_BASE_REQUEST_INTERNAL_CONSTRUCTION_ONLY=true")
           PY
 
-      - name: Exhaust base 512-state and W3 16-state lattices
+      - name: Exhaust base 512-state and W3 64-state lattices
         run: |
           python3 - <<'PY'
           from tools.awj032.glm53_g6_gate10_owner_host_evidence_request import prove_different_j
           from tools.awj032.glm53_g6_admission_identity_binding_addendum import prove_identity_binding_lattice
           assert prove_different_j() == 512
-          assert prove_identity_binding_lattice() == 16
+          assert prove_identity_binding_lattice() == 64
           print("G6_BASE_DIFFERENT_J_512=PASS")
-          print("G6_IDENTITY_BINDING_W3_16=PASS")
+          print("G6_IDENTITY_BINDING_W3_64=PASS")
           PY
 
       - name: Enforce anti-cross-cast and nonpromotion laws
@@ -162,6 +186,10 @@ jobs:
           target=tools/awj032/glm53_g6_admission_identity_binding_addendum.py
           grep -q 'ReuseCandidateSummary!=AdmissionReuseReceiptIdentity' "$target"
           grep -q 'GLM53AdmissionFamilyMustRemainExact' "$target"
+          grep -q 'ExactQ18AdmissionReceiptMustRemainBound' "$target"
+          grep -q 'Q18ReceiptIdentityInheritedThroughPR769Lineage' "$target"
+          grep -q 'PR769ReuseDigestMustCommitExactIdentityVector' "$target"
+          grep -q 'DigestShape!=DigestRelationProof' "$target"
           grep -q 'AdmissionReceiptDigest+Subject+Source+Evidence+Owner+Decision+ReuseDigestMustSurviveProjection' "$target"
           grep -q 'CallerSuppliedBaseRequest+IndependentIdentity!=JoinedRequestIdentity' "$target"
           grep -q 'IdentityBoundWrapperMustConstructBaseRequest' "$target"
@@ -169,7 +197,9 @@ jobs:
           grep -q 'IdentityBinding!=SourceCurrentnessTruth' "$target"
           grep -q 'RepoHeadChanged!=TensorSourceGenerationChanged' "$target"
           grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' "$target"
+          echo "Q18_OBJECTIVE_PARENT_CREDIT=0"
           echo "CALLER_SUPPLIED_BASE_REQUEST_ACCEPTED=false"
+          echo "PR769_REUSE_DIGEST_RELATION_VERIFIED=true"
           echo "REUSE_RECEIPT_AUTHENTICATED_BY_THIS_CONTRACT=false"
           echo "SOURCE_CURRENTNESS_PROVEN_BY_THIS_CONTRACT=false"
           echo "MODEL_OR_PROVIDER_EXECUTION_OBSERVED=false"
