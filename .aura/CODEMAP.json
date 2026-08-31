@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788154671,
+  "generated_at_unix": 1788155175,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1694,
+    "repo_file_count": 1697,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -148,6 +148,7 @@
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
       ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
+      ".github/workflows/awj032-glm53-lifecycle-return-evidence-class.yml",
       ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
       ".github/workflows/awj032-glm53-owner-host-lifecycle-return-packet.yml",
       ".github/workflows/awj032-glm53-w3-canonical-owner-composite.yml",
@@ -1662,6 +1663,7 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/glm53_layout_binding_bridge.py",
+      "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
       "tools/awj032/glm53_official_w2_observation.py",
       "tools/awj032/glm53_official_w2_plan_binding.py",
       "tools/awj032/glm53_owner_host_c2_handoff.py",
@@ -1676,6 +1678,7 @@
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_layout_binding_bridge.py",
+      "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
       "tools/awj032/test_glm53_official_w2_plan_binding.py",
       "tools/awj032/test_glm53_owner_host_c2_handoff.py",
       "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
@@ -1810,16 +1813,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1694,
-      "bytes": 26716092,
-      "tokens_est": 6669428,
+      "files": 1697,
+      "bytes": 26732792,
+      "tokens_est": 6673604,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1035,
-        "schema_or_lexicon": 282,
+        "python_module": 1037,
+        "schema_or_lexicon": 283,
         "support_file": 49
       }
     },
@@ -3992,6 +3995,14 @@
         "signature_hash": "8d5bf5695239b859"
       },
       {
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#function:_canonical:36351401efe934c8",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
         "file": "tools/awj032/glm53_official_w2_observation.py",
         "kind": "function",
         "line": 35,
@@ -4511,6 +4522,14 @@
         "line": 43,
         "end_line": 44,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_digest:52413db1a1e1f0ba",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#function:_digest:65243e3c8be7f911",
         "signature_hash": "514f786724465716"
       },
       {
@@ -119570,6 +119589,14 @@
         "end_line": 67,
         "semantic_id": "tests/test_aura_bilateral_live_repair_foundry_hardening.py#function:packet:adfb39c8bcaf3817",
         "signature_hash": "f6da9b5797f366a6"
+      },
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 77,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#function:packet:1d68dad1b5133661",
+        "signature_hash": "3b481df4d44eef98"
       }
     ],
     "strict_runtime_proof": [
@@ -137108,6 +137135,14 @@
         "end_line": 223,
         "semantic_id": "tests/test_aura_gate.py#function:request:7c151532eef8bfd3",
         "signature_hash": "9045b73142116e1c"
+      },
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 44,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#function:request:32cffbe654f431b7",
+        "signature_hash": "0a92ba0bcaac69ef"
       }
     ],
     "test_prepare_compiles_exact_evidence_contract": [
@@ -158586,6 +158621,92 @@
         "signature_hash": "58bd05ed3cf52aad"
       }
     ],
+    "LifecycleReturnEvidenceClassError": [
+      {
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#class:LifecycleReturnEvidenceClassError:556e72544d811c09",
+        "signature_hash": "4b7bbd6a3dcb262f"
+      }
+    ],
+    "LifecycleReturnEvidenceClassError.__init__": [
+      {
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassError.__init__:09451f0092267472",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_exact_false": [
+      {
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#function:_exact_false:67d395ffd17e348f",
+        "signature_hash": "f91b25463cce23f6"
+      },
+      {
+        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_exact_false:cf4d2eb50bb7e657",
+        "signature_hash": "e088d9cc20555008"
+      },
+      {
+        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 94,
+        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_exact_false:39d14176adfcf564",
+        "signature_hash": "e088d9cc20555008"
+      }
+    ],
+    "LifecycleReturnEvidenceClassReceipt": [
+      {
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "class",
+        "line": 60,
+        "end_line": 93,
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#class:LifecycleReturnEvidenceClassReceipt:8cda6638676607fb",
+        "signature_hash": "4243fc71f50aa942"
+      }
+    ],
+    "LifecycleReturnEvidenceClassReceipt.to_dict": [
+      {
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 89,
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassReceipt.to_dict:1c6f59a2a0afa1b0",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "LifecycleReturnEvidenceClassReceipt.receipt_digest": [
+      {
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 93,
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassReceipt.receipt_digest:e6d0a06d59d23bc3",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "preserve_lifecycle_return_evidence_class": [
+      {
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 138,
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#function:preserve_lifecycle_return_evidence_class:0f16ee4cb2eccfda",
+        "signature_hash": "df9f69bb465ad634"
+      }
+    ],
     "OfficialW2ObservationError": [
       {
         "file": "tools/awj032/glm53_official_w2_observation.py",
@@ -158674,24 +158795,6 @@
         "end_line": 55,
         "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_plan_dict:491a7826f4946b66",
         "signature_hash": "bb6a47c38f49c5eb"
-      }
-    ],
-    "_exact_false": [
-      {
-        "file": "tools/awj032/glm53_official_w2_plan_binding.py",
-        "kind": "function",
-        "line": 73,
-        "end_line": 75,
-        "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_exact_false:cf4d2eb50bb7e657",
-        "signature_hash": "e088d9cc20555008"
-      },
-      {
-        "file": "tools/awj032/glm53_w3_canonical_owner_composite.py",
-        "kind": "function",
-        "line": 92,
-        "end_line": 94,
-        "semantic_id": "tools/awj032/glm53_w3_canonical_owner_composite.py#function:_exact_false:39d14176adfcf564",
-        "signature_hash": "e088d9cc20555008"
       }
     ],
     "OfficialW2BoundPagerPlan": [
@@ -160716,6 +160819,116 @@
         "end_line": 329,
         "semantic_id": "tools/awj032/test_glm53_layout_binding_bridge.py#method:BridgeTests.test_clock_metadata_does_not_churn_source_plan:b0a28040725e1331",
         "signature_hash": "4a072c4ecf897aa7"
+      }
+    ],
+    "LifecycleReturnEvidenceClassBoundaryTests": [
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 168,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#class:LifecycleReturnEvidenceClassBoundaryTests:00e0aa62df5f4f51",
+        "signature_hash": "e91f2906115773ac"
+      }
+    ],
+    "LifecycleReturnEvidenceClassBoundaryTests.assert_code": [
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.assert_code:ca9abf5a83233795",
+        "signature_hash": "91625c37a81c4d9d"
+      }
+    ],
+    "LifecycleReturnEvidenceClassBoundaryTests.test_exact_return_packet_preserves_attempt_return_class": [
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 98,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_exact_return_packet_preserves_attempt_return_class:0193ef8ba4b9f50e",
+        "signature_hash": "bfa49a041ca82a61"
+      }
+    ],
+    "LifecycleReturnEvidenceClassBoundaryTests.test_attempt_counters_remain_attempt_telemetry": [
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 108,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_attempt_counters_remain_attempt_telemetry:d12579c33c893177",
+        "signature_hash": "67439cf1bc436788"
+      }
+    ],
+    "LifecycleReturnEvidenceClassBoundaryTests.test_same_lifecycle_reference_does_not_convert_type": [
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 115,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_same_lifecycle_reference_does_not_convert_type:a8013bbd3d13093f",
+        "signature_hash": "2837b77172e5b2c6"
+      }
+    ],
+    "LifecycleReturnEvidenceClassBoundaryTests.test_rejects_parent_ceiling_widening_before_class_reasoning": [
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 122,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_rejects_parent_ceiling_widening_before_class_reasoning:9e0bec92a9f2e958",
+        "signature_hash": "5ab65eef1a8cda75"
+      }
+    ],
+    "LifecycleReturnEvidenceClassBoundaryTests.test_rejects_target_schema_drift": [
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 129,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_rejects_target_schema_drift:94527dbff3b667c0",
+        "signature_hash": "109bc8033561b262"
+      }
+    ],
+    "LifecycleReturnEvidenceClassBoundaryTests.test_mapping_cannot_impersonate_typed_return_packet": [
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 136,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_mapping_cannot_impersonate_typed_return_packet:64c13c88faeec075",
+        "signature_hash": "5ddde39d57ef6b40"
+      }
+    ],
+    "LifecycleReturnEvidenceClassBoundaryTests.test_public_boundary_has_no_type_rank_metric_or_trust_overrides": [
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 155,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_public_boundary_has_no_type_rank_metric_or_trust_overrides:758970c6c1259068",
+        "signature_hash": "3fb37ebb493e762f"
+      }
+    ],
+    "LifecycleReturnEvidenceClassBoundaryTests.test_corroboration_and_digest_preservation_do_not_upgrade_class": [
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 161,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_corroboration_and_digest_preservation_do_not_upgrade_class:46f4e16eaac4068f",
+        "signature_hash": "a467812b95f136e2"
+      }
+    ],
+    "LifecycleReturnEvidenceClassBoundaryTests.test_receipt_is_deterministic": [
+      {
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 168,
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_receipt_is_deterministic:cacfde6a5682afb5",
+        "signature_hash": "4676c27ccb236b1c"
       }
     ],
     "plan": [
@@ -163936,11 +164149,13 @@
       "tools/awj032/README.md"
     ],
     "python3 -m py_compile": [
+      ".github/workflows/awj032-glm53-lifecycle-return-evidence-class.yml",
       ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
       ".github/workflows/awj032-glm53-owner-host-lifecycle-return-packet.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
+      ".github/workflows/awj032-glm53-lifecycle-return-evidence-class.yml",
       ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
       ".github/workflows/awj032-glm53-owner-host-lifecycle-return-packet.yml"
     ],
@@ -173779,6 +173994,63 @@
         -0.263084,
         0.156325,
         -0.125823
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-lifecycle-return-evidence-class.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4009,
+      "lines": 85,
+      "tokens_est": 1003,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          37
+        ],
+        "python3 -m unittest": [
+          41
+        ]
+      },
+      "topology": {},
+      "digest8": "3346b2b038bb8cce",
+      "vector": [
+        0.077127,
+        -0.165632,
+        0.226322,
+        0.117586,
+        0.246552,
+        0.216207,
+        0.082184,
+        -0.297127,
+        0.173219,
+        -0.261724,
+        0.198506,
+        0.079655,
+        0.198506,
+        0.039195,
+        -0.236437,
+        -0.102414,
+        -0.274368,
+        -0.135287,
+        -0.188391,
+        -0.132759,
+        -0.216207,
+        -0.307242,
+        -0.281954,
+        -0.152989,
+        0.006322,
+        -0.072069,
+        -0.084713,
+        0.092299,
+        -0.120115,
+        -0.064483,
+        0.013908,
+        -0.13023
       ]
     },
     {
@@ -269547,6 +269819,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5759,
+      "lines": 139,
+      "tokens_est": 1440,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "317ced8b35374b63",
+      "vector": [
+        -0.112874,
+        -0.187348,
+        0.243204,
+        -0.187348,
+        -0.224585,
+        -0.252513,
+        -0.157093,
+        -0.28975,
+        -0.21993,
+        0.087274,
+        -0.008146,
+        0.205967,
+        0.236222,
+        -0.275786,
+        -0.145457,
+        -0.178039,
+        0.010473,
+        0.171057,
+        0.138475,
+        -0.257167,
+        -0.28975,
+        -0.124511,
+        -0.075637,
+        -0.022109,
+        0.145457,
+        0.005818,
+        0.16873,
+        -0.119856,
+        0.10822,
+        0.233894,
+        0.031419,
+        -0.010473
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_official_w2_observation.py",
       "role": "python_module",
       "binary": false,
@@ -270202,6 +270521,53 @@
         -0.054453,
         0.143096,
         -0.01393
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6932,
+      "lines": 173,
+      "tokens_est": 1733,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6dbe6e438f486073",
+      "vector": [
+        -0.077879,
+        0.045333,
+        0.052307,
+        -0.110426,
+        -0.287107,
+        0.277808,
+        -0.110426,
+        0.063931,
+        -0.126699,
+        0.201091,
+        0.005812,
+        -0.168544,
+        0.273158,
+        -0.261535,
+        -0.094152,
+        -0.296406,
+        0.247586,
+        -0.296406,
+        0.096477,
+        0.01976,
+        0.233638,
+        0.066255,
+        -0.217364,
+        0.033709,
+        0.21039,
+        -0.096477,
+        0.036034,
+        -0.126699,
+        0.040683,
+        0.096477,
+        -0.296406,
+        0.201091
       ]
     },
     {
@@ -294673,16 +295039,16 @@
     }
   },
   "summary": {
-    "file_count": 1694,
-    "total_bytes": 26716092,
-    "text_tokens_est": 6669428,
+    "file_count": 1697,
+    "total_bytes": 26732792,
+    "text_tokens_est": 6673604,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1035,
-      "schema_or_lexicon": 282,
+      "python_module": 1037,
+      "schema_or_lexicon": 283,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -294840,6 +295206,7 @@
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
       ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
+      ".github/workflows/awj032-glm53-lifecycle-return-evidence-class.yml",
       ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
       ".github/workflows/awj032-glm53-owner-host-lifecycle-return-packet.yml",
       ".github/workflows/awj032-glm53-w3-canonical-owner-composite.yml",
@@ -296354,6 +296721,7 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/glm53_layout_binding_bridge.py",
+      "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
       "tools/awj032/glm53_official_w2_observation.py",
       "tools/awj032/glm53_official_w2_plan_binding.py",
       "tools/awj032/glm53_owner_host_c2_handoff.py",
@@ -296368,6 +296736,7 @@
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_layout_binding_bridge.py",
+      "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
       "tools/awj032/test_glm53_official_w2_plan_binding.py",
       "tools/awj032/test_glm53_owner_host_c2_handoff.py",
       "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
@@ -454896,6 +455265,96 @@
         "file_digest8": "abcfdbf63c9ebf9a"
       },
       {
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#class:LifecycleReturnEvidenceClassError:556e72544d811c09",
+        "name": "LifecycleReturnEvidenceClassError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "4b7bbd6a3dcb262f",
+        "file_digest8": "317ced8b35374b63"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#class:LifecycleReturnEvidenceClassReceipt:8cda6638676607fb",
+        "name": "LifecycleReturnEvidenceClassReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 60,
+        "end_line": 93,
+        "signature_hash": "4243fc71f50aa942",
+        "file_digest8": "317ced8b35374b63"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#function:_canonical:36351401efe934c8",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 37,
+        "end_line": 47,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "317ced8b35374b63"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#function:_digest:65243e3c8be7f911",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "317ced8b35374b63"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#function:_exact_false:67d395ffd17e348f",
+        "name": "_exact_false",
+        "kind": "function",
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 54,
+        "end_line": 56,
+        "signature_hash": "f91b25463cce23f6",
+        "file_digest8": "317ced8b35374b63"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#function:preserve_lifecycle_return_evidence_class:0f16ee4cb2eccfda",
+        "name": "preserve_lifecycle_return_evidence_class",
+        "kind": "function",
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 96,
+        "end_line": 138,
+        "signature_hash": "df9f69bb465ad634",
+        "file_digest8": "317ced8b35374b63"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassError.__init__:09451f0092267472",
+        "name": "LifecycleReturnEvidenceClassError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "317ced8b35374b63"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassReceipt.receipt_digest:e6d0a06d59d23bc3",
+        "name": "LifecycleReturnEvidenceClassReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 92,
+        "end_line": 93,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "317ced8b35374b63"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassReceipt.to_dict:1c6f59a2a0afa1b0",
+        "name": "LifecycleReturnEvidenceClassReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 88,
+        "end_line": 89,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "317ced8b35374b63"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_official_w2_observation.py#class:OfficialW2Observation:cba3d21b65a65441",
         "name": "OfficialW2Observation",
         "kind": "class",
@@ -457284,6 +457743,136 @@
         "end_line": 308,
         "signature_hash": "35a2724e252944e5",
         "file_digest8": "0bc5171222798741"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#class:LifecycleReturnEvidenceClassBoundaryTests:00e0aa62df5f4f51",
+        "name": "LifecycleReturnEvidenceClassBoundaryTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 80,
+        "end_line": 168,
+        "signature_hash": "e91f2906115773ac",
+        "file_digest8": "6dbe6e438f486073"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#function:packet:1d68dad1b5133661",
+        "name": "packet",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 47,
+        "end_line": 77,
+        "signature_hash": "3b481df4d44eef98",
+        "file_digest8": "6dbe6e438f486073"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#function:request:32cffbe654f431b7",
+        "name": "request",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 32,
+        "end_line": 44,
+        "signature_hash": "0a92ba0bcaac69ef",
+        "file_digest8": "6dbe6e438f486073"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.assert_code:ca9abf5a83233795",
+        "name": "LifecycleReturnEvidenceClassBoundaryTests.assert_code",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 81,
+        "end_line": 84,
+        "signature_hash": "91625c37a81c4d9d",
+        "file_digest8": "6dbe6e438f486073"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_attempt_counters_remain_attempt_telemetry:d12579c33c893177",
+        "name": "LifecycleReturnEvidenceClassBoundaryTests.test_attempt_counters_remain_attempt_telemetry",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 100,
+        "end_line": 108,
+        "signature_hash": "67439cf1bc436788",
+        "file_digest8": "6dbe6e438f486073"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_corroboration_and_digest_preservation_do_not_upgrade_class:46f4e16eaac4068f",
+        "name": "LifecycleReturnEvidenceClassBoundaryTests.test_corroboration_and_digest_preservation_do_not_upgrade_class",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 157,
+        "end_line": 161,
+        "signature_hash": "a467812b95f136e2",
+        "file_digest8": "6dbe6e438f486073"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_exact_return_packet_preserves_attempt_return_class:0193ef8ba4b9f50e",
+        "name": "LifecycleReturnEvidenceClassBoundaryTests.test_exact_return_packet_preserves_attempt_return_class",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 86,
+        "end_line": 98,
+        "signature_hash": "bfa49a041ca82a61",
+        "file_digest8": "6dbe6e438f486073"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_mapping_cannot_impersonate_typed_return_packet:64c13c88faeec075",
+        "name": "LifecycleReturnEvidenceClassBoundaryTests.test_mapping_cannot_impersonate_typed_return_packet",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 131,
+        "end_line": 136,
+        "signature_hash": "5ddde39d57ef6b40",
+        "file_digest8": "6dbe6e438f486073"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_public_boundary_has_no_type_rank_metric_or_trust_overrides:758970c6c1259068",
+        "name": "LifecycleReturnEvidenceClassBoundaryTests.test_public_boundary_has_no_type_rank_metric_or_trust_overrides",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 138,
+        "end_line": 155,
+        "signature_hash": "3fb37ebb493e762f",
+        "file_digest8": "6dbe6e438f486073"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_receipt_is_deterministic:cacfde6a5682afb5",
+        "name": "LifecycleReturnEvidenceClassBoundaryTests.test_receipt_is_deterministic",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 163,
+        "end_line": 168,
+        "signature_hash": "4676c27ccb236b1c",
+        "file_digest8": "6dbe6e438f486073"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_rejects_parent_ceiling_widening_before_class_reasoning:9e0bec92a9f2e958",
+        "name": "LifecycleReturnEvidenceClassBoundaryTests.test_rejects_parent_ceiling_widening_before_class_reasoning",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 117,
+        "end_line": 122,
+        "signature_hash": "5ab65eef1a8cda75",
+        "file_digest8": "6dbe6e438f486073"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_rejects_target_schema_drift:94527dbff3b667c0",
+        "name": "LifecycleReturnEvidenceClassBoundaryTests.test_rejects_target_schema_drift",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 124,
+        "end_line": 129,
+        "signature_hash": "109bc8033561b262",
+        "file_digest8": "6dbe6e438f486073"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py#method:LifecycleReturnEvidenceClassBoundaryTests.test_same_lifecycle_reference_does_not_convert_type:a8013bbd3d13093f",
+        "name": "LifecycleReturnEvidenceClassBoundaryTests.test_same_lifecycle_reference_does_not_convert_type",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
+        "line": 110,
+        "end_line": 115,
+        "signature_hash": "2837b77172e5b2c6",
+        "file_digest8": "6dbe6e438f486073"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#class:OfficialW2PlanBindingTests:5962abc5e516c7e6",
@@ -460316,7 +460905,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "ead28f9a329787d440105fdbf3da24a1",
-    "payload_hash": "b6df35e9a1d457eb15b1b8085f7b9f39"
+    "record_fingerprint": "95a284656fc4f734d62d798aea6f18d4",
+    "payload_hash": "ad0eb957007141d9eef7799e2261442c"
   }
 }
