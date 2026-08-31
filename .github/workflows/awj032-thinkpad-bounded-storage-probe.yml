@@ -1,0 +1,115 @@
+name: AWJ032 ThinkPad Bounded Storage Probe
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR582_SHA: 24a5404ee3b987dee12192917e40b35d3a43e81c
+  PR586_SHA: aa3fcd9a4cefd18dbc991c3e8a450fcfbbb6726b
+  CONVERGENCE_SHA: 3dc431918d5e4a5c48bf312045983555426351eb
+
+jobs:
+  exact-thinkpad-storage-probe:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Fetch exact child and prove PR582 x PR586 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=220 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR582_SHA" "$PR586_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR582_SHA $PR586_SHA"
+          git merge-base --is-ancestor "$PR582_SHA" HEAD
+          git merge-base --is-ancestor "$PR586_SHA" HEAD
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove exact PR582 C2 handoff owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/awj032/glm53_owner_host_c2_handoff.py
+          python3 -m unittest -v tools.awj032.test_glm53_owner_host_c2_handoff
+
+      - name: Re-prove exact PR586 lifecycle-return owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr586
+          git init /tmp/pr586
+          git -C /tmp/pr586 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr586 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR586_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr586 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr586 rev-parse HEAD)" = "$PR586_SHA"
+          cd /tmp/pr586
+          python3 -m py_compile \
+            tools/awj032/glm53_owner_host_c2_handoff.py \
+            tools/awj032/glm53_owner_host_lifecycle_return_packet.py
+          python3 -m unittest -v \
+            tools.awj032.test_glm53_owner_host_c2_handoff \
+            tools.awj032.test_glm53_owner_host_lifecycle_return_packet
+
+      - name: Prove bounded read-only storage probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/awj032/thinkpad_bounded_storage_probe.py
+          python3 -m unittest -v tools.awj032.test_thinkpad_bounded_storage_probe
+
+      - name: Assert read-only public boundary and evidence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from pathlib import Path
+          from tools.awj032.thinkpad_bounded_storage_probe import (
+              ThinkPadStorageProbeReceipt,
+              run_bounded_storage_probe,
+          )
+
+          assert set(inspect.signature(run_bounded_storage_probe).parameters) == {
+              'request', 'relative_path', 'byte_offset', 'probe_bytes',
+              'chunk_bytes', 'max_wall_seconds'
+          }
+          source = Path('tools/awj032/thinkpad_bounded_storage_probe.py').read_text()
+          for forbidden in (
+              'O_WRONLY', 'O_RDWR', 'os.write(', '.write_bytes(', '.unlink(',
+              'os.remove(', 'os.rename(', 'os.replace(', 'subprocess', 'requests.'
+          ):
+              assert forbidden not in source, forbidden
+          fields = ThinkPadStorageProbeReceipt.__dataclass_fields__
+          for required_false in (
+              'page_cache_bypass_proven', 'physical_nvme_io_attested',
+              'storage_medium_nvme_proven', 'producer_authenticated',
+              'model_execution_observed', 'lifecycle_measurement_admitted',
+              'effect_authority_proven', 'g2_admitted'
+          ):
+              assert required_false in fields
+          print('READ_ONLY_LOGICAL_PROBE=true')
+          print('PHYSICAL_NVME_IO_ATTESTED=false')
+          print('STORAGE_MEDIUM_NVME_PROVEN=false')
+          print('PRODUCER_AUTHENTICATED=false')
+          print('MODEL_EXECUTION_OBSERVED=false')
+          print('LIFECYCLE_MEASUREMENT_ADMITTED=false')
+          print('EFFECT_AUTHORITY_PROVEN=false')
+          print('G2_ADMITTED=false')
+          PY

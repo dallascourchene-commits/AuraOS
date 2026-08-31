@@ -1,0 +1,90 @@
+name: AWJ032 GLM53 W3 canonical owner composite
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_w3_canonical_owner_composite.py"
+      - "tools/awj032/test_glm53_w3_canonical_owner_composite.py"
+      - "tools/awj032/glm53_w3_official_producer_admission.py"
+      - "tools/awj032/test_glm53_w3_official_producer_admission.py"
+      - ".github/workflows/awj032-glm53-w3-canonical-owner-composite.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: awj032-glm53-w3-canonical-owner-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  canonical-owner-composite:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.12"
+
+      - name: Install focused test dependency
+        run: python -m pip install "pytest>=8.2,<9.0"
+
+      - name: Verify canonical public boundary traverses PR410 live
+        run: |
+          python -m py_compile \
+            tools/awj032/glm53_w3_official_producer_admission.py \
+            tools/awj032/glm53_w3_canonical_owner_composite.py \
+            tools/awj032/test_glm53_w3_canonical_owner_composite.py
+          python -m pytest -q \
+            tools/awj032/test_glm53_w3_official_producer_admission.py \
+            tools/awj032/test_glm53_w3_canonical_owner_composite.py
+
+      - name: Emit composition identity and ceilings through public live path
+        run: |
+          python - <<'PY'
+          from tools.awj032.test_glm53_w3_official_producer_admission import LowerPlan, metadata, security
+          from tools.awj032.glm53_w3_canonical_owner_composite import (
+              CANONICAL_PR421_OWNER_RECEIPT,
+              compose_canonical_w3_admission,
+          )
+
+          out = compose_canonical_w3_admission(
+              pager_plan=LowerPlan(),
+              airllm_security_evidence=security(),
+              glm53_metadata_evidence=metadata(),
+          )
+          assert out.status == "ELIGIBLE_FOR_NATIVE_SYNTHETIC_W3_FIXTURE"
+          assert out.blockers == ()
+          assert out.official_w2_producer_proof_consumed is True
+          assert out.registry_bound_mtp_owner_consumed is True
+          assert out.native_synthetic_w3_eligible is True
+          assert out.native_synthetic_w3_numerical_proven is False
+          assert out.official_tensor_payload_admitted is False
+          assert out.runtime_execution_admitted is False
+          assert out.quality_proven is False
+          assert out.g2_admitted is False
+          assert out.provider_effect_admitted is False
+          assert out.authority is False
+          print("PR421_OWNER_RECEIPT_DIGEST=" + CANONICAL_PR421_OWNER_RECEIPT.receipt_digest)
+          print("W3_CANONICAL_OWNER_COMPOSITE_LOGICAL_ID=" + out.logical_id)
+          print("PR410_PUBLIC_LIVE_TRAVERSAL=true")
+          print("CALLER_SERIALIZED_PR410_RECEIPT_ACCEPTED=false")
+          print("W3_NATIVE_SYNTHETIC_ELIGIBLE=true")
+          print("W3_NATIVE_SYNTHETIC_NUMERICAL_PROVEN=false")
+          print("G2_ADMITTED=false")
+          PY

@@ -1,0 +1,37 @@
+name: AWJ032 GLM53 W3 official producer consumption
+
+on:
+  push:
+    branches:
+      - awj032/glm53-w3-official-producer-consumption-20260830
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_w3_official_producer_admission.py'
+      - 'tools/awj032/test_glm53_w3_official_producer_admission.py'
+      - 'tools/awj032/glm53_official_w2_observation.py'
+      - 'tools/awj032/glm53_official_w2_plan_binding.py'
+      - '.github/workflows/awj032-glm53-w3-official-producer-consumption.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  producer-consumption:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile exact proof-plane modules
+        run: |
+          python -m py_compile \
+            tools/awj032/glm53_official_w2_observation.py \
+            tools/awj032/glm53_official_w2_plan_binding.py \
+            tools/awj032/glm53_w3_official_producer_admission.py \
+            tools/awj032/test_glm53_w3_official_producer_admission.py
+      - name: Run W3 producer-consumption regressions
+        run: python -m unittest -v tools.awj032.test_glm53_w3_official_producer_admission

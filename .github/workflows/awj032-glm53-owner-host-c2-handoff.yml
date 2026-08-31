@@ -1,0 +1,66 @@
+name: AWJ032 GLM53 Owner Host C2 Handoff
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  handoff-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Fetch exact pull-request head without submodule traversal
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - name: Prove exact checked-out head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 -m py_compile tools/awj032/glm53_owner_host_c2_handoff.py
+          python3 -m unittest -v tools.awj032.test_glm53_owner_host_c2_handoff
+      - name: Assert nonpromotion ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from tools.awj032.glm53_owner_host_c2_handoff import (
+              OwnerHostC2CanaryRequest,
+              OwnerHostC2CanaryReceipt,
+              OwnerHostC2JoinReceipt,
+              join_owner_host_c2_attempt,
+          )
+          assert OwnerHostC2CanaryRequest.__dataclass_fields__["execution_authorized_by_this_contract"].default is False
+          assert OwnerHostC2CanaryRequest.__dataclass_fields__["g2_admitted"].default is False
+          assert OwnerHostC2CanaryReceipt.__dataclass_fields__["producer_authenticated_by_this_contract"].default is False
+          assert OwnerHostC2CanaryReceipt.__dataclass_fields__["effect_authority_proven"].default is False
+          assert OwnerHostC2CanaryReceipt.__dataclass_fields__["g2_admitted"].default is False
+          assert OwnerHostC2JoinReceipt.__dataclass_fields__["producer_authentication_required"].default is True
+          assert OwnerHostC2JoinReceipt.__dataclass_fields__["lifecycle_registry_required"].default is True
+          assert OwnerHostC2JoinReceipt.__dataclass_fields__["full_model_runtime_proven"].default is False
+          assert OwnerHostC2JoinReceipt.__dataclass_fields__["g2_admitted"].default is False
+          params = set(inspect.signature(join_owner_host_c2_attempt).parameters)
+          assert params == {"request", "receipt"}
+          print("OWNER_HOST_C2_HANDOFF_CONTRACT_PROVEN=true")
+          print("OWNER_HOST_EFFECT_EXECUTED=false")
+          print("PRODUCER_AUTHENTICATED=false")
+          print("FULL_MODEL_RUNTIME_PROVEN=false")
+          print("G2_ADMITTED=false")
+          PY

@@ -1,0 +1,122 @@
+name: AWJ032 GLM53 W3 live canonical synthetic proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_w3_official_producer_admission.py"
+      - "tools/awj032/glm53_w3_canonical_owner_composite.py"
+      - "tools/awj032/test_glm53_w3_canonical_owner_composite.py"
+      - "tools/awj032/glm53_w3_live_canonical_owner_synthetic_proof.py"
+      - "tools/awj032/test_glm53_w3_live_canonical_owner_synthetic_proof.py"
+      - ".github/workflows/awj032-glm53-w3-live-canonical-synthetic-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: awj032-glm53-w3-live-canonical-synthetic-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  live-canonical-synthetic-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.12"
+
+      - name: Install focused test dependency
+        run: python -m pip install "pytest>=8.2,<9.0"
+
+      - name: Materialize exact PR406 semantic numerical tests
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR406_SHA: d518e0910a747ab83b6524bdcc49245076a0090c
+        run: |
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR406_SHA"
+          unset AUTH_HEADER
+          test "$(git rev-parse FETCH_HEAD)" = "$PR406_SHA"
+          git show "$PR406_SHA:tools/awj032/test_glm53_w3_native_per_expert_fixture.py" > tools/awj032/test_glm53_w3_native_per_expert_fixture.py
+          git show "$PR406_SHA:tools/awj032/test_glm53_w3_scale_semantic_oracle.py" > tools/awj032/test_glm53_w3_scale_semantic_oracle.py
+          test "$(git rev-parse "$PR406_SHA:tools/awj032/test_glm53_w3_native_per_expert_fixture.py")" = "80471d603ba9b4b17a44e130f4870fb19372b15a"
+          test "$(git rev-parse "$PR406_SHA:tools/awj032/test_glm53_w3_scale_semantic_oracle.py")" = "92a31df1e3b6abb0944a0cae58fb08eb3d2662aa"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Compile proof planes
+        run: |
+          python -m py_compile \
+            tools/awj032/glm53_w3_official_producer_admission.py \
+            tools/awj032/glm53_w3_canonical_owner_composite.py \
+            tools/awj032/glm53_w3_live_canonical_owner_synthetic_proof.py \
+            tools/awj032/test_glm53_w3_native_per_expert_fixture.py \
+            tools/awj032/test_glm53_w3_scale_semantic_oracle.py \
+            tools/awj032/test_glm53_w3_live_canonical_owner_synthetic_proof.py
+
+      - name: Replay live canonical owner admission
+        run: python -m pytest -q tools/awj032/test_glm53_w3_official_producer_admission.py tools/awj032/test_glm53_w3_canonical_owner_composite.py
+
+      - name: Replay exact PR406 selected-range and scale semantics
+        run: python -m unittest -v tools.awj032.test_glm53_w3_native_per_expert_fixture tools.awj032.test_glm53_w3_scale_semantic_oracle
+
+      - name: Run live canonical convergence adversarial contracts
+        run: python -m unittest -v tools.awj032.test_glm53_w3_live_canonical_owner_synthetic_proof
+
+      - name: Emit public live-path synthetic proof and ceilings
+        run: |
+          python - <<'PY'
+          import inspect
+          from tools.awj032.test_glm53_w3_official_producer_admission import LowerPlan, metadata, security
+          from tools.awj032.glm53_w3_live_canonical_owner_synthetic_proof import prove_live_canonical_native_synthetic_w3
+
+          assert tuple(inspect.signature(prove_live_canonical_native_synthetic_w3).parameters) == (
+              "pager_plan", "airllm_security_evidence", "glm53_metadata_evidence"
+          )
+          out = prove_live_canonical_native_synthetic_w3(
+              pager_plan=LowerPlan(),
+              airllm_security_evidence=security(),
+              glm53_metadata_evidence=metadata(),
+          )
+          assert out.status == "PROVEN_NATIVE_SYNTHETIC_W3_FIXTURE"
+          assert out.blockers == ()
+          assert out.live_pr410_public_traversal_proven is True
+          assert out.caller_serialized_pr410_receipt_accepted is False
+          assert out.caller_canonical_admission_accepted is False
+          assert out.caller_numerical_evidence_override_accepted is False
+          assert out.native_synthetic_w3_proven is True
+          assert out.official_tensor_compatibility_proven is False
+          assert out.official_tensor_payload_admitted is False
+          assert out.runtime_mtp_support_proven is False
+          assert out.runtime_execution_admitted is False
+          assert out.checkpoint_payload_admitted is False
+          assert out.quality_proven is False
+          assert out.g2_admitted is False
+          assert out.provider_effect_admitted is False
+          assert out.authority is False
+          print("W3_LIVE_CANONICAL_SYNTHETIC_PROOF=" + out.logical_id)
+          print("PR432_LIVE_ADMISSION_TRAVERSED=true")
+          print("CALLER_PREBUILT_ADMISSION_ACCEPTED=false")
+          print("CALLER_NUMERICAL_OVERRIDE_ACCEPTED=false")
+          print("NATIVE_SYNTHETIC_W3_PROVEN=true")
+          print("OFFICIAL_TENSOR_COMPATIBILITY_PROVEN=false")
+          print("RUNTIME_MTP_SUPPORT_PROVEN=false")
+          print("G2_ADMITTED=false")
+          PY
