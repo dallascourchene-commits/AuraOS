@@ -1,0 +1,163 @@
+name: Aura WorkCapsule Proof-Type Memory Admission
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR580_SHA: 5d13a9bd5f939fcf2e281a92114a15e99b929c67
+  PR581_SHA: 4b0cdcef93bfaf09d8bb4545a9e022f922067dc7
+  CONVERGENCE_SHA: a3eda8eed8ee0ac54b301dea5ce463a7e1327306
+  PR580_OWNER_BLOB: 19cec404761811a7422e3cd6c79672357ede5b8f
+  PR580_TEST_BLOB: 5f9f0f20c888e06967a8239f159f4ae7a739c714
+  PR581_OWNER_BLOB: d2831fceadeb6abc4855943c0615fe84be5bd879
+  PR581_TEST_BLOB: 8360b18e0ab958f7908bddecc89e8fb08fd6b366
+
+jobs:
+  exact-proof-type-memory-admission:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact child and prove PR580 x current PR581 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=340 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR580_SHA" "$PR581_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR580_SHA $PR581_SHA"
+          git merge-base --is-ancestor "$PR580_SHA" HEAD
+          git merge-base --is-ancestor "$PR581_SHA" HEAD
+          test "$(git hash-object scripts/aura_workcapsule_live_artifact_raw_slice_noninterchangeability.py)" = "$PR580_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_workcapsule_live_artifact_raw_slice_noninterchangeability.py)" = "$PR580_TEST_BLOB"
+          test "$(git hash-object scripts/aura_provenance_corroboration_memory_admission.py)" = "$PR581_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_provenance_corroboration_memory_admission.py)" = "$PR581_TEST_BLOB"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_PR580_PR581_V2_CONVERGENCE=true'
+
+      - name: Re-prove exact PR580 evidence-class owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_live_artifact_raw_slice_noninterchangeability.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_artifact_raw_slice_noninterchangeability
+
+      - name: Re-prove exact current PR581 V2 memory owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_provenance_corroboration_memory_admission.py
+          python3 -m unittest -v tests.test_aura_provenance_corroboration_memory_admission
+
+      - name: Prove O46 type-domain-use adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_proof_type_memory_admission.py
+          python3 -m unittest -v tests.test_aura_workcapsule_proof_type_memory_admission
+
+      - name: Prove fixed public boundary and owner reuse
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_workcapsule_proof_type_memory_admission.py
+          grep -q 'admit_live_artifact_raw_slice_noninterchangeability' "$child"
+          grep -q 'admit_evidence_nodes' "$child"
+          if grep -q '^def admit_live_artifact_raw_slice_noninterchangeability' "$child"; then
+            echo 'child duplicated PR580 owner' >&2
+            exit 1
+          fi
+          if grep -q '^def admit_evidence_nodes' "$child"; then
+            echo 'child duplicated PR581 owner' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_proof_type_memory_admission import (
+              admit_pr580_proof_type_memory_views,
+              project_pr580_proof_types_to_memory,
+          )
+          expected = {'live_artifact_host_receipt', 'causal_raw_slice_host_separation_receipt'}
+          assert set(inspect.signature(project_pr580_proof_types_to_memory).parameters) == expected
+          assert set(inspect.signature(admit_pr580_proof_type_memory_views).parameters) == expected
+          PY
+
+      - name: Execute exact PR580 fixture through current PR581 V2
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts.aura_workcapsule_proof_type_memory_admission import (
+              PR580_GENERATION, PR581_GENERATION,
+              admit_pr580_proof_type_memory_views,
+              project_pr580_proof_types_to_memory,
+          )
+          from tests.test_aura_workcapsule_live_artifact_raw_slice_noninterchangeability import live_receipt, raw_receipt
+
+          projection = project_pr580_proof_types_to_memory(
+              live_artifact_host_receipt=live_receipt(),
+              causal_raw_slice_host_separation_receipt=raw_receipt(),
+          )
+          views = admit_pr580_proof_type_memory_views(
+              live_artifact_host_receipt=live_receipt(),
+              causal_raw_slice_host_separation_receipt=raw_receipt(),
+          )
+          assert projection['pr580_generation'] == PR580_GENERATION
+          assert projection['pr581_generation'] == PR581_GENERATION
+          assert projection['generation_bound_currentness_only'] is True
+          assert projection['ambient_repository_currentness_reproved'] is False
+          assert len(views['retrieval_admission']['eligible_artifact_refs']) == 2
+          assert len(views['host_currentness_admission']['eligible_artifact_refs']) == 1
+          assert views['host_currentness_admits_raw_slice_evidence'] is False
+          assert views['raw_slice_host_currentness_rejection_reasons'] == [
+              'USE_CLASS_NOT_ALLOWED',
+              'EVIDENCE_TYPE_NOT_ACCEPTED',
+              'CURRENTNESS_DOMAIN_NOT_ACCEPTED',
+          ]
+          assert views['corroboration_or_memory_count_grants_host_rank'] is False
+          assert views['producer_authenticated'] is False
+          assert views['semantic_truth_proven'] is False
+          assert views['effect_authority_proven'] is False
+          print('PR580_PROOF_TYPES_PROJECTED_INTO_PR581_V2=true')
+          print('RETRIEVAL_ADMITS_BOTH=true')
+          print('HOST_CURRENTNESS_ADMITS_RAW_SLICE=false')
+          PY
+
+      - name: Emit consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat <<'EOF'
+          PR580_NONINTERCHANGEABILITY_PRESERVED=true
+          PR581_V2_TYPED_ADMISSION_PRESERVED=true
+          RETRIEVAL_CAN_ADMIT_HOST_AND_RAW=true
+          HOST_CURRENTNESS_CAN_ADMIT_RAW=false
+          RAW_REJECTED_BY_USE_TYPE_AND_CURRENTNESS_DOMAIN=true
+          RAW_SLICE_HOST_RANK_TRANSITION=false
+          CALLER_SELECTED_EVIDENCE_TYPE=false
+          CALLER_SELECTED_CURRENTNESS_DOMAIN=false
+          CALLER_SELECTED_USE_CLASS=false
+          CALLER_SELECTED_GENERATION=false
+          CALLER_SELECTED_CURRENTNESS=false
+          GENERATION_BOUND_CURRENTNESS_ONLY=true
+          AMBIENT_REPOSITORY_CURRENTNESS_REPROVED=false
+          PRODUCER_AUTHENTICATED=false
+          SEMANTIC_TRUTH_PROVEN=false
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          EFFECT_AUTHORITY_PROVEN=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          SEMANTIC_K27_AUTHORITY=false
+          MERGE_PROMOTION_AUTHORITY=false
+          GATE10_PROMOTION=false
+          EOF
