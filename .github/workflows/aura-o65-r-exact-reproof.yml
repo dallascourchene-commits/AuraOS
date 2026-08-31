@@ -100,7 +100,7 @@ jobs:
           python3 - <<'PY'
           import json
           body=json.load(open('/tmp/o65-r-cli.json',encoding='utf-8'))
-          assert body['schema']=='AURA-AUTHORITY-MATERIALIZATION-PROPOSAL-CONFORMANCE-v1'
+          assert body['schema']=='AURA-AUTHORITY-MATERIALIZATION-PROPOSAL-CONFORMANCE-v2'
           claim=body['claim_ceiling']
           assert claim['live_proposal_currentness_resolved'] is False
           for key in ('execution_authorized','provider_effect_authorized','semantic_k27_authority','native_private_transformer_kv_accessed','gate10_promoted','merge_or_deployment_authorized'):
