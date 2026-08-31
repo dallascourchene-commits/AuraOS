@@ -15,8 +15,7 @@ use sha2::{Digest, Sha256};
 use std::error::Error;
 use std::fmt::{Display, Formatter, Write as _};
 
-pub const PROJECTION_SCHEMA_V1: &str =
-    "AURA_K27_ASTGE_PORTABLE_TARGET_RAW_SLICE_PROJECTION_V1";
+pub const PROJECTION_SCHEMA_V1: &str = "AURA_K27_ASTGE_PORTABLE_TARGET_RAW_SLICE_PROJECTION_V1";
 pub const CANONICALIZATION_PROFILE_V1: &str = "AURA_SERDE_JSON_STRUCT_ORDER_COMPACT_V1";
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -209,7 +208,10 @@ fn require_raw_slice_owner(
         &raw_slice.projection_payload_sha256,
     )?;
     require_digest("full_source_sha256_hex", &raw_slice.full_source_sha256_hex)?;
-    require_digest("target_slice_sha256_hex", &raw_slice.target_slice_sha256_hex)?;
+    require_digest(
+        "target_slice_sha256_hex",
+        &raw_slice.target_slice_sha256_hex,
+    )?;
     require_digest(
         "selected_target_semantic_handle_digest_hex",
         &raw_slice.selected_target_semantic_handle_digest_hex,
