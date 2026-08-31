@@ -23,6 +23,8 @@ from scripts.aura_workcapsule_current_recursive_target_raw_slice_binding import 
 
 VERSION = "AURA_WORKCAPSULE_ARTIFACT_QUALIFIED_HOST_OBSERVATION_V1"
 HOST_VERSION = "AURA_WORKCAPSULE_TEMPORAL_HOST_OBSERVATION_ADMISSION_V1"
+HOST_RESOLUTION_SCHEMA = "AURA_HOST_OBSERVATION_RESOLUTION_V1"
+HOST_RESOLUTION_VERSION = 1
 GATES = ("U_HEAD", "U_ROUTE", "U_F2", "U_CUSTODY", "U_CANARY")
 STATES = frozenset({"PASS", "FAIL", "UNKNOWN"})
 LOCAL_PREFIX = "LOCAL_ARTIFACT_"
@@ -73,16 +75,56 @@ _HOST_FALSE_FIELDS = (
     "semantic_repair_correctness_minted",
     "producer_identity_authenticated",
 )
+_RESOLUTION_FIELDS = (
+    "schema",
+    "version",
+    "gate",
+    "state",
+    "observation_ref",
+    "producer_ref",
+    "producer_generation",
+    "currentness_ref",
+    "authority_ref",
+    "target_ref",
+    "resolver_ref",
+    "resolver_generation",
+    "revoked",
+    "resolution_digest",
+)
+_RESOLUTION_PAYLOAD_FIELDS = tuple(
+    field for field in _RESOLUTION_FIELDS if field != "resolution_digest"
+)
+_RESOLUTION_BINDING_FIELDS = (
+    "observation_ref",
+    "producer_ref",
+    "producer_generation",
+    "currentness_ref",
+    "authority_ref",
+    "target_ref",
+    "resolver_ref",
+    "resolver_generation",
+)
 
 
 def _canonical_bytes(value: Any) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode(
-        "utf-8"
-    )
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
 
 
 def _sha256(value: Any) -> str:
     return hashlib.sha256(_canonical_bytes(value)).hexdigest()
+
+
+def _is_sha256(value: Any) -> bool:
+    return (
+        isinstance(value, str)
+        and len(value) == 64
+        and all(character in "0123456789abcdef" for character in value)
+    )
 
 
 def artifact_target_ref(local_receipt: dict[str, Any]) -> str:
@@ -121,8 +163,57 @@ def _gate_maps(
     return states, resolutions, violations
 
 
+def _resolution_digest(resolution: dict[str, Any]) -> str:
+    payload = {field: resolution[field] for field in _RESOLUTION_PAYLOAD_FIELDS}
+    return _sha256(payload)
+
+
+def _resolution_integrity_violations(
+    *,
+    gate: str,
+    effective_state: Any,
+    resolution: Any,
+) -> list[str]:
+    if not isinstance(resolution, dict):
+        return ["RESOLVED_GATE_MISSING_RESOLUTION:" + gate]
+    if set(resolution) != set(_RESOLUTION_FIELDS):
+        return ["HOST_RESOLUTION_FIELDS_MISMATCH:" + gate]
+
+    violations: list[str] = []
+    if resolution.get("schema") != HOST_RESOLUTION_SCHEMA:
+        violations.append("HOST_RESOLUTION_SCHEMA_MISMATCH:" + gate)
+    version = resolution.get("version")
+    if type(version) is not int or version != HOST_RESOLUTION_VERSION:
+        violations.append("HOST_RESOLUTION_VERSION_MISMATCH:" + gate)
+    if resolution.get("gate") != gate:
+        violations.append("HOST_RESOLUTION_GATE_MISMATCH:" + gate)
+    if resolution.get("state") not in STATES:
+        violations.append("HOST_RESOLUTION_STATE_INVALID:" + gate)
+
+    revoked = resolution.get("revoked")
+    if not isinstance(revoked, bool):
+        violations.append("HOST_RESOLUTION_REVOKED_NOT_BOOL:" + gate)
+    else:
+        derived_state = "FAIL" if revoked else resolution.get("state")
+        if derived_state != effective_state:
+            violations.append("HOST_RESOLUTION_EFFECTIVE_STATE_MISMATCH:" + gate)
+
+    for field in _RESOLUTION_BINDING_FIELDS:
+        value = resolution.get(field)
+        if not isinstance(value, str) or not value.strip():
+            violations.append(f"HOST_RESOLUTION_BINDING_MISSING:{gate}:{field}")
+
+    supplied_digest = resolution.get("resolution_digest")
+    if not _is_sha256(supplied_digest):
+        violations.append("HOST_RESOLUTION_DIGEST_INVALID:" + gate)
+    elif supplied_digest != _resolution_digest(resolution):
+        violations.append("HOST_RESOLUTION_DIGEST_MISMATCH:" + gate)
+    return violations
+
+
 def _gate_shape_violations(
-    states: dict[str, Any], resolutions: dict[str, Any]
+    states: dict[str, Any],
+    resolutions: dict[str, Any],
 ) -> list[str]:
     violations: list[str] = []
     for gate in GATES:
@@ -130,10 +221,18 @@ def _gate_shape_violations(
         resolution = resolutions.get(gate)
         if state not in STATES:
             violations.append("HOST_GATE_STATE_INVALID:" + gate)
-        elif state == "UNKNOWN" and resolution is not None:
-            violations.append("UNKNOWN_GATE_HAS_RESOLUTION:" + gate)
-        elif state in {"PASS", "FAIL"} and not isinstance(resolution, dict):
-            violations.append("RESOLVED_GATE_MISSING_RESOLUTION:" + gate)
+            continue
+        if state == "UNKNOWN":
+            if resolution is not None:
+                violations.append("UNKNOWN_GATE_HAS_RESOLUTION:" + gate)
+            continue
+        violations.extend(
+            _resolution_integrity_violations(
+                gate=gate,
+                effective_state=state,
+                resolution=resolution,
+            )
+        )
     return violations
 
 
@@ -154,17 +253,22 @@ def _identity_violations(receipt: dict[str, Any]) -> list[str]:
     if not isinstance(identity, dict):
         return ["HOST_RECEIPT_IDENTITY_MISSING"]
     violations: list[str] = []
-    if identity.get("kind") != "DIGEST" or identity.get("algorithm_or_provider") != "sha256":
+    if (
+        identity.get("kind") != "DIGEST"
+        or identity.get("algorithm_or_provider") != "sha256"
+    ):
         violations.append("HOST_RECEIPT_IDENTITY_PROFILE_INVALID")
     supplied = identity.get("value")
-    payload = {key: value for key, value in receipt.items() if key != "receipt_identity"}
+    payload = {
+        key: value for key, value in receipt.items() if key != "receipt_identity"
+    }
     if not isinstance(supplied, str) or supplied != _sha256(payload):
         violations.append("HOST_RECEIPT_IDENTITY_MISMATCH")
     return violations
 
 
 def verify_host_admission_envelope(receipt: dict[str, Any]) -> list[str]:
-    """Check #559 envelope integrity/ceiling; never authenticate its producer."""
+    """Check #559 envelope and nested resolution integrity, never producer trust."""
     if not isinstance(receipt, dict) or set(receipt) != _HOST_FIELDS:
         return ["MALFORMED_HOST_ADMISSION_ENVELOPE"]
     states, resolutions, violations = _gate_maps(receipt)
@@ -205,7 +309,9 @@ def _admit_local(
 
 
 def _target_binding_violations(
-    *, host_receipt: dict[str, Any], expected_ref: str
+    *,
+    host_receipt: dict[str, Any],
+    expected_ref: str,
 ) -> list[str]:
     states = host_receipt["host_gate_states"]
     resolutions = host_receipt["host_gate_resolutions"]
@@ -233,12 +339,18 @@ def verify_artifact_qualified_host_observation(
         "raw_slice_receipt": raw_slice_receipt,
     }
     violations = _local_violations(**local_kwargs)
-    violations.extend(HOST_PREFIX + item for item in verify_host_admission_envelope(host_admission_receipt))
+    violations.extend(
+        HOST_PREFIX + item
+        for item in verify_host_admission_envelope(host_admission_receipt)
+    )
     if violations:
         return list(dict.fromkeys(violations))
     expected_ref = artifact_target_ref(_admit_local(**local_kwargs))
     violations.extend(
-        _target_binding_violations(host_receipt=host_admission_receipt, expected_ref=expected_ref)
+        _target_binding_violations(
+            host_receipt=host_admission_receipt,
+            expected_ref=expected_ref,
+        )
     )
     return list(dict.fromkeys(violations))
 
@@ -252,7 +364,9 @@ def _host_gate_partition(states: dict[str, Any]) -> tuple[list[str], list[str]]:
 def admit_artifact_qualified_host_observation(**kwargs: Any) -> dict[str, Any]:
     violations = verify_artifact_qualified_host_observation(**kwargs)
     if violations:
-        raise ValueError("artifact-qualified host observation failed: " + ",".join(violations))
+        raise ValueError(
+            "artifact-qualified host observation failed: " + ",".join(violations)
+        )
     local = _admit_local(
         scoped_target_inputs=kwargs["scoped_target_inputs"],
         higher_owner_projection=kwargs["higher_owner_projection"],
