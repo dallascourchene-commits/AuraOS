@@ -1,0 +1,109 @@
+name: GLM53 Official Equal Rate E8 Canary
+
+on:
+  pull_request:
+    paths:
+      - 'tools/quantization/aura_glm53_official_equal_rate_e8_canary.py'
+      - 'tools/quantization/aura_glm53_equal_rate_e8_ablation.py'
+      - 'tests/test_aura_glm53_official_equal_rate_e8_canary.py'
+      - '.github/workflows/glm53-official-equal-rate-e8-canary.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  Q13_HEAD: eb09b5ffd14577d1676f57bb908e5ddd81125605
+  Q13_RUN: '33397035043'
+  Q13_SOURCE_BLOB: 5d3b365911ecd78bb2698a9423807dbf13f1b5ad
+  Q4_CODEC_BLOB: 8c35c47f6b162bf03324f509dc1b820b6eb689f9
+
+jobs:
+  q5-official-equal-rate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Q5 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install exact numeric dependency
+        run: python -m pip install --disable-pip-version-check 'numpy==2.3.5'
+
+      - name: Prove exact Q13 semantic parent and Q4 implementation substrate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$Q13_HEAD" HEAD
+          test "$(git rev-parse "$Q13_HEAD":tools/quantization/aura_glm53_full_representative_canonical_source_set.py)" = "$Q13_SOURCE_BLOB"
+          test "$(git hash-object tools/quantization/aura_glm53_equal_rate_e8_ablation.py)" = "$Q4_CODEC_BLOB"
+          python3 - <<'PY'
+          import json, os, urllib.request
+          req=urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{os.environ['Q13_RUN']}",
+              headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+          )
+          with urllib.request.urlopen(req,timeout=30) as response: run=json.load(response)
+          assert run['status']=='completed' and run['conclusion']=='success',run
+          assert run['head_sha']==os.environ['Q13_HEAD'],run['head_sha']
+          print('Q5_Q13_EXACT_GREEN_SOURCE_PARENT=true')
+          print('Q5_Q4_CODEC_EXACT_BLOB=true')
+          PY
+
+      - name: Compile and run Q5 adversarial contract
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/quantization/aura_glm53_official_equal_rate_e8_canary.py tests/test_aura_glm53_official_equal_rate_e8_canary.py
+          python -m unittest -v tests.test_aura_glm53_official_equal_rate_e8_canary
+
+      - name: Execute exact live official-source equal-rate canary
+        run: |
+          set -euo pipefail
+          python -m tools.quantization.aura_glm53_official_equal_rate_e8_canary | tee /tmp/q5a.json
+          python -m tools.quantization.aura_glm53_official_equal_rate_e8_canary | tee /tmp/q5b.json
+          python3 - <<'PY'
+          import json
+          a=json.load(open('/tmp/q5a.json',encoding='utf-8')); b=json.load(open('/tmp/q5b.json',encoding='utf-8'))
+          assert a['receipt_digest']==b['receipt_digest'],(a['receipt_digest'],b['receipt_digest'])
+          assert a['q13_head']=='eb09b5ffd14577d1676f57bb908e5ddd81125605'
+          assert a['q13_source_tensor_set_digest']=='f41495beb566f4c49f5674f2820f3d5c32591647be552048cf711a885a1b71b6'
+          assert a['codec_bpw_e8']==1.25 and a['codec_bpw_control']==1.25 and a['equal_rate'] is True
+          assert a['total_official_weights_observed']==512
+          assert len(a['tiles'])==8
+          assert {x['tensor_role'] for x in a['tiles']}=={'gate_up_proj','down_proj'}
+          assert {x['col_start'] for x in a['tiles']}=={0,128,256,384}
+          assert all(x['outcome'] in {'E8_WIN','CONTROL_WIN','TIE'} for x in a['tiles'])
+          assert a['aggregate_outcome'] in {'E8_WIN','CONTROL_WIN','TIE'}
+          print('Q5_OFFICIAL_SOURCE_EQUAL_RATE_EVIDENCE=true')
+          print('Q5_AGGREGATE_OUTCOME='+a['aggregate_outcome'])
+          print('Q5_AGGREGATE_E8_OVER_CONTROL='+repr(a['aggregate_e8_over_control']))
+          print('Q5_RECEIPT_DIGEST='+a['receipt_digest'])
+          for x in a['tiles']:
+              print('Q5_TILE='+x['tensor_role']+':'+str(x['col_start'])+':'+x['outcome']+':'+repr(x['e8_over_control']))
+          PY
+
+      - name: Prove no geometry privilege or promotion
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q5a.json',encoding='utf-8'))
+          assert r['official_source_equal_rate_distortion_evidence'] is True
+          assert r['representative_canary_scope_only'] is True
+          for key in ('geometry_privileged','full_tensor_quantized','whole_model_quantized','glm_quality_proven','runtime_performance_proven','native_private_transformer_kv_accessed','semantic_k27_authority','gate10_promoted'):
+              assert r[key] is False,key
+          print('Q5_GEOMETRY_PRIVILEGED=false')
+          print('Q5_GLM_QUALITY_PROVEN=false')
+          print('Q5_RUNTIME_PERFORMANCE_PROVEN=false')
+          print('Q5_GATE10_PROMOTED=false')
+          PY
