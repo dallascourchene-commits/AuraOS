@@ -50,11 +50,12 @@ jobs:
           test "$(git rev-parse "$ABSTENTION_PARENT_HEAD:tools/awj032/glm53_router_separated_prefetch.py")" = "$ABSTENTION_PARENT_SOURCE_BLOB"
           grep -q '_canonical_prefetch_expert_ids' tools/awj032/glm53_router_separated_prefetch.py
           grep -q 'PagerResultMustBindExactRequestedExpertsAndSource' tools/awj032/glm53_router_separated_prefetch.py
-          grep -q 'if cold_bytes == 0' tools/awj032/glm53_prefetch_transfer_admission.py
+          grep -q 'NOT_APPLICABLE_ZERO_LOGICAL_BYTES' tools/awj032/glm53_prefetch_transfer_admission.py
           echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
           echo 'G2_COST_ADMISSION_COGNITION_PRESERVED=true'
           echo 'G1_ABSTENTION_COGNITION_PRESERVED=true'
           echo 'G1_POST_READ_W3_GUARD_PRESERVED=true'
+          echo 'ZERO_BYTE_REUSE_DOMAIN_REPAIRED=true'
 
       - name: Revalidate exact hosted parent proofs
         shell: bash
@@ -62,24 +63,15 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           import json, os, urllib.request
-
-          repo = os.environ['REPO']
-          token = os.environ['GH_TOKEN']
+          repo = os.environ['REPO']; token = os.environ['GH_TOKEN']
           expected = {
               int(os.environ['G2_PARENT_RUN']): os.environ['G2_PARENT_HEAD'],
               int(os.environ['G2_W3_RUN']): os.environ['G2_PARENT_HEAD'],
               int(os.environ['ABSTENTION_PARENT_RUN']): os.environ['ABSTENTION_PARENT_HEAD'],
           }
-          headers = {
-              'Authorization': f'Bearer {token}',
-              'Accept': 'application/vnd.github+json',
-              'X-GitHub-Api-Version': '2022-11-28',
-          }
+          headers = {'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'}
           for run_id, head_sha in expected.items():
-              req = urllib.request.Request(
-                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
-                  headers=headers,
-              )
+              req = urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}', headers=headers)
               with urllib.request.urlopen(req, timeout=30) as response:
                   run = json.load(response)
               assert run['head_sha'] == head_sha, (run_id, run['head_sha'], head_sha)
@@ -109,8 +101,9 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           from tools.awj032.glm53_router_separated_prefetch import PREFETCH_SCHEMA, PrefetchPrediction
-          from tools.awj032.glm53_prefetch_transfer_admission import PrefetchTransferPolicy, admit_prefetch_transfers
-
+          from tools.awj032.glm53_prefetch_transfer_admission import (
+              PrefetchTransferPolicy, REUSE_NOT_APPLICABLE, admit_prefetch_transfers,
+          )
           prediction = PrefetchPrediction(
               schema=PREFETCH_SCHEMA,
               predictor_generation='predictor:g3:abstain',
@@ -119,35 +112,29 @@ jobs:
               predicted_experts=(),
           )
           policy = PrefetchTransferPolicy(
-              policy_generation='policy:g3',
-              predictor_calibration_generation='cal:g3',
-              layer_id='layer:g3',
-              binding_digest='binding:g3',
+              policy_generation='policy:g3', predictor_calibration_generation='cal:g3',
+              layer_id='layer:g3', binding_digest='binding:g3',
               effective_storage_bandwidth_bytes_per_second=1_000_000_000.0,
               prefetch_window_seconds=0.01,
-              minimum_hit_probability_numerator=3,
-              minimum_hit_probability_denominator=4,
+              minimum_hit_probability_numerator=3, minimum_hit_probability_denominator=4,
               max_logical_prefetch_bytes=8_000_000,
               max_estimated_transfer_energy_joules=1.0,
           )
-          receipt = admit_prefetch_transfers(
-              prediction=prediction,
-              forecasts=(),
-              policy=policy,
-              num_experts=256,
-          )
+          receipt = admit_prefetch_transfers(prediction=prediction, forecasts=(), policy=policy, num_experts=256)
           assert receipt.predicted_experts == ()
           assert receipt.admitted_experts == ()
           assert receipt.cold_predicted_logical_bytes == 0
-          assert receipt.cold_required_reuse_for_window == 0.0
+          assert receipt.cold_required_reuse_for_window is None
+          assert receipt.cold_required_reuse_disposition == REUSE_NOT_APPLICABLE
           assert receipt.admitted_logical_bytes == 0
           assert receipt.admitted_logical_transfer_seconds == 0.0
           assert receipt.physical_io_attested is False
           assert receipt.physical_prefetch_bytes is None
           assert receipt.transfer_effect_authorized is False
           assert receipt.g2_admitted is False
-          print('PREDICTOR_ABSTENTION_COMMUTES_TO_ZERO_TRANSFER_PLAN=true')
-          print('ZERO_TRANSFER_PLAN_NOT_PHYSICAL_SAVINGS_PROOF=true')
+          print('PREDICTOR_ABSTENTION_COMMUTES_TO_EMPTY_TRANSFER_PLAN=true')
+          print('ZERO_BYTE_REUSE_IS_NOT_APPLICABLE_NOT_NUMERICAL_ZERO=true')
+          print('EMPTY_TRANSFER_PLAN_NOT_PHYSICAL_SAVINGS_PROOF=true')
           PY
 
       - name: Consequence ceiling
@@ -155,7 +142,8 @@ jobs:
           echo 'PredictionAbstention!=RoutingFailure'
           echo 'EmptyPrediction=>ZeroSpeculativeTransferPlan'
           echo 'ZeroSpeculativeTransferPlan!=ZeroNativeExecutionDemand'
-          echo 'ZeroPredictedBytes=>ZeroReuseRequiredNotPhysicalSavingsProof'
+          echo 'ZeroPredictedBytes=>ReuseFeasibilityNotApplicable'
+          echo 'ReuseNotApplicable!=ZeroReuseRequirement'
           echo 'PagerResultSourceProofStillRequiredForNativeDemandMisses'
           echo 'TransferPlanEligibility!=TransferEffectAuthority!=G2Admission'
           echo 'K27Coordinate!=TransformerKVCache!=RoutingAuthority'
