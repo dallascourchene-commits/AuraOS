@@ -151,14 +151,20 @@ class WorkCapsuleObservationBoundExactVerifierTests(unittest.TestCase):
         self.tmp.cleanup()
 
     def compile(self, *, graph=None, witness=None):
-        return compile_observation_bound_reentry_closure(
-            root=self.root,
-            codemap=self.codemap,
-            anchor_manifest=self.anchors,
-            witness_manifest=witness if witness is not None else self.witness,
-            previous_binding=self.previous,
-            reentry_receipt=self.reentry,
-            candidate_graph_witness=graph if graph is not None else self.graph,
+        # The candidate under attack must be independent from the relying party's
+        # pinned inputs. PR516 intentionally preserves nested identity objects by
+        # reference, so deep-copy the candidate at this test boundary before any
+        # adversarial mutation.
+        return copy.deepcopy(
+            compile_observation_bound_reentry_closure(
+                root=self.root,
+                codemap=self.codemap,
+                anchor_manifest=self.anchors,
+                witness_manifest=witness if witness is not None else self.witness,
+                previous_binding=self.previous,
+                reentry_receipt=self.reentry,
+                candidate_graph_witness=graph if graph is not None else self.graph,
+            )
         )
 
     def verify(self, receipt, *, graph=None, witness=None):
