@@ -1,0 +1,189 @@
+name: Aura O66 Non-Executable Commit Candidate Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_nonexecutable_commit_candidate.py"
+      - "tests/test_aura_nonexecutable_commit_candidate.py"
+      - ".github/workflows/aura-o66-nonexecutable-commit-candidate-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  O66_SEMANTIC_HEAD: "1030cc4ae55db50cb9aa4d5bc78b82a0727c402f"
+  O66_SOURCE_BLOB: "5247851dc18002002498c60dba41b7ff1a11a7ec"
+  O66_TEST_BLOB: "59e9f4b99249a96a0346f0067a1406698a3400ef"
+  O65_PROOF_HEAD: "4490a3d70ed9c26eaa0f941e3f856201bf5574fd"
+  O65_RUN: "33409361040"
+  O65_JOB: "99544759401"
+  O65_SOURCE_BLOB: "70d4299a17edfc68b4176138e87948b05f407b5b"
+  O65_TEST_BLOB: "c0b999761c53aecdbbf3f21867becf4011dec18b"
+  Q20_PROOF_HEAD: "22e72fd3de7b008752bbb5176347d61518f4e83a"
+  Q20_RUN: "33409821076"
+  Q20_JOB: "99546289815"
+  Q20_SOURCE_BLOB: "78281b7a1f78f380997bd30ab3becfcb838edf85"
+  Q20_TEST_BLOB: "4e73b9b5172824690570351cc2dc1f834f847a82"
+
+jobs:
+  o66-nonexecutable-commit-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Exact authenticated checkout without mutable actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=20 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Authenticate O66 semantic cut and exact parent proof generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'}
+          def get(path):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/{path}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  return json.load(r)
+          head=os.environ['O66_SEMANTIC_HEAD']
+          current=get(f'commits/{os.environ["GITHUB_SHA"]}')
+          # The mutable workflow head must descend from / contain the pinned semantic files.
+          for path,blob in (
+              ('tools/aura_nonexecutable_commit_candidate.py',os.environ['O66_SOURCE_BLOB']),
+              ('tests/test_aura_nonexecutable_commit_candidate.py',os.environ['O66_TEST_BLOB']),
+          ):
+              encoded=urllib.parse.quote(path,safe='/')
+              pinned=get(f'contents/{encoded}?ref={head}')
+              live=get(f'contents/{encoded}?ref={os.environ["GITHUB_SHA"]}')
+              assert pinned['sha']==blob,(path,pinned['sha'],blob)
+              assert live['sha']==blob,(path,live['sha'],blob)
+          parents=(
+              ('O65',os.environ['O65_PROOF_HEAD'],int(os.environ['O65_RUN']),int(os.environ['O65_JOB']),
+               'tools/aura_pre_attempt_admission.py',os.environ['O65_SOURCE_BLOB'],
+               'tests/test_aura_pre_attempt_admission.py',os.environ['O65_TEST_BLOB']),
+              ('Q20',os.environ['Q20_PROOF_HEAD'],int(os.environ['Q20_RUN']),int(os.environ['Q20_JOB']),
+               'tools/aura_owner_resolved_proposal_lifecycle_bridge.py',os.environ['Q20_SOURCE_BLOB'],
+               'tests/test_aura_owner_resolved_proposal_lifecycle_bridge.py',os.environ['Q20_TEST_BLOB']),
+          )
+          for label,proof_head,run_id,job_id,source_path,source_blob,test_path,test_blob in parents:
+              run=get(f'actions/runs/{run_id}')
+              job=get(f'actions/jobs/{job_id}')
+              assert run['status']=='completed' and run['conclusion']=='success',(label,run)
+              assert run['head_sha']==proof_head,(label,run['head_sha'],proof_head)
+              assert job['status']=='completed' and job['conclusion']=='success',(label,job)
+              for path,blob in ((source_path,source_blob),(test_path,test_blob)):
+                  encoded=urllib.parse.quote(path,safe='/')
+                  obj=get(f'contents/{encoded}?ref={proof_head}')
+                  assert obj['sha']==blob,(label,path,obj['sha'],blob)
+          print('O66_TWO_PARENT_TERMINAL_PROOFS_AUTHENTICATED=true')
+          print('O66_SEMANTIC_CUT_AUTHENTICATED=true')
+          PY
+
+      - name: Compile and run O66 adversarial contract
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_nonexecutable_commit_candidate.py \
+            tests/test_aura_nonexecutable_commit_candidate.py
+          python3 -m unittest -v tests.test_aura_nonexecutable_commit_candidate
+
+      - name: Materialize exact non-executable commit-candidate receipt
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from tools.aura_nonexecutable_commit_candidate import (
+              PRE_ATTEMPT_SCHEMA, LIFECYCLE_RELATION_SCHEMA,
+              PreAttemptEnvelopeRef, ProposalLifecycleRelationRef,
+              create_nonexecutable_commit_candidate,
+          )
+          A='a'*64; B='b'*64; C='c'*64; D='d'*64; E='e'*64; F='f'*64
+          G='1'*64; H='2'*64; I='3'*64; J='4'*64; K='5'*64; L='6'*64
+          p=PreAttemptEnvelopeRef(
+              schema_version=PRE_ATTEMPT_SCHEMA, owner_ref='owner:o65-pre-attempt:v1',
+              semantic_generation='4490a3d70ed9c26eaa0f941e3f856201bf5574fd',
+              disposition='PRE_ATTEMPT_ENVELOPE_ELIGIBLE', receipt_digest=A,
+              proposal_id=B, proposal_basis_digest=C, proposal_source_generation='source-gen-9',
+              pre_attempt_id=D, policy_generation='pre-attempt-policy-gen-4', policy_digest=E,
+              authority_scope='D0_NONPROMOTING', expected_route_fingerprint='route:bounded:exact',
+              expected_observer_identity='HOST_OBSERVER', action_parameters_digest=F,
+              resource_envelope_digest=G, concurrency_scope_digest=H, effect_ceiling_digest=I,
+              proposal_current=True, policy_current=True, concurrent_live_attempt_conflict=False,
+              revalidation_required_at_effect_boundary=True, execution_authorized=False,
+              execution_lease_minted=False, provider_effect_authorized=False,
+              provider_effect_started=False, semantic_k27_authority=False,
+              native_private_transformer_kv_accessed=False, gate10_promoted=False,
+              merge_deploy_spend_public_financial_human_effect=False,
+          )
+          q=ProposalLifecycleRelationRef(
+              schema_version=LIFECYCLE_RELATION_SCHEMA, owner_ref='owner:q20-proposal-lifecycle:v1',
+              semantic_generation='22e72fd3de7b008752bbb5176347d61518f4e83a', receipt_digest=J,
+              proposal_id=B, proposal_basis_digest=C, proposal_currentness_state='CURRENT_NONEXECUTABLE',
+              model_objective_id='O66-hosted-proof', model_attempt_id='attempt-q20-hosted',
+              model_output_digest=K, lifecycle_source_generation='source-gen-9',
+              lifecycle_authority_scope='D0_NONPROMOTING', proposal_ref_present=True,
+              proposal_ref_required_by_policy=True, source_generation_bound_to_proposal=True,
+              authority_scope_bound_to_proposal=True, consequence_key_bound_to_proposal=True,
+              lifecycle_terminal_state='TERMINAL_SUCCESS',
+              lifecycle_reason_code='ALL_CLOSED_WORLD_GATES_SATISFIED', semantic_commit_eligible=True,
+              semantic_commit_key=L, execution_authority_granted=False,
+              provider_effect_authority_granted=False, semantic_k27_authority_minted=False,
+              native_private_transformer_kv_accessed=False, gate10_promoted=False,
+              merge_deploy_spend_public_human_effect_authorized=False,
+          )
+          r=create_nonexecutable_commit_candidate(pre_attempt=p,lifecycle=q)
+          assert r.disposition=='NONEXECUTABLE_COMMIT_CANDIDATE_ELIGIBLE'
+          assert r.commit_candidate_id is not None
+          assert r.revalidation_required_at_effect_boundary is True
+          assert all(v is False for v in (
+              r.execution_authorized,r.execution_lease_minted,r.commit_authorized,
+              r.provider_effect_authorized,r.provider_effect_started,r.semantic_k27_authority,
+              r.native_private_transformer_kv_accessed,r.gate10_promoted,
+              r.merge_deploy_spend_public_financial_human_effect,
+          ))
+          with open('/tmp/o66.json','w',encoding='utf-8') as f:
+              json.dump({
+                  'schema':'AURA-O66-HOSTED-PROOF-v1',
+                  'semantic_head':'1030cc4ae55db50cb9aa4d5bc78b82a0727c402f',
+                  'o65_run':33409361040,'o65_job':99544759401,
+                  'q20_run':33409821076,'q20_job':99546289815,
+                  'commit_candidate_id':r.commit_candidate_id,
+                  'receipt_digest':r.receipt_digest,
+                  'effect_boundary_revalidation_required':True,
+                  'execution_authorized':False,'execution_lease_minted':False,
+                  'commit_authorized':False,'provider_effect_authorized':False,
+                  'provider_effect_started':False,'semantic_k27_authority':False,
+                  'native_private_transformer_kv_accessed':False,'gate10_promoted':False,
+                  'merge_deploy_spend_public_financial_human_effect':False,
+              },f,sort_keys=True,indent=2); f.write('\n')
+          print('O66_NONEXECUTABLE_COMMIT_CANDIDATE_PROVEN=true')
+          PY
+
+      - name: Preserve O66 proof receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: o66-nonexecutable-commit-candidate-proof
+          path: /tmp/o66.json
+          retention-days: 90
+
+      - name: Consequence ceiling
+        run: |
+          echo 'PreAttemptEligibility!=CommitAuthority'
+          echo 'LifecycleTerminalSuccess!=EffectAuthority'
+          echo 'CommitCandidate!=ExecutionLease!=EffectCommit'
+          echo 'EffectBoundaryRequiresFreshOwnerRevalidation'
+          echo 'K27Coordinate!=CommitEligibility!=Authority'
+          echo 'O66_COMPLETE=true'
