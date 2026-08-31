@@ -3,17 +3,18 @@
 
 D0 / HS1 / NONPROMOTING.
 
-This module does not decide whether evidence is favorable or whether a hard-gate
-product is feasible. It consumes an exact typed eligibility receipt from those owners
-and freezes the exact bounded proposal basis for later revalidation. A proposal is
-never an execution lease or effect credential.
+A proposal basis is not allowed to self-certify either eligibility or currentness.
+Creation requires an owner-controlled resolver to reproduce the exact eligibility
+record. Revalidation resolves every consequence-changing operand from its current
+owner state; unavailable, unknown, stale, or mismatched state invalidates rather than
+renewing the proposal.
 """
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import hashlib
 import json
-from typing import Any
+from typing import Any, Protocol
 
 BASIS_SCHEMA = "AURA-BOUNDED-PROPOSAL-BASIS-v1"
 CAPSULE_SCHEMA = "AURA-BOUNDED-PROPOSAL-CAPSULE-v1"
@@ -22,7 +23,9 @@ HEX = frozenset("0123456789abcdef")
 
 
 def _canonical(value: Any) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("ascii")
+    return json.dumps(
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False
+    ).encode("ascii")
 
 
 def _sha(value: Any) -> str:
@@ -42,6 +45,10 @@ def _sha256(value: str, name: str) -> None:
 @dataclass(frozen=True)
 class EligibilityReceiptRef:
     owner_ref: str
+    transition_id: str
+    domain_id: str
+    gate_scope_digest: str
+    source_currentness_root: str
     disposition: str
     receipt_digest: str
     receipt_generation: str
@@ -51,18 +58,85 @@ class EligibilityReceiptRef:
     provider_effect_authorized: bool
 
     def validate(self) -> None:
-        _required(self.owner_ref, "ELIGIBILITY_OWNER_REF")
+        for value, name in (
+            (self.owner_ref, "ELIGIBILITY_OWNER_REF"),
+            (self.transition_id, "ELIGIBILITY_TRANSITION_ID"),
+            (self.domain_id, "ELIGIBILITY_DOMAIN_ID"),
+            (self.source_currentness_root, "ELIGIBILITY_SOURCE_CURRENTNESS_ROOT"),
+            (self.receipt_generation, "ELIGIBILITY_RECEIPT_GENERATION"),
+            (self.policy_generation_ref, "ELIGIBILITY_POLICY_GENERATION_REF"),
+        ):
+            _required(value, name)
+        _sha256(self.gate_scope_digest, "ELIGIBILITY_GATE_SCOPE_DIGEST")
+        _sha256(self.receipt_digest, "ELIGIBILITY_RECEIPT_DIGEST")
         if self.disposition != ELIGIBILITY_DISPOSITION:
             raise ValueError("ELIGIBILITY_RECEIPT_NOT_PROPOSAL_ELIGIBLE")
-        _sha256(self.receipt_digest, "ELIGIBILITY_RECEIPT_DIGEST")
-        _required(self.receipt_generation, "ELIGIBILITY_RECEIPT_GENERATION")
-        _required(self.policy_generation_ref, "ELIGIBILITY_POLICY_GENERATION_REF")
         if self.proposal_eligible is not True:
             raise ValueError("ELIGIBILITY_RECEIPT_MUST_ASSERT_PROPOSAL_ELIGIBLE")
         if self.execution_authorized is not False:
             raise ValueError("ELIGIBILITY_RECEIPT_MUST_NOT_AUTHORIZE_EXECUTION")
         if self.provider_effect_authorized is not False:
             raise ValueError("ELIGIBILITY_RECEIPT_MUST_NOT_AUTHORIZE_PROVIDER_EFFECT")
+
+
+@dataclass(frozen=True)
+class ScientificEvidenceState:
+    scope_digest: str
+    generation: str
+    receipt_digest: str
+
+    def validate(self) -> None:
+        _sha256(self.scope_digest, "SCIENTIFIC_SCOPE_DIGEST")
+        _required(self.generation, "SCIENTIFIC_EVIDENCE_GENERATION")
+        _sha256(self.receipt_digest, "SCIENTIFIC_EVIDENCE_RECEIPT_DIGEST")
+
+
+@dataclass(frozen=True)
+class SourceAdmissionState:
+    scope_digest: str
+    generation: str
+    receipt_digest: str
+
+    def validate(self) -> None:
+        _sha256(self.scope_digest, "SOURCE_SCOPE_DIGEST")
+        _required(self.generation, "SOURCE_ADMISSION_GENERATION")
+        _sha256(self.receipt_digest, "SOURCE_ADMISSION_RECEIPT_DIGEST")
+
+
+@dataclass(frozen=True)
+class RequestOwnerState:
+    request_id: str
+    request_digest: str
+    action_parameters_digest: str
+    resource_envelope_digest: str
+
+    def validate(self) -> None:
+        _required(self.request_id, "REQUEST_ID")
+        _sha256(self.request_digest, "REQUEST_DIGEST")
+        _sha256(self.action_parameters_digest, "ACTION_PARAMETERS_DIGEST")
+        _sha256(self.resource_envelope_digest, "RESOURCE_ENVELOPE_DIGEST")
+
+
+class ProposalOwnerResolver(Protocol):
+    """Host-owned current-state resolvers. Callers do not supply raw current truth."""
+
+    def resolve_eligibility(
+        self, *, owner_ref: str, transition_id: str
+    ) -> EligibilityReceiptRef | None: ...
+
+    def resolve_scientific_evidence(
+        self, *, scope_digest: str
+    ) -> ScientificEvidenceState | None: ...
+
+    def resolve_source_admission(
+        self, *, scope_digest: str
+    ) -> SourceAdmissionState | None: ...
+
+    def resolve_request(self, *, request_id: str) -> RequestOwnerState | None: ...
+
+    def currentness_root_is_current(self, *, root: str) -> bool | None: ...
+
+    def invalidator_is_triggered(self, *, invalidator: str) -> bool | None: ...
 
 
 @dataclass(frozen=True)
@@ -108,11 +182,19 @@ class ProposalBasis:
         ):
             _sha256(value, name)
         self.eligibility.validate()
-        if not self.currentness_roots or any(not isinstance(x, str) or not x.strip() for x in self.currentness_roots):
+        if self.eligibility.domain_id != self.domain_id:
+            raise ValueError("ELIGIBILITY_DOMAIN_MISMATCH")
+        if not self.currentness_roots or any(
+            not isinstance(x, str) or not x.strip() for x in self.currentness_roots
+        ):
             raise ValueError("CURRENTNESS_ROOTS_REQUIRED")
         if len(set(self.currentness_roots)) != len(self.currentness_roots):
             raise ValueError("DUPLICATE_CURRENTNESS_ROOT")
-        if not self.invalidators or any(not isinstance(x, str) or not x.strip() for x in self.invalidators):
+        if self.eligibility.source_currentness_root not in self.currentness_roots:
+            raise ValueError("ELIGIBILITY_CURRENTNESS_ROOT_NOT_BOUND")
+        if not self.invalidators or any(
+            not isinstance(x, str) or not x.strip() for x in self.invalidators
+        ):
             raise ValueError("INVALIDATORS_REQUIRED")
         if len(set(self.invalidators)) != len(self.invalidators):
             raise ValueError("DUPLICATE_INVALIDATOR")
@@ -127,7 +209,9 @@ class ProposalBasis:
 
     @property
     def basis_digest(self) -> str:
-        return _sha({"domain": "AURA-BOUNDED-PROPOSAL-BASIS-v1", "basis": self.canonical_identity_payload})
+        return _sha(
+            {"domain": "AURA-BOUNDED-PROPOSAL-BASIS-v1", "basis": self.canonical_identity_payload}
+        )
 
     @property
     def proposal_id(self) -> str:
@@ -169,11 +253,9 @@ class ProposalCapsule:
             raise ValueError("PROPOSAL_CAPSULE_SCHEMA_MISMATCH")
         _sha256(self.proposal_basis_digest, "PROPOSAL_BASIS_DIGEST")
         _sha256(self.proposal_id, "PROPOSAL_ID")
-        expected_basis_digest = self.basis.basis_digest
-        if self.proposal_basis_digest != expected_basis_digest:
+        if self.proposal_basis_digest != self.basis.basis_digest:
             raise ValueError("PROPOSAL_CAPSULE_BASIS_INTEGRITY_MISMATCH")
-        expected_proposal_id = self.basis.proposal_id
-        if self.proposal_id != expected_proposal_id:
+        if self.proposal_id != self.basis.proposal_id:
             raise ValueError("PROPOSAL_CAPSULE_ID_INTEGRITY_MISMATCH")
         self.validate_claim_ceiling()
 
@@ -194,9 +276,32 @@ class ProposalCurrentnessDecision:
     provider_effect_authorized: bool = False
 
 
-def create_bounded_proposal_capsule(*, basis: ProposalBasis, producer_identity: str) -> ProposalGeneration:
-    """Freeze exact eligible basis; producer identity does not alter proposal_id."""
+def _resolve_eligibility_or_raise(
+    *, basis: ProposalBasis, owner_resolver: ProposalOwnerResolver | None
+) -> None:
+    if owner_resolver is None:
+        raise ValueError("ELIGIBILITY_OWNER_RESOLVER_REQUIRED")
+    resolved = owner_resolver.resolve_eligibility(
+        owner_ref=basis.eligibility.owner_ref,
+        transition_id=basis.eligibility.transition_id,
+    )
+    if resolved is None:
+        raise ValueError("ELIGIBILITY_OWNER_RECEIPT_UNRESOLVED")
+    resolved.validate()
+    if resolved != basis.eligibility:
+        raise ValueError("ELIGIBILITY_OWNER_RECEIPT_MISMATCH")
+
+
+def create_bounded_proposal_capsule(
+    *,
+    basis: ProposalBasis,
+    producer_identity: str,
+    owner_resolver: ProposalOwnerResolver | None,
+) -> ProposalGeneration:
+    """Freeze only an owner-resolved eligible basis; producer identity does not alter ID."""
     _required(producer_identity, "PRODUCER_IDENTITY")
+    basis.validate()
+    _resolve_eligibility_or_raise(basis=basis, owner_resolver=owner_resolver)
     capsule = ProposalCapsule(
         schema_version=CAPSULE_SCHEMA,
         proposal_id=basis.proposal_id,
@@ -209,6 +314,8 @@ def create_bounded_proposal_capsule(*, basis: ProposalBasis, producer_identity: 
             "domain": "AURA-BOUNDED-PROPOSAL-GENERATION-v1",
             "proposal_id": capsule.proposal_id,
             "producer_identity": producer_identity,
+            "eligibility_owner_ref": basis.eligibility.owner_ref,
+            "eligibility_receipt_digest": basis.eligibility.receipt_digest,
         }
     )
     return ProposalGeneration(
@@ -218,26 +325,88 @@ def create_bounded_proposal_capsule(*, basis: ProposalBasis, producer_identity: 
     )
 
 
+def _invalidated(capsule: ProposalCapsule, reason_code: str) -> ProposalCurrentnessDecision:
+    return ProposalCurrentnessDecision(
+        state="INVALIDATED",
+        reason_code=reason_code,
+        proposal_id=capsule.proposal_id,
+    )
+
+
 def revalidate_proposal_capsule(
-    *, capsule: ProposalCapsule, current_basis: ProposalBasis
+    *, capsule: ProposalCapsule, owner_resolver: ProposalOwnerResolver | None
 ) -> ProposalCurrentnessDecision:
-    """Revalidate exact operands without renewing or authorizing the proposal."""
+    """Resolve current owner state; caller replay of the stored basis cannot assert currentness."""
     capsule.validate_integrity()
-    current_basis.validate()
-    if current_basis.proposal_id != capsule.proposal_id:
-        return ProposalCurrentnessDecision(
-            state="INVALIDATED",
-            reason_code="PROPOSAL_OPERAND_OR_CURRENTNESS_DRIFT",
-            proposal_id=capsule.proposal_id,
+    if owner_resolver is None:
+        return _invalidated(capsule, "OWNER_RESOLVER_UNAVAILABLE")
+    b = capsule.basis
+    try:
+        eligibility = owner_resolver.resolve_eligibility(
+            owner_ref=b.eligibility.owner_ref,
+            transition_id=b.eligibility.transition_id,
         )
-    if current_basis.basis_digest != capsule.proposal_basis_digest:
-        return ProposalCurrentnessDecision(
-            state="INVALIDATED",
-            reason_code="PROPOSAL_BASIS_DIGEST_MISMATCH",
-            proposal_id=capsule.proposal_id,
+        science = owner_resolver.resolve_scientific_evidence(
+            scope_digest=b.scientific_scope_digest
         )
+        source = owner_resolver.resolve_source_admission(scope_digest=b.source_scope_digest)
+        request = owner_resolver.resolve_request(request_id=b.request_id)
+    except Exception:
+        return _invalidated(capsule, "OWNER_RESOLVER_ERROR")
+
+    if eligibility is None or science is None or source is None or request is None:
+        return _invalidated(capsule, "OWNER_STATE_UNAVAILABLE_OR_UNKNOWN")
+    try:
+        eligibility.validate()
+        science.validate()
+        source.validate()
+        request.validate()
+    except ValueError:
+        return _invalidated(capsule, "OWNER_STATE_INVALID")
+
+    if eligibility != b.eligibility:
+        return _invalidated(capsule, "ELIGIBILITY_OWNER_STATE_DRIFT")
+    expected_science = ScientificEvidenceState(
+        scope_digest=b.scientific_scope_digest,
+        generation=b.scientific_evidence_generation,
+        receipt_digest=b.scientific_evidence_receipt_digest,
+    )
+    if science != expected_science:
+        return _invalidated(capsule, "SCIENTIFIC_EVIDENCE_OWNER_STATE_DRIFT")
+    expected_source = SourceAdmissionState(
+        scope_digest=b.source_scope_digest,
+        generation=b.source_admission_generation,
+        receipt_digest=b.source_admission_receipt_digest,
+    )
+    if source != expected_source:
+        return _invalidated(capsule, "SOURCE_ADMISSION_OWNER_STATE_DRIFT")
+    expected_request = RequestOwnerState(
+        request_id=b.request_id,
+        request_digest=b.request_digest,
+        action_parameters_digest=b.action_parameters_digest,
+        resource_envelope_digest=b.resource_envelope_digest,
+    )
+    if request != expected_request:
+        return _invalidated(capsule, "REQUEST_OR_RESOURCE_OWNER_STATE_DRIFT")
+
+    for root in b.currentness_roots:
+        try:
+            state = owner_resolver.currentness_root_is_current(root=root)
+        except Exception:
+            return _invalidated(capsule, "CURRENTNESS_RESOLVER_ERROR")
+        if state is not True:
+            return _invalidated(capsule, "CURRENTNESS_ROOT_NOT_ATTESTED_CURRENT")
+
+    for invalidator in b.invalidators:
+        try:
+            triggered = owner_resolver.invalidator_is_triggered(invalidator=invalidator)
+        except Exception:
+            return _invalidated(capsule, "INVALIDATOR_RESOLVER_ERROR")
+        if triggered is not False:
+            return _invalidated(capsule, "INVALIDATOR_UNKNOWN_OR_TRIGGERED")
+
     return ProposalCurrentnessDecision(
         state="CURRENT_NONEXECUTABLE",
-        reason_code="EXACT_PROPOSAL_BASIS_STILL_CURRENT",
+        reason_code="ALL_OWNER_RESOLVED_OPERANDS_STILL_CURRENT",
         proposal_id=capsule.proposal_id,
     )
