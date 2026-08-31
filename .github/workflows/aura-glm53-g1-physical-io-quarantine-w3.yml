@@ -1,0 +1,102 @@
+name: Aura GLM53 G1 Physical IO Quarantine W3
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_router_separated_prefetch.py"
+      - "tools/awj032/test_glm53_router_separated_prefetch.py"
+      - "tools/awj032/glm53_router_separated_prefetch_source_guard.py"
+      - "tools/awj032/test_glm53_router_separated_prefetch_source_guard.py"
+      - ".github/workflows/aura-glm53-g1-physical-io-quarantine-w3.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  physical-io-quarantine-w3:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      SOURCE_GUARD_HEAD: "73db19384fe8e312134397d355bc1436463083a4"
+      SOURCE_GUARD_BLOB: "61354b1c1474ac0103ad2683baf33266013f590c"
+      SOURCE_GUARD_RUN: "33414061827"
+      W4_EXACT_PROOF_HEAD: "fdb052586b94d9a6063cf594c7ead26a4aa0bf42"
+      W4_EXACT_PROOF_RUN: "33339847796"
+    steps:
+      - name: Exact authenticated checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags origin "$TARGET_SHA" "$SOURCE_GUARD_HEAD" "$W4_EXACT_PROOF_HEAD"
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git rev-parse "$SOURCE_GUARD_HEAD:tools/awj032/glm53_router_separated_prefetch_source_guard.py")" = "$SOURCE_GUARD_BLOB"
+
+      - name: Revalidate foreign proof coordinates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'}
+          for name,run_id,allow_pending in (
+              ('source_guard',int(os.environ['SOURCE_GUARD_RUN']),True),
+              ('w4_exact',int(os.environ['W4_EXACT_PROOF_RUN']),False),
+          ):
+              with urllib.request.urlopen(urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers),timeout=30) as r:
+                  run=json.load(r)
+              if allow_pending and run['status']!='completed':
+                  print(f'{name.upper()}_PROOF_PENDING=true')
+                  continue
+              assert run['status']=='completed' and run['conclusion']=='success',(name,run['status'],run['conclusion'])
+              print(f'{name.upper()}_PROOF_GREEN=true')
+          PY
+
+      - name: Compile exact G1 and source-guard cones
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/awj032/glm53_router_separated_prefetch.py \
+            tools/awj032/test_glm53_router_separated_prefetch.py \
+            tools/awj032/glm53_router_separated_prefetch_source_guard.py \
+            tools/awj032/test_glm53_router_separated_prefetch_source_guard.py
+
+      - name: Run G1 and source-guard adversarial suites
+        run: |
+          set -euo pipefail
+          python3 -m unittest -v \
+            tools.awj032.test_glm53_router_separated_prefetch \
+            tools.awj032.test_glm53_router_separated_prefetch_source_guard
+
+      - name: Independently prove caller physical bytes remain unknown
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from tools.awj032.test_glm53_router_separated_prefetch import prediction, route, BYTES, NUM_EXPERTS, BINDING
+          from tools.awj032.glm53_router_separated_prefetch import IO_SCHEMA, PhysicalIOAttestation, build_prefetch_trace
+          p=prediction(); r=route()
+          base=build_prefetch_trace(prediction=p,native_route=r,num_experts=NUM_EXPERTS,logical_bytes_by_expert=BYTES)
+          assert base.physical_io_attested is False and base.physical_total_bytes is None
+          io=PhysicalIOAttestation(schema=IO_SCHEMA,binding_digest=BINDING,prediction_digest=p.digest,native_route_digest=r.digest,prefetch_experts=p.predicted_experts,demand_experts=base.demand_misses,physical_prefetch_bytes=base.logical_prefetch_bytes,physical_demand_bytes=base.logical_demand_bytes,attestation_id='caller-self-minted')
+          try:
+              build_prefetch_trace(prediction=p,native_route=r,num_experts=NUM_EXPERTS,logical_bytes_by_expert=BYTES,physical_io=io)
+          except ValueError as e:
+              assert str(e)=='CALLER_PHYSICAL_IO_ATTESTATION_FORBIDDEN',str(e)
+          else:
+              raise AssertionError('caller physical attestation was accepted')
+          print('CALLER_PHYSICAL_IO_SELF_MINT_REJECTED=true')
+          print('G1_PHYSICAL_IO_ALWAYS_UNKNOWN=true')
+          print('PHYSICAL_IO_DELEGATED_TO_BACKEND_W4=true')
+          print('MODEL_PROVIDER_EXECUTION=false')
+          print('G2_ADMITTED=false')
+          print('SEMANTIC_K27_AUTHORITY=false')
+          PY

@@ -167,7 +167,7 @@ class RouterSeparatedPrefetchTests(unittest.TestCase):
         self.assertIsNone(out.physical_demand_bytes)
         self.assertIsNone(out.physical_total_bytes)
 
-    def test_exact_bound_physical_attestation_may_fill_physical_plane(self):
+    def test_syntactically_valid_caller_physical_attestation_cannot_fill_physical_plane(self):
         p = prediction()
         r = route()
         base = build_prefetch_trace(
@@ -182,22 +182,24 @@ class RouterSeparatedPrefetchTests(unittest.TestCase):
             demand_experts=base.demand_misses,
             physical_prefetch_bytes=4096,
             physical_demand_bytes=2048,
-            attestation_id="host-io-receipt-1",
+            attestation_id="caller-claimed",
         )
-        out = build_prefetch_trace(
-            prediction=p, native_route=r, num_experts=NUM_EXPERTS, logical_bytes_by_expert=BYTES, physical_io=io
-        )
-        self.assertTrue(out.physical_io_attested)
-        self.assertEqual(out.physical_total_bytes, 6144)
-        self.assertEqual(out.io_attestation_id, "host-io-receipt-1")
+        with self.assertRaisesRegex(ValueError, "CALLER_PHYSICAL_IO_ATTESTATION_FORBIDDEN"):
+            build_prefetch_trace(
+                prediction=p,
+                native_route=r,
+                num_experts=NUM_EXPERTS,
+                logical_bytes_by_expert=BYTES,
+                physical_io=io,
+            )
 
-    def test_physical_attestation_cross_casts_reject(self):
+    def test_even_exact_structural_physical_attestation_is_not_g1_authority(self):
         p = prediction()
         r = route()
         base = build_prefetch_trace(
             prediction=p, native_route=r, num_experts=NUM_EXPERTS, logical_bytes_by_expert=BYTES
         )
-        good = PhysicalIOAttestation(
+        io = PhysicalIOAttestation(
             schema=IO_SCHEMA,
             binding_digest=BINDING,
             prediction_digest=p.digest,
@@ -206,22 +208,29 @@ class RouterSeparatedPrefetchTests(unittest.TestCase):
             demand_experts=base.demand_misses,
             physical_prefetch_bytes=1,
             physical_demand_bytes=2,
-            attestation_id="io-1",
+            attestation_id="perfectly-bound-but-untrusted",
         )
-        cases = (
-            replace(good, binding_digest="wrong"),
-            replace(good, prediction_digest="wrong"),
-            replace(good, native_route_digest="wrong"),
-            replace(good, prefetch_experts=(1,)),
-            replace(good, demand_experts=(2,)),
+        io.validate()
+        with self.assertRaisesRegex(ValueError, "CALLER_PHYSICAL_IO_ATTESTATION_FORBIDDEN"):
+            build_prefetch_trace(
+                prediction=p, native_route=r, num_experts=NUM_EXPERTS,
+                logical_bytes_by_expert=BYTES, physical_io=io,
+            )
+
+    def test_forged_trace_cannot_self_promote_physical_plane(self):
+        out = build_prefetch_trace(
+            prediction=prediction(), native_route=route(), num_experts=NUM_EXPERTS, logical_bytes_by_expert=BYTES
         )
-        for io in cases:
-            with self.subTest(io=io):
-                with self.assertRaises(ValueError):
-                    build_prefetch_trace(
-                        prediction=p, native_route=r, num_experts=NUM_EXPERTS,
-                        logical_bytes_by_expert=BYTES, physical_io=io,
-                    )
+        forged = replace(
+            out,
+            physical_io_attested=True,
+            physical_prefetch_bytes=100,
+            physical_demand_bytes=20,
+            physical_total_bytes=120,
+            io_attestation_id="caller-claimed",
+        )
+        with self.assertRaisesRegex(ValueError, "G1_PHYSICAL_IO_MUST_REMAIN_DELEGATED"):
+            forged.validate_claim_ceiling()
 
     def test_prediction_and_route_identity_are_order_canonical_not_process_identity(self):
         p = prediction((1, 3, 5, 7))
@@ -238,6 +247,7 @@ class RouterSeparatedPrefetchTests(unittest.TestCase):
         out = build_prefetch_trace(
             prediction=prediction(), native_route=route(), num_experts=NUM_EXPERTS, logical_bytes_by_expert=BYTES
         )
+        self.assertFalse(out.physical_io_attested)
         for field in (
             "routing_mutated_by_predictor",
             "output_semantics_changed_by_prediction",
