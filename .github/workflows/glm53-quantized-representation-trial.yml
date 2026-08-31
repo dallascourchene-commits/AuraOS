@@ -39,10 +39,12 @@ jobs:
           from tools.quantization.aura_glm53_quantized_representation_trial import (
               BENCHMARK_WORK_ORDER_ID,
               PLACEMENT_DERBY_WORK_ORDER_ID,
+              VERSION,
               compare_quantized_representation,
           )
           assert BENCHMARK_WORK_ORDER_ID == '1rPU_cIF-AOVigT3Liu7k67GD3_UAtrlKxzxTtlb1QS8'
           assert PLACEMENT_DERBY_WORK_ORDER_ID == '1lqFmTIV1WdgTU7KjHiTN7bNDY9CN7qIJPZdvEUw_kJw'
+          assert VERSION == 'AURA_GLM53_QUANTIZED_REPRESENTATION_TRIAL_V2'
           assert set(inspect.signature(compare_quantized_representation).parameters) == {
               'request', 'baseline_sample', 'candidate_sample', 'independent_verification'
           }
@@ -54,6 +56,9 @@ jobs:
         run: |
           cat <<'EOF'
           SMALLER_OR_FASTER_NE_QUALITY_RETAINED=true
+          STATIC_WEIGHT_BYTES_REQUIRE_SAME_BOUND_DOMAIN=true
+          SAME_BYTE_DOMAIN_LABEL_NE_SAME_COMPONENT_MANIFEST=true
+          ROUTED_EXPERT_STATIC_BYTES_NE_FULL_MODEL_STATIC_BYTES=true
           QUALITY_RETENTION_REQUIRES_FROZEN_CORPUS_AND_CRITERIA=true
           SAME_MODEL_SELF_REVIEW_IS_INDEPENDENT=false
           QUANTIZED_OUTPUT_CHANGE_NE_EXACT_CAUSAL_TIMING_COMPARISON=true

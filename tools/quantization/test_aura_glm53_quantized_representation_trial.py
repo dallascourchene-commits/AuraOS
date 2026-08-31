@@ -3,6 +3,8 @@ from __future__ import annotations
 import unittest
 
 from tools.quantization.aura_glm53_quantized_representation_trial import (
+    FULL_MODEL_STATIC,
+    ROUTED_EXPERT_BANK_STATIC,
     IndependentVerification,
     QuantizedTrialRequest,
     RepresentationIdentity,
@@ -18,11 +20,13 @@ B = "e" * 64
 C = "f" * 64
 O1 = "1" * 64
 O2 = "2" * 64
+D = "9" * 64
+D2 = "8" * 64
 
 
 def reps():
-    baseline = RepresentationIdentity("glm53-r1", H, "fp8-r1", B, 8.0, 753_000_000_000, False)
-    candidate = RepresentationIdentity("glm53-r1", H, "vq-r1", C, 2.5, 240_000_000_000, True)
+    baseline = RepresentationIdentity("glm53-r1", H, "fp8-r1", B, 8.0, 753_000_000_000, FULL_MODEL_STATIC, D, False)
+    candidate = RepresentationIdentity("glm53-r1", H, "vq-r1", C, 2.5, 240_000_000_000, FULL_MODEL_STATIC, D, True)
     return baseline, candidate
 
 
@@ -66,6 +70,8 @@ class QuantizedRepresentationTrialTests(unittest.TestCase):
         self.assertTrue(out.candidate_smaller_static_weights)
         self.assertTrue(out.candidate_faster_wall_time)
         self.assertEqual(out.candidate_tradeoff_class, "FROZEN_CORPUS_CANDIDATE_DOMINATES_MEASURED_AXES")
+        self.assertEqual(out.static_weight_byte_domain, FULL_MODEL_STATIC)
+        self.assertEqual(out.static_weight_byte_domain_digest, D)
         self.assertFalse(out.general_performance_winner_proven)
         self.assertFalse(out.gate10_ready_for_owner_promotion)
 
@@ -78,8 +84,42 @@ class QuantizedRepresentationTrialTests(unittest.TestCase):
 
     def test_same_model_and_topology_are_required(self):
         baseline, candidate = reps()
-        bad = RepresentationIdentity("glm53-other", H, candidate.representation_revision, candidate.representation_digest, candidate.nominal_bits_per_weight, candidate.static_weight_bytes, True)
+        bad = RepresentationIdentity(
+            "glm53-other", H, candidate.representation_revision, candidate.representation_digest,
+            candidate.nominal_bits_per_weight, candidate.static_weight_bytes,
+            candidate.static_weight_byte_domain, candidate.static_weight_byte_domain_digest, True
+        )
         with self.assertRaisesRegex(ValueError, "MODEL_REVISION_MISMATCH"):
+            QuantizedTrialRequest(T, A, P, "MEDIUM", "SINGLE", "BACKGROUND", baseline, bad).validate()
+
+    def test_whole_model_vs_routed_expert_byte_cross_cast_is_rejected(self):
+        baseline, candidate = reps()
+        expert_only = RepresentationIdentity(
+            candidate.model_revision, candidate.topology_digest, candidate.representation_revision,
+            candidate.representation_digest, candidate.nominal_bits_per_weight, 120_000_000_000,
+            ROUTED_EXPERT_BANK_STATIC, D2, True
+        )
+        with self.assertRaisesRegex(ValueError, "STATIC_WEIGHT_BYTE_DOMAIN_MISMATCH"):
+            QuantizedTrialRequest(T, A, P, "MEDIUM", "SINGLE", "BACKGROUND", baseline, expert_only).validate()
+
+    def test_same_domain_label_with_different_component_manifest_is_rejected(self):
+        baseline, candidate = reps()
+        mismatched_manifest = RepresentationIdentity(
+            candidate.model_revision, candidate.topology_digest, candidate.representation_revision,
+            candidate.representation_digest, candidate.nominal_bits_per_weight, candidate.static_weight_bytes,
+            FULL_MODEL_STATIC, D2, True
+        )
+        with self.assertRaisesRegex(ValueError, "STATIC_WEIGHT_BYTE_DOMAIN_MANIFEST_MISMATCH"):
+            QuantizedTrialRequest(T, A, P, "MEDIUM", "SINGLE", "BACKGROUND", baseline, mismatched_manifest).validate()
+
+    def test_invalid_byte_domain_is_rejected(self):
+        baseline, candidate = reps()
+        bad = RepresentationIdentity(
+            candidate.model_revision, candidate.topology_digest, candidate.representation_revision,
+            candidate.representation_digest, candidate.nominal_bits_per_weight, candidate.static_weight_bytes,
+            "UNSCOPED_BYTES", D, True
+        )
+        with self.assertRaisesRegex(ValueError, "INVALID_STATIC_WEIGHT_BYTE_DOMAIN"):
             QuantizedTrialRequest(T, A, P, "MEDIUM", "SINGLE", "BACKGROUND", baseline, bad).validate()
 
     def test_candidate_output_may_differ_but_quality_must_be_measured(self):

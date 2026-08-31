@@ -8,6 +8,9 @@ Derived from two non-self AWJ032 GLM work orders:
 The contract prevents a smaller or faster quantized representation from becoming a
 "winner" unless it is evaluated on the same frozen task corpus and acceptance criteria
 and an independent verifier reproduces the declared quality consequence.
+
+V2 additionally binds the exact static-weight byte domain so whole-model bytes cannot
+be compared to routed-expert-only or other partial-component bytes.
 """
 from __future__ import annotations
 
@@ -16,9 +19,18 @@ import hashlib
 import json
 import math
 
-VERSION = "AURA_GLM53_QUANTIZED_REPRESENTATION_TRIAL_V1"
+VERSION = "AURA_GLM53_QUANTIZED_REPRESENTATION_TRIAL_V2"
 BENCHMARK_WORK_ORDER_ID = "1rPU_cIF-AOVigT3Liu7k67GD3_UAtrlKxzxTtlb1QS8"
 PLACEMENT_DERBY_WORK_ORDER_ID = "1lqFmTIV1WdgTU7KjHiTN7bNDY9CN7qIJPZdvEUw_kJw"
+
+FULL_MODEL_STATIC = "FULL_MODEL_STATIC"
+ROUTED_EXPERT_BANK_STATIC = "ROUTED_EXPERT_BANK_STATIC"
+COMPONENT_MANIFEST_STATIC = "COMPONENT_MANIFEST_STATIC"
+_ALLOWED_STATIC_WEIGHT_BYTE_DOMAINS = {
+    FULL_MODEL_STATIC,
+    ROUTED_EXPERT_BANK_STATIC,
+    COMPONENT_MANIFEST_STATIC,
+}
 
 
 def _canonical(value: object) -> bytes:
@@ -47,6 +59,8 @@ class RepresentationIdentity:
     representation_digest: str
     nominal_bits_per_weight: float
     static_weight_bytes: int
+    static_weight_byte_domain: str
+    static_weight_byte_domain_digest: str
     quantized: bool
 
     def validate(self) -> None:
@@ -58,6 +72,9 @@ class RepresentationIdentity:
             raise ValueError("INVALID_BPW")
         if type(self.static_weight_bytes) is not int or self.static_weight_bytes <= 0:
             raise ValueError("INVALID_STATIC_WEIGHT_BYTES")
+        if self.static_weight_byte_domain not in _ALLOWED_STATIC_WEIGHT_BYTE_DOMAINS:
+            raise ValueError("INVALID_STATIC_WEIGHT_BYTE_DOMAIN")
+        _hex64("static_weight_byte_domain_digest", self.static_weight_byte_domain_digest)
         if type(self.quantized) is not bool:
             raise ValueError("QUANTIZED_BOOLEAN_REQUIRED")
 
@@ -88,6 +105,10 @@ class QuantizedTrialRequest:
             raise ValueError("MODEL_REVISION_MISMATCH")
         if self.baseline.topology_digest != self.candidate.topology_digest:
             raise ValueError("TOPOLOGY_MISMATCH")
+        if self.baseline.static_weight_byte_domain != self.candidate.static_weight_byte_domain:
+            raise ValueError("STATIC_WEIGHT_BYTE_DOMAIN_MISMATCH")
+        if self.baseline.static_weight_byte_domain_digest != self.candidate.static_weight_byte_domain_digest:
+            raise ValueError("STATIC_WEIGHT_BYTE_DOMAIN_MANIFEST_MISMATCH")
         if self.baseline.representation_digest == self.candidate.representation_digest:
             raise ValueError("DISTINCT_REPRESENTATIONS_REQUIRED")
         if self.candidate.quantized is not True:
@@ -175,6 +196,8 @@ class QuantizedRepresentationComparison:
     baseline_sample_digest: str
     candidate_sample_digest: str
     independent_verifier_identity: str
+    static_weight_byte_domain: str
+    static_weight_byte_domain_digest: str
     quality_pass_delta: int
     candidate_quality_retained_on_frozen_corpus: bool
     independent_acceptance_reproduced: bool
@@ -259,6 +282,8 @@ def compare_quantized_representation(
         baseline_sample_digest=baseline_sample.sample_digest,
         candidate_sample_digest=candidate_sample.sample_digest,
         independent_verifier_identity=independent_verification.verifier_identity,
+        static_weight_byte_domain=request.baseline.static_weight_byte_domain,
+        static_weight_byte_domain_digest=request.baseline.static_weight_byte_domain_digest,
         quality_pass_delta=quality_delta,
         candidate_quality_retained_on_frozen_corpus=quality_retained,
         independent_acceptance_reproduced=independent_reproduced,
