@@ -1,6 +1,6 @@
 name: WorkCapsule post-world-bound scoped rebind exact
 
-# W3 currentness retrigger: prior ubuntu-latest exact-head runs remained queued before step 1; production code is unchanged.
+# W3 exact-head transport: manual fetch avoids malformed legacy submodule cleanup in actions/checkout.
 on:
   workflow_dispatch:
   pull_request:
@@ -16,28 +16,37 @@ permissions:
 
 env:
   PYTHONPATH: ${{ github.workspace }}
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   exact-head-proof:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - name: Checkout exact event head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-          persist-credentials: false
+      - name: Fetch exact event head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
 
       - name: Assert exact event head
         shell: bash
         run: |
           set -euo pipefail
-          expected='${{ github.event.pull_request.head.sha || github.sha }}'
           actual="$(git rev-parse HEAD)"
-          echo "EXPECTED_HEAD=$expected"
+          echo "EXPECTED_HEAD=$TARGET_SHA"
           echo "ACTUAL_HEAD=$actual"
-          test "$actual" = "$expected"
+          test "$actual" = "$TARGET_SHA"
 
       - name: Compile Objective 28 membrane
         run: |
