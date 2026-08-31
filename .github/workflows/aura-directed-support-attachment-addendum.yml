@@ -1,0 +1,97 @@
+name: Aura Directed Support Attachment Addendum
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_directed_support_attachment_addendum.py'
+      - 'tests/test_aura_directed_support_attachment_addendum.py'
+      - '.github/workflows/aura-directed-support-attachment-addendum.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  ADDENDUM_SEMANTIC_HEAD: 81619c97aa012ffc50eec300f45c757aaafe41cc
+  ADDENDUM_SOURCE_BLOB: 2312a7c0e388ed8cd3782fb164ffbf980285dd0f
+  ADDENDUM_TEST_BLOB: 4a55eb4c617245d02c777a5cc0ad8b3ab93dae71
+  Q22_SOURCE_HEAD: 7dcd146ebcecb7ca7ab53b6ba5eb0d8c9a649cc6
+  Q22_SOURCE_BLOB: c0be1c5f1d7fee5661e98a20f54685030375d716
+  O67_SOURCE_HEAD: 3b2e5230dccc9782a2714c8621446679a25de6b2
+  O67_SOURCE_BLOB: dc927a8a2819888a49779c514b3eba18ab944003
+
+jobs:
+  directed-support-attachment-addendum:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact addendum descendant
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate addendum and both anchor artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$ADDENDUM_SEMANTIC_HEAD" HEAD
+          git fetch -q --no-tags origin "$Q22_SOURCE_HEAD" "$O67_SOURCE_HEAD"
+          test "$(git rev-parse "$ADDENDUM_SEMANTIC_HEAD:tools/aura_directed_support_attachment_addendum.py")" = "$ADDENDUM_SOURCE_BLOB"
+          test "$(git rev-parse "$ADDENDUM_SEMANTIC_HEAD:tests/test_aura_directed_support_attachment_addendum.py")" = "$ADDENDUM_TEST_BLOB"
+          test "$(git rev-parse "$Q22_SOURCE_HEAD:tools/aura_materialization_support_lifecycle_lineage.py")" = "$Q22_SOURCE_BLOB"
+          test "$(git rev-parse "$O67_SOURCE_HEAD:tools/aura_materialization_support_lineage_attachment.py")" = "$O67_SOURCE_BLOB"
+          echo 'ANCHOR_Q22_EXACT=true'
+          echo 'ANCHOR_O67_COLLISION_DELTA_EXACT=true'
+
+      - name: Compile addendum surface
+        run: |
+          python -m py_compile \
+            tools/aura_directed_support_attachment_addendum.py \
+            tests/test_aura_directed_support_attachment_addendum.py
+
+      - name: Run addendum adversarial suite
+        run: |
+          python -m unittest tests.test_aura_directed_support_attachment_addendum -v
+
+      - name: Independently prove hold and bound states
+        run: |
+          python - <<'PY'
+          from dataclasses import replace
+          from tools.aura_directed_support_attachment_addendum import bind_directed_provenance_addendum
+          from tests.test_aura_directed_support_attachment_addendum import q22, o67
+
+          held = bind_directed_provenance_addendum(q22=q22(), o67=o67(False))
+          assert held.disposition == 'HOLD_DIRECTED_ATTACHMENT_PROVENANCE_REQUIRED'
+          assert held.collision_cognition_preserved_as_addendum is True
+          assert held.directed_attachment_addendum_id is None
+
+          bound = bind_directed_provenance_addendum(q22=q22(), o67=o67(True))
+          assert bound.disposition == 'DIRECTED_ATTACHMENT_PROVENANCE_BOUND'
+          assert bound.directed_provenance_bound_to_attachment is True
+          assert bound.collision_cognition_preserved_as_addendum is True
+          assert bound.directed_attachment_addendum_id
+          assert not any((
+              bound.live_support_currentness_resolved,
+              bound.host_causality_proven,
+              bound.execution_authorized,
+              bound.provider_effect_authorized,
+              bound.semantic_k27_authority,
+              bound.native_private_transformer_kv_accessed,
+              bound.gate10_promoted,
+          ))
+
+          mismatch = bind_directed_provenance_addendum(
+              q22=q22(), o67=replace(o67(True), materialization_support_digest='f' * 64)
+          )
+          assert mismatch.disposition == 'HOLD_DIRECTED_ATTACHMENT_IDENTITY_MISMATCH'
+          print('TRIADIC_COLLISION_ADDENDUM_CONTRACT_PROVEN=true')
+          PY
+
+      - name: Consequence ceiling
+        run: |
+          echo 'Collision!=Discard'
+          echo 'SharedConclusion=>PreserveCanonicalOwner'
+          echo 'LocalDelta=>AddendumArtifact'
+          echo 'DirectedBasisRelation!=IdentityEquality'
+          echo 'AttachmentOwnerMustNotEraseDirectedProvenance'
+          echo 'Addendum!=LiveCurrentness!=ExecutionAuthority!=EffectAuthority'
