@@ -10,7 +10,6 @@ from tools.awj032.glm53_g4_prefetch_plan_revalidation import (
     G3PlanProjection,
 )
 from tools.awj032.glm53_g4_owner_currentness_addendum import (
-    G4OwnerCurrentnessReceipt,
     HOLD_OWNER_CURRENTNESS_REQUIRED,
     HOLD_OWNER_STATE_EPOCH_CHANGED,
     HOLD_RECOMPUTE_G3_OWNER_RESOLVED,
@@ -25,6 +24,8 @@ def d(ch: str) -> str:
 
 
 class FakeResolver:
+    """Test double only; it deliberately proves protocol shape != authentication."""
+
     def __init__(
         self,
         *,
@@ -105,7 +106,7 @@ class G4OwnerCurrentnessAddendumTests(unittest.TestCase):
         self.assertEqual(receipt.disposition, HOLD_OWNER_CURRENTNESS_REQUIRED)
         self.assertFalse(receipt.reusable_without_recompute)
 
-    def test_matching_owner_context_in_stable_epoch_revalidates(self) -> None:
+    def test_matching_resolver_context_in_stable_epoch_revalidates_structurally(self) -> None:
         plan = self.plan()
         receipt = revalidate_g3_plan_owner_resolved(
             plan=plan, owner_resolver=FakeResolver(plan=plan)
@@ -115,6 +116,8 @@ class G4OwnerCurrentnessAddendumTests(unittest.TestCase):
         self.assertTrue(receipt.owner_state_epoch_stable)
         self.assertTrue(receipt.reusable_without_recompute)
         self.assertFalse(receipt.recompute_g3_required)
+        self.assertFalse(receipt.owner_resolver_authenticated_by_this_contract)
+        self.assertFalse(receipt.owner_currentness_truth_proven_by_this_contract)
         self.assertFalse(receipt.plan_executed_by_this_contract)
 
     def test_owner_resolved_axis_drift_requires_g3_recompute(self) -> None:
@@ -184,12 +187,14 @@ class G4OwnerCurrentnessAddendumTests(unittest.TestCase):
         b = replace(a, resolver_generation="resolver::2")
         self.assertNotEqual(a.observation_digest, b.observation_digest)
 
-    def test_receipt_cannot_self_mint_effect_authority(self) -> None:
+    def test_receipt_cannot_self_authenticate_or_mint_effect_authority(self) -> None:
         plan = self.plan()
         receipt = revalidate_g3_plan_owner_resolved(
             plan=plan, owner_resolver=FakeResolver(plan=plan)
         )
         for field in (
+            "owner_resolver_authenticated_by_this_contract",
+            "owner_currentness_truth_proven_by_this_contract",
             "plan_executed_by_this_contract",
             "transfer_effect_authorized",
             "native_route_mutated",
