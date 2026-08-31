@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788158172,
+  "generated_at_unix": 1788159229,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1696,
+    "repo_file_count": 1700,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -157,6 +157,7 @@
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
+      ".github/workflows/creator-studio-neutral-timeline.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -1650,6 +1651,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_creator_studio_neutral_timeline_contract.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -1689,6 +1691,8 @@
       "tools/awj032/thinkpad_bounded_storage_probe.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/creator_studio/neutral_timeline_contract.py",
+      "tools/creator_studio/requirements-timeline.txt",
       "tools/k27/thinkpad_portable_simd_dispatch.cpp",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -1812,17 +1816,17 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1696,
-      "bytes": 26724714,
-      "tokens_est": 6671584,
+      "files": 1700,
+      "bytes": 26742276,
+      "tokens_est": 6675975,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 13,
         "operator_script": 9,
-        "python_module": 1035,
-        "schema_or_lexicon": 283,
-        "support_file": 49
+        "python_module": 1037,
+        "schema_or_lexicon": 284,
+        "support_file": 50
       }
     },
     {
@@ -51842,6 +51846,14 @@
         "end_line": 39,
         "semantic_id": "aura_gate_comparison.py#function:_clean_id:b2fdc01bf9516221",
         "signature_hash": "7acb2bc41b83aca5"
+      },
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 48,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:_clean_id:3fbac5caa037019e",
+        "signature_hash": "139ad905ad33246f"
       }
     ],
     "_counter_value": [
@@ -157974,6 +157986,106 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "asset": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 20,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#function:asset:e2f445f105edf775",
+        "signature_hash": "0d6e361401db0346"
+      }
+    ],
+    "CreatorTimelineContractTests": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 90,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#class:CreatorTimelineContractTests:3ecf52e0c36b1f9b",
+        "signature_hash": "f3e72f836370b434"
+      }
+    ],
+    "CreatorTimelineContractTests.test_tag_identity_is_permutation_duplicate_case_whitespace_invariant": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 30,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_tag_identity_is_permutation_duplicate_case_whitespace_invariant:6307f4614fa05bb3",
+        "signature_hash": "336fc4d6ced1d0ab"
+      }
+    ],
+    "CreatorTimelineContractTests.test_length_prefix_prevents_concatenation_ambiguity": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 36,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_length_prefix_prevents_concatenation_ambiguity:d9b7781a29c0574c",
+        "signature_hash": "2b120cf4980ddadb"
+      }
+    ],
+    "CreatorTimelineContractTests.test_composition_identity_excludes_uri_evidence_and_tag_metadata": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 49,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_composition_identity_excludes_uri_evidence_and_tag_metadata:e02bc130be9201ea",
+        "signature_hash": "f1ca9db16f78d404"
+      }
+    ],
+    "CreatorTimelineContractTests.test_clip_sequence_changes_composition_identity": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 56,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_clip_sequence_changes_composition_identity:de5cc976086e3c65",
+        "signature_hash": "22adf5d0dc0d6109"
+      }
+    ],
+    "CreatorTimelineContractTests.test_invalid_timing_fails_closed": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 62,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_invalid_timing_fails_closed:3f46b986e7c41e50",
+        "signature_hash": "a09c1011d0dbc39a"
+      }
+    ],
+    "CreatorTimelineContractTests.test_duplicate_clip_ids_fail_closed": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 68,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_duplicate_clip_ids_fail_closed:4d5fd2e4e8f7c378",
+        "signature_hash": "bbc114478832f838"
+      }
+    ],
+    "CreatorTimelineContractTests.test_otio_roundtrip_preserves_order_timing_asset_and_digests": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 84,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_otio_roundtrip_preserves_order_timing_asset_and_digests:56144ae6d4082f1a",
+        "signature_hash": "320954bd462a186d"
+      }
+    ],
+    "CreatorTimelineContractTests.test_media_type_and_empty_tags_are_bounded": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 90,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_media_type_and_empty_tags_are_bounded:7b6bf247d02bccd7",
+        "signature_hash": "f4acb2e9ca874cf2"
+      }
+    ],
     "test_space_app_card_declares_public_docker_runtime": [
       {
         "file": "tests/test_huggingface_space_deployment.py",
@@ -162560,6 +162672,196 @@
         "end_line": 255,
         "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:run_bounded_storage_probe:295e3e57817cf05a",
         "signature_hash": "63009562ddb386e4"
+      }
+    ],
+    "TimelineContractError": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:TimelineContractError:663ba818c45d6c53",
+        "signature_hash": "f6528f2d01d5e8a2"
+      }
+    ],
+    "_clean_text": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 41,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:_clean_text:1a80323bb51fbcf7",
+        "signature_hash": "0b584b1815d83212"
+      }
+    ],
+    "canonical_tag_set": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 63,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:canonical_tag_set:1ecb4b1139795ae9",
+        "signature_hash": "72e4d2ae8632688e"
+      }
+    ],
+    "tag_set_fingerprint": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 75,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:tag_set_fingerprint:330fb0d50470249f",
+        "signature_hash": "188030f1634ee672"
+      }
+    ],
+    "AdmittedAssetRefV1": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "class",
+        "line": 79,
+        "end_line": 105,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:AdmittedAssetRefV1:728675d4c4dab2a9",
+        "signature_hash": "577387c81e5d84f8"
+      }
+    ],
+    "AdmittedAssetRefV1.__post_init__": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 101,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:AdmittedAssetRefV1.__post_init__:ac68603abb307beb",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "AdmittedAssetRefV1.tag_fingerprint": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 105,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:AdmittedAssetRefV1.tag_fingerprint:ea3ed360afa04afc",
+        "signature_hash": "752d280e8993dc67"
+      }
+    ],
+    "TimelineClipV1": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "class",
+        "line": 109,
+        "end_line": 120,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:TimelineClipV1:4cea21488ec9cab3",
+        "signature_hash": "3bdb22ccb2d2761d"
+      }
+    ],
+    "TimelineClipV1.__post_init__": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 120,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:TimelineClipV1.__post_init__:f5a2bbf733224d46",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CreatorTimelineV1": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "class",
+        "line": 124,
+        "end_line": 224,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:CreatorTimelineV1:bf4077e7dea8a548",
+        "signature_hash": "5a575473a0f9873c"
+      }
+    ],
+    "CreatorTimelineV1.__post_init__": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 142,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.__post_init__:b9a5920f10d10709",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CreatorTimelineV1.rate": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 146,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.rate:8e8606aa3f78f197",
+        "signature_hash": "58d305fd864a7904"
+      }
+    ],
+    "CreatorTimelineV1._composition_record": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 162,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1._composition_record:2d46c65decb75fa8",
+        "signature_hash": "e6ca383f2900af01"
+      }
+    ],
+    "CreatorTimelineV1._evidence_record": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 177,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1._evidence_record:c2ddc308ee326327",
+        "signature_hash": "aabfc04017843b14"
+      }
+    ],
+    "CreatorTimelineV1.composition_digest": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 180,
+        "end_line": 182,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.composition_digest:4a02fa275b57e582",
+        "signature_hash": "e43ef37db9133a24"
+      }
+    ],
+    "CreatorTimelineV1.evidence_binding_digest": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 185,
+        "end_line": 187,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.evidence_binding_digest:d5fb4fc56e1e3571",
+        "signature_hash": "59b7b1a5f1b315c4"
+      }
+    ],
+    "CreatorTimelineV1.to_otio": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 189,
+        "end_line": 221,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.to_otio:dbdaf6ebe92cb38f",
+        "signature_hash": "f6d7ada9a37ee67d"
+      }
+    ],
+    "CreatorTimelineV1.to_otio_json": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 223,
+        "end_line": 224,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.to_otio_json:d6a4d2fc42659ce2",
+        "signature_hash": "6bf3347e8249a303"
+      }
+    ],
+    "validate_otio_roundtrip": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "function",
+        "line": 227,
+        "end_line": 265,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:validate_otio_roundtrip:4a00ee07a77ef5cd",
+        "signature_hash": "8cc5394d1bae6638"
       }
     ],
     "_coordinates": [
@@ -174351,6 +174653,53 @@
       ]
     },
     {
+      "path": ".github/workflows/creator-studio-neutral-timeline.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2028,
+      "lines": 52,
+      "tokens_est": 507,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "eabe8cce7198a797",
+      "vector": [
+        -0.110359,
+        -0.134092,
+        -0.205291,
+        0.288357,
+        -0.162572,
+        0.172065,
+        0.098492,
+        0.098492,
+        0.276491,
+        0.252757,
+        0.062893,
+        0.193425,
+        -0.141212,
+        0.150705,
+        0.067639,
+        0.143585,
+        -0.288357,
+        0.150705,
+        -0.250384,
+        -0.088999,
+        0.084252,
+        -0.164945,
+        -0.255131,
+        -0.020173,
+        0.077133,
+        -0.207665,
+        0.143585,
+        -0.274117,
+        -0.065266,
+        -0.115106,
+        0.022546,
+        0.28361
+      ]
+    },
+    {
       "path": ".github/workflows/f1-financial-exact-contracts.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -174531,47 +174880,47 @@
       "path": ".github/workflows/k27-thinkpad-portable-simd-dispatch.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 2970,
-      "lines": 66,
-      "tokens_est": 743,
+      "bytes": 3359,
+      "lines": 75,
+      "tokens_est": 840,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2acc4640b1c5f64c",
+      "digest8": "9e1931fe973465ea",
       "vector": [
-        0.25577,
-        -0.01491,
-        -0.115842,
-        0.17319,
-        0.175484,
-        -0.198423,
-        0.150251,
-        0.186953,
-        -0.092903,
-        -0.260358,
-        -0.074552,
-        0.209892,
-        -0.193835,
-        0.230537,
-        0.221362,
-        -0.198423,
-        0.164014,
-        0.22595,
-        0.189247,
-        -0.028674,
-        -0.207598,
-        0.024086,
-        -0.182365,
-        -0.003441,
-        -0.191541,
-        0.209892,
-        0.271828,
-        0.264946,
-        0.030968,
-        0.198423,
-        0.030968,
-        -0.021792
+        -0.129089,
+        0.138563,
+        0.292523,
+        0.148038,
+        0.268837,
+        0.261731,
+        -0.200147,
+        0.050925,
+        -0.095928,
+        0.015396,
+        -0.138563,
+        -0.256994,
+        0.301997,
+        0.28068,
+        -0.015396,
+        -0.261731,
+        -0.079348,
+        -0.214359,
+        0.091191,
+        -0.043819,
+        -0.285417,
+        -0.121983,
+        -0.193041,
+        0.043819,
+        -0.22857,
+        -0.081717,
+        0.036713,
+        0.013027,
+        0.072242,
+        0.140932,
+        -0.119615,
+        -0.204884
       ]
     },
     {
@@ -269041,6 +269390,53 @@
       ]
     },
     {
+      "path": "tests/test_creator_studio_neutral_timeline_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4340,
+      "lines": 95,
+      "tokens_est": 1085,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "518b28dc17188e37",
+      "vector": [
+        0.252121,
+        0.105568,
+        0.269509,
+        -0.070793,
+        -0.222314,
+        0.108052,
+        -0.212378,
+        0.110536,
+        -0.045953,
+        -0.043469,
+        0.157731,
+        0.117988,
+        -0.304284,
+        -0.142827,
+        -0.021114,
+        -0.224798,
+        0.083212,
+        -0.31422,
+        -0.040985,
+        0.172635,
+        0.20741,
+        -0.247153,
+        0.237217,
+        -0.080728,
+        0.299316,
+        -0.237217,
+        -0.098116,
+        0.175119,
+        0.157731,
+        -0.083212,
+        -0.021114,
+        -0.003726
+      ]
+    },
+    {
       "path": "tests/test_huggingface_space_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -270881,6 +271277,100 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/creator_studio/neutral_timeline_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10782,
+      "lines": 266,
+      "tokens_est": 2696,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "568c0c377a2de379",
+      "vector": [
+        0.008908,
+        -0.075082,
+        0.052176,
+        0.237971,
+        -0.090353,
+        -0.245607,
+        -0.075082,
+        -0.059811,
+        0.271058,
+        0.016543,
+        0.197249,
+        0.237971,
+        0.108169,
+        -0.311781,
+        -0.062356,
+        0.230336,
+        -0.115804,
+        0.276148,
+        0.115804,
+        -0.278694,
+        -0.166707,
+        0.034359,
+        -0.003818,
+        0.156527,
+        0.115804,
+        -0.151436,
+        -0.304145,
+        -0.072537,
+        -0.146346,
+        0.011453,
+        -0.187068,
+        0.311781
+      ]
+    },
+    {
+      "path": "tools/creator_studio/requirements-timeline.txt",
+      "role": "support_file",
+      "binary": false,
+      "bytes": 23,
+      "lines": 2,
+      "tokens_est": 6,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7675c0170ebdb617",
+      "vector": [
+        0.305897,
+        0.201018,
+        0.310891,
+        0.021225,
+        0.093642,
+        0.225989,
+        -0.178544,
+        0.193526,
+        0.118613,
+        -0.018728,
+        0.021225,
+        -0.225989,
+        -0.096139,
+        0.018728,
+        -0.248463,
+        -0.176047,
+        0.186035,
+        0.153573,
+        -0.240972,
+        -0.001249,
+        0.041202,
+        0.198521,
+        0.203515,
+        -0.118613,
+        -0.275931,
+        -0.171052,
+        0.061179,
+        -0.176047,
+        -0.275931,
+        -0.101133,
+        -0.033711,
+        -0.176047
       ]
     },
     {
@@ -294835,17 +295325,17 @@
     }
   },
   "summary": {
-    "file_count": 1696,
-    "total_bytes": 26724714,
-    "text_tokens_est": 6671584,
+    "file_count": 1700,
+    "total_bytes": 26742276,
+    "text_tokens_est": 6675975,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 13,
       "operator_script": 9,
-      "python_module": 1035,
-      "schema_or_lexicon": 283,
-      "support_file": 49
+      "python_module": 1037,
+      "schema_or_lexicon": 284,
+      "support_file": 50
     },
     "topology_nodes": 11478,
     "topology_edges": 28068,
@@ -295011,6 +295501,7 @@
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
+      ".github/workflows/creator-studio-neutral-timeline.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -296504,6 +296995,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_creator_studio_neutral_timeline_contract.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -296543,6 +297035,8 @@
       "tools/awj032/thinkpad_bounded_storage_probe.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/creator_studio/neutral_timeline_contract.py",
+      "tools/creator_studio/requirements-timeline.txt",
       "tools/k27/thinkpad_portable_simd_dispatch.cpp",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
@@ -454310,6 +454804,106 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#class:CreatorTimelineContractTests:3ecf52e0c36b1f9b",
+        "name": "CreatorTimelineContractTests",
+        "kind": "class",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 23,
+        "end_line": 90,
+        "signature_hash": "f3e72f836370b434",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#function:asset:e2f445f105edf775",
+        "name": "asset",
+        "kind": "function",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 13,
+        "end_line": 20,
+        "signature_hash": "0d6e361401db0346",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_clip_sequence_changes_composition_identity:de5cc976086e3c65",
+        "name": "CreatorTimelineContractTests.test_clip_sequence_changes_composition_identity",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 51,
+        "end_line": 56,
+        "signature_hash": "22adf5d0dc0d6109",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_composition_identity_excludes_uri_evidence_and_tag_metadata:e02bc130be9201ea",
+        "name": "CreatorTimelineContractTests.test_composition_identity_excludes_uri_evidence_and_tag_metadata",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 38,
+        "end_line": 49,
+        "signature_hash": "f1ca9db16f78d404",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_duplicate_clip_ids_fail_closed:4d5fd2e4e8f7c378",
+        "name": "CreatorTimelineContractTests.test_duplicate_clip_ids_fail_closed",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 64,
+        "end_line": 68,
+        "signature_hash": "bbc114478832f838",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_invalid_timing_fails_closed:3f46b986e7c41e50",
+        "name": "CreatorTimelineContractTests.test_invalid_timing_fails_closed",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 58,
+        "end_line": 62,
+        "signature_hash": "a09c1011d0dbc39a",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_length_prefix_prevents_concatenation_ambiguity:d9b7781a29c0574c",
+        "name": "CreatorTimelineContractTests.test_length_prefix_prevents_concatenation_ambiguity",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 32,
+        "end_line": 36,
+        "signature_hash": "2b120cf4980ddadb",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_media_type_and_empty_tags_are_bounded:7b6bf247d02bccd7",
+        "name": "CreatorTimelineContractTests.test_media_type_and_empty_tags_are_bounded",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 86,
+        "end_line": 90,
+        "signature_hash": "f4acb2e9ca874cf2",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_otio_roundtrip_preserves_order_timing_asset_and_digests:56144ae6d4082f1a",
+        "name": "CreatorTimelineContractTests.test_otio_roundtrip_preserves_order_timing_asset_and_digests",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 70,
+        "end_line": 84,
+        "signature_hash": "320954bd462a186d",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_tag_identity_is_permutation_duplicate_case_whitespace_invariant:6307f4614fa05bb3",
+        "name": "CreatorTimelineContractTests.test_tag_identity_is_permutation_duplicate_case_whitespace_invariant",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 24,
+        "end_line": 30,
+        "signature_hash": "336fc4d6ced1d0ab",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "name": "test_deployment_docs_have_submission_field_and_no_localhost_url_claim",
         "kind": "function",
@@ -459300,6 +459894,206 @@
         "file_digest8": "323452d323e79bce"
       },
       {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:AdmittedAssetRefV1:728675d4c4dab2a9",
+        "name": "AdmittedAssetRefV1",
+        "kind": "class",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 79,
+        "end_line": 105,
+        "signature_hash": "577387c81e5d84f8",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:CreatorTimelineV1:bf4077e7dea8a548",
+        "name": "CreatorTimelineV1",
+        "kind": "class",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 124,
+        "end_line": 224,
+        "signature_hash": "5a575473a0f9873c",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:TimelineClipV1:4cea21488ec9cab3",
+        "name": "TimelineClipV1",
+        "kind": "class",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 109,
+        "end_line": 120,
+        "signature_hash": "3bdb22ccb2d2761d",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:TimelineContractError:663ba818c45d6c53",
+        "name": "TimelineContractError",
+        "kind": "class",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "f6528f2d01d5e8a2",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:_clean_id:3fbac5caa037019e",
+        "name": "_clean_id",
+        "kind": "function",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 44,
+        "end_line": 48,
+        "signature_hash": "139ad905ad33246f",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:_clean_text:1a80323bb51fbcf7",
+        "name": "_clean_text",
+        "kind": "function",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 30,
+        "end_line": 41,
+        "signature_hash": "0b584b1815d83212",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:canonical_tag_set:1ecb4b1139795ae9",
+        "name": "canonical_tag_set",
+        "kind": "function",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 51,
+        "end_line": 63,
+        "signature_hash": "72e4d2ae8632688e",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:tag_set_fingerprint:330fb0d50470249f",
+        "name": "tag_set_fingerprint",
+        "kind": "function",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 66,
+        "end_line": 75,
+        "signature_hash": "188030f1634ee672",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:validate_otio_roundtrip:4a00ee07a77ef5cd",
+        "name": "validate_otio_roundtrip",
+        "kind": "function",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 227,
+        "end_line": 265,
+        "signature_hash": "8cc5394d1bae6638",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:AdmittedAssetRefV1.__post_init__:ac68603abb307beb",
+        "name": "AdmittedAssetRefV1.__post_init__",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 93,
+        "end_line": 101,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:AdmittedAssetRefV1.tag_fingerprint:ea3ed360afa04afc",
+        "name": "AdmittedAssetRefV1.tag_fingerprint",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 104,
+        "end_line": 105,
+        "signature_hash": "752d280e8993dc67",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.__post_init__:b9a5920f10d10709",
+        "name": "CreatorTimelineV1.__post_init__",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 130,
+        "end_line": 142,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1._composition_record:2d46c65decb75fa8",
+        "name": "CreatorTimelineV1._composition_record",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 148,
+        "end_line": 162,
+        "signature_hash": "e6ca383f2900af01",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1._evidence_record:c2ddc308ee326327",
+        "name": "CreatorTimelineV1._evidence_record",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 164,
+        "end_line": 177,
+        "signature_hash": "aabfc04017843b14",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.composition_digest:4a02fa275b57e582",
+        "name": "CreatorTimelineV1.composition_digest",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 180,
+        "end_line": 182,
+        "signature_hash": "e43ef37db9133a24",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.evidence_binding_digest:d5fb4fc56e1e3571",
+        "name": "CreatorTimelineV1.evidence_binding_digest",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 185,
+        "end_line": 187,
+        "signature_hash": "59b7b1a5f1b315c4",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.rate:8e8606aa3f78f197",
+        "name": "CreatorTimelineV1.rate",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 145,
+        "end_line": 146,
+        "signature_hash": "58d305fd864a7904",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.to_otio:dbdaf6ebe92cb38f",
+        "name": "CreatorTimelineV1.to_otio",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 189,
+        "end_line": 221,
+        "signature_hash": "f6d7ada9a37ee67d",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.to_otio_json:d6a4d2fc42659ce2",
+        "name": "CreatorTimelineV1.to_otio_json",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 223,
+        "end_line": 224,
+        "signature_hash": "6bf3347e8249a303",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:TimelineClipV1.__post_init__:f5a2bbf733224d46",
+        "name": "TimelineClipV1.__post_init__",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 115,
+        "end_line": 120,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -460550,7 +461344,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "7c8ded7186b07ae29b43995224aa7aff",
-    "payload_hash": "da554dd6ac05a843ea2a4bd4a9c77bcc"
+    "record_fingerprint": "efbf6b8cbada96cecb5cd0e9692d9af3",
+    "payload_hash": "bcbfcf41e02282be1c7ea2891ba6c64e"
   }
 }

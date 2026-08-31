@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1696
-- **total_bytes**: 26724714
-- **text_tokens_est**: 6671584
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 13, 'operator_script': 9, 'python_module': 1035, 'schema_or_lexicon': 283, 'support_file': 49}
+- **file_count**: 1700
+- **total_bytes**: 26742276
+- **text_tokens_est**: 6675975
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 13, 'operator_script': 9, 'python_module': 1037, 'schema_or_lexicon': 284, 'support_file': 50}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1696,
+  "repo_file_count": 1700,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -175,6 +175,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
     ".github/workflows/construction-demo-asset-foundation.yml",
+    ".github/workflows/creator-studio-neutral-timeline.yml",
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
@@ -1668,6 +1669,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_authority_bridge.py",
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
+    "tests/test_creator_studio_neutral_timeline_contract.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
@@ -1707,6 +1709,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/thinkpad_bounded_storage_probe.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/creator_studio/neutral_timeline_contract.py",
+    "tools/creator_studio/requirements-timeline.txt",
     "tools/k27/thinkpad_portable_simd_dispatch.cpp",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
@@ -1836,17 +1840,17 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1696,
-  "bytes": 26724714,
-  "tokens_est": 6671584,
+  "files": 1700,
+  "bytes": 26742276,
+  "tokens_est": 6675975,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 13,
     "operator_script": 9,
-    "python_module": 1035,
-    "schema_or_lexicon": 283,
-    "support_file": 49
+    "python_module": 1037,
+    "schema_or_lexicon": 284,
+    "support_file": 50
   }
 }
 ```
