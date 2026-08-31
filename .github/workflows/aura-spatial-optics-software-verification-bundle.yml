@@ -1,0 +1,147 @@
+name: Aura Spatial Optics Software Verification Bundle
+
+on:
+  pull_request:
+    paths:
+      - 'tools/spatial_optics_software_verification_bundle.py'
+      - 'tools/spatial/optical_invariant_witness.py'
+      - 'tools/spatial/requirements-optical.txt'
+      - 'tools/k27_optics_independent_conformance.py'
+      - 'tests/test_spatial_optics_software_verification_bundle.py'
+      - 'tests/test_spatial_optical_invariant_witness.py'
+      - 'tests/test_k27_optics_independent_conformance.py'
+      - '.github/workflows/aura-spatial-optics-software-verification-bundle.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-spatial-optics-software-verification-bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch exact child and prove PR620 x PR619 convergence
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prove exact two-parent ancestry and owner blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          CONVERGENCE=b88c67062734b0ef36ac5343105949b0663b4dd8
+          PR620=1a4c3f6705964428b1d80f2bbd3f5ada8c000f8b
+          PR619=c74239e79244b877d63f4952cea590ea6e122e78
+          test "$(git show -s --format=%P "$CONVERGENCE")" = "$PR620 $PR619"
+          git merge-base --is-ancestor "$CONVERGENCE" "$GITHUB_SHA"
+          test "$(git rev-parse "$GITHUB_SHA:tools/spatial/optical_invariant_witness.py")" = ffa5f427ace5badf506bd45378f9b278bf9eb228
+          test "$(git rev-parse "$GITHUB_SHA:tests/test_spatial_optical_invariant_witness.py")" = fb6ef47b21e6ac82a4b5de0145f27ca2708cf050
+          test "$(git rev-parse "$GITHUB_SHA:tools/spatial/requirements-optical.txt")" = a943b699ac88970b1b117c4ccb426bb62a29ef8a
+          test "$(git rev-parse "$GITHUB_SHA:tools/k27_optics_independent_conformance.py")" = 5aacc34ef9fba08ebedefd77efc964f92e6e3bbb
+          test "$(git rev-parse "$GITHUB_SHA:tests/test_k27_optics_independent_conformance.py")" = 38f95b2becdc02c2cdefd2a8f3bce3790e229cf2
+
+      - name: Pin exact successful parent hosted runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          expected = {
+              33365731815: "1a4c3f6705964428b1d80f2bbd3f5ada8c000f8b",
+              33365613764: "c74239e79244b877d63f4952cea590ea6e122e78",
+          }
+          for run_id, sha in expected.items():
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{os.environ['REPO']}/actions/runs/{run_id}",
+                  headers={
+                      "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+                      "Accept": "application/vnd.github+json",
+                  },
+              )
+              with urllib.request.urlopen(req) as response:
+                  data = json.load(response)
+              assert data["head_sha"] == sha, (run_id, data["head_sha"], sha)
+              assert data["status"] == "completed", (run_id, data["status"])
+              assert data["conclusion"] == "success", (run_id, data["conclusion"])
+              print(f"PINNED_PARENT_RUN={run_id}:{sha}:SUCCESS")
+          PY
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install exact optical witness dependency
+        run: python -m pip install -r tools/spatial/requirements-optical.txt
+
+      - name: Re-prove PR619 field-invariant owner
+        env:
+          PYTHONPATH: tools
+        run: python -m unittest tests.test_spatial_optical_invariant_witness
+
+      - name: Re-prove PR620 independent-formulation owner
+        env:
+          PYTHONPATH: tools
+        run: python -m unittest tests.test_k27_optics_independent_conformance
+
+      - name: Prove O58 two-lane bundle adversarials
+        env:
+          PYTHONPATH: tools
+        run: python -m unittest tests.test_spatial_optics_software_verification_bundle
+
+      - name: Prove distinct verification modes do not become one experiment or physical validation
+        env:
+          PYTHONPATH: tools
+        run: |
+          python - <<'PY'
+          from dataclasses import asdict
+          from spatial import optical_invariant_witness as inv
+          import k27_optics_independent_conformance as conf
+          import spatial_optics_software_verification_bundle as bundle
+
+          invariant = inv.measure_invariants(
+              inv.deterministic_fixture(), dx_m=8e-6, dy_m=8e-6,
+              wavelength_m=532e-9, distance_m=0.03,
+          )
+          findings = conf.run_independent_conformance()
+          conformance = conf.build_conformance_receipt(
+              parent_artifact_ids=("artifact-a", "artifact-b"),
+              imported_source_sha256=bundle.EXPECTED_IMPORTED_SOURCE_SHA256,
+              findings=findings,
+          )
+          result = bundle.build_software_verification_bundle(invariant, conformance)
+          assert result.field_invariant_measurement_pass is True
+          assert result.independent_formulation_conformance_pass is True
+          assert result.verification_modes_distinct is True
+          assert result.same_test_object_proven is False
+          assert result.shared_implementation_generation_proven is False
+          assert result.shared_fixture_identity_proven is False
+          assert result.shared_sampling_grid_identity_proven is False
+          assert result.shared_source_identity_proven is False
+          assert result.physical_optics_validation_proven is False
+          assert result.hardware_performance_proven is False
+          assert result.semantic_k27_authority_proven is False
+          assert result.effect_authority_proven is False
+          print("INDEPENDENT_FORMULATION_AGREEMENT_NE_FIELD_INVARIANT_MEASUREMENT=true")
+          print("TWO_SOFTWARE_VERIFICATION_MODES_NE_SAME_TEST_OBJECT=true")
+          print("VERIFICATION_BUNDLE_NE_PHYSICAL_VALIDATION=true")
+          print("REOPEN=" + ",".join(result.reopen_requirements))
+          print("BUNDLE=" + result.evidence_ref)
+          PY
+
+      - name: Assert narrow public boundary and complete consequence ceiling
+        env:
+          PYTHONPATH: tools
+        run: |
+          python - <<'PY'
+          import inspect
+          import spatial_optics_software_verification_bundle as bundle
+          params = tuple(inspect.signature(bundle.build_software_verification_bundle).parameters)
+          assert params == ("invariant_receipt", "conformance_receipt"), params
+          forbidden = {"trust", "rank", "current", "authority", "effect", "k27", "same_test_object"}
+          assert not forbidden.intersection(params)
+          print("PUBLIC_INPUTS=invariant_receipt,conformance_receipt")
+          print("CLAIM_CEILING=NO_SAME_TEST_OBJECT,NO_SHARED_IMPLEMENTATION,NO_SHARED_FIXTURE,NO_SHARED_GRID,NO_SHARED_SOURCE_IDENTITY,NO_PHYSICAL_OPTICS_VALIDATION,NO_HARDWARE_PERFORMANCE,NO_OPTICAL_SAFETY,NO_DEPLOYMENT,NO_SEMANTIC_K27_AUTHORITY,NO_EFFECT,NO_GATE10,NO_NATIVE_TRANSFORMER_KV")
+          PY
