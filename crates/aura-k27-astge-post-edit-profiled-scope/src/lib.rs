@@ -443,9 +443,7 @@ mod tests {
         .to_string()
     }
 
-    fn changed_candidate(
-        setup: &Setup,
-    ) -> (Vec<u8>, Vec<AuthorizedSpanV1>, Vec<ReplacementV1>) {
+    fn changed_candidate(setup: &Setup) -> (Vec<u8>, Vec<AuthorizedSpanV1>, Vec<ReplacementV1>) {
         let mut candidate = SOURCE.as_bytes().to_vec();
         candidate.splice(
             setup.edit_start..setup.edit_start + 1,
