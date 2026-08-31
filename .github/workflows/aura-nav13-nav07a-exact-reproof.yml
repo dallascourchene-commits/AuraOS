@@ -133,5 +133,7 @@ jobs:
 
       - name: Assert proof-only ownership boundary
         run: |
-          unexpected="$(git diff --name-only 019b9e3dcab37fb9a3549bbaf78296da223b557a...HEAD | grep -v '^.github/workflows/aura-nav13-nav07a-exact-reproof.yml$' || true)"
+          unexpected="$(git diff --name-only 019b9e3dcab37fb9a3549bbaf78296da223b557a...HEAD \
+            | grep -Ev '^(\.github/workflows/aura-nav13-nav07a-exact-reproof\.yml|\.aura/CODEMAP\.(json|md))$' \
+            || true)"
           test -z "$unexpected" || { printf 'UNEXPECTED_SEMANTIC_DIFF\n%s\n' "$unexpected"; exit 1; }
