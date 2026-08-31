@@ -60,7 +60,7 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import copy, hashlib, json, pathlib, sys
+          import copy, hashlib, json, pathlib
           from scripts.aura_workcapsule_scoped_higher_owner_portable_continuity import (
               OUTER_PAYLOAD_FIELDS,
               OUTER_DIGEST_MISMATCH,
@@ -77,7 +77,6 @@ jobs:
           negative = copy.deepcopy(obj)
           nested = negative['payload']['canonical_target_projection']
           nested['payload'] = dict(reversed(list(nested['payload'].items())))
-          # This is the exact bug class from HSC-243: reseal the OUTER digest over caller map order.
           caller_outer = {field: negative['payload'][field] for field in OUTER_PAYLOAD_FIELDS}
           negative['payload_sha256'] = hashlib.sha256(
               json.dumps(caller_outer, separators=(',', ':'), ensure_ascii=False).encode('utf-8')
@@ -167,16 +166,23 @@ jobs:
           print('SECOND_TARGET_PROJECTION_ACCEPTED=false')
           PY
           cat <<'EOF'
-          OBJECTIVE_29=SCOPED_HIGHER_OWNER_PORTABLE_CONTINUITY
-          SAME_SCOPED_TARGET_AS_HIGHER_OWNER_PROJECTION=PROVEN
-          RECURSIVE_CROSS_RUNTIME_CANONICALIZATION=PROVEN_SHARED_VECTOR
-          PYTHON_ORDER_DEPENDENT_RESEAL=REJECTED
+          OBJECTIVE_29=SCOPED_TARGET_HIGHER_OWNER_PORTABLE_CONTINUITY
+          EXACT_PR548_TARGET_COORDINATE_REPROVED=true
+          PR541_PORTABLE_HIGHER_OWNER_CHAIN_VERIFIED=true
+          RECURSIVE_CROSS_RUNTIME_CANONICAL_BYTES_EQUAL=true
+          HSC243_REORDER_RESEAL_REJECTED_BY_PYTHON_AND_RUST=true
+          SAME_SCOPED_TARGET_BOUND_TO_HIGHER_OWNER_CHAIN=true
+          REENTRY_CLOSED=false
+          REENTRY_SCOPE_NARROWED=false
+          STRUCTURAL_HANDLE_BOUND_TO_RAW_BYTES=false
           PRODUCER_AUTHENTICATED=false
           SEMANTIC_REPAIR_CORRECTNESS_PROVEN=false
-          REENTRY_CLOSED=false
-          INVALIDATION_NARROWED=false
+          SEMANTIC_TRUTH_MINTED=false
           SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false
-          NODE_LEVEL_DEPENDENCY_CONE_PROVEN=false
+          NODE_LEVEL_INVALIDATION_CONE_PROVEN=false
+          RUNTIME_NAME_RESOLUTION_PROVEN=false
+          CALL_GRAPH_PROVEN=false
+          B_MINUS_APPROVED=false
           REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_EFFECT_AUTHORITY=false
           GATE10_PROMOTION=false
           EOF
