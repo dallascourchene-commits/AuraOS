@@ -15,8 +15,8 @@ from tools.awj032.glm53_owner_host_c2_handoff import (
     join_owner_host_c2_attempt,
 )
 from tools.awj032.glm53_g2_c2_operation_observation_join import (
-    BOUND,
     HOLD,
+    STRUCTURAL,
     WITNESS_SCHEMA,
     GLM53OperationObservationWitness,
     bind_plan_attempt_operation_observation,
@@ -111,14 +111,14 @@ def witness(req, attachment, att, c2_join, **updates):
         lifecycle_measurement_ref=att.lifecycle_measurement_ref,
         physical_io_attestation_ref="physical-io-attestation:operation:001",
         source_binding_revalidation_ref="source-binding-revalidation:operation:001",
-        physical_read_bytes=att.physical_read_bytes,
+        claimed_physical_read_bytes=att.physical_read_bytes,
     )
     base.update(updates)
     return GLM53OperationObservationWitness(**base)
 
 
 class G2C2OperationObservationJoinTests(unittest.TestCase):
-    def test_missing_operation_witness_holds_without_manufacturing_measurement(self):
+    def test_missing_witness_holds_without_manufacturing_measurement(self):
         req, attachment, att, c2_join = relation_inputs()
         out = bind_plan_attempt_operation_observation(
             attachment=attachment, request=req, attempt=att, c2_join=c2_join, witness=None
@@ -126,11 +126,14 @@ class G2C2OperationObservationJoinTests(unittest.TestCase):
         self.assertEqual(HOLD, out.disposition)
         self.assertTrue(out.plan_to_request_bound)
         self.assertTrue(out.request_to_attempt_bound)
-        self.assertFalse(out.attempt_to_observation_bound)
-        self.assertIsNone(out.physical_read_bytes)
-        self.assertFalse(out.causal_plan_benefit_proven)
+        self.assertFalse(out.attempt_to_candidate_witness_structurally_bound)
+        self.assertIsNone(out.claimed_physical_read_bytes)
+        self.assertTrue(out.producer_authentication_required)
+        self.assertTrue(out.observer_registry_authentication_required)
+        self.assertFalse(out.physical_observation_proven)
+        self.assertFalse(out.observational_attribution_bound)
 
-    def test_exact_operation_witness_binds_observation_not_causal_benefit(self):
+    def test_exact_caller_witness_binds_structure_only_not_observation_truth(self):
         req, attachment, att, c2_join = relation_inputs()
         out = bind_plan_attempt_operation_observation(
             attachment=attachment,
@@ -139,10 +142,15 @@ class G2C2OperationObservationJoinTests(unittest.TestCase):
             c2_join=c2_join,
             witness=witness(req, attachment, att, c2_join),
         )
-        self.assertEqual(BOUND, out.disposition)
-        self.assertTrue(out.observational_attribution_bound)
-        self.assertTrue(out.source_binding_revalidation_bound)
-        self.assertEqual(att.physical_read_bytes, out.physical_read_bytes)
+        self.assertEqual(STRUCTURAL, out.disposition)
+        self.assertTrue(out.attempt_to_candidate_witness_structurally_bound)
+        self.assertTrue(out.source_binding_revalidation_claim_carried)
+        self.assertEqual(att.physical_read_bytes, out.claimed_physical_read_bytes)
+        self.assertTrue(out.producer_authentication_required)
+        self.assertTrue(out.observer_registry_authentication_required)
+        self.assertFalse(out.physical_observation_proven)
+        self.assertFalse(out.observational_attribution_bound)
+        self.assertFalse(out.source_binding_revalidation_proven)
         self.assertTrue(out.counterfactual_baseline_required)
         self.assertFalse(out.causal_plan_benefit_proven)
         self.assertFalse(out.bytes_saved_proven)
@@ -156,32 +164,20 @@ class G2C2OperationObservationJoinTests(unittest.TestCase):
         other = request(storage_plan_digest="c" * 64)
         with self.assertRaisesRegex(ValueError, "PLAN_ATTACHMENT_NOT_FOR_C2_REQUEST"):
             bind_plan_attempt_operation_observation(
-                attachment=attachment,
-                request=other,
-                attempt=att,
-                c2_join=c2_join,
-                witness=None,
+                attachment=attachment, request=other, attempt=att, c2_join=c2_join, witness=None
             )
         wrong_attempt = attempt(req, request_digest="d" * 64)
         with self.assertRaisesRegex(ValueError, "C2_ATTEMPT_NOT_FOR_REQUEST"):
             bind_plan_attempt_operation_observation(
-                attachment=attachment,
-                request=req,
-                attempt=wrong_attempt,
-                c2_join=c2_join,
-                witness=None,
+                attachment=attachment, request=req, attempt=wrong_attempt, c2_join=c2_join, witness=None
             )
         wrong_join = replace(c2_join, attempt_receipt_digest="e" * 64)
         with self.assertRaisesRegex(ValueError, "C2_JOIN_NOT_FOR_EXACT_ATTEMPT"):
             bind_plan_attempt_operation_observation(
-                attachment=attachment,
-                request=req,
-                attempt=att,
-                c2_join=wrong_join,
-                witness=None,
+                attachment=attachment, request=req, attempt=att, c2_join=wrong_join, witness=None
             )
 
-    def test_observation_identity_substitutions_reject(self):
+    def test_candidate_witness_identity_substitutions_reject(self):
         req, attachment, att, c2_join = relation_inputs()
         cases = (
             {"request_digest": "f" * 64},
@@ -195,11 +191,11 @@ class G2C2OperationObservationJoinTests(unittest.TestCase):
             {"source_snapshot_digest": "3" * 64},
             {"host_measurement_ref": "host-measurement:other"},
             {"lifecycle_measurement_ref": "lifecycle:other"},
-            {"physical_read_bytes": att.physical_read_bytes + 1},
+            {"claimed_physical_read_bytes": att.physical_read_bytes + 1},
         )
         for updates in cases:
             with self.subTest(updates=updates):
-                with self.assertRaisesRegex(ValueError, "PLAN_ATTEMPT_OBSERVATION_IDENTITY_MISMATCH"):
+                with self.assertRaisesRegex(ValueError, "PLAN_ATTEMPT_WITNESS_IDENTITY_MISMATCH"):
                     bind_plan_attempt_operation_observation(
                         attachment=attachment,
                         request=req,
@@ -208,32 +204,45 @@ class G2C2OperationObservationJoinTests(unittest.TestCase):
                         witness=witness(req, attachment, att, c2_join, **updates),
                     )
 
-    def test_witness_currentness_operation_source_and_domain_are_hard_gates(self):
+    def test_boolean_claims_do_not_authenticate_the_candidate(self):
         req, attachment, att, c2_join = relation_inputs()
-        cases = (
-            ({"observer_current": False}, "WITNESS_OBSERVER_CURRENTNESS_REQUIRED"),
-            ({"exact_operation_bound": False}, "WITNESS_EXACT_OPERATION_BINDING_REQUIRED"),
-            ({"source_binding_revalidated": False}, "WITNESS_SOURCE_BINDING_REVALIDATION_REQUIRED"),
-            ({"glm53_workload": False}, "WITNESS_MUST_BE_GLM53_NOT_TINY_FIXTURE_CROSSCAST"),
-            ({"tiny_fixture_crosscast": True}, "WITNESS_MUST_BE_GLM53_NOT_TINY_FIXTURE_CROSSCAST"),
-        )
-        for updates, code in cases:
-            with self.subTest(updates=updates):
-                with self.assertRaisesRegex(ValueError, code):
-                    bind_plan_attempt_operation_observation(
-                        attachment=attachment,
-                        request=req,
-                        attempt=att,
-                        c2_join=c2_join,
-                        witness=witness(req, attachment, att, c2_join, **updates),
-                    )
-
-    def test_witness_or_relation_cannot_mint_authority_or_benefit(self):
-        req, attachment, att, c2_join = relation_inputs()
-        for field in ("execution_authority_granted", "effect_authority_granted", "semantic_k27_authority", "native_private_transformer_kv_accessed"):
+        for field in (
+            "observer_current_claimed",
+            "exact_operation_bound_claimed",
+            "source_binding_revalidated_claimed",
+            "glm53_workload_claimed",
+        ):
             with self.subTest(field=field):
-                with self.assertRaisesRegex(ValueError, "WITNESS_CANNOT_WIDEN_AUTHORITY"):
+                out = bind_plan_attempt_operation_observation(
+                    attachment=attachment,
+                    request=req,
+                    attempt=att,
+                    c2_join=c2_join,
+                    witness=witness(req, attachment, att, c2_join, **{field: False}),
+                )
+                self.assertEqual(STRUCTURAL, out.disposition)
+                self.assertFalse(out.physical_observation_proven)
+                self.assertFalse(out.observational_attribution_bound)
+        with self.assertRaisesRegex(ValueError, "WITNESS_TINY_FIXTURE_CROSSCAST_FORBIDDEN"):
+            witness(req, attachment, att, c2_join, tiny_fixture_crosscast=True).validate()
+
+    def test_caller_witness_cannot_self_authenticate(self):
+        req, attachment, att, c2_join = relation_inputs()
+        for field in (
+            "producer_authenticated",
+            "observer_registry_authenticated",
+            "physical_observation_proven",
+            "execution_authority_granted",
+            "effect_authority_granted",
+            "semantic_k27_authority",
+            "native_private_transformer_kv_accessed",
+        ):
+            with self.subTest(field=field):
+                with self.assertRaisesRegex(ValueError, "CALLER_WITNESS_CANNOT_SELF_AUTHENTICATE_OR_WIDEN_AUTHORITY"):
                     witness(req, attachment, att, c2_join, **{field: True}).validate()
+
+    def test_structural_relation_cannot_self_promote_observation_or_benefit(self):
+        req, attachment, att, c2_join = relation_inputs()
         out = bind_plan_attempt_operation_observation(
             attachment=attachment,
             request=req,
@@ -241,12 +250,23 @@ class G2C2OperationObservationJoinTests(unittest.TestCase):
             c2_join=c2_join,
             witness=witness(req, attachment, att, c2_join),
         )
-        for field in ("causal_plan_benefit_proven", "bytes_saved_proven", "latency_saved_proven", "physical_io_avoided_proven", "execution_authorized", "g2_admitted", "semantic_k27_authority_minted"):
+        for field in (
+            "physical_observation_proven",
+            "observational_attribution_bound",
+            "source_binding_revalidation_proven",
+            "causal_plan_benefit_proven",
+            "bytes_saved_proven",
+            "latency_saved_proven",
+            "physical_io_avoided_proven",
+            "execution_authorized",
+            "g2_admitted",
+            "semantic_k27_authority_minted",
+        ):
             with self.subTest(field=field):
-                with self.assertRaisesRegex(ValueError, "PLAN_OPERATION_JOIN_CANNOT_MINT_CAUSAL_BENEFIT_OR_AUTHORITY"):
+                with self.assertRaisesRegex(ValueError, "STRUCTURAL_JOIN_CANNOT_MINT_OBSERVATION_CAUSALITY_OR_AUTHORITY"):
                     replace(out, **{field: True}).validate_claim_ceiling()
 
-    def test_relation_digest_changes_with_operation_identity(self):
+    def test_relation_digest_changes_with_operation_claim_identity(self):
         req, attachment, att, c2_join = relation_inputs()
         a = bind_plan_attempt_operation_observation(
             attachment=attachment, request=req, attempt=att, c2_join=c2_join,
@@ -257,6 +277,8 @@ class G2C2OperationObservationJoinTests(unittest.TestCase):
             witness=witness(req, attachment, att, c2_join, operation_id="operation:b"),
         )
         self.assertNotEqual(a.relation_digest, b.relation_digest)
+        self.assertFalse(a.observational_attribution_bound)
+        self.assertFalse(b.observational_attribution_bound)
 
 
 if __name__ == "__main__":
