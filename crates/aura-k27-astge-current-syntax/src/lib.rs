@@ -93,17 +93,17 @@ pub fn admit_current_syntax_hydration(
     if string_field(object.get("version"))? != HYDRATION_VERSION {
         return Err(CurrentSyntaxHydrationError::WrongHydrationVersion);
     }
-    if exact_bool(object.get("source_body_witness_required"))? != true {
+    if !exact_bool(object.get("source_body_witness_required"))? {
         return Err(CurrentSyntaxHydrationError::HydrationContractInvalid(
             "source_body_witness_required",
         ));
     }
-    if exact_bool(object.get("unknown_or_stale_hydration_admitted"))? != false {
+    if exact_bool(object.get("unknown_or_stale_hydration_admitted"))? {
         return Err(CurrentSyntaxHydrationError::HydrationContractInvalid(
             "unknown_or_stale_hydration_admitted",
         ));
     }
-    if exact_bool(object.get("source_authority_minted"))? != false {
+    if exact_bool(object.get("source_authority_minted"))? {
         return Err(CurrentSyntaxHydrationError::HydrationContractInvalid(
             "source_authority_minted",
         ));
@@ -154,7 +154,7 @@ pub fn admit_current_syntax_hydration(
             ))
         }
     }
-    if exact_bool(receipt.get("hydration_admitted"))? != true {
+    if !exact_bool(receipt.get("hydration_admitted"))? {
         return Err(CurrentSyntaxHydrationError::HydrationNotAdmitted);
     }
     if string_field(receipt.get("reason"))? != CURRENT_REASON {
@@ -162,8 +162,8 @@ pub fn admit_current_syntax_hydration(
             "reason",
         ));
     }
-    if exact_bool(receipt.get("source_authority_minted"))? != false
-        || exact_bool(receipt.get("semantic_identity_minted_by_bridge"))? != false
+    if exact_bool(receipt.get("source_authority_minted"))?
+        || exact_bool(receipt.get("semantic_identity_minted_by_bridge"))?
     {
         return Err(CurrentSyntaxHydrationError::HydrationContractInvalid(
             "authority ceiling",
