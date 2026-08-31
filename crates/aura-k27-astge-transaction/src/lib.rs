@@ -8,10 +8,10 @@
 //! required graph generation is the currently validated serving generation. It does not prove
 //! semantic correctness and grants no commit, execution, review, or external-effect authority.
 
-use aura_k27_astge_recovery::{CurrentRecoveryStateV1, inspect_recovery_state};
+use aura_k27_astge_recovery::{inspect_recovery_state, CurrentRecoveryStateV1};
 use aura_k27_astge_scope::{
-    AuthorizedSpanV1, ReplacementV1, ScopeError, ScopeVerificationReceiptV1, SourceBindingV1,
-    verify_candidate_scope,
+    verify_candidate_scope, AuthorizedSpanV1, ReplacementV1, ScopeError,
+    ScopeVerificationReceiptV1, SourceBindingV1,
 };
 use std::error::Error;
 use std::fmt::{Display, Formatter};
@@ -108,9 +108,7 @@ pub fn verify_patch_transaction_inputs(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aura_k27_astge::{
-        NodeIndexRecordV1, PageRow, PhysicalPageV1, StorageGenerationBindingV1,
-    };
+    use aura_k27_astge::{NodeIndexRecordV1, PageRow, PhysicalPageV1, StorageGenerationBindingV1};
     use aura_k27_astge_mmap::publish_generation;
     use std::fs;
     use std::path::{Path, PathBuf};
@@ -164,14 +162,7 @@ mod tests {
         }
         .encode()
         .unwrap();
-        publish_generation(
-            root,
-            generation,
-            binding,
-            &record.encode(),
-            &page,
-        )
-        .unwrap();
+        publish_generation(root, generation, binding, &record.encode(), &page).unwrap();
     }
 
     fn scoped_edit<'a>() -> (
