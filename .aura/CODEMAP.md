@@ -11,8 +11,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ## Summary
 
 - **file_count**: 1673
-- **total_bytes**: 26695394
-- **text_tokens_est**: 6664208
+- **total_bytes**: 26703428
+- **text_tokens_est**: 6666217
 - **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 17, 'operator_script': 9, 'python_module': 1012, 'schema_or_lexicon': 283, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
@@ -1814,8 +1814,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 {
   "ring": "repo",
   "files": 1673,
-  "bytes": 26695394,
-  "tokens_est": 6664208,
+  "bytes": 26703428,
+  "tokens_est": 6666217,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
