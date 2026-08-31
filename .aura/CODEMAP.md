@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1657
-- **total_bytes**: 26536082
-- **text_tokens_est**: 6624374
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 274, 'support_file': 56}
+- **file_count**: 1658
+- **total_bytes**: 26536246
+- **text_tokens_est**: 6624415
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 274, 'support_file': 57}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1657,
+  "repo_file_count": 1658,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -38,6 +38,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".aura/SECURITY.md",
     ".aura/amd_track3_demo_tasks.json",
     ".aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md",
+    ".aura/arena/objective-g-proof-activation.txt",
     ".aura/arena_routes/coding.v1.json",
     ".aura/arena_routes/construction.v1.json",
     ".aura/arena_routes/human_agent.v1.json",
@@ -1797,9 +1798,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1657,
-  "bytes": 26536082,
-  "tokens_est": 6624374,
+  "files": 1658,
+  "bytes": 26536246,
+  "tokens_est": 6624415,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
@@ -1807,7 +1808,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "operator_script": 9,
     "python_module": 1004,
     "schema_or_lexicon": 274,
-    "support_file": 56
+    "support_file": 57
   }
 }
 ```
