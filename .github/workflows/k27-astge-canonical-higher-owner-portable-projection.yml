@@ -1,0 +1,105 @@
+name: K27 ASTGE Canonical Higher-Owner Portable Projection
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge-canonical-higher-owner-owner-reduction/**"
+      - "crates/aura-k27-astge-post-edit-canonical-projection/**"
+      - "crates/aura-k27-astge-canonical-higher-owner-portable-projection/**"
+      - ".github/workflows/k27-astge-canonical-higher-owner-portable-projection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portable-owner-chain:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR538 canonical reduced owner chain
+        run: |
+          cargo fmt --check --manifest-path crates/aura-k27-astge-canonical-higher-owner-owner-reduction/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-canonical-higher-owner-owner-reduction/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-canonical-higher-owner-owner-reduction/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-canonical-higher-owner-owner-reduction/Cargo.toml --all-targets -- -D warnings
+
+      - name: Re-prove PR537 deterministic lower projection
+        run: |
+          cargo fmt --check --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --all-targets -- -D warnings
+
+      - name: Prove continuity-bound portable owner-chain envelope
+        run: |
+          cargo fmt --check --manifest-path crates/aura-k27-astge-canonical-higher-owner-portable-projection/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-canonical-higher-owner-portable-projection/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-canonical-higher-owner-portable-projection/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-canonical-higher-owner-portable-projection/Cargo.toml --all-targets -- -D warnings
+
+      - name: Assert production boundary reuses only reduced chain plus projection owner
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('crates/aura-k27-astge-canonical-higher-owner-portable-projection/src/lib.rs').read_text()
+          assert 'aura_k27_astge_canonical_higher_owner_owner_reduction::CanonicalHigherOwnerOwnerReducedV1' in text
+          assert 'aura_k27_astge_post_edit_canonical_projection' in text
+          assert 'aura_k27_astge_post_edit_canonical_target_handle_continuity' not in text
+          assert 'admit_post_edit' not in text
+          assert 'parse_python' not in text
+          assert 'AURA_ASTGE_CANONICAL_HIGHER_OWNER_OWNER_CHAIN_PROJECTION_V1' in text
+          assert 'producer_authenticated: false' in text
+          assert 'higher_owner_semantic_handle_continuity_proven: true' in text
+          print('REDUCED_OWNER_CHAIN_REUSED=true')
+          print('LOWER_PORTABLE_PROJECTION_REUSED=true')
+          print('RAW_CONSTRUCTOR_REIMPLEMENTED=false')
+          print('PRODUCER_AUTHENTICATED=false')
+          PY
+
+      - name: Safe-path unsafe scan
+        run: |
+          if grep -R --line-number -E 'unsafe\s*\{' \
+            crates/aura-k27-astge-canonical-higher-owner-portable-projection/src \
+            crates/aura-k27-astge-canonical-higher-owner-portable-projection/tests; then
+            echo 'unsafe block found in portable owner-chain path' >&2
+            exit 1
+          fi
+
+      - name: Emit claim ceiling
+        run: |
+          echo 'PORTABLE_CANONICAL_HIGHER_OWNER_CHAIN_V1=true'
+          echo 'OUTER_CONSTRUCTOR_REPROVED_BY_INNER_OWNER=true'
+          echo 'ONE_CANONICAL_POST_EDIT_CONSEQUENCE=true'
+          echo 'HIGHER_OWNER_HANDLE_CONTINUITY_BOUND_TO_PROJECTION=true'
+          echo 'DETERMINISTIC_PORTABLE_PAYLOAD_DIGEST=true'
+          echo 'PRODUCER_AUTHENTICATED=false'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'SEMANTIC_PATCH_CORRECTNESS_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
