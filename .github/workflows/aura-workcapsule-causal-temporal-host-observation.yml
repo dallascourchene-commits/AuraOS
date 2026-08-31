@@ -1,0 +1,162 @@
+name: Aura WorkCapsule Causal Temporal Host Observation
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_temporal_host_observation_admission.py'
+      - 'scripts/aura_workcapsule_raw_owner_derived_post_closure_transition.py'
+      - 'scripts/aura_workcapsule_causal_temporal_host_observation_admission.py'
+      - 'tests/test_aura_workcapsule_temporal_host_observation_admission.py'
+      - 'tests/test_aura_workcapsule_raw_owner_derived_post_closure_transition.py'
+      - 'tests/test_aura_workcapsule_causal_temporal_host_observation_admission.py'
+      - '.github/workflows/aura-workcapsule-causal-temporal-host-observation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR559_SHA: 26201c63c3531bbf631ef34803c6f01ccd7499d3
+  PR556_SHA: 5fae4070f82a9b5882ae0f63877359bf6e5a9a2b
+  CONVERGENCE_SHA: d3c591a61edd91c7d0889e39fac0245204969bca
+  PR556_BLOB: 920c652189a391a5fc96f8504f2b687812c2c974
+
+jobs:
+  causal-temporal-host-owner-currentness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Fetch exact child and prove PR559 plus PR556 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=220 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR559_SHA" "$PR556_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR559_SHA $PR556_SHA"
+          git merge-base --is-ancestor "$PR559_SHA" HEAD
+          git merge-base --is-ancestor "$PR556_SHA" HEAD
+          test "$(git hash-object scripts/aura_workcapsule_raw_owner_derived_post_closure_transition.py)" = "$PR556_BLOB"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+          echo 'EXACT_PR556_OWNER_BLOB_MATERIALIZED=true'
+
+      - name: Re-prove PR559 host observation owner unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_temporal_host_observation_admission.py
+          python3 -m unittest -v tests.test_aura_workcapsule_temporal_host_observation_admission
+
+      - name: Re-prove exact PR556 causal temporal owner in isolation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr556
+          mkdir -p /tmp/pr556
+          git -C /tmp/pr556 init .
+          git -C /tmp/pr556 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr556 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR556_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr556 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr556 rev-parse HEAD)" = "$PR556_SHA"
+          test -z "$(git -C /tmp/pr556 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr556
+          python3 -m py_compile scripts/aura_workcapsule_raw_owner_derived_post_closure_transition.py
+          python3 -m unittest -v tests.test_aura_workcapsule_raw_owner_derived_post_closure_transition
+
+      - name: Pass causal host owner-currentness adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_causal_temporal_host_observation_admission.py
+          python3 -m unittest -v tests.test_aura_workcapsule_causal_temporal_host_observation_admission
+
+      - name: Prove real PR556 fixture under unchanged UNKNOWN host lattice
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts.aura_workcapsule_causal_temporal_host_observation_admission import (
+              admit_causal_temporal_host_observation_admission,
+          )
+          from tests.test_aura_workcapsule_raw_owner_derived_post_closure_transition import (
+              WorkCapsuleRawOwnerDerivedPostClosureTransitionTests,
+          )
+
+          case = WorkCapsuleRawOwnerDerivedPostClosureTransitionTests(
+              methodName='test_raw_pre_and_raw_post_derive_exact_transition_without_caller_closure'
+          )
+          case.setUp()
+          try:
+              out = admit_causal_temporal_host_observation_admission(
+                  host_observations={},
+                  pre_root=case.pre_root,
+                  pre_codemap=case.codemap,
+                  pre_anchor_manifest=case.anchors,
+                  pre_witness_manifest=case.pre_witness,
+                  previous_binding=case.previous,
+                  pre_graph_witness=case.graph,
+                  post_root=case.post_root,
+                  post_codemap=case.codemap,
+                  post_anchor_manifest=case.anchors,
+                  post_witness_manifest=case.post_witness,
+                  post_graph_witness=case.graph,
+              )
+              assert out['causal_temporal_owner_reproved'] is True
+              assert out['pre_reentry_receipt_reused_for_post_o10'] is True
+              assert out['fresh_post_reentry_receipt_substituted'] is False
+              assert out['pre_closure_status'] == 'HOLD'
+              assert out['post_closure_status'] == 'CLOSED'
+              assert out['unknown_mask'] == 31
+              assert out['disposition'] == 'HOST_OBSERVATION_REQUIRED'
+              assert out['host_effect_ready'] is False
+              assert out['resolver_trust_proven_by_this_module'] is False
+              assert out['producer_identity_authenticated'] is False
+              assert not any(out['authority'].values())
+              print('REAL_PR556_CAUSAL_OWNER_UNDER_PR559_HOST_LATTICE=true')
+          finally:
+              case.tearDown()
+          PY
+
+      - name: Assert host owner delegation and consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_workcapsule_causal_temporal_host_observation_admission.py
+          grep -q 'from scripts.aura_workcapsule_temporal_host_observation_admission import' "$child"
+          grep -q '_resolve_host_gates' "$child"
+          if grep -q '^def _resolve_host_gates' "$child"; then
+            echo 'child duplicated PR559 host gate resolver owner' >&2
+            exit 1
+          fi
+          cat <<'EOF'
+          PR559_HOST_GATE_OWNER_REUSED=true
+          PR556_CAUSAL_TEMPORAL_OWNER_REPROVED=true
+          PRE_REENTRY_REUSED_FOR_POST_O10=true
+          FRESH_POST_REENTRY_SUBSTITUTED=false
+          HOST_GATE_SET=U_HEAD,U_ROUTE,U_F2,U_CUSTODY,U_CANARY
+          LOCAL_TEMPORAL_CLOSURE_PROMOTED_TO_HOST_RANK=false
+          RESOLVER_TRUST_PROVEN=false
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          TRUSTED_CONTINUATION_READY=false
+          HOST_EFFECT_READY=false
+          SEMANTIC_REPAIR_CORRECTNESS=false
+          PRODUCER_AUTHENTICATED=false
+          REVIEW_EXECUTION_COMMIT_MERGE_PROMOTION_PROVIDER_PUBLIC_HUMAN_AUTHORITY=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF
