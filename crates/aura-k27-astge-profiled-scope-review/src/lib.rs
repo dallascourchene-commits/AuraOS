@@ -579,25 +579,15 @@ mod tests {
             .iter()
             .find(|scope| scope.parent_scope_id.is_none())
             .unwrap();
-        let graph = parse_python_named_ast(&state.source, 77).unwrap();
-        let encoded = encode_ast_to_splane(&graph, &state.handles, 0, 41, [0x71; 32]).unwrap();
-        let module_record = encoded
-            .records
-            .iter()
-            .find(|record| record.node_id == module.ast_local_node_id.unwrap())
-            .unwrap();
         let err = admit_profiled_scope_review(
             &state.catalog,
-            module_record,
+            &state.inner_record,
             state.source.as_bytes(),
             state.source.as_bytes(),
             "source://fixture/current",
             module.scope_id,
             &state.handles,
-            &[AuthorizedSpanV1 {
-                start: u64::from(module.byte_start),
-                end: u64::from(module.byte_end),
-            }],
+            &[state.inner_span],
             &[],
         )
         .unwrap_err();
