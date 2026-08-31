@@ -29,6 +29,58 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Authenticate exact current G4 v2 parent proof and blobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+          import urllib.request
+
+          repo = "dallascourchene-commits/AuraOS"
+          head = "025d619d24d95dd6acc29981b1bd61bce92e25a3"
+          run_id = 33436948448
+          job_id = 99635568410
+          source_blob = "3e5686c3fe635f59e85768e1270be98175983e03"
+          test_blob = "f0b0b6e0c62588e6325452b57bbd8bae246de6a0"
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/actions/runs/{run_id}", headers=headers
+          )
+          with urllib.request.urlopen(req, timeout=20) as response:
+              run = json.load(response)
+          if run.get("conclusion") != "success":
+              raise SystemExit("G4_V2_RUN_NOT_SUCCESS")
+          if run.get("head_sha") != head:
+              raise SystemExit(f"G4_V2_HEAD_MISMATCH:{run.get('head_sha')}")
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/actions/jobs/{job_id}", headers=headers
+          )
+          with urllib.request.urlopen(req, timeout=20) as response:
+              job = json.load(response)
+          if job.get("conclusion") != "success":
+              raise SystemExit("G4_V2_JOB_NOT_SUCCESS")
+
+          observed_source = subprocess.check_output(
+              ["git", "hash-object", "tools/awj032/glm53_g4_prefetch_plan_revalidation.py"],
+              text=True,
+          ).strip()
+          observed_test = subprocess.check_output(
+              ["git", "hash-object", "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py"],
+              text=True,
+          ).strip()
+          if observed_source != source_blob:
+              raise SystemExit(f"G4_V2_SOURCE_BLOB_MISMATCH:{observed_source}")
+          if observed_test != test_blob:
+              raise SystemExit(f"G4_V2_TEST_BLOB_MISMATCH:{observed_test}")
+          PY
+
       - name: Authenticate O65 serializable owner-state proof
         env:
           GH_TOKEN: ${{ github.token }}
@@ -73,7 +125,7 @@ jobs:
             tools/awj032/glm53_g4_owner_currentness_addendum.py \
             tools/awj032/test_glm53_g4_owner_currentness_addendum.py
 
-      - name: Reexecute G4 adversarial contract
+      - name: Reexecute G4 v2 adversarial contract
         run: python3 -m unittest tools.awj032.test_glm53_g4_prefetch_plan_revalidation -v
 
       - name: Execute owner-currentness W3 adversarial contract
