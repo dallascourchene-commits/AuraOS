@@ -1,0 +1,114 @@
+name: Aura GLM53 G5 G4 Parent Currentness Gate
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g5-g4-parent-currentness-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify pull-request exact head
+        if: github.event_name == 'pull_request'
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Verify G5 owner surface is unchanged from repair cut
+        run: |
+          git merge-base --is-ancestor 8b1f38a6c917a9e7f1af941273164ca0db69821b HEAD
+          test "$(git rev-parse 8b1f38a6c917a9e7f1af941273164ca0db69821b:tools/awj032/glm53_g5_recompute_admission.py)" = \
+               "$(git rev-parse HEAD:tools/awj032/glm53_g5_recompute_admission.py)"
+
+      - name: Verify G4 v2 semantic repair persisted into proof generation
+        run: |
+          test "$(git rev-parse 981971f5b34da2046f539ee92f3e272eccac8360:tools/awj032/glm53_g4_prefetch_plan_revalidation.py)" = \
+               "$(git rev-parse 025d619d24d95dd6acc29981b1bd61bce92e25a3:tools/awj032/glm53_g4_prefetch_plan_revalidation.py)"
+
+      - name: Authenticate current G4 v2 hosted proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = "dallascourchene-commits/AuraOS"
+          run_id = 33436948448
+          job_id = 99635568410
+          expected_head = "025d619d24d95dd6acc29981b1bd61bce92e25a3"
+
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/actions/runs/{run_id}",
+              headers=headers,
+          )
+          with urllib.request.urlopen(req, timeout=20) as response:
+              run = json.load(response)
+          if run.get("head_sha") != expected_head:
+              raise SystemExit(f"G4_V2_PROOF_HEAD_MISMATCH:{run.get('head_sha')}")
+          if run.get("conclusion") != "success":
+              raise SystemExit(f"G4_V2_PROOF_NOT_SUCCESS:{run.get('conclusion')}")
+
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs?per_page=100",
+              headers=headers,
+          )
+          with urllib.request.urlopen(req, timeout=20) as response:
+              jobs = json.load(response).get("jobs", [])
+          matches = [j for j in jobs if j.get("id") == job_id]
+          if len(matches) != 1:
+              raise SystemExit("G4_V2_PROOF_JOB_NOT_FOUND")
+          job = matches[0]
+          if job.get("name") != "g4-prefetch-plan-revalidation" or job.get("conclusion") != "success":
+              raise SystemExit(f"G4_V2_PROOF_JOB_NOT_SUCCESS:{job.get('name')}:{job.get('conclusion')}")
+          PY
+
+      - name: Reexecute current G4 and G5 adversarial contracts
+        run: |
+          python3 -m unittest tools.awj032.test_glm53_g4_prefetch_plan_revalidation -v
+          python3 -m unittest tools.awj032.test_glm53_g5_recompute_admission -v
+
+      - name: Execute G5 parent-currentness gate adversarials
+        run: python3 -m unittest tools.awj032.test_glm53_g5_g4_parent_currentness_gate -v
+
+      - name: Enforce historical-vs-current proof split
+        run: |
+          python3 - <<'PY'
+          from tools.awj032.glm53_g5_recompute_admission import G4_PROOF_HEAD, G4_PROOF_RUN, G4_PROOF_JOB
+          from tools.awj032.glm53_g5_g4_parent_currentness_gate import (
+              G4_V1_HISTORICAL_PROOF_HEAD,
+              G4_V1_HISTORICAL_PROOF_RUN,
+              G4_V1_HISTORICAL_PROOF_JOB,
+              G4_V2_PROOF_HEAD,
+              G4_V2_PROOF_RUN,
+              G4_V2_PROOF_JOB,
+          )
+          if (G4_PROOF_HEAD, G4_PROOF_RUN, G4_PROOF_JOB) != (
+              G4_V1_HISTORICAL_PROOF_HEAD,
+              G4_V1_HISTORICAL_PROOF_RUN,
+              G4_V1_HISTORICAL_PROOF_JOB,
+          ):
+              raise SystemExit("G5_OWNER_NO_LONGER_REPRODUCES_STALE_PARENT; REBASE_OR_RETIRE_THIS_ADDENDUM")
+          if (G4_PROOF_HEAD, G4_PROOF_RUN, G4_PROOF_JOB) == (
+              G4_V2_PROOF_HEAD,
+              G4_V2_PROOF_RUN,
+              G4_V2_PROOF_JOB,
+          ):
+              raise SystemExit("HISTORICAL_AND_CURRENT_G4_PROOF_MUST_BE_DISTINCT")
+          PY
