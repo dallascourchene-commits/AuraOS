@@ -4,23 +4,13 @@ Status: **CANONICAL GOVERNANCE RULE — FAIL CLOSED**
 
 ## Invariant
 
-Every GitHub change pushed to an AuraOS pull-request branch MUST receive a **clean exact-current-head outcome** from all three required reviewer classes before that change is eligible for merge, promotion, release, provider effect, public effect, or any equivalent production-admission claim:
+Every GitHub change pushed to an AuraOS pull-request branch MUST receive a **clean exact-current-head outcome** from all three required reviewer classes before that head can be considered eligible for merge, promotion, release, provider effect, public effect, or equivalent admission:
 
 1. **OpenAI Codex code review**
 2. **CodeRabbit code review**
 3. **Codacy static/code-quality review**
 
-These three are cumulative. None substitutes for another. Sourcery, GitHub Actions, Aura-native review learning, security scanners, human review, and future reviewers are additive evidence only unless a later canonical policy explicitly promotes them into the required set.
-
-A review merely occurring is not a pass. Unresolved exact-head Codex/CodeRabbit findings remain blocking.
-
-## Push semantics
-
-A raw `git push` happens before a pull-request reviewer can inspect the resulting remote commit. Therefore this policy does **not** claim that a review can precede the network push that creates the reviewable SHA.
-
-Instead, the enforceable rule is:
-
-> **Every push invalidates prior review admission and MUST trigger/reacquire Codex + CodeRabbit + Codacy clean evidence for the new exact head before the pushed change can become merge/promote/release admissible.**
+The three are cumulative. Sourcery, Aura review learning, GitHub Actions, security scanners, and human review are additive and do not substitute for any required plane.
 
 `PushOccurred != ReviewAdmission`.
 
@@ -28,84 +18,81 @@ Instead, the enforceable rule is:
 
 `MergeOrPromotionAdmissible => CodexCleanExactHead AND CodeRabbitCleanExactHead AND CodacyPassedExactHead`.
 
+`RepairPush => ReReviewAllRequiredPlanes`.
+
 ## Trusted enforcement boundary
 
-The canonical gate is `.github/workflows/aura-github-review-triad-gate.yml` backed by `scripts/aura_github_review_triad_gate.py`.
+The enforcement workflow is `.github/workflows/aura-github-review-triad-gate.yml`; the verifier is `scripts/aura_github_review_triad_gate.py`.
 
-The **enforcement verifier MUST execute from the trusted default branch**, never from the pull request's own mutable copy. The PR SHA is evidence data; it is not allowed to supply the code that decides whether its own reviews are sufficient.
+The admission verifier MUST execute from the trusted default branch, never from a pull request's mutable copy. The PR head is evidence data only. The verifier reads the requested PR head before collection, gathers all provider evidence with pagination, reads the PR head again, and fails closed unless both observations equal the requested SHA. The trusted workflow publishes the resulting `Aura GitHub Review Triad Gate` status directly to that PR SHA.
 
-The enforcement workflow therefore uses default-branch-triggered events (`pull_request_target`, trusted provider comments/check completions/statuses), fetches the default-branch verifier, evaluates the target PR head, re-fetches the PR head after evidence collection, and explicitly publishes the `Aura GitHub Review Triad Gate` status onto that exact SHA.
-
-The pull request that initially installs V1 is a **bootstrap HOLD**: until the verifier/workflow exist on the trusted default branch, that installing PR cannot self-certify an unbypassable review-triad admission. Its code may be reviewed/tested, but server-side enforcement becomes earned only after trusted installation plus branch-protection/ruleset configuration.
+The pull request that installs V1 is a **bootstrap HOLD**. Its `.github/workflows/aura-github-review-triad-bootstrap-tests.yml` may compile and test the proposed verifier, but bootstrap testing is explicitly NONAUTHORITY and cannot certify its own admission.
 
 `UntrustedPRVerifier != AdmissionAuthority`.
 
-`TrustedDefaultBranchVerifier + ExactPRHeadAsData => EligibleGateExecution`.
+`InitialHead == FinalHead == RequestedHead`.
 
-`InitialHead == FinalHead == RequestedHead` is required; a push during evidence collection fails closed.
+## Provider identity
 
-## Exact-head evidence and provider identity
+Provider identity MUST NOT be inferred from mutable names or text. A check named `Codacy`, a status context named `CodeRabbit`, a review body saying `Codex review complete`, or a copied bot login does not establish provider provenance.
 
-**Provider identity MUST NOT be inferred from mutable text.** A status context named `Codacy`, a check named `CodeRabbit`, a review body containing `@codex review`, or a copied bot login is not provider provenance.
+V1 accepts only GitHub-owned identities observed on AuraOS:
 
-V1 pins GitHub-owned provider identities:
+- **Codex:** user/bot identity `(actor_id=199175422, login=chatgpt-codex-connector[bot])`.
+- **CodeRabbit:** user/bot identity `(actor_id=136622811, login=coderabbitai[bot])`.
+- **Codacy:** GitHub App identity `(app_id=56611, slug=codacy-production)`.
 
-- **Codex:** GitHub actor ID `199175422` with login `chatgpt-codex-connector[bot]`, or GitHub App slug `chatgpt-codex-connector`.
-- **CodeRabbit:** GitHub actor ID `136622811` with login `coderabbitai[bot]`, or GitHub App slug `coderabbitai`.
-- **Codacy:** GitHub App slug `codacy`. If an installed Codacy integration exposes a different GitHub-owned slug/identity, V1 remains HOLD until this canonical allowlist is deliberately updated from observed provider evidence.
+No unobserved Codex or CodeRabbit GitHub App ID is guessed. If their evidence later arrives through an App rather than the pinned user/bot actor, the gate remains HOLD until the immutable App ID + slug pair is observed and deliberately added.
 
-The immutable actor ID + expected bot login pair is required for user/bot evidence; matching the login string alone is insufficient. Check-run evidence is attributed by GitHub App slug, never by check name.
-
-Accepted completion semantics are provider-specific:
-
-- **Codex:** a trusted exact-head APPROVED review/check, or a trusted Codex clean completion summary that explicitly binds the reviewed commit (for example its `Reviewed commit: <sha-prefix>` form plus a no-major-issues conclusion). Exact-head inline Codex findings block the Codex plane; merely mentioning the SHA, being queued, running, or unavailable never counts as completion.
-- **CodeRabbit:** a trusted current-head successful status/check or approved completion, with no unresolved exact-head CodeRabbit finding. A draft/repository skip notice is not review completion. A historical skip does not poison future heads forever; a skip suppresses completion only when it is newer than or tied to the relevant CodeRabbit completion attempt.
-- **Codacy:** a successful exact-head check from the pinned `codacy` GitHub App. Absence of Codacy is a failure, not a waiver.
-
-The gate paginates review, comment, status, and check collections rather than silently ignoring later pages.
+For GitHub App evidence, **both App ID and slug must match**. Matching the slug alone is insufficient. For bot/user evidence, **both actor ID and login must match**. Matching the login alone is insufficient.
 
 `MutableProviderLabel != ProviderIdentity`.
 
+`ProviderSlugAlone != ProviderIdentity`.
+
+`ProviderActorLoginAlone != ProviderIdentity`.
+
+## Clean outcome semantics
+
+A reviewer merely running is not a pass.
+
+- **Codex:** completion must bind the exact current head and report a clean outcome. An `@codex review` request is only a trigger. Queued/running/unavailable summaries do not count. Exact-head inline Codex findings are blockers.
+- **CodeRabbit:** completion must come from the pinned actor and represent an actual completed review with no unresolved exact-head finding. A GitHub commit status whose state is `success` but whose provider-authored description says `Review skipped`, `manual review required`, queued, unavailable, or equivalent is **not completion**.
+- **Codacy:** a successful completed exact-head check must come from App `(56611, codacy-production)`. The observed AuraOS check is `Codacy Static Code Analysis`; its mutable check name is not used as identity.
+
+Historical CodeRabbit skip records do not poison future reviewed heads forever; only a skip/noncompletion at or after the relevant completion can suppress that completion.
+
 `ProviderReviewOccurred != ProviderPassed`.
 
-`PinnedProviderIdentity + ExactHeadBinding + CleanOutcome => EligibleReviewEvidence`.
+`SuccessState + ProviderDescriptionSaysSkipped != CleanCompletion`.
 
 `UnresolvedExactHeadFinding => HOLD`.
-
-Review evidence from an older SHA cannot be carried forward after `synchronize`/push.
 
 ## Review lifecycle
 
 For every PR head:
 
-1. Push or update the branch.
-2. Codex review is requested/triggered for that exact head. Repository/workspace configuration SHOULD use Codex review-on-every-push where available; explicit `@codex review` is the fallback trigger.
-3. CodeRabbit reviews the exact head. If automatic review is unavailable/skipped, manual `@coderabbitai review` is required.
-4. Codacy analyzes the exact head and reports success.
-5. Supplemental reviewers may run: Sourcery, Aura Review Learning, security/static-analysis workflows, and humans.
-6. Findings are evaluated. A blocking finding MUST be repaired or explicitly dispositioned through the relevant governed review process. A repair push creates a new head and invalidates every prior-head triad admission.
-7. Trusted provider completion events re-run the default-branch Review Triad Gate.
-8. The gate revalidates that the PR head did not change while evidence was collected and publishes its status directly to the exact PR SHA.
-9. Only after the triad status and all other required project-specific gates are green may a separate authority layer consider merge/promotion/release.
+1. Push/update the branch. The new SHA invalidates previous admission.
+2. Request/trigger Codex review for that exact SHA.
+3. Obtain an actual CodeRabbit review for that exact SHA; if automatic review is skipped, trigger manual review.
+4. Codacy analyzes that exact SHA.
+5. Evaluate provider findings. Repair any blocker; a repair creates a new SHA and restarts all three planes.
+6. Trusted provider-completion/status/check events cause the default-branch gate to re-evaluate.
+7. The gate paginates statuses, check runs, reviews, review comments, and issue comments; it revalidates the PR head after collection.
+8. Only a clean three-plane exact-head conjunction may be called review-triad green.
+9. A separate authority layer must still decide merge/promotion/release.
 
-## Failure and unavailability
+## Failure semantics
 
 `ReviewerUnavailable != ReviewerPassed`.
 
-If Codex, CodeRabbit, or Codacy is unavailable, disconnected, rate-limited, skipped, cannot prove its pinned GitHub identity, cannot bind evidence to the exact head, or reports unresolved findings, the change remains **HOLD / NONPROMOTING**. The correct response is to restore/re-run/configure/repair that reviewer plane, not to replace its evidence with another tool.
+Missing, stale, skipped, spoofed, rate-limited, unresolved, wrong-head, wrong-ID, or wrong-App evidence produces **HOLD / NONPROMOTING**. Another tool cannot substitute for the missing required reviewer.
 
-A reviewer finding does not authorize an automatic fix. Findings enter the normal repair/re-review loop. Any repair push creates a new head and therefore invalidates the previous triad admission.
+A reviewer finding does not by itself authorize a repair. Repairs remain ordinary governed repository changes and require a fresh triad on the resulting SHA.
 
 ## Authority ceiling
 
-The Review Triad proves only that three independent review planes reached clean outcomes on the exact current head under the bounded provider-evidence rules above. It does not itself prove:
-
-- semantic correctness or truth;
-- producer identity beyond pinned GitHub provider evidence;
-- runtime behavior beyond executed tests/checks;
-- human/community consent;
-- source mutation authority;
-- execution, commit, merge, promotion, release, provider, or public-effect authority.
+The review triad proves only that the three required independent review planes reached clean outcomes under this bounded evidence policy on one exact current head. It does not prove semantic truth, producer identity beyond the pinned provider evidence, runtime behavior beyond executed tests, human/community consent, or mutation/execution/commit/merge/promotion/release/provider/public-effect authority.
 
 `ThreeCleanReviews != MergeAuthority`.
 
@@ -119,30 +106,30 @@ The Review Triad proves only that three independent review planes reached clean 
 - `ReviewOnOldHead != ReviewOnCurrentHead`.
 - `Codex + CodeRabbit + Codacy` is a conjunction, not a vote.
 - `ProviderReviewOccurred != ProviderPassed`.
+- `ProviderAppId + ProviderSlug` is the App identity conjunction.
+- `ProviderActorId + ProviderLogin` is the bot/user identity conjunction.
 - `OneReviewerSuccess + AnotherReviewerMissing => HOLD`.
+- `SuccessState + SkipDescription => HOLD`.
 - `UnresolvedExactHeadFinding => HOLD`.
 - `StaticAnalysis != IntentAwareReview`.
 - `IntentAwareReview != StaticAnalysis`.
-- `MutableProviderLabel != ProviderIdentity`.
-- `ProviderStatusSuccess + NewerProviderSkip != ReviewCompletion`.
 - `UntrustedPRVerifier != AdmissionAuthority`.
 - `HeadChangedDuringEvidenceCollection => HOLD`.
-- `CrossReviewerAgreement != SemanticTruth`.
 - `RepairPush => ReReviewAllRequiredPlanes`.
 - `ReviewTriadGreen != MergeAuthority`.
 
 ## Crystalline routing
 
-The review triad is a governance/verification projection, not evidence that all eight crystalline consequence planes are earned. For this V1 policy:
+The review triad is a governance/verification projection, not proof that all eight crystalline consequence planes are earned:
 
-- W0: exact head identity + trusted verifier identity.
+- W0: exact PR head + trusted verifier identity.
 - W1: pinned clean Codex outcome.
 - W2: pinned clean CodeRabbit outcome.
-- W3: pinned successful Codacy quality outcome.
-- W4: disagreement/missing/stale/spoofed/skipped/blocking-review challenge.
-- W5: exact-head conjunction receipt + status published to exact PR head.
+- W3: pinned successful Codacy App outcome.
+- W4: stale/spoofed/skipped/noncompletion/unresolved/race challenge.
+- W5: exact-head conjunction receipt/status.
 - W6-W8: unearned by this policy alone.
 
 ## Operational note
 
-GitHub repository rulesets/branch protection SHOULD make the `Aura GitHub Review Triad Gate` status a required check on protected merge targets. If repository-administration APIs are unavailable to an agent, the absence of that provider-side protection MUST be recorded explicitly; repository policy and the gate remain canonical, but cannot be represented as an unbypassable GitHub server rule until an administrator enables the required status context.
+GitHub repository rulesets/branch protection SHOULD make `Aura GitHub Review Triad Gate` a required protected-branch status. Until that server-side rule is verified, repository policy and exact-head receipts are canonical governance evidence but MUST NOT be described as an unbypassable GitHub merge rule.
