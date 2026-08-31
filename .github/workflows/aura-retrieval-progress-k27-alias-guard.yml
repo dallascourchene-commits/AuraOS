@@ -93,27 +93,24 @@ jobs:
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          from tests.test_aura_retrieval_progress_k27_alias_guard import alias, obs, session_view, view
-          from tools.aura_retrieval_progress_k27_alias_guard import (
-              AliasAwareDecision,
-              assess_k27_alias_aware_retrieval_progress,
-          )
+          from tests.test_aura_retrieval_progress_k27_alias_guard import alias, obs, other_source_view, session_view, view
+          from tools.aura_retrieval_progress_k27_alias_guard import AliasAwareDecision, assess_k27_alias_aware_retrieval_progress
 
           checked = 0
           a, b = view(), session_view()
+
           # 24 same-SID / different-route states.
           for alias_present in (False, True):
               for state_changed in (False, True):
                   for evidence_changed in (False, True):
                       for prior in (0, 1, 2):
-                          current = obs(
-                              b,
-                              state="provider:g1" if state_changed else "provider:g0",
-                              evidence="evidence:e1" if evidence_changed else "evidence:e0",
-                          )
                           receipt = assess_k27_alias_aware_retrieval_progress(
                               previous=obs(a),
-                              current=current,
+                              current=obs(
+                                  b,
+                                  state="provider:g1" if state_changed else "provider:g0",
+                                  evidence="evidence:e1" if evidence_changed else "evidence:e0",
+                              ),
                               previous_view=a,
                               current_view=b,
                               alias_projection=alias(a, b) if alias_present else None,
@@ -127,10 +124,13 @@ jobs:
                               expected = AliasAwareDecision.CHANGE_AXIS_REQUIRED
                           else:
                               expected = AliasAwareDecision.COLLAPSE_CONE
-                          assert receipt.decision is expected, (alias_present, state_changed, evidence_changed, prior, receipt.decision, expected)
+                          assert receipt.decision is expected, (
+                              alias_present, state_changed, evidence_changed, prior,
+                              receipt.decision, expected
+                          )
                           checked += 1
 
-          # 12 same-view states: route identity contributes no artificial progress.
+          # 12 same-view states.
           for state_changed in (False, True):
               for evidence_changed in (False, True):
                   for prior in (0, 1, 2):
@@ -154,12 +154,8 @@ jobs:
                       assert receipt.decision is expected
                       checked += 1
 
-          # 12 different-SID states: source identity itself is a genuine resource-axis change.
-          c = view(
-              canonical_key="https://arxiv.org/abs/2607.10487",
-              xyz=(5, 3, 9),
-              sid="sid:arxiv:2607.10487",
-          )
+          # 12 different-SID states: SID rotation itself is NEVER sufficient progress.
+          c = other_source_view()
           for state_changed in (False, True):
               for evidence_changed in (False, True):
                   for prior in (0, 1, 2):
@@ -174,7 +170,14 @@ jobs:
                           current_view=c,
                           prior_no_progress_count=prior,
                       )
-                      assert receipt.decision is AliasAwareDecision.ALLOW_CHANGED_AXIS
+                      expected = (
+                          AliasAwareDecision.ALLOW_STATE_TRANSITION
+                          if state_changed or evidence_changed
+                          else AliasAwareDecision.HOLD_SOURCE_IDENTITY_TRANSITION_REQUIRED
+                      )
+                      assert receipt.decision is expected, (
+                          state_changed, evidence_changed, prior, receipt.decision, expected
+                      )
                       checked += 1
 
           assert checked == 48, checked
@@ -186,6 +189,8 @@ jobs:
           set -euo pipefail
           grep -q 'RouteProjectionChanged!=SemanticRetrievalAxisChanged' tools/aura_retrieval_progress_k27_alias_guard.py
           grep -q 'SchemeRotationCannotResetNoProgressDebt' tools/aura_retrieval_progress_k27_alias_guard.py
+          grep -q 'CallerSIDRotationCannotMintProgress' tools/aura_retrieval_progress_k27_alias_guard.py
+          grep -q 'DifferentSIDWithoutIndependentProgress=>HoldForSourceIdentityOwner' tools/aura_retrieval_progress_k27_alias_guard.py
           grep -q 'AliasProjectionCanOnlyRestrictRetry;CannotGrantProgressOrAuthority' tools/aura_retrieval_progress_k27_alias_guard.py
           grep -q 'CoordinateView!=SourceIdentity!=SemanticTruth!=Authority' tools/aura_retrieval_progress_k27_alias_guard.py
           grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' tools/aura_retrieval_progress_k27_alias_guard.py
