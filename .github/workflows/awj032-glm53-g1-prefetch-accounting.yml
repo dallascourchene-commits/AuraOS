@@ -1,0 +1,116 @@
+name: AWJ032 GLM53 G1 Router-Separated Prefetch Accounting
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_speculative_prefetch_accounting.py"
+      - "tools/awj032/test_glm53_speculative_prefetch_accounting.py"
+      - ".github/workflows/awj032-glm53-g1-prefetch-accounting.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prefetch-accounting:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      NATIVE_ROUTER_PARENT_HEAD: 815ec64338114d8d3947af6c295b28f8f401287e
+      NATIVE_ROUTER_SOURCE_BLOB: 6f2c2c7e577a451ffeb46af65fa70d9ce25f1aaa
+      PAGER_PARENT_HEAD: 7f33d2e8f6e53b8862f8ecf0ddc28e0564fb388a
+      PAGER_SOURCE_BLOB: 2b9b50e23b8ed963be4c1981598d30adb04dc1fe
+      PAGER_TEST_BLOB: bb55213eac8d8aa3b0eeee1715fbb66e728a5585
+    steps:
+      - name: Checkout exact child
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate exact parent semantic surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$NATIVE_ROUTER_PARENT_HEAD" HEAD
+          git merge-base --is-ancestor "$PAGER_PARENT_HEAD" HEAD
+          test "$(git hash-object tools/awj032/glm53_compatibility_probe.py)" = "$NATIVE_ROUTER_SOURCE_BLOB"
+          test "$(git hash-object tools/awj032/glm53_packed_expert_pager.py)" = "$PAGER_SOURCE_BLOB"
+          test "$(git hash-object tools/awj032/test_glm53_packed_expert_pager.py)" = "$PAGER_TEST_BLOB"
+
+      - name: Compile exact cone
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/awj032/glm53_compatibility_probe.py \
+            tools/awj032/glm53_packed_expert_pager.py \
+            tools/awj032/glm53_speculative_prefetch_accounting.py
+
+      - name: Replay pager parent and prefetch adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$PWD:$PWD/tools/awj032"
+          python3 -m unittest \
+            tools.awj032.test_glm53_packed_expert_pager \
+            tools.awj032.test_glm53_speculative_prefetch_accounting
+
+      - name: Independently enforce route separation and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          export PYTHONPATH="$PWD:$PWD/tools/awj032"
+          python3 - <<'PY'
+          from tools.awj032.glm53_packed_expert_pager import ExpertSourceBinding, PackedExpertPager
+          from tools.awj032.glm53_speculative_prefetch_accounting import account_speculative_prefetch
+
+          class Backend:
+              def __init__(self):
+                  self.tensors = {"gate_up": tuple(range(8)), "down": tuple(range(8))}
+              def read_rows(self, key, start, end):
+                  return self.tensors[key][start:end]
+
+          binding = ExpertSourceBinding(
+              model_revision="proof-rev",
+              index_digest="proof-index",
+              layer_id="model.layers.7.mlp.experts",
+              num_experts=8,
+              tensor_map={"gate_up": "gate_up", "down": "down"},
+              scale_map={},
+              representation="GROUPED_EXPERT_PROOF",
+          )
+          pager = PackedExpertPager(binding, Backend())
+          pager.load_selected((1, 3, 4), model_revision="proof-rev", index_digest="proof-index")
+          receipt = account_speculative_prefetch(
+              binding=binding,
+              predicted_expert_ids=(1, 3, 4),
+              native_route_expert_ids=(3, 4, 5),
+              prefetch_receipt=pager.receipt(),
+          )
+          assert receipt.native_route_experts == (3, 4, 5)
+          assert receipt.useful_prefetch_experts == (3, 4)
+          assert receipt.wasted_prefetch_experts == (1,)
+          assert receipt.demand_load_experts == (5,)
+          assert receipt.prediction_can_change_native_route is False
+          assert receipt.demand_load_observed is False
+          assert receipt.execution_authorized is False
+          assert receipt.provider_effect_authorized is False
+          assert receipt.g2_admitted is False
+          assert receipt.semantic_k27_authority is False
+          assert receipt.native_private_transformer_kv_accessed is False
+          assert receipt.physical_bytes_read is None
+          assert len(receipt.receipt_digest) == 64
+          print("GLM53_PREFETCH_ROUTE_SEPARATION=PASS")
+          print("GLM53_PREFETCH_MISS_DEMAND_LOAD_RESIDUAL=PASS")
+          print("GLM53_PREFETCH_PHYSICAL_BYTES_UNKNOWN=PASS")
+          print("GLM53_PREFETCH_RECEIPT=" + receipt.receipt_digest)
+          PY
+
+      - name: Consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "Prediction != native router authority"
+          echo "Logical staged rows != physical NVMe bytes"
+          echo "Prediction miss => exact native-route demand-load residual"
+          echo "No model/provider execution, G2 admission, K27 authority, or native/private transformer KV access claimed"
