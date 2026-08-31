@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import copy
 import hashlib
 import inspect
 import json
@@ -171,8 +170,9 @@ class WorkCapsuleLiveCausalArtifactHostObservationTests(
         self.assertTrue(any("HOST_RECEIPT_IDENTITY_MISMATCH" in item for item in violations))
 
     def test_live_causal_source_drift_invalidates_artifact_before_host_binding(self) -> None:
+        host = self.host_receipt()
         (self.causal.post_root / "src/a.py").write_bytes(b"def target(x):\n    return x + 4\n")
-        violations = verify_live_causal_artifact_host_observation(**self.child_kwargs())
+        violations = verify_live_causal_artifact_host_observation(**self.child_kwargs(host=host))
         self.assertTrue(any(item.startswith("LIVE_CAUSAL_ARTIFACT_") for item in violations))
 
     def test_public_boundary_has_no_artifact_or_authority_override(self) -> None:
