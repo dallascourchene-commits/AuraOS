@@ -1,0 +1,44 @@
+name: K27 ASTGE ThinkPad Warm I/O Benchmark Contract
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch exact pull-request head without submodule traversal
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          ! git config --local --get-regexp '^http\..*\.extraheader$'
+
+      - name: Prove inherited S-plane and mmap owners
+        run: |
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets --locked
+          cargo test --manifest-path crates/aura-k27-astge-mmap/Cargo.toml --all-targets
+
+      - name: Prove matched ThinkPad benchmark contract
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-thinkpad-bench/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-thinkpad-bench/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-thinkpad-bench/Cargo.toml --all-targets -- -D warnings
+
+      - name: Assert no cold-NVMe or superiority promotion
+        run: |
+          grep -F 'WARMISH_VERIFICATION_TOUCHED_UNCONTROLLED_OS_PAGE_CACHE' crates/aura-k27-astge-thinkpad-bench/src/lib.rs
+          grep -F 'physical_nvme_read_proven: false' crates/aura-k27-astge-thinkpad-bench/src/lib.rs
+          grep -F 'performance_superiority_proven: false' crates/aura-k27-astge-thinkpad-bench/src/lib.rs
+          grep -F 'cache_coldness_proven: false' crates/aura-k27-astge-thinkpad-bench/src/lib.rs
