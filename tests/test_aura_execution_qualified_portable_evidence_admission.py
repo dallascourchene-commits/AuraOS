@@ -46,6 +46,8 @@ class ExecutionQualifiedPortableEvidenceAdmissionTests(unittest.TestCase):
         self.assertTrue(r.portable_semantic_evidence_admitted)
         self.assertTrue(r.portable_evidence_reuse_allowed)
         self.assertEqual(r.freshness_disposition, "PRE_CUT_SEMANTIC_GENERATION")
+        self.assertFalse(r.structural_freshness_candidate)
+        self.assertFalse(r.producer_generation_authenticated)
         self.assertFalse(r.semantic_sibling_credit)
         self.assertEqual(r.execution_classification, "EXECUTED_JOB_SUCCESS_OBSERVED")
         self.assertTrue(r.run_identity_exact)
@@ -133,13 +135,31 @@ class ExecutionQualifiedPortableEvidenceAdmissionTests(unittest.TestCase):
         ):
             self.assertFalse(getattr(r, key), key)
 
-    def test_structurally_post_cut_generation_is_fresh_but_still_nonauthorizing(self):
+    def test_structurally_post_cut_generation_is_candidate_not_countable_without_authentication(self):
         r = classify(producer_time="2026-08-31T13:20:00Z")
-        self.assertTrue(r.semantic_sibling_credit)
+        self.assertEqual(r.freshness_disposition, "SEMANTIC_SIBLING")
+        self.assertTrue(r.structural_freshness_candidate)
+        self.assertFalse(r.producer_generation_authenticated)
+        self.assertFalse(r.semantic_sibling_credit)
         self.assertTrue(r.execution_qualified_portable_semantic_evidence)
-        self.assertTrue(r.fresh_semantic_sibling_execution_qualified)
+        self.assertTrue(r.structurally_fresh_but_generation_unauthenticated)
+        self.assertFalse(r.fresh_semantic_sibling_execution_qualified)
         self.assertFalse(r.historical_exact_execution_reuse)
-        self.assertFalse(r.producer_authenticated)
+        self.assertEqual(
+            r.reason,
+            "EXECUTION_QUALIFIED_PORTABLE_EVIDENCE_FRESHNESS_CANDIDATE_GENERATION_UNAUTHENTICATED",
+        )
+
+    def test_caller_supplied_generation_time_never_authenticates_generation(self):
+        for producer_time in (
+            "2026-08-31T13:20:00Z",
+            "2026-09-01T00:00:00Z",
+            "2030-01-01T00:00:00Z",
+        ):
+            r = classify(producer_time=producer_time)
+            self.assertFalse(r.producer_generation_authenticated)
+            self.assertFalse(r.semantic_sibling_credit)
+            self.assertFalse(r.fresh_semantic_sibling_execution_qualified)
 
     def test_receipt_is_deterministic(self):
         self.assertEqual(classify().receipt_digest, classify().receipt_digest)
