@@ -56,19 +56,37 @@ class GLM53G5V2Tests(unittest.TestCase):
         )
 
     def progress(self, decision: str = ALLOW_STATE_TRANSITION, *, alias_hold: bool = False):
+        actual = HOLD_ALIAS_RESOLUTION_REQUIRED if alias_hold else decision
+        initial = actual == ALLOW_INITIAL
         return AliasStableProgressProjection(
             receipt_digest=d("b"),
-            decision=HOLD_ALIAS_RESOLUTION_REQUIRED if alias_hold else decision,
+            decision=actual,
             semantic_fingerprint_digest=d("c"),
             source_sid="sid::glm53",
             provider_state_generation="provider::17",
             evidence_digest=d("d"),
             route_projection_changed=alias_hold,
-            source_sid_same=True,
+            source_sid_same=False if initial else True,
             alias_projection_required=alias_hold,
             alias_projection_consumed=False,
-            raw_decision=ALLOW_CHANGED_AXIS if alias_hold else decision,
-            semantic_decision=None if alias_hold else decision,
+            raw_decision=ALLOW_CHANGED_AXIS if alias_hold else actual,
+            semantic_decision=None if alias_hold else actual,
+        )
+
+    def resolved_alias_progress(self, decision: str = ALLOW_STATE_TRANSITION):
+        return AliasStableProgressProjection(
+            receipt_digest=d("b"),
+            decision=decision,
+            semantic_fingerprint_digest=d("c"),
+            source_sid="sid::glm53",
+            provider_state_generation="provider::18",
+            evidence_digest=d("d"),
+            route_projection_changed=True,
+            source_sid_same=True,
+            alias_projection_required=True,
+            alias_projection_consumed=True,
+            raw_decision=ALLOW_CHANGED_AXIS,
+            semantic_decision=decision,
         )
 
     def version(self):
@@ -124,6 +142,31 @@ class GLM53G5V2Tests(unittest.TestCase):
         with self.assertRaises(ValueError):
             forged.validate()
 
+    def test_same_sid_route_change_cannot_hide_alias_requirement(self):
+        forged = replace(
+            self.progress(ALLOW_CHANGED_AXIS),
+            route_projection_changed=True,
+            source_sid_same=True,
+            alias_projection_required=False,
+            alias_projection_consumed=False,
+        )
+        with self.assertRaisesRegex(ValueError, "ALIAS_REQUIREMENT_MUST_MATCH"):
+            forged.validate()
+
+    def test_alias_resolved_progress_binds_semantic_decision(self):
+        self.resolved_alias_progress(ALLOW_STATE_TRANSITION).validate()
+        forged = replace(
+            self.resolved_alias_progress(ALLOW_STATE_TRANSITION),
+            decision=ALLOW_CHANGED_AXIS,
+        )
+        with self.assertRaisesRegex(ValueError, "MUST_BIND_SEMANTIC_DECISION"):
+            forged.validate()
+
+    def test_initial_progress_cannot_claim_prior_same_sid(self):
+        forged = replace(self.progress(ALLOW_INITIAL), source_sid_same=True)
+        with self.assertRaises(ValueError):
+            forged.validate()
+
     def test_first_no_progress_repeat_requires_axis_change(self):
         r = self.assess(progress=self.progress(CHANGE_AXIS_REQUIRED))
         self.assertEqual(r.disposition, HOLD_RETRIEVAL_AXIS_CHANGE_REQUIRED)
@@ -138,6 +181,10 @@ class GLM53G5V2Tests(unittest.TestCase):
                 r = self.assess(progress=self.progress(decision))
                 self.assertEqual(r.disposition, ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT)
                 self.assertTrue(r.bounded_g3_recompute_attempt_admitted)
+
+    def test_resolved_route_alias_with_true_semantic_transition_can_admit(self):
+        r = self.assess(progress=self.resolved_alias_progress(ALLOW_STATE_TRANSITION))
+        self.assertEqual(r.disposition, ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT)
 
     def test_source_drift_requires_explicit_version_transition(self):
         r = self.assess(g4=self.g4(source_changed=True))
