@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1740
-- **total_bytes**: 27248430
-- **text_tokens_est**: 6802491
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 19, 'operator_script': 9, 'python_module': 1055, 'schema_or_lexicon': 305, 'support_file': 49}
+- **file_count**: 1744
+- **total_bytes**: 27291535
+- **text_tokens_est**: 6813268
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 19, 'operator_script': 9, 'python_module': 1059, 'schema_or_lexicon': 305, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1740,
+  "repo_file_count": 1744,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1296,6 +1296,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_navigation_refresh.py",
     "scripts/aura_prepare_construction_demo_assets.py",
     "scripts/aura_prepare_construction_demo_assets_core.py",
+    "scripts/aura_provenance_corroboration_memory_admission.py",
     "scripts/aura_review_learning_architect_harness.py",
     "scripts/aura_runtime_profile_v2_adapter.py",
     "scripts/aura_runtime_refactor_harness.py",
@@ -1309,6 +1310,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_workcapsule_canonical_temporal_lifecycle_equivalence.py",
     "scripts/aura_workcapsule_causal_artifact_qualified_host_envelope.py",
     "scripts/aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py",
+    "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py",
     "scripts/aura_workcapsule_context_binding.py",
     "scripts/aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
     "scripts/aura_workcapsule_current_recursive_target_raw_slice_binding.py",
@@ -1612,6 +1614,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_prepare_construction_demo_assets_temp_cleanup.py",
     "tests/test_aura_project_context_acceptance.py",
     "tests/test_aura_project_context_compiler.py",
+    "tests/test_aura_provenance_corroboration_memory_admission.py",
     "tests/test_aura_provider_routing.py",
     "tests/test_aura_qdkt_compatibility.py",
     "tests/test_aura_qdkt_compatibility_hardening.py",
@@ -1712,6 +1715,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workcapsule_canonical_temporal_lifecycle_equivalence.py",
     "tests/test_aura_workcapsule_causal_artifact_qualified_host_envelope.py",
     "tests/test_aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py",
+    "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
     "tests/test_aura_workcapsule_context_binding.py",
     "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
     "tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py",
@@ -1805,6 +1809,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_navigation_refresh.py",
     "scripts/aura_prepare_construction_demo_assets.py",
     "scripts/aura_prepare_construction_demo_assets_core.py",
+    "scripts/aura_provenance_corroboration_memory_admission.py",
     "scripts/aura_review_learning_architect_harness.py",
     "scripts/aura_runtime_profile_v2_adapter.py",
     "scripts/aura_runtime_refactor_harness.py",
@@ -1818,6 +1823,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_workcapsule_canonical_temporal_lifecycle_equivalence.py",
     "scripts/aura_workcapsule_causal_artifact_qualified_host_envelope.py",
     "scripts/aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py",
+    "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py",
     "scripts/aura_workcapsule_context_binding.py",
     "scripts/aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
     "scripts/aura_workcapsule_current_recursive_target_raw_slice_binding.py",
@@ -1864,9 +1870,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_agent_arena_github_bridge.py",
     "tests/test_aura_agent_arena_mcp.py",
     "tests/test_aura_agent_arena_review_learning.py",
-    "tests/test_aura_agent_workbench_interface.py",
-    "tests/test_aura_ai_router_dynamic.py",
-    "tests/test_aura_amd_track3_demo.py"
+    "tests/test_aura_agent_workbench_interface.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1880,15 +1884,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1740,
-  "bytes": 27248430,
-  "tokens_est": 6802491,
+  "files": 1744,
+  "bytes": 27291535,
+  "tokens_est": 6813268,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 19,
     "operator_script": 9,
-    "python_module": 1055,
+    "python_module": 1059,
     "schema_or_lexicon": 305,
     "support_file": 49
   }
