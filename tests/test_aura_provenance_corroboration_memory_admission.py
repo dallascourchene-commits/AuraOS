@@ -10,12 +10,13 @@ from scripts.aura_provenance_corroboration_memory_admission import (
     verify_evidence_node,
 )
 
-CONTEXT = {"scope": "arena", "use_class": "retrieval"}
+CONTEXT = {"scope": "arena", "use_class": "retrieval", "accepted_evidence_types": ["*"]}
 
 
 def node(
     artifact_ref: str,
     *,
+    evidence_type: str = "generic-evidence",
     claim_key: str = "claim:alpha",
     claim_value_ref: str = "value:yes",
     world_ref: str = "world:1",
@@ -34,6 +35,7 @@ def node(
             "artifact_ref": artifact_ref,
             "artifact_ref_scheme": scheme,
             "artifact_ref_value": value,
+            "evidence_type": evidence_type,
             "claim_key": claim_key,
             "claim_value_ref": claim_value_ref,
             "world_ref": world_ref,
@@ -56,7 +58,9 @@ class ProvenanceCorroborationMemoryAdmissionTests(unittest.TestCase):
         self.assertEqual(["artifact:a"], out["eligible_artifact_refs"])
         self.assertTrue(out["hard_eligibility_precedes_ranking"])
         self.assertTrue(out["typed_artifact_reference_schemes_preserved"])
+        self.assertTrue(out["typed_evidence_objects_preserved"])
         self.assertFalse(out["reference_scheme_aliasing_performed"])
+        self.assertFalse(out["proof_type_cross_cast_performed"])
         self.assertFalse(out["input_currentness_reproved_by_this_module"])
         self.assertFalse(out["claim_world_semantics_reproved_by_this_module"])
         self.assertFalse(out["semantic_truth_proven"])
@@ -84,6 +88,33 @@ class ProvenanceCorroborationMemoryAdmissionTests(unittest.TestCase):
             ["SCOPE_NOT_ALLOWED", "USE_CLASS_NOT_ALLOWED"],
             out["excluded_by_artifact_ref"]["artifact:blocked"],
         )
+
+    def test_evidence_type_is_hard_gate_before_corroboration(self) -> None:
+        context = {
+            "scope": "arena",
+            "use_class": "retrieval",
+            "accepted_evidence_types": ["host-admission-envelope"],
+        }
+        raw = node("artifact:raw", evidence_type="causal-raw-slice-evidence")
+        host = node("artifact:host", evidence_type="host-admission-envelope", dependency_class_ref="dep:host")
+        out = admit_evidence_nodes([raw, host], context)
+        self.assertEqual(["artifact:host"], out["eligible_artifact_refs"])
+        self.assertEqual(["EVIDENCE_TYPE_NOT_ACCEPTED"], out["excluded_by_artifact_ref"]["artifact:raw"])
+        self.assertEqual([], [r for r in out["relations"] if r["kind"] == "CORROBORATES"])
+
+    def test_cross_type_corroboration_preserves_noninterchangeability_when_policy_accepts_both(self) -> None:
+        context = {
+            "scope": "arena",
+            "use_class": "retrieval",
+            "accepted_evidence_types": ["causal-raw-slice-evidence", "host-admission-envelope"],
+        }
+        raw = node("artifact:raw", evidence_type="causal-raw-slice-evidence", dependency_class_ref="dep:raw")
+        host = node("artifact:host", evidence_type="host-admission-envelope", dependency_class_ref="dep:host")
+        out = admit_evidence_nodes([raw, host], context)
+        edge = [r for r in out["relations"] if r["kind"] == "CORROBORATES"][0]
+        self.assertTrue(edge["evidence_types_distinct"])
+        self.assertFalse(edge["proof_artifacts_interchangeable"])
+        self.assertEqual(["causal-raw-slice-evidence", "host-admission-envelope"], out["corroboration_groups"][0]["evidence_types"])
 
     def test_same_lineage_corroborates_without_increasing_kappa(self) -> None:
         out = admit_evidence_nodes(
@@ -136,6 +167,7 @@ class ProvenanceCorroborationMemoryAdmissionTests(unittest.TestCase):
             "artifact_ref": "aura-proof-artifact-sha256:not-a-digest",
             "artifact_ref_scheme": "aura-proof-artifact-sha256",
             "artifact_ref_value": "not-a-digest",
+            "evidence_type": "generic-evidence",
             "claim_key": "claim:alpha",
             "claim_value_ref": "value:yes",
             "world_ref": "world:1",
