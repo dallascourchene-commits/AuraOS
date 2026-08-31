@@ -1,0 +1,104 @@
+name: Aura WorkCapsule Raw-Owner Stale-Safe Re-entry
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_astge_anchor_hydration.py'
+      - 'tests/test_aura_astge_anchor_hydration.py'
+      - 'scripts/aura_workcapsule_context_binding.py'
+      - 'tests/test_aura_workcapsule_context_binding.py'
+      - 'scripts/aura_workcapsule_reentry_invalidation.py'
+      - 'tests/test_aura_workcapsule_reentry_invalidation.py'
+      - 'scripts/aura_workcapsule_reentry_exact_verifier.py'
+      - 'tests/test_aura_workcapsule_reentry_exact_verifier.py'
+      - 'scripts/aura_workcapsule_source_reentry_observation.py'
+      - 'tests/test_aura_workcapsule_source_reentry_observation.py'
+      - 'scripts/aura_workcapsule_source_bound_exact_reentry.py'
+      - 'tests/test_aura_workcapsule_source_bound_exact_reentry.py'
+      - 'scripts/aura_workcapsule_stale_exact_reentry.py'
+      - 'tests/test_aura_workcapsule_stale_exact_reentry.py'
+      - 'scripts/aura_workcapsule_raw_owner_stale_safe_reentry.py'
+      - 'tests/test_aura_workcapsule_raw_owner_stale_safe_reentry.py'
+      - '.github/workflows/aura-workcapsule-raw-owner-stale-safe-reentry.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  raw-owner-stale-safe-reentry:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR514 raw-source-owner exact re-entry
+        run: |
+          python3 -m py_compile scripts/aura_source_anchor_map.py scripts/aura_astge_anchor_hydration.py
+          python3 -m py_compile scripts/aura_workcapsule_context_binding.py scripts/aura_workcapsule_reentry_invalidation.py scripts/aura_workcapsule_reentry_exact_verifier.py
+          python3 -m py_compile scripts/aura_workcapsule_source_reentry_observation.py scripts/aura_workcapsule_source_bound_exact_reentry.py
+          python3 -m unittest -v tests.test_aura_astge_anchor_hydration
+          python3 -m unittest -v tests.test_aura_workcapsule_context_binding
+          python3 -m unittest -v tests.test_aura_workcapsule_reentry_invalidation
+          python3 -m unittest -v tests.test_aura_workcapsule_reentry_exact_verifier
+          python3 -m unittest -v tests.test_aura_workcapsule_source_reentry_observation
+          python3 -m unittest -v tests.test_aura_workcapsule_source_bound_exact_reentry
+
+      - name: Re-prove PR517 stale-safe exact re-entry
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_stale_exact_reentry.py
+          python3 -m unittest -v tests.test_aura_workcapsule_stale_exact_reentry
+
+      - name: Prove raw-owner stale-safe composition
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_raw_owner_stale_safe_reentry.py
+          python3 -m unittest -v tests.test_aura_workcapsule_raw_owner_stale_safe_reentry
+
+      - name: Assert caller projection and source-witness escape hatches are absent
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_raw_owner_stale_safe_reentry import verify_raw_owner_stale_safe_exact_reentry
+          params = inspect.signature(verify_raw_owner_stale_safe_exact_reentry).parameters
+          assert 'source_observation_receipt' not in params
+          assert 'observed_source_witnesses' not in params
+          assert 'root' in params and 'witness_manifest' in params
+          print('CALLER_SOURCE_OBSERVATION_RECEIPT_ACCEPTED=false')
+          print('CALLER_O8_SOURCE_WITNESSES_ACCEPTED=false')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'RAW_SOURCE_OWNER_BOUND=true'
+          echo 'REJECTED_CURRENTNESS_EXACT_REENTRY_ONLY=true'
+          echo 'EXACT_INPUT_REPRODUCTION_MINTS_SOURCE_CURRENTNESS=false'
+          echo 'STALE_OBSERVED_BYTES_BOUND_TO_SOURCE_GENERATION=false'
+          echo 'UNKNOWN_IDENTITY_GUESSED=false'
+          echo 'REJECTED_ACTIVE_SOURCE_REQUIRES_REENTRY=true'
+          echo 'GRAPH_WITNESS_PRODUCER_AUTHENTICATED=false'
+          echo 'SOURCE_OBSERVATION_PRODUCER_AUTHENTICATED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_INVALIDATION_CONE_PROVEN=false'
+          echo 'SEMANTIC_TRUTH_MINTED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
