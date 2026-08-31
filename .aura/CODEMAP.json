@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788156613,
+  "generated_at_unix": 1788156779,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1778,8 +1778,8 @@
     {
       "ring": "repo",
       "files": 1661,
-      "bytes": 26603809,
-      "tokens_est": 6641308,
+      "bytes": 26604021,
+      "tokens_est": 6641361,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
@@ -159983,6 +159983,7 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -160309,12 +160310,9 @@
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
     ],
-    "python3 -m py_compile": [
+    "python -m unittest": [
       ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
-    ],
-    "python3 -m unittest": [
-      ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml"
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
@@ -160836,6 +160834,9 @@
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
     ],
+    "python3 -m py_compile": [
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
     ],
@@ -160978,9 +160979,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -170510,59 +170508,58 @@
       "path": ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 6139,
-      "lines": 150,
-      "tokens_est": 1535,
+      "bytes": 6351,
+      "lines": 155,
+      "tokens_est": 1588,
       "symbol_count": 0,
       "commands": [
-        "python3 -m py_compile",
-        "python3 -m unittest"
+        "python -m py_compile",
+        "python -m unittest"
       ],
       "command_lines": {
-        "python3 -m py_compile": [
-          79,
-          101
+        "python -m py_compile": [
+          84,
+          107
         ],
-        "python3 -m unittest": [
-          80,
-          104
+        "python -m unittest": [
+          110
         ]
       },
       "topology": {},
-      "digest8": "5c556ebe604a5ae1",
+      "digest8": "fd82bb10dc720a3a",
       "vector": [
-        0.176707,
-        0.055305,
-        0.311598,
-        0.254944,
-        0.084981,
-        -0.225268,
-        -0.141636,
-        -0.241455,
-        -0.22257,
-        0.314296,
-        0.095773,
-        -0.055305,
-        0.022931,
-        -0.190196,
-        -0.314296,
-        -0.033723,
-        0.187498,
-        -0.155125,
-        -0.122751,
-        0.165916,
-        -0.087679,
-        0.076888,
-        0.114657,
-        -0.063399,
-        -0.236059,
-        0.241455,
-        0.130844,
-        -0.168614,
-        -0.195592,
-        0.109262,
-        -0.033723,
-        0.163218
+        0.301319,
+        0.233553,
+        -0.064136,
+        0.262596,
+        -0.056876,
+        0.042354,
+        -0.015732,
+        0.255335,
+        -0.068977,
+        0.008471,
+        -0.020572,
+        0.177887,
+        0.127062,
+        -0.093179,
+        -0.180308,
+        -0.151265,
+        -0.296479,
+        0.265016,
+        -0.015732,
+        -0.194829,
+        0.151265,
+        0.013311,
+        0.243234,
+        -0.163366,
+        -0.131903,
+        0.238393,
+        0.114961,
+        0.076237,
+        0.30374,
+        -0.144004,
+        0.245654,
+        -0.148845
       ]
     },
     {
@@ -289385,8 +289382,8 @@
   },
   "summary": {
     "file_count": 1661,
-    "total_bytes": 26603809,
-    "text_tokens_est": 6641308,
+    "total_bytes": 26604021,
+    "text_tokens_est": 6641361,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
@@ -451335,6 +451332,6 @@
       }
     ],
     "record_fingerprint": "d4c772e0befda8b3c13d6643de3c06f5",
-    "payload_hash": "fbcd6f924bcd9a8110f75505dc5f019a"
+    "payload_hash": "88b0fe45e6e1793725e0899d384a1b3e"
   }
 }
