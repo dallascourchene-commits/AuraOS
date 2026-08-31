@@ -1,0 +1,173 @@
+name: GLM53 Execution Qualified Official Canary Evidence
+
+on:
+  push:
+    branches:
+      - 'arena/q15-*'
+    paths:
+      - 'tools/aura_glm53_execution_qualified_official_canary_evidence.py'
+      - 'tests/test_aura_glm53_execution_qualified_official_canary_evidence.py'
+      - 'tools/aura_execution_qualified_portable_evidence_admission.py'
+      - 'tools/aura_fresh_portable_semantic_evidence_admission.py'
+      - 'tools/arena_portable_semantic_evidence_transfer.py'
+      - 'tools/aura_execution_aware_hyperscale_admission.py'
+      - '.github/workflows/glm53-execution-qualified-official-canary-evidence.yml'
+  pull_request:
+    paths:
+      - 'tools/aura_glm53_execution_qualified_official_canary_evidence.py'
+      - 'tests/test_aura_glm53_execution_qualified_official_canary_evidence.py'
+      - 'tools/aura_execution_qualified_portable_evidence_admission.py'
+      - 'tools/aura_fresh_portable_semantic_evidence_admission.py'
+      - 'tools/arena_portable_semantic_evidence_transfer.py'
+      - 'tools/aura_execution_aware_hyperscale_admission.py'
+      - '.github/workflows/glm53-execution-qualified-official-canary-evidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q15-execution-qualified-official-canary:
+    runs-on: ubuntu-24.04
+    env:
+      Q5_HEAD: 23c8345a1e3d5034ce88bea1ab32c69c1a9cf3f2
+      Q5_RUN: '33400399223'
+      Q5_JOB: '99515030515'
+      Q5_RECEIPT: 00bae035570665f19c40405c8d04002f894f6a7c05c75155ce9e63d8dcf9f01a
+      A7_HEAD: 10481aa76117c24e5fdf7f93752e7820713a8285
+      A7_RUN: '33400287890'
+      A7_JOB: 99514663480
+      Q15_SEMANTIC_HEAD: 8fbfa885ac5abe1ebe6b54e7694b18b2d6ab9cd3
+    steps:
+      - name: Checkout current PR or push head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install exact canary dependency
+        run: python -m pip install --disable-pip-version-check 'numpy==2.3.5'
+
+      - name: Prove exact semantic convergence and bounded descendants
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$Q15_SEMANTIC_HEAD" HEAD
+          python3 - <<'PY'
+          import os, subprocess
+          semantic=os.environ['Q15_SEMANTIC_HEAD']
+          parts=subprocess.check_output(['git','rev-list','--parents','-n','1',semantic], text=True).strip().split()
+          parents=parts[1:]
+          assert sorted(parents)==sorted([os.environ['A7_HEAD'],os.environ['Q5_HEAD']]),parents
+          changed=subprocess.check_output(['git','diff','--name-only',semantic+'..HEAD'], text=True).splitlines()
+          allowed={'.aura/CODEMAP.json','.aura/CODEMAP.md','.github/workflows/glm53-execution-qualified-official-canary-evidence.yml'}
+          unexpected=[p for p in changed if p not in allowed]
+          assert not unexpected,unexpected
+          print('Q15_TRUE_TWO_PARENT_SEMANTIC_CONVERGENCE=true')
+          print('Q15_DESCENDANT_PATHS='+','.join(changed))
+          PY
+
+      - name: Revalidate exact A7 hosted parent
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          req=urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{os.environ['A7_RUN']}",
+              headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+          )
+          with urllib.request.urlopen(req,timeout=30) as r: run=json.load(r)
+          assert run['status']=='completed' and run['conclusion']=='success',run
+          assert run['head_sha']==os.environ['A7_HEAD'],run['head_sha']
+          print('Q15_A7_EXACT_GREEN=true')
+          PY
+
+      - name: Revalidate exact Q5 provider run and job
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          def get(url):
+              with urllib.request.urlopen(urllib.request.Request(url,headers=headers),timeout=30) as r:
+                  return json.load(r)
+          run=get(f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{os.environ['Q5_RUN']}")
+          jobs=get(f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{os.environ['Q5_RUN']}/jobs?per_page=100")['jobs']
+          assert run['status']=='completed' and run['conclusion']=='success',run
+          assert run['head_sha']==os.environ['Q5_HEAD'],run['head_sha']
+          exact=[j for j in jobs if str(j['id'])==os.environ['Q5_JOB']]
+          assert len(exact)==1 and exact[0]['status']=='completed' and exact[0]['conclusion']=='success',exact
+          portable_run={'id':run['id'],'name':run['name'],'head_sha':run['head_sha'],'status':run['status'],'conclusion':run['conclusion']}
+          portable_jobs=[{'id':j['id'],'status':j['status'],'conclusion':j['conclusion']} for j in exact]
+          json.dump({'run':portable_run,'jobs':portable_jobs},open('/tmp/q5-provider.json','w'),sort_keys=True)
+          print('Q15_Q5_EXACT_PROVIDER_EXECUTION=true')
+          PY
+
+      - name: Re-execute PR671 exact official-source canary in isolation
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/q5-exact "$Q5_HEAD"
+          (cd /tmp/q5-exact && python -m tools.quantization.aura_glm53_official_equal_rate_e8_canary > /tmp/q5-live.json)
+          python3 - <<'PY'
+          import json, os
+          r=json.load(open('/tmp/q5-live.json',encoding='utf-8'))
+          assert r['receipt_digest']==os.environ['Q5_RECEIPT'],r['receipt_digest']
+          assert r['representative_canary_scope_only'] is True
+          assert r['aggregate_outcome']=='E8_WIN'
+          assert r['total_official_weights_observed']==512
+          print('Q15_Q5_LIVE_RECEIPT_EXACT=true')
+          PY
+
+      - name: Reprove A7 and Q15 adversarials
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/aura_glm53_execution_qualified_official_canary_evidence.py tests/test_aura_glm53_execution_qualified_official_canary_evidence.py
+          python -m unittest -v tests.test_aura_execution_qualified_portable_evidence_admission
+          python -m unittest -v tests.test_aura_glm53_execution_qualified_official_canary_evidence
+
+      - name: Bind live Q5 receipt to exact provider execution through A7
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from dataclasses import asdict
+          from tools import aura_glm53_execution_qualified_official_canary_evidence as q15
+          obs=json.load(open('/tmp/q5-live.json',encoding='utf-8'))
+          provider=json.load(open('/tmp/q5-provider.json',encoding='utf-8'))
+          r=q15.classify_official_canary_portable_evidence(q5_observation=obs,run=provider['run'],jobs=provider['jobs'])
+          assert r.execution_qualified_portable_evidence is True
+          assert r.historical_exact_execution_reuse is True
+          assert r.semantic_sibling_credit is False
+          assert r.fresh_semantic_sibling_execution_qualified is False
+          assert r.representative_canary_scope_only is True
+          for key in ('generalized_e8_superiority_proven','full_tensor_quantized','whole_model_quantized','glm_quality_proven','runtime_performance_proven','c2_execution_authority_granted','producer_authenticated','effect_authority_granted','semantic_k27_authority_minted','native_private_transformer_kv_accessed','gate10_promoted'):
+              assert getattr(r,key) is False,key
+          body=asdict(r); body['receipt_digest']=r.receipt_digest
+          json.dump(body,open('/tmp/q15-receipt.json','w'),sort_keys=True,indent=2)
+          print('Q15_EXECUTION_QUALIFIED_OFFICIAL_CANARY=true')
+          print('Q15_HISTORICAL_EXACT_EXECUTION_REUSE=true')
+          print('Q15_SEMANTIC_SIBLING_CREDIT=false')
+          print('Q15_GENERALIZED_E8_SUPERIORITY_PROVEN=false')
+          print('Q15_C2_EXECUTION_AUTHORITY_GRANTED=false')
+          print('Q15_RECEIPT_DIGEST='+r.receipt_digest)
+          PY
+
+      - name: Preserve bounded Q15 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: q15-execution-qualified-official-canary-receipt
+          path: /tmp/q15-receipt.json
+          if-no-files-found: error
+          retention-days: 30
