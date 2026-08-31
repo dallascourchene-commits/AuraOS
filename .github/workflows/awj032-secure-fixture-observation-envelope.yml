@@ -53,32 +53,38 @@ jobs:
           echo 'AIRLLM_PR311_EXACT=true'
           echo 'W4_PR408_EXACT=true'
 
-      - name: Reexecute source-controlled parent contracts
+      - name: Reexecute each parent in its exact owned source world
         shell: bash
         run: |
           set -euo pipefail
-          cd tools/awj032
-          python -m py_compile \
-            airllm_runtime_hard_false.py \
-            airllm_tiny_fixture_probe.py \
-            glm53_w4_host_preflight.py \
-            airllm_secure_fixture_observation_envelope.py \
-            test_airllm_secure_fixture_observation_envelope.py
+          git worktree add --detach /tmp/awj032-airllm "$AIRLLM_SOURCE_HEAD"
+          git worktree add --detach /tmp/awj032-w4 "$W4_SOURCE_HEAD"
+
+          cd /tmp/awj032-airllm/tools/awj032
+          python -m py_compile airllm_runtime_hard_false.py airllm_tiny_fixture_probe.py
           python -m unittest test_airllm_runtime_hard_false -v
+
+          cd /tmp/awj032-w4/tools/awj032
+          python -m py_compile glm53_w4_host_preflight.py test_glm53_w4_host_preflight.py
           python -m unittest test_glm53_w4_host_preflight -v
 
-      - name: Run cross-plane adversarial envelope contract
+          echo 'PARENT_CONTRACTS_REEXECUTED_IN_EXACT_OWNED_WORLDS=true'
+
+      - name: Compile and run cross-plane adversarial envelope contract
         shell: bash
         run: |
           set -euo pipefail
-          cd tools/awj032
+          cd "$GITHUB_WORKSPACE/tools/awj032"
+          python -m py_compile \
+            airllm_secure_fixture_observation_envelope.py \
+            test_airllm_secure_fixture_observation_envelope.py
           python -m unittest test_airllm_secure_fixture_observation_envelope -v
 
       - name: Independently prove HOLD and exact-bound states
         shell: bash
         run: |
           set -euo pipefail
-          cd tools/awj032
+          cd "$GITHUB_WORKSPACE/tools/awj032"
           python - <<'PY'
           from dataclasses import replace
           from airllm_secure_fixture_observation_envelope import BOUND, HOLD, bind_secure_fixture_observation
@@ -116,8 +122,10 @@ jobs:
           print('SECURE_FIXTURE_OBSERVATION_ENVELOPE_PROVEN=true')
           PY
 
-      - name: Consequence ceiling
+      - name: W3 proof-topology scar and consequence ceiling
         run: |
+          echo 'ParentContractMustExecuteInItsOwnedDependencyWorld'
+          echo 'BridgeCheckoutNeedNotVendorParentDependencyClosure'
           echo 'HardFalseFixtureRuntime!=PhysicalObservation'
           echo 'PhysicalObservationMustBeExactOperationBoundAndBackendOwned'
           echo 'TinyLlamaFixture!=GLM53PerformanceEvidence'
