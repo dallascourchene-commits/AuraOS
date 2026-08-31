@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788207460,
+  "generated_at_unix": 1788207733,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1643,
+    "repo_file_count": 1644,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-retrieval-progress-guard-exact-reproof.yml",
       ".github/workflows/aura-retrieval-progress-guard.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -1759,16 +1760,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1643,
-      "bytes": 26434113,
-      "tokens_est": 6598880,
+      "files": 1644,
+      "bytes": 26436890,
+      "tokens_est": 6599574,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 999,
-        "schema_or_lexicon": 272,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -158869,6 +158870,13 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-retrieval-progress-guard-exact-reproof.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/aura-retrieval-progress-guard-exact-reproof.yml"
+    ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
     ],
@@ -159431,9 +159439,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -168024,50 +168029,107 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-retrieval-progress-guard-exact-reproof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2684,
+      "lines": 61,
+      "tokens_est": 671,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          41
+        ],
+        "python3 -m unittest": [
+          42
+        ]
+      },
+      "topology": {},
+      "digest8": "8dba3b0f0d799b3a",
+      "vector": [
+        0.057497,
+        -0.100286,
+        0.322252,
+        0.022731,
+        0.014709,
+        -0.292835,
+        0.110983,
+        -0.31423,
+        0.15912,
+        0.255395,
+        -0.070869,
+        -0.260744,
+        0.196561,
+        0.300858,
+        -0.169818,
+        0.00936,
+        -0.161795,
+        0.076217,
+        -0.100286,
+        0.057497,
+        0.244698,
+        -0.086915,
+        -0.06552,
+        -0.124355,
+        0.212606,
+        -0.340972,
+        -0.161795,
+        0.145749,
+        0.02808,
+        0.012034,
+        -0.143075,
+        0.02808
+      ]
+    },
+    {
       "path": ".github/workflows/aura-retrieval-progress-guard.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 1278,
-      "lines": 39,
-      "tokens_est": 320,
+      "bytes": 1371,
+      "lines": 42,
+      "tokens_est": 343,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6be79e9bcef1f352",
+      "digest8": "a595d73a120cfba4",
       "vector": [
-        0.158779,
-        0.038054,
-        0.27163,
-        -0.111539,
-        0.266381,
-        -0.148281,
-        0.182399,
-        0.090543,
-        0.066923,
-        -0.303124,
-        0.051177,
-        -0.014434,
-        -0.303124,
-        0.310997,
-        -0.253259,
-        0.211268,
-        0.003937,
-        -0.198146,
-        -0.009186,
-        -0.077421,
-        -0.316246,
-        -0.10629,
-        0.137783,
-        0.122037,
-        -0.263757,
-        -0.203395,
-        -0.05905,
-        0.087919,
-        -0.166652,
-        0.087919,
-        0.014434,
-        -0.087919
+        0.00128,
+        0.088334,
+        -0.285485,
+        0.090894,
+        0.042247,
+        0.244518,
+        0.172827,
+        0.165146,
+        -0.090894,
+        -0.096015,
+        -0.003841,
+        -0.113938,
+        0.25732,
+        -0.12674,
+        0.288045,
+        -0.039686,
+        -0.211233,
+        -0.311089,
+        0.167706,
+        -0.049928,
+        -0.032005,
+        0.021763,
+        -0.231716,
+        0.280364,
+        0.075532,
+        0.244518,
+        -0.244518,
+        -0.057609,
+        0.277804,
+        -0.093455,
+        0.180508,
+        0.183069
       ]
     },
     {
@@ -287118,16 +287180,16 @@
     }
   },
   "summary": {
-    "file_count": 1643,
-    "total_bytes": 26434113,
-    "text_tokens_est": 6598880,
+    "file_count": 1644,
+    "total_bytes": 26436890,
+    "text_tokens_est": 6599574,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 999,
-      "schema_or_lexicon": 272,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287273,6 +287335,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-retrieval-progress-guard-exact-reproof.yml",
       ".github/workflows/aura-retrieval-progress-guard.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -447641,6 +447704,6 @@
       }
     ],
     "record_fingerprint": "5406d8e4fae156cc3b875637949b6e1a",
-    "payload_hash": "bee5220405b9f397800a0494457cc2ef"
+    "payload_hash": "3f52901462e843e5289f5dc2260f867a"
   }
 }
