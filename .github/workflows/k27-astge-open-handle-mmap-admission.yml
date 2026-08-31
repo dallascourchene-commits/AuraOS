@@ -1,0 +1,60 @@
+name: K27 ASTGE open-handle mmap admission
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - ".github/workflows/k27-astge-open-handle-mmap-admission.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: k27-astge-mmap-admission-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  mmap-admission:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact candidate head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify Rust toolchain
+        run: |
+          rustc --version
+          cargo --version
+
+      - name: Test inherited generation admission and open-handle membrane
+        run: cargo test --locked --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets --verbose
+
+      - name: Clippy all native targets fail closed
+        run: cargo clippy --locked --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+
+      - name: Emit claim ceiling
+        run: |
+          echo "OPEN_HANDLE_IDENTITY_BOUND=true"
+          echo "PATH_SWAP_REDIRECT_REJECTED_BY_DESIGN=true"
+          echo "PRE_MAP_IDENTITY_REVALIDATION=true"
+          echo "PERMISSION_BITS_IMMUTABILITY_PROVEN=false"
+          echo "LIFETIME_IMMUTABILITY_SELF_PROVEN=false"
+          echo "MMAP_IMPLEMENTED=false"
+          echo "HOSTILE_PROCESS_MMAP_SAFETY_PROVEN=false"
+          echo "PHYSICAL_CRASH_DURABILITY_PROVEN=false"
+          echo "READ_SEEK_FALLBACK_RETAINED=true"
+          echo "AURAOS_RUNTIME_INTEGRATION_PROVEN=false"
+          echo "EXTERNAL_EFFECT_AUTHORIZED=false"
