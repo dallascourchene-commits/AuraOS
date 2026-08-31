@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788200518,
+  "generated_at_unix": 1788200620,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1647,
+    "repo_file_count": 1648,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1509,6 +1509,7 @@
       "tests/test_aura_model_connectome_bridge.py",
       "tests/test_aura_music_mitosis_adapter.py",
       "tests/test_aura_native_cockpit_contract.py",
+      "tests/test_aura_navigator_k27_collision_router.py",
       "tests/test_aura_node_inspector.py",
       "tests/test_aura_pascal_spatial_presentation.py",
       "tests/test_aura_persistence_integrations.py",
@@ -1763,15 +1764,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1647,
-      "bytes": 26462817,
-      "tokens_est": 6606058,
+      "files": 1648,
+      "bytes": 26470889,
+      "tokens_est": 6608076,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1002,
+        "python_module": 1003,
         "schema_or_lexicon": 272,
         "support_file": 49
       }
@@ -113529,6 +113530,14 @@
         "signature_hash": "c3d68e6bce1db336"
       },
       {
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#function:candidate:873b162c73c4ef34",
+        "signature_hash": "204a301089f7e8c6"
+      },
+      {
         "file": "tests/test_aura_shadow_model_router.py",
         "kind": "function",
         "line": 42,
@@ -124374,6 +124383,14 @@
         "line": 12,
         "end_line": 13,
         "semantic_id": "tests/test_aura_collision_safe_rebase.py#function:h:e36165a8504e83f6",
+        "signature_hash": "ad123cb640a00f07"
+      },
+      {
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#function:h:5a0ff51f4d7cf291",
         "signature_hash": "ad123cb640a00f07"
       }
     ],
@@ -142379,6 +142396,96 @@
         "signature_hash": "ea5d38aab5faf9ef"
       }
     ],
+    "owner": [
+      {
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 33,
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#function:owner:201a020543cd8c51",
+        "signature_hash": "e312f27a2c71eed8"
+      }
+    ],
+    "NavigatorK27CollisionRouterTests": [
+      {
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 194,
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#class:NavigatorK27CollisionRouterTests:4eea14c81a987862",
+        "signature_hash": "2c451e01ca1cf183"
+      }
+    ],
+    "NavigatorK27CollisionRouterTests.test_different_k27_paths_do_not_override_semantic_duplicate": [
+      {
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 65,
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_different_k27_paths_do_not_override_semantic_duplicate:dd368d8c648394c3",
+        "signature_hash": "f1d283c3f36f6c88"
+      }
+    ],
+    "NavigatorK27CollisionRouterTests.test_same_k27_path_does_not_override_semantic_orthogonality": [
+      {
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_same_k27_path_does_not_override_semantic_orthogonality:62391e99231bde4e",
+        "signature_hash": "8a2de726a67602c9"
+      }
+    ],
+    "NavigatorK27CollisionRouterTests.test_ancestor_descendant_locality_can_still_route_semantic_addendum": [
+      {
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 109,
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_ancestor_descendant_locality_can_still_route_semantic_addendum:3f9f2030703237c2",
+        "signature_hash": "cca4980288c68a98"
+      }
+    ],
+    "NavigatorK27CollisionRouterTests.test_stale_owner_holds_even_when_k27_is_distinguished": [
+      {
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 130,
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_stale_owner_holds_even_when_k27_is_distinguished:d85cb03f4cfacc90",
+        "signature_hash": "5513bd2ded92b18a"
+      }
+    ],
+    "NavigatorK27CollisionRouterTests.test_claim_and_effect_ceiling_stays_false": [
+      {
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 155,
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_claim_and_effect_ceiling_stays_false:48de01ab9f20946a",
+        "signature_hash": "1de01639426492f1"
+      }
+    ],
+    "NavigatorK27CollisionRouterTests.test_same_owner_and_candidate_reference_is_rejected": [
+      {
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 168,
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_same_owner_and_candidate_reference_is_rejected:01d42f9624e220fa",
+        "signature_hash": "4d517121d23b2352"
+      }
+    ],
+    "NavigatorK27CollisionRouterTests.test_receipt_is_deterministic_under_claim_order_noise": [
+      {
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "kind": "method",
+        "line": 170,
+        "end_line": 194,
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_receipt_is_deterministic_under_claim_order_noise:980e5a10d85e77e3",
+        "signature_hash": "7ec4faaeb8bd4e92"
+      }
+    ],
     "TestInspectNode": [
       {
         "file": "tests/test_aura_node_inspector.py",
@@ -157862,7 +157969,7 @@
         "file": "tools/aura_navigator_k27_collision_router.py",
         "kind": "function",
         "line": 158,
-        "end_line": 235,
+        "end_line": 239,
         "semantic_id": "tools/aura_navigator_k27_collision_router.py#function:route_k27_collision:ad8d387858b09336",
         "signature_hash": "5229caab6cca8f19"
       }
@@ -257600,6 +257707,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_navigator_k27_collision_router.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8051,
+      "lines": 199,
+      "tokens_est": 2013,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "08ba39ecb88819ac",
+      "vector": [
+        0.13476,
+        -0.130378,
+        -0.058067,
+        -0.082171,
+        0.178585,
+        -0.189541,
+        -0.257469,
+        0.250895,
+        0.058067,
+        -0.226792,
+        0.02739,
+        -0.185158,
+        -0.2246,
+        0.231174,
+        -0.112848,
+        -0.023008,
+        -0.253086,
+        0.147908,
+        -0.228983,
+        0.235557,
+        -0.261851,
+        0.018625,
+        -0.033964,
+        -0.082171,
+        0.193923,
+        0.064641,
+        0.180776,
+        -0.202688,
+        -0.211453,
+        -0.213644,
+        0.248704,
+        0.110657
+      ]
+    },
+    {
       "path": "tests/test_aura_node_inspector.py",
       "role": "python_module",
       "binary": false,
@@ -263666,47 +263820,47 @@
       "path": "tools/aura_navigator_k27_collision_router.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 9712,
-      "lines": 253,
-      "tokens_est": 2428,
+      "bytes": 9733,
+      "lines": 257,
+      "tokens_est": 2433,
       "symbol_count": 7,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "a03a8ef4dd034589",
+      "digest8": "ce60c3d28cebacd1",
       "vector": [
-        -0.33987,
-        -0.155717,
-        0.028435,
-        -0.090722,
-        -0.310081,
-        0.023019,
-        0.226129,
-        0.163842,
-        0.004062,
-        0.047392,
-        0.320913,
-        0.104263,
-        -0.055517,
-        -0.329038,
-        -0.245086,
-        0.20988,
-        -0.150301,
-        -0.106971,
-        -0.29654,
-        -0.063641,
-        -0.004062,
-        0.301956,
-        -0.134052,
-        0.109679,
-        -0.177382,
-        -0.025727,
-        -0.112387,
-        0.039268,
-        0.144885,
-        -0.13676,
-        0.0501,
-        0.096139
+        -0.269688,
+        0.077224,
+        -0.022573,
+        -0.196029,
+        -0.215038,
+        -0.200781,
+        -0.070095,
+        -0.184148,
+        0.174644,
+        0.181772,
+        -0.27444,
+        -0.041582,
+        -0.158011,
+        0.253056,
+        -0.150883,
+        -0.04871,
+        -0.224542,
+        -0.248303,
+        -0.020197,
+        -0.243551,
+        -0.153259,
+        -0.072471,
+        -0.288697,
+        0.224542,
+        -0.110489,
+        -0.096232,
+        0.010692,
+        0.067719,
+        -0.146131,
+        0.17702,
+        0.298202,
+        -0.013069
       ]
     },
     {
@@ -287708,15 +287862,15 @@
     }
   },
   "summary": {
-    "file_count": 1647,
-    "total_bytes": 26462817,
-    "text_tokens_est": 6606058,
+    "file_count": 1648,
+    "total_bytes": 26470889,
+    "text_tokens_est": 6608076,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1002,
+      "python_module": 1003,
       "schema_or_lexicon": 272,
       "support_file": 49
     },
@@ -289236,6 +289390,7 @@
       "tests/test_aura_model_connectome_bridge.py",
       "tests/test_aura_music_mitosis_adapter.py",
       "tests/test_aura_native_cockpit_contract.py",
+      "tests/test_aura_navigator_k27_collision_router.py",
       "tests/test_aura_node_inspector.py",
       "tests/test_aura_pascal_spatial_presentation.py",
       "tests/test_aura_persistence_integrations.py",
@@ -430844,6 +430999,116 @@
         "file_digest8": "d44b09e1fecebab0"
       },
       {
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#class:NavigatorK27CollisionRouterTests:4eea14c81a987862",
+        "name": "NavigatorK27CollisionRouterTests",
+        "kind": "class",
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "line": 46,
+        "end_line": 194,
+        "signature_hash": "2c451e01ca1cf183",
+        "file_digest8": "08ba39ecb88819ac"
+      },
+      {
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#function:candidate:873b162c73c4ef34",
+        "name": "candidate",
+        "kind": "function",
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "line": 36,
+        "end_line": 43,
+        "signature_hash": "204a301089f7e8c6",
+        "file_digest8": "08ba39ecb88819ac"
+      },
+      {
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#function:h:5a0ff51f4d7cf291",
+        "name": "h",
+        "kind": "function",
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "ad123cb640a00f07",
+        "file_digest8": "08ba39ecb88819ac"
+      },
+      {
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#function:owner:201a020543cd8c51",
+        "name": "owner",
+        "kind": "function",
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "line": 27,
+        "end_line": 33,
+        "signature_hash": "e312f27a2c71eed8",
+        "file_digest8": "08ba39ecb88819ac"
+      },
+      {
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_ancestor_descendant_locality_can_still_route_semantic_addendum:3f9f2030703237c2",
+        "name": "NavigatorK27CollisionRouterTests.test_ancestor_descendant_locality_can_still_route_semantic_addendum",
+        "kind": "method",
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "line": 89,
+        "end_line": 109,
+        "signature_hash": "cca4980288c68a98",
+        "file_digest8": "08ba39ecb88819ac"
+      },
+      {
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_claim_and_effect_ceiling_stays_false:48de01ab9f20946a",
+        "name": "NavigatorK27CollisionRouterTests.test_claim_and_effect_ceiling_stays_false",
+        "kind": "method",
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "line": 132,
+        "end_line": 155,
+        "signature_hash": "1de01639426492f1",
+        "file_digest8": "08ba39ecb88819ac"
+      },
+      {
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_different_k27_paths_do_not_override_semantic_duplicate:dd368d8c648394c3",
+        "name": "NavigatorK27CollisionRouterTests.test_different_k27_paths_do_not_override_semantic_duplicate",
+        "kind": "method",
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "line": 47,
+        "end_line": 65,
+        "signature_hash": "f1d283c3f36f6c88",
+        "file_digest8": "08ba39ecb88819ac"
+      },
+      {
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_receipt_is_deterministic_under_claim_order_noise:980e5a10d85e77e3",
+        "name": "NavigatorK27CollisionRouterTests.test_receipt_is_deterministic_under_claim_order_noise",
+        "kind": "method",
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "line": 170,
+        "end_line": 194,
+        "signature_hash": "7ec4faaeb8bd4e92",
+        "file_digest8": "08ba39ecb88819ac"
+      },
+      {
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_same_k27_path_does_not_override_semantic_orthogonality:62391e99231bde4e",
+        "name": "NavigatorK27CollisionRouterTests.test_same_k27_path_does_not_override_semantic_orthogonality",
+        "kind": "method",
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "line": 67,
+        "end_line": 87,
+        "signature_hash": "8a2de726a67602c9",
+        "file_digest8": "08ba39ecb88819ac"
+      },
+      {
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_same_owner_and_candidate_reference_is_rejected:01d42f9624e220fa",
+        "name": "NavigatorK27CollisionRouterTests.test_same_owner_and_candidate_reference_is_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "line": 157,
+        "end_line": 168,
+        "signature_hash": "4d517121d23b2352",
+        "file_digest8": "08ba39ecb88819ac"
+      },
+      {
+        "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionRouterTests.test_stale_owner_holds_even_when_k27_is_distinguished:d85cb03f4cfacc90",
+        "name": "NavigatorK27CollisionRouterTests.test_stale_owner_holds_even_when_k27_is_distinguished",
+        "kind": "method",
+        "file": "tests/test_aura_navigator_k27_collision_router.py",
+        "line": 111,
+        "end_line": 130,
+        "signature_hash": "5513bd2ded92b18a",
+        "file_digest8": "08ba39ecb88819ac"
+      },
+      {
         "semantic_id": "tests/test_aura_node_inspector.py#class:TestExpandNode:03120896b6cc5a89",
         "name": "TestExpandNode",
         "kind": "class",
@@ -447321,7 +447586,7 @@
         "line": 60,
         "end_line": 120,
         "signature_hash": "a4e9948602f082dc",
-        "file_digest8": "a03a8ef4dd034589"
+        "file_digest8": "ce60c3d28cebacd1"
       },
       {
         "semantic_id": "tools/aura_navigator_k27_collision_router.py#class:NavigatorRouteDisposition:146928b5c279134f",
@@ -447331,7 +447596,7 @@
         "line": 52,
         "end_line": 56,
         "signature_hash": "3114c1a61291041c",
-        "file_digest8": "a03a8ef4dd034589"
+        "file_digest8": "ce60c3d28cebacd1"
       },
       {
         "semantic_id": "tools/aura_navigator_k27_collision_router.py#function:_hydration_plan:fc4927c48cb96599",
@@ -447341,7 +447606,7 @@
         "line": 127,
         "end_line": 155,
         "signature_hash": "5bd0b82b251b359d",
-        "file_digest8": "a03a8ef4dd034589"
+        "file_digest8": "ce60c3d28cebacd1"
       },
       {
         "semantic_id": "tools/aura_navigator_k27_collision_router.py#function:_path_text:87dc1e79dc5d3be3",
@@ -447351,7 +447616,7 @@
         "line": 123,
         "end_line": 124,
         "signature_hash": "960b0911055dd83d",
-        "file_digest8": "a03a8ef4dd034589"
+        "file_digest8": "ce60c3d28cebacd1"
       },
       {
         "semantic_id": "tools/aura_navigator_k27_collision_router.py#function:route_k27_collision:ad8d387858b09336",
@@ -447359,9 +447624,9 @@
         "kind": "function",
         "file": "tools/aura_navigator_k27_collision_router.py",
         "line": 158,
-        "end_line": 235,
+        "end_line": 239,
         "signature_hash": "5229caab6cca8f19",
-        "file_digest8": "a03a8ef4dd034589"
+        "file_digest8": "ce60c3d28cebacd1"
       },
       {
         "semantic_id": "tools/aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionReceiptV1.receipt_digest:d7e2b1c372117c58",
@@ -447371,7 +447636,7 @@
         "line": 100,
         "end_line": 112,
         "signature_hash": "1a6a05eb2610184a",
-        "file_digest8": "a03a8ef4dd034589"
+        "file_digest8": "ce60c3d28cebacd1"
       },
       {
         "semantic_id": "tools/aura_navigator_k27_collision_router.py#method:NavigatorK27CollisionReceiptV1.to_dict:dfabcfa144464702",
@@ -447381,7 +447646,7 @@
         "line": 114,
         "end_line": 120,
         "signature_hash": "5c1a69a9659e2089",
-        "file_digest8": "a03a8ef4dd034589"
+        "file_digest8": "ce60c3d28cebacd1"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -448634,7 +448899,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "d3c05e4b22124a0459a3e5d200f52be1",
-    "payload_hash": "e1abc4b20f5c666991b15eb7e3b548b0"
+    "record_fingerprint": "10c805a4b4560a1043ee2550c5758fcf",
+    "payload_hash": "3e029c9d319491ed57bbba6aecee3cde"
   }
 }
