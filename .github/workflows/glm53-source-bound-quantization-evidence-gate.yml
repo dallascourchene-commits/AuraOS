@@ -5,6 +5,8 @@ on:
     paths:
       - 'tools/quantization/aura_glm53_source_bound_quantization_evidence_gate.py'
       - 'tools/quantization/test_aura_glm53_source_bound_quantization_evidence_gate.py'
+      - 'tools/quantization/aura_glm53_historical_official_w2_bridge.py'
+      - 'tests/test_aura_glm53_historical_official_w2_bridge.py'
       - 'tools/quantization/aura_glm53_official_source_admission.py'
       - 'tools/quantization/aura_glm53_quantization_evidence_transfer.py'
       - '.github/workflows/glm53-source-bound-quantization-evidence-gate.yml'
@@ -22,23 +24,34 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Assert exact Q6 base and materialized Q5 producer
+      - name: Assert exact Q6 base and materialized source owners
         run: |
           set -euo pipefail
           Q6=4137aabd972feff9c4412bb4786ef8fd4de207e0
           Q5_BLOB=7ed09c57699fe303f555a3b6bdaadb791c64223f
+          BRIDGE_BLOB=e4697103ac693996526a646ae46ff4bb35005397
           git merge-base --is-ancestor "$Q6" HEAD
           test "$(git rev-parse HEAD:tools/quantization/aura_glm53_official_source_admission.py)" = "$Q5_BLOB"
+          test "$(git rev-parse HEAD:tools/quantization/aura_glm53_historical_official_w2_bridge.py)" = "$BRIDGE_BLOB"
           python - <<'PY'
           from tools.quantization.aura_glm53_official_source_admission import current_public_state
           from tools.quantization.aura_glm53_source_bound_quantization_evidence_gate import (
-              Q5_CURRENT_SOURCE_STATE_DIGEST, Q5_OWNER_BLOB_SHA, VERSION,
+              HISTORICAL_BRIDGE_OWNER_BLOB_SHA,
+              HISTORICAL_BRIDGE_VERSION,
+              Q5_CURRENT_SOURCE_STATE_DIGEST,
+              Q5_OWNER_BLOB_SHA,
+              VERSION,
+              _current_historical_bridge,
           )
           source = current_public_state()
+          bridge = _current_historical_bridge()
           assert source.digest() == Q5_CURRENT_SOURCE_STATE_DIGEST
           assert Q5_OWNER_BLOB_SHA == '7ed09c57699fe303f555a3b6bdaadb791c64223f'
-          assert VERSION == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V3'
+          assert HISTORICAL_BRIDGE_OWNER_BLOB_SHA == 'e4697103ac693996526a646ae46ff4bb35005397'
+          assert bridge.version == HISTORICAL_BRIDGE_VERSION
+          assert VERSION == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V4'
           print('Q5_EXACT_PRODUCER_TRAVERSAL=true')
+          print('HISTORICAL_BRIDGE_PRODUCER_TRAVERSAL=true')
           PY
 
       - name: Revalidate exact Q5 and Q6 hosted runs
@@ -108,6 +121,24 @@ jobs:
           grep -q 'OFFICIAL_INDEX_BYTES_AND_REPRESENTATIVE_HEADERS_NOT_MATERIALIZED' /tmp/q5-state.json
           grep -q '"header_trial_eligible": false' /tmp/q5-state.json
 
+      - name: Re-prove materialized historical bridge owner
+        run: |
+          set -euo pipefail
+          python -m unittest tests.test_aura_glm53_historical_official_w2_bridge -v
+          python tools/quantization/aura_glm53_historical_official_w2_bridge.py | tee /tmp/historical-bridge.json
+          python - <<'PY'
+          import json
+          x = json.load(open('/tmp/historical-bridge.json'))
+          assert x['historical_raw_index_verification_observed'] is True
+          assert x['historical_representative_headers_observed'] is True
+          assert x['historical_fp8_companions_bound'] is True
+          assert x['current_consumer_raw_index_bytes_materialized'] is False
+          assert x['current_consumer_raw_header_prefixes_materialized'] is False
+          assert x['all_layers_experts_uniformity_proven'] is False
+          assert x['source_tensor_payload_bound'] is False
+          print('HISTORICAL_BRIDGE_OWNER_REPROVED=true')
+          PY
+
       - name: Re-prove Q6 and Q7 adversarials
         run: |
           set -euo pipefail
@@ -121,8 +152,10 @@ jobs:
           python - <<'PY'
           import json
           x = json.load(open('/tmp/q7.json'))
-          assert x['version'] == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V3'
+          assert x['version'] == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V4'
           assert x['q5_source_owner_blob'] == '7ed09c57699fe303f555a3b6bdaadb791c64223f'
+          assert x['historical_bridge_owner_blob'] == 'e4697103ac693996526a646ae46ff4bb35005397'
+          assert len(x['historical_bridge_digest']) == 64
           assert x['disposition'] == 'HOLD_CURRENT_SOURCE_TRANSPORT_AND_REPRESENTATION_EVIDENCE'
           assert x['historical_official_index_relation_observed'] is True
           assert x['historical_official_headers_observed'] is True
@@ -151,6 +184,7 @@ jobs:
           ):
               assert x[key] is False, key
           print('COPIED_PARENT_STATE_NE_PRODUCER_TRAVERSAL=true')
+          print('Q7_TRAVERSES_MATERIALIZED_HISTORICAL_BRIDGE_OWNER=true')
           print('HISTORICAL_HEADER_PROOF_NE_CURRENT_BYTE_RESIDENCY=true')
           print('REPRESENTATIVE_HEADER_PROOF_NE_GLOBAL_LAYOUT_UNIFORMITY=true')
           print('SOURCE_IDENTITY_NE_CURRENT_SOURCE_BYTES=true')
