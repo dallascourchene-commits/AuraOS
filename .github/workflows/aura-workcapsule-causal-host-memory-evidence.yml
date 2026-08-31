@@ -1,0 +1,196 @@
+name: Aura WorkCapsule Causal Host Memory Evidence
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  O42_SHA: 69e7af0f7190f841d459890343b8a96f6961764a
+  PR581_SHA: 45f06a317456ee2ac31c1bfdcd7b3e4f1058ad73
+  CONVERGENCE_SHA: b772435d8805d67e60e0700e2a98c90a32c708a5
+  O42_RUN: '33360020181'
+  PR581_RUN: '33360644088'
+  O42_OWNER_BLOB: 1ebc0969880c87a7aa3c985688be38231204c7b6
+  O42_TEST_BLOB: a17dae81cd88005e95a8c94f516cae7880d91ade
+  PR581_OWNER_BLOB: 08e56979c0d80834d7e92858f3b64321cf8f6c1d
+  PR581_TEST_BLOB: 2b60f04bf25638c20e2d9670516510f3b88b5f45
+
+jobs:
+  exact-causal-host-memory-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact child and prove O42 x PR581 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=360 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$O42_SHA" "$PR581_SHA"
+          unset AUTH_HEADER
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$O42_SHA $PR581_SHA"
+          git merge-base --is-ancestor "$O42_SHA" HEAD
+          git merge-base --is-ancestor "$PR581_SHA" HEAD
+          test "$(git hash-object scripts/aura_workcapsule_live_causal_artifact_causal_host_envelope.py)" = "$O42_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_workcapsule_live_causal_artifact_causal_host_envelope.py)" = "$O42_TEST_BLOB"
+          test "$(git hash-object scripts/aura_provenance_corroboration_memory_admission.py)" = "$PR581_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_provenance_corroboration_memory_admission.py)" = "$PR581_TEST_BLOB"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+          echo 'EXACT_PARENT_OWNER_AND_TEST_BLOBS=true'
+
+      - name: Pin exact successful parent hosted runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          expected = {
+              os.environ['O42_RUN']: os.environ['O42_SHA'],
+              os.environ['PR581_RUN']: os.environ['PR581_SHA'],
+          }
+          for run_id, sha in expected.items():
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json'},
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  data = json.load(response)
+              assert data['head_sha'] == sha, (run_id, data['head_sha'], sha)
+              assert data['status'] == 'completed'
+              assert data['conclusion'] == 'success'
+              print(f'PINNED_PARENT_RUN={run_id}@{sha}=SUCCESS')
+          PY
+
+      - name: Re-prove exact O42 causal-host owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_live_causal_artifact_causal_host_envelope.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_causal_artifact_causal_host_envelope
+
+      - name: Re-prove exact PR581 memory admission owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_provenance_corroboration_memory_admission.py
+          python3 -m unittest -v tests.test_aura_provenance_corroboration_memory_admission
+
+      - name: Prove O47 host-state memory adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_causal_host_memory_evidence.py
+          python3 -m unittest -v tests.test_aura_workcapsule_causal_host_memory_evidence
+
+      - name: Prove remembered all-PASS host evidence remains nonauthorizing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts.aura_workcapsule_causal_host_memory_evidence import (
+              EVIDENCE_TYPE, admit_causal_host_memory_evidence, causal_host_evidence_ref,
+          )
+          from scripts.aura_workcapsule_live_causal_artifact_causal_host_envelope import admit_live_causal_artifact_causal_host_envelope
+          from tests.test_aura_provenance_corroboration_memory_admission import node
+          from tests.test_aura_workcapsule_live_causal_artifact_causal_host_envelope import WorkCapsuleLiveCausalArtifactCausalHostEnvelopeTests
+
+          case = WorkCapsuleLiveCausalArtifactCausalHostEnvelopeTests(
+              'test_exact_causal_envelope_binds_to_exact_live_artifact_and_world'
+          )
+          case.setUp()
+          try:
+              inputs = case.o42_kwargs(host=case.causal_host_receipt(all_pass=True))
+              receipt = admit_live_causal_artifact_causal_host_envelope(**inputs)
+              ref = causal_host_evidence_ref(receipt)
+              evidence = node(
+                  ref,
+                  evidence_type=EVIDENCE_TYPE,
+                  claim_key='workcapsule:causal-host-observation',
+                  claim_value_ref='o42-receipt:' + ref.split(':', 1)[1],
+                  world_ref='workcapsule:o42:causal-host-world',
+                  dependency_class_ref='workcapsule:o42:raw-owner-chain',
+                  generation_ref='o42:69e7af0f7190f841d459890343b8a96f6961764a',
+              )
+              out = admit_causal_host_memory_evidence(
+                  o42_inputs=inputs,
+                  evidence_node=evidence,
+                  context={'scope':'arena','use_class':'retrieval','accepted_evidence_types':[EVIDENCE_TYPE]},
+              )
+              assert set(out['remembered_host_gate_states'].values()) == {'PASS'}
+              assert out['memory_node_currentness_derived_from_o42'] is False
+              assert out['host_state_currentness_reproved_after_memory_admission'] is False
+              assert out['memory_admission_promotes_host_observation_authority'] is False
+              assert out['causal_host_observation_authority_proven'] is False
+              assert out['trusted_continuation_ready'] is False
+              assert out['host_effect_ready'] is False
+              assert out['effect_authority_proven'] is False
+              assert not any(out['authority'].values())
+              print('ALL_PASS_HOST_STATE_REMEMBERED=true')
+              print('MEMORY_CURRENTNESS_DERIVED_FROM_O42=false')
+              print('HOST_AUTHORITY_PROMOTED_BY_MEMORY=false')
+          finally:
+              case.tearDown()
+          PY
+
+      - name: Assert owner reuse and complete consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_workcapsule_causal_host_memory_evidence.py
+          grep -q 'admit_live_causal_artifact_causal_host_envelope' "$child"
+          grep -q 'admit_evidence_nodes' "$child"
+          if grep -q '^def admit_live_causal_artifact_causal_host_envelope' "$child"; then
+            echo 'child duplicated O42 owner' >&2; exit 1
+          fi
+          if grep -q '^def admit_evidence_nodes' "$child"; then
+            echo 'child duplicated PR581 owner' >&2; exit 1
+          fi
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_causal_host_memory_evidence import verify_causal_host_memory_evidence
+          params = set(inspect.signature(verify_causal_host_memory_evidence).parameters)
+          assert params == {'o42_inputs', 'evidence_node', 'context'}
+          forbidden = {
+              'memory_current','host_state_current','host_observation_resolver',
+              'producer_authenticated','semantic_truth','trusted_continuation_ready',
+              'host_effect_ready','execution_authorized','k27_coordinate',
+          }
+          assert params.isdisjoint(forbidden)
+          PY
+          cat <<'EOF'
+          O42_CAUSAL_HOST_EVIDENCE_REPROVED_AT_ADMISSION=true
+          PR581_MEMORY_ADMISSION_OWNER_REUSED=true
+          HOST_STATE_VECTOR_REMEMBERED_AS_EVIDENCE=true
+          O42_ARTIFACT_TARGET_IDENTITY_PRESERVED=true
+          MEMORY_NODE_CURRENTNESS_DERIVED_FROM_O42=false
+          MEMORY_CURRENTNESS_REPROVED_BY_CHILD=false
+          HOST_STATE_CURRENTNESS_REPROVED_AFTER_MEMORY_ADMISSION=false
+          MEMORY_ADMISSION_PROMOTES_HOST_OBSERVATION_AUTHORITY=false
+          CAUSAL_HOST_RESOLVER_TRUST_PROVEN=false
+          CAUSAL_HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          PRODUCER_AUTHENTICATION_PROVEN=false
+          CLAIM_WORLD_SEMANTICS_REPROVED_BY_CHILD=false
+          SEMANTIC_TRUTH_PROVEN=false
+          TRUSTED_CONTINUATION_READY=false
+          HOST_EFFECT_READY=false
+          EFFECT_AUTHORITY_PROVEN=false
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_PROVIDER_PUBLIC_HUMAN_AUTHORITY=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF
