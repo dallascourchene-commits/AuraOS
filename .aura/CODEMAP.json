@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788132649,
+  "generated_at_unix": 1788154671,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1688,
+    "repo_file_count": 1694,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -148,6 +148,8 @@
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
       ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
+      ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
+      ".github/workflows/awj032-glm53-owner-host-lifecycle-return-packet.yml",
       ".github/workflows/awj032-glm53-w3-canonical-owner-composite.yml",
       ".github/workflows/awj032-glm53-w3-live-canonical-synthetic-proof.yml",
       ".github/workflows/awj032-glm53-w3-official-producer-consumption.yml",
@@ -1662,6 +1664,8 @@
       "tools/awj032/glm53_layout_binding_bridge.py",
       "tools/awj032/glm53_official_w2_observation.py",
       "tools/awj032/glm53_official_w2_plan_binding.py",
+      "tools/awj032/glm53_owner_host_c2_handoff.py",
+      "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
@@ -1673,6 +1677,8 @@
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_layout_binding_bridge.py",
       "tools/awj032/test_glm53_official_w2_plan_binding.py",
+      "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+      "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
@@ -1804,16 +1810,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1688,
-      "bytes": 26669910,
-      "tokens_est": 6657880,
+      "files": 1694,
+      "bytes": 26716092,
+      "tokens_est": 6669428,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1031,
-        "schema_or_lexicon": 280,
+        "python_module": 1035,
+        "schema_or_lexicon": 282,
         "support_file": 49
       }
     },
@@ -4002,6 +4008,22 @@
         "signature_hash": "8d5bf5695239b859"
       },
       {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_canonical:82c97d8c71895859",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#function:_canonical:d8bd3c34731e118b",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
         "kind": "function",
         "line": 50,
@@ -4505,6 +4527,22 @@
         "line": 42,
         "end_line": 43,
         "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_digest:50a78e0547136596",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_digest:956157d18c018414",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 88,
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#function:_digest:65fbee241fad2360",
         "signature_hash": "514f786724465716"
       },
       {
@@ -13932,6 +13970,14 @@
         "end_line": 68,
         "semantic_id": "tools/awj032/glm53_layout_binding_bridge.py#function:_sha256:38feddaf19b1dd95",
         "signature_hash": "ddcb28c0cb88d369"
+      },
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_sha256:032c51d60a2138de",
+        "signature_hash": "a67fb107614d9ca0"
       }
     ],
     "PullRequestRouteBinding": [
@@ -14893,6 +14939,14 @@
         "line": 67,
         "end_line": 70,
         "semantic_id": "tools/awj032/glm53_official_w2_plan_binding.py#function:_text:3d6c730280c47cfa",
+        "signature_hash": "a4ea29b9a7789fe0"
+      },
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_text:d8ca8fd3ed2c71d4",
         "signature_hash": "a4ea29b9a7789fe0"
       },
       {
@@ -26592,6 +26646,14 @@
         "end_line": 68,
         "semantic_id": "aura_spatial_importers/contracts.py#function:_positive_int:cb9f2b4384fccde6",
         "signature_hash": "5cca323f428421e2"
+      },
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 69,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_positive_int:619a649b847e005b",
+        "signature_hash": "9fa9d0d235d67d55"
       }
     ],
     "_span_line_bounds": [
@@ -158672,6 +158734,254 @@
         "signature_hash": "cb85d64dbedf2972"
       }
     ],
+    "OwnerHostC2HandoffError": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2HandoffError:3478a5bdfb49ef64",
+        "signature_hash": "6b7462371eb08f8d"
+      }
+    ],
+    "OwnerHostC2HandoffError.__init__": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffError.__init__:eef7b725cfd16306",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_nonneg_int": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_nonneg_int:78063f97f0681742",
+        "signature_hash": "de511ebb37461ace"
+      }
+    ],
+    "_positive_float": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_positive_float:0a2bc9f0392f908a",
+        "signature_hash": "b2fece0b5243771f"
+      }
+    ],
+    "_exact_bool": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 89,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_exact_bool:a1243bad81411609",
+        "signature_hash": "5a63b7579db28835"
+      },
+      {
+        "file": "tools/awj032/glm53_w3_live_canonical_owner_synthetic_proof.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/glm53_w3_live_canonical_owner_synthetic_proof.py#function:_exact_bool:6391d462a6c6fd49",
+        "signature_hash": "5a63b7579db28835"
+      }
+    ],
+    "_utc": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 100,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_utc:5cd91f9ce1611753",
+        "signature_hash": "0da762b8bec66904"
+      }
+    ],
+    "OwnerHostC2CanaryRequest": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "class",
+        "line": 104,
+        "end_line": 168,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2CanaryRequest:f2456c99dcf56388",
+        "signature_hash": "fe4cefa33562e880"
+      }
+    ],
+    "OwnerHostC2CanaryRequest.__post_init__": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 161,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryRequest.__post_init__:35ab0ec4e482897a",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "OwnerHostC2CanaryRequest.to_dict": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 164,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryRequest.to_dict:d77a8bfe335e1477",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "OwnerHostC2CanaryRequest.request_digest": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 168,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryRequest.request_digest:7465361c1e35d675",
+        "signature_hash": "6fa9305943538fcf"
+      }
+    ],
+    "OwnerHostC2CanaryReceipt": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "class",
+        "line": 172,
+        "end_line": 257,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2CanaryReceipt:c255f70e8afe0b7c",
+        "signature_hash": "0967335b2db491fc"
+      }
+    ],
+    "OwnerHostC2CanaryReceipt.__post_init__": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 250,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryReceipt.__post_init__:71f0c7989c142cb1",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "OwnerHostC2CanaryReceipt.to_dict": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 252,
+        "end_line": 253,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryReceipt.to_dict:6d8cf47f5b4f3fa9",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "OwnerHostC2CanaryReceipt.receipt_digest": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 256,
+        "end_line": 257,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryReceipt.receipt_digest:2630aaa125574a4a",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "OwnerHostC2JoinReceipt": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "class",
+        "line": 261,
+        "end_line": 285,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2JoinReceipt:1fe0c79917639e6b",
+        "signature_hash": "db6c9872995e331e"
+      }
+    ],
+    "OwnerHostC2JoinReceipt.to_dict": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 280,
+        "end_line": 281,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2JoinReceipt.to_dict:84a2004cfb3208df",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "OwnerHostC2JoinReceipt.logical_id": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 284,
+        "end_line": 285,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2JoinReceipt.logical_id:cd5122090ee96db7",
+        "signature_hash": "77512dea4c34aaf7"
+      }
+    ],
+    "join_owner_host_c2_attempt": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 288,
+        "end_line": 321,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:join_owner_host_c2_attempt:5edc56f5e54a38ba",
+        "signature_hash": "457dbc96033c9b2f"
+      }
+    ],
+    "OwnerHostLifecycleReturnError": [
+      {
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 71,
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#class:OwnerHostLifecycleReturnError:735759d7ac7e215a",
+        "signature_hash": "914068bf96c0c1d9"
+      }
+    ],
+    "OwnerHostLifecycleReturnError.__init__": [
+      {
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 71,
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnError.__init__:d52673cdcdd05afb",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacket": [
+      {
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "class",
+        "line": 92,
+        "end_line": 137,
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#class:OwnerHostLifecycleReturnPacket:2848f848d77d0280",
+        "signature_hash": "1c17d7a4e1171110"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacket.to_dict": [
+      {
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 133,
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacket.to_dict:7b3097fda24ad207",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacket.packet_digest": [
+      {
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 137,
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacket.packet_digest:48186afac78ba3e2",
+        "signature_hash": "9bc5db86166c6b2f"
+      }
+    ],
+    "build_owner_host_lifecycle_return_packet": [
+      {
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "function",
+        "line": 140,
+        "end_line": 206,
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#function:build_owner_host_lifecycle_return_packet:4ef468efe1449c2a",
+        "signature_hash": "d50064e04d46672d"
+      }
+    ],
     "PagerError": [
       {
         "file": "tools/awj032/glm53_packed_expert_pager.py",
@@ -159698,16 +160008,6 @@
         "signature_hash": "0b6534a3148e5c5d"
       }
     ],
-    "_exact_bool": [
-      {
-        "file": "tools/awj032/glm53_w3_live_canonical_owner_synthetic_proof.py",
-        "kind": "function",
-        "line": 73,
-        "end_line": 75,
-        "semantic_id": "tools/awj032/glm53_w3_live_canonical_owner_synthetic_proof.py#function:_exact_bool:6391d462a6c6fd49",
-        "signature_hash": "5a63b7579db28835"
-      }
-    ],
     "PR406DiscriminativeNumericalEvidence": [
       {
         "file": "tools/awj032/glm53_w3_live_canonical_owner_synthetic_proof.py",
@@ -160556,6 +160856,306 @@
         "end_line": 100,
         "semantic_id": "tools/awj032/test_glm53_official_w2_plan_binding.py#method:OfficialW2PlanBindingTests.test_producer_bound_plan_identity_includes_inner_plan_identity:f4a7569f093dd435",
         "signature_hash": "1fcbb9f80354a9cc"
+      }
+    ],
+    "OwnerHostC2HandoffTests": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 213,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#class:OwnerHostC2HandoffTests:1153e004795fa244",
+        "signature_hash": "fb4a2f986ce2eb3e"
+      }
+    ],
+    "OwnerHostC2HandoffTests.request": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 39,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.request:25cb409a25b603de",
+        "signature_hash": "213557bb0946e88e"
+      }
+    ],
+    "OwnerHostC2HandoffTests.receipt": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 66,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.receipt:ee654684dbbed1e5",
+        "signature_hash": "86fea5122b8c7054"
+      }
+    ],
+    "OwnerHostC2HandoffTests.assert_code": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 71,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.assert_code:97461d1d636d52ff",
+        "signature_hash": "eb1a74aa8011ddd4"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_exact_upstream_generations_are_bound": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 78,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_exact_upstream_generations_are_bound:a8e2c3926ce05c4e",
+        "signature_hash": "5b6e0e2e56d70378"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_request_digest_is_deterministic": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 81,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_digest_is_deterministic:755b20f0cdd3a087",
+        "signature_hash": "bdd35efe8ac4b0de"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_request_rejects_remote_code_fallback_and_substitution": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 95,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_rejects_remote_code_fallback_and_substitution:3f39d833c33a6143",
+        "signature_hash": "9a64799dd45cdb6b"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_request_rejects_stale_owner_generations": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 105,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_rejects_stale_owner_generations:b91e6ce2a144b4dc",
+        "signature_hash": "6e43d3fa46ba8fdf"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_request_requires_bounded_workspace": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 111,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_requires_bounded_workspace:31434c46aa666a65",
+        "signature_hash": "8d945a36d0694e51"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_receipt_records_attempt_but_does_not_authenticate_itself": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 127,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_records_attempt_but_does_not_authenticate_itself:934d8d64220cc18b",
+        "signature_hash": "379d0e96aa08c932"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_receipt_must_bind_exact_request": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 136,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_must_bind_exact_request:97e7f38a761823ec",
+        "signature_hash": "1bf05e6b68ed56e1"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_receipt_rejects_airllm_generation_drift": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 144,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_rejects_airllm_generation_drift:34f1d31afb23f8e7",
+        "signature_hash": "16d326a8518d96d7"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_receipt_rejects_payload_and_wall_budget_escape": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 162,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_rejects_payload_and_wall_budget_escape:283a994aab9353e9",
+        "signature_hash": "5e6cf5f60865aed9"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_receipt_rejects_remote_or_substituted_execution": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 180,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_rejects_remote_or_substituted_execution:3981487122ed16bf",
+        "signature_hash": "e540147b1496feac"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_c2_receipt_cannot_promote_full_model_or_g2": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 194,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_c2_receipt_cannot_promote_full_model_or_g2:92c24748c8a0f33d",
+        "signature_hash": "834a7df2fa30327a"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_generated_tokens_require_output_digest": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 196,
+        "end_line": 200,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_generated_tokens_require_output_digest:365d3cb930af3d12",
+        "signature_hash": "0d05036087a810c5"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_nonzero_exit_is_recorded_without_false_success": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 202,
+        "end_line": 213,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_nonzero_exit_is_recorded_without_false_success:2c1da6601cf0a0e9",
+        "signature_hash": "d6a8975fc12898f7"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 192,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#class:OwnerHostLifecycleReturnPacketTests:6744fc4513a29d27",
+        "signature_hash": "fe073a35a83f5f09"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests.request": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 45,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.request:3c59a80deafda3ea",
+        "signature_hash": "213557bb0946e88e"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests.receipt": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 72,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.receipt:fa04537583b86b25",
+        "signature_hash": "86fea5122b8c7054"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests.packet": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.packet:557ba4a87dc11255",
+        "signature_hash": "cb668342ada2cd8a"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests.assert_code": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 85,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.assert_code:8ac5b1c25fd7a90a",
+        "signature_hash": "eb1a74aa8011ddd4"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests.test_exact_c2_attempt_binds_to_nonmetric_lifecycle_return_packet": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 109,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_exact_c2_attempt_binds_to_nonmetric_lifecycle_return_packet:c579470808dbc675",
+        "signature_hash": "652aefaf2f17e9ce"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests.test_target_pr430_schema_and_hosted_generation_are_explicit": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 116,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_target_pr430_schema_and_hosted_generation_are_explicit:b91d5fcd8d08c9a2",
+        "signature_hash": "6814a6a1ecde68ff"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests.test_public_builder_has_no_lifecycle_metric_or_registry_override_inputs": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 144,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_public_builder_has_no_lifecycle_metric_or_registry_override_inputs:aa8deafa0f11aeb4",
+        "signature_hash": "649286bf3741456a"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests.test_attempt_counters_are_not_relabelled_as_lifecycle_metrics": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 151,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_attempt_counters_are_not_relabelled_as_lifecycle_metrics:4bc56043de670d24",
+        "signature_hash": "448b0c479d0753d1"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests.test_rejects_caller_modified_join": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 163,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_rejects_caller_modified_join:583acc1695a81d5f",
+        "signature_hash": "6b8542623fdae680"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests.test_rejects_parent_ceiling_widening": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 175,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_rejects_parent_ceiling_widening:6bdae37d6fc7de34",
+        "signature_hash": "9ff13ece6421fc82"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests.test_failed_attempt_can_return_identity_without_false_success": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 189,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_failed_attempt_can_return_identity_without_false_success:f91aed0c9e970c58",
+        "signature_hash": "af4c6a6a8de36ab9"
+      }
+    ],
+    "OwnerHostLifecycleReturnPacketTests.test_packet_digest_is_deterministic": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "kind": "method",
+        "line": 191,
+        "end_line": 192,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_packet_digest_is_deterministic:94d09f675a5565d1",
+        "signature_hash": "eee6fa1adaef434e"
       }
     ],
     "FakeSliceBackend": [
@@ -163335,6 +163935,15 @@
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
       "tools/awj032/README.md"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
+      ".github/workflows/awj032-glm53-owner-host-lifecycle-return-packet.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
+      ".github/workflows/awj032-glm53-owner-host-lifecycle-return-packet.yml"
+    ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
       ".github/workflows/phase3-compass-bounded-projection-repair.yml",
@@ -163876,9 +164485,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -173173,6 +173779,120 @@
         -0.263084,
         0.156325,
         -0.125823
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3083,
+      "lines": 67,
+      "tokens_est": 771,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          36
+        ],
+        "python3 -m unittest": [
+          37
+        ]
+      },
+      "topology": {},
+      "digest8": "d77b13223b7f53cb",
+      "vector": [
+        -0.042169,
+        0.213009,
+        0.26491,
+        -0.260585,
+        -0.176246,
+        -0.169758,
+        0.08542,
+        -0.258422,
+        -0.06812,
+        -0.225984,
+        0.09407,
+        -0.262747,
+        -0.202196,
+        0.176246,
+        -0.05947,
+        0.247609,
+        0.275722,
+        0.044332,
+        0.007569,
+        -0.048657,
+        -0.171921,
+        -0.213009,
+        -0.031357,
+        -0.210846,
+        0.072445,
+        0.027032,
+        -0.225984,
+        0.148133,
+        -0.161108,
+        -0.182734,
+        0.033519,
+        -0.26491
+      ]
+    },
+    {
+      "path": ".github/workflows/awj032-glm53-owner-host-lifecycle-return-packet.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3817,
+      "lines": 77,
+      "tokens_est": 955,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          36
+        ],
+        "python3 -m unittest": [
+          39
+        ]
+      },
+      "topology": {},
+      "digest8": "474fd914b7cc33f4",
+      "vector": [
+        0.187695,
+        0.10317,
+        -0.080796,
+        0.289622,
+        -0.023617,
+        -0.314482,
+        -0.120572,
+        0.041019,
+        0.105656,
+        0.239901,
+        0.023617,
+        0.215041,
+        0.142946,
+        -0.175265,
+        0.006215,
+        0.083282,
+        -0.177751,
+        0.247359,
+        -0.023617,
+        0.292108,
+        0.011187,
+        0.292108,
+        0.011187,
+        0.215041,
+        -0.080796,
+        0.277192,
+        -0.239901,
+        0.026103,
+        0.314482,
+        -0.041019,
+        -0.036047,
+        0.142946
       ]
     },
     {
@@ -268921,6 +269641,100 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_owner_host_c2_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13991,
+      "lines": 322,
+      "tokens_est": 3498,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e295400e67afa9f7",
+      "vector": [
+        0.271437,
+        0.173228,
+        -0.028644,
+        -0.246885,
+        0.290533,
+        -0.0341,
+        0.02046,
+        0.279621,
+        0.271437,
+        0.205965,
+        -0.121396,
+        -0.135036,
+        -0.121396,
+        -0.312357,
+        -0.04774,
+        0.238701,
+        0.151404,
+        0.094116,
+        -0.137764,
+        -0.009548,
+        0.178685,
+        -0.066836,
+        0.107756,
+        -0.012276,
+        0.083204,
+        0.271437,
+        0.148676,
+        -0.042284,
+        -0.328725,
+        0.0341,
+        -0.077748,
+        0.175957
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8601,
+      "lines": 207,
+      "tokens_est": 2151,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7def5e384b391900",
+      "vector": [
+        0.04433,
+        -0.137315,
+        -0.1957,
+        -0.184888,
+        -0.165426,
+        0.089741,
+        -0.029193,
+        -0.126503,
+        -0.193538,
+        0.271386,
+        -0.109203,
+        -0.264898,
+        -0.236787,
+        -0.152452,
+        0.264898,
+        -0.260574,
+        -0.11569,
+        -0.098391,
+        0.256249,
+        0.228137,
+        -0.223812,
+        0.091904,
+        0.158939,
+        0.111365,
+        0.189213,
+        -0.14164,
+        0.206513,
+        0.219487,
+        0.20435,
+        0.001081,
+        -0.13299,
+        -0.02703
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_packed_expert_pager.py",
       "role": "python_module",
       "binary": false,
@@ -269435,6 +270249,100 @@
         0.115002,
         0.010049,
         -0.056943
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8378,
+      "lines": 218,
+      "tokens_est": 2095,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "59ea671973a372da",
+      "vector": [
+        0.048844,
+        0.272439,
+        -0.179093,
+        -0.257243,
+        0.187777,
+        -0.202972,
+        0.237706,
+        -0.033648,
+        -0.215997,
+        -0.009769,
+        0.226851,
+        0.068381,
+        -0.209485,
+        0.263756,
+        -0.226851,
+        0.272439,
+        -0.255072,
+        0.022794,
+        -0.083577,
+        0.179093,
+        -0.161727,
+        0.024965,
+        0.001085,
+        -0.129164,
+        0.218168,
+        0.252901,
+        -0.231193,
+        0.009769,
+        0.048844,
+        -0.083577,
+        -0.031477,
+        -0.159556
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8312,
+      "lines": 197,
+      "tokens_est": 2078,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c5d6e3a22d2eb93f",
+      "vector": [
+        0.11821,
+        0.233043,
+        -0.206024,
+        0.156488,
+        -0.11821,
+        -0.016887,
+        0.010132,
+        -0.185759,
+        0.0349,
+        0.206024,
+        0.093442,
+        -0.082184,
+        -0.113707,
+        0.278076,
+        0.28483,
+        0.246553,
+        -0.235295,
+        0.176752,
+        0.113707,
+        -0.064171,
+        -0.097946,
+        0.163243,
+        0.082184,
+        -0.095694,
+        0.287082,
+        -0.235295,
+        0.269069,
+        -0.156488,
+        0.070926,
+        0.147481,
+        -0.260063,
+        0.199269
       ]
     },
     {
@@ -293765,16 +294673,16 @@
     }
   },
   "summary": {
-    "file_count": 1688,
-    "total_bytes": 26669910,
-    "text_tokens_est": 6657880,
+    "file_count": 1694,
+    "total_bytes": 26716092,
+    "text_tokens_est": 6669428,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1031,
-      "schema_or_lexicon": 280,
+      "python_module": 1035,
+      "schema_or_lexicon": 282,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -293932,6 +294840,8 @@
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-g1-probe.yml",
       ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
+      ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
+      ".github/workflows/awj032-glm53-owner-host-lifecycle-return-packet.yml",
       ".github/workflows/awj032-glm53-w3-canonical-owner-composite.yml",
       ".github/workflows/awj032-glm53-w3-live-canonical-synthetic-proof.yml",
       ".github/workflows/awj032-glm53-w3-official-producer-consumption.yml",
@@ -295446,6 +296356,8 @@
       "tools/awj032/glm53_layout_binding_bridge.py",
       "tools/awj032/glm53_official_w2_observation.py",
       "tools/awj032/glm53_official_w2_plan_binding.py",
+      "tools/awj032/glm53_owner_host_c2_handoff.py",
+      "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
@@ -295457,6 +296369,8 @@
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_layout_binding_bridge.py",
       "tools/awj032/test_glm53_official_w2_plan_binding.py",
+      "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+      "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
@@ -454182,6 +455096,316 @@
         "file_digest8": "d024f06ceeb2f33d"
       },
       {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2CanaryReceipt:c255f70e8afe0b7c",
+        "name": "OwnerHostC2CanaryReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 172,
+        "end_line": 257,
+        "signature_hash": "0967335b2db491fc",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2CanaryRequest:f2456c99dcf56388",
+        "name": "OwnerHostC2CanaryRequest",
+        "kind": "class",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 104,
+        "end_line": 168,
+        "signature_hash": "fe4cefa33562e880",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2HandoffError:3478a5bdfb49ef64",
+        "name": "OwnerHostC2HandoffError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 29,
+        "end_line": 33,
+        "signature_hash": "6b7462371eb08f8d",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2JoinReceipt:1fe0c79917639e6b",
+        "name": "OwnerHostC2JoinReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 261,
+        "end_line": 285,
+        "signature_hash": "db6c9872995e331e",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_canonical:82c97d8c71895859",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 36,
+        "end_line": 46,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_digest:956157d18c018414",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_exact_bool:a1243bad81411609",
+        "name": "_exact_bool",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 87,
+        "end_line": 89,
+        "signature_hash": "5a63b7579db28835",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_nonneg_int:78063f97f0681742",
+        "name": "_nonneg_int",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 72,
+        "end_line": 75,
+        "signature_hash": "de511ebb37461ace",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_positive_float:0a2bc9f0392f908a",
+        "name": "_positive_float",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 78,
+        "end_line": 84,
+        "signature_hash": "b2fece0b5243771f",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_positive_int:619a649b847e005b",
+        "name": "_positive_int",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 66,
+        "end_line": 69,
+        "signature_hash": "9fa9d0d235d67d55",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_sha256:032c51d60a2138de",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 59,
+        "end_line": 63,
+        "signature_hash": "a67fb107614d9ca0",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_text:d8ca8fd3ed2c71d4",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 53,
+        "end_line": 56,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_utc:5cd91f9ce1611753",
+        "name": "_utc",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 92,
+        "end_line": 100,
+        "signature_hash": "0da762b8bec66904",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:join_owner_host_c2_attempt:5edc56f5e54a38ba",
+        "name": "join_owner_host_c2_attempt",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 288,
+        "end_line": 321,
+        "signature_hash": "457dbc96033c9b2f",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryReceipt.__post_init__:71f0c7989c142cb1",
+        "name": "OwnerHostC2CanaryReceipt.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 204,
+        "end_line": 250,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryReceipt.receipt_digest:2630aaa125574a4a",
+        "name": "OwnerHostC2CanaryReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 256,
+        "end_line": 257,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryReceipt.to_dict:6d8cf47f5b4f3fa9",
+        "name": "OwnerHostC2CanaryReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 252,
+        "end_line": 253,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryRequest.__post_init__:35ab0ec4e482897a",
+        "name": "OwnerHostC2CanaryRequest.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 129,
+        "end_line": 161,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryRequest.request_digest:7465361c1e35d675",
+        "name": "OwnerHostC2CanaryRequest.request_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 167,
+        "end_line": 168,
+        "signature_hash": "6fa9305943538fcf",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryRequest.to_dict:d77a8bfe335e1477",
+        "name": "OwnerHostC2CanaryRequest.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 163,
+        "end_line": 164,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffError.__init__:eef7b725cfd16306",
+        "name": "OwnerHostC2HandoffError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2JoinReceipt.logical_id:cd5122090ee96db7",
+        "name": "OwnerHostC2JoinReceipt.logical_id",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 284,
+        "end_line": 285,
+        "signature_hash": "77512dea4c34aaf7",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2JoinReceipt.to_dict:84a2004cfb3208df",
+        "name": "OwnerHostC2JoinReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 280,
+        "end_line": 281,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#class:OwnerHostLifecycleReturnError:735759d7ac7e215a",
+        "name": "OwnerHostLifecycleReturnError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "line": 67,
+        "end_line": 71,
+        "signature_hash": "914068bf96c0c1d9",
+        "file_digest8": "7def5e384b391900"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#class:OwnerHostLifecycleReturnPacket:2848f848d77d0280",
+        "name": "OwnerHostLifecycleReturnPacket",
+        "kind": "class",
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "line": 92,
+        "end_line": 137,
+        "signature_hash": "1c17d7a4e1171110",
+        "file_digest8": "7def5e384b391900"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#function:_canonical:d8bd3c34731e118b",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "line": 74,
+        "end_line": 84,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "7def5e384b391900"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#function:_digest:65fbee241fad2360",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "line": 87,
+        "end_line": 88,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "7def5e384b391900"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#function:build_owner_host_lifecycle_return_packet:4ef468efe1449c2a",
+        "name": "build_owner_host_lifecycle_return_packet",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "line": 140,
+        "end_line": 206,
+        "signature_hash": "d50064e04d46672d",
+        "file_digest8": "7def5e384b391900"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnError.__init__:d52673cdcdd05afb",
+        "name": "OwnerHostLifecycleReturnError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "line": 68,
+        "end_line": 71,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "7def5e384b391900"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacket.packet_digest:48186afac78ba3e2",
+        "name": "OwnerHostLifecycleReturnPacket.packet_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "line": 136,
+        "end_line": 137,
+        "signature_hash": "9bc5db86166c6b2f",
+        "file_digest8": "7def5e384b391900"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacket.to_dict:7b3097fda24ad207",
+        "name": "OwnerHostLifecycleReturnPacket.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
+        "line": 132,
+        "end_line": 133,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "7def5e384b391900"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_packed_expert_pager.py#class:ExpertRangeError:a8c6d962660c0c2f",
         "name": "ExpertRangeError",
         "kind": "class",
@@ -456200,6 +457424,306 @@
         "end_line": 35,
         "signature_hash": "5c1a69a9659e2089",
         "file_digest8": "cf5c15f5731bd4b3"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#class:OwnerHostC2HandoffTests:1153e004795fa244",
+        "name": "OwnerHostC2HandoffTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 25,
+        "end_line": 213,
+        "signature_hash": "fb4a2f986ce2eb3e",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.assert_code:97461d1d636d52ff",
+        "name": "OwnerHostC2HandoffTests.assert_code",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 68,
+        "end_line": 71,
+        "signature_hash": "eb1a74aa8011ddd4",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.receipt:ee654684dbbed1e5",
+        "name": "OwnerHostC2HandoffTests.receipt",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 41,
+        "end_line": 66,
+        "signature_hash": "86fea5122b8c7054",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.request:25cb409a25b603de",
+        "name": "OwnerHostC2HandoffTests.request",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 26,
+        "end_line": 39,
+        "signature_hash": "213557bb0946e88e",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_c2_receipt_cannot_promote_full_model_or_g2:92c24748c8a0f33d",
+        "name": "OwnerHostC2HandoffTests.test_c2_receipt_cannot_promote_full_model_or_g2",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 182,
+        "end_line": 194,
+        "signature_hash": "834a7df2fa30327a",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_exact_upstream_generations_are_bound:a8e2c3926ce05c4e",
+        "name": "OwnerHostC2HandoffTests.test_exact_upstream_generations_are_bound",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 73,
+        "end_line": 78,
+        "signature_hash": "5b6e0e2e56d70378",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_generated_tokens_require_output_digest:365d3cb930af3d12",
+        "name": "OwnerHostC2HandoffTests.test_generated_tokens_require_output_digest",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 196,
+        "end_line": 200,
+        "signature_hash": "0d05036087a810c5",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_nonzero_exit_is_recorded_without_false_success:2c1da6601cf0a0e9",
+        "name": "OwnerHostC2HandoffTests.test_nonzero_exit_is_recorded_without_false_success",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 202,
+        "end_line": 213,
+        "signature_hash": "d6a8975fc12898f7",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_must_bind_exact_request:97e7f38a761823ec",
+        "name": "OwnerHostC2HandoffTests.test_receipt_must_bind_exact_request",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 129,
+        "end_line": 136,
+        "signature_hash": "1bf05e6b68ed56e1",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_records_attempt_but_does_not_authenticate_itself:934d8d64220cc18b",
+        "name": "OwnerHostC2HandoffTests.test_receipt_records_attempt_but_does_not_authenticate_itself",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 113,
+        "end_line": 127,
+        "signature_hash": "379d0e96aa08c932",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_rejects_airllm_generation_drift:34f1d31afb23f8e7",
+        "name": "OwnerHostC2HandoffTests.test_receipt_rejects_airllm_generation_drift",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 138,
+        "end_line": 144,
+        "signature_hash": "16d326a8518d96d7",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_rejects_payload_and_wall_budget_escape:283a994aab9353e9",
+        "name": "OwnerHostC2HandoffTests.test_receipt_rejects_payload_and_wall_budget_escape",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 146,
+        "end_line": 162,
+        "signature_hash": "5e6cf5f60865aed9",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_rejects_remote_or_substituted_execution:3981487122ed16bf",
+        "name": "OwnerHostC2HandoffTests.test_receipt_rejects_remote_or_substituted_execution",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 164,
+        "end_line": 180,
+        "signature_hash": "e540147b1496feac",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_digest_is_deterministic:755b20f0cdd3a087",
+        "name": "OwnerHostC2HandoffTests.test_request_digest_is_deterministic",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 80,
+        "end_line": 81,
+        "signature_hash": "bdd35efe8ac4b0de",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_rejects_remote_code_fallback_and_substitution:3f39d833c33a6143",
+        "name": "OwnerHostC2HandoffTests.test_request_rejects_remote_code_fallback_and_substitution",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 83,
+        "end_line": 95,
+        "signature_hash": "9a64799dd45cdb6b",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_rejects_stale_owner_generations:b91e6ce2a144b4dc",
+        "name": "OwnerHostC2HandoffTests.test_request_rejects_stale_owner_generations",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 97,
+        "end_line": 105,
+        "signature_hash": "6e43d3fa46ba8fdf",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_requires_bounded_workspace:31434c46aa666a65",
+        "name": "OwnerHostC2HandoffTests.test_request_requires_bounded_workspace",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 107,
+        "end_line": 111,
+        "signature_hash": "8d945a36d0694e51",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#class:OwnerHostLifecycleReturnPacketTests:6744fc4513a29d27",
+        "name": "OwnerHostLifecycleReturnPacketTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 31,
+        "end_line": 192,
+        "signature_hash": "fe073a35a83f5f09",
+        "file_digest8": "c5d6e3a22d2eb93f"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.assert_code:8ac5b1c25fd7a90a",
+        "name": "OwnerHostLifecycleReturnPacketTests.assert_code",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 82,
+        "end_line": 85,
+        "signature_hash": "eb1a74aa8011ddd4",
+        "file_digest8": "c5d6e3a22d2eb93f"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.packet:557ba4a87dc11255",
+        "name": "OwnerHostLifecycleReturnPacketTests.packet",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 74,
+        "end_line": 80,
+        "signature_hash": "cb668342ada2cd8a",
+        "file_digest8": "c5d6e3a22d2eb93f"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.receipt:fa04537583b86b25",
+        "name": "OwnerHostLifecycleReturnPacketTests.receipt",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 47,
+        "end_line": 72,
+        "signature_hash": "86fea5122b8c7054",
+        "file_digest8": "c5d6e3a22d2eb93f"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.request:3c59a80deafda3ea",
+        "name": "OwnerHostLifecycleReturnPacketTests.request",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 32,
+        "end_line": 45,
+        "signature_hash": "213557bb0946e88e",
+        "file_digest8": "c5d6e3a22d2eb93f"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_attempt_counters_are_not_relabelled_as_lifecycle_metrics:4bc56043de670d24",
+        "name": "OwnerHostLifecycleReturnPacketTests.test_attempt_counters_are_not_relabelled_as_lifecycle_metrics",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 146,
+        "end_line": 151,
+        "signature_hash": "448b0c479d0753d1",
+        "file_digest8": "c5d6e3a22d2eb93f"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_exact_c2_attempt_binds_to_nonmetric_lifecycle_return_packet:c579470808dbc675",
+        "name": "OwnerHostLifecycleReturnPacketTests.test_exact_c2_attempt_binds_to_nonmetric_lifecycle_return_packet",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 87,
+        "end_line": 109,
+        "signature_hash": "652aefaf2f17e9ce",
+        "file_digest8": "c5d6e3a22d2eb93f"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_failed_attempt_can_return_identity_without_false_success:f91aed0c9e970c58",
+        "name": "OwnerHostLifecycleReturnPacketTests.test_failed_attempt_can_return_identity_without_false_success",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 177,
+        "end_line": 189,
+        "signature_hash": "af4c6a6a8de36ab9",
+        "file_digest8": "c5d6e3a22d2eb93f"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_packet_digest_is_deterministic:94d09f675a5565d1",
+        "name": "OwnerHostLifecycleReturnPacketTests.test_packet_digest_is_deterministic",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 191,
+        "end_line": 192,
+        "signature_hash": "eee6fa1adaef434e",
+        "file_digest8": "c5d6e3a22d2eb93f"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_public_builder_has_no_lifecycle_metric_or_registry_override_inputs:aa8deafa0f11aeb4",
+        "name": "OwnerHostLifecycleReturnPacketTests.test_public_builder_has_no_lifecycle_metric_or_registry_override_inputs",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 118,
+        "end_line": 144,
+        "signature_hash": "649286bf3741456a",
+        "file_digest8": "c5d6e3a22d2eb93f"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_rejects_caller_modified_join:583acc1695a81d5f",
+        "name": "OwnerHostLifecycleReturnPacketTests.test_rejects_caller_modified_join",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 153,
+        "end_line": 163,
+        "signature_hash": "6b8542623fdae680",
+        "file_digest8": "c5d6e3a22d2eb93f"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_rejects_parent_ceiling_widening:6bdae37d6fc7de34",
+        "name": "OwnerHostLifecycleReturnPacketTests.test_rejects_parent_ceiling_widening",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 165,
+        "end_line": 175,
+        "signature_hash": "9ff13ece6421fc82",
+        "file_digest8": "c5d6e3a22d2eb93f"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_target_pr430_schema_and_hosted_generation_are_explicit:b91d5fcd8d08c9a2",
+        "name": "OwnerHostLifecycleReturnPacketTests.test_target_pr430_schema_and_hosted_generation_are_explicit",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+        "line": 111,
+        "end_line": 116,
+        "signature_hash": "6814a6a1ecde68ff",
+        "file_digest8": "c5d6e3a22d2eb93f"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:FakeSliceBackend:bf8532e42602b3b5",
@@ -458792,7 +460316,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "147cb3c39656c369cd219d58f9ac27f9",
-    "payload_hash": "092bdd2e69d25369bd390c8933639beb"
+    "record_fingerprint": "ead28f9a329787d440105fdbf3da24a1",
+    "payload_hash": "b6df35e9a1d457eb15b1b8085f7b9f39"
   }
 }
