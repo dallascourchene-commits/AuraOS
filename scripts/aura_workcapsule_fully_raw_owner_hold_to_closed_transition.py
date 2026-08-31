@@ -3,14 +3,14 @@
 
 PR533 derives the complete rejected-currentness PRE lifecycle from raw owner evidence and then
 proves a distinct POST CLOSED transition, but intentionally keeps one POST closure receipt pinned
-at its public boundary. PR523 derives one canonical re-entry plan, candidate, and observation-bound
-closure from raw owner evidence and accepts neither caller O8 nor caller candidate bindings.
+at its public boundary. PR523 derives one canonical re-entry plan, candidate, observation-bound
+wrapper, and inner canonical O10 closure from raw owner evidence without caller O8/candidate input.
 
-This D0 successor derives the POST closure through PR523 from the same POST raw evidence passed to
-PR533, requires that owner-derived consequence to be CLOSED, and passes only that exact derived
-closure into PR533. No caller lifecycle intermediate remains. Exact temporal provenance remains
-separate from producer authentication, semantic repair correctness, dependency-cone proof, review,
-or operational authority.
+This D0 successor derives the POST lifecycle through PR523 from the same POST raw evidence passed
+to PR533, exact-reverifies PR523's wrapper, requires the wrapper and its nested canonical O10
+closure to be CLOSED, and passes only that exact inner closure to PR533. No caller lifecycle
+intermediate remains. Exact temporal provenance remains separate from producer authentication,
+semantic repair correctness, dependency-cone proof, review, or operational authority.
 """
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ def _derive_post_owner_closure(
     post_witness_manifest: dict[str, Any],
     previous_binding: dict[str, Any],
     post_graph_witness: dict[str, Any],
-) -> tuple[dict[str, Any], dict[str, Any]]:
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     owner = compile_owner_bound_reentry_closure(
         root=post_root,
         codemap=post_codemap,
@@ -63,10 +63,14 @@ def _derive_post_owner_closure(
     )
     if violations:
         raise ValueError("owner-derived POST closure is not exact: " + ",".join(violations))
-    closure = owner.get("observation_bound_closure")
-    if not isinstance(closure, dict):
-        raise ValueError("owner-derived POST closure payload missing")
-    return owner, closure
+
+    observation_bound = owner.get("observation_bound_closure")
+    if not isinstance(observation_bound, dict):
+        raise ValueError("owner-derived POST observation-bound wrapper missing")
+    canonical_closure = observation_bound.get("closure_receipt")
+    if not isinstance(canonical_closure, dict):
+        raise ValueError("owner-derived POST canonical closure missing")
+    return owner, observation_bound, canonical_closure
 
 
 def verify_fully_raw_owner_hold_to_closed_transition(
@@ -85,7 +89,7 @@ def verify_fully_raw_owner_hold_to_closed_transition(
 ) -> list[str]:
     """Verify an exact HOLD -> CLOSED transition with no caller lifecycle intermediate."""
     try:
-        post_owner, post_closure = _derive_post_owner_closure(
+        post_owner, post_observation_bound, post_closure = _derive_post_owner_closure(
             post_root=post_root,
             post_codemap=post_codemap,
             post_anchor_manifest=post_anchor_manifest,
@@ -96,7 +100,11 @@ def verify_fully_raw_owner_hold_to_closed_transition(
     except (KeyError, TypeError, ValueError) as exc:
         return [f"{POST_OWNER_PREFIX}DERIVATION_FAILED:{exc}"]
 
-    if post_owner.get("closure_status") != "CLOSED" or post_closure.get("closure_status") != "CLOSED":
+    if (
+        post_owner.get("closure_status") != "CLOSED"
+        or post_observation_bound.get("closure_status") != "CLOSED"
+        or post_closure.get("closure_status") != "CLOSED"
+    ):
         return [POST_NOT_CLOSED]
 
     transition_violations = verify_raw_owner_hold_to_closed_transition(
@@ -149,7 +157,7 @@ def admit_fully_raw_owner_hold_to_closed_transition(
             "fully raw-owner HOLD-to-CLOSED transition failed: " + ",".join(violations)
         )
 
-    post_owner, post_closure = _derive_post_owner_closure(
+    post_owner, post_observation_bound, post_closure = _derive_post_owner_closure(
         post_root=post_root,
         post_codemap=post_codemap,
         post_anchor_manifest=post_anchor_manifest,
@@ -189,6 +197,9 @@ def admit_fully_raw_owner_hold_to_closed_transition(
         "pre_closure_status": transition["pre_closure_status"],
         "post_closure_status": transition["post_closure_status"],
         "post_owner_bound_lifecycle_receipt_identity": post_owner["receipt_identity"],
+        "post_owner_observation_bound_receipt_identity": post_observation_bound[
+            "receipt_identity"
+        ],
         "post_owner_derived_reentry_receipt_identity": post_owner[
             "owner_derived_reentry_receipt_identity"
         ],
