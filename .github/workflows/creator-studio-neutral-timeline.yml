@@ -1,0 +1,51 @@
+name: Creator Studio Neutral Timeline Contract
+
+on:
+  pull_request:
+    paths:
+      - "tools/creator_studio/**"
+      - "tests/test_creator_studio_neutral_timeline_contract.py"
+      - ".github/workflows/creator-studio-neutral-timeline.yml"
+  workflow_dispatch:
+
+jobs:
+  neutral-timeline-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Assert exact PR head
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install exact interchange dependency
+        run: python -m pip install -r tools/creator_studio/requirements-timeline.txt
+
+      - name: Execute neutral timeline contract
+        run: python -m unittest -v tests.test_creator_studio_neutral_timeline_contract
+
+      - name: Claim ceiling and private-format boundary
+        shell: python
+        run: |
+          from pathlib import Path
+          source = Path('tools/creator_studio/neutral_timeline_contract.py').read_text()
+          assert 'TAG_SCHEMA = "AURA_TAG_SET_V1"' in source
+          assert 'capcut_private_draft_compatibility_proven": False' in source
+          assert 'semantic_k27_authority": False' in source
+          assert 'native_transformer_kv_accessed": False' in source
+          assert 'verified' not in source.split('class AdmittedAssetRefV1:', 1)[1].split('@property', 1)[0]
+          print('CREATOR_NEUTRAL_TIMELINE_CONTRACT_EXECUTED=true')
+          print('TAG_SET_ORDER_INVARIANT=true')
+          print('OTIO_ROUNDTRIP_REQUIRED=true')
+          print('CAPCUT_PRIVATE_DRAFT_COMPATIBILITY_PROVEN=false')
+          print('ASSET_VERIFICATION_MINTED_BY_TIMELINE_LAYER=false')
+          print('SEMANTIC_K27_AUTHORITY=false')
+          print('NATIVE_TRANSFORMER_KV_ACCESSED=false')
