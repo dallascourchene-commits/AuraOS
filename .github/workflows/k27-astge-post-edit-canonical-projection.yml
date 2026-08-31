@@ -45,12 +45,17 @@ jobs:
           cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml --doc
           cargo clippy --manifest-path crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml --all-targets -- -D warnings
 
-      - name: Verify deterministic serialized projection
-        run: |
-          cargo fmt --check --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml
-          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --all-targets
-          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --doc
-          cargo clippy --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --all-targets -- -D warnings
+      - name: Projection rustfmt check
+        run: cargo fmt --check --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml
+
+      - name: Projection tests
+        run: cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --all-targets
+
+      - name: Projection doctests
+        run: cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --doc
+
+      - name: Projection fatal Clippy
+        run: cargo clippy --manifest-path crates/aura-k27-astge-post-edit-canonical-projection/Cargo.toml --all-targets -- -D warnings
 
       - name: Verify projection boundary is owner typed and authority negative
         run: |
@@ -64,6 +69,7 @@ jobs:
           assert 'selected_target_semantic_handle_digest_hex: hex(&handle)' in text
           assert 'producer_authenticated: false' in text
           assert 'local_scope_id_is_semantic_identity: false' in text
+          assert 'candidate_current.semantic_k27_derived' in text
           print('REPOSITORY_OWNED_SERIALIZED_PR525_PROJECTION=true')
           print('PROJECTION_PRODUCER_AUTHENTICATED=false')
           print('SEMANTIC_AUTHORITY=false')
