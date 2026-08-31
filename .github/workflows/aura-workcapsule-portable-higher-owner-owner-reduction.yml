@@ -92,21 +92,52 @@ jobs:
       - name: Assert duplicate semantic owner is absent from compatibility facade
         run: |
           python3 - <<'PY'
+          import ast
           import inspect
           from pathlib import Path
           import scripts.aura_workcapsule_post_repair_portable_higher_owner_continuity as legacy
+
           source = Path('scripts/aura_workcapsule_post_repair_portable_higher_owner_continuity.py').read_text()
           assert 'aura_workcapsule_post_source_portable_higher_owner_continuity' in source
-          forbidden = (
+          tree = ast.parse(source)
+          imported_modules = {
+              node.module
+              for node in ast.walk(tree)
+              if isinstance(node, ast.ImportFrom) and node.module is not None
+          }
+          assert 'scripts.aura_workcapsule_post_repair_source_projection_continuity' not in imported_modules
+
+          called_names = set()
+          for node in ast.walk(tree):
+              if not isinstance(node, ast.Call):
+                  continue
+              if isinstance(node.func, ast.Name):
+                  called_names.add(node.func.id)
+              elif isinstance(node.func, ast.Attribute):
+                  called_names.add(node.func.attr)
+          for forbidden_call in (
               'verify_portable_canonical_target_projection',
               'verify_post_repair_source_projection_continuity',
               'admit_post_repair_source_projection_continuity',
+              '_owner_chain_payload_bytes',
+          ):
+              assert forbidden_call not in called_names, forbidden_call
+
+          assigned_names = {
+              target.id
+              for node in ast.walk(tree)
+              if isinstance(node, (ast.Assign, ast.AnnAssign))
+              for target in (node.targets if isinstance(node, ast.Assign) else [node.target])
+              if isinstance(target, ast.Name)
+          }
+          for forbidden_state in (
               '_OWNER_CHAIN_FIELDS',
               '_TARGET_PAYLOAD_FIELDS',
-              '_owner_chain_payload_bytes',
-          )
-          for token in forbidden:
-              assert token not in source, token
+              '_OWNER_CHAIN_POSITIVE_FIELDS',
+              '_OWNER_CHAIN_NEGATIVE_FIELDS',
+          ):
+              assert forbidden_state not in assigned_names, forbidden_state
+
           params = inspect.signature(legacy.verify_post_repair_portable_higher_owner_continuity).parameters
           assert 'higher_owner_projection' in params
           assert 'astge_projection' not in params
