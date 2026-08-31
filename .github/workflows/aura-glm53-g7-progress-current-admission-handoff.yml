@@ -1,0 +1,159 @@
+name: Aura GLM53 G7 Progress Current Admission Handoff
+
+on:
+  pull_request:
+  workflow_dispatch:
+  push:
+    branches:
+      - arena/glm53-g7-progress-current-admission-handoff-v1-20260831-sol
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g7-progress-current-admission-handoff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify pull-request exact head
+        if: github.event_name == 'pull_request'
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Authenticate exact two-parent convergence
+        run: |
+          python3 - <<'PY'
+          import subprocess
+
+          convergence = "afadf96392b2a1fb0f32c488f1b240853b46462c"
+          nav14 = "6cdd1be40428250bffba20e924f664c7be585469"
+          reuse = "d1a0f94255527835a59a70a0af7dc417ba1d023d"
+          parents = subprocess.check_output(
+              ["git", "show", "-s", "--format=%P", convergence], text=True
+          ).strip().split()
+          if parents != [reuse, nav14]:
+              raise SystemExit(f"G7_CONVERGENCE_PARENT_MISMATCH:{parents}")
+          if subprocess.run(["git", "merge-base", "--is-ancestor", convergence, "HEAD"]).returncode:
+              raise SystemExit("G7_CONVERGENCE_NOT_ANCESTOR_OF_HEAD")
+          PY
+
+      - name: Authenticate exact parent semantic blobs
+        run: |
+          test "$(git rev-parse 6cdd1be40428250bffba20e924f664c7be585469:tools/aura_nav14_progress_bound_hydrated_version_handoff.py)" = "b1bdfb4c65281c314e658a6fb6fc8727a4b54245"
+          test "$(git rev-parse d1a0f94255527835a59a70a0af7dc417ba1d023d:tools/aura_generation_bound_admission_reuse.py)" = "d171d0938e469a4383490d1a691750c2068f21e7"
+
+      - name: Revalidate exact hosted parent proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = "dallascourchene-commits/AuraOS"
+          coords = (
+              (33437542974, 99637538062, "6cdd1be40428250bffba20e924f664c7be585469", "NAV14"),
+              (33437612722, 99637780915, "d1a0f94255527835a59a70a0af7dc417ba1d023d", "ADMISSION_REUSE"),
+          )
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          for run_id, job_id, head, label in coords:
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{run_id}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  run = json.load(response)
+              if run.get("conclusion") != "success":
+                  raise SystemExit(f"{label}_RUN_NOT_SUCCESS")
+              if run.get("head_sha") != head:
+                  raise SystemExit(f"{label}_RUN_HEAD_MISMATCH:{run.get('head_sha')}")
+
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/jobs/{job_id}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  job = json.load(response)
+              if job.get("conclusion") != "success":
+                  raise SystemExit(f"{label}_JOB_NOT_SUCCESS")
+          PY
+
+      - name: Compile proof surfaces
+        run: |
+          python3 -m py_compile \
+            tools/aura_nav14_progress_bound_hydrated_version_handoff.py \
+            tools/aura_generation_bound_admission_reuse.py \
+            tools/awj032/glm53_g7_progress_current_admission_handoff.py \
+            tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py \
+            tests/test_aura_generation_bound_admission_reuse.py \
+            tools/awj032/test_glm53_g7_progress_current_admission_handoff.py
+
+      - name: Reexecute NAV-14 parent adversarials
+        run: python3 -m unittest tests.test_aura_nav14_progress_bound_hydrated_version_handoff -v
+
+      - name: Reexecute generation-bound admission reuse adversarials
+        run: python3 -m unittest tests.test_aura_generation_bound_admission_reuse -v
+
+      - name: Execute G7 adversarial contract
+        run: python3 -m unittest tools.awj032.test_glm53_g7_progress_current_admission_handoff -v
+
+      - name: Exhaust complete 512-state Different-J lattice
+        run: |
+          python3 - <<'PY'
+          from tools.awj032.glm53_g7_progress_current_admission_handoff import prove_different_j
+          checked = prove_different_j()
+          if checked != 512:
+              raise SystemExit(f"G7_DIFFERENT_J_COUNT_MISMATCH:{checked}")
+          print({"states": checked})
+          PY
+
+      - name: Enforce G7 currentness and nonpromotion ceiling
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path("tools/awj032/glm53_g7_progress_current_admission_handoff.py").read_text()
+          required = (
+              "future_read_currentness_required: bool = True",
+              "future_read_currentness_proven: bool = False",
+              "tensor_payload_bound: bool = False",
+              "source_truth_proven: bool = False",
+              "evidence_admitted: bool = False",
+              "persistent_write_authorized: bool = False",
+              "execution_authorized: bool = False",
+              "provider_effect_authorized: bool = False",
+              "owner_host_execution_observed: bool = False",
+              "gate10_promoted: bool = False",
+              "semantic_k27_authority: bool = False",
+              "native_private_transformer_kv_accessed: bool = False",
+          )
+          for marker in required:
+              if marker not in text:
+                  raise SystemExit(f"G7_CLAIM_CEILING_MARKER_MISSING:{marker}")
+          forbidden = (
+              "gate10_promoted: bool = True",
+              "execution_authorized: bool = True",
+              "provider_effect_authorized: bool = True",
+              "tensor_payload_bound: bool = True",
+              "future_read_currentness_proven: bool = True",
+          )
+          for marker in forbidden:
+              if marker in text:
+                  raise SystemExit(f"G7_FORBIDDEN_PROMOTION_MARKER_PRESENT:{marker}")
+          PY
