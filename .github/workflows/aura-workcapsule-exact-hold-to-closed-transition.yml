@@ -1,0 +1,100 @@
+name: Aura WorkCapsule Exact HOLD-to-CLOSED Transition
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_astge_anchor_hydration.py'
+      - 'scripts/aura_workcapsule_context_binding.py'
+      - 'scripts/aura_workcapsule_reentry_invalidation.py'
+      - 'scripts/aura_workcapsule_source_reentry_observation.py'
+      - 'scripts/aura_workcapsule_reentry_exact_verifier.py'
+      - 'scripts/aura_workcapsule_reentry_closure.py'
+      - 'scripts/aura_workcapsule_reentry_closure_exact_verifier.py'
+      - 'scripts/aura_workcapsule_observation_bound_closure.py'
+      - 'scripts/aura_workcapsule_observation_bound_exact_verifier.py'
+      - 'scripts/aura_workcapsule_source_bound_exact_reentry.py'
+      - 'scripts/aura_workcapsule_two_phase_source_bound_closure.py'
+      - 'scripts/aura_workcapsule_exact_hold_to_closed_transition.py'
+      - 'tests/test_aura_workcapsule_observation_bound_exact_verifier.py'
+      - 'tests/test_aura_workcapsule_source_bound_exact_reentry.py'
+      - 'tests/test_aura_workcapsule_two_phase_source_bound_closure.py'
+      - 'tests/test_aura_workcapsule_exact_hold_to_closed_transition.py'
+      - '.github/workflows/aura-workcapsule-exact-hold-to-closed-transition.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-hold-to-closed-transition:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR519 exact pre-state owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_observation_bound_exact_verifier.py
+          python3 -m unittest -v tests.test_aura_workcapsule_observation_bound_exact_verifier
+
+      - name: Re-prove PR518 two-phase lifecycle owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_source_bound_exact_reentry.py scripts/aura_workcapsule_two_phase_source_bound_closure.py
+          python3 -m unittest -v tests.test_aura_workcapsule_source_bound_exact_reentry tests.test_aura_workcapsule_two_phase_source_bound_closure
+
+      - name: Prove exact PRE HOLD to POST CLOSED transition
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_exact_hold_to_closed_transition.py
+          python3 -m unittest -v tests.test_aura_workcapsule_exact_hold_to_closed_transition
+
+      - name: Assert O26 public boundary and O19 separation
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_exact_hold_to_closed_transition import verify_exact_hold_to_closed_transition
+          params = inspect.signature(verify_exact_hold_to_closed_transition).parameters
+          assert 'candidate_binding' not in params
+          assert 'observed_source_witnesses' not in params
+          assert 'source_observation_receipt' not in params
+          assert 'reentry_receipt' in params  # O19 owns eliminating caller O8; O26 owns temporal transition only.
+          assert 'pre_observation_closure_receipt' in params
+          assert 'pre_root' in params and 'post_root' in params
+          print('O19_NO_CALLER_O8_OWNER_NOT_DUPLICATED=true')
+          print('O26_PINNED_O8_INPUT_RETAINED=true')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'EXACT_PRE_OBSERVATION_HOLD_REQUIRED=true'
+          echo 'EXACT_TWO_PHASE_POST_CLOSED_REQUIRED=true'
+          echo 'PRE_POST_RAW_EVIDENCE_DISTINCT=true'
+          echo 'SAME_PREVIOUS_BINDING_AND_REENTRY_RECEIPT_BOUND=true'
+          echo 'FOREIGN_PRE_WORLD_RECEIPT_ACCEPTED=false'
+          echo 'EXACT_POST_HOLD_PROMOTED_TO_CLOSED=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_MINTED=false'
+          echo 'PRODUCER_IDENTITY_AUTHENTICATED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_DEPENDENCY_CONE_PROVEN=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
