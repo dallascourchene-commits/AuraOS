@@ -1,0 +1,173 @@
+name: Aura WorkCapsule Live Artifact Raw-Slice Noninterchangeability
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR575_SHA: c13a3214e32f93b79b17e5009a53700bbdc4dbf0
+  PR574_SHA: 082340acd0b0f52e266f069e08b45a81090c591d
+  CONVERGENCE_SHA: b3a3fc4f759035a1b097deec16cf146da7014561
+
+jobs:
+  exact-noninterchangeability:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact child and prove PR575 x PR574 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=260 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR575_SHA" "$PR574_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR575_SHA $PR574_SHA"
+          git merge-base --is-ancestor "$PR575_SHA" HEAD
+          git merge-base --is-ancestor "$PR574_SHA" HEAD
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+
+      - name: Re-prove exact PR575 live-artifact target owner on child tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/aura_workcapsule_live_causal_artifact_host_observation.py \
+            scripts/aura_workcapsule_live_artifact_raw_slice_noninterchangeability.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_causal_artifact_host_observation
+
+      - name: Fetch and re-prove exact PR574 causal raw-slice separation owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr574 && mkdir -p /tmp/pr574
+          git -C /tmp/pr574 init .
+          git -C /tmp/pr574 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr574 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR574_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr574 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr574 rev-parse HEAD)" = "$PR574_SHA"
+          test -z "$(git -C /tmp/pr574 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr574
+          python3 -m py_compile scripts/aura_workcapsule_causal_raw_slice_host_separation.py
+          python3 -m unittest -v tests.test_aura_workcapsule_causal_raw_slice_host_separation
+
+      - name: Run closed-receipt adversarial membrane
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          python3 -m unittest -v tests.test_aura_workcapsule_live_artifact_raw_slice_noninterchangeability
+
+      - name: Emit one actual PR574 consequence receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/pr574
+          PYTHONPATH=. python3 - <<'PY'
+          import json
+          from unittest.mock import patch
+          from scripts import aura_workcapsule_causal_raw_slice_host_separation as target
+          from tests.test_aura_workcapsule_causal_raw_slice_host_separation import raw_slice, host_receipt
+
+          host = host_receipt()
+          with patch.object(target, '_verify_snapshot_and_causal_host', return_value=[]), patch.object(
+              target, 'admit_causal_temporal_host_observation_admission', return_value=host
+          ):
+              out = target.admit_causal_raw_slice_host_separation(raw_slice_receipt=raw_slice())
+          with open('/tmp/pr574_receipt.json', 'w', encoding='utf-8') as handle:
+              json.dump(out, handle, sort_keys=True, separators=(',', ':'))
+          print('EXACT_PR574_CONSEQUENCE_SHAPE_EMITTED=true')
+          PY
+
+      - name: Prove actual PR574 receipt cannot substitute for PR575 host evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          python3 - <<'PY'
+          import json
+          from scripts.aura_workcapsule_live_causal_artifact_host_observation import (
+              admit_live_causal_artifact_host_observation,
+          )
+          from scripts.aura_workcapsule_live_artifact_raw_slice_noninterchangeability import (
+              admit_live_artifact_raw_slice_noninterchangeability,
+          )
+          from tests.test_aura_workcapsule_live_causal_artifact_host_observation import (
+              WorkCapsuleLiveCausalArtifactHostObservationTests,
+          )
+
+          case = WorkCapsuleLiveCausalArtifactHostObservationTests(
+              methodName='test_resolved_gate_binds_to_exact_live_causal_artifact'
+          )
+          case.setUp()
+          try:
+              live = admit_live_causal_artifact_host_observation(**case.child_kwargs())
+              with open('/tmp/pr574_receipt.json', encoding='utf-8') as handle:
+                  raw = json.load(handle)
+              out = admit_live_artifact_raw_slice_noninterchangeability(
+                  live_artifact_host_receipt=live,
+                  causal_raw_slice_host_separation_receipt=raw,
+              )
+              assert out['raw_slice_host_envelope_cross_cast_rejected'] is True
+              assert out['raw_slice_used_as_host_resolution'] is False
+              assert out['proof_artifacts_interchangeable'] is False
+              assert out['host_effect_ready'] is False
+              assert not any(out['authority'].values())
+              print('RAW_SLICE_RECEIPT_CANNOT_IMPERSONATE_LIVE_ARTIFACT_HOST_EVIDENCE=true')
+          finally:
+              case.tearDown()
+          PY
+
+      - name: Assert narrow owner boundary and consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_workcapsule_live_artifact_raw_slice_noninterchangeability.py
+          grep -q 'verify_host_admission_envelope' "$child"
+          if grep -q '^def verify_host_admission_envelope' "$child"; then
+            echo 'child duplicated host envelope owner' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_live_artifact_raw_slice_noninterchangeability import (
+              verify_live_artifact_raw_slice_noninterchangeability,
+          )
+          assert set(inspect.signature(verify_live_artifact_raw_slice_noninterchangeability).parameters) == {
+              'live_artifact_host_receipt',
+              'causal_raw_slice_host_separation_receipt',
+          }
+          PY
+          cat <<'EOF'
+          EXACT_LIVE_ARTIFACT_TARGET_BINDING_PRESERVED=true
+          EXACT_CAUSAL_RAW_SLICE_LOCAL_EVIDENCE_PRESERVED=true
+          RAW_SLICE_HOST_ENVELOPE_CROSS_CAST_REJECTED=true
+          RAW_SLICE_PROMOTED_TO_HOST_RANK=false
+          RAW_SLICE_USED_AS_HOST_RESOLUTION=false
+          PROOF_ARTIFACTS_INTERCHANGEABLE=false
+          PRODUCER_AUTHENTICATED=false
+          SEMANTIC_EQUIVALENCE_PROVEN=false
+          HOST_RESOLVER_TRUST_PROVEN=false
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          HOST_EFFECT_READY=false
+          REVIEW_EXECUTION_COMMIT_MERGE_PROMOTION_PROVIDER_PUBLIC_HUMAN_AUTHORITY=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF
