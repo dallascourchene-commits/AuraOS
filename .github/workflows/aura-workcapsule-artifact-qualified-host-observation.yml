@@ -71,11 +71,13 @@ jobs:
           python3 -m unittest -v tests.test_aura_workcapsule_temporal_host_observation_admission
           echo 'PR559_REPROVED_IN_ISOLATION=true'
 
-      - name: Run artifact-qualified host adversarial suite
+      - name: Run artifact-qualified host adversarial and hardening suites
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m unittest -v tests.test_aura_workcapsule_artifact_qualified_host_observation
+          python3 -m unittest -v \
+            tests.test_aura_workcapsule_artifact_qualified_host_observation \
+            tests.test_aura_workcapsule_artifact_qualified_host_observation_hardening
 
       - name: Assert owner boundary and consequence ceiling
         shell: bash
@@ -86,6 +88,8 @@ jobs:
           from scripts.aura_workcapsule_artifact_qualified_host_observation import verify_artifact_qualified_host_observation
           params = set(inspect.signature(verify_artifact_qualified_host_observation).parameters)
           assert params == {'scoped_target_inputs','higher_owner_projection','raw_slice_receipt','host_admission_receipt'}
+          print('STRUCTURED_UNKNOWN_RESOLUTION_PRESERVED=true')
+          print('UNHASHABLE_HOST_STATE_FAILS_CLOSED=true')
           print('CALLER_HOST_RESOLVER_ACCEPTED=false')
           print('CALLER_EFFECT_OVERRIDE_ACCEPTED=false')
           print('HOST_ADMISSION_REPROVED_BY_CHILD=false')
