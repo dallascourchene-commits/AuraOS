@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788161508,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1646,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -149,6 +149,8 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-cross-isa-hamming-replay.yml",
+      ".github/workflows/k27-xhdv-riscv-candidate-falsifier.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -1326,6 +1328,7 @@
       "tests/fixtures/amd_track3/demo_one.py",
       "tests/fixtures/amd_track3/demo_three.py",
       "tests/fixtures/amd_track3/demo_two.py",
+      "tests/fixtures/k27_cross_isa_pr613_replay.cpp",
       "tests/fixtures/relationship_atlas/relational_index_fixture.json",
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
@@ -1623,6 +1626,8 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_cross_isa_hamming_replay.py",
+      "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -1633,6 +1638,8 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/k27_cross_isa_hamming_replay.py",
+      "tools/k27_xhdv_riscv_candidate_falsifier.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1755,16 +1762,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1646,
+      "bytes": 26451026,
+      "tokens_est": 6603110,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
-        "native_accelerator": 12,
+        "native_accelerator": 13,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 1001,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -3458,6 +3465,22 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 233,
+        "end_line": 248,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:main:a632db2a6dee7a3e",
+        "signature_hash": "0e430dbd1b01e915"
+      },
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 206,
+        "end_line": 208,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:main:33ec1244a53e6a22",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -8057,6 +8080,14 @@
         "end_line": 161,
         "semantic_id": "aura_review_lessons_contracts.py#function:_canonical_json:986e3ee6617aeebf",
         "signature_hash": "caa6df7371712507"
+      },
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 31,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:_canonical_json:a69f059a5146601a",
+        "signature_hash": "c6d0368c0d268d56"
       }
     ],
     "_sha": [
@@ -21647,6 +21678,14 @@
         "end_line": 109,
         "semantic_id": "aura_vsa_encoding_profile.py#function:bind:2d20904dbe815ba2",
         "signature_hash": "5cd660891da3ff69"
+      },
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 79,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:bind:8063b154f1f2a286",
+        "signature_hash": "9412f39b4cce75ed"
       }
     ],
     "unbind": [
@@ -156921,6 +156960,206 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "CrossISAHammingReplayTests": [
+      {
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "kind": "class",
+        "line": 11,
+        "end_line": 78,
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#class:CrossISAHammingReplayTests:96222b7af6257b44",
+        "signature_hash": "619bf38e766bdf4a"
+      }
+    ],
+    "CrossISAHammingReplayTests.test_frozen_corpus_digest_and_expected_distances": [
+      {
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "kind": "method",
+        "line": 12,
+        "end_line": 14,
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_frozen_corpus_digest_and_expected_distances:b8add83a3077146a",
+        "signature_hash": "7f77c69f711983bf"
+      }
+    ],
+    "CrossISAHammingReplayTests.test_representation_map_digest_is_exact": [
+      {
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 18,
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_representation_map_digest_is_exact:2debba3c511160de",
+        "signature_hash": "b5bfe713a08ce19c"
+      }
+    ],
+    "CrossISAHammingReplayTests.test_canonical_wire_roundtrip_all_vectors": [
+      {
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 24,
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_canonical_wire_roundtrip_all_vectors:a70420da8615f6de",
+        "signature_hash": "854c2593062f7698"
+      }
+    ],
+    "CrossISAHammingReplayTests.test_wire_is_explicit_word_order_and_little_endian": [
+      {
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 31,
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_wire_is_explicit_word_order_and_little_endian:e7e26ab02f4c6f2e",
+        "signature_hash": "cd958e52ddb6c261"
+      }
+    ],
+    "CrossISAHammingReplayTests.test_reverse_word_order_is_not_wire_compatible": [
+      {
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 38,
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_reverse_word_order_is_not_wire_compatible:f23f312d6d53703a",
+        "signature_hash": "2fafe7beadb0acaa"
+      }
+    ],
+    "CrossISAHammingReplayTests.test_big_endian_per_word_is_not_canonical_wire": [
+      {
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 44,
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_big_endian_per_word_is_not_canonical_wire:b93513d79c10a1e0",
+        "signature_hash": "b180e1f47872d875"
+      }
+    ],
+    "CrossISAHammingReplayTests.test_emit_tsv_is_complete_and_ordered": [
+      {
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 53,
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_emit_tsv_is_complete_and_ordered:2a731552feb60477",
+        "signature_hash": "bb357d7f69b1358f"
+      }
+    ],
+    "CrossISAHammingReplayTests.test_pr623_exact_software_reference_replays_corpus": [
+      {
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 56,
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_pr623_exact_software_reference_replays_corpus:f509671a548124cd",
+        "signature_hash": "48e68a6a503c52dc"
+      }
+    ],
+    "CrossISAHammingReplayTests.test_receipt_keeps_representation_abi_hardware_effect_ceiling_false": [
+      {
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 78,
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_receipt_keeps_representation_abi_hardware_effect_ceiling_false:e7c2a03f862b1881",
+        "signature_hash": "243aa152151d891d"
+      }
+    ],
+    "XhdvCandidateFalsifierTests": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 73,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#class:XhdvCandidateFalsifierTests:2724e878c9f433a7",
+        "signature_hash": "fcd35da815ab6c14"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_custom0_and_r_encoding_roundtrip": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_custom0_and_r_encoding_roundtrip:6510d5d403eb1ab6",
+        "signature_hash": "ddd7a120c99a7fb3"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_register_fields_are_strict_five_bit_ids": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_register_fields_are_strict_five_bit_ids:1605206584568cd9",
+        "signature_hash": "d28ee652af131bee"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_bind_is_exact_xor_and_hamming_extrema_fit_11_bits": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 39,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_bind_is_exact_xor_and_hamming_extrema_fit_11_bits:503a3bea032048c9",
+        "signature_hash": "0f9c3c0078b9a2ff"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_rotate_roundtrip_edge_and_random_shifts": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 46,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_rotate_roundtrip_edge_and_random_shifts:778e3b39f4486ffd",
+        "signature_hash": "a57143142cd99e38"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_pasted_dataset_recovers_target_but_threshold_rejects_nothing": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 52,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_pasted_dataset_recovers_target_but_threshold_rejects_nothing:60df202f9eda8fa0",
+        "signature_hash": "84fd07bf9927e4a2"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_pasted_threshold_is_not_discriminative": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_pasted_threshold_is_not_discriminative:75df0f33216e0625",
+        "signature_hash": "0422c043a5c2d1d2"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_shown_inline_asm_does_not_establish_hidden_h_register_abi": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 60,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_shown_inline_asm_does_not_establish_hidden_h_register_abi:e406efe2db58e485",
+        "signature_hash": "d507b3bc51040607"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_rtl_and_two_cycle_timing_remain_unproven": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 66,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_rtl_and_two_cycle_timing_remain_unproven:3b5c075b36f89213",
+        "signature_hash": "aff33ef43e84f3ed"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_performance_k27_and_alignment_authority_remain_false": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 73,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_performance_k27_and_alignment_authority_remain_false:e4366a2bea4e39f1",
+        "signature_hash": "58f89392af80d91f"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -157179,6 +157418,346 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "representation_map": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 47,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:representation_map:6867dc4b0a3506b4",
+        "signature_hash": "131b36e2fe4b72f3"
+      }
+    ],
+    "_strict_words": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 58,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:_strict_words:f4f235e8d61ba712",
+        "signature_hash": "c6d2d0f9873e618f"
+      }
+    ],
+    "encode_wire": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 63,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:encode_wire:5b633e2601f67f4b",
+        "signature_hash": "d7c51d3c0abf6ad9"
+      }
+    ],
+    "decode_wire": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 69,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:decode_wire:89c50ca5242f04ea",
+        "signature_hash": "3a04a8cc4880f78b"
+      }
+    ],
+    "logical_hamming": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 75,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:logical_hamming:810b5fc75c8d9f7a",
+        "signature_hash": "0cb5309c0edc9e17"
+      }
+    ],
+    "_sha_word": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 80,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:_sha_word:0094f37f77d7b765",
+        "signature_hash": "f41326e1e9254ea0"
+      }
+    ],
+    "HammingVector": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "class",
+        "line": 84,
+        "end_line": 96,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#class:HammingVector:fda53518969a03de",
+        "signature_hash": "b3c77870f6fd2b7b"
+      }
+    ],
+    "HammingVector.canonical_dict": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 96,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#method:HammingVector.canonical_dict:611037ebbdc77bb2",
+        "signature_hash": "e5e443dc056f9572"
+      }
+    ],
+    "vectors": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 99,
+        "end_line": 125,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:vectors:be684a3c2be856be",
+        "signature_hash": "e323118b41326794"
+      }
+    ],
+    "corpus_object": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 135,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:corpus_object:b543daa2d2816006",
+        "signature_hash": "419a24c0baed5dea"
+      }
+    ],
+    "verify_frozen_identities": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 138,
+        "end_line": 144,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:verify_frozen_identities:34d49345d3cde007",
+        "signature_hash": "e39b982075dffa7d"
+      }
+    ],
+    "emit_tsv": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 147,
+        "end_line": 152,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:emit_tsv:a89aae89fe2d8f0d",
+        "signature_hash": "2026b4fbf2aeb946"
+      }
+    ],
+    "replay_pr623": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 160,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:replay_pr623:9dc37d35ced8c17b",
+        "signature_hash": "9d31f69b791bcee9"
+      }
+    ],
+    "_parse_pr613_results": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 163,
+        "end_line": 181,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:_parse_pr613_results:587034259295a8cd",
+        "signature_hash": "dd15d73a29c767ed"
+      }
+    ],
+    "representation_roundtrip_passes": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 184,
+        "end_line": 190,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:representation_roundtrip_passes:d068cf8ac4fae415",
+        "signature_hash": "7e200f2926344a19"
+      }
+    ],
+    "build_receipt": [
+      {
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "kind": "function",
+        "line": 193,
+        "end_line": 230,
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:build_receipt:1506f6724e053e5f",
+        "signature_hash": "55c8f03f427c581d"
+      }
+    ],
+    "XhdvError": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#class:XhdvError:7c34c85a1ad9b3c3",
+        "signature_hash": "5aafdad87ad4a512"
+      }
+    ],
+    "_strict_u5": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 28,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u5:f6305af9b22bae73",
+        "signature_hash": "1d2c4b3d000ca5b5"
+      }
+    ],
+    "_strict_u3": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u3:a894f4879e6da1d8",
+        "signature_hash": "fb33be0bc00ea2b8"
+      }
+    ],
+    "_strict_u7": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 40,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u7:990606cc383e955f",
+        "signature_hash": "f19b770d420add7a"
+      }
+    ],
+    "encode_r": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 51,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:encode_r:9c1d6903e712edd0",
+        "signature_hash": "f65dc6d2672b5e00"
+      }
+    ],
+    "decode_r": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 64,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:decode_r:fc27e7eda4e024d4",
+        "signature_hash": "6dc34b4fdee51bb7"
+      }
+    ],
+    "_words": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 73,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_words:de0f6babdc114fe5",
+        "signature_hash": "0de3832501cca684"
+      }
+    ],
+    "popcnt": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 83,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:popcnt:c5587374ec6ec42a",
+        "signature_hash": "434dda8e57bffe82"
+      }
+    ],
+    "hdist": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 87,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:hdist:fcea4835db3f0226",
+        "signature_hash": "e504eb10a5c40010"
+      }
+    ],
+    "_to_int": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 91,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_to_int:a7a861113a1266cf",
+        "signature_hash": "1f1bd39f49b24aa6"
+      }
+    ],
+    "_from_int": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 96,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_from_int:202a79685d5f7dad",
+        "signature_hash": "7177122ac6d4b414"
+      }
+    ],
+    "perm": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 99,
+        "end_line": 107,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:perm:cce177bbf741819c",
+        "signature_hash": "af16675f8cda24e5"
+      }
+    ],
+    "pasted_centroid_word": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 113,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:pasted_centroid_word:38fa02eb1d282b4c",
+        "signature_hash": "2b0a6019c1c535a1"
+      }
+    ],
+    "pasted_scan_falsifier": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 116,
+        "end_line": 139,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:pasted_scan_falsifier:1a40629c8fdb6336",
+        "signature_hash": "96e92dd86707d1a9"
+      }
+    ],
+    "XhdvCandidateDisposition": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "class",
+        "line": 143,
+        "end_line": 171,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#class:XhdvCandidateDisposition:60c84d34f6212fe5",
+        "signature_hash": "4494db9fefe25a3d"
+      }
+    ],
+    "XhdvCandidateDisposition.to_dict": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 166,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateDisposition.to_dict:72c166a106d95885",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "XhdvCandidateDisposition.digest": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 171,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateDisposition.digest:b5aef3ef80fc0adb",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "disposition": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 174,
+        "end_line": 203,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:disposition:e2d1b92a2f011265",
+        "signature_hash": "b75f037b7138c920"
       }
     ],
     "_coordinates": [
@@ -158302,6 +158881,8 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-cross-isa-hamming-replay.yml",
+      ".github/workflows/k27-xhdv-riscv-candidate-falsifier.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -158627,6 +159208,23 @@
     ],
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/k27-cross-isa-hamming-replay.yml",
+      ".github/workflows/k27-xhdv-riscv-candidate-falsifier.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
+    "python tools/k27_cross_isa_hamming_replay.py --verify-pr623": [
+      ".github/workflows/k27-cross-isa-hamming-replay.yml"
+    ],
+    "python tools/k27_cross_isa_hamming_replay.py --emit-tsv /tmp/k27-replay/corpus.tsv": [
+      ".github/workflows/k27-cross-isa-hamming-replay.yml"
+    ],
+    "python tools/k27_cross_isa_hamming_replay.py --receipt /tmp/k27-replay/pr613.tsv | tee /tmp/k27-replay/receipt.json": [
+      ".github/workflows/k27-cross-isa-hamming-replay.yml"
+    ],
+    "python tools/k27_xhdv_riscv_candidate_falsifier.py | tee /tmp/xhdv.json": [
+      ".github/workflows/k27-xhdv-riscv-candidate-falsifier.yml"
     ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
@@ -159293,9 +159891,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -168530,6 +169125,136 @@
         0.193092,
         -0.001409,
         -0.102888
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-cross-isa-hamming-replay.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5547,
+      "lines": 129,
+      "tokens_est": 1387,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest",
+        "python tools/k27_cross_isa_hamming_replay.py --verify-pr623",
+        "python tools/k27_cross_isa_hamming_replay.py --emit-tsv /tmp/k27-replay/corpus.tsv",
+        "python tools/k27_cross_isa_hamming_replay.py --receipt /tmp/k27-replay/pr613.tsv | tee /tmp/k27-replay/receipt.json"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          86
+        ],
+        "python -m unittest": [
+          87
+        ],
+        "python tools/k27_cross_isa_hamming_replay.py --verify-pr623": [
+          88
+        ],
+        "python tools/k27_cross_isa_hamming_replay.py --emit-tsv /tmp/k27-replay/corpus.tsv": [
+          90
+        ],
+        "python tools/k27_cross_isa_hamming_replay.py --receipt /tmp/k27-replay/pr613.tsv | tee /tmp/k27-replay/receipt.json": [
+          105
+        ]
+      },
+      "topology": {},
+      "digest8": "7d473321b40cb1c6",
+      "vector": [
+        0.228422,
+        -0.066886,
+        -0.066886,
+        0.008834,
+        0.223374,
+        -0.210754,
+        -0.243566,
+        -0.041646,
+        0.273854,
+        -0.102222,
+        0.20823,
+        0.114842,
+        -0.034074,
+        0.129986,
+        0.117366,
+        0.251138,
+        -0.230946,
+        -0.253662,
+        -0.029026,
+        -0.064362,
+        0.076982,
+        -0.228422,
+        -0.235994,
+        -0.263758,
+        0.061838,
+        0.049218,
+        -0.003786,
+        0.251138,
+        0.294046,
+        0.14513,
+        -0.112318,
+        0.225898
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-xhdv-riscv-candidate-falsifier.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3002,
+      "lines": 75,
+      "tokens_est": 751,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest",
+        "python tools/k27_xhdv_riscv_candidate_falsifier.py | tee /tmp/xhdv.json"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          39
+        ],
+        "python -m unittest": [
+          40
+        ],
+        "python tools/k27_xhdv_riscv_candidate_falsifier.py | tee /tmp/xhdv.json": [
+          46
+        ]
+      },
+      "topology": {},
+      "digest8": "f6dea3ef0c1ab5cb",
+      "vector": [
+        0.167015,
+        -0.259162,
+        0.293716,
+        -0.058743,
+        -0.275287,
+        0.114031,
+        -0.206177,
+        0.178534,
+        -0.178534,
+        -0.074869,
+        -0.123246,
+        0.213088,
+        0.067958,
+        0.240732,
+        -0.035707,
+        -0.040314,
+        0.024188,
+        0.021885,
+        -0.171623,
+        -0.192355,
+        -0.233821,
+        -0.116335,
+        -0.035707,
+        0.272984,
+        -0.026492,
+        0.238429,
+        -0.014974,
+        -0.238429,
+        -0.143979,
+        -0.143979,
+        0.261465,
+        0.229214
       ]
     },
     {
@@ -248313,6 +249038,53 @@
       ]
     },
     {
+      "path": "tests/fixtures/k27_cross_isa_pr613_replay.cpp",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 2751,
+      "lines": 84,
+      "tokens_est": 688,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8b9f5acb988acdd8",
+      "vector": [
+        0.04719,
+        0.157683,
+        0.11855,
+        -0.008057,
+        -0.183004,
+        -0.192212,
+        -0.162287,
+        -0.164588,
+        -0.286591,
+        0.033378,
+        -0.185306,
+        0.150777,
+        0.258968,
+        -0.252062,
+        0.291195,
+        -0.279685,
+        0.206023,
+        -0.012661,
+        -0.090926,
+        0.206023,
+        0.072511,
+        -0.008057,
+        0.130059,
+        0.143871,
+        0.040284,
+        -0.031076,
+        0.293497,
+        -0.127757,
+        -0.284289,
+        0.012661,
+        0.279685,
+        0.021868
+      ]
+    },
+    {
       "path": "tests/fixtures/relationship_atlas/relational_index_fixture.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -262272,6 +263044,100 @@
       ]
     },
     {
+      "path": "tests/test_k27_cross_isa_hamming_replay.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3706,
+      "lines": 83,
+      "tokens_est": 927,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e185a289288fa577",
+      "vector": [
+        0.302021,
+        -0.037301,
+        -0.174475,
+        0.287582,
+        0.078213,
+        0.270736,
+        -0.008423,
+        0.034895,
+        -0.116717,
+        -0.119124,
+        -0.292395,
+        0.061367,
+        0.294802,
+        0.234638,
+        -0.119124,
+        0.133563,
+        0.090245,
+        -0.049334,
+        0.186507,
+        0.188914,
+        0.193727,
+        0.107091,
+        0.234638,
+        -0.246671,
+        -0.010829,
+        0.234638,
+        0.210573,
+        -0.157629,
+        -0.215386,
+        -0.068587,
+        -0.032488,
+        0.00361
+      ]
+    },
+    {
+      "path": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2963,
+      "lines": 78,
+      "tokens_est": 741,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "807727167e835b3e",
+      "vector": [
+        -0.003326,
+        0.2406,
+        0.049894,
+        -0.134159,
+        -0.014414,
+        -0.034371,
+        -0.227295,
+        0.242817,
+        -0.216207,
+        0.034371,
+        -0.189597,
+        -0.211772,
+        0.211772,
+        0.209554,
+        0.096462,
+        -0.280515,
+        0.085374,
+        0.118637,
+        -0.25834,
+        0.156334,
+        0.149682,
+        0.041024,
+        0.025501,
+        0.145247,
+        0.034371,
+        0.22286,
+        0.27608,
+        0.23173,
+        -0.116419,
+        -0.22286,
+        0.280515,
+        0.151899
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -262739,6 +263605,100 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/k27_cross_isa_hamming_replay.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10319,
+      "lines": 253,
+      "tokens_est": 2580,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5e1690a62e132ba0",
+      "vector": [
+        0.155429,
+        -0.128201,
+        0.252998,
+        0.112317,
+        -0.239384,
+        0.114586,
+        -0.110048,
+        -0.230307,
+        -0.032901,
+        0.273419,
+        0.135008,
+        -0.085089,
+        -0.268881,
+        -0.114586,
+        -0.103241,
+        -0.10551,
+        0.05786,
+        -0.273419,
+        0.030632,
+        0.014749,
+        -0.180389,
+        0.287033,
+        0.041977,
+        -0.280226,
+        -0.137277,
+        -0.041977,
+        -0.17812,
+        0.10551,
+        -0.110048,
+        -0.187196,
+        0.264343,
+        -0.289302
+      ]
+    },
+    {
+      "path": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7690,
+      "lines": 213,
+      "tokens_est": 1923,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "126ee50d8506a5b7",
+      "vector": [
+        0.231346,
+        0.011632,
+        -0.016802,
+        0.071084,
+        -0.019387,
+        0.213252,
+        -0.314062,
+        0.009047,
+        0.277873,
+        0.076254,
+        0.065914,
+        0.014217,
+        0.158969,
+        0.081423,
+        0.2391,
+        0.189988,
+        -0.246855,
+        -0.25461,
+        0.084008,
+        -0.314062,
+        0.125366,
+        -0.099517,
+        -0.184818,
+        0.04265,
+        0.151215,
+        -0.029726,
+        -0.231346,
+        0.146045,
+        -0.037481,
+        -0.316646,
+        -0.076254,
+        0.290798
       ]
     },
     {
@@ -286646,16 +287606,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1646,
+    "total_bytes": 26451026,
+    "text_tokens_est": 6603110,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
-      "native_accelerator": 12,
+      "native_accelerator": 13,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 1001,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286814,6 +287774,8 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-cross-isa-hamming-replay.yml",
+      ".github/workflows/k27-xhdv-riscv-candidate-falsifier.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -287991,6 +288953,7 @@
       "tests/fixtures/amd_track3/demo_one.py",
       "tests/fixtures/amd_track3/demo_three.py",
       "tests/fixtures/amd_track3/demo_two.py",
+      "tests/fixtures/k27_cross_isa_pr613_replay.cpp",
       "tests/fixtures/relationship_atlas/relational_index_fixture.json",
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
@@ -288288,6 +289251,8 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_cross_isa_hamming_replay.py",
+      "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -288298,6 +289263,8 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/k27_cross_isa_hamming_replay.py",
+      "tools/k27_xhdv_riscv_candidate_falsifier.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -445354,6 +446321,206 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#class:CrossISAHammingReplayTests:96222b7af6257b44",
+        "name": "CrossISAHammingReplayTests",
+        "kind": "class",
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "line": 11,
+        "end_line": 78,
+        "signature_hash": "619bf38e766bdf4a",
+        "file_digest8": "e185a289288fa577"
+      },
+      {
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_big_endian_per_word_is_not_canonical_wire:b93513d79c10a1e0",
+        "name": "CrossISAHammingReplayTests.test_big_endian_per_word_is_not_canonical_wire",
+        "kind": "method",
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "line": 40,
+        "end_line": 44,
+        "signature_hash": "b180e1f47872d875",
+        "file_digest8": "e185a289288fa577"
+      },
+      {
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_canonical_wire_roundtrip_all_vectors:a70420da8615f6de",
+        "name": "CrossISAHammingReplayTests.test_canonical_wire_roundtrip_all_vectors",
+        "kind": "method",
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "line": 20,
+        "end_line": 24,
+        "signature_hash": "854c2593062f7698",
+        "file_digest8": "e185a289288fa577"
+      },
+      {
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_emit_tsv_is_complete_and_ordered:2a731552feb60477",
+        "name": "CrossISAHammingReplayTests.test_emit_tsv_is_complete_and_ordered",
+        "kind": "method",
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "line": 46,
+        "end_line": 53,
+        "signature_hash": "bb357d7f69b1358f",
+        "file_digest8": "e185a289288fa577"
+      },
+      {
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_frozen_corpus_digest_and_expected_distances:b8add83a3077146a",
+        "name": "CrossISAHammingReplayTests.test_frozen_corpus_digest_and_expected_distances",
+        "kind": "method",
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "line": 12,
+        "end_line": 14,
+        "signature_hash": "7f77c69f711983bf",
+        "file_digest8": "e185a289288fa577"
+      },
+      {
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_pr623_exact_software_reference_replays_corpus:f509671a548124cd",
+        "name": "CrossISAHammingReplayTests.test_pr623_exact_software_reference_replays_corpus",
+        "kind": "method",
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "line": 55,
+        "end_line": 56,
+        "signature_hash": "48e68a6a503c52dc",
+        "file_digest8": "e185a289288fa577"
+      },
+      {
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_receipt_keeps_representation_abi_hardware_effect_ceiling_false:e7c2a03f862b1881",
+        "name": "CrossISAHammingReplayTests.test_receipt_keeps_representation_abi_hardware_effect_ceiling_false",
+        "kind": "method",
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "line": 58,
+        "end_line": 78,
+        "signature_hash": "243aa152151d891d",
+        "file_digest8": "e185a289288fa577"
+      },
+      {
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_representation_map_digest_is_exact:2debba3c511160de",
+        "name": "CrossISAHammingReplayTests.test_representation_map_digest_is_exact",
+        "kind": "method",
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "line": 16,
+        "end_line": 18,
+        "signature_hash": "b5bfe713a08ce19c",
+        "file_digest8": "e185a289288fa577"
+      },
+      {
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_reverse_word_order_is_not_wire_compatible:f23f312d6d53703a",
+        "name": "CrossISAHammingReplayTests.test_reverse_word_order_is_not_wire_compatible",
+        "kind": "method",
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "line": 33,
+        "end_line": 38,
+        "signature_hash": "2fafe7beadb0acaa",
+        "file_digest8": "e185a289288fa577"
+      },
+      {
+        "semantic_id": "tests/test_k27_cross_isa_hamming_replay.py#method:CrossISAHammingReplayTests.test_wire_is_explicit_word_order_and_little_endian:e7e26ab02f4c6f2e",
+        "name": "CrossISAHammingReplayTests.test_wire_is_explicit_word_order_and_little_endian",
+        "kind": "method",
+        "file": "tests/test_k27_cross_isa_hamming_replay.py",
+        "line": 26,
+        "end_line": 31,
+        "signature_hash": "cd958e52ddb6c261",
+        "file_digest8": "e185a289288fa577"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#class:XhdvCandidateFalsifierTests:2724e878c9f433a7",
+        "name": "XhdvCandidateFalsifierTests",
+        "kind": "class",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 21,
+        "end_line": 73,
+        "signature_hash": "fcd35da815ab6c14",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_bind_is_exact_xor_and_hamming_extrema_fit_11_bits:503a3bea032048c9",
+        "name": "XhdvCandidateFalsifierTests.test_bind_is_exact_xor_and_hamming_extrema_fit_11_bits",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 33,
+        "end_line": 39,
+        "signature_hash": "0f9c3c0078b9a2ff",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_custom0_and_r_encoding_roundtrip:6510d5d403eb1ab6",
+        "name": "XhdvCandidateFalsifierTests.test_custom0_and_r_encoding_roundtrip",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "ddd7a120c99a7fb3",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_pasted_dataset_recovers_target_but_threshold_rejects_nothing:60df202f9eda8fa0",
+        "name": "XhdvCandidateFalsifierTests.test_pasted_dataset_recovers_target_but_threshold_rejects_nothing",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 48,
+        "end_line": 52,
+        "signature_hash": "84fd07bf9927e4a2",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_pasted_threshold_is_not_discriminative:75df0f33216e0625",
+        "name": "XhdvCandidateFalsifierTests.test_pasted_threshold_is_not_discriminative",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "0422c043a5c2d1d2",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_performance_k27_and_alignment_authority_remain_false:e4366a2bea4e39f1",
+        "name": "XhdvCandidateFalsifierTests.test_performance_k27_and_alignment_authority_remain_false",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 68,
+        "end_line": 73,
+        "signature_hash": "58f89392af80d91f",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_register_fields_are_strict_five_bit_ids:1605206584568cd9",
+        "name": "XhdvCandidateFalsifierTests.test_register_fields_are_strict_five_bit_ids",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "d28ee652af131bee",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_rotate_roundtrip_edge_and_random_shifts:778e3b39f4486ffd",
+        "name": "XhdvCandidateFalsifierTests.test_rotate_roundtrip_edge_and_random_shifts",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 41,
+        "end_line": 46,
+        "signature_hash": "a57143142cd99e38",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_rtl_and_two_cycle_timing_remain_unproven:3b5c075b36f89213",
+        "name": "XhdvCandidateFalsifierTests.test_rtl_and_two_cycle_timing_remain_unproven",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 62,
+        "end_line": 66,
+        "signature_hash": "aff33ef43e84f3ed",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_shown_inline_asm_does_not_establish_hidden_h_register_abi:e406efe2db58e485",
+        "name": "XhdvCandidateFalsifierTests.test_shown_inline_asm_does_not_establish_hidden_h_register_abi",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 57,
+        "end_line": 60,
+        "signature_hash": "d507b3bc51040607",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -445632,6 +446799,386 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#class:HammingVector:fda53518969a03de",
+        "name": "HammingVector",
+        "kind": "class",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 84,
+        "end_line": 96,
+        "signature_hash": "b3c77870f6fd2b7b",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:_canonical_json:a69f059a5146601a",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 30,
+        "end_line": 31,
+        "signature_hash": "c6d0368c0d268d56",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:_parse_pr613_results:587034259295a8cd",
+        "name": "_parse_pr613_results",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 163,
+        "end_line": 181,
+        "signature_hash": "dd15d73a29c767ed",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:_sha_word:0094f37f77d7b765",
+        "name": "_sha_word",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 78,
+        "end_line": 80,
+        "signature_hash": "f41326e1e9254ea0",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:_strict_words:f4f235e8d61ba712",
+        "name": "_strict_words",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 50,
+        "end_line": 58,
+        "signature_hash": "c6d2d0f9873e618f",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:build_receipt:1506f6724e053e5f",
+        "name": "build_receipt",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 193,
+        "end_line": 230,
+        "signature_hash": "55c8f03f427c581d",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:corpus_object:b543daa2d2816006",
+        "name": "corpus_object",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 128,
+        "end_line": 135,
+        "signature_hash": "419a24c0baed5dea",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:decode_wire:89c50ca5242f04ea",
+        "name": "decode_wire",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 66,
+        "end_line": 69,
+        "signature_hash": "3a04a8cc4880f78b",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:emit_tsv:a89aae89fe2d8f0d",
+        "name": "emit_tsv",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 147,
+        "end_line": 152,
+        "signature_hash": "2026b4fbf2aeb946",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:encode_wire:5b633e2601f67f4b",
+        "name": "encode_wire",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 61,
+        "end_line": 63,
+        "signature_hash": "d7c51d3c0abf6ad9",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:logical_hamming:810b5fc75c8d9f7a",
+        "name": "logical_hamming",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 72,
+        "end_line": 75,
+        "signature_hash": "0cb5309c0edc9e17",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:main:a632db2a6dee7a3e",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 233,
+        "end_line": 248,
+        "signature_hash": "0e430dbd1b01e915",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:replay_pr623:9dc37d35ced8c17b",
+        "name": "replay_pr623",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 155,
+        "end_line": 160,
+        "signature_hash": "9d31f69b791bcee9",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:representation_map:6867dc4b0a3506b4",
+        "name": "representation_map",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 34,
+        "end_line": 47,
+        "signature_hash": "131b36e2fe4b72f3",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:representation_roundtrip_passes:d068cf8ac4fae415",
+        "name": "representation_roundtrip_passes",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 184,
+        "end_line": 190,
+        "signature_hash": "7e200f2926344a19",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:vectors:be684a3c2be856be",
+        "name": "vectors",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 99,
+        "end_line": 125,
+        "signature_hash": "e323118b41326794",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#function:verify_frozen_identities:34d49345d3cde007",
+        "name": "verify_frozen_identities",
+        "kind": "function",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 138,
+        "end_line": 144,
+        "signature_hash": "e39b982075dffa7d",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_cross_isa_hamming_replay.py#method:HammingVector.canonical_dict:611037ebbdc77bb2",
+        "name": "HammingVector.canonical_dict",
+        "kind": "method",
+        "file": "tools/k27_cross_isa_hamming_replay.py",
+        "line": 90,
+        "end_line": 96,
+        "signature_hash": "e5e443dc056f9572",
+        "file_digest8": "5e1690a62e132ba0"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#class:XhdvCandidateDisposition:60c84d34f6212fe5",
+        "name": "XhdvCandidateDisposition",
+        "kind": "class",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 143,
+        "end_line": 171,
+        "signature_hash": "4494db9fefe25a3d",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#class:XhdvError:7c34c85a1ad9b3c3",
+        "name": "XhdvError",
+        "kind": "class",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "5aafdad87ad4a512",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_from_int:202a79685d5f7dad",
+        "name": "_from_int",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 94,
+        "end_line": 96,
+        "signature_hash": "7177122ac6d4b414",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u3:a894f4879e6da1d8",
+        "name": "_strict_u3",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "fb33be0bc00ea2b8",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u5:f6305af9b22bae73",
+        "name": "_strict_u5",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 25,
+        "end_line": 28,
+        "signature_hash": "1d2c4b3d000ca5b5",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u7:990606cc383e955f",
+        "name": "_strict_u7",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 37,
+        "end_line": 40,
+        "signature_hash": "f19b770d420add7a",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_to_int:a7a861113a1266cf",
+        "name": "_to_int",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 90,
+        "end_line": 91,
+        "signature_hash": "1f1bd39f49b24aa6",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_words:de0f6babdc114fe5",
+        "name": "_words",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 67,
+        "end_line": 73,
+        "signature_hash": "0de3832501cca684",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:bind:8063b154f1f2a286",
+        "name": "bind",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 76,
+        "end_line": 79,
+        "signature_hash": "9412f39b4cce75ed",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:decode_r:fc27e7eda4e024d4",
+        "name": "decode_r",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 54,
+        "end_line": 64,
+        "signature_hash": "6dc34b4fdee51bb7",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:disposition:e2d1b92a2f011265",
+        "name": "disposition",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 174,
+        "end_line": 203,
+        "signature_hash": "b75f037b7138c920",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:encode_r:9c1d6903e712edd0",
+        "name": "encode_r",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 43,
+        "end_line": 51,
+        "signature_hash": "f65dc6d2672b5e00",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:hdist:fcea4835db3f0226",
+        "name": "hdist",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 86,
+        "end_line": 87,
+        "signature_hash": "e504eb10a5c40010",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:main:33ec1244a53e6a22",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 206,
+        "end_line": 208,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:pasted_centroid_word:38fa02eb1d282b4c",
+        "name": "pasted_centroid_word",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 110,
+        "end_line": 113,
+        "signature_hash": "2b0a6019c1c535a1",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:pasted_scan_falsifier:1a40629c8fdb6336",
+        "name": "pasted_scan_falsifier",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 116,
+        "end_line": 139,
+        "signature_hash": "96e92dd86707d1a9",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:perm:cce177bbf741819c",
+        "name": "perm",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 99,
+        "end_line": 107,
+        "signature_hash": "af16675f8cda24e5",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:popcnt:c5587374ec6ec42a",
+        "name": "popcnt",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 82,
+        "end_line": 83,
+        "signature_hash": "434dda8e57bffe82",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateDisposition.digest:b5aef3ef80fc0adb",
+        "name": "XhdvCandidateDisposition.digest",
+        "kind": "method",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 169,
+        "end_line": 171,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateDisposition.to_dict:72c166a106d95885",
+        "name": "XhdvCandidateDisposition.to_dict",
+        "kind": "method",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 165,
+        "end_line": 166,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "126ee50d8506a5b7"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -446884,7 +448431,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "cdc44e80282b945bdfbc9a568ebb9e2f",
+    "payload_hash": "c391f2f0e257f5c4a498bd1fa69bf462"
   }
 }
