@@ -11,6 +11,12 @@ from typing import Any, Sequence
 
 
 TURN_DISPOSITIONS = {"PASS", "STATE_DRIFT", "TIMEOUT", "ADAPTER_ERROR", "PROTOCOL_ERROR"}
+CAMPAIGN_DISPOSITIONS = {
+    "PASS",
+    "STATE_DRIFT",
+    "INCONCLUSIVE",
+    "STATE_DRIFT_WITH_INCONCLUSIVE",
+}
 
 
 def _digest(state: dict[str, int]) -> str:
@@ -82,6 +88,25 @@ def _validate_telemetry(payload: dict[str, Any]) -> dict[str, Any]:
         if value is not None and (not isinstance(value, (int, float)) or isinstance(value, bool) or value < 0):
             raise ValueError(f"INVALID_{key.upper()}")
     return telemetry
+
+
+def _campaign_disposition(disposition_counts: dict[str, int], *, rounds: int) -> tuple[str, bool, int]:
+    state_drift_detected = disposition_counts["STATE_DRIFT"] > 0
+    inconclusive_turns = sum(
+        disposition_counts[name]
+        for name in ("TIMEOUT", "ADAPTER_ERROR", "PROTOCOL_ERROR")
+    )
+    if disposition_counts["PASS"] == rounds:
+        campaign_disposition = "PASS"
+    elif state_drift_detected and inconclusive_turns:
+        campaign_disposition = "STATE_DRIFT_WITH_INCONCLUSIVE"
+    elif state_drift_detected:
+        campaign_disposition = "STATE_DRIFT"
+    else:
+        campaign_disposition = "INCONCLUSIVE"
+    if campaign_disposition not in CAMPAIGN_DISPOSITIONS:
+        raise AssertionError(f"UNKNOWN_CAMPAIGN_DISPOSITION:{campaign_disposition}")
+    return campaign_disposition, state_drift_detected, inconclusive_turns
 
 
 def run_adapter(
@@ -166,14 +191,20 @@ def run_adapter(
         disposition: sum(result.disposition == disposition for result in results)
         for disposition in sorted(TURN_DISPOSITIONS)
     }
+    campaign_disposition, state_drift_detected, inconclusive_turns = _campaign_disposition(
+        disposition_counts, rounds=rounds
+    )
     return {
         "schema_id": "AURA_LONG_HORIZON_STATE_BENCHMARK_V1",
         "rounds": rounds,
         "seed": seed,
         "timeout_seconds": timeout_seconds,
         "workload_digest": hashlib.sha256(json.dumps(workload, sort_keys=True).encode("utf-8")).hexdigest(),
+        "campaign_disposition": campaign_disposition,
         "passed_turns": passed,
-        "state_drift_detected": passed != rounds,
+        "state_drift_detected": state_drift_detected,
+        "inconclusive_observation_present": inconclusive_turns > 0,
+        "inconclusive_turns": inconclusive_turns,
         "runner_wall_time_ms": sum(result.wall_time_ms for result in results),
         "telemetry_observed_turns": observed_turns,
         "telemetry_estimated_turns": estimated_turns,
@@ -200,7 +231,7 @@ def main() -> int:
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return 0 if not report["state_drift_detected"] else 1
+    return 0 if report["campaign_disposition"] == "PASS" else 1
 
 
 if __name__ == "__main__":
