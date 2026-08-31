@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1662
-- **total_bytes**: 26592496
-- **text_tokens_est**: 6638481
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1019, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1665
+- **total_bytes**: 26616613
+- **text_tokens_est**: 6644511
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1021, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1662,
+  "repo_file_count": 1665,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -161,6 +161,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-spatial-s4.yml",
     ".github/workflows/aura-spatial-s5-s6-construction.yml",
     ".github/workflows/bughound-seedlab.yml",
+    ".github/workflows/bughound-source-owned-reproduction-registry.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1650,6 +1651,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_bughound_envelope_lint.py",
     "tests/test_bughound_human_submission_review.py",
     "tests/test_bughound_registered_reproduction_gate.py",
+    "tests/test_bughound_reproduction_registry_convergence_v2.py",
+    "tests/test_bughound_reproduction_registry_independence.py",
     "tests/test_bughound_seedlab_benchmark.py",
     "tests/test_bughound_trust_boundary_seed.py",
     "tests/test_huggingface_space_deployment.py",
@@ -1802,16 +1805,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1662,
-  "bytes": 26592496,
-  "tokens_est": 6638481,
+  "files": 1665,
+  "bytes": 26616613,
+  "tokens_est": 6644511,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1019,
-    "schema_or_lexicon": 272,
+    "python_module": 1021,
+    "schema_or_lexicon": 273,
     "support_file": 49
   }
 }
