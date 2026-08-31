@@ -68,6 +68,22 @@ class SourceHeaderMaterializerTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "CONTENT_RANGE_MISMATCH"):
                 s1.urllib_read_range("https://example.invalid/x", 10, 4)
 
+    def test_range_reader_rejects_malformed_or_unknown_complete_length(self):
+        for value in ("bytes 10-13/*", "bytes 10-13/999junk", "bytes 10-13/", "bytes 10-13/ 999"):
+            with self.subTest(content_range=value):
+                response = _Response(b"abcd", content_range=value)
+                with patch.object(s1.urllib.request, "urlopen", return_value=response):
+                    with self.assertRaisesRegex(ValueError, "CONTENT_RANGE_MISMATCH"):
+                        s1.urllib_read_range("https://example.invalid/x", 10, 4)
+
+    def test_range_reader_requires_complete_length_greater_than_last_position(self):
+        for value in ("bytes 10-13/13", "bytes 10-13/12"):
+            with self.subTest(content_range=value):
+                response = _Response(b"abcd", content_range=value)
+                with patch.object(s1.urllib.request, "urlopen", return_value=response):
+                    with self.assertRaisesRegex(ValueError, "CONTENT_RANGE_INVALID_COMPLETE_LENGTH"):
+                        s1.urllib_read_range("https://example.invalid/x", 10, 4)
+
     def test_header_length_is_bounded_before_second_fetch(self):
         oversized = struct.pack("<Q", s1.MAX_HEADER_PREFIX_BYTES + 1)
         with patch.object(s1, "urllib_read_range", return_value=oversized) as read_range:
