@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788200498,
+  "generated_at_unix": 1788203178,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1645,
+    "repo_file_count": 1646,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -138,6 +138,7 @@
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-fractal-k27-nav03a.yml",
       ".github/workflows/aura-nav07a-epistemic-route.yml",
+      ".github/workflows/aura-nav13-nav07a-exact-reproof.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1761,16 +1762,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1645,
-      "bytes": 26451774,
-      "tokens_est": 6603297,
+      "files": 1646,
+      "bytes": 26457822,
+      "tokens_est": 6604809,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1001,
-        "schema_or_lexicon": 273,
+        "schema_or_lexicon": 274,
         "support_file": 49
       }
     },
@@ -159317,6 +159318,10 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-nav13-nav07a-exact-reproof.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
     ],
@@ -159879,9 +159884,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -168563,6 +168565,59 @@
         -0.151942,
         -0.135404,
         0.02584
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-nav13-nav07a-exact-reproof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6048,
+      "lines": 138,
+      "tokens_est": 1512,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          97
+        ]
+      },
+      "topology": {},
+      "digest8": "2a4fda3a1ed58f93",
+      "vector": [
+        0.19577,
+        0.076063,
+        -0.148386,
+        -0.283056,
+        -0.170831,
+        0.295525,
+        -0.018704,
+        -0.298019,
+        -0.283056,
+        -0.278068,
+        -0.175819,
+        -0.13841,
+        -0.315476,
+        -0.096014,
+        -0.088533,
+        0.213227,
+        -0.210733,
+        -0.10599,
+        0.088533,
+        -0.006235,
+        -0.038655,
+        -0.043643,
+        0.018704,
+        -0.101002,
+        0.023692,
+        -0.02868,
+        0.120953,
+        -0.076063,
+        0.278068,
+        -0.280562,
+        -0.063594,
+        -0.13841
       ]
     },
     {
@@ -287660,16 +287715,16 @@
     }
   },
   "summary": {
-    "file_count": 1645,
-    "total_bytes": 26451774,
-    "text_tokens_est": 6603297,
+    "file_count": 1646,
+    "total_bytes": 26457822,
+    "text_tokens_est": 6604809,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1001,
-      "schema_or_lexicon": 273,
+      "schema_or_lexicon": 274,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287817,6 +287872,7 @@
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-fractal-k27-nav03a.yml",
       ".github/workflows/aura-nav07a-epistemic-route.yml",
+      ".github/workflows/aura-nav13-nav07a-exact-reproof.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -448635,6 +448691,6 @@
       }
     ],
     "record_fingerprint": "2f0af8614a9e9a14cc6f6a350f7d101d",
-    "payload_hash": "69cd5958f6a7e95efa6f4750080383dd"
+    "payload_hash": "ebe13a1f28024f41e047c42142ec8abb"
   }
 }
