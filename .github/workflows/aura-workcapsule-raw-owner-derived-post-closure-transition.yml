@@ -1,0 +1,113 @@
+name: Aura WorkCapsule Raw-Owner Derived POST Closure Transition
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_raw_owner_hold_to_closed_transition.py'
+      - 'scripts/aura_workcapsule_two_phase_source_bound_closure.py'
+      - 'scripts/aura_workcapsule_reentry_closure.py'
+      - 'scripts/aura_workcapsule_raw_owner_derived_post_closure_transition.py'
+      - 'tests/test_aura_workcapsule_raw_owner_derived_post_closure_transition.py'
+      - '.github/workflows/aura-workcapsule-raw-owner-derived-post-closure-transition.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  raw-owner-derived-post-closure:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR533_SHA: e09a1e85bfd8d601a1b4138b8ecf03c221123c2a
+      PR518_SHA: b8a6c5f263da705433665c174848cd424deeb723
+    steps:
+      - name: Fetch exact child head and prove both parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=120 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor "$PR533_SHA" HEAD
+          git merge-base --is-ancestor "$PR518_SHA" HEAD
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'PR533_PARENT_BOUND=true'
+          echo 'PR518_PARENT_BOUND=true'
+
+      - name: Re-prove PR533 raw PRE owner and exact transition
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_raw_owner_hold_to_closed_transition.py
+          python3 -m unittest -v tests.test_aura_workcapsule_raw_owner_hold_to_closed_transition
+
+      - name: Re-prove exact PR518 two-phase POST candidate owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/pr518
+          git -C /tmp/pr518 init .
+          git -C /tmp/pr518 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr518 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR518_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr518 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr518 rev-parse HEAD)" = "$PR518_SHA"
+          test -z "$(git -C /tmp/pr518 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr518
+          python3 -m py_compile scripts/aura_workcapsule_two_phase_source_bound_closure.py
+          python3 -m unittest -v tests.test_aura_workcapsule_two_phase_source_bound_closure
+
+      - name: Prove corrected causal join and adversarial surface
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_raw_owner_derived_post_closure_transition.py
+          python3 -m unittest -v tests.test_aura_workcapsule_raw_owner_derived_post_closure_transition
+
+      - name: Assert no caller lifecycle intermediate and no fresh POST re-entry substitution
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_raw_owner_derived_post_closure_transition import verify_raw_owner_derived_post_closure_transition
+          params = inspect.signature(verify_raw_owner_derived_post_closure_transition).parameters
+          for forbidden in (
+              'post_closure_receipt',
+              'reentry_receipt',
+              'pre_observation_closure_receipt',
+              'candidate_binding',
+              'source_observation_receipt',
+          ):
+              assert forbidden not in params, forbidden
+          print('CALLER_POST_CLOSURE_ACCEPTED=false')
+          print('CALLER_REENTRY_RECEIPT_ACCEPTED=false')
+          print('CALLER_CANDIDATE_BINDING_ACCEPTED=false')
+          print('PRE_REENTRY_PLUS_POST_CANDIDATE_CAUSAL_JOIN=true')
+          print('FRESH_POST_REENTRY_SUBSTITUTION=false')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'RAW_OWNER_PRE_LIFECYCLE_DERIVED=true'
+          echo 'RAW_OWNER_POST_CANDIDATE_DERIVED=true'
+          echo 'POST_O10_DERIVED_FROM_PRE_REENTRY_AND_POST_CANDIDATE=true'
+          echo 'PR518_EXACT_O10_REPROOF=true'
+          echo 'PR533_EXACT_TEMPORAL_TRANSITION=true'
+          echo 'SOURCE_CURRENTNESS_MINTED=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_MINTED=false'
+          echo 'PRODUCER_IDENTITY_AUTHENTICATED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_INVALIDATION_CONE_PROVEN=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
