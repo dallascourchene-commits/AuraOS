@@ -13,27 +13,42 @@ PR #769's consequence-bearing receipt contains a stronger identity vector:
 admission receipt digest, subject identity, source generation, evidence generation,
 owner context, decision context, and reuse digest.
 
-This addendum binds that exact vector to the already-compiled G6 request. It does
-not authenticate a caller-supplied receipt; exact parent proof authentication stays
-in hosted CI and future owner/runtime receipt authentication remains unpaid.
+Critical W3 rule: an independently supplied compiled G6 request cannot simply be
+paired with an independently supplied exact reuse identity, because the base receipt
+does not carry enough information to prove that join. The public API therefore takes
+the exact reuse identity plus the base provenance/owner/evidence inputs and constructs
+the G6 base request internally after validating the exact GLM admission family. This
+prevents caller-supplied base-request cross-casting.
+
+The addendum still does not authenticate the producer of the reuse receipt; exact
+parent proof authentication stays in hosted CI and future owner/runtime receipt
+authentication remains unpaid.
 """
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import hashlib
+import inspect
 import itertools
 import json
 from typing import Any
 
 from tools.awj032.glm53_g6_gate10_owner_host_evidence_request import (
+    AdmissionReuseProjection as BaseAdmissionReuseProjection,
     COMPILED,
+    EvidenceContractProjection,
     G6RequestReceipt,
+    ObservationProvenanceContractProjection,
     OFFICIAL_REPOSITORY,
+    OwnerHostTargetProjection,
     PINNED_OFFICIAL_REVISION,
+    REUSE_DISPOSITION as BASE_REUSE_DISPOSITION,
+    REUSE_FAMILY as BASE_REUSE_FAMILY,
     SOURCE_SET_DIGEST,
+    compile_gate10_owner_host_evidence_request,
 )
 
-SCHEMA = "AURA-GLM53-G6-ADMISSION-IDENTITY-BINDING-W3-v1"
+SCHEMA = "AURA-GLM53-G6-ADMISSION-IDENTITY-BINDING-W3-v2"
 
 REUSE_HEAD = "d1a0f94255527835a59a70a0af7dc417ba1d023d"
 REUSE_SOURCE_BLOB = "d171d0938e469a4383490d1a691750c2068f21e7"
@@ -185,6 +200,8 @@ class G6AdmissionIdentityBindingReceipt:
     exact_glm53_reuse_family_bound: bool
     exact_reuse_candidate_identity_bound: bool
     base_g6_request_compiled: bool
+    base_g6_request_constructed_by_this_contract: bool
+    caller_supplied_base_request_accepted: bool = False
     reuse_receipt_authenticated_by_this_contract: bool = False
     source_currentness_proven_by_this_contract: bool = False
     owner_authenticated_by_this_contract: bool = False
@@ -220,12 +237,16 @@ class G6AdmissionIdentityBindingReceipt:
         if self.disposition == IDENTITY_BOUND_EXTERNAL_AUTH_REQUIRED:
             if not (
                 self.base_g6_request_compiled
+                and self.base_g6_request_constructed_by_this_contract
                 and self.exact_glm53_reuse_family_bound
                 and self.exact_reuse_candidate_identity_bound
             ):
                 raise ValueError("IDENTITY_BOUND_POSITIVE_STATE_INVALID")
         else:
             raise ValueError("G6_IDENTITY_BINDING_DISPOSITION_INVALID")
+
+        if self.caller_supplied_base_request_accepted:
+            raise ValueError("CALLER_SUPPLIED_BASE_REQUEST_MUST_REMAIN_FORBIDDEN")
 
         forbidden = (
             self.reuse_receipt_authenticated_by_this_contract,
@@ -252,21 +273,14 @@ class G6AdmissionIdentityBindingReceipt:
         return _sha({"domain": SCHEMA, "receipt": asdict(self)})
 
 
-def bind_g6_request_to_admission_identity(
+def _bind_internally_constructed_request(
     *,
     base_request: G6RequestReceipt,
     reuse_identity: AdmissionReuseIdentityProjection,
 ) -> G6AdmissionIdentityBindingReceipt:
-    """Bind the complete PR #769 identity vector to one compiled G6 request.
-
-    A successful return proves deterministic identity preservation only. It does
-    not authenticate who produced the reuse receipt or establish source/currentness,
-    execution, observation, or Gate-10 truth.
-    """
+    """Private join. Public callers cannot inject a precompiled base request."""
 
     base_request.validate_claim_ceiling()
-    reuse_identity.validate_shape()
-
     if not (
         base_request.disposition == COMPILED
         and base_request.request_envelope_compiled
@@ -274,10 +288,6 @@ def bind_g6_request_to_admission_identity(
         and base_request.operation_provenance_contract_bound
     ):
         raise ValueError(HOLD_BASE_G6_REQUEST_REQUIRED)
-    if reuse_identity.admission_family != REUSE_FAMILY:
-        raise ValueError(HOLD_EXACT_REUSE_FAMILY_REQUIRED)
-    if reuse_identity.disposition != REUSE_DISPOSITION:
-        raise ValueError(HOLD_REUSE_CANDIDATE_REQUIRED)
 
     if (
         base_request.official_repository,
@@ -305,7 +315,7 @@ def bind_g6_request_to_admission_identity(
     receipt = G6AdmissionIdentityBindingReceipt(
         schema=SCHEMA,
         disposition=IDENTITY_BOUND_EXTERNAL_AUTH_REQUIRED,
-        reason_code="EXACT_PR769_REUSE_IDENTITY_VECTOR_BOUND_TO_G6_REQUEST_EXTERNAL_RECEIPT_AUTH_REQUIRED",
+        reason_code="EXACT_PR769_REUSE_IDENTITY_VECTOR_BOUND_DURING_INTERNAL_G6_REQUEST_CONSTRUCTION_EXTERNAL_RECEIPT_AUTH_REQUIRED",
         base_g6_request_digest=base_request.request_digest,
         admission_reuse_identity_digest=identity_digest,
         admission_receipt_digest=reuse_identity.admission_receipt_digest,
@@ -319,13 +329,62 @@ def bind_g6_request_to_admission_identity(
         exact_glm53_reuse_family_bound=True,
         exact_reuse_candidate_identity_bound=True,
         base_g6_request_compiled=True,
+        base_g6_request_constructed_by_this_contract=True,
     )
     receipt.validate_claim_ceiling()
     return receipt
 
 
+def compile_identity_bound_g6_request(
+    *,
+    reuse_identity: AdmissionReuseIdentityProjection,
+    provenance: ObservationProvenanceContractProjection,
+    owner: OwnerHostTargetProjection,
+    evidence: EvidenceContractProjection,
+) -> G6AdmissionIdentityBindingReceipt:
+    """Construct and identity-bind the G6 request without a caller-supplied base receipt.
+
+    The exact GLM reuse family and full identity vector are validated first. Only then
+    is the weaker base G6 reuse projection constructed internally. This prevents an
+    unrelated precompiled G6 request from being paired with an independent exact
+    identity after the fact.
+    """
+
+    reuse_identity.validate_shape()
+    if reuse_identity.admission_family != REUSE_FAMILY:
+        raise ValueError(HOLD_EXACT_REUSE_FAMILY_REQUIRED)
+    if reuse_identity.disposition != REUSE_DISPOSITION:
+        raise ValueError(HOLD_REUSE_CANDIDATE_REQUIRED)
+
+    base_reuse = BaseAdmissionReuseProjection(
+        proof_head=REUSE_HEAD,
+        proof_run=REUSE_RUN,
+        proof_job=REUSE_JOB,
+        source_blob=REUSE_SOURCE_BLOB,
+        test_blob=REUSE_TEST_BLOB,
+        admission_family=BASE_REUSE_FAMILY,
+        disposition=BASE_REUSE_DISPOSITION,
+        current_context_exact=True,
+    )
+    base_request = compile_gate10_owner_host_evidence_request(
+        reuse=base_reuse,
+        provenance=provenance,
+        owner=owner,
+        evidence=evidence,
+    )
+    return _bind_internally_constructed_request(
+        base_request=base_request,
+        reuse_identity=reuse_identity,
+    )
+
+
+def public_api_parameters() -> tuple[str, ...]:
+    """Hosted guard that the public API never grows a caller-supplied base request."""
+    return tuple(inspect.signature(compile_identity_bound_g6_request).parameters)
+
+
 def prove_identity_binding_lattice() -> int:
-    """Exhaust summary conditions; only all-true can reach the binding operation."""
+    """Exhaust summary conditions; only all-true can reach identity-bound candidate."""
     checked = 0
     for base_ok, family_ok, disposition_ok, identity_complete in itertools.product(
         (False, True), repeat=4
@@ -357,6 +416,8 @@ LAWS = (
     "ReuseCandidateSummary!=AdmissionReuseReceiptIdentity",
     "GLM53AdmissionFamilyMustRemainExact",
     "AdmissionReceiptDigest+Subject+Source+Evidence+Owner+Decision+ReuseDigestMustSurviveProjection",
+    "CallerSuppliedBaseRequest+IndependentIdentity!=JoinedRequestIdentity",
+    "IdentityBoundWrapperMustConstructBaseRequest",
     "IdentityBinding!=ReceiptProducerAuthentication",
     "IdentityBinding!=SourceCurrentnessTruth",
     "CallerWitness!=BackendObservationProvenance",
