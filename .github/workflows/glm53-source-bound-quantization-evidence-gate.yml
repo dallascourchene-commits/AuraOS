@@ -1,0 +1,103 @@
+name: GLM53 Source-Bound Quantization Evidence Gate
+
+on:
+  pull_request:
+    paths:
+      - 'tools/quantization/aura_glm53_source_bound_quantization_evidence_gate.py'
+      - 'tools/quantization/test_aura_glm53_source_bound_quantization_evidence_gate.py'
+      - 'tools/quantization/aura_glm53_quantization_evidence_transfer.py'
+      - '.github/workflows/glm53-source-bound-quantization-evidence-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q7-source-bound-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Assert exact Q6 base generation
+        run: |
+          set -euo pipefail
+          Q6=4137aabd972feff9c4412bb4786ef8fd4de207e0
+          git merge-base --is-ancestor "$Q6" HEAD
+
+      - name: Revalidate exact Q5 and Q6 hosted runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          expected = {
+              33369967425: ('730426b82235b0ff4e75fef1cff00707877a84ad', 'GLM53 Official Quantization Source Admission'),
+              33370305329: ('4137aabd972feff9c4412bb4786ef8fd4de207e0', 'GLM53 Quantization Evidence Transfer'),
+          }
+          for run_id, (sha, name) in expected.items():
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json'},
+              )
+              with urllib.request.urlopen(req) as r:
+                  data = json.load(r)
+              assert data['head_sha'] == sha, (run_id, data['head_sha'], sha)
+              assert data['name'] == name, (run_id, data['name'], name)
+              assert data['status'] == 'completed', data['status']
+              assert data['conclusion'] == 'success', data['conclusion']
+          print('Q5_Q6_EXACT_HOSTED_SUCCESS=true')
+          PY
+
+      - name: Re-prove Q5 exact source admission in isolation
+        run: |
+          set -euo pipefail
+          Q5=730426b82235b0ff4e75fef1cff00707877a84ad
+          git fetch origin "$Q5"
+          git worktree add --detach /tmp/q5 "$Q5"
+          cd /tmp/q5
+          python -m unittest tests.test_aura_glm53_official_source_admission -v
+          python tools/quantization/aura_glm53_official_source_admission.py | tee /tmp/q5-state.json
+          grep -q 'OFFICIAL_INDEX_BYTES_AND_REPRESENTATIVE_HEADERS_NOT_MATERIALIZED' /tmp/q5-state.json
+          grep -q '"header_trial_eligible": false' /tmp/q5-state.json
+
+      - name: Re-prove Q6 and Q7 adversarials
+        run: |
+          set -euo pipefail
+          python -m unittest tools.quantization.test_aura_glm53_quantization_evidence_transfer -v
+          python -m unittest tools.quantization.test_aura_glm53_source_bound_quantization_evidence_gate -v
+
+      - name: Emit and assert exact Q7 consequence
+        run: |
+          set -euo pipefail
+          python tools/quantization/aura_glm53_source_bound_quantization_evidence_gate.py | tee /tmp/q7.json
+          python - <<'PY'
+          import json
+          x = json.load(open('/tmp/q7.json'))
+          assert x['disposition'] == 'HOLD_SOURCE_TRANSPORT_AND_REPRESENTATION_EVIDENCE'
+          assert x['independent_source_transport_residual'] is True
+          assert x['independent_representation_evidence_residual'] is True
+          assert x['source_bound_evidence_admitted'] is False
+          assert x['geometry_family_label_match'] is True
+          assert x['exact_representation_identity_match'] is False
+          assert x['source_evidence_scope'] == 'SYNTHETIC_DISTORTION_ONLY'
+          for key in (
+              'glm53_tensor_evidence_admitted',
+              'coding_quality_evidence_admitted',
+              'runtime_evidence_admitted',
+              'semantic_k27_authority_minted',
+              'native_transformer_kv_accessed',
+              'gate10_promoted',
+          ):
+              assert x[key] is False, key
+          print('SOURCE_IDENTITY_NE_SOURCE_BYTES=true')
+          print('REPRESENTATION_IDENTITY_NE_EVIDENCE_SCOPE=true')
+          print('SOURCE_BOUND_TRIAL_REQUIRES_BOTH_PLANES=true')
+          print('GEOMETRY_FAMILY_NE_EVIDENCE_TRANSFER=true')
+          print('Q7_D0_NONPROMOTING=true')
+          PY
