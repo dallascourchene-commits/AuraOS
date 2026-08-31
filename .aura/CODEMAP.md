@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1639
-- **total_bytes**: 26415048
-- **text_tokens_est**: 6594113
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1640
+- **total_bytes**: 26423813
+- **text_tokens_est**: 6596305
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1639,
+  "repo_file_count": 1640,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -196,6 +196,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/pr138-grounded-phase-integration.yml",
     ".github/workflows/publish-arena-connector.yml",
     ".github/workflows/publish-ghcr-showcase.yml",
+    ".github/workflows/q15-portable-materialization-proof-trigger.yml",
     ".github/workflows/render-four-tab-demo.yml",
     ".github/workflows/sco-construction-e9-e14-completion.yml",
     ".github/workflows/sco-phase2-finalize.yml",
@@ -1779,16 +1780,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1639,
-  "bytes": 26415048,
-  "tokens_est": 6594113,
+  "files": 1640,
+  "bytes": 26423813,
+  "tokens_est": 6596305,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 997,
-    "schema_or_lexicon": 271,
+    "schema_or_lexicon": 272,
     "support_file": 49
   }
 }

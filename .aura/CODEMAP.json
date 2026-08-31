@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788189024,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1640,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -178,6 +178,7 @@
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
+      ".github/workflows/q15-portable-materialization-proof-trigger.yml",
       ".github/workflows/render-four-tab-demo.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
@@ -1755,16 +1756,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1640,
+      "bytes": 26423813,
+      "tokens_est": 6596305,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 997,
-        "schema_or_lexicon": 271,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -158674,6 +158675,13 @@
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml"
     ],
+    "python -m unittest": [
+      ".github/workflows/q15-portable-materialization-proof-trigger.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
+    "python -m tools.quantization.aura_execution_qualified_portable_materialization_currentness": [
+      ".github/workflows/q15-portable-materialization-proof-trigger.yml"
+    ],
     "python tools/apply_sco_construction_completion.py": [
       ".github/workflows/sco-construction-e9-e14-completion.yml"
     ],
@@ -159293,9 +159301,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -170323,6 +170328,63 @@
         -0.203305,
         0.276816,
         -0.201008
+      ]
+    },
+    {
+      "path": ".github/workflows/q15-portable-materialization-proof-trigger.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 8765,
+      "lines": 164,
+      "tokens_est": 2192,
+      "symbol_count": 0,
+      "commands": [
+        "python -m unittest",
+        "python -m tools.quantization.aura_execution_qualified_portable_materialization_currentness"
+      ],
+      "command_lines": {
+        "python -m unittest": [
+          78
+        ],
+        "python -m tools.quantization.aura_execution_qualified_portable_materialization_currentness": [
+          131
+        ]
+      },
+      "topology": {},
+      "digest8": "5d7448454d055cff",
+      "vector": [
+        0.018939,
+        -0.225812,
+        0.080127,
+        -0.284086,
+        0.18502,
+        -0.085954,
+        -0.173366,
+        0.170452,
+        -0.109264,
+        -0.222899,
+        0.333619,
+        -0.068472,
+        -0.147142,
+        0.068472,
+        -0.266604,
+        -0.004371,
+        0.068472,
+        -0.179193,
+        -0.065558,
+        -0.001457,
+        -0.018939,
+        -0.254949,
+        0.254949,
+        0.202503,
+        -0.316137,
+        0.123833,
+        0.097609,
+        -0.077213,
+        -0.336533,
+        0.10635,
+        0.091782,
+        -0.097609
       ]
     },
     {
@@ -286646,16 +286708,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1640,
+    "total_bytes": 26423813,
+    "text_tokens_est": 6596305,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 997,
-      "schema_or_lexicon": 271,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286843,6 +286905,7 @@
       ".github/workflows/pr138-grounded-phase-integration.yml",
       ".github/workflows/publish-arena-connector.yml",
       ".github/workflows/publish-ghcr-showcase.yml",
+      ".github/workflows/q15-portable-materialization-proof-trigger.yml",
       ".github/workflows/render-four-tab-demo.yml",
       ".github/workflows/sco-construction-e9-e14-completion.yml",
       ".github/workflows/sco-phase2-finalize.yml",
@@ -446885,6 +446948,6 @@
       }
     ],
     "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "payload_hash": "33b38e9b53932a9317d1cdc22e6e8d52"
   }
 }
