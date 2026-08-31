@@ -24,6 +24,7 @@ H = "2" * 64
 
 def eligibility(**overrides):
     base = EligibilityReceiptRef(
+        owner_ref="owner:generic-product-gate:v1",
         disposition=ELIGIBILITY_DISPOSITION,
         receipt_digest=A,
         receipt_generation="transition-gen-1",
@@ -84,6 +85,12 @@ class BoundedProposalCapsuleTests(unittest.TestCase):
                 basis=basis(eligibility=eligibility(disposition="HOLD")), producer_identity="worker-a"
             )
 
+    def test_eligibility_receipt_requires_owner_binding(self):
+        with self.assertRaisesRegex(ValueError, "ELIGIBILITY_OWNER_REF_REQUIRED"):
+            create_bounded_proposal_capsule(
+                basis=basis(eligibility=eligibility(owner_ref="")), producer_identity="worker-a"
+            )
+
     def test_eligibility_receipt_cannot_smuggle_execution_authority(self):
         with self.assertRaisesRegex(ValueError, "ELIGIBILITY_RECEIPT_MUST_NOT_AUTHORIZE_EXECUTION"):
             create_bounded_proposal_capsule(
@@ -124,11 +131,14 @@ class BoundedProposalCapsuleTests(unittest.TestCase):
             newer = create_bounded_proposal_capsule(basis=changed, producer_identity="worker-b")
             self.assertNotEqual(original.capsule.proposal_id, newer.capsule.proposal_id)
 
-    def test_policy_generation_change_invalidates_even_when_science_and_source_match(self):
+    def test_policy_or_owner_change_invalidates_even_when_science_and_source_match(self):
         original = create_bounded_proposal_capsule(basis=basis(), producer_identity="worker-a")
-        changed = basis(eligibility=eligibility(policy_generation_ref="eligibility-policy-gen-3"))
-        decision = revalidate_proposal_capsule(capsule=original.capsule, current_basis=changed)
-        self.assertEqual(decision.state, "INVALIDATED")
+        for changed in (
+            basis(eligibility=eligibility(policy_generation_ref="eligibility-policy-gen-3")),
+            basis(eligibility=eligibility(owner_ref="owner:generic-product-gate:v2")),
+        ):
+            decision = revalidate_proposal_capsule(capsule=original.capsule, current_basis=changed)
+            self.assertEqual(decision.state, "INVALIDATED")
 
     def test_currentness_root_change_invalidates_without_wall_clock_renewal(self):
         original = create_bounded_proposal_capsule(basis=basis(), producer_identity="worker-a")
@@ -154,6 +164,26 @@ class BoundedProposalCapsuleTests(unittest.TestCase):
         self.assertEqual(decision.reason_code, "EXACT_PROPOSAL_BASIS_STILL_CURRENT")
         self.assertFalse(decision.execution_authorized)
         self.assertFalse(decision.provider_effect_authorized)
+
+    def test_tampered_embedded_basis_is_rejected_before_currentness_comparison(self):
+        original = create_bounded_proposal_capsule(basis=basis(), producer_identity="worker-a")
+        tampered = replace(
+            original.capsule,
+            basis=basis(source_admission_generation="source-gen-tampered"),
+        )
+        with self.assertRaisesRegex(ValueError, "PROPOSAL_CAPSULE_BASIS_INTEGRITY_MISMATCH"):
+            revalidate_proposal_capsule(capsule=tampered, current_basis=basis())
+
+    def test_tampered_stored_id_or_basis_digest_is_rejected(self):
+        original = create_bounded_proposal_capsule(basis=basis(), producer_identity="worker-a")
+        with self.assertRaisesRegex(ValueError, "PROPOSAL_CAPSULE_ID_INTEGRITY_MISMATCH"):
+            revalidate_proposal_capsule(
+                capsule=replace(original.capsule, proposal_id="9" * 64), current_basis=basis()
+            )
+        with self.assertRaisesRegex(ValueError, "PROPOSAL_CAPSULE_BASIS_INTEGRITY_MISMATCH"):
+            revalidate_proposal_capsule(
+                capsule=replace(original.capsule, proposal_basis_digest="8" * 64), current_basis=basis()
+            )
 
     def test_duplicate_currentness_or_invalidators_fail_closed(self):
         with self.assertRaisesRegex(ValueError, "DUPLICATE_CURRENTNESS_ROOT"):
