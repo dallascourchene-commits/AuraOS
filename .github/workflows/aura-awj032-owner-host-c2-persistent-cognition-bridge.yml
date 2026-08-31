@@ -1,0 +1,106 @@
+name: Aura AWJ032 Owner Host C2 Persistent Cognition Bridge
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR582_HEAD: 24a5404ee3b987dee12192917e40b35d3a43e81c
+  PR582_OWNER_BLOB: 91da9f6f5c9c8175fbe123634e53e14bc9ba3cbe
+  PR582_TEST_BLOB: c2ade84d0f16ba43a752eb01fe1cbbd629210dd0
+
+jobs:
+  exact-owner-host-c2-memory-bridge:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Fetch exact bridge head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo "EXACT_HEAD=$TARGET_SHA"
+
+      - name: Prove exact PR582 transport owner materialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/awj032/glm53_owner_host_c2_handoff.py)" = "$PR582_OWNER_BLOB"
+          test "$(git hash-object tools/awj032/test_glm53_owner_host_c2_handoff.py)" = "$PR582_TEST_BLOB"
+          python3 -m py_compile tools/awj032/glm53_owner_host_c2_handoff.py
+          python3 -m unittest -v tools.awj032.test_glm53_owner_host_c2_handoff
+          echo "EXACT_PR582_OWNER_REPROVED=true"
+
+      - name: Prove typed contract-current memory bridge
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/aura_provenance_corroboration_memory_admission.py \
+            scripts/aura_awj032_owner_host_c2_memory_bridge.py
+          python3 -m unittest -v \
+            tests.test_aura_provenance_corroboration_memory_admission \
+            tests.test_aura_awj032_owner_host_c2_memory_bridge
+
+      - name: Assert narrow public boundary and no effect surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import ast
+          import inspect
+          from scripts.aura_awj032_owner_host_c2_memory_bridge import project_owner_host_c2_attempt_memory
+          assert list(inspect.signature(project_owner_host_c2_attempt_memory).parameters) == ['request', 'receipt']
+          path='scripts/aura_awj032_owner_host_c2_memory_bridge.py'
+          source=open(path,encoding='utf-8').read()
+          tree=ast.parse(source,filename=path)
+          forbidden={'sqlite3','redis','requests','subprocess','socket'}
+          for item in ast.walk(tree):
+              if isinstance(item,ast.Import):
+                  for alias in item.names:
+                      assert alias.name.split('.')[0] not in forbidden
+              elif isinstance(item,ast.ImportFrom) and item.module:
+                  assert item.module.split('.')[0] not in forbidden
+              elif isinstance(item,ast.Call) and isinstance(item.func,ast.Name) and item.func.id=='open':
+                  raise AssertionError('bridge must not open files')
+          print('PUBLIC_INPUTS=request,receipt')
+          print('STORAGE_BACKEND_IMPLEMENTED=false')
+          print('NETWORK_EFFECT_IMPLEMENTED=false')
+          PY
+
+      - name: Emit consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat <<'EOF'
+          PR582_TRANSPORT_OWNER_REPROVED=true
+          CONTRACT_GENERATION_EVIDENCE_ADMITTED=true
+          CONTRACT_CURRENTNESS_CROSS_CAST_TO_HOST_OBSERVATION=false
+          INDEPENDENT_ATTEMPTS_MAY_CORROBORATE=true
+          CORROBORATION_GRANTS_HOST_RANK=false
+          CONTRADICTORY_ATTEMPT_OUTCOMES_LAST_WRITE_WINS=false
+          OWNER_HOST_PRODUCER_AUTHENTICATED=false
+          LIFECYCLE_REGISTRY_SATISFIED=false
+          REAL_W4_POLICY_WINNER_PROVEN=false
+          FULL_MODEL_RUNTIME_PROVEN=false
+          G2_ADMITTED=false
+          HOST_RANK_TRANSITION_PERFORMED=false
+          EFFECT_AUTHORITY_PROVEN=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          MERGE_PROMOTION_AUTHORITY=false
+          GATE10_PROMOTION=false
+          EOF
