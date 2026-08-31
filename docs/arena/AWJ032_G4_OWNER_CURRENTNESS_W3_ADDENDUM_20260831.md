@@ -32,26 +32,42 @@ The W3 public API is intentionally:
 
 There is no raw `current` argument.
 
-The owner resolver must provide:
+The injected resolver must provide:
 - a nonempty state epoch before the read;
 - one `OwnerReuseStateObservation` bound to the exact G4 plan identity, the same epoch, a resolver generation, and the eight-axis `CurrentReuseContext`;
 - the same state epoch after G4 classification.
 
+### External trust boundary
+
+The resolver is a trusted integration boundary supplied by the owning runtime/control plane. This pure contract does **not** authenticate the resolver producer and does **not** independently prove source/runtime currentness truth merely because an object satisfies the resolver protocol.
+
+For before/after epoch equality to imply one coherent snapshot, the runtime must additionally guarantee that the epoch token:
+- changes for every consequence-bearing mutation relevant to the eight-axis read set; and
+- is not reset/reused over the read window.
+
+This is a seqlock/OCC-style integration invariant. PR #764 requires it but cannot prove it from inside the pure membrane.
+
+Receipts therefore permanently carry:
+- `owner_resolver_authenticated_by_this_contract=false`;
+- `owner_currentness_truth_proven_by_this_contract=false`;
+- `owner_epoch_change_complete_required=true`;
+- `owner_epoch_change_complete_proven_by_this_contract=false`.
+
 Typed outcomes:
-- `OWNER_REVALIDATED_UNCHANGED` only when the owner observation exactly matches the plan and the epoch is stable;
-- `HOLD_RECOMPUTE_G3_OWNER_RESOLVED` when owner-resolved state is stable but one or more G4 axes drifted;
-- `HOLD_OWNER_CURRENTNESS_REQUIRED` when owner state is unavailable, unknown, malformed, exceptional or plan-mismatched;
+- `OWNER_REVALIDATED_UNCHANGED` only when the resolver observation exactly matches the plan and the returned epoch is stable; this remains a structural/use-boundary result under the external trust assumptions above, not producer authentication;
+- `HOLD_RECOMPUTE_G3_OWNER_RESOLVED` when resolver-observed state is stable but one or more G4 axes drifted;
+- `HOLD_OWNER_CURRENTNESS_REQUIRED` when state is unavailable, unknown, malformed, exceptional or plan-mismatched;
 - `HOLD_OWNER_STATE_EPOCH_CHANGED` when the observation is not from the opened epoch or the epoch changes during revalidation.
 
 ## Triadic Process
 
 **Thesis:** G4's eight-axis equality is the correct deterministic reuse comparison.
 
-**Counterplane:** equality of caller-shaped values does not establish their provenance/currentness or that they coexisted.
+**Counterplane:** equality of caller-shaped values does not establish provenance/currentness, producer authentication, or that the values coexisted.
 
-**Contradiction:** `CurrentReuseContextValuesMatch => CurrentReuseStateProven` is false without an owner boundary.
+**Second counterplane:** equality of opaque epoch labels does not establish snapshot serializability unless the owner epoch is change-complete and non-reused.
 
-**Synthesis:** owner-resolved plan-bound observation + optimistic before/after epoch serializability + unchanged G4 classifier.
+**Synthesis:** plan-bound resolver observation + externally guaranteed change-complete/non-reused epoch bracketing + unchanged G4 classifier + explicit non-authentication ceiling.
 
 ## Creation Process
 
@@ -61,41 +77,56 @@ Typed outcomes:
 4. Preserve G4's eight-axis classifier unchanged.
 5. Remove raw current-context input from the addendum public API.
 6. Bind observation to exact plan identity + owner epoch + resolver generation.
-7. Attack missing/error/malformed/mismatched owner observations.
+7. Attack missing/error/malformed/mismatched observations.
 8. Attack epoch drift before/after the complete read.
-9. Reexecute G4 adversarials and add W3 adversarials in hosted proof.
-10. Preserve all execution/effect ceilings and return ownership to PR #757.
+9. Attack resolver self-authentication and ABA/reused-epoch assumptions.
+10. Reexecute G4 adversarials, preserve all execution/effect ceilings and return ownership to PR #757.
 
 ## Omega-8 crystalline lenses
 
-- **W1 ordered:** plan -> open epoch -> owner observation -> G4 comparison -> close epoch -> disposition.
-- **W2 adversarial:** plan ID, observation epoch, resolver generation, each G4 axis, and owner failure substitutions.
-- **W3 contradiction:** matching caller strings are not owner-currentness proof.
-- **W4 factorization:** plan identity, owner currentness, state epoch, G4 drift, physical observation, execution and effect authority remain independent leaves.
+- **W1 ordered:** plan -> open epoch -> resolver observation -> G4 comparison -> close epoch -> disposition.
+- **W2 adversarial:** plan ID, observation epoch, resolver generation, each G4 axis, resolver failure and reused/opaque epoch assumptions.
+- **W3 contradiction:** matching caller strings are not owner-currentness proof; equal opaque epoch labels are not serializability proof without change-complete semantics.
+- **W4 factorization:** plan identity, resolver provenance, currentness truth, epoch semantics, G4 drift, physical observation, execution and effect authority remain independent leaves.
 - **W5 synthesis:** current G4 owner × terminal O65 serializability law.
 - **W6 quotient:** G4 remains canonical owner; addendum receives only consequence-distinct W3 residue.
-- **W7 temporal:** use-time owner epoch is identity-bearing and must remain stable across the read.
-- **W8 effect:** unearned; effect-boundary revalidation remains mandatory.
+- **W7 temporal:** use-time epoch semantics are identity-bearing integration obligations; effect-time revalidation remains mandatory.
+- **W8 effect:** unearned.
 
 ## HyperScale
 
-HS1 remains sufficient. The base eight-axis G4 lattice is finite; the new unresolved dimension is not more worker fanout but provenance/serializability of the observation itself. Same-boundary synthetic workers cannot manufacture owner currentness.
+HS1 remains sufficient. The base eight-axis G4 lattice is finite; the new unresolved dimension is an independent owner/trust observation boundary, not more worker fanout. Same-boundary synthetic workers cannot manufacture currentness, resolver authenticity, or epoch change-completeness.
 
 `ScaleUntilOwnerBoundaryResolved; SameObservationFanoutDoesNotIncreaseCurrentnessRank`.
 
+`SameEpochLabelFanout != SerializabilityProof`.
+
 ## External Different-J pressure
 
-SpecPrefetch (arXiv `2607.24787`) keeps native routing authoritative and uses prediction only to schedule transfers under runtime cache/bandwidth constraints. Fresh public GLM-5.3 DGX Spark and LocalLLaMA measurements continue to show configuration-sensitive behavior across FP8-KV, MTP/DFlash2, graph caching, offload, concurrency and KV-pool sizing. These sources support keeping runtime/cache/host state use-bound; they do not establish Aura owner currentness or performance.
+- SpecPrefetch (arXiv `2607.24787`) keeps native routing authoritative and uses prediction only to schedule transfers under runtime cache/bandwidth constraints.
+- CoAgent (arXiv `2606.15376`) treats multi-agent serializability/conflict repair as an explicit runtime coordination problem rather than a local value-label property.
+- Seqlock-style readers rely on a sequence/version token whose write semantics make before/after equality meaningful; the comparison syntax alone is insufficient.
+- Commit-time authorization (arXiv `2607.10487`) reinforces that even a pre-attempt/current-use result does not replace freshness/rebinding at the durability/effect boundary.
+- Current public GLM-5.3 DGX Spark and LocalLLaMA measurements remain configuration-sensitive across FP8-KV, MTP/DFlash2, graph caching, offload, concurrency and KV-pool sizing.
+
+These sources are methodology/falsification pressure only. They do not establish Aura resolver authenticity, currentness, serializability or performance.
 
 Google Scholar direct task-specific discovery remains `SCHOLAR_DIRECT_GAP` for this cut.
 
 ## K27 / external coordinate memory
 
-No new semantic coordinate is minted. Reuse PR #757's deterministic external-world K27 records for SpecPrefetch, the GLM runtime benchmark, LocalLLaMA and the Scholar gap. This W3 adds an internal reopen edge only:
+No semantic coordinate is minted. Existing G4 coordinates are reused; the concurrency falsifiers are added only as retrieval/reopen handles:
+- SpecPrefetch `arxiv:2607.24787` -> `(16,9,15)`;
+- CoAgent `arxiv:2606.15376` -> `(17,23,18)`;
+- seqlock reference `github:Amanieu/seqlock` -> `(10,1,19)`;
+- commit-time authorization `arxiv:2607.10487` -> `(5,3,9)`;
+- explicit Scholar gap remains `(12,12,16)`.
+
+Internal reopen edge:
 
 `K27:AWJ032:G4:PREFETCH_PLAN_REVALIDATION -> W3:OWNER_CURRENTNESS_REQUIRED`.
 
-`K27Coordinate != OwnerCurrentness != RuntimeTruth != Authority`.
+`K27Coordinate != OwnerCurrentness != ResolverAuthentication != EpochSerializability != RuntimeTruth != Authority`.
 
 `CoordinateMemory != MODEL_PREFIX_KV`.
 
@@ -105,11 +136,15 @@ No native/private transformer KV state is read, written or inferred.
 
 `MatchingCallerContext != OwnerResolvedCurrentState`.
 
+`ResolverProjection != ResolverProducerAuthentication != OwnerCurrentnessTruth`.
+
 `OwnerObservationMustBindExactPlanIdentity`.
 
 `OwnerObservationEpochMustEqualOpenEpoch`.
 
 `OwnerEpochBefore != OwnerEpochAfter => HOLD`.
+
+`EqualOpaqueEpochLabels != SnapshotSerializabilityUnlessChangeCompleteNonreusedEpoch`.
 
 `OwnerResolverUnavailableOrUnknown => HOLD`.
 
@@ -121,6 +156,6 @@ No native/private transformer KV state is read, written or inferred.
 
 ## Claim ceiling
 
-No model/provider execution, transfer effect, physical-I/O proof, native-route mutation, causal performance claim, source truth, semantic K27 authority, native/private transformer KV access, G2/Gate-10 promotion, merge/deploy/spend, or public/financial/human effect is granted.
+No resolver producer authentication or independent owner-currentness truth is minted by this contract. No model/provider execution, transfer effect, physical-I/O proof, native-route mutation, causal performance claim, source truth, semantic K27 authority, native/private transformer KV access, G2/Gate-10 promotion, merge/deploy/spend, or public/financial/human effect is granted.
 
 This addendum is not a new G4 owner and must not receive duplicate G4 successor mass. Closure requires its dedicated exact-head hosted workflow to succeed; integration/disposition remains with the canonical G4 owner.
