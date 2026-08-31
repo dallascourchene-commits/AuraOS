@@ -1,0 +1,54 @@
+name: Aura Collision-Safe Rebase Addendum
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_collision_safe_rebase.py'
+      - 'tests/test_aura_collision_safe_rebase.py'
+      - 'docs/arena/COLLISION_SAFE_REBASE_ADDENDUM_SOP_V1.md'
+      - '.github/workflows/aura-collision-safe-rebase-addendum.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  collision-safe-rebase:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile contract
+        run: python -m py_compile tools/aura_collision_safe_rebase.py tests/test_aura_collision_safe_rebase.py
+      - name: Run focused adversarial tests
+        run: python -m unittest tests.test_aura_collision_safe_rebase -v
+      - name: Verify claim ceiling
+        run: |
+          python - <<'PY'
+          import hashlib
+          from tools.aura_collision_safe_rebase import CandidateContribution, OwnerState, assess_collision
+
+          h = lambda x: hashlib.sha256(x.encode()).hexdigest()
+          result = assess_collision(
+              OwnerState('PR#408', '3a7c562f2e0f278bc3f350416ff243893d0eb0ff', h('owner'), True),
+              CandidateContribution(
+                  'gemini-airllm-glm53-20260831',
+                  h('candidate'),
+                  ('pager-owned', 'nominal-topk-payload-bound'),
+                  ('gemini-thread', 'PR#408'),
+                  ('owner-generation-change', 'host-measurement'),
+              ),
+              overlapping_claims=('pager-owned',),
+              unique_residual_claims=('nominal-topk-payload-bound',),
+          )
+          assert result.disposition.value == 'ADDENDUM_CANDIDATE'
+          assert result.requires_rebase is True
+          assert result.requires_revalidation is True
+          assert result.preserve_as_reusable_cognition is True
+          assert result.sibling_credit_earned is False
+          assert result.semantic_authority_granted is False
+          assert result.effect_authority_granted is False
+          print(result.assessment_digest)
+          PY
