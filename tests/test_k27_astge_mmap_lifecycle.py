@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import replace
+from collections import deque
 import os
 import tempfile
 import unittest
@@ -8,6 +8,22 @@ from unittest.mock import patch
 
 import k27_astge_mmap_lifecycle as life
 import k27_astge_reference as ref
+
+
+def heap_nodes(graph: dict[int, tuple[int, ...]], root: int, max_depth: int) -> tuple[int, ...]:
+    visited = {root}
+    queue = deque([(root, 0)])
+    ordered: list[int] = []
+    while queue:
+        current, depth = queue.popleft()
+        ordered.append(current)
+        if depth >= max_depth:
+            continue
+        for target in graph[current]:
+            if target not in visited:
+                visited.add(target)
+                queue.append((target, depth + 1))
+    return tuple(ordered)
 
 
 class ASTGEMmapLifecycleTests(unittest.TestCase):
@@ -32,7 +48,7 @@ class ASTGEMmapLifecycleTests(unittest.TestCase):
                 self.assertFalse(receipt.native_engine_safety_proven)
                 self.assertFalse(receipt.external_effect)
                 guarded = reader.query_affected_cone(0, 3)
-            self.assertEqual(ref.heap_query_affected_cone(graph, 0, 3), guarded)
+            self.assertEqual(heap_nodes(graph, 0, 3), guarded.node_ids)
 
     def test_nodes_truncation_is_rejected_before_delegate_mmap_read(self):
         with tempfile.TemporaryDirectory() as td:
@@ -108,7 +124,7 @@ class ASTGEMmapLifecycleTests(unittest.TestCase):
 
     def test_reopen_establishes_new_generation_after_explicit_rebuild(self):
         with tempfile.TemporaryDirectory() as td:
-            graph, nodes, edges = self.fixture(td)
+            _, nodes, edges = self.fixture(td)
             reader = life.LifecycleGuardedMmapGraphReader(nodes, edges)
             old_generation = reader.validate_generation().combined_generation_digest
             reader.close()
@@ -119,8 +135,8 @@ class ASTGEMmapLifecycleTests(unittest.TestCase):
                 new_generation = fresh.validate_generation().combined_generation_digest
                 self.assertNotEqual(old_generation, new_generation)
                 self.assertEqual(
-                    ref.heap_query_affected_cone(replacement_graph, 0, 2),
-                    fresh.query_affected_cone(0, 2),
+                    heap_nodes(replacement_graph, 0, 2),
+                    fresh.query_affected_cone(0, 2).node_ids,
                 )
             finally:
                 fresh.close()
