@@ -1,0 +1,74 @@
+name: K27 Xhdv RISC-V Candidate Falsifier
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-candidate-falsifier:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+      SOURCE_SHA256: 98bc8189027158a2cfbc0cb8eaf443836dd9e6ec125ac3fcadaeee9bcc8ba412
+    steps:
+      - name: Fetch exact candidate head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          git -c http.extraheader="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git config --local --unset-all http.https://github.com/.extraheader || true
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          check-latest: false
+
+      - name: Prove encoding and functional subset
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/k27_xhdv_riscv_candidate_falsifier.py tests/test_k27_xhdv_riscv_candidate_falsifier.py
+          python -m unittest -v tests.test_k27_xhdv_riscv_candidate_falsifier
+
+      - name: Emit and assert falsifier receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/k27_xhdv_riscv_candidate_falsifier.py | tee /tmp/xhdv.json
+          python - <<'PY'
+          import json, os
+          r = json.load(open('/tmp/xhdv.json', encoding='utf-8'))
+          assert r['schema'] == 'AuraK27XhdvRiscvCandidateFalsifierV1'
+          assert r['source_sha256'] == os.environ['SOURCE_SHA256']
+          assert r['custom_0_opcode_valid'] is True
+          assert r['r_type_encoding_roundtrip_proven'] is True
+          assert r['xor_binding_functional'] is True
+          assert r['rotate_functional'] is True
+          assert r['popcount_hamming_functional'] is True
+          assert r['pasted_emulator_target_recovered'] is True
+          assert r['pasted_threshold_discriminative'] is False
+          assert r['hidden_h_register_file_modeled_by_shown_gnu_insn'] is False
+          assert r['shown_inline_asm_compiler_sound_for_hidden_h_registers'] is False
+          assert r['rtl_synthesized'] is False
+          assert r['rtl_timing_closed'] is False
+          assert r['two_cycle_popcount_latency_proven'] is False
+          assert r['hardware_speedup_proven'] is False
+          assert r['semantic_k27_authority'] is False
+          PY
+
+      - name: Emit claim ceiling
+        shell: bash
+        run: |
+          echo 'CUSTOM_0_VALID_NE_TOOLCHAIN_ABI=true'
+          echo 'FUNCTIONAL_HDV_MATH_NE_SYNTHESIZED_RTL=true'
+          echo 'SOFTWARE_SCAN_NE_HARDWARE_RATE=true'
+          echo 'K27_COORDINATE_NE_SEMANTIC_AUTHORITY=true'
