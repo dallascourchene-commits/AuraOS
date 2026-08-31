@@ -1,0 +1,206 @@
+name: Aura WorkCapsule Live Causal Artifact Causal Host Envelope
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR575_SHA: c13a3214e32f93b79b17e5009a53700bbdc4dbf0
+  PR573_SHA: 88a49aeec6d7ef465f334fc7a2f7e514f67a7b5a
+  CONVERGENCE_SHA: ca172f7e3240a6d2dee0d10cd2789b57754008b5
+  PR573_ENVELOPE_BLOB: cc2358ff568e24125bc50e28ea82c00624689af5
+
+jobs:
+  exact-live-artifact-causal-host-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact child and prove PR575 x PR573 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=320 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR575_SHA" "$PR573_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR575_SHA $PR573_SHA"
+          git merge-base --is-ancestor "$PR575_SHA" HEAD
+          git merge-base --is-ancestor "$PR573_SHA" HEAD
+          test "$(git hash-object scripts/aura_workcapsule_causal_artifact_qualified_host_envelope.py)" = "$PR573_ENVELOPE_BLOB"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+          echo 'EXACT_PR573_CAUSAL_ENVELOPE_OWNER_MATERIALIZED=true'
+
+      - name: Re-prove exact PR575 live-causal artifact owner on child tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/aura_workcapsule_live_causal_raw_slice_join.py \
+            scripts/aura_workcapsule_live_causal_artifact_host_observation.py \
+            scripts/aura_workcapsule_live_causal_artifact_causal_host_envelope.py
+          python3 -m unittest -v \
+            tests.test_aura_workcapsule_live_causal_raw_slice_join \
+            tests.test_aura_workcapsule_live_causal_artifact_host_observation
+
+      - name: Fetch and re-prove exact PR573 causal-envelope owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr573 && mkdir -p /tmp/pr573
+          git -C /tmp/pr573 init .
+          git -C /tmp/pr573 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr573 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR573_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr573 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr573 rev-parse HEAD)" = "$PR573_SHA"
+          test -z "$(git -C /tmp/pr573 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr573
+          python3 -m py_compile scripts/aura_workcapsule_causal_artifact_qualified_host_envelope.py
+          python3 -m unittest -v tests.test_aura_workcapsule_causal_artifact_qualified_host_envelope
+
+      - name: Prove O42 causal-world and artifact-generation adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest -v \
+            tests.test_aura_workcapsule_live_causal_artifact_causal_host_envelope
+
+      - name: Prove artifact identity excludes host observation state
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts.aura_workcapsule_live_causal_artifact_causal_host_envelope import (
+              admit_live_causal_artifact_causal_host_envelope,
+          )
+          from tests.test_aura_workcapsule_live_causal_artifact_causal_host_envelope import (
+              WorkCapsuleLiveCausalArtifactCausalHostEnvelopeTests,
+          )
+
+          case = WorkCapsuleLiveCausalArtifactCausalHostEnvelopeTests(
+              'test_artifact_ref_is_invariant_to_host_observation_state'
+          )
+          case.setUp()
+          try:
+              partial = admit_live_causal_artifact_causal_host_envelope(
+                  **case.o42_kwargs(host=case.causal_host_receipt())
+              )
+              complete = admit_live_causal_artifact_causal_host_envelope(
+                  **case.o42_kwargs(host=case.causal_host_receipt(all_pass=True))
+              )
+              assert partial['host_gate_states'] != complete['host_gate_states']
+              assert partial['live_causal_artifact_target_ref'] == complete['live_causal_artifact_target_ref']
+              assert partial['artifact_target_ref_excludes_host_observation_state'] is True
+              print('HOST_OBSERVATION_STATE_CHANGED=true')
+              print('LIVE_CAUSAL_ARTIFACT_TARGET_REF_CHANGED=false')
+              print('ARTIFACT_IDENTITY_EXCLUDES_OBSERVATION_STATE=true')
+          finally:
+              case.tearDown()
+          PY
+
+      - name: Prove valid foreign causal world is rejected at relation membrane
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import copy
+          from scripts.aura_workcapsule_causal_artifact_qualified_host_envelope import verify_causal_host_admission_envelope
+          from scripts.aura_workcapsule_live_causal_artifact_causal_host_envelope import (
+              CAUSAL_CLOSURE_IDENTITY_MISMATCH,
+              verify_live_causal_artifact_causal_host_envelope,
+          )
+          from tests.test_aura_workcapsule_live_causal_artifact_causal_host_envelope import (
+              WorkCapsuleLiveCausalArtifactCausalHostEnvelopeTests,
+              _seal_causal,
+          )
+
+          case = WorkCapsuleLiveCausalArtifactCausalHostEnvelopeTests(
+              'test_valid_resealed_foreign_causal_world_fails_relation_not_envelope'
+          )
+          case.setUp()
+          try:
+              host = case.causal_host_receipt()
+              foreign = copy.deepcopy(host['post_closure_receipt_identity'])
+              foreign['value'] = 'cd' * 32
+              host['post_closure_receipt_identity'] = foreign
+              _seal_causal(host)
+              assert verify_causal_host_admission_envelope(host) == []
+              violations = verify_live_causal_artifact_causal_host_envelope(
+                  **case.o42_kwargs(host=host)
+              )
+              assert CAUSAL_CLOSURE_IDENTITY_MISMATCH in violations, violations
+              print('FOREIGN_CAUSAL_ENVELOPE_INTERNALLY_VALID=true')
+              print('FOREIGN_CAUSAL_WORLD_ACCEPTED_FOR_LIVE_ARTIFACT=false')
+          finally:
+              case.tearDown()
+          PY
+
+      - name: Assert owner reuse and full consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_workcapsule_live_causal_artifact_causal_host_envelope.py
+          grep -q 'live_causal_artifact_target_ref' "$child"
+          grep -q 'verify_causal_host_admission_envelope' "$child"
+          grep -q '_target_binding_violations' "$child"
+          if grep -q '^def live_causal_artifact_target_ref' "$child"; then
+            echo 'child duplicated PR575 artifact-reference owner' >&2
+            exit 1
+          fi
+          if grep -q '^def verify_causal_host_admission_envelope' "$child"; then
+            echo 'child duplicated PR573 causal-envelope owner' >&2
+            exit 1
+          fi
+          if grep -q '^def _target_binding_violations' "$child"; then
+            echo 'child duplicated PR565 target-binding owner' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_live_causal_artifact_causal_host_envelope import verify_live_causal_artifact_causal_host_envelope
+          params = set(inspect.signature(verify_live_causal_artifact_causal_host_envelope).parameters)
+          assert 'causal_host_admission_receipt' in params
+          for forbidden in (
+              'host_admission_receipt', 'artifact_target_ref', 'host_target_ref',
+              'post_source_witness', 'post_closure_receipt', 'host_observation_resolver',
+              'host_effect_ready', 'trusted_continuation_ready', 'execution_authorized',
+              'provider_effect_authorized'
+          ):
+              assert forbidden not in params
+          PY
+          cat <<'EOF'
+          OBJECTIVE_O42=LIVE_CAUSAL_ARTIFACT_CAUSAL_HOST_ENVELOPE
+          PR575_LIVE_CAUSAL_ARTIFACT_REF_REUSED=true
+          PR573_CAUSAL_HOST_ENVELOPE_OWNER_REUSED=true
+          SAME_CAUSAL_POST_CLOSURE_IDENTITY_REQUIRED=true
+          RESOLVED_CAUSAL_HOST_GATES_BOUND_TO_LIVE_ARTIFACT=true
+          ARTIFACT_TARGET_REF_EXCLUDES_HOST_OBSERVATION_STATE=true
+          CAUSAL_HOST_ENVELOPE_REPROVED_BY_CHILD=false
+          CAUSAL_HOST_ENVELOPE_PRODUCER_AUTHENTICATED=false
+          HOST_RESOLVER_TRUST_PROVEN=false
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          SEMANTIC_HANDLE_DERIVED_FROM_RAW_SLICE=false
+          SEMANTIC_IDENTITY_PROVEN_BY_RAW_SLICE=false
+          SEMANTIC_REPAIR_CORRECTNESS=false
+          TRUSTED_CONTINUATION_READY=false
+          HOST_EFFECT_READY=false
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_PROVIDER_PUBLIC_HUMAN_AUTHORITY=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF
