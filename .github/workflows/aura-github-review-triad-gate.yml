@@ -39,7 +39,7 @@ jobs:
        github.event.issue.pull_request != null &&
        (github.event.sender.id == 199175422 || github.event.sender.id == 136622811)) ||
       (github.event_name == 'check_run' &&
-       (github.event.check_run.app.slug == 'codacy' ||
+       (github.event.check_run.app.slug == 'codacy-production' ||
         github.event.check_run.app.slug == 'coderabbitai' ||
         github.event.check_run.app.slug == 'chatgpt-codex-connector')) ||
       (github.event_name == 'status' &&
