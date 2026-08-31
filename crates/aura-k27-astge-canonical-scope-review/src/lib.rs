@@ -14,8 +14,8 @@ use aura_k27_astge_materialize::AdmittedSourceCatalogV1;
 use aura_k27_astge_scope::{AuthorizedSpanV1, ReplacementV1};
 use aura_k27_astge_scopes::{PythonLexicalScopeIndexV1, ScopeKindV1};
 use aura_k27_astge_typed_nested_scope_review::{
-    admit_typed_nested_scope_source_review, TypedNestedScopeReviewErrorV1,
-    TypedNestedScopeSourceReviewAdmissionV1,
+    TypedNestedScopeReviewErrorV1, TypedNestedScopeSourceReviewAdmissionV1,
+    admit_typed_nested_scope_source_review,
 };
 use std::error::Error;
 use std::fmt::{Display, Formatter};
@@ -48,9 +48,18 @@ pub struct CanonicalDefinitionScopeReviewAdmissionV1 {
 pub enum CanonicalScopeReviewErrorV1 {
     SelectedScopeMissing(u64),
     SelectedScopeHasNoParent(u64),
-    DefinitionBindingMissing { selected_scope_id: u64, node_id: u64 },
-    DefinitionBindingAmbiguous { selected_scope_id: u64, matches: usize },
-    BindingOwnerParentMismatch { binding_owner_scope_id: u64, selected_parent_scope_id: u64 },
+    DefinitionBindingMissing {
+        selected_scope_id: u64,
+        node_id: u64,
+    },
+    DefinitionBindingAmbiguous {
+        selected_scope_id: u64,
+        matches: usize,
+    },
+    BindingOwnerParentMismatch {
+        binding_owner_scope_id: u64,
+        selected_parent_scope_id: u64,
+    },
     OwnerScopeMissing(u64),
     TypedNestedReview(TypedNestedScopeReviewErrorV1),
 }
@@ -101,10 +110,15 @@ pub fn admit_canonical_definition_scope_review(
         .scopes
         .iter()
         .find(|scope| scope.scope_id == selected_scope_id)
-        .ok_or(CanonicalScopeReviewErrorV1::SelectedScopeMissing(selected_scope_id))?;
-    let selected_parent_scope_id = selected
-        .parent_scope_id
-        .ok_or(CanonicalScopeReviewErrorV1::SelectedScopeHasNoParent(selected_scope_id))?;
+        .ok_or(CanonicalScopeReviewErrorV1::SelectedScopeMissing(
+            selected_scope_id,
+        ))?;
+    let selected_parent_scope_id =
+        selected
+            .parent_scope_id
+            .ok_or(CanonicalScopeReviewErrorV1::SelectedScopeHasNoParent(
+                selected_scope_id,
+            ))?;
 
     let matches: Vec<_> = scope_index
         .bindings
@@ -123,14 +137,14 @@ pub fn admit_canonical_definition_scope_review(
             return Err(CanonicalScopeReviewErrorV1::DefinitionBindingMissing {
                 selected_scope_id,
                 node_id: record.node_id,
-            })
+            });
         }
         [binding] => *binding,
         _ => {
             return Err(CanonicalScopeReviewErrorV1::DefinitionBindingAmbiguous {
                 selected_scope_id,
                 matches: matches.len(),
-            })
+            });
         }
     };
 
@@ -144,7 +158,9 @@ pub fn admit_canonical_definition_scope_review(
         .scopes
         .iter()
         .find(|scope| scope.scope_id == binding.owner_scope_id)
-        .ok_or(CanonicalScopeReviewErrorV1::OwnerScopeMissing(binding.owner_scope_id))?;
+        .ok_or(CanonicalScopeReviewErrorV1::OwnerScopeMissing(
+            binding.owner_scope_id,
+        ))?;
 
     let typed_nested_review = admit_typed_nested_scope_source_review(
         scope_index,
@@ -295,7 +311,10 @@ mod tests {
         let start = setup.edit_start as u64;
         (
             candidate,
-            vec![AuthorizedSpanV1 { start, end: start + 1 }],
+            vec![AuthorizedSpanV1 {
+                start,
+                end: start + 1,
+            }],
             vec![ReplacementV1 {
                 start,
                 end: start + 1,
@@ -323,9 +342,18 @@ mod tests {
 
         assert_eq!(receipt.definition_name, "inner");
         assert_eq!(receipt.definition_target_scope_id, setup.selected_scope_id);
-        assert_ne!(receipt.definition_owner_scope_id, receipt.definition_target_scope_id);
+        assert_ne!(
+            receipt.definition_owner_scope_id,
+            receipt.definition_target_scope_id
+        );
         assert_eq!(
-            setup.index.scopes.iter().find(|s| s.scope_id == setup.selected_scope_id).unwrap().parent_scope_id,
+            setup
+                .index
+                .scopes
+                .iter()
+                .find(|s| s.scope_id == setup.selected_scope_id)
+                .unwrap()
+                .parent_scope_id,
             Some(receipt.definition_owner_scope_id)
         );
         assert_eq!(receipt.duplicate_same_owner_name_count, 2);
@@ -333,7 +361,10 @@ mod tests {
         assert!(receipt.binding_owner_is_selected_parent);
         assert!(receipt.typed_nested_review.lexical_scope_restriction_proven);
         assert_eq!(receipt.source_generation.value(), setup.generation);
-        assert_eq!(receipt.source_generation_coordinate.domain, GenerationDomainV1::Source);
+        assert_eq!(
+            receipt.source_generation_coordinate.domain,
+            GenerationDomainV1::Source
+        );
         assert!(!receipt.post_edit_scope_ast_currentness_proven);
         assert!(!receipt.identifier_use_resolution_proven);
         assert!(!receipt.runtime_binding_winner_proven);
@@ -349,7 +380,12 @@ mod tests {
     #[test]
     fn definition_owner_scope_cannot_be_substituted_for_target_review_scope() {
         let setup = setup("owner-not-target");
-        let selected = setup.index.scopes.iter().find(|s| s.scope_id == setup.selected_scope_id).unwrap();
+        let selected = setup
+            .index
+            .scopes
+            .iter()
+            .find(|s| s.scope_id == setup.selected_scope_id)
+            .unwrap();
         let owner_scope_id = selected.parent_scope_id.unwrap();
         let (candidate, spans, replacements) = edit(&setup);
         let error = admit_canonical_definition_scope_review(
@@ -364,7 +400,10 @@ mod tests {
             &replacements,
         )
         .unwrap_err();
-        assert!(matches!(error, CanonicalScopeReviewErrorV1::DefinitionBindingMissing { .. }));
+        assert!(matches!(
+            error,
+            CanonicalScopeReviewErrorV1::DefinitionBindingMissing { .. }
+        ));
         fs::remove_dir_all(setup.root).unwrap();
     }
 
@@ -384,7 +423,10 @@ mod tests {
             &replacements,
         )
         .unwrap_err();
-        assert!(matches!(error, CanonicalScopeReviewErrorV1::DefinitionBindingMissing { .. }));
+        assert!(matches!(
+            error,
+            CanonicalScopeReviewErrorV1::DefinitionBindingMissing { .. }
+        ));
         fs::remove_dir_all(setup.root).unwrap();
     }
 
@@ -404,7 +446,10 @@ mod tests {
             &replacements,
         )
         .unwrap_err();
-        assert!(matches!(error, CanonicalScopeReviewErrorV1::TypedNestedReview(_)));
+        assert!(matches!(
+            error,
+            CanonicalScopeReviewErrorV1::TypedNestedReview(_)
+        ));
         fs::remove_dir_all(setup.root).unwrap();
     }
 
