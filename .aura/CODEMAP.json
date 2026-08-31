@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788200620,
+  "generated_at_unix": 1788200882,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1648,
+    "repo_file_count": 1650,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -20,6 +20,7 @@
       ".aura/SECURITY.md",
       ".aura/amd_track3_demo_tasks.json",
       ".aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md",
+      ".aura/arena/objective-h-proof-activation.txt",
       ".aura/arena_routes/coding.v1.json",
       ".aura/arena_routes/construction.v1.json",
       ".aura/arena_routes/human_agent.v1.json",
@@ -137,6 +138,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-objective-h-hosted-proof-mirror.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1764,17 +1766,17 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1648,
-      "bytes": 26470889,
-      "tokens_est": 6608076,
+      "files": 1650,
+      "bytes": 26478741,
+      "tokens_est": 6610040,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1003,
-        "schema_or_lexicon": 272,
-        "support_file": 49
+        "schema_or_lexicon": 273,
+        "support_file": 50
       }
     },
     {
@@ -159085,6 +159087,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-objective-h-hosted-proof-mirror.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -159377,6 +159380,10 @@
       "docs/AURA_ARCHITECTURE_HARNESS.md",
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
+    ],
+    "python -m unittest": [
+      ".github/workflows/aura-objective-h-hosted-proof-mirror.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
@@ -160086,9 +160093,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -162843,6 +162847,53 @@
         0.075319,
         -0.142527,
         -0.198147
+      ]
+    },
+    {
+      "path": ".aura/arena/objective-h-proof-activation.txt",
+      "role": "support_file",
+      "binary": false,
+      "bytes": 90,
+      "lines": 2,
+      "tokens_est": 23,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "adf6233277deb8f7",
+      "vector": [
+        0.001312,
+        0.234862,
+        0.261104,
+        0.258479,
+        -0.143017,
+        0.017057,
+        -0.169258,
+        0.066916,
+        -0.137768,
+        0.313587,
+        0.221741,
+        -0.030178,
+        0.20862,
+        -0.114151,
+        0.027554,
+        -0.143017,
+        0.153513,
+        0.001312,
+        -0.16401,
+        0.074788,
+        0.001312,
+        -0.326708,
+        0.024929,
+        0.017057,
+        -0.237486,
+        -0.237486,
+        0.1955,
+        -0.129896,
+        0.308338,
+        0.137768,
+        0.22699,
+        -0.116775
       ]
     },
     {
@@ -168577,6 +168628,63 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-objective-h-hosted-proof-mirror.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 7762,
+      "lines": 145,
+      "tokens_est": 1941,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          98
+        ],
+        "python -m unittest": [
+          105
+        ]
+      },
+      "topology": {},
+      "digest8": "7679ba4d6f981db1",
+      "vector": [
+        0.155344,
+        0.350555,
+        -0.32856,
+        -0.015122,
+        -0.17459,
+        -0.202085,
+        0.017871,
+        0.182839,
+        -0.103104,
+        -0.144346,
+        0.070111,
+        -0.295566,
+        0.317562,
+        -0.152595,
+        -0.268072,
+        0.27907,
+        -0.072861,
+        0.053614,
+        0.037118,
+        -0.094856,
+        -0.034368,
+        -0.188338,
+        0.067362,
+        -0.298316,
+        0.053614,
+        0.015122,
+        -0.039867,
+        0.210333,
+        0.12785,
+        -0.138847,
+        -0.089357,
+        -0.028869
       ]
     },
     {
@@ -287862,17 +287970,17 @@
     }
   },
   "summary": {
-    "file_count": 1648,
-    "total_bytes": 26470889,
-    "text_tokens_est": 6608076,
+    "file_count": 1650,
+    "total_bytes": 26478741,
+    "text_tokens_est": 6610040,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1003,
-      "schema_or_lexicon": 272,
-      "support_file": 49
+      "schema_or_lexicon": 273,
+      "support_file": 50
     },
     "topology_nodes": 11478,
     "topology_edges": 28068,
@@ -287901,6 +288009,7 @@
       ".aura/SECURITY.md",
       ".aura/amd_track3_demo_tasks.json",
       ".aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md",
+      ".aura/arena/objective-h-proof-activation.txt",
       ".aura/arena_routes/coding.v1.json",
       ".aura/arena_routes/construction.v1.json",
       ".aura/arena_routes/human_agent.v1.json",
@@ -288018,6 +288127,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-objective-h-hosted-proof-mirror.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -448900,6 +449010,6 @@
       }
     ],
     "record_fingerprint": "10c805a4b4560a1043ee2550c5758fcf",
-    "payload_hash": "3e029c9d319491ed57bbba6aecee3cde"
+    "payload_hash": "c48b12c134b359a225f1a6c84764899f"
   }
 }
