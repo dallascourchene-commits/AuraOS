@@ -1,0 +1,88 @@
+name: Aura GLM53 Q19 Q8 Producer Evidence Request Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_q19_q8_producer_evidence_request.py"
+      - "tests/test_aura_glm53_q19_q8_producer_evidence_request.py"
+      - "docs/arena/GLM53_Q19_Q8_PRODUCER_EVIDENCE_REQUEST_20260831.md"
+      - ".github/workflows/aura-glm53-q19-q8-producer-evidence-request.yml"
+  push:
+    branches:
+      - "arena/glm53-q19-materialization-evidence-request-v1-20260831-sol"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-q19-request-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Authenticate inherited exact Q18 semantic surface
+        run: |
+          test "$(git hash-object tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py)" = "4cee26edaf0759fc80d31889ab9e4e268f9a4fbe"
+          test "$(git hash-object tests/test_aura_glm53_current_generation_bounded_c2_proposal.py)" = "95d590fe20604b1930279e68c58adb5b4345fd5c"
+
+      - name: Compile Q18 and Q19 surfaces
+        run: |
+          python -m py_compile \
+            tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py \
+            tests/test_aura_glm53_current_generation_bounded_c2_proposal.py \
+            tools/quantization/aura_glm53_q19_q8_producer_evidence_request.py \
+            tests/test_aura_glm53_q19_q8_producer_evidence_request.py
+
+      - name: Reexecute exact Q18 adversarial contract
+        run: python -m unittest tests.test_aura_glm53_current_generation_bounded_c2_proposal -v
+
+      - name: Execute Q19 adversarial contract
+        run: python -m unittest tests.test_aura_glm53_q19_q8_producer_evidence_request -v
+
+      - name: Exhaust complete 32-state Different-J request lattice
+        run: |
+          python - <<'PY'
+          from tools.quantization.aura_glm53_q19_q8_producer_evidence_request import prove_different_j
+          assert prove_different_j() == 32
+          print("Q19_32_STATE_DIFFERENT_J=PASS")
+          PY
+
+      - name: Enforce request-only claim ceiling
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          text = Path("tools/quantization/aura_glm53_q19_q8_producer_evidence_request.py").read_text()
+          for marker in (
+              "cross_domain_source_relation_proven: bool = False",
+              "official_source_tensor_payload_observed: bool = False",
+              "exact_official_tensor_to_concrete_source_tensor_set_relation_proven: bool = False",
+              "candidate_page_materialization_owner_receipt_observed: bool = False",
+              "baseline_same_official_source_tensor_set_relation_proven: bool = False",
+              "tensor_payload_bound: bool = False",
+              "real_tensor_quantization_observed: bool = False",
+              "model_execution_observed: bool = False",
+              "execution_authorized: bool = False",
+              "effect_authorized: bool = False",
+              "semantic_k27_authority_minted: bool = False",
+              "native_private_transformer_kv_accessed: bool = False",
+              "gate10_promoted: bool = False",
+          ):
+              if marker not in text:
+                  raise SystemExit(f"Q19_CLAIM_CEILING_MARKER_MISSING:{marker}")
+          for law in (
+              "Q18ProposalEligible!=TensorPayloadBound",
+              "ProgressBoundHydratedMaterial!=OfficialGLMTensorPayload",
+              "Q8WitnessNames!=Q8WitnessEvidence",
+          ):
+              if law not in text:
+                  raise SystemExit(f"Q19_LAW_MISSING:{law}")
+          print("Q19_REQUEST_ONLY_NONPROMOTION=PASS")
+          PY
