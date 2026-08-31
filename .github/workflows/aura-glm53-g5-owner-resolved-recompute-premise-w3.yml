@@ -1,0 +1,135 @@
+name: Aura GLM53 G5 Owner Resolved Recompute Premise W3
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g5-owner-resolved-recompute-premise:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify pull-request exact head
+        if: github.event_name == 'pull_request'
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Authenticate exact G5-v2 semantic substrate at review cut
+        run: |
+          git merge-base --is-ancestor 82f942b55cf02f3305ac2d148a41671496fbd73a HEAD
+          test "$(git rev-parse 82f942b55cf02f3305ac2d148a41671496fbd73a:tools/awj032/glm53_g5_recompute_admission.py)" = d3f1ed13a42503192ed01cdd3d6a66e34fedabd8
+          test "$(git rev-parse 82f942b55cf02f3305ac2d148a41671496fbd73a:tools/awj032/test_glm53_g5_recompute_admission.py)" = b388de02cd8f24ba063d4f323453119a0f94006f
+          test "$(git rev-parse HEAD:tools/awj032/glm53_g5_recompute_admission.py)" = d3f1ed13a42503192ed01cdd3d6a66e34fedabd8
+          test "$(git rev-parse HEAD:tools/awj032/test_glm53_g5_recompute_admission.py)" = b388de02cd8f24ba063d4f323453119a0f94006f
+
+      - name: Authenticate exact O65 and PR769 terminal proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = "dallascourchene-commits/AuraOS"
+          proofs = (
+              (33410032496, 99546999922, "7efca33d95f6dc39c4e159250d45373b260060ed", "o65-owner-resolved-pre-attempt"),
+              (33437612722, 99637780915, "d1a0f94255527835a59a70a0af7dc417ba1d023d", "exact-admission-reuse-proof"),
+          )
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          for run_id, job_id, expected_head, expected_job_name in proofs:
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{run_id}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  run = json.load(response)
+              if run.get("head_sha") != expected_head or run.get("conclusion") != "success":
+                  raise SystemExit(f"FOREIGN_PROOF_RUN_INVALID:{run_id}:{run.get('head_sha')}:{run.get('conclusion')}")
+
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs?per_page=100",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  jobs = json.load(response).get("jobs", [])
+              matches = [job for job in jobs if job.get("id") == job_id]
+              if len(matches) != 1:
+                  raise SystemExit(f"FOREIGN_PROOF_JOB_NOT_FOUND:{job_id}")
+              job = matches[0]
+              if job.get("name") != expected_job_name or job.get("conclusion") != "success":
+                  raise SystemExit(f"FOREIGN_PROOF_JOB_INVALID:{job_id}:{job.get('name')}:{job.get('conclusion')}")
+          PY
+
+      - name: Compile current G5-v2 and W3 premise gate
+        run: |
+          python3 -m py_compile \
+            tools/awj032/glm53_g5_recompute_admission.py \
+            tools/awj032/glm53_g5_owner_resolved_recompute_premise.py \
+            tools/awj032/test_glm53_g5_recompute_admission.py \
+            tools/awj032/test_glm53_g5_owner_resolved_recompute_premise.py
+
+      - name: Reexecute current G5-v2 adversarial and finite-state contract
+        run: python3 -m unittest tools.awj032.test_glm53_g5_recompute_admission -v
+
+      - name: Execute owner-resolved premise W3 adversarials
+        run: python3 -m unittest tools.awj032.test_glm53_g5_owner_resolved_recompute_premise -v
+
+      - name: Prove raw drift projection no longer escapes strong wrapper
+        run: |
+          python3 - <<'PY'
+          from tools.awj032.glm53_g5_recompute_admission import (
+              ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT,
+              ALLOW_INITIAL,
+              G4_HOLD_RECOMPUTE,
+              G4V2RevalidationProjection,
+              AliasStableProgressProjection,
+              assess_g3_recompute_admission,
+          )
+          from tools.awj032.glm53_g5_owner_resolved_recompute_premise import (
+              HOLD_G4_OWNER_RESOLVED_DRIFT_REQUIRED,
+              assess_owner_resolved_recompute_premise,
+          )
+
+          g4 = G4V2RevalidationProjection(
+              receipt_digest="a" * 64,
+              disposition=G4_HOLD_RECOMPUTE,
+              changed_axes=("runtime_generation",),
+              frozen_source_binding_generation="source::17",
+              current_source_binding_generation="source::17",
+          )
+          progress = AliasStableProgressProjection(
+              receipt_digest="b" * 64,
+              decision=ALLOW_INITIAL,
+              semantic_fingerprint_digest="c" * 64,
+              source_sid="sid::glm53",
+              provider_state_generation="provider::17",
+              evidence_digest="d" * 64,
+              route_projection_changed=False,
+              source_sid_same=True,
+              alias_projection_required=False,
+              alias_projection_consumed=False,
+          )
+          raw = assess_g3_recompute_admission(g4=g4, progress=progress)
+          if raw.disposition != ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT:
+              raise SystemExit("W3_REPRODUCTION_DID_NOT_REACH_RAW_BASE_ADMISSION")
+          gated = assess_owner_resolved_recompute_premise(g4=g4, progress=progress)
+          if gated.disposition != HOLD_G4_OWNER_RESOLVED_DRIFT_REQUIRED:
+              raise SystemExit(f"RAW_DRIFT_ESCAPED_W3_GATE:{gated.disposition}")
+          if gated.owner_resolved_recompute_candidate or gated.bounded_g3_recompute_attempt_admitted_by_this_contract:
+              raise SystemExit("RAW_DRIFT_MINTED_RECOMPUTE_AUTHORITY")
+          PY
