@@ -1,0 +1,67 @@
+name: GLM53 Quantized Representation Trial
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  q3-quantized-trial:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Compile exact Q3 surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_quantized_representation_trial.py \
+            tools/quantization/test_aura_glm53_quantized_representation_trial.py
+
+      - name: Run Q3 adversarial trial suite
+        run: python3 -m unittest -v tools.quantization.test_aura_glm53_quantized_representation_trial
+
+      - name: Prove exact non-self parents and fixed public boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from tools.quantization.aura_glm53_quantized_representation_trial import (
+              BENCHMARK_WORK_ORDER_ID,
+              PLACEMENT_DERBY_WORK_ORDER_ID,
+              compare_quantized_representation,
+          )
+          assert BENCHMARK_WORK_ORDER_ID == '1rPU_cIF-AOVigT3Liu7k67GD3_UAtrlKxzxTtlb1QS8'
+          assert PLACEMENT_DERBY_WORK_ORDER_ID == '1lqFmTIV1WdgTU7KjHiTN7bNDY9CN7qIJPZdvEUw_kJw'
+          assert set(inspect.signature(compare_quantized_representation).parameters) == {
+              'request', 'baseline_sample', 'candidate_sample', 'independent_verification'
+          }
+          print('Q3_PUBLIC_BOUNDARY_FIXED=true')
+          PY
+
+      - name: Emit consequence ceiling
+        shell: bash
+        run: |
+          cat <<'EOF'
+          SMALLER_OR_FASTER_NE_QUALITY_RETAINED=true
+          QUALITY_RETENTION_REQUIRES_FROZEN_CORPUS_AND_CRITERIA=true
+          SAME_MODEL_SELF_REVIEW_IS_INDEPENDENT=false
+          QUANTIZED_OUTPUT_CHANGE_NE_EXACT_CAUSAL_TIMING_COMPARISON=true
+          FROZEN_CORPUS_WIN_NE_GENERAL_PERFORMANCE_WINNER=true
+          FROZEN_CORPUS_WIN_NE_GATE10_OWNER_PROMOTION=true
+          OWNER_HOST_IDENTITY_AUTHENTICATED=false
+          PHYSICAL_IO_EXCLUSIVELY_ATTRIBUTED=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          SEMANTIC_K27_AUTHORITY_MINTED=false
+          DEPLOYMENT_AUTHORIZED=false
+          EOF
