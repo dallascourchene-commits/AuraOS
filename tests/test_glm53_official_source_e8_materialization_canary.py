@@ -130,3 +130,5 @@ class Q14MaterializationCanaryTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+# Proof-only trigger: re-observe the repaired Q14 hosted membrane after a zero-job provider generation.
