@@ -2,8 +2,9 @@
 
 Discovery does not directly mint CURRENT_REFERENCE. The bridge first creates an
 L0 metadata-verified node. A second owner/provider observation of the same exact
-subject and evidence generation may promote that node to CURRENT_REFERENCE for
-read-only reuse. Tool execution still requires separate admission.
+source snapshot may promote that node to CURRENT_REFERENCE for read-only reuse.
+The verifier/evidence generation is allowed to advance during that recheck.
+Tool execution still requires separate admission.
 """
 from __future__ import annotations
 
@@ -60,6 +61,21 @@ def _security_flags(record: DiscoveryRecord) -> tuple[str, ...]:
     if record.remote_code_authorized is False:
         flags.add("REMOTE_CODE_NOT_AUTHORIZED")
     return tuple(sorted(flags))
+
+
+def _source_snapshot_identity(observation: ExternalObservation) -> tuple[object, ...]:
+    """Fields describing the external source snapshot, excluding verifier/process state."""
+    return (
+        observation.provider_revision,
+        observation.content_digest,
+        observation.source_generated_at,
+        observation.exact_source_uri,
+        observation.etag,
+        observation.last_modified,
+        observation.license_id,
+        observation.security_flags,
+        observation.provider_metadata_digest,
+    )
 
 
 def discovery_to_l0_node(
@@ -125,7 +141,7 @@ def promote_if_same_current_generation(
     observed_at: str | None = None,
     validator_generation: str = "eki1-currentness-recheck-v1",
 ) -> ExternalKnowledgeNode:
-    """Promote only when the exact source generation is independently unchanged."""
+    """Promote when an independently observed exact source snapshot is unchanged."""
     node.validate()
     candidate = discovery_to_l0_node(
         current_record,
@@ -134,11 +150,13 @@ def promote_if_same_current_generation(
     )
     if node.subject_key != candidate.subject_key:
         return replace(node, knowledge_state=KnowledgeState.INVALIDATED, read_only_reference_admissible=False)
-    if node.evidence_generation_key != candidate.evidence_generation_key:
+    if candidate.knowledge_state != KnowledgeState.METADATA_VERIFIED:
+        return replace(node, knowledge_state=KnowledgeState.STALE_REVERIFY_REQUIRED, read_only_reference_admissible=False)
+    if _source_snapshot_identity(node.observation) != _source_snapshot_identity(candidate.observation):
         return replace(node, knowledge_state=KnowledgeState.STALE_REVERIFY_REQUIRED, read_only_reference_admissible=False)
     return build_external_knowledge_node(
-        subject=node.subject,
-        observation=node.observation,
+        subject=candidate.subject,
+        observation=candidate.observation,
         knowledge_state=KnowledgeState.CURRENT_REFERENCE,
         hydration=node.hydration,
         validator_generation=validator_generation,
@@ -147,8 +165,10 @@ def promote_if_same_current_generation(
 
 LAWS = (
     "Discovery!=CurrentReference",
-    "ExactProviderRevision+SecondMatchingObservation=>ReadOnlyCurrentReferenceCandidate",
-    "ChangedEvidenceGeneration=>StaleReverifyRequired",
+    "SourceSnapshotIdentity!=EvidenceGenerationKey",
+    "ExactProviderRevision+SecondMatchingSourceSnapshot=>ReadOnlyCurrentReferenceCandidate",
+    "MatchingSourceSnapshotMayAdvanceEGKViaVerifierRefresh",
+    "ChangedSourceSnapshot=>StaleReverifyRequired",
     "ChangedSubject=>Invalidated",
     "CurrentReadOnlyReference!=ToolExecutionAdmission",
 )
