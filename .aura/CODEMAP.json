@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788195283,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-external-cognition-resolve-adapter.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1465,6 +1466,7 @@
       "tests/test_aura_event_contracts.py",
       "tests/test_aura_event_privacy_hardening.py",
       "tests/test_aura_exact_head_transport.py",
+      "tests/test_aura_external_cognition_resolve_adapter.py",
       "tests/test_aura_external_llm_session.py",
       "tests/test_aura_fetch_construction_demo_source.py",
       "tests/test_aura_financial_contracts.py",
@@ -1631,6 +1633,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_external_cognition_resolve_adapter.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26438048,
+      "tokens_est": 6599864,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -8056,6 +8059,14 @@
         "line": 153,
         "end_line": 161,
         "semantic_id": "aura_review_lessons_contracts.py#function:_canonical_json:986e3ee6617aeebf",
+        "signature_hash": "caa6df7371712507"
+      },
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 119,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#function:_canonical_json:19cceac6d3f7f4b8",
         "signature_hash": "caa6df7371712507"
       }
     ],
@@ -135367,6 +135378,186 @@
         "signature_hash": "4f651f8817bf26f1"
       }
     ],
+    "make_store": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 21,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#function:make_store:60fc9f21b667947b",
+        "signature_hash": "c5c094140a14b2ff"
+      }
+    ],
+    "row": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 28,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#function:row:2e06f7812e16613a",
+        "signature_hash": "117d47d4c7b5a69e"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 151,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#class:ExternalCognitionResolveAdapterTests:6de8462d1dad7fc9",
+        "signature_hash": "b76e545e8783e45e"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.setUp": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 50,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.setUp:190c77680b2edcfd",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.request": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 69,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.request:7ff24df3e8114cf2",
+        "signature_hash": "117503179b4d27ee"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_exact_key_wrong_digest_fails_closed": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 74,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_exact_key_wrong_digest_fails_closed:654b46148f8aff0d",
+        "signature_hash": "a49e2efa8bb09694"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_stale_store_generation_fails_before_row_use": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 78,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_stale_store_generation_fails_before_row_use:7cf2193e68cd4adb",
+        "signature_hash": "15366580063a861a"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_unknown_required_source_currentness_reopens": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_unknown_required_source_currentness_reopens:61a5fb1fef86c70b",
+        "signature_hash": "6481571409939d4a"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_k27_collision_does_not_merge_semantic_keys": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 95,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_k27_collision_does_not_merge_semantic_keys:921d9f00db2a4d1f",
+        "signature_hash": "6abc80e22bc058c5"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_successor_returns_history_only_candidate": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 101,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_successor_returns_history_only_candidate:935353d311f311bc",
+        "signature_hash": "7c32d00d40104784"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_context_flood_bound_refuses_instead_of_silent_truncation": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 106,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_context_flood_bound_refuses_instead_of_silent_truncation:9bf6b877b6b8e17c",
+        "signature_hash": "7a5b817fba06c7e4"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_poisoned_imperative_is_evidence_only": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_poisoned_imperative_is_evidence_only:8f8412735d5d382d",
+        "signature_hash": "93fbb08e3c220bd4"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_wrong_evidence_domain_refuses": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 118,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_wrong_evidence_domain_refuses:031f5c5edab93337",
+        "signature_hash": "3266f436b037c56a"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_model_prefix_kv_is_wrong_owner": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 123,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_model_prefix_kv_is_wrong_owner:20aed7230969a520",
+        "signature_hash": "cd91ff661abdf497"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_resolve_many_has_one_snapshot_boundary": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 133,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_resolve_many_has_one_snapshot_boundary:8fda23ecce746f39",
+        "signature_hash": "c25b1fc0e856d37b"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_principal_private_scope_does_not_cross": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 137,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_principal_private_scope_does_not_cross:05be7c36f0a4ad65",
+        "signature_hash": "5fe235dadab60a4b"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_receipt_identity_changes_when_request_changes": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 146,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_receipt_identity_changes_when_request_changes:a8859284cdbdb7ce",
+        "signature_hash": "e1a8f59c117098df"
+      }
+    ],
+    "ExternalCognitionResolveAdapterTests.test_legacy_sha16_binds_snapshot_prefix_without_becoming_authority": [
+      {
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 151,
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_legacy_sha16_binds_snapshot_prefix_without_becoming_authority:736052b4349489a9",
+        "signature_hash": "07e9b093d7588e62"
+      }
+    ],
     "FakeBridge.aura_get_micro_context": [
       {
         "file": "tests/test_aura_external_llm_session.py",
@@ -157181,6 +157372,156 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "ResolveDisposition": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 27,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ResolveDisposition:1a0b316f0f08f0b7",
+        "signature_hash": "43b918428f127609"
+      }
+    ],
+    "CurrentnessStatus": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CurrentnessStatus:f8ad77246260b531",
+        "signature_hash": "d23a19aea559196f"
+      }
+    ],
+    "ExternalCognitionReadRequestV1": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 51,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ExternalCognitionReadRequestV1:3e5f48bad39afee6",
+        "signature_hash": "d1157224428339b5"
+      }
+    ],
+    "ReadValidationContextV1": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 55,
+        "end_line": 59,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ReadValidationContextV1:b954eed13a1dd49c",
+        "signature_hash": "a0bf16e215043b40"
+      }
+    ],
+    "CoordinateMemoryReadCandidateV1": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 76,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CoordinateMemoryReadCandidateV1:0dc876aa62fbcf1b",
+        "signature_hash": "0b047bad6356bf7b"
+      }
+    ],
+    "CoordinateMemoryReadReceiptV1": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 80,
+        "end_line": 96,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CoordinateMemoryReadReceiptV1:47dc09b12dc4dd11",
+        "signature_hash": "259509dce664ba5c"
+      }
+    ],
+    "CoordinateMemoryBatchReceiptV1": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 100,
+        "end_line": 109,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CoordinateMemoryBatchReceiptV1:1cabe5d676cc3c7e",
+        "signature_hash": "b9949bb1c81da746"
+      }
+    ],
+    "_sha256_hex": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 123,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#function:_sha256_hex:c02a5b72b071adab",
+        "signature_hash": "635cdca712c9c619"
+      }
+    ],
+    "_normalize_expected_sha256": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 130,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#function:_normalize_expected_sha256:5cbd648c0f74c6c8",
+        "signature_hash": "952d6900577bbbe9"
+      }
+    ],
+    "ExternalCognitionResolveAdapterV1": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "class",
+        "line": 133,
+        "end_line": 373,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ExternalCognitionResolveAdapterV1:51ed90d84bb7ee45",
+        "signature_hash": "e17544af5d648e88"
+      }
+    ],
+    "ExternalCognitionResolveAdapterV1.__init__": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 141,
+        "end_line": 183,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1.__init__:b7d35a5624b621d9",
+        "signature_hash": "1cf4294fec8f1026"
+      }
+    ],
+    "ExternalCognitionResolveAdapterV1._request_digest": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 185,
+        "end_line": 186,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1._request_digest:ae75878236358056",
+        "signature_hash": "7536a24ae166d7ac"
+      }
+    ],
+    "ExternalCognitionResolveAdapterV1._receipt": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 227,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1._receipt:ef431eddef5e32dd",
+        "signature_hash": "4d04dd52e9be7fb3"
+      }
+    ],
+    "ExternalCognitionResolveAdapterV1.resolve": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 229,
+        "end_line": 357,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1.resolve:f2ff68d8edb4c839",
+        "signature_hash": "4358c733dc1eaf5d"
+      }
+    ],
+    "ExternalCognitionResolveAdapterV1.resolve_many": [
+      {
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "kind": "method",
+        "line": 359,
+        "end_line": 373,
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1.resolve_many:8e232a4500d1f93a",
+        "signature_hash": "8c0a21ffb486f184"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -167737,6 +168078,53 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-external-cognition-resolve-adapter.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 764,
+      "lines": 25,
+      "tokens_est": 191,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "81ff990e9fc4fb2c",
+      "vector": [
+        0.186792,
+        -0.295423,
+        0.25303,
+        -0.038418,
+        0.067563,
+        0.258329,
+        -0.009273,
+        0.181493,
+        -0.295423,
+        -0.035769,
+        0.165596,
+        -0.154997,
+        0.181493,
+        0.157647,
+        -0.051666,
+        0.25568,
+        0.189441,
+        0.109955,
+        -0.070213,
+        -0.287474,
+        0.147049,
+        -0.316619,
+        0.147049,
+        0.038418,
+        0.059614,
+        -0.033119,
+        -0.186792,
+        -0.189441,
+        -0.017222,
+        -0.128502,
+        0.245081,
+        -0.096708
       ]
     },
     {
@@ -254846,6 +255234,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_external_cognition_resolve_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7343,
+      "lines": 156,
+      "tokens_est": 1836,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d2473a862fa40cba",
+      "vector": [
+        -0.048085,
+        -0.250819,
+        0.040287,
+        0.269014,
+        0.102667,
+        -0.131258,
+        -0.115663,
+        -0.167646,
+        0.066279,
+        -0.09227,
+        -0.03249,
+        -0.292406,
+        -0.172845,
+        0.15465,
+        0.263815,
+        0.146853,
+        0.131258,
+        0.300204,
+        -0.024692,
+        -0.178043,
+        -0.198836,
+        -0.06108,
+        0.006498,
+        0.271613,
+        0.042886,
+        -0.198836,
+        -0.084473,
+        -0.152051,
+        0.320997,
+        0.318398,
+        -0.079275,
+        -0.089671
+      ]
+    },
+    {
       "path": "tests/test_aura_external_llm_session.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +263080,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_external_cognition_resolve_adapter.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14893,
+      "lines": 374,
+      "tokens_est": 3724,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "01550b6c1ec5886e",
+      "vector": [
+        0.207241,
+        0.22536,
+        0.236685,
+        -0.24348,
+        -0.118909,
+        -0.161942,
+        -0.193651,
+        -0.139293,
+        -0.198181,
+        -0.252539,
+        -0.057756,
+        0.284248,
+        -0.279718,
+        0.053226,
+        -0.279718,
+        -0.039636,
+        -0.121174,
+        -0.202711,
+        -0.177797,
+        0.164207,
+        -0.245744,
+        0.016987,
+        -0.105319,
+        -0.150618,
+        -0.143823,
+        -0.150618,
+        0.098524,
+        0.279718,
+        -0.060021,
+        0.028312,
+        -0.032841,
+        0.003397
       ]
     },
     {
@@ -286646,16 +287128,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26438048,
+    "text_tokens_est": 6599864,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286801,6 +287283,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-external-cognition-resolve-adapter.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -288130,6 +288613,7 @@
       "tests/test_aura_event_contracts.py",
       "tests/test_aura_event_privacy_hardening.py",
       "tests/test_aura_exact_head_transport.py",
+      "tests/test_aura_external_cognition_resolve_adapter.py",
       "tests/test_aura_external_llm_session.py",
       "tests/test_aura_fetch_construction_demo_source.py",
       "tests/test_aura_financial_contracts.py",
@@ -288296,6 +288780,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_external_cognition_resolve_adapter.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -422474,6 +422959,186 @@
         "file_digest8": "84ce96843c918333"
       },
       {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#class:ExternalCognitionResolveAdapterTests:6de8462d1dad7fc9",
+        "name": "ExternalCognitionResolveAdapterTests",
+        "kind": "class",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 31,
+        "end_line": 151,
+        "signature_hash": "b76e545e8783e45e",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#function:make_store:60fc9f21b667947b",
+        "name": "make_store",
+        "kind": "function",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 16,
+        "end_line": 21,
+        "signature_hash": "c5c094140a14b2ff",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#function:row:2e06f7812e16613a",
+        "name": "row",
+        "kind": "function",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 24,
+        "end_line": 28,
+        "signature_hash": "117d47d4c7b5a69e",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.request:7ff24df3e8114cf2",
+        "name": "ExternalCognitionResolveAdapterTests.request",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 52,
+        "end_line": 69,
+        "signature_hash": "117503179b4d27ee",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.setUp:190c77680b2edcfd",
+        "name": "ExternalCognitionResolveAdapterTests.setUp",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 32,
+        "end_line": 50,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_context_flood_bound_refuses_instead_of_silent_truncation:9bf6b877b6b8e17c",
+        "name": "ExternalCognitionResolveAdapterTests.test_context_flood_bound_refuses_instead_of_silent_truncation",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 103,
+        "end_line": 106,
+        "signature_hash": "7a5b817fba06c7e4",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_exact_key_wrong_digest_fails_closed:654b46148f8aff0d",
+        "name": "ExternalCognitionResolveAdapterTests.test_exact_key_wrong_digest_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 71,
+        "end_line": 74,
+        "signature_hash": "a49e2efa8bb09694",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_k27_collision_does_not_merge_semantic_keys:921d9f00db2a4d1f",
+        "name": "ExternalCognitionResolveAdapterTests.test_k27_collision_does_not_merge_semantic_keys",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 89,
+        "end_line": 95,
+        "signature_hash": "6abc80e22bc058c5",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_legacy_sha16_binds_snapshot_prefix_without_becoming_authority:736052b4349489a9",
+        "name": "ExternalCognitionResolveAdapterTests.test_legacy_sha16_binds_snapshot_prefix_without_becoming_authority",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 148,
+        "end_line": 151,
+        "signature_hash": "07e9b093d7588e62",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_model_prefix_kv_is_wrong_owner:20aed7230969a520",
+        "name": "ExternalCognitionResolveAdapterTests.test_model_prefix_kv_is_wrong_owner",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 120,
+        "end_line": 123,
+        "signature_hash": "cd91ff661abdf497",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_poisoned_imperative_is_evidence_only:8f8412735d5d382d",
+        "name": "ExternalCognitionResolveAdapterTests.test_poisoned_imperative_is_evidence_only",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 108,
+        "end_line": 114,
+        "signature_hash": "93fbb08e3c220bd4",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_principal_private_scope_does_not_cross:05be7c36f0a4ad65",
+        "name": "ExternalCognitionResolveAdapterTests.test_principal_private_scope_does_not_cross",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 135,
+        "end_line": 137,
+        "signature_hash": "5fe235dadab60a4b",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_receipt_identity_changes_when_request_changes:a8859284cdbdb7ce",
+        "name": "ExternalCognitionResolveAdapterTests.test_receipt_identity_changes_when_request_changes",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 139,
+        "end_line": 146,
+        "signature_hash": "e1a8f59c117098df",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_resolve_many_has_one_snapshot_boundary:8fda23ecce746f39",
+        "name": "ExternalCognitionResolveAdapterTests.test_resolve_many_has_one_snapshot_boundary",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 125,
+        "end_line": 133,
+        "signature_hash": "c25b1fc0e856d37b",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_stale_store_generation_fails_before_row_use:7cf2193e68cd4adb",
+        "name": "ExternalCognitionResolveAdapterTests.test_stale_store_generation_fails_before_row_use",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 76,
+        "end_line": 78,
+        "signature_hash": "15366580063a861a",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_successor_returns_history_only_candidate:935353d311f311bc",
+        "name": "ExternalCognitionResolveAdapterTests.test_successor_returns_history_only_candidate",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 97,
+        "end_line": 101,
+        "signature_hash": "7c32d00d40104784",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_unknown_required_source_currentness_reopens:61a5fb1fef86c70b",
+        "name": "ExternalCognitionResolveAdapterTests.test_unknown_required_source_currentness_reopens",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 80,
+        "end_line": 87,
+        "signature_hash": "6481571409939d4a",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterTests.test_wrong_evidence_domain_refuses:031f5c5edab93337",
+        "name": "ExternalCognitionResolveAdapterTests.test_wrong_evidence_domain_refuses",
+        "kind": "method",
+        "file": "tests/test_aura_external_cognition_resolve_adapter.py",
+        "line": 116,
+        "end_line": 118,
+        "signature_hash": "3266f436b037c56a",
+        "file_digest8": "d2473a862fa40cba"
+      },
+      {
         "semantic_id": "tests/test_aura_external_llm_session.py#class:FakeBridge:40165af0c5492060",
         "name": "FakeBridge",
         "kind": "class",
@@ -445634,6 +446299,166 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CoordinateMemoryBatchReceiptV1:1cabe5d676cc3c7e",
+        "name": "CoordinateMemoryBatchReceiptV1",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 100,
+        "end_line": 109,
+        "signature_hash": "b9949bb1c81da746",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CoordinateMemoryReadCandidateV1:0dc876aa62fbcf1b",
+        "name": "CoordinateMemoryReadCandidateV1",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 63,
+        "end_line": 76,
+        "signature_hash": "0b047bad6356bf7b",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CoordinateMemoryReadReceiptV1:47dc09b12dc4dd11",
+        "name": "CoordinateMemoryReadReceiptV1",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 80,
+        "end_line": 96,
+        "signature_hash": "259509dce664ba5c",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:CurrentnessStatus:f8ad77246260b531",
+        "name": "CurrentnessStatus",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "d23a19aea559196f",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ExternalCognitionReadRequestV1:3e5f48bad39afee6",
+        "name": "ExternalCognitionReadRequestV1",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 38,
+        "end_line": 51,
+        "signature_hash": "d1157224428339b5",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ExternalCognitionResolveAdapterV1:51ed90d84bb7ee45",
+        "name": "ExternalCognitionResolveAdapterV1",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 133,
+        "end_line": 373,
+        "signature_hash": "e17544af5d648e88",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ReadValidationContextV1:b954eed13a1dd49c",
+        "name": "ReadValidationContextV1",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 55,
+        "end_line": 59,
+        "signature_hash": "a0bf16e215043b40",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#class:ResolveDisposition:1a0b316f0f08f0b7",
+        "name": "ResolveDisposition",
+        "kind": "class",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 15,
+        "end_line": 27,
+        "signature_hash": "43b918428f127609",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#function:_canonical_json:19cceac6d3f7f4b8",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 112,
+        "end_line": 119,
+        "signature_hash": "caa6df7371712507",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#function:_normalize_expected_sha256:5cbd648c0f74c6c8",
+        "name": "_normalize_expected_sha256",
+        "kind": "function",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 126,
+        "end_line": 130,
+        "signature_hash": "952d6900577bbbe9",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#function:_sha256_hex:c02a5b72b071adab",
+        "name": "_sha256_hex",
+        "kind": "function",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 122,
+        "end_line": 123,
+        "signature_hash": "635cdca712c9c619",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1.__init__:b7d35a5624b621d9",
+        "name": "ExternalCognitionResolveAdapterV1.__init__",
+        "kind": "method",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 141,
+        "end_line": 183,
+        "signature_hash": "1cf4294fec8f1026",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1._receipt:ef431eddef5e32dd",
+        "name": "ExternalCognitionResolveAdapterV1._receipt",
+        "kind": "method",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 188,
+        "end_line": 227,
+        "signature_hash": "4d04dd52e9be7fb3",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1._request_digest:ae75878236358056",
+        "name": "ExternalCognitionResolveAdapterV1._request_digest",
+        "kind": "method",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 185,
+        "end_line": 186,
+        "signature_hash": "7536a24ae166d7ac",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1.resolve:f2ff68d8edb4c839",
+        "name": "ExternalCognitionResolveAdapterV1.resolve",
+        "kind": "method",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 229,
+        "end_line": 357,
+        "signature_hash": "4358c733dc1eaf5d",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
+        "semantic_id": "tools/aura_external_cognition_resolve_adapter.py#method:ExternalCognitionResolveAdapterV1.resolve_many:8e232a4500d1f93a",
+        "name": "ExternalCognitionResolveAdapterV1.resolve_many",
+        "kind": "method",
+        "file": "tools/aura_external_cognition_resolve_adapter.py",
+        "line": 359,
+        "end_line": 373,
+        "signature_hash": "8c0a21ffb486f184",
+        "file_digest8": "01550b6c1ec5886e"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447709,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "5420fda673c0466d44b6392ef63e7f2d",
+    "payload_hash": "334b32c597b5c521288b2f2d83fddb2b"
   }
 }

@@ -1,0 +1,24 @@
+name: Aura External Cognition Resolve Adapter
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_external_cognition_resolve_adapter.py"
+      - "tests/test_aura_external_cognition_resolve_adapter.py"
+      - ".github/workflows/aura-external-cognition-resolve-adapter.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-adversarial:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact PR head
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+      - name: Run WP03 source-ready reader adversarials
+        run: python -m unittest tests.test_aura_external_cognition_resolve_adapter -v
