@@ -1,0 +1,123 @@
+name: Aura WorkCapsule Current Causal Corroboration Member
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR573_SHA: 01603674b2de33f5cad4b534c1e602511cf6bb5a
+  PR579_SHA: 6f228182dec6264d206aef7515f724d7e7355be2
+  CONVERGENCE_SHA: 7c844cd6ab3d23cc75443661c52d195c2c5c0486
+  PR573_OWNER_BLOB: daaadce3ec21957a2a257c2fbb4ee066f1be0c9a
+  PR579_OWNER_BLOB: 75ddb3818a3361e2f80b0c82015840b79fca33c1
+  PR577_OWNER_BLOB: ea56321ab6ebd06a74a22d8ee4736d362a561b16
+
+jobs:
+  exact-current-causal-corroboration-member-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact child and prove PR573 x PR579 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=300 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR573_SHA" "$PR579_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR573_SHA $PR579_SHA"
+          git merge-base --is-ancestor "$PR573_SHA" HEAD
+          git merge-base --is-ancestor "$PR579_SHA" HEAD
+          test "$(git hash-object scripts/aura_workcapsule_causal_artifact_qualified_host_envelope.py)" = "$PR573_OWNER_BLOB"
+          test "$(git hash-object scripts/aura_workcapsule_corroboration_qualified_host_member.py)" = "$PR579_OWNER_BLOB"
+          test "$(git hash-object scripts/aura_workcapsule_live_causal_corroboration.py)" = "$PR577_OWNER_BLOB"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_PR573_PR579_CONVERGENCE=true'
+
+      - name: Re-prove PR573 current causal-envelope owner on child tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/aura_workcapsule_artifact_qualified_host_observation.py \
+            scripts/aura_workcapsule_causal_artifact_qualified_host_envelope.py
+          python3 -m unittest -v tests.test_aura_workcapsule_causal_artifact_qualified_host_envelope
+
+      - name: Re-prove PR579 corroboration-qualified member on child tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/aura_workcapsule_live_causal_corroboration.py \
+            scripts/aura_workcapsule_corroboration_qualified_host_member.py
+          python3 -m unittest -v \
+            tests.test_aura_workcapsule_live_causal_corroboration \
+            tests.test_aura_workcapsule_corroboration_qualified_host_member
+
+      - name: Prove O44 target-state-O10 conjunction adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_current_causal_corroboration_member.py
+          python3 -m unittest -v tests.test_aura_workcapsule_current_causal_corroboration_member
+
+      - name: Prove target state and causal world are independent falsifiers
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest -v \
+            tests.test_aura_workcapsule_current_causal_corroboration_member.CurrentCausalCorroborationMemberTests.test_same_target_and_o10_but_different_state_vector_rejects \
+            tests.test_aura_workcapsule_current_causal_corroboration_member.CurrentCausalCorroborationMemberTests.test_same_state_and_o10_but_foreign_target_rejects \
+            tests.test_aura_workcapsule_current_causal_corroboration_member.CurrentCausalCorroborationMemberTests.test_same_state_and_target_but_foreign_o10_rejects
+
+      - name: Assert owner reuse and full consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_workcapsule_current_causal_corroboration_member.py
+          grep -q 'verify_corroboration_qualified_host_member' "$child"
+          grep -q 'verify_causal_host_admission_envelope' "$child"
+          if grep -q '^def verify_corroboration_qualified_host_member' "$child"; then
+            echo 'child duplicated PR579 member owner' >&2
+            exit 1
+          fi
+          if grep -q '^def verify_causal_host_admission_envelope' "$child"; then
+            echo 'child duplicated PR573 envelope owner' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_current_causal_corroboration_member import verify_current_causal_corroboration_member
+          params = set(inspect.signature(verify_current_causal_corroboration_member).parameters)
+          assert params == {'live_host_receipt','pr568_receipt','pr572_receipt','causal_host_admission_receipt'}
+          PY
+          cat <<'EOF'
+          PR579_CORROBORATION_MEMBER_REPROVED=true
+          PR573_CAUSAL_ENVELOPE_INTEGRITY_CHECKED=true
+          SAME_PR568_HOST_TARGET=true
+          SAME_HOST_GATE_STATE_VECTOR=true
+          SAME_CAUSAL_O10_WORLD=true
+          HOST_OBSERVATION_TRANSFERRED_TO_PR572_SIBLING=false
+          CAUSAL_HOST_ENVELOPE_REPROVED_BY_CHILD=false
+          PRODUCER_AUTHENTICATION=false
+          SEMANTIC_EQUIVALENCE=false
+          SEMANTIC_TRUTH=false
+          HOST_RESOLVER_TRUST=false
+          HOST_OBSERVATION_AUTHORITY=false
+          TRUSTED_CONTINUATION=false
+          HOST_EFFECT_READY=false
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_PROVIDER_PUBLIC_HUMAN_AUTHORITY=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF
