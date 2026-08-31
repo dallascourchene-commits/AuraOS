@@ -5,7 +5,7 @@ import unittest
 
 from tools.awj032.glm53_g5_recompute_admission import (
     ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT,
-    ALLOW_INITIAL,
+    ALLOW_STATE_TRANSITION,
     G4_HOLD_RECOMPUTE,
     G4_STRUCTURAL_MATCH_OWNER_AUTH_REQUIRED,
     G4V2RevalidationProjection,
@@ -51,15 +51,17 @@ def g4_structural_match() -> G4V2RevalidationProjection:
 def progress() -> AliasStableProgressProjection:
     return AliasStableProgressProjection(
         receipt_digest=d("c"),
-        decision=ALLOW_INITIAL,
+        decision=ALLOW_STATE_TRANSITION,
         semantic_fingerprint_digest=d("d"),
         source_sid="sid::glm53",
-        provider_state_generation="provider::17",
+        provider_state_generation="provider::18",
         evidence_digest=d("e"),
         route_projection_changed=False,
         source_sid_same=True,
         alias_projection_required=False,
         alias_projection_consumed=False,
+        raw_decision=ALLOW_STATE_TRANSITION,
+        semantic_decision=ALLOW_STATE_TRANSITION,
     )
 
 
