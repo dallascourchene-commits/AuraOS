@@ -8,7 +8,8 @@ scoped rebind, but deliberately accepts a caller-supplied ``post_edit_witness``.
 This D0 membrane consumes both parent consequence paths. It validates and replays PR542, derives
 the PR532-shaped post-edit witness deterministically from PR542's one nested canonical-target
 projection plus the preserved PRE rejected-currentness observation, and passes only that derived
-witness into PR540. Callers cannot provide a second post-edit witness or target projection.
+witness into PR540. Cross-parent target equality is delegated to PR548's canonical receipt-level
+shared-target coordinate owner instead of being reimplemented here.
 
 The result is evidence reduction only. It does not authenticate the portable producer or the PRE
 re-entry/source-observation producers, bind the structural semantic handle to raw bytes, prove
@@ -21,6 +22,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from scripts import aura_workcapsule_scoped_portable_target_identity as shared_target_owner
 from scripts.aura_workcapsule_post_source_portable_higher_owner_continuity import (
     admit_post_source_portable_higher_owner_continuity,
     verify_portable_higher_owner_owner_chain_projection,
@@ -38,11 +40,7 @@ STALE = "STALE"
 UNKNOWN = "UNKNOWN"
 PORTABLE_PREFIX = "PORTABLE_"
 SCOPED_PREFIX = "SCOPED_"
-SHARED_DEPENDENCY_MISMATCH = "SHARED_DEPENDENCY_MISMATCH"
-SHARED_GENERATION_MISMATCH = "SHARED_GENERATION_MISMATCH"
-SHARED_BODY_SHA_MISMATCH = "SHARED_BODY_SHA_MISMATCH"
-SHARED_BODY_LENGTH_MISMATCH = "SHARED_BODY_LENGTH_MISMATCH"
-SHARED_HANDLE_MISMATCH = "SHARED_HANDLE_MISMATCH"
+SHARED_TARGET_PREFIX = "SHARED_TARGET_"
 
 _FALSE_WITNESS_FIELDS = (
     "old_local_scope_id_currentness_authority",
@@ -215,7 +213,7 @@ def verify_portable_derived_scoped_rebind(
     source_observation: dict[str, Any],
     dependency_key: dict[str, Any],
 ) -> list[str]:
-    """Consume PR542 + PR540 with one derived PR532 witness and no caller witness slot."""
+    """Consume PR542 + PR540 and delegate shared-target equality to PR548."""
     kwargs = locals()
     portable_violations = verify_post_source_portable_higher_owner_continuity(
         **_portable_kwargs(kwargs)
@@ -238,20 +236,11 @@ def verify_portable_derived_scoped_rebind(
     portable = admit_post_source_portable_higher_owner_continuity(**_portable_kwargs(kwargs))
     scoped = admit_post_world_bound_scoped_rebind(**_scoped_kwargs(kwargs, witness))
     nested_scoped = scoped["scoped_post_repair_rebind"]
-    violations: list[str] = []
-    if portable.get("repaired_dependency_key") != scoped.get("dependency_key"):
-        violations.append(SHARED_DEPENDENCY_MISMATCH)
-    if portable.get("post_source_generation") != scoped.get("post_source_generation"):
-        violations.append(SHARED_GENERATION_MISMATCH)
-    if portable.get("post_source_sha256") != scoped.get("post_body_sha256"):
-        violations.append(SHARED_BODY_SHA_MISMATCH)
-    if portable.get("post_source_byte_len") != scoped.get("post_byte_len"):
-        violations.append(SHARED_BODY_LENGTH_MISMATCH)
-    if portable.get("continuous_semantic_handle_digest_hex") != nested_scoped.get(
-        "semantic_handle_digest"
-    ):
-        violations.append(SHARED_HANDLE_MISMATCH)
-    return violations
+    coordinate_violations = shared_target_owner.verify_shared_target_coordinates(
+        scoped_receipt=nested_scoped,
+        source_receipt=portable,
+    )
+    return [SHARED_TARGET_PREFIX + item for item in coordinate_violations]
 
 
 def admit_portable_derived_scoped_rebind(**kwargs: Any) -> dict[str, Any]:
@@ -273,6 +262,8 @@ def admit_portable_derived_scoped_rebind(**kwargs: Any) -> dict[str, Any]:
         "post_edit_witness_derived_from_portable_target": True,
         "caller_post_edit_witness_accepted": False,
         "one_portable_target_projection_used": True,
+        "shared_target_coordinate_owner": "scripts.aura_workcapsule_scoped_portable_target_identity.verify_shared_target_coordinates",
+        "shared_target_coordinate_reproved": True,
         "dependency_key": scoped["dependency_key"],
         "post_source_generation": scoped["post_source_generation"],
         "post_body_sha256": scoped["post_body_sha256"],

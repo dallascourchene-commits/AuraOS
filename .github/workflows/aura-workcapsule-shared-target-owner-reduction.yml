@@ -1,0 +1,110 @@
+name: Aura WorkCapsule Shared-Target Owner Reduction
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_*.py'
+      - 'tests/test_aura_workcapsule_*.py'
+      - '.github/workflows/aura-workcapsule-shared-target-owner-reduction.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  TARGET_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Fetch exact current branch without legacy submodule cleanup
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=160 origin \
+            "+refs/heads/${TARGET_REF}:refs/remotes/origin/${TARGET_REF}"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Assert true two-parent convergence
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "EXPECTED_HEAD=$TARGET_SHA"
+          echo "ACTUAL_HEAD=$(git rev-parse HEAD)"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor 278e4b4ab7c8a9ff296508cfdb70155ffb2e9250 HEAD
+          git merge-base --is-ancestor c10eb7316e76c75df6a4f04b933536f99f310702 HEAD
+          parents="$(git cat-file -p cbf6afdc0ceab2bee9916d0b00859dc2fbbd03ee | grep '^parent ' || true)"
+          echo "$parents" | grep '278e4b4ab7c8a9ff296508cfdb70155ffb2e9250'
+          echo "$parents" | grep 'c10eb7316e76c75df6a4f04b933536f99f310702'
+
+      - name: Compile reduced owner chain
+        run: |
+          python -m py_compile \
+            scripts/aura_workcapsule_scoped_portable_target_identity.py \
+            scripts/aura_workcapsule_portable_derived_scoped_rebind.py
+
+      - name: Re-prove exact-green PR548 legacy boundary through canonical receipt owner
+        run: python -m unittest tests.test_aura_workcapsule_scoped_portable_target_identity
+
+      - name: Re-prove exact-green PR549 derived-witness boundary
+        run: python -m unittest tests.test_aura_workcapsule_portable_derived_scoped_rebind
+
+      - name: Prove shared-target owner reduction
+        run: python -m unittest tests.test_aura_workcapsule_shared_target_owner_reduction
+
+      - name: Assert single shared-target semantic owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          lower = Path('scripts/aura_workcapsule_scoped_portable_target_identity.py').read_text()
+          higher = Path('scripts/aura_workcapsule_portable_derived_scoped_rebind.py').read_text()
+          assert 'def verify_shared_target_coordinates' in lower
+          assert 'shared_target_owner.verify_shared_target_coordinates' in higher
+          for duplicated in (
+              'SHARED_DEPENDENCY_MISMATCH',
+              'SHARED_GENERATION_MISMATCH',
+              'SHARED_BODY_SHA_MISMATCH',
+              'SHARED_BODY_LENGTH_MISMATCH',
+              'SHARED_HANDLE_MISMATCH',
+          ):
+              assert duplicated not in higher
+          print('CANONICAL_SHARED_TARGET_COORDINATE_OWNER=PR548_RECEIPT_LEVEL')
+          print('PR549_ROLE=DERIVATION_PLUS_HIGHER_OWNER_EXTENSION')
+          print('DUPLICATE_SHARED_TARGET_EQUALITY_OWNER=FALSE')
+          PY
+
+      - name: Emit D0 consequence ceiling
+        shell: bash
+        run: |
+          cat <<'EOF'
+          PR548_LEGACY_API_STABLE=TRUE
+          PR548_CANONICAL_RECEIPT_COMPARATOR=TRUE
+          PR549_DELEGATES_SHARED_TARGET_COORDINATE=TRUE
+          SYNTAX_ORDINAL_AND_EXACT_SPAN_PRESERVED=TRUE
+          CALLER_POST_EDIT_WITNESS_ACCEPTED_BY_PR549=FALSE
+          PRODUCER_AUTHENTICATION_PROVEN=FALSE
+          HANDLE_BOUND_TO_RAW_BYTES=FALSE
+          SEMANTIC_REPAIR_CORRECTNESS_PROVEN=FALSE
+          REENTRY_CLOSED=FALSE
+          REENTRY_SCOPE_NARROWED=FALSE
+          SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=FALSE
+          NODE_LEVEL_INVALIDATION_CONE_PROVEN=FALSE
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_EFFECT_AUTHORITY=FALSE
+          GATE10_PROMOTION=FALSE
+          EOF
