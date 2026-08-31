@@ -56,6 +56,12 @@ def _canonical(value: object) -> bytes:
 
 
 def decode_e4m3fn_byte(code: int) -> float:
+    """Decode one OCP-style finite E4M3FN byte to an exactly representable float.
+
+    Layout is S1E4M3 with exponent bias 7. Exponent 0 is subnormal/zero. The
+    outer codes S1111111 are NaN; exponent 15 with mantissa 0..6 remains finite,
+    giving maximum magnitude 448.
+    """
     if isinstance(code, bool) or not isinstance(code, int) or not 0 <= code <= 0xFF:
         raise GateDequantizationError("invalid E4M3FN byte")
     sign = -1.0 if code & 0x80 else 1.0
@@ -82,7 +88,14 @@ def e4m3fn_lookup_table() -> np.ndarray:
     return table
 
 
-def dequantize_blockwise_to_canonical_f32(weight_raw: bytes, scale_raw: bytes, *, weight_shape: tuple[int, int], scale_shape: tuple[int, int]) -> bytes:
+def dequantize_blockwise_to_canonical_f32(
+    weight_raw: bytes,
+    scale_raw: bytes,
+    *,
+    weight_shape: tuple[int, int],
+    scale_shape: tuple[int, int],
+) -> bytes:
+    """Dequantize row-major E4M3FN weights by an exact F32 inverse-scale grid."""
     if len(weight_shape) != 2 or len(scale_shape) != 2:
         raise GateDequantizationError("rank-2 weight/scale required")
     rows, cols = weight_shape
@@ -98,12 +111,14 @@ def dequantize_blockwise_to_canonical_f32(weight_raw: bytes, scale_raw: bytes, *
         raise GateDequantizationError("weight payload length mismatch")
     if len(scale_raw) != scale_rows * scale_cols * 4:
         raise GateDequantizationError("scale payload length mismatch")
+
     codes = np.frombuffer(weight_raw, dtype=np.uint8)
     if np.any((codes == 0x7F) | (codes == 0xFF)):
         raise GateDequantizationError("NaN E4M3FN code in live weight payload")
     scales = np.frombuffer(scale_raw, dtype="<f4").reshape(scale_shape)
     if not np.all(np.isfinite(scales)) or not np.all(scales > 0.0):
         raise GateDequantizationError("scale grid must be positive finite float32")
+
     table = e4m3fn_lookup_table()
     q = table[codes].reshape(weight_shape)
     q_blocks = q.reshape(scale_rows, block_rows, scale_cols, block_cols)
@@ -189,19 +204,64 @@ def current_live_gate_identity() -> LiveGateCanonicalF32IdentityReceipt:
     scale_sha = _sha256(scale_raw)
     if weight_sha != EXPECTED_WEIGHT_SHA256 or scale_sha != EXPECTED_SCALE_SHA256:
         raise GateDequantizationError("live payload generation drifted from exact-green PR650")
-    canonical = dequantize_blockwise_to_canonical_f32(weight_raw, scale_raw, weight_shape=tuple(live.WEIGHT_SHAPE), scale_shape=tuple(live.SCALE_SHAPE))
+
+    canonical = dequantize_blockwise_to_canonical_f32(
+        weight_raw,
+        scale_raw,
+        weight_shape=tuple(live.WEIGHT_SHAPE),
+        scale_shape=tuple(live.SCALE_SHAPE),
+    )
     if len(canonical) != EXPECTED_CANONICAL_F32_BYTES:
         raise GateDequantizationError("unexpected canonical gate tensor byte count")
+
     return LiveGateCanonicalF32IdentityReceipt(
-        schema=SCHEMA, convergence_commit=CONVERGENCE_COMMIT, exact_parent_heads=(PR650_HEAD, PR641_HEAD), exact_parent_runs=(PR650_RUN, PR641_RUN), pr650_job=PR650_JOB, pr641_source_blob=PR641_SOURCE_BLOB, pr628_source_blob=PR628_SOURCE_BLOB,
-        official_repository=live.OFFICIAL_REPOSITORY, official_revision=live.OFFICIAL_REVISION, selected_layer=live.SELECTED_LAYER, selected_expert=live.SELECTED_EXPERT, selected_shard=live.SELECTED_SHARD,
-        weight_key=live.WEIGHT_KEY, scale_key=live.SCALE_KEY, weight_shape=tuple(live.WEIGHT_SHAPE), scale_shape=tuple(live.SCALE_SHAPE), block_shape=BLOCK_SHAPE, live_header_length_bytes=header_len,
-        weight_payload_bytes=len(weight_raw), weight_payload_sha256=weight_sha, scale_payload_bytes=len(scale_raw), scale_payload_sha256=scale_sha, fp8_format=E4M3FN_SPEC,
-        canonical_float32_domain=CANONICAL_FLOAT32_DOMAIN, canonical_float32_bytes=len(canonical), canonical_float32_sha256=_sha256(canonical), live_gate_pair_reobserved=True,
-        exact_pr650_payload_generation_reproduced=True, fp8_dequantization_semantics_bound=True, official_gate_canonical_float32_source_identity_bound=True, pr628_source_hash_byte_domain_matched=True,
-        up_payload_observed=False, down_payload_observed=False, full_expert_payload_observed=False, gate_up_composition_bound=False, official_tensor_to_pr641_page_set_relation_proven=False,
-        candidate_page_materialization_owner_bound=False, baseline_same_official_source_tensor_set_proven=False, real_e8_page_materialized=False, model_execution_observed=False,
-        generalized_quality_proven=False, runtime_performance_proven=False, semantic_k27_authority=False, native_private_transformer_kv_accessed=False, gate10_promoted=False, deployment_authorized=False)
+        schema=SCHEMA,
+        convergence_commit=CONVERGENCE_COMMIT,
+        exact_parent_heads=(PR650_HEAD, PR641_HEAD),
+        exact_parent_runs=(PR650_RUN, PR641_RUN),
+        pr650_job=PR650_JOB,
+        pr641_source_blob=PR641_SOURCE_BLOB,
+        pr628_source_blob=PR628_SOURCE_BLOB,
+        official_repository=live.OFFICIAL_REPOSITORY,
+        official_revision=live.OFFICIAL_REVISION,
+        selected_layer=live.SELECTED_LAYER,
+        selected_expert=live.SELECTED_EXPERT,
+        selected_shard=live.SELECTED_SHARD,
+        weight_key=live.WEIGHT_KEY,
+        scale_key=live.SCALE_KEY,
+        weight_shape=tuple(live.WEIGHT_SHAPE),
+        scale_shape=tuple(live.SCALE_SHAPE),
+        block_shape=BLOCK_SHAPE,
+        live_header_length_bytes=header_len,
+        weight_payload_bytes=len(weight_raw),
+        weight_payload_sha256=weight_sha,
+        scale_payload_bytes=len(scale_raw),
+        scale_payload_sha256=scale_sha,
+        fp8_format=E4M3FN_SPEC,
+        canonical_float32_domain=CANONICAL_FLOAT32_DOMAIN,
+        canonical_float32_bytes=len(canonical),
+        canonical_float32_sha256=_sha256(canonical),
+        live_gate_pair_reobserved=True,
+        exact_pr650_payload_generation_reproduced=True,
+        fp8_dequantization_semantics_bound=True,
+        official_gate_canonical_float32_source_identity_bound=True,
+        pr628_source_hash_byte_domain_matched=True,
+        up_payload_observed=False,
+        down_payload_observed=False,
+        full_expert_payload_observed=False,
+        gate_up_composition_bound=False,
+        official_tensor_to_pr641_page_set_relation_proven=False,
+        candidate_page_materialization_owner_bound=False,
+        baseline_same_official_source_tensor_set_proven=False,
+        real_e8_page_materialized=False,
+        model_execution_observed=False,
+        generalized_quality_proven=False,
+        runtime_performance_proven=False,
+        semantic_k27_authority=False,
+        native_private_transformer_kv_accessed=False,
+        gate10_promoted=False,
+        deployment_authorized=False,
+    )
 
 
 def main() -> None:
