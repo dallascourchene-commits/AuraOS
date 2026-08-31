@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788158780,
+  "generated_at_unix": 1788159881,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1816,8 +1816,8 @@
     {
       "ring": "repo",
       "files": 1699,
-      "bytes": 26756358,
-      "tokens_est": 6679497,
+      "bytes": 26756843,
+      "tokens_est": 6679618,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
@@ -164604,11 +164604,13 @@
     ],
     "python3 -m py_compile": [
       ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
+      ".github/workflows/awj032-plan-bound-storage-probe.yml",
       ".github/workflows/awj032-thinkpad-bounded-storage-probe.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
       ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
+      ".github/workflows/awj032-plan-bound-storage-probe.yml",
       ".github/workflows/awj032-thinkpad-bounded-storage-probe.yml"
     ],
     "python -m aura_codemap_verify": [
@@ -174672,47 +174674,61 @@
       "path": ".github/workflows/awj032-plan-bound-storage-probe.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 3365,
-      "lines": 77,
-      "tokens_est": 842,
+      "bytes": 3850,
+      "lines": 90,
+      "tokens_est": 963,
       "symbol_count": 0,
-      "commands": [],
-      "command_lines": {},
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          36,
+          43,
+          50
+        ],
+        "python3 -m unittest": [
+          37,
+          44,
+          51
+        ]
+      },
       "topology": {},
-      "digest8": "bff56496af2a86a8",
+      "digest8": "ad4f663f49b5fbce",
       "vector": [
-        0.020295,
-        0.071708,
-        -0.16371,
-        -0.001353,
-        0.133944,
-        -0.171828,
-        0.023001,
-        -0.06359,
-        0.044648,
-        0.282771,
-        0.166416,
-        -0.031118,
-        0.334184,
-        -0.190769,
-        0.290889,
-        0.001353,
-        0.255712,
-        0.255712,
-        0.15018,
-        -0.142062,
-        -0.280065,
-        0.117709,
-        0.047354,
-        0.142062,
-        -0.052766,
-        -0.188063,
-        0.326067,
-        0.047354,
-        0.155592,
-        -0.144768,
-        0.16371,
-        0.255712
+        -0.232734,
+        0.172765,
+        -0.115653,
+        -0.175621,
+        -0.007139,
+        0.015706,
+        0.115653,
+        -0.14992,
+        -0.192755,
+        -0.346959,
+        0.144209,
+        -0.064252,
+        -0.2156,
+        -0.201322,
+        0.095664,
+        -0.049973,
+        -0.049973,
+        0.015706,
+        0.044262,
+        0.067107,
+        0.201322,
+        0.315547,
+        0.167054,
+        0.024273,
+        0.175621,
+        -0.132787,
+        -0.235589,
+        -0.004283,
+        -0.309836,
+        -0.232734,
+        0.01285,
+        0.349814
       ]
     },
     {
@@ -295580,8 +295596,8 @@
   },
   "summary": {
     "file_count": 1699,
-    "total_bytes": 26756358,
-    "text_tokens_est": 6679497,
+    "total_bytes": 26756843,
+    "text_tokens_est": 6679618,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
@@ -461918,6 +461934,6 @@
       }
     ],
     "record_fingerprint": "68a36e6bb14a371d5ee2428022c283d3",
-    "payload_hash": "03a4d995cf3ac4fb96391baeb2e17aa9"
+    "payload_hash": "8e266c3247c5574a831d8184c3f7ff98"
   }
 }
