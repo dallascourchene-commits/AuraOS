@@ -1,0 +1,76 @@
+name: Aura EKI-1 External Knowledge Ingress Admission
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_external_knowledge_ingress.py'
+      - 'tests/test_aura_external_knowledge_ingress.py'
+      - '.github/workflows/aura-external-knowledge-ingress.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  eki1-external-knowledge-ingress:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Exact authenticated checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init -q .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            REF="refs/pull/${{ github.event.pull_request.number }}/head"
+            EXPECTED="${{ github.event.pull_request.head.sha }}"
+          else
+            REF="${GITHUB_REF_NAME}"
+            EXPECTED="${GITHUB_SHA}"
+          fi
+          git fetch -q --no-tags --depth=1 origin "${REF}"
+          git checkout -q --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${EXPECTED}"
+          echo "EKI1_HEAD=${EXPECTED}" >> "$GITHUB_ENV"
+
+      - name: Compile and run focused adversarial contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_external_knowledge_ingress.py \
+            tests/test_aura_external_knowledge_ingress.py
+          python3 -m unittest -v tests.test_aura_external_knowledge_ingress
+
+      - name: Enforce live fail-closed demonstration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m tools.aura_external_knowledge_ingress > /tmp/eki1.json
+          python3 - <<'PY'
+          import json, os
+          d=json.load(open('/tmp/eki1.json',encoding='utf-8'))
+          assert d['schema']=='AURA-EXTERNAL-KNOWLEDGE-INGRESS-v1'
+          assert d['availability']=='DISCOVERY_CACHEABLE'
+          assert d['admitted_hydration_level']==1
+          assert d['execution_authorized'] is False
+          assert d['provider_effect_authorized'] is False
+          assert d['semantic_k27_authority'] is False
+          assert d['native_private_transformer_kv_accessed'] is False
+          assert d['gate10_promoted'] is False
+          assert d['merge_deploy_spend_public_financial_human_effect_authorized'] is False
+          assert len(d['projection_13d']['trits']) == 13
+          assert len(d['k27_locality']['trits']) == 27
+          assert d['k27_locality']['trits'][:13] == d['projection_13d']['trits']
+          assert d['k27_locality']['routing_only'] is True
+          assert d['k27_locality']['semantic_identity'] is False
+          assert d['refresh_phase']['currentness_witness'] is False
+          print('EKI1_DISCOVERY_BEFORE_TRUST=true')
+          print('EKI1_13D_K27_ROUTING_ONLY=true')
+          print('EKI1_TOROIDAL_REFRESH_NOT_CURRENTNESS=true')
+          print('EKI1_EXECUTION_AUTHORITY=false')
+          print('EKI1_HEAD='+os.environ['EKI1_HEAD'])
+          PY
