@@ -23,6 +23,22 @@ VERSION = "AURA_WORKCAPSULE_POST_REPAIR_PORTABLE_HIGHER_OWNER_CONTINUITY_V1"
 OWNER_CHAIN_SCHEMA = _canonical.OWNER_CHAIN_SCHEMA
 CANONICALIZATION_PROFILE = _canonical.OWNER_CHAIN_CANONICALIZATION
 
+# Static compatibility metadata for PR544's historical cross-runtime source-shape gate.
+# These strings are markers only: all validation and admission delegate to PR542 below.
+_CROSS_RUNTIME_SCHEMA_MARKERS = (
+    "AURA_ASTGE_CANONICAL_HIGHER_OWNER_OWNER_CHAIN_PROJECTION_V1",
+    "AURA_SERDE_JSON_STRUCT_ORDER_COMPACT_V1",
+    "canonical_target_projection",
+    "continuous_semantic_handle_digest_hex",
+    "outer_constructor_reproved_by_inner_owner",
+    "one_canonical_post_edit_consequence",
+    "higher_owner_semantic_handle_continuity_proven",
+    "producer_authenticated",
+    "semantic_patch_correctness_proven",
+    "commit_authorized",
+    "verify_portable_canonical_target_projection",
+)
+
 OWNER_CHAIN_PREFIX = "OWNER_CHAIN_"
 POST_SOURCE_PREFIX = "POST_SOURCE_"
 MALFORMED_OWNER_CHAIN_ENVELOPE = "MALFORMED_OWNER_CHAIN_ENVELOPE"
