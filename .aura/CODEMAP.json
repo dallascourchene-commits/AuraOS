@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788206264,
+  "generated_at_unix": 1788206309,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1652,
+    "repo_file_count": 1653,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1511,6 +1511,7 @@
       "tests/test_aura_music_mitosis_adapter.py",
       "tests/test_aura_native_cockpit_contract.py",
       "tests/test_aura_nav13_lawfield.py",
+      "tests/test_aura_nav13_minimum_hydration.py",
       "tests/test_aura_navigator_k27_collision_router.py",
       "tests/test_aura_node_inspector.py",
       "tests/test_aura_pascal_spatial_presentation.py",
@@ -1768,15 +1769,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1652,
-      "bytes": 26535051,
-      "tokens_est": 6624118,
+      "files": 1653,
+      "bytes": 26552382,
+      "tokens_est": 6628451,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1006,
+        "python_module": 1007,
         "schema_or_lexicon": 273,
         "support_file": 49
       }
@@ -142448,6 +142449,14 @@
         "end_line": 20,
         "semantic_id": "tests/test_aura_nav13_lawfield.py#function:d:b74c9814c66f05d5",
         "signature_hash": "9eecb08c862ad6ce"
+      },
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#function:d:c3cb5435cebe04f6",
+        "signature_hash": "9eecb08c862ad6ce"
       }
     ],
     "Nav13LawFieldTests": [
@@ -142608,6 +142617,226 @@
         "end_line": 276,
         "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_duplicate_policy_atoms_fail_closed:52c6c0b5b739a5c8",
         "signature_hash": "5ce6922bd187d98b"
+      }
+    ],
+    "Nav13MinimumHydrationTests": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 435,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#class:Nav13MinimumHydrationTests:646dddabcc669c70",
+        "signature_hash": "b2581cfe0dc8f920"
+      }
+    ],
+    "Nav13MinimumHydrationTests.law": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.law:100121fafaf993a3",
+        "signature_hash": "5049824a2768a6c5"
+      }
+    ],
+    "Nav13MinimumHydrationTests.route": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 62,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.route:341cb165100c1862",
+        "signature_hash": "4c9b70fba5f62ad6"
+      }
+    ],
+    "Nav13MinimumHydrationTests.req": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 71,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.req:bbd588359bbf2a4a",
+        "signature_hash": "e0c390a936ce6f3d"
+      }
+    ],
+    "Nav13MinimumHydrationTests.source": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 101,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.source:dc582535b1c44cce",
+        "signature_hash": "c18e688302847749"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_two_sources_compile_only_missing_contiguous_levels": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 124,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_two_sources_compile_only_missing_contiguous_levels:ce8920b332f4f492",
+        "signature_hash": "88c951a735f53d20"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_shared_source_collapses_to_maximum_required_level": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 140,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_shared_source_collapses_to_maximum_required_level:546f7d652aea1d43",
+        "signature_hash": "884b98cbee8124c0"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_satisfied_current_route_needs_no_hydration": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 157,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_satisfied_current_route_needs_no_hydration:112cbf60acd4639c",
+        "signature_hash": "6b1671854805c208"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_blocking_epistemic_debt_precedes_hydration": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 181,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_blocking_epistemic_debt_precedes_hydration:281ba6d3de868bbd",
+        "signature_hash": "8287e4784f03ce96"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_deficit_with_known_current_requires_route_rebase": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 197,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_deficit_with_known_current_requires_route_rebase:0ca3379f5646b247",
+        "signature_hash": "7f5bf624876c52ec"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_no_deficit_with_external_unhydrated_requires_route_rebase": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 199,
+        "end_line": 212,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_no_deficit_with_external_unhydrated_requires_route_rebase:90c0f7987d526b5c",
+        "signature_hash": "d319a25e37b8302a"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_effective_law_can_forbid_hydration": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 214,
+        "end_line": 228,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_effective_law_can_forbid_hydration:9d04237f7e390710",
+        "signature_hash": "4dec470a67a7a2d0"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_currentness_unknown_or_not_required_cannot_pay_required_debt": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 230,
+        "end_line": 248,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_currentness_unknown_or_not_required_cannot_pay_required_debt:c881eac8f4f05828",
+        "signature_hash": "909a9eeb95d2bfc2"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_noncurrent_eki_node_and_unverified_reader_fail_closed": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 250,
+        "end_line": 280,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_noncurrent_eki_node_and_unverified_reader_fail_closed:5361fa175ae69517",
+        "signature_hash": "6dab8df7f4f4eb1e"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_exact_source_required_missing_holds": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 282,
+        "end_line": 295,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_exact_source_required_missing_holds:50f00a165864131a",
+        "signature_hash": "339cd9b62d53b1f6"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_exact_source_optional_but_new_hydration_still_needs_reopen_handle": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 297,
+        "end_line": 312,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_exact_source_optional_but_new_hydration_still_needs_reopen_handle:abb36676ab26a1cb",
+        "signature_hash": "b72ed81f3bde59c6"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_exact_source_optional_and_already_satisfied_is_allowed": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 314,
+        "end_line": 327,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_exact_source_optional_and_already_satisfied_is_allowed:057e9c27e8063ec4",
+        "signature_hash": "999632ba47ce677d"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_k27_placement_changes_routing_not_semantic_plan": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 329,
+        "end_line": 353,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_k27_placement_changes_routing_not_semantic_plan:789a7e7dd605cc83",
+        "signature_hash": "eba5185d2837ebe9"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_evidence_generation_change_changes_semantic_plan": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 355,
+        "end_line": 378,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_evidence_generation_change_changes_semantic_plan:c8ff20258c191ec6",
+        "signature_hash": "f9105954115ea801"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_law_requirement_binding_is_exact": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 380,
+        "end_line": 388,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_law_requirement_binding_is_exact:60cccd62e0124c4a",
+        "signature_hash": "616a736a1ed5e780"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_duplicate_requirement_or_source_fails_closed": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 390,
+        "end_line": 415,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_duplicate_requirement_or_source_fails_closed:ed91567d5c4755f9",
+        "signature_hash": "374215cce6eb5620"
+      }
+    ],
+    "Nav13MinimumHydrationTests.test_nonpromotion_fields_remain_false": [
+      {
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "kind": "method",
+        "line": 417,
+        "end_line": 435,
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_nonpromotion_fields_remain_false:b34de7043add668f",
+        "signature_hash": "7df540d02cdfa35a"
       }
     ],
     "owner": [
@@ -258498,6 +258727,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_nav13_minimum_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 17331,
+      "lines": 440,
+      "tokens_est": 4333,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "dd51534f667aa722",
+      "vector": [
+        -0.127089,
+        -0.172077,
+        0.106845,
+        -0.235059,
+        0.050611,
+        -0.133837,
+        0.214815,
+        -0.113593,
+        -0.16083,
+        -0.205817,
+        0.100097,
+        0.277797,
+        0.174326,
+        -0.264301,
+        0.163079,
+        0.237308,
+        0.118092,
+        0.127089,
+        -0.275547,
+        0.181074,
+        -0.109094,
+        -0.133837,
+        -0.237308,
+        -0.284545,
+        -0.046112,
+        0.214815,
+        -0.066356,
+        -0.239558,
+        0.113593,
+        -0.15858,
+        -0.109094,
+        -0.059608
+      ]
+    },
+    {
       "path": "tests/test_aura_navigator_k27_collision_router.py",
       "role": "python_module",
       "binary": false,
@@ -288747,15 +289023,15 @@
     }
   },
   "summary": {
-    "file_count": 1652,
-    "total_bytes": 26535051,
-    "text_tokens_est": 6624118,
+    "file_count": 1653,
+    "total_bytes": 26552382,
+    "text_tokens_est": 6628451,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1006,
+      "python_module": 1007,
       "schema_or_lexicon": 273,
       "support_file": 49
     },
@@ -290277,6 +290553,7 @@
       "tests/test_aura_music_mitosis_adapter.py",
       "tests/test_aura_native_cockpit_contract.py",
       "tests/test_aura_nav13_lawfield.py",
+      "tests/test_aura_nav13_minimum_hydration.py",
       "tests/test_aura_navigator_k27_collision_router.py",
       "tests/test_aura_node_inspector.py",
       "tests/test_aura_pascal_spatial_presentation.py",
@@ -432058,6 +432335,236 @@
         "file_digest8": "979270c7ffcf5d92"
       },
       {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#class:Nav13MinimumHydrationTests:646dddabcc669c70",
+        "name": "Nav13MinimumHydrationTests",
+        "kind": "class",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 23,
+        "end_line": 435,
+        "signature_hash": "b2581cfe0dc8f920",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#function:d:c3cb5435cebe04f6",
+        "name": "d",
+        "kind": "function",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "9eecb08c862ad6ce",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.law:100121fafaf993a3",
+        "name": "Nav13MinimumHydrationTests.law",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 24,
+        "end_line": 43,
+        "signature_hash": "5049824a2768a6c5",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.req:bbd588359bbf2a4a",
+        "name": "Nav13MinimumHydrationTests.req",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 64,
+        "end_line": 71,
+        "signature_hash": "e0c390a936ce6f3d",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.route:341cb165100c1862",
+        "name": "Nav13MinimumHydrationTests.route",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 45,
+        "end_line": 62,
+        "signature_hash": "4c9b70fba5f62ad6",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.source:dc582535b1c44cce",
+        "name": "Nav13MinimumHydrationTests.source",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 73,
+        "end_line": 101,
+        "signature_hash": "c18e688302847749",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_blocking_epistemic_debt_precedes_hydration:281ba6d3de868bbd",
+        "name": "Nav13MinimumHydrationTests.test_blocking_epistemic_debt_precedes_hydration",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 159,
+        "end_line": 181,
+        "signature_hash": "8287e4784f03ce96",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_currentness_unknown_or_not_required_cannot_pay_required_debt:c881eac8f4f05828",
+        "name": "Nav13MinimumHydrationTests.test_currentness_unknown_or_not_required_cannot_pay_required_debt",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 230,
+        "end_line": 248,
+        "signature_hash": "909a9eeb95d2bfc2",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_deficit_with_known_current_requires_route_rebase:0ca3379f5646b247",
+        "name": "Nav13MinimumHydrationTests.test_deficit_with_known_current_requires_route_rebase",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 183,
+        "end_line": 197,
+        "signature_hash": "7f5bf624876c52ec",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_duplicate_requirement_or_source_fails_closed:ed91567d5c4755f9",
+        "name": "Nav13MinimumHydrationTests.test_duplicate_requirement_or_source_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 390,
+        "end_line": 415,
+        "signature_hash": "374215cce6eb5620",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_effective_law_can_forbid_hydration:9d04237f7e390710",
+        "name": "Nav13MinimumHydrationTests.test_effective_law_can_forbid_hydration",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 214,
+        "end_line": 228,
+        "signature_hash": "4dec470a67a7a2d0",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_evidence_generation_change_changes_semantic_plan:c8ff20258c191ec6",
+        "name": "Nav13MinimumHydrationTests.test_evidence_generation_change_changes_semantic_plan",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 355,
+        "end_line": 378,
+        "signature_hash": "f9105954115ea801",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_exact_source_optional_and_already_satisfied_is_allowed:057e9c27e8063ec4",
+        "name": "Nav13MinimumHydrationTests.test_exact_source_optional_and_already_satisfied_is_allowed",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 314,
+        "end_line": 327,
+        "signature_hash": "999632ba47ce677d",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_exact_source_optional_but_new_hydration_still_needs_reopen_handle:abb36676ab26a1cb",
+        "name": "Nav13MinimumHydrationTests.test_exact_source_optional_but_new_hydration_still_needs_reopen_handle",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 297,
+        "end_line": 312,
+        "signature_hash": "b72ed81f3bde59c6",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_exact_source_required_missing_holds:50f00a165864131a",
+        "name": "Nav13MinimumHydrationTests.test_exact_source_required_missing_holds",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 282,
+        "end_line": 295,
+        "signature_hash": "339cd9b62d53b1f6",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_k27_placement_changes_routing_not_semantic_plan:789a7e7dd605cc83",
+        "name": "Nav13MinimumHydrationTests.test_k27_placement_changes_routing_not_semantic_plan",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 329,
+        "end_line": 353,
+        "signature_hash": "eba5185d2837ebe9",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_law_requirement_binding_is_exact:60cccd62e0124c4a",
+        "name": "Nav13MinimumHydrationTests.test_law_requirement_binding_is_exact",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 380,
+        "end_line": 388,
+        "signature_hash": "616a736a1ed5e780",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_no_deficit_with_external_unhydrated_requires_route_rebase:90c0f7987d526b5c",
+        "name": "Nav13MinimumHydrationTests.test_no_deficit_with_external_unhydrated_requires_route_rebase",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 199,
+        "end_line": 212,
+        "signature_hash": "d319a25e37b8302a",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_noncurrent_eki_node_and_unverified_reader_fail_closed:5361fa175ae69517",
+        "name": "Nav13MinimumHydrationTests.test_noncurrent_eki_node_and_unverified_reader_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 250,
+        "end_line": 280,
+        "signature_hash": "6dab8df7f4f4eb1e",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_nonpromotion_fields_remain_false:b34de7043add668f",
+        "name": "Nav13MinimumHydrationTests.test_nonpromotion_fields_remain_false",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 417,
+        "end_line": 435,
+        "signature_hash": "7df540d02cdfa35a",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_satisfied_current_route_needs_no_hydration:112cbf60acd4639c",
+        "name": "Nav13MinimumHydrationTests.test_satisfied_current_route_needs_no_hydration",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 142,
+        "end_line": 157,
+        "signature_hash": "6b1671854805c208",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_shared_source_collapses_to_maximum_required_level:546f7d652aea1d43",
+        "name": "Nav13MinimumHydrationTests.test_shared_source_collapses_to_maximum_required_level",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 126,
+        "end_line": 140,
+        "signature_hash": "884b98cbee8124c0",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_minimum_hydration.py#method:Nav13MinimumHydrationTests.test_two_sources_compile_only_missing_contiguous_levels:ce8920b332f4f492",
+        "name": "Nav13MinimumHydrationTests.test_two_sources_compile_only_missing_contiguous_levels",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_minimum_hydration.py",
+        "line": 103,
+        "end_line": 124,
+        "signature_hash": "88c951a735f53d20",
+        "file_digest8": "dd51534f667aa722"
+      },
+      {
         "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#class:NavigatorK27CollisionRouterTests:4eea14c81a987862",
         "name": "NavigatorK27CollisionRouterTests",
         "kind": "class",
@@ -450488,7 +450995,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "e7f352fe931db72de7df02d8cdee11a5",
-    "payload_hash": "c594398ea96cc2a76effac72c6cc2854"
+    "record_fingerprint": "9c3bcac9833a4d19a4c83f7cba459717",
+    "payload_hash": "96add3bde119621acc5ae234bd9b62ea"
   }
 }
