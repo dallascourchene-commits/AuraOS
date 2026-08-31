@@ -60,7 +60,8 @@ class WorkCapsuleScopedHigherOwnerPortableContinuityTests(
         ).hexdigest()
         return out
 
-    def kwargs(self, *, owner=None) -> dict:
+    def o29_kwargs(self, *, owner=None) -> dict:
+        """Build only the O29 public arguments without shadowing inherited fixture helpers."""
         return {
             "scoped_target_inputs": self.joined_kwargs(),
             "higher_owner_projection": owner if owner is not None else self.owner_projection(),
@@ -75,8 +76,8 @@ class WorkCapsuleScopedHigherOwnerPortableContinuityTests(
         ).hexdigest()
 
     def test_exact_scoped_target_is_same_pr541_higher_owner_target(self) -> None:
-        self.assertEqual([], verify_scoped_higher_owner_portable_continuity(**self.kwargs()))
-        receipt = admit_scoped_higher_owner_portable_continuity(**self.kwargs())
+        self.assertEqual([], verify_scoped_higher_owner_portable_continuity(**self.o29_kwargs()))
+        receipt = admit_scoped_higher_owner_portable_continuity(**self.o29_kwargs())
         self.assertTrue(receipt["same_scoped_target_as_higher_owner_projection_proven"])
         self.assertTrue(receipt["recursive_cross_runtime_canonicalization_proven"])
         self.assertTrue(receipt["same_nested_portable_projection_digest_proven"])
@@ -109,7 +110,7 @@ class WorkCapsuleScopedHigherOwnerPortableContinuityTests(
         self.assertIn(OUTER_DIGEST_MISMATCH, verify_portable_higher_owner_projection(owner))
         self.assertIn(
             OWNER_PREFIX + OUTER_DIGEST_MISMATCH,
-            verify_scoped_higher_owner_portable_continuity(**self.kwargs(owner=owner)),
+            verify_scoped_higher_owner_portable_continuity(**self.o29_kwargs(owner=owner)),
         )
 
     def test_independently_valid_nested_projection_from_different_source_generation_rejects(self) -> None:
@@ -118,7 +119,7 @@ class WorkCapsuleScopedHigherOwnerPortableContinuityTests(
         self.reseal_nested(nested)
         self.assertEqual([], verify_portable_canonical_target_projection(nested))
         owner = self.owner_projection(nested=nested)
-        violations = verify_scoped_higher_owner_portable_continuity(**self.kwargs(owner=owner))
+        violations = verify_scoped_higher_owner_portable_continuity(**self.o29_kwargs(owner=owner))
         self.assertIn(PROJECTION_DIGEST_MISMATCH, violations)
 
     def test_outer_continuous_handle_drift_rejects_even_after_reseal(self) -> None:
