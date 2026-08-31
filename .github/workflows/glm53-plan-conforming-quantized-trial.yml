@@ -1,0 +1,117 @@
+name: GLM53 Plan-Conforming Quantized Trial
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q4-plan-conforming-trial:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact pull-request head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove true Q2 x Q3 convergence and exact green parent runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+
+          convergence = '79c0d416c04874b1fb0a75b714cb39259d572fc2'
+          q2 = 'cb9f50fc2fd05006f4f5af0a2f143f2c74aee62f'
+          q3 = 'c4f526714e89fc36c55230c55ab2f704695212dc'
+          parents = subprocess.check_output(['git', 'rev-list', '--parents', '-n', '1', convergence], text=True).strip().split()
+          assert parents == [convergence, q2, q3], parents
+
+          token = os.environ['GH_TOKEN']
+          repo = os.environ['GH_REPO']
+          for run_id, expected_head in ((33367433407, q2), (33367951206, q3)):
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={
+                      'Authorization': f'Bearer {token}',
+                      'Accept': 'application/vnd.github+json',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  run = json.load(response)
+              assert run['conclusion'] == 'success', (run_id, run['conclusion'])
+              assert run['head_sha'] == expected_head, (run_id, run['head_sha'], expected_head)
+          print('Q4_EXACT_TWO_PARENT_GREEN=true')
+          PY
+
+      - name: Compile Q2 Q3 and Q4 exact surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_packed_expert_quantization_plan.py \
+            tools/quantization/test_aura_glm53_packed_expert_quantization_plan.py \
+            tools/quantization/aura_glm53_quantized_representation_trial.py \
+            tools/quantization/test_aura_glm53_quantized_representation_trial.py \
+            tools/quantization/aura_glm53_plan_conforming_quantized_trial.py \
+            tools/quantization/test_aura_glm53_plan_conforming_quantized_trial.py
+
+      - name: Re-prove both parents and run Q4 adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest -v \
+            tools.quantization.test_aura_glm53_packed_expert_quantization_plan \
+            tools.quantization.test_aura_glm53_quantized_representation_trial \
+            tools.quantization.test_aura_glm53_plan_conforming_quantized_trial
+
+      - name: Prove fixed Q4 public boundary and exact parent pins
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          import tools.quantization.aura_glm53_plan_conforming_quantized_trial as q4
+          assert q4.Q2_EXACT_HEAD == 'cb9f50fc2fd05006f4f5af0a2f143f2c74aee62f'
+          assert q4.Q2_EXACT_RUN == 33367433407
+          assert q4.Q3_EXACT_HEAD == 'c4f526714e89fc36c55230c55ab2f704695212dc'
+          assert q4.Q3_EXACT_RUN == 33367951206
+          assert q4.Q4_CONVERGENCE_COMMIT == '79c0d416c04874b1fb0a75b714cb39259d572fc2'
+          assert set(inspect.signature(q4.bind_plan_conforming_quantized_trial).parameters) == {
+              'plan_request', 'representations', 'candidate_manifest', 'trial_request',
+              'baseline_sample', 'candidate_sample', 'independent_verification'
+          }
+          print('Q4_PUBLIC_BOUNDARY_FIXED=true')
+          PY
+
+      - name: Emit Q4 consequence ceiling
+        shell: bash
+        run: |
+          cat <<'EOF'
+          PLAN_BOUND_CANDIDATE_DIGEST_REQUIRED=true
+          EXPERT_ASSIGNMENT_DRIFT_INVALIDATES_TRIAL_IDENTITY=true
+          IMPLEMENTATION_DIGEST_DRIFT_INVALIDATES_TRIAL_IDENTITY=true
+          Q3_INDEPENDENT_SAMPLE_VERIFICATION_RETAINED=true
+          PLAN_CONFORMING_IDENTITY_NE_PLAN_EXECUTION=true
+          SELECTED_EXPERTS_ACTUALLY_SERVED_PROVEN=false
+          COMPANION_LAYOUT_ACTUALLY_LOADED_PROVEN=false
+          IMPLEMENTATION_BYTES_AUTHENTICATED=false
+          WHOLE_MODEL_STATIC_BYTES_DERIVED_FROM_ROUTED_EXPERT_PLAN=false
+          PHYSICAL_IO_EXCLUSIVELY_ATTRIBUTED=false
+          GENERAL_PERFORMANCE_WINNER_PROVEN=false
+          CODING_QUALITY_GENERALIZED=false
+          OWNER_HOST_IDENTITY_AUTHENTICATED=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          SEMANTIC_K27_AUTHORITY_MINTED=false
+          GATE10_READY=false
+          DEPLOYMENT_AUTHORIZED=false
+          EOF
