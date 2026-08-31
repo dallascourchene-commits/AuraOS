@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1659
-- **total_bytes**: 26576039
-- **text_tokens_est**: 6634367
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1011, 'schema_or_lexicon': 276, 'support_file': 49}
+- **file_count**: 1660
+- **total_bytes**: 26589569
+- **text_tokens_est**: 6637751
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1012, 'schema_or_lexicon': 276, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1659,
+  "repo_file_count": 1660,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1504,6 +1504,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_gate_egress.py",
     "tests/test_aura_gate_oidc.py",
     "tests/test_aura_gate_server.py",
+    "tests/test_aura_glm53_historical_official_w2_bridge.py",
     "tests/test_aura_harness_issue_capsules.py",
     "tests/test_aura_hermes_arena_mode.py",
     "tests/test_aura_human_agent_arena.py",
@@ -1799,15 +1800,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1659,
-  "bytes": 26576039,
-  "tokens_est": 6634367,
+  "files": 1660,
+  "bytes": 26589569,
+  "tokens_est": 6637751,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1011,
+    "python_module": 1012,
     "schema_or_lexicon": 276,
     "support_file": 49
   }
