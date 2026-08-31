@@ -6,9 +6,11 @@ on:
       - 'tools/aura_external_knowledge_ingress.py'
       - 'tools/aura_external_discovery.py'
       - 'tools/aura_external_discovery_cli.py'
+      - 'tools/aura_external_discovery_ingress_bridge.py'
       - 'tools/Invoke-AuraExternalDiscovery.ps1'
       - 'tests/test_aura_external_knowledge_ingress.py'
       - 'tests/test_aura_external_discovery.py'
+      - 'tests/test_aura_external_discovery_ingress_bridge.py'
       - 'docs/arena/EXTERNAL_KNOWLEDGE_INGRESS_V1.md'
       - '.github/workflows/aura-external-knowledge-ingress.yml'
   workflow_dispatch:
@@ -44,8 +46,10 @@ jobs:
             tools/aura_external_knowledge_ingress.py \
             tools/aura_external_discovery.py \
             tools/aura_external_discovery_cli.py \
+            tools/aura_external_discovery_ingress_bridge.py \
             tests/test_aura_external_knowledge_ingress.py \
-            tests/test_aura_external_discovery.py
+            tests/test_aura_external_discovery.py \
+            tests/test_aura_external_discovery_ingress_bridge.py
 
       - name: Run adversarial ingress contracts without network
         shell: bash
@@ -53,7 +57,8 @@ jobs:
           set -euo pipefail
           python3 -m unittest -v \
             tests.test_aura_external_knowledge_ingress \
-            tests.test_aura_external_discovery
+            tests.test_aura_external_discovery \
+            tests.test_aura_external_discovery_ingress_bridge
 
       - name: Parse PowerShell wrapper
         shell: pwsh
@@ -70,46 +75,33 @@ jobs:
           }
           Write-Host 'EKI1_POWERSHELL_PARSE=PASS'
 
-      - name: Prove coordinate and authority ceiling
+      - name: Prove staged currentness coordinate and authority ceiling
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          from tools.aura_external_knowledge_ingress import (
-              ExternalObservation,
-              ExternalSubject,
-              HydrationPayload,
-              KnowledgeState,
-              LAWS,
-              build_external_knowledge_node,
-          )
+          from tools.aura_external_discovery import DiscoveryRecord
+          from tools.aura_external_discovery_ingress_bridge import discovery_to_l0_node, promote_if_same_current_generation
+          from tools.aura_external_knowledge_ingress import LAWS, KnowledgeState
 
-          subject = ExternalSubject(
+          record = DiscoveryRecord(
               provider='GITHUB',
               source_kind='REPOSITORY',
               canonical_id='owner/repo',
               canonical_uri='https://github.com/owner/repo',
-              sector='06_RUN',
-          )
-          observation = ExternalObservation(
+              title='owner/repo',
               provider_revision='a' * 40,
-              content_digest='b' * 64,
-              observed_at='2026-08-31T16:45:00Z',
               source_generated_at='2026-08-31T16:30:00Z',
               exact_source_uri='https://github.com/owner/repo/tree/' + 'a' * 40,
-              verifier_generation='eki1-proof-v1',
-              verified_fields=('canonical_id', 'exact_source_uri', 'provider_revision'),
+              provider_metadata_digest='b' * 64,
+              metadata={'license':'MIT','archived':False},
+              revision_strength='EXACT_COMMIT_SHA',
           )
-          hydration = (
-              HydrationPayload(level='L0', data={'title':'repo','thesis':'tooling'}, derivation_method='PROVIDER_METADATA_EXTRACT'),
-              HydrationPayload(level='L1', data={'purpose':'agent tooling'}, derivation_method='SOURCE_BOUND_SUMMARY'),
-          )
-          node = build_external_knowledge_node(
-              subject=subject,
-              observation=observation,
-              knowledge_state=KnowledgeState.CURRENT_REFERENCE,
-              hydration=hydration,
-              validator_generation='eki1-proof-v1',
+          l0 = discovery_to_l0_node(record, observed_at='2026-08-31T16:45:00Z')
+          assert l0.knowledge_state == KnowledgeState.METADATA_VERIFIED
+          assert l0.read_only_reference_admissible is False
+          node = promote_if_same_current_generation(
+              l0, record, observed_at='2026-08-31T16:45:00Z'
           )
           required = {
               'ExternalSubjectIdentity!=ExternalEvidenceGeneration',
@@ -120,6 +112,7 @@ jobs:
               'NativePrivateTransformerKVAccessed=false',
           }
           assert required <= set(LAWS), required - set(LAWS)
+          assert node.knowledge_state == KnowledgeState.CURRENT_REFERENCE
           assert node.coordinate.tesseract_vertex == (1, 1, 1, 0)
           assert node.read_only_reference_admissible is True
           assert node.tool_use_requires_separate_admission is True
@@ -130,7 +123,8 @@ jobs:
           assert node.provider_effect_authorized is False
           assert node.semantic_k27_authority is False
           assert node.native_private_transformer_kv_accessed is False
-          print('EKI1_SOURCE_RESOLVABLE_CURRENT_REFERENCE=true')
+          print('EKI1_DISCOVERY_NOT_CURRENT=true')
+          print('EKI1_SECOND_MATCHING_GENERATION_CURRENT_REFERENCE=true')
           print('EKI1_13D_TRIT_COORDINATE=true')
           print('EKI1_K27_TOROIDAL_INDEX=true')
           print('EKI1_TESSERACT_EFFECT_BIT=0')
