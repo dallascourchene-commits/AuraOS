@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788162680,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -147,6 +147,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-equal-rate-e8-ablation.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -1480,6 +1481,7 @@
       "tests/test_aura_gate_egress.py",
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
+      "tests/test_aura_glm53_equal_rate_e8_ablation.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -1633,6 +1635,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26430680,
+      "tokens_est": 6598021,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3458,6 +3461,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 294,
+        "end_line": 298,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:main:d4d5b34432d76ef6",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -13707,6 +13718,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:_sha256:01962c40accdcb93",
+        "signature_hash": "9084cb89be4caca5"
       }
     ],
     "PullRequestRouteBinding": [
@@ -138535,6 +138554,96 @@
         "signature_hash": "ee5f19dbb698e25c"
       }
     ],
+    "EqualRateE8AblationTests": [
+      {
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 68,
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#class:EqualRateE8AblationTests:a9d4525d5f795eb5",
+        "signature_hash": "2709bf9474f9630d"
+      }
+    ],
+    "EqualRateE8AblationTests.test_e8_root_system_is_exact_and_finite": [
+      {
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 21,
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_e8_root_system_is_exact_and_finite:557c06e87139497d",
+        "signature_hash": "311086b3f9a90ab2"
+      }
+    ],
+    "EqualRateE8AblationTests.test_matched_payload_rate_is_exactly_1_25_bpw": [
+      {
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 30,
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_matched_payload_rate_is_exactly_1_25_bpw:653dbcee35e9edca",
+        "signature_hash": "d04ff346b1c67145"
+      }
+    ],
+    "EqualRateE8AblationTests.test_packed_roundtrip_is_deterministic": [
+      {
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 37,
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_packed_roundtrip_is_deterministic:3b38915c5dd8dae0",
+        "signature_hash": "c4a97e9379a7da39"
+      }
+    ],
+    "EqualRateE8AblationTests.test_unused_e8_byte_indices_fail_closed": [
+      {
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 42,
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_unused_e8_byte_indices_fail_closed:01f06bbcf6007739",
+        "signature_hash": "0994f0b1b31721fa"
+      }
+    ],
+    "EqualRateE8AblationTests.test_unknown_scheme_fails_closed": [
+      {
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 47,
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_unknown_scheme_fails_closed:7ea7d4a77a5f2098",
+        "signature_hash": "00cc8dfd3ae2cc0d"
+      }
+    ],
+    "EqualRateE8AblationTests.test_e8_beats_equal_rate_hypercube_on_frozen_gaussian": [
+      {
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 53,
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_e8_beats_equal_rate_hypercube_on_frozen_gaussian:39246c34bbd4662c",
+        "signature_hash": "00554b570c0d4c78"
+      }
+    ],
+    "EqualRateE8AblationTests.test_e8_beats_equal_rate_hypercube_on_frozen_heavy_tail": [
+      {
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 59,
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_e8_beats_equal_rate_hypercube_on_frozen_heavy_tail:3829af4d1daf231f",
+        "signature_hash": "8084c5282c89969e"
+      }
+    ],
+    "EqualRateE8AblationTests.test_consequence_ceiling_stays_closed": [
+      {
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 68,
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_consequence_ceiling_stays_closed:44bf4ed89acb58dd",
+        "signature_hash": "7a85e1648bc334e7"
+      }
+    ],
     "_write_minimal_codemap": [
       {
         "file": "tests/test_aura_harness_issue_capsules.py",
@@ -157181,6 +157290,176 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "e8_root_codebook": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 71,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:e8_root_codebook:bdcecd140feb03e0",
+        "signature_hash": "c748a5581bfc4389"
+      }
+    ],
+    "hypercube_codebook": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 78,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:hypercube_codebook:8b0108322359e107",
+        "signature_hash": "015d872a48c0ab4b"
+      }
+    ],
+    "codebook_digest": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 85,
+        "end_line": 89,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:codebook_digest:b706121a842a1a6e",
+        "signature_hash": "8b8d6754cbd86e29"
+      }
+    ],
+    "_dot": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 96,
+        "end_line": 97,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:_dot:351bbfba820965cd",
+        "signature_hash": "f2eb0d85e50606ad"
+      }
+    ],
+    "_nearest_index": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 108,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:_nearest_index:ce5eaac5603fd185",
+        "signature_hash": "d50987856ace2868"
+      }
+    ],
+    "_pack_half": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 111,
+        "end_line": 112,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:_pack_half:136ad8c2f9df1632",
+        "signature_hash": "aba0a892f51e40a5"
+      }
+    ],
+    "_unpack_half": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 115,
+        "end_line": 116,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:_unpack_half:5e2a6ea42dbcf085",
+        "signature_hash": "f28612dbbb8408da"
+      }
+    ],
+    "_validate_group": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 119,
+        "end_line": 125,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:_validate_group:92645b83a705f7c5",
+        "signature_hash": "3b4474e8022f74c7"
+      }
+    ],
+    "encode_group": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 128,
+        "end_line": 164,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:encode_group:a98e3fa8fa733dfc",
+        "signature_hash": "94c910677902200f"
+      }
+    ],
+    "decode_group": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 167,
+        "end_line": 182,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:decode_group:9cc110904fa16a97",
+        "signature_hash": "5ca7d54d98bf47be"
+      }
+    ],
+    "mse": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 185,
+        "end_line": 188,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:mse:21a129369861a166",
+        "signature_hash": "0d7c23591af5667b"
+      }
+    ],
+    "frozen_gaussian_blocks": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 191,
+        "end_line": 193,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:frozen_gaussian_blocks:364dc98312daa2f6",
+        "signature_hash": "243e5c3a2d0c2fcf"
+      }
+    ],
+    "frozen_heavy_tail_blocks": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 196,
+        "end_line": 205,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:frozen_heavy_tail_blocks:24284dc49a510776",
+        "signature_hash": "e509035a55a3cd28"
+      }
+    ],
+    "AblationLane": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "class",
+        "line": 209,
+        "end_line": 215,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#class:AblationLane:748ec52040186e0c",
+        "signature_hash": "407936e3fe0a76f3"
+      }
+    ],
+    "AblationReceipt": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "class",
+        "line": 219,
+        "end_line": 241,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#class:AblationReceipt:6e2998f18b1aacc0",
+        "signature_hash": "7d7b5c53bd385df5"
+      }
+    ],
+    "AblationReceipt.digest": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "method",
+        "line": 240,
+        "end_line": 241,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#method:AblationReceipt.digest:b90a6c28b32dbf89",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "run_ablation": [
+      {
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "kind": "function",
+        "line": 244,
+        "end_line": 291,
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:run_ablation:b90635e674432803",
+        "signature_hash": "04791e51aa1f5c2e"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158300,6 +158579,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-equal-rate-e8-ablation.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -158627,6 +158907,13 @@
     ],
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/glm53-equal-rate-e8-ablation.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
+    "python tools/quantization/aura_glm53_equal_rate_e8_ablation.py | tee /tmp/q4.json": [
+      ".github/workflows/glm53-equal-rate-e8-ablation.yml"
     ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
@@ -159293,9 +159580,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -168415,6 +168699,67 @@
         0.151989,
         -0.198544,
         0.335472
+      ]
+    },
+    {
+      "path": ".github/workflows/glm53-equal-rate-e8-ablation.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2123,
+      "lines": 58,
+      "tokens_est": 531,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest",
+        "python tools/quantization/aura_glm53_equal_rate_e8_ablation.py | tee /tmp/q4.json"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          27
+        ],
+        "python -m unittest": [
+          32
+        ],
+        "python tools/quantization/aura_glm53_equal_rate_e8_ablation.py | tee /tmp/q4.json": [
+          37
+        ]
+      },
+      "topology": {},
+      "digest8": "b3e83c88e84dacd5",
+      "vector": [
+        -0.157392,
+        -0.088755,
+        0.05562,
+        -0.252064,
+        0.235497,
+        -0.046153,
+        -0.202361,
+        0.289933,
+        -0.06272,
+        -0.091122,
+        0.00355,
+        -0.081655,
+        -0.11479,
+        -0.275732,
+        -0.162126,
+        -0.145558,
+        0.275732,
+        -0.081655,
+        0.138458,
+        -0.067454,
+        0.166859,
+        0.270999,
+        -0.294667,
+        -0.289933,
+        0.041419,
+        0.126624,
+        0.188161,
+        -0.091122,
+        -0.110056,
+        -0.176327,
+        0.067454,
+        -0.273365
       ]
     },
     {
@@ -255551,6 +255896,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2954,
+      "lines": 73,
+      "tokens_est": 739,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c338ab57df18e273",
+      "vector": [
+        0.148953,
+        0.308805,
+        0.042385,
+        0.233723,
+        0.289429,
+        -0.052073,
+        0.061761,
+        -0.187705,
+        0.119889,
+        0.291851,
+        -0.054495,
+        -0.112623,
+        0.306383,
+        0.245833,
+        -0.303961,
+        -0.027853,
+        0.216769,
+        0.182861,
+        0.003633,
+        0.233723,
+        0.190127,
+        0.260365,
+        -0.047229,
+        0.148953,
+        0.059339,
+        0.027853,
+        -0.141687,
+        0.001211,
+        0.190127,
+        0.107779,
+        0.047229,
+        -0.006055
+      ]
+    },
+    {
       "path": "tests/test_aura_harness_issue_capsules.py",
       "role": "python_module",
       "binary": false,
@@ -262739,6 +263131,53 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10555,
+      "lines": 303,
+      "tokens_est": 2638,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "dc525224a0563c2b",
+      "vector": [
+        -0.078314,
+        -0.204552,
+        0.23728,
+        0.090003,
+        0.001169,
+        -0.075976,
+        -0.120394,
+        0.246631,
+        -0.291048,
+        0.225592,
+        -0.293386,
+        0.272346,
+        0.197539,
+        -0.015195,
+        0.171824,
+        -0.153122,
+        0.078314,
+        -0.104029,
+        -0.099354,
+        -0.047924,
+        -0.087665,
+        0.127407,
+        -0.27936,
+        -0.253645,
+        0.080652,
+        0.101692,
+        -0.298062,
+        -0.18585,
+        -0.019871,
+        -0.244294,
+        -0.001169,
+        0.150784
       ]
     },
     {
@@ -286646,16 +287085,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26430680,
+    "text_tokens_est": 6598021,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286812,6 +287251,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-equal-rate-e8-ablation.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -288145,6 +288585,7 @@
       "tests/test_aura_gate_egress.py",
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
+      "tests/test_aura_glm53_equal_rate_e8_ablation.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -288298,6 +288739,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -425814,6 +426256,96 @@
         "file_digest8": "ada41f95735768a2"
       },
       {
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#class:EqualRateE8AblationTests:a9d4525d5f795eb5",
+        "name": "EqualRateE8AblationTests",
+        "kind": "class",
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "line": 15,
+        "end_line": 68,
+        "signature_hash": "2709bf9474f9630d",
+        "file_digest8": "c338ab57df18e273"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_consequence_ceiling_stays_closed:44bf4ed89acb58dd",
+        "name": "EqualRateE8AblationTests.test_consequence_ceiling_stays_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "line": 61,
+        "end_line": 68,
+        "signature_hash": "7a85e1648bc334e7",
+        "file_digest8": "c338ab57df18e273"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_e8_beats_equal_rate_hypercube_on_frozen_gaussian:39246c34bbd4662c",
+        "name": "EqualRateE8AblationTests.test_e8_beats_equal_rate_hypercube_on_frozen_gaussian",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "line": 49,
+        "end_line": 53,
+        "signature_hash": "00554b570c0d4c78",
+        "file_digest8": "c338ab57df18e273"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_e8_beats_equal_rate_hypercube_on_frozen_heavy_tail:3829af4d1daf231f",
+        "name": "EqualRateE8AblationTests.test_e8_beats_equal_rate_hypercube_on_frozen_heavy_tail",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "line": 55,
+        "end_line": 59,
+        "signature_hash": "8084c5282c89969e",
+        "file_digest8": "c338ab57df18e273"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_e8_root_system_is_exact_and_finite:557c06e87139497d",
+        "name": "EqualRateE8AblationTests.test_e8_root_system_is_exact_and_finite",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "line": 16,
+        "end_line": 21,
+        "signature_hash": "311086b3f9a90ab2",
+        "file_digest8": "c338ab57df18e273"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_matched_payload_rate_is_exactly_1_25_bpw:653dbcee35e9edca",
+        "name": "EqualRateE8AblationTests.test_matched_payload_rate_is_exactly_1_25_bpw",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "line": 23,
+        "end_line": 30,
+        "signature_hash": "d04ff346b1c67145",
+        "file_digest8": "c338ab57df18e273"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_packed_roundtrip_is_deterministic:3b38915c5dd8dae0",
+        "name": "EqualRateE8AblationTests.test_packed_roundtrip_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "line": 32,
+        "end_line": 37,
+        "signature_hash": "c4a97e9379a7da39",
+        "file_digest8": "c338ab57df18e273"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_unknown_scheme_fails_closed:7ea7d4a77a5f2098",
+        "name": "EqualRateE8AblationTests.test_unknown_scheme_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "line": 44,
+        "end_line": 47,
+        "signature_hash": "00cc8dfd3ae2cc0d",
+        "file_digest8": "c338ab57df18e273"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_equal_rate_e8_ablation.py#method:EqualRateE8AblationTests.test_unused_e8_byte_indices_fail_closed:01f06bbcf6007739",
+        "name": "EqualRateE8AblationTests.test_unused_e8_byte_indices_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_equal_rate_e8_ablation.py",
+        "line": 39,
+        "end_line": 42,
+        "signature_hash": "0994f0b1b31721fa",
+        "file_digest8": "c338ab57df18e273"
+      },
+      {
         "semantic_id": "tests/test_aura_harness_issue_capsules.py#function:_raise_secret:a2391cb47c115705",
         "name": "_raise_secret",
         "kind": "function",
@@ -445634,6 +446166,196 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#class:AblationLane:748ec52040186e0c",
+        "name": "AblationLane",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 209,
+        "end_line": 215,
+        "signature_hash": "407936e3fe0a76f3",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#class:AblationReceipt:6e2998f18b1aacc0",
+        "name": "AblationReceipt",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 219,
+        "end_line": 241,
+        "signature_hash": "7d7b5c53bd385df5",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:_dot:351bbfba820965cd",
+        "name": "_dot",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 96,
+        "end_line": 97,
+        "signature_hash": "f2eb0d85e50606ad",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:_nearest_index:ce5eaac5603fd185",
+        "name": "_nearest_index",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 100,
+        "end_line": 108,
+        "signature_hash": "d50987856ace2868",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:_pack_half:136ad8c2f9df1632",
+        "name": "_pack_half",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 111,
+        "end_line": 112,
+        "signature_hash": "aba0a892f51e40a5",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:_sha256:01962c40accdcb93",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 43,
+        "end_line": 44,
+        "signature_hash": "9084cb89be4caca5",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:_unpack_half:5e2a6ea42dbcf085",
+        "name": "_unpack_half",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 115,
+        "end_line": 116,
+        "signature_hash": "f28612dbbb8408da",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:_validate_group:92645b83a705f7c5",
+        "name": "_validate_group",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 119,
+        "end_line": 125,
+        "signature_hash": "3b4474e8022f74c7",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:codebook_digest:b706121a842a1a6e",
+        "name": "codebook_digest",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 85,
+        "end_line": 89,
+        "signature_hash": "8b8d6754cbd86e29",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:decode_group:9cc110904fa16a97",
+        "name": "decode_group",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 167,
+        "end_line": 182,
+        "signature_hash": "5ca7d54d98bf47be",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:e8_root_codebook:bdcecd140feb03e0",
+        "name": "e8_root_codebook",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 47,
+        "end_line": 71,
+        "signature_hash": "c748a5581bfc4389",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:encode_group:a98e3fa8fa733dfc",
+        "name": "encode_group",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 128,
+        "end_line": 164,
+        "signature_hash": "94c910677902200f",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:frozen_gaussian_blocks:364dc98312daa2f6",
+        "name": "frozen_gaussian_blocks",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 191,
+        "end_line": 193,
+        "signature_hash": "243e5c3a2d0c2fcf",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:frozen_heavy_tail_blocks:24284dc49a510776",
+        "name": "frozen_heavy_tail_blocks",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 196,
+        "end_line": 205,
+        "signature_hash": "e509035a55a3cd28",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:hypercube_codebook:8b0108322359e107",
+        "name": "hypercube_codebook",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 74,
+        "end_line": 78,
+        "signature_hash": "015d872a48c0ab4b",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:main:d4d5b34432d76ef6",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 294,
+        "end_line": 298,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:mse:21a129369861a166",
+        "name": "mse",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 185,
+        "end_line": 188,
+        "signature_hash": "0d7c23591af5667b",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#function:run_ablation:b90635e674432803",
+        "name": "run_ablation",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 244,
+        "end_line": 291,
+        "signature_hash": "04791e51aa1f5c2e",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py#method:AblationReceipt.digest:b90a6c28b32dbf89",
+        "name": "AblationReceipt.digest",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_equal_rate_e8_ablation.py",
+        "line": 240,
+        "end_line": 241,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "dc525224a0563c2b"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447606,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "5da4c1692e741b87b5529bb55578647f",
+    "payload_hash": "cde9acaa0a46f4a38c7b4ede932218f5"
   }
 }
