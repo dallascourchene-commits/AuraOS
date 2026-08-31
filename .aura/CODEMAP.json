@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788207727,
+  "generated_at_unix": 1788210705,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1664,
+    "repo_file_count": 1676,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -140,6 +140,9 @@
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
       ".github/workflows/aura-external-version-transition-envelope-v1.yml",
+      ".github/workflows/aura-nav13d-eki4-hydrated-version-handoff.yml",
+      ".github/workflows/aura-nav14-progress-bound-hydrated-version-handoff.yml",
+      ".github/workflows/aura-nav15-loop-safe-attempt-session.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1110,6 +1113,9 @@
       "docs/arena/EKI4_EXTERNAL_COORDINATE_MAP_V1.json",
       "docs/arena/EXTERNAL_SUBJECT_LINEAGE_BRIDGE_V1.md",
       "docs/arena/EXTERNAL_VERSION_TRANSITION_ENVELOPE_V1.md",
+      "docs/arena/NAV13D_EKI4_HYDRATED_VERSION_HANDOFF_V1.md",
+      "docs/arena/NAV14_PROGRESS_BOUND_HYDRATED_VERSION_HANDOFF_V1.md",
+      "docs/arena/NAV15_LOOP_SAFE_ATTEMPT_SESSION_V1.md",
       "docs/arena/eki2-external-cognition-store-writer-v1.md",
       "docs/arena/eki2-proof-target-v2.txt",
       "docs/arena/eki2-proof-target.txt",
@@ -1525,6 +1531,9 @@
       "tests/test_aura_model_connectome_bridge.py",
       "tests/test_aura_music_mitosis_adapter.py",
       "tests/test_aura_native_cockpit_contract.py",
+      "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+      "tests/test_aura_nav14_loop_safe_attempt_session.py",
+      "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
       "tests/test_aura_node_inspector.py",
       "tests/test_aura_pascal_spatial_presentation.py",
       "tests/test_aura_persistence_integrations.py",
@@ -1656,6 +1665,9 @@
       "tools/aura_external_knowledge_store_writer.py",
       "tools/aura_external_subject_lineage_bridge.py",
       "tools/aura_external_version_transition_envelope.py",
+      "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+      "tools/aura_nav14_loop_safe_attempt_session.py",
+      "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1780,16 +1792,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1664,
-      "bytes": 26610996,
-      "tokens_est": 6643097,
+      "files": 1676,
+      "bytes": 26727430,
+      "tokens_est": 6672195,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 240,
+        "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1006,
-        "schema_or_lexicon": 277,
+        "python_module": 1012,
+        "schema_or_lexicon": 280,
         "support_file": 56
       }
     },
@@ -3952,6 +3964,30 @@
         "end_line": 90,
         "semantic_id": "tools/aura_external_version_transition_envelope.py#function:_canonical:85311e867d6ba571",
         "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 56,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_canonical:ee8b6c98d92c7c49",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 54,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_canonical:ed390d41bf6030fb",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 66,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_canonical:e6c90ccb183230d5",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -4394,6 +4430,30 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 73,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_digest:b292f0ad86b13af8",
+        "signature_hash": "5880d7b3614e1b56"
+      },
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 71,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_digest:89fd6614aaf49eb4",
+        "signature_hash": "5880d7b3614e1b56"
+      },
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 83,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_digest:276bd71368a34a00",
+        "signature_hash": "5880d7b3614e1b56"
       }
     ],
     "_token_proxy": [
@@ -8164,6 +8224,30 @@
         "end_line": 94,
         "semantic_id": "tools/aura_external_version_transition_envelope.py#function:_sha:8779648c3b4365e9",
         "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_sha:d23d559e472d8c73",
+        "signature_hash": "3c3bc3c037860fe9"
+      },
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_sha:3ed27f381db8bb0e",
+        "signature_hash": "3c3bc3c037860fe9"
+      },
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 70,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_sha:b8107cc649d381b4",
+        "signature_hash": "3c3bc3c037860fe9"
       }
     ],
     "_repo": [
@@ -14774,6 +14858,30 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 66,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_text:f6c47134073d7c6b",
+        "signature_hash": "0f196e838c2631a3"
+      },
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 64,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_text:54a1df3e80536f1c",
+        "signature_hash": "0f196e838c2631a3"
+      },
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 76,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_text:eef260417c267326",
+        "signature_hash": "0f196e838c2631a3"
       }
     ],
     "_bounded": [
@@ -24446,6 +24554,14 @@
         "end_line": 481,
         "semantic_id": "aura_ephemeral_workspace_contracts.py#function:_bool:bd9cd6160906e7bf",
         "signature_hash": "44cc9609a5c19f78"
+      },
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "function",
+        "line": 74,
+        "end_line": 77,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_bool:a6d606ea1ab87926",
+        "signature_hash": "fda0b11437ffbd59"
       }
     ],
     "_snapshot": [
@@ -44372,6 +44488,14 @@
         "end_line": 224,
         "semantic_id": "aura_ephemeral_lifecycle.py#function:transition:9e5920465ae02b2a",
         "signature_hash": "eff9e00dc3e92d52"
+      },
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 35,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#function:transition:aee1a09346c48541",
+        "signature_hash": "ec0c80f9ea9d0f93"
       }
     ],
     "get_state_info": [
@@ -143212,6 +143336,446 @@
         "signature_hash": "ea5d38aab5faf9ef"
       }
     ],
+    "hydration": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 10,
+        "end_line": 19,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#function:hydration:5fbd83c3d64ae133",
+        "signature_hash": "004ff9512f6131ba"
+      }
+    ],
+    "HydratedVersionHandoffTests": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 126,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#class:HydratedVersionHandoffTests:2531cce1c943540d",
+        "signature_hash": "1d1c4b366e39d2bb"
+      }
+    ],
+    "HydratedVersionHandoffTests.test_exact_handoff_ready_but_nonpromoting": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 46,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_exact_handoff_ready_but_nonpromoting:f9599b70b80d057a",
+        "signature_hash": "dd88e1edd33f1bea"
+      }
+    ],
+    "HydratedVersionHandoffTests.test_completion_required": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 53,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_completion_required:bd10a761581c2547",
+        "signature_hash": "08ffea9febf7bf1b"
+      }
+    ],
+    "HydratedVersionHandoffTests.test_transition_ready_required": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 60,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_transition_ready_required:e465fc16b3c0be55",
+        "signature_hash": "42b3d086de934164"
+      }
+    ],
+    "HydratedVersionHandoffTests.test_subject_generation_material_and_uri_are_independent_axes": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 74,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_subject_generation_material_and_uri_are_independent_axes:2b8f8ad0583db331",
+        "signature_hash": "885d87e11957353e"
+      }
+    ],
+    "HydratedVersionHandoffTests.test_write_currentness_and_future_read_debt_remain_separate": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 90,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_write_currentness_and_future_read_debt_remain_separate:face9deca4d59d0b",
+        "signature_hash": "72165485ae005e11"
+      }
+    ],
+    "HydratedVersionHandoffTests.test_exact_future_read_axes_required": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 97,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_exact_future_read_axes_required:0a6b8f5f834f288c",
+        "signature_hash": "70675d4d25494b77"
+      }
+    ],
+    "HydratedVersionHandoffTests.test_parent_generation_is_identity_bearing": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 104,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_parent_generation_is_identity_bearing:a39ecf01d6456a89",
+        "signature_hash": "29f169c571413889"
+      }
+    ],
+    "HydratedVersionHandoffTests.test_claim_ceiling_fails_closed": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 111,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_claim_ceiling_fails_closed:d9624da819e945bd",
+        "signature_hash": "80496d3bd88c72bc"
+      }
+    ],
+    "HydratedVersionHandoffTests.test_model_prefix_kv_claim_fails_closed": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 118,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_model_prefix_kv_claim_fails_closed:4a7c27b15ffb94a4",
+        "signature_hash": "68556f57613c7455"
+      }
+    ],
+    "HydratedVersionHandoffTests.test_deterministic_receipt": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 123,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_deterministic_receipt:5d00bd98b69e5974",
+        "signature_hash": "5fe59dddb67e4083"
+      }
+    ],
+    "HydratedVersionHandoffTests.test_different_j_complete_128_state_matrix": [
+      {
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 126,
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_different_j_complete_128_state_matrix:018ff1f68360df99",
+        "signature_hash": "e3264a1e32da6ecb"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 183,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#class:Nav14LoopSafeAttemptSessionTests:2ee8f3c2aeaf9e6b",
+        "signature_hash": "3ed8d376075741cd"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_clean_exact_session_is_candidate_only": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_clean_exact_session_is_candidate_only:08cd018a776d670a",
+        "signature_hash": "9bcff2147cb27113"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_parent_generation_forgery_holds": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 34,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_parent_generation_forgery_holds:2bfe1ea58985116a",
+        "signature_hash": "76597b483b9ad30b"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_candidate_identity_must_commute": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 47,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_candidate_identity_must_commute:95e3fa76c0adfdc7",
+        "signature_hash": "c75627077e067b70"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_session_identity_must_commute": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 61,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_session_identity_must_commute:9c26ffb6dfb4cc5c",
+        "signature_hash": "c054550e8e1d5596"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_terminal_or_no_progress_ledger_debt_requires_reopen": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 75,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_terminal_or_no_progress_ledger_debt_requires_reopen:491b96ad5d2ca38c",
+        "signature_hash": "79281fe3d656cd09"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_every_loop_guard_debt_taints_session": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 89,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_every_loop_guard_debt_taints_session:8efdd29ae43e22b0",
+        "signature_hash": "caeeda05fe4abf38"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_handoff_readiness_and_ceiling_fail_closed": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 121,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_handoff_readiness_and_ceiling_fail_closed:e106670716fe79c7",
+        "signature_hash": "8740655677136aa9"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_ledger_cannot_self_mint_authentication_or_persistence": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 134,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_ledger_cannot_self_mint_authentication_or_persistence:58663d51442dc731",
+        "signature_hash": "dcd5689305480840"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_projection_shape_types_fail_closed": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 153,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_projection_shape_types_fail_closed:573510e7756cf43f",
+        "signature_hash": "aee3813b51ea9300"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_hold_receipt_suppresses_candidate_and_session_identity": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 165,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_hold_receipt_suppresses_candidate_and_session_identity:ed46530e45a35781",
+        "signature_hash": "66d5f5b4d30de09d"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_receipt_is_deterministic": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 172,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_receipt_is_deterministic:ea4313283c3668b8",
+        "signature_hash": "4676c27ccb236b1c"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_complete_64_state_different_j_lattice": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 175,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_complete_64_state_different_j_lattice:a2e61120cda34fab",
+        "signature_hash": "59e1c14103eb7acb"
+      }
+    ],
+    "Nav14LoopSafeAttemptSessionTests.test_parent_coordinates_are_exact": [
+      {
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 183,
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_parent_coordinates_are_exact:5bce1e136801adfc",
+        "signature_hash": "acdf9d64bacfa888"
+      }
+    ],
+    "handoff": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 11,
+        "end_line": 22,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#function:handoff:21e0e28b655be27a",
+        "signature_hash": "dc000b6d3b43cb1a"
+      }
+    ],
+    "retrieval": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#function:retrieval:1fe6a93a1b286e2f",
+        "signature_hash": "68c2b5a4999795ff"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 150,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#class:ProgressBoundHydratedVersionHandoffTests:8d3e90e09cf94168",
+        "signature_hash": "b585627f78d65d87"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_initial_retrieval_can_support_candidate_only": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 41,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_initial_retrieval_can_support_candidate_only:d1dd216d9ed7e5e3",
+        "signature_hash": "a66519a8e41894f4"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_independent_provider_state_transition_can_support_candidate": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 48,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_independent_provider_state_transition_can_support_candidate:73bab4eb7e9ccb11",
+        "signature_hash": "5bd4a923878eea8f"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_fingerprint_axis_change_alone_cannot_mint_handoff_consequence": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 50,
+        "end_line": 56,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_fingerprint_axis_change_alone_cannot_mint_handoff_consequence:a9e64552f9de6a01",
+        "signature_hash": "ecc11dc48cfd5647"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_first_identical_no_progress_repeat_requires_axis_change": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 66,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_first_identical_no_progress_repeat_requires_axis_change:9b3f255a6c08093f",
+        "signature_hash": "edccfd32ffd16df0"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_repeated_identical_no_progress_collapses_handoff_cone": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 76,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_repeated_identical_no_progress_collapses_handoff_cone:b5b6d819a6fe779c",
+        "signature_hash": "2e00011d6749e186"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_retrieval_evidence_must_bind_exact_hydrated_material": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 85,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_retrieval_evidence_must_bind_exact_hydrated_material:5b225e9d61c57c5b",
+        "signature_hash": "46b4332c444e3928"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_retrieval_purpose_must_be_exact_handoff_purpose": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 91,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_retrieval_purpose_must_be_exact_handoff_purpose:f65be5b4c6f99bac",
+        "signature_hash": "4850377e3d9287af"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_handoff_must_remain_ready_and_carry_read_debt": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 107,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_handoff_must_remain_ready_and_carry_read_debt:e5f89d8f9ed9d541",
+        "signature_hash": "65b67e25f22ac040"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_parent_generation_mismatch_holds": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_parent_generation_mismatch_holds:72d80edce8058c22",
+        "signature_hash": "6fbc68526c064239"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_claim_ceiling_widening_holds": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 124,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_claim_ceiling_widening_holds:893b3bb3b481f387",
+        "signature_hash": "2b57c1faa8969f76"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_parent_retrieval_receipt_identity_is_recomputed": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 130,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_parent_retrieval_receipt_identity_is_recomputed:8bc034bf327f4e81",
+        "signature_hash": "8942c1d9a4168406"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_parent_retrieval_decision_shape_is_fail_closed": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 141,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_parent_retrieval_decision_shape_is_fail_closed:4c5f86cef349bee7",
+        "signature_hash": "310a17daa57dd3b0"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_deterministic_receipt": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 147,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_deterministic_receipt:b44f73bec9de8f69",
+        "signature_hash": "5fe59dddb67e4083"
+      }
+    ],
+    "ProgressBoundHydratedVersionHandoffTests.test_complete_different_j_matrix": [
+      {
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 150,
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_complete_different_j_matrix:495045fabfa87be7",
+        "signature_hash": "5e44154c01bdbbe4"
+      }
+    ],
     "TestInspectNode": [
       {
         "file": "tests/test_aura_node_inspector.py",
@@ -147526,6 +148090,14 @@
         "end_line": 46,
         "semantic_id": "tests/test_aura_refactor_output_quality.py#function:_fixture:9101c24f9fc5abe0",
         "signature_hash": "e62dcb25d3bb3b81"
+      },
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "function",
+        "line": 417,
+        "end_line": 461,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_fixture:54b1efa5ff3154eb",
+        "signature_hash": "1af00df2a1ae200e"
       }
     ],
     "_spec": [
@@ -159334,6 +159906,460 @@
         "signature_hash": "31ef49b55fa33e8d"
       }
     ],
+    "HandoffDisposition": [
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 45,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#class:HandoffDisposition:e9ef6456cee5c461",
+        "signature_hash": "ca56e1f2f22b1440"
+      }
+    ],
+    "HydrationCompletionProjectionV1": [
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "class",
+        "line": 77,
+        "end_line": 96,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#class:HydrationCompletionProjectionV1:93a0e27886d755ca",
+        "signature_hash": "f9339b4c611e23a8"
+      }
+    ],
+    "HydrationCompletionProjectionV1.validate_shape": [
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 96,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#method:HydrationCompletionProjectionV1.validate_shape:adf7a0a5abedc003",
+        "signature_hash": "324a5e1b2423f7c1"
+      }
+    ],
+    "VersionTransitionProjectionV1": [
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "class",
+        "line": 100,
+        "end_line": 126,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#class:VersionTransitionProjectionV1:90ac953578f32804",
+        "signature_hash": "63f1ad6b76d5a81b"
+      }
+    ],
+    "VersionTransitionProjectionV1.validate_shape": [
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 126,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#method:VersionTransitionProjectionV1.validate_shape:b5a4a7d4f40e8680",
+        "signature_hash": "324a5e1b2423f7c1"
+      }
+    ],
+    "HydratedVersionHandoffReceiptV1": [
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "class",
+        "line": 130,
+        "end_line": 153,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#class:HydratedVersionHandoffReceiptV1:83df371bed602b8a",
+        "signature_hash": "f4301bea278f8596"
+      }
+    ],
+    "HydratedVersionHandoffReceiptV1.ready": [
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 153,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffReceiptV1.ready:00ce40e7b491481f",
+        "signature_hash": "98033e7220e3ac8b"
+      }
+    ],
+    "_ceiling_breached": [
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 176,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_ceiling_breached:5c98cf6e5e57f3f9",
+        "signature_hash": "c3ed87a60a6035a9"
+      },
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "function",
+        "line": 263,
+        "end_line": 281,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_ceiling_breached:63dc70a9d4accfc5",
+        "signature_hash": "d33b09f87e10163b"
+      },
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 240,
+        "end_line": 260,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_ceiling_breached:bb2d139ea0765bc0",
+        "signature_hash": "f256836f23492cbd"
+      }
+    ],
+    "_classify_tree": [
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 179,
+        "end_line": 207,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_classify_tree:db7a27ac30f8d985",
+        "signature_hash": "caa7d4a3743d01bd"
+      },
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "function",
+        "line": 293,
+        "end_line": 313,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_classify_tree:7df296aaae912a8f",
+        "signature_hash": "08d5c8512fe755ed"
+      },
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 263,
+        "end_line": 288,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_classify_tree:6b51aee5fdc79af1",
+        "signature_hash": "5d9ffe4fc6631461"
+      }
+    ],
+    "_classify_rules": [
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 210,
+        "end_line": 234,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_classify_rules:b82b38a22f862cf5",
+        "signature_hash": "29fa909c8a2315cb"
+      },
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "function",
+        "line": 316,
+        "end_line": 352,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_classify_rules:1599e3be05773fb5",
+        "signature_hash": "9834fd13956362c2"
+      },
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 291,
+        "end_line": 334,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_classify_rules:a19dd29ce9c3501c",
+        "signature_hash": "b835a34cb0fd826a"
+      }
+    ],
+    "bind_hydrated_version_handoff": [
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 237,
+        "end_line": 299,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:bind_hydrated_version_handoff:e5e0526636f64ee5",
+        "signature_hash": "a3107b2d645fe0c9"
+      }
+    ],
+    "prove_different_j": [
+      {
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 302,
+        "end_line": 341,
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:prove_different_j:854e81e16c9b4702",
+        "signature_hash": "545054efddc8fb30"
+      },
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "function",
+        "line": 464,
+        "end_line": 496,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:prove_different_j:090b4e71d48179c6",
+        "signature_hash": "545054efddc8fb30"
+      },
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 443,
+        "end_line": 478,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:prove_different_j:964b0c0670ab60a2",
+        "signature_hash": "545054efddc8fb30"
+      }
+    ],
+    "AttemptDisposition": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 43,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#class:AttemptDisposition:15677e95b325e6c0",
+        "signature_hash": "dd8df142c712645d"
+      }
+    ],
+    "ProgressBoundHandoffProjectionV1": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "class",
+        "line": 81,
+        "end_line": 116,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#class:ProgressBoundHandoffProjectionV1:0592f33548443bf2",
+        "signature_hash": "e6a0b6d1e1407f75"
+      }
+    ],
+    "ProgressBoundHandoffProjectionV1.validate": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 116,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#method:ProgressBoundHandoffProjectionV1.validate:73c580d4a963dce4",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "AttemptLedgerProjectionV1": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "class",
+        "line": 120,
+        "end_line": 155,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#class:AttemptLedgerProjectionV1:44deb2e52034e698",
+        "signature_hash": "3b1f2167058fa345"
+      }
+    ],
+    "AttemptLedgerProjectionV1.validate": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 155,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#method:AttemptLedgerProjectionV1.validate:40ca5264d1fd96b6",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "LoopGuardSnapshotProjectionV1": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "class",
+        "line": 159,
+        "end_line": 215,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#class:LoopGuardSnapshotProjectionV1:f9e2be2f0b1dfe71",
+        "signature_hash": "1ca3b4c61c30f8da"
+      }
+    ],
+    "LoopGuardSnapshotProjectionV1.validate": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 172,
+        "end_line": 210,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#method:LoopGuardSnapshotProjectionV1.validate:400bf465601d5ce9",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "LoopGuardSnapshotProjectionV1.snapshot_digest": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 215,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#method:LoopGuardSnapshotProjectionV1.snapshot_digest:8f1710e87444af58",
+        "signature_hash": "189c0bac868597a8"
+      }
+    ],
+    "AttemptIntentV1": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "class",
+        "line": 219,
+        "end_line": 236,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#class:AttemptIntentV1:9560de60fd77417e",
+        "signature_hash": "fb6f9dd4c0aa36b9"
+      }
+    ],
+    "AttemptIntentV1.validate": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 226,
+        "end_line": 231,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#method:AttemptIntentV1.validate:92dd7ad6ac14a081",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "AttemptIntentV1.fingerprint_digest": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "method",
+        "line": 234,
+        "end_line": 236,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#method:AttemptIntentV1.fingerprint_digest:70ccfb4989f026b2",
+        "signature_hash": "05e52ca185b889f2"
+      }
+    ],
+    "LoopSafeAttemptReceiptV1": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "class",
+        "line": 240,
+        "end_line": 260,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#class:LoopSafeAttemptReceiptV1:83c2c45408176a34",
+        "signature_hash": "ed546455c260b922"
+      }
+    ],
+    "_guard_clean": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "function",
+        "line": 284,
+        "end_line": 290,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_guard_clean:7a3eb7574bb75e1e",
+        "signature_hash": "736db47388c106ed"
+      }
+    ],
+    "bind_loop_safe_attempt_session": [
+      {
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "kind": "function",
+        "line": 355,
+        "end_line": 414,
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:bind_loop_safe_attempt_session:159408844187c6ff",
+        "signature_hash": "f61974070475e9f1"
+      }
+    ],
+    "RetrievalDecision": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 42,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#class:RetrievalDecision:ca83505e7abd7aec",
+        "signature_hash": "cb96e423750734f4"
+      }
+    ],
+    "ProgressHandoffDisposition": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 55,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#class:ProgressHandoffDisposition:c6962f0be89853e9",
+        "signature_hash": "5e6f9f734915cf95"
+      }
+    ],
+    "HydratedVersionHandoffProjectionV1": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "class",
+        "line": 87,
+        "end_line": 111,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#class:HydratedVersionHandoffProjectionV1:addde8170f97ff58",
+        "signature_hash": "6b194fe3370af281"
+      }
+    ],
+    "HydratedVersionHandoffProjectionV1.validate_shape": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 111,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#method:HydratedVersionHandoffProjectionV1.validate_shape:b8ad6559cc4f9f83",
+        "signature_hash": "324a5e1b2423f7c1"
+      }
+    ],
+    "RetrievalProgressProjectionV1": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "class",
+        "line": 115,
+        "end_line": 168,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#class:RetrievalProgressProjectionV1:a509872b6d5581c1",
+        "signature_hash": "d584f2363813b328"
+      }
+    ],
+    "RetrievalProgressProjectionV1.fingerprint_payload": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 147,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#method:RetrievalProgressProjectionV1.fingerprint_payload:2f7af87931895cc4",
+        "signature_hash": "e40b503b702b686d"
+      }
+    ],
+    "RetrievalProgressProjectionV1.validate_shape": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 168,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#method:RetrievalProgressProjectionV1.validate_shape:bf92997146782fde",
+        "signature_hash": "324a5e1b2423f7c1"
+      }
+    ],
+    "ProgressBoundHandoffReceiptV1": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "class",
+        "line": 172,
+        "end_line": 195,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#class:ProgressBoundHandoffReceiptV1:80ed99734c9ee261",
+        "signature_hash": "e886a98c0570b4fb"
+      }
+    ],
+    "ProgressBoundHandoffReceiptV1.ready": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "method",
+        "line": 194,
+        "end_line": 195,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHandoffReceiptV1.ready:6baeab16882636f9",
+        "signature_hash": "98033e7220e3ac8b"
+      }
+    ],
+    "_parent_receipt_digest": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 198,
+        "end_line": 215,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_parent_receipt_digest:4a25e9546357e635",
+        "signature_hash": "a76554488b1818f3"
+      }
+    ],
+    "_validate_decision_shape": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 218,
+        "end_line": 237,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_validate_decision_shape:8dfdc3af27172894",
+        "signature_hash": "e7509c915cd4fa83"
+      }
+    ],
+    "bind_progress_bound_handoff": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 337,
+        "end_line": 397,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:bind_progress_bound_handoff:a24375abe0bf1a40",
+        "signature_hash": "67429dd5e226ce40"
+      }
+    ],
+    "_retrieval_fixture": [
+      {
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "kind": "function",
+        "line": 400,
+        "end_line": 440,
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_retrieval_fixture:45355255a991a289",
+        "signature_hash": "7c98830f7e24624c"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -160448,6 +161474,8 @@
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
       ".github/workflows/aura-external-version-transition-envelope-v1.yml",
+      ".github/workflows/aura-nav14-progress-bound-hydrated-version-handoff.yml",
+      ".github/workflows/aura-nav15-loop-safe-attempt-session.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -160743,10 +161771,12 @@
     ],
     "python3 -m py_compile": [
       ".github/workflows/aura-external-knowledge-ingress.yml",
+      ".github/workflows/aura-nav13d-eki4-hydrated-version-handoff.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
-      ".github/workflows/aura-external-knowledge-ingress.yml"
+      ".github/workflows/aura-external-knowledge-ingress.yml",
+      ".github/workflows/aura-nav13d-eki4-hydrated-version-handoff.yml"
     ],
     "python3 -m tools.aura_external_knowledge_ingress": [
       ".github/workflows/aura-external-knowledge-ingress.yml"
@@ -160755,6 +161785,8 @@
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
       ".github/workflows/aura-external-version-transition-envelope-v1.yml",
+      ".github/workflows/aura-nav14-progress-bound-hydrated-version-handoff.yml",
+      ".github/workflows/aura-nav15-loop-safe-attempt-session.yml",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
@@ -170135,6 +171167,182 @@
         0.307633,
         -0.111532,
         0.074763
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-nav13d-eki4-hydrated-version-handoff.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5009,
+      "lines": 109,
+      "tokens_est": 1253,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          84
+        ],
+        "python3 -m unittest": [
+          85
+        ]
+      },
+      "topology": {},
+      "digest8": "c20ca704ad1dece1",
+      "vector": [
+        -0.026055,
+        0.088586,
+        0.067742,
+        -0.013548,
+        0.217818,
+        0.157371,
+        0.213649,
+        -0.244915,
+        0.174046,
+        -0.236577,
+        -0.196974,
+        -0.021886,
+        -0.22824,
+        -0.22824,
+        0.094839,
+        0.240746,
+        -0.259506,
+        -0.140696,
+        0.263674,
+        0.232409,
+        -0.153202,
+        -0.26159,
+        0.084418,
+        -0.00938,
+        0.263674,
+        0.105261,
+        0.101093,
+        0.088586,
+        -0.188637,
+        -0.090671,
+        -0.167793,
+        -0.178215
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-nav14-progress-bound-hydrated-version-handoff.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6201,
+      "lines": 132,
+      "tokens_est": 1551,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          76,
+          84,
+          91
+        ],
+        "python -m unittest": [
+          77,
+          85,
+          92
+        ]
+      },
+      "topology": {},
+      "digest8": "763dc1ee7a2e87e8",
+      "vector": [
+        -0.091971,
+        0.107867,
+        0.126034,
+        -0.228224,
+        -0.282725,
+        -0.284996,
+        0.212328,
+        0.19189,
+        -0.039741,
+        0.137389,
+        0.200973,
+        -0.178265,
+        0.2691,
+        -0.091971,
+        0.144201,
+        -0.175994,
+        0.132847,
+        -0.017032,
+        0.069262,
+        0.073804,
+        0.16691,
+        0.119222,
+        0.253204,
+        -0.128305,
+        -0.128305,
+        0.235037,
+        -0.214599,
+        -0.173723,
+        0.24412,
+        0.130576,
+        0.042011,
+        -0.257746
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-nav15-loop-safe-attempt-session.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6348,
+      "lines": 146,
+      "tokens_est": 1587,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          94,
+          102
+        ],
+        "python -m unittest": [
+          95
+        ]
+      },
+      "topology": {},
+      "digest8": "9ef0626449c6fc2e",
+      "vector": [
+        -0.292838,
+        -0.084176,
+        0.003557,
+        0.207476,
+        -0.212219,
+        0.053351,
+        -0.202734,
+        0.034382,
+        0.015413,
+        -0.209848,
+        -0.015413,
+        0.219332,
+        -0.129228,
+        0.001186,
+        -0.288096,
+        0.103145,
+        -0.285725,
+        0.295209,
+        0.001186,
+        0.15294,
+        -0.065207,
+        0.266755,
+        -0.162424,
+        0.231188,
+        0.221703,
+        -0.058093,
+        -0.259642,
+        0.017784,
+        0.107888,
+        0.221703,
+        -0.048609,
+        -0.200363
       ]
     },
     {
@@ -237641,6 +238849,147 @@
       ]
     },
     {
+      "path": "docs/arena/NAV13D_EKI4_HYDRATED_VERSION_HANDOFF_V1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 5065,
+      "lines": 90,
+      "tokens_est": 1261,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "001ddde0b288e090",
+      "vector": [
+        0.075737,
+        -0.186337,
+        -0.198359,
+        -0.222402,
+        0.296937,
+        -0.212785,
+        -0.049289,
+        0.24885,
+        0.19355,
+        -0.171911,
+        0.119015,
+        -0.070928,
+        0.068524,
+        0.224806,
+        0.277702,
+        0.135846,
+        0.174315,
+        -0.232019,
+        0.234424,
+        0.126228,
+        -0.030054,
+        0.169506,
+        0.167102,
+        0.003607,
+        -0.022841,
+        -0.15508,
+        -0.126228,
+        -0.131037,
+        -0.272893,
+        -0.006011,
+        -0.26568,
+        0.143059
+      ]
+    },
+    {
+      "path": "docs/arena/NAV14_PROGRESS_BOUND_HYDRATED_VERSION_HANDOFF_V1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 9315,
+      "lines": 161,
+      "tokens_est": 2324,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e06cde2c473ae497",
+      "vector": [
+        -0.117357,
+        -0.096259,
+        -0.03824,
+        0.164827,
+        -0.296688,
+        0.048789,
+        0.18065,
+        -0.183287,
+        0.122631,
+        0.135817,
+        -0.040877,
+        0.20966,
+        0.199111,
+        -0.117357,
+        0.222846,
+        -0.043514,
+        0.267679,
+        -0.222846,
+        0.230757,
+        0.043514,
+        -0.20966,
+        -0.222846,
+        0.207022,
+        0.072524,
+        0.317786,
+        -0.18065,
+        -0.212297,
+        0.13318,
+        0.241306,
+        -0.117357,
+        -0.141092,
+        -0.032965
+      ]
+    },
+    {
+      "path": "docs/arena/NAV15_LOOP_SAFE_ATTEMPT_SESSION_V1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 10036,
+      "lines": 195,
+      "tokens_est": 2505,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f142c99149e95f3f",
+      "vector": [
+        -0.062376,
+        0.170005,
+        -0.14799,
+        0.248281,
+        -0.184682,
+        0.020792,
+        0.018346,
+        -0.167559,
+        0.182236,
+        0.101514,
+        -0.265404,
+        0.047699,
+        -0.133314,
+        0.228712,
+        0.025684,
+        0.196913,
+        -0.162667,
+        0.172452,
+        0.192021,
+        -0.145544,
+        -0.284973,
+        0.240943,
+        -0.22382,
+        0.253174,
+        -0.14799,
+        -0.17979,
+        0.111299,
+        -0.211589,
+        0.272743,
+        -0.072161,
+        -0.099068,
+        -0.162667
+      ]
+    },
+    {
       "path": "docs/arena/eki2-external-cognition-store-writer-v1.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -259876,6 +261225,147 @@
       ]
     },
     {
+      "path": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5330,
+      "lines": 131,
+      "tokens_est": 1333,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f5b75db016239329",
+      "vector": [
+        -0.055227,
+        0.26141,
+        0.128864,
+        -0.126409,
+        0.116591,
+        0.197591,
+        0.293319,
+        -0.111682,
+        -0.089591,
+        -0.229501,
+        0.209864,
+        -0.209864,
+        -0.020864,
+        -0.001227,
+        0.303137,
+        -0.239319,
+        0.197591,
+        0.133773,
+        0.300683,
+        -0.114137,
+        -0.111682,
+        0.006136,
+        -0.0405,
+        0.146046,
+        -0.035591,
+        -0.141137,
+        0.106773,
+        -0.192682,
+        0.271228,
+        0.241773,
+        0.131318,
+        -0.177955
+      ]
+    },
+    {
+      "path": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8047,
+      "lines": 188,
+      "tokens_est": 2012,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7225f5e058b1e6a6",
+      "vector": [
+        -0.222656,
+        -0.287338,
+        0.140559,
+        0.247534,
+        0.195291,
+        -0.167925,
+        -0.085828,
+        -0.016171,
+        0.046024,
+        0.207729,
+        0.028609,
+        -0.175388,
+        -0.095779,
+        -0.001244,
+        -0.302265,
+        -0.190315,
+        0.215193,
+        -0.197778,
+        0.075877,
+        -0.006219,
+        0.185339,
+        0.046024,
+        0.063438,
+        -0.222656,
+        -0.150511,
+        0.235095,
+        0.078365,
+        0.237583,
+        -0.262461,
+        0.150511,
+        -0.250022,
+        0.152998
+      ]
+    },
+    {
+      "path": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6314,
+      "lines": 155,
+      "tokens_est": 1579,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fb44c219774c8eab",
+      "vector": [
+        0.162009,
+        -0.30929,
+        -0.103097,
+        -0.041507,
+        -0.097741,
+        0.036151,
+        0.14862,
+        -0.132553,
+        0.036151,
+        0.137909,
+        -0.036151,
+        -0.220922,
+        -0.028117,
+        0.004017,
+        0.108452,
+        -0.081674,
+        0.207533,
+        -0.060251,
+        0.330713,
+        0.143264,
+        -0.121842,
+        -0.12452,
+        -0.113808,
+        0.228955,
+        -0.172721,
+        0.295901,
+        0.242344,
+        -0.330713,
+        -0.317324,
+        -0.143264,
+        -0.215566,
+        0.006695
+      ]
+    },
+    {
       "path": "tests/test_aura_node_inspector.py",
       "role": "python_module",
       "binary": false,
@@ -266030,6 +267520,147 @@
         0.15957,
         0.223397,
         -0.079194
+      ]
+    },
+    {
+      "path": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15615,
+      "lines": 354,
+      "tokens_est": 3904,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ca9268e7d531cfef",
+      "vector": [
+        -0.017085,
+        -0.003417,
+        0.233493,
+        -0.110482,
+        0.206157,
+        0.222103,
+        -0.185655,
+        -0.281331,
+        0.217547,
+        0.281331,
+        0.192489,
+        -0.149208,
+        0.053533,
+        -0.033031,
+        0.149208,
+        0.094536,
+        -0.185655,
+        -0.023919,
+        0.121872,
+        -0.226659,
+        0.103648,
+        0.288165,
+        -0.187933,
+        0.156042,
+        -0.238049,
+        0.12415,
+        -0.244883,
+        -0.185655,
+        0.035309,
+        -0.203879,
+        -0.074034,
+        0.192489
+      ]
+    },
+    {
+      "path": "tools/aura_nav14_loop_safe_attempt_session.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 18743,
+      "lines": 510,
+      "tokens_est": 4686,
+      "symbol_count": 24,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bd1dc3820c47d3e1",
+      "vector": [
+        0.287774,
+        -0.238791,
+        0.221647,
+        0.131029,
+        -0.033063,
+        0.079597,
+        0.248588,
+        -0.123682,
+        -0.177563,
+        -0.268181,
+        0.126131,
+        -0.091843,
+        -0.216749,
+        -0.01347,
+        0.09919,
+        0.199605,
+        0.143275,
+        -0.111436,
+        -0.197156,
+        -0.24369,
+        -0.006123,
+        -0.057555,
+        0.082046,
+        -0.231444,
+        0.055106,
+        -0.268181,
+        -0.307367,
+        0.011021,
+        -0.118783,
+        -0.104089,
+        0.165317,
+        0.260834
+      ]
+    },
+    {
+      "path": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 20411,
+      "lines": 494,
+      "tokens_est": 5103,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ae82422a6dad04da",
+      "vector": [
+        -0.019945,
+        -0.111458,
+        0.052796,
+        -0.16308,
+        0.195931,
+        -0.184198,
+        0.198277,
+        -0.04341,
+        0.193584,
+        -0.001173,
+        -0.217049,
+        0.294483,
+        0.041063,
+        -0.219395,
+        -0.181852,
+        -0.228781,
+        0.205316,
+        0.186545,
+        -0.188891,
+        -0.03637,
+        -0.179505,
+        0.151348,
+        0.259285,
+        0.247553,
+        0.050449,
+        -0.071567,
+        0.012906,
+        -0.259285,
+        0.238167,
+        0.193584,
+        0.24286,
+        -0.109111
       ]
     },
     {
@@ -290031,16 +291662,16 @@
     }
   },
   "summary": {
-    "file_count": 1664,
-    "total_bytes": 26610996,
-    "text_tokens_est": 6643097,
+    "file_count": 1676,
+    "total_bytes": 26727430,
+    "text_tokens_est": 6672195,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 240,
+      "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1006,
-      "schema_or_lexicon": 277,
+      "python_module": 1012,
+      "schema_or_lexicon": 280,
       "support_file": 56
     },
     "topology_nodes": 11478,
@@ -290190,6 +291821,9 @@
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
       ".github/workflows/aura-external-version-transition-envelope-v1.yml",
+      ".github/workflows/aura-nav13d-eki4-hydrated-version-handoff.yml",
+      ".github/workflows/aura-nav14-progress-bound-hydrated-version-handoff.yml",
+      ".github/workflows/aura-nav15-loop-safe-attempt-session.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -291160,6 +292794,9 @@
       "docs/arena/EKI4_EXTERNAL_COORDINATE_MAP_V1.json",
       "docs/arena/EXTERNAL_SUBJECT_LINEAGE_BRIDGE_V1.md",
       "docs/arena/EXTERNAL_VERSION_TRANSITION_ENVELOPE_V1.md",
+      "docs/arena/NAV13D_EKI4_HYDRATED_VERSION_HANDOFF_V1.md",
+      "docs/arena/NAV14_PROGRESS_BOUND_HYDRATED_VERSION_HANDOFF_V1.md",
+      "docs/arena/NAV15_LOOP_SAFE_ATTEMPT_SESSION_V1.md",
       "docs/arena/eki2-external-cognition-store-writer-v1.md",
       "docs/arena/eki2-proof-target-v2.txt",
       "docs/arena/eki2-proof-target.txt",
@@ -291575,6 +293212,9 @@
       "tests/test_aura_model_connectome_bridge.py",
       "tests/test_aura_music_mitosis_adapter.py",
       "tests/test_aura_native_cockpit_contract.py",
+      "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+      "tests/test_aura_nav14_loop_safe_attempt_session.py",
+      "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
       "tests/test_aura_node_inspector.py",
       "tests/test_aura_pascal_spatial_presentation.py",
       "tests/test_aura_persistence_integrations.py",
@@ -291706,6 +293346,9 @@
       "tools/aura_external_knowledge_store_writer.py",
       "tools/aura_external_subject_lineage_bridge.py",
       "tools/aura_external_version_transition_envelope.py",
+      "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+      "tools/aura_nav14_loop_safe_attempt_session.py",
+      "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -433884,6 +435527,456 @@
         "file_digest8": "d44b09e1fecebab0"
       },
       {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#class:HydratedVersionHandoffTests:2531cce1c943540d",
+        "name": "HydratedVersionHandoffTests",
+        "kind": "class",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 38,
+        "end_line": 126,
+        "signature_hash": "1d1c4b366e39d2bb",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#function:hydration:5fbd83c3d64ae133",
+        "name": "hydration",
+        "kind": "function",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 10,
+        "end_line": 19,
+        "signature_hash": "004ff9512f6131ba",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#function:transition:aee1a09346c48541",
+        "name": "transition",
+        "kind": "function",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 22,
+        "end_line": 35,
+        "signature_hash": "ec0c80f9ea9d0f93",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_claim_ceiling_fails_closed:d9624da819e945bd",
+        "name": "HydratedVersionHandoffTests.test_claim_ceiling_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 106,
+        "end_line": 111,
+        "signature_hash": "80496d3bd88c72bc",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_completion_required:bd10a761581c2547",
+        "name": "HydratedVersionHandoffTests.test_completion_required",
+        "kind": "method",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 48,
+        "end_line": 53,
+        "signature_hash": "08ffea9febf7bf1b",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_deterministic_receipt:5d00bd98b69e5974",
+        "name": "HydratedVersionHandoffTests.test_deterministic_receipt",
+        "kind": "method",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 120,
+        "end_line": 123,
+        "signature_hash": "5fe59dddb67e4083",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_different_j_complete_128_state_matrix:018ff1f68360df99",
+        "name": "HydratedVersionHandoffTests.test_different_j_complete_128_state_matrix",
+        "kind": "method",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 125,
+        "end_line": 126,
+        "signature_hash": "e3264a1e32da6ecb",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_exact_future_read_axes_required:0a6b8f5f834f288c",
+        "name": "HydratedVersionHandoffTests.test_exact_future_read_axes_required",
+        "kind": "method",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 92,
+        "end_line": 97,
+        "signature_hash": "70675d4d25494b77",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_exact_handoff_ready_but_nonpromoting:f9599b70b80d057a",
+        "name": "HydratedVersionHandoffTests.test_exact_handoff_ready_but_nonpromoting",
+        "kind": "method",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 39,
+        "end_line": 46,
+        "signature_hash": "dd88e1edd33f1bea",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_model_prefix_kv_claim_fails_closed:4a7c27b15ffb94a4",
+        "name": "HydratedVersionHandoffTests.test_model_prefix_kv_claim_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 113,
+        "end_line": 118,
+        "signature_hash": "68556f57613c7455",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_parent_generation_is_identity_bearing:a39ecf01d6456a89",
+        "name": "HydratedVersionHandoffTests.test_parent_generation_is_identity_bearing",
+        "kind": "method",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 99,
+        "end_line": 104,
+        "signature_hash": "29f169c571413889",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_subject_generation_material_and_uri_are_independent_axes:2b8f8ad0583db331",
+        "name": "HydratedVersionHandoffTests.test_subject_generation_material_and_uri_are_independent_axes",
+        "kind": "method",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 62,
+        "end_line": 74,
+        "signature_hash": "885d87e11957353e",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_transition_ready_required:e465fc16b3c0be55",
+        "name": "HydratedVersionHandoffTests.test_transition_ready_required",
+        "kind": "method",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 55,
+        "end_line": 60,
+        "signature_hash": "42b3d086de934164",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffTests.test_write_currentness_and_future_read_debt_remain_separate:face9deca4d59d0b",
+        "name": "HydratedVersionHandoffTests.test_write_currentness_and_future_read_debt_remain_separate",
+        "kind": "method",
+        "file": "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 76,
+        "end_line": 90,
+        "signature_hash": "72165485ae005e11",
+        "file_digest8": "f5b75db016239329"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#class:Nav14LoopSafeAttemptSessionTests:2ee8f3c2aeaf9e6b",
+        "name": "Nav14LoopSafeAttemptSessionTests",
+        "kind": "class",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 9,
+        "end_line": 183,
+        "signature_hash": "3ed8d376075741cd",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_candidate_identity_must_commute:95e3fa76c0adfdc7",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_candidate_identity_must_commute",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 36,
+        "end_line": 47,
+        "signature_hash": "c75627077e067b70",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_clean_exact_session_is_candidate_only:08cd018a776d670a",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_clean_exact_session_is_candidate_only",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 10,
+        "end_line": 23,
+        "signature_hash": "9bcff2147cb27113",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_complete_64_state_different_j_lattice:a2e61120cda34fab",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_complete_64_state_different_j_lattice",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 174,
+        "end_line": 175,
+        "signature_hash": "59e1c14103eb7acb",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_every_loop_guard_debt_taints_session:8efdd29ae43e22b0",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_every_loop_guard_debt_taints_session",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 77,
+        "end_line": 89,
+        "signature_hash": "caeeda05fe4abf38",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_handoff_readiness_and_ceiling_fail_closed:e106670716fe79c7",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_handoff_readiness_and_ceiling_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 91,
+        "end_line": 121,
+        "signature_hash": "8740655677136aa9",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_hold_receipt_suppresses_candidate_and_session_identity:ed46530e45a35781",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_hold_receipt_suppresses_candidate_and_session_identity",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 155,
+        "end_line": 165,
+        "signature_hash": "66d5f5b4d30de09d",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_ledger_cannot_self_mint_authentication_or_persistence:58663d51442dc731",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_ledger_cannot_self_mint_authentication_or_persistence",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 123,
+        "end_line": 134,
+        "signature_hash": "dcd5689305480840",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_parent_coordinates_are_exact:5bce1e136801adfc",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_parent_coordinates_are_exact",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 177,
+        "end_line": 183,
+        "signature_hash": "acdf9d64bacfa888",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_parent_generation_forgery_holds:2bfe1ea58985116a",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_parent_generation_forgery_holds",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 25,
+        "end_line": 34,
+        "signature_hash": "76597b483b9ad30b",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_projection_shape_types_fail_closed:573510e7756cf43f",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_projection_shape_types_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 136,
+        "end_line": 153,
+        "signature_hash": "aee3813b51ea9300",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_receipt_is_deterministic:ea4313283c3668b8",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_receipt_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 167,
+        "end_line": 172,
+        "signature_hash": "4676c27ccb236b1c",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_session_identity_must_commute:9c26ffb6dfb4cc5c",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_session_identity_must_commute",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 49,
+        "end_line": 61,
+        "signature_hash": "c054550e8e1d5596",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_loop_safe_attempt_session.py#method:Nav14LoopSafeAttemptSessionTests.test_terminal_or_no_progress_ledger_debt_requires_reopen:491b96ad5d2ca38c",
+        "name": "Nav14LoopSafeAttemptSessionTests.test_terminal_or_no_progress_ledger_debt_requires_reopen",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_loop_safe_attempt_session.py",
+        "line": 63,
+        "end_line": 75,
+        "signature_hash": "79281fe3d656cd09",
+        "file_digest8": "7225f5e058b1e6a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#class:ProgressBoundHydratedVersionHandoffTests:8d3e90e09cf94168",
+        "name": "ProgressBoundHydratedVersionHandoffTests",
+        "kind": "class",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 29,
+        "end_line": 150,
+        "signature_hash": "b585627f78d65d87",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#function:handoff:21e0e28b655be27a",
+        "name": "handoff",
+        "kind": "function",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 11,
+        "end_line": 22,
+        "signature_hash": "dc000b6d3b43cb1a",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#function:retrieval:1fe6a93a1b286e2f",
+        "name": "retrieval",
+        "kind": "function",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "68c2b5a4999795ff",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_claim_ceiling_widening_holds:893b3bb3b481f387",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_claim_ceiling_widening_holds",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 115,
+        "end_line": 124,
+        "signature_hash": "2b57c1faa8969f76",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_complete_different_j_matrix:495045fabfa87be7",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_complete_different_j_matrix",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 149,
+        "end_line": 150,
+        "signature_hash": "5e44154c01bdbbe4",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_deterministic_receipt:b44f73bec9de8f69",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_deterministic_receipt",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 143,
+        "end_line": 147,
+        "signature_hash": "5fe59dddb67e4083",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_fingerprint_axis_change_alone_cannot_mint_handoff_consequence:a9e64552f9de6a01",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_fingerprint_axis_change_alone_cannot_mint_handoff_consequence",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 50,
+        "end_line": 56,
+        "signature_hash": "ecc11dc48cfd5647",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_first_identical_no_progress_repeat_requires_axis_change:9b3f255a6c08093f",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_first_identical_no_progress_repeat_requires_axis_change",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 58,
+        "end_line": 66,
+        "signature_hash": "edccfd32ffd16df0",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_handoff_must_remain_ready_and_carry_read_debt:e5f89d8f9ed9d541",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_handoff_must_remain_ready_and_carry_read_debt",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 93,
+        "end_line": 107,
+        "signature_hash": "65b67e25f22ac040",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_independent_provider_state_transition_can_support_candidate:73bab4eb7e9ccb11",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_independent_provider_state_transition_can_support_candidate",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 43,
+        "end_line": 48,
+        "signature_hash": "5bd4a923878eea8f",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_initial_retrieval_can_support_candidate_only:d1dd216d9ed7e5e3",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_initial_retrieval_can_support_candidate_only",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 30,
+        "end_line": 41,
+        "signature_hash": "a66519a8e41894f4",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_parent_generation_mismatch_holds:72d80edce8058c22",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_parent_generation_mismatch_holds",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 109,
+        "end_line": 113,
+        "signature_hash": "6fbc68526c064239",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_parent_retrieval_decision_shape_is_fail_closed:4c5f86cef349bee7",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_parent_retrieval_decision_shape_is_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 132,
+        "end_line": 141,
+        "signature_hash": "310a17daa57dd3b0",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_parent_retrieval_receipt_identity_is_recomputed:8bc034bf327f4e81",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_parent_retrieval_receipt_identity_is_recomputed",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 126,
+        "end_line": 130,
+        "signature_hash": "8942c1d9a4168406",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_repeated_identical_no_progress_collapses_handoff_cone:b5b6d819a6fe779c",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_repeated_identical_no_progress_collapses_handoff_cone",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 68,
+        "end_line": 76,
+        "signature_hash": "2e00011d6749e186",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_retrieval_evidence_must_bind_exact_hydrated_material:5b225e9d61c57c5b",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_retrieval_evidence_must_bind_exact_hydrated_material",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 78,
+        "end_line": 85,
+        "signature_hash": "46b4332c444e3928",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHydratedVersionHandoffTests.test_retrieval_purpose_must_be_exact_handoff_purpose:f65be5b4c6f99bac",
+        "name": "ProgressBoundHydratedVersionHandoffTests.test_retrieval_purpose_must_be_exact_handoff_purpose",
+        "kind": "method",
+        "file": "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 87,
+        "end_line": 91,
+        "signature_hash": "4850377e3d9287af",
+        "file_digest8": "fb44c219774c8eab"
+      },
+      {
         "semantic_id": "tests/test_aura_node_inspector.py#class:TestExpandNode:03120896b6cc5a89",
         "name": "TestExpandNode",
         "kind": "class",
@@ -451224,6 +453317,616 @@
         "file_digest8": "ea4bc7e67d8eaa87"
       },
       {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#class:HandoffDisposition:e9ef6456cee5c461",
+        "name": "HandoffDisposition",
+        "kind": "class",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 34,
+        "end_line": 45,
+        "signature_hash": "ca56e1f2f22b1440",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#class:HydratedVersionHandoffReceiptV1:83df371bed602b8a",
+        "name": "HydratedVersionHandoffReceiptV1",
+        "kind": "class",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 130,
+        "end_line": 153,
+        "signature_hash": "f4301bea278f8596",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#class:HydrationCompletionProjectionV1:93a0e27886d755ca",
+        "name": "HydrationCompletionProjectionV1",
+        "kind": "class",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 77,
+        "end_line": 96,
+        "signature_hash": "f9339b4c611e23a8",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#class:VersionTransitionProjectionV1:90ac953578f32804",
+        "name": "VersionTransitionProjectionV1",
+        "kind": "class",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 100,
+        "end_line": 126,
+        "signature_hash": "63f1ad6b76d5a81b",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_canonical:ee8b6c98d92c7c49",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 48,
+        "end_line": 56,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_ceiling_breached:5c98cf6e5e57f3f9",
+        "name": "_ceiling_breached",
+        "kind": "function",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 156,
+        "end_line": 176,
+        "signature_hash": "c3ed87a60a6035a9",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_classify_rules:b82b38a22f862cf5",
+        "name": "_classify_rules",
+        "kind": "function",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 210,
+        "end_line": 234,
+        "signature_hash": "29fa909c8a2315cb",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_classify_tree:db7a27ac30f8d985",
+        "name": "_classify_tree",
+        "kind": "function",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 179,
+        "end_line": 207,
+        "signature_hash": "caa7d4a3743d01bd",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_digest:b292f0ad86b13af8",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 69,
+        "end_line": 73,
+        "signature_hash": "5880d7b3614e1b56",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_sha:d23d559e472d8c73",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "3c3bc3c037860fe9",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:_text:f6c47134073d7c6b",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 63,
+        "end_line": 66,
+        "signature_hash": "0f196e838c2631a3",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:bind_hydrated_version_handoff:e5e0526636f64ee5",
+        "name": "bind_hydrated_version_handoff",
+        "kind": "function",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 237,
+        "end_line": 299,
+        "signature_hash": "a3107b2d645fe0c9",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#function:prove_different_j:854e81e16c9b4702",
+        "name": "prove_different_j",
+        "kind": "function",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 302,
+        "end_line": 341,
+        "signature_hash": "545054efddc8fb30",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#method:HydratedVersionHandoffReceiptV1.ready:00ce40e7b491481f",
+        "name": "HydratedVersionHandoffReceiptV1.ready",
+        "kind": "method",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 152,
+        "end_line": 153,
+        "signature_hash": "98033e7220e3ac8b",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#method:HydrationCompletionProjectionV1.validate_shape:adf7a0a5abedc003",
+        "name": "HydrationCompletionProjectionV1.validate_shape",
+        "kind": "method",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 91,
+        "end_line": 96,
+        "signature_hash": "324a5e1b2423f7c1",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav13d_eki4_hydrated_version_handoff.py#method:VersionTransitionProjectionV1.validate_shape:b5a4a7d4f40e8680",
+        "name": "VersionTransitionProjectionV1.validate_shape",
+        "kind": "method",
+        "file": "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+        "line": 121,
+        "end_line": 126,
+        "signature_hash": "324a5e1b2423f7c1",
+        "file_digest8": "ca9268e7d531cfef"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#class:AttemptDisposition:15677e95b325e6c0",
+        "name": "AttemptDisposition",
+        "kind": "class",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 35,
+        "end_line": 43,
+        "signature_hash": "dd8df142c712645d",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#class:AttemptIntentV1:9560de60fd77417e",
+        "name": "AttemptIntentV1",
+        "kind": "class",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 219,
+        "end_line": 236,
+        "signature_hash": "fb6f9dd4c0aa36b9",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#class:AttemptLedgerProjectionV1:44deb2e52034e698",
+        "name": "AttemptLedgerProjectionV1",
+        "kind": "class",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 120,
+        "end_line": 155,
+        "signature_hash": "3b1f2167058fa345",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#class:LoopGuardSnapshotProjectionV1:f9e2be2f0b1dfe71",
+        "name": "LoopGuardSnapshotProjectionV1",
+        "kind": "class",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 159,
+        "end_line": 215,
+        "signature_hash": "1ca3b4c61c30f8da",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#class:LoopSafeAttemptReceiptV1:83c2c45408176a34",
+        "name": "LoopSafeAttemptReceiptV1",
+        "kind": "class",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 240,
+        "end_line": 260,
+        "signature_hash": "ed546455c260b922",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#class:ProgressBoundHandoffProjectionV1:0592f33548443bf2",
+        "name": "ProgressBoundHandoffProjectionV1",
+        "kind": "class",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 81,
+        "end_line": 116,
+        "signature_hash": "e6a0b6d1e1407f75",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_bool:a6d606ea1ab87926",
+        "name": "_bool",
+        "kind": "function",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 74,
+        "end_line": 77,
+        "signature_hash": "fda0b11437ffbd59",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_canonical:ed390d41bf6030fb",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 46,
+        "end_line": 54,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_ceiling_breached:63dc70a9d4accfc5",
+        "name": "_ceiling_breached",
+        "kind": "function",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 263,
+        "end_line": 281,
+        "signature_hash": "d33b09f87e10163b",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_classify_rules:1599e3be05773fb5",
+        "name": "_classify_rules",
+        "kind": "function",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 316,
+        "end_line": 352,
+        "signature_hash": "9834fd13956362c2",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_classify_tree:7df296aaae912a8f",
+        "name": "_classify_tree",
+        "kind": "function",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 293,
+        "end_line": 313,
+        "signature_hash": "08d5c8512fe755ed",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_digest:89fd6614aaf49eb4",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 67,
+        "end_line": 71,
+        "signature_hash": "5880d7b3614e1b56",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_fixture:54b1efa5ff3154eb",
+        "name": "_fixture",
+        "kind": "function",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 417,
+        "end_line": 461,
+        "signature_hash": "1af00df2a1ae200e",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_guard_clean:7a3eb7574bb75e1e",
+        "name": "_guard_clean",
+        "kind": "function",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 284,
+        "end_line": 290,
+        "signature_hash": "736db47388c106ed",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_sha:3ed27f381db8bb0e",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "3c3bc3c037860fe9",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:_text:54a1df3e80536f1c",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 61,
+        "end_line": 64,
+        "signature_hash": "0f196e838c2631a3",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:bind_loop_safe_attempt_session:159408844187c6ff",
+        "name": "bind_loop_safe_attempt_session",
+        "kind": "function",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 355,
+        "end_line": 414,
+        "signature_hash": "f61974070475e9f1",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#function:prove_different_j:090b4e71d48179c6",
+        "name": "prove_different_j",
+        "kind": "function",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 464,
+        "end_line": 496,
+        "signature_hash": "545054efddc8fb30",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#method:AttemptIntentV1.fingerprint_digest:70ccfb4989f026b2",
+        "name": "AttemptIntentV1.fingerprint_digest",
+        "kind": "method",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 234,
+        "end_line": 236,
+        "signature_hash": "05e52ca185b889f2",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#method:AttemptIntentV1.validate:92dd7ad6ac14a081",
+        "name": "AttemptIntentV1.validate",
+        "kind": "method",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 226,
+        "end_line": 231,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#method:AttemptLedgerProjectionV1.validate:40ca5264d1fd96b6",
+        "name": "AttemptLedgerProjectionV1.validate",
+        "kind": "method",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 132,
+        "end_line": 155,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#method:LoopGuardSnapshotProjectionV1.snapshot_digest:8f1710e87444af58",
+        "name": "LoopGuardSnapshotProjectionV1.snapshot_digest",
+        "kind": "method",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 213,
+        "end_line": 215,
+        "signature_hash": "189c0bac868597a8",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#method:LoopGuardSnapshotProjectionV1.validate:400bf465601d5ce9",
+        "name": "LoopGuardSnapshotProjectionV1.validate",
+        "kind": "method",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 172,
+        "end_line": 210,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_loop_safe_attempt_session.py#method:ProgressBoundHandoffProjectionV1.validate:73c580d4a963dce4",
+        "name": "ProgressBoundHandoffProjectionV1.validate",
+        "kind": "method",
+        "file": "tools/aura_nav14_loop_safe_attempt_session.py",
+        "line": 98,
+        "end_line": 116,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "bd1dc3820c47d3e1"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#class:HydratedVersionHandoffProjectionV1:addde8170f97ff58",
+        "name": "HydratedVersionHandoffProjectionV1",
+        "kind": "class",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 87,
+        "end_line": 111,
+        "signature_hash": "6b194fe3370af281",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#class:ProgressBoundHandoffReceiptV1:80ed99734c9ee261",
+        "name": "ProgressBoundHandoffReceiptV1",
+        "kind": "class",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 172,
+        "end_line": 195,
+        "signature_hash": "e886a98c0570b4fb",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#class:ProgressHandoffDisposition:c6962f0be89853e9",
+        "name": "ProgressHandoffDisposition",
+        "kind": "class",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 45,
+        "end_line": 55,
+        "signature_hash": "5e6f9f734915cf95",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#class:RetrievalDecision:ca83505e7abd7aec",
+        "name": "RetrievalDecision",
+        "kind": "class",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 37,
+        "end_line": 42,
+        "signature_hash": "cb96e423750734f4",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#class:RetrievalProgressProjectionV1:a509872b6d5581c1",
+        "name": "RetrievalProgressProjectionV1",
+        "kind": "class",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 115,
+        "end_line": 168,
+        "signature_hash": "d584f2363813b328",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_canonical:e6c90ccb183230d5",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 58,
+        "end_line": 66,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_ceiling_breached:bb2d139ea0765bc0",
+        "name": "_ceiling_breached",
+        "kind": "function",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 240,
+        "end_line": 260,
+        "signature_hash": "f256836f23492cbd",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_classify_rules:a19dd29ce9c3501c",
+        "name": "_classify_rules",
+        "kind": "function",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 291,
+        "end_line": 334,
+        "signature_hash": "b835a34cb0fd826a",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_classify_tree:6b51aee5fdc79af1",
+        "name": "_classify_tree",
+        "kind": "function",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 263,
+        "end_line": 288,
+        "signature_hash": "5d9ffe4fc6631461",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_digest:276bd71368a34a00",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 79,
+        "end_line": 83,
+        "signature_hash": "5880d7b3614e1b56",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_parent_receipt_digest:4a25e9546357e635",
+        "name": "_parent_receipt_digest",
+        "kind": "function",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 198,
+        "end_line": 215,
+        "signature_hash": "a76554488b1818f3",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_retrieval_fixture:45355255a991a289",
+        "name": "_retrieval_fixture",
+        "kind": "function",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 400,
+        "end_line": 440,
+        "signature_hash": "7c98830f7e24624c",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_sha:b8107cc649d381b4",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 69,
+        "end_line": 70,
+        "signature_hash": "3c3bc3c037860fe9",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_text:eef260417c267326",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 73,
+        "end_line": 76,
+        "signature_hash": "0f196e838c2631a3",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:_validate_decision_shape:8dfdc3af27172894",
+        "name": "_validate_decision_shape",
+        "kind": "function",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 218,
+        "end_line": 237,
+        "signature_hash": "e7509c915cd4fa83",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:bind_progress_bound_handoff:a24375abe0bf1a40",
+        "name": "bind_progress_bound_handoff",
+        "kind": "function",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 337,
+        "end_line": 397,
+        "signature_hash": "67429dd5e226ce40",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#function:prove_different_j:964b0c0670ab60a2",
+        "name": "prove_different_j",
+        "kind": "function",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 443,
+        "end_line": 478,
+        "signature_hash": "545054efddc8fb30",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#method:HydratedVersionHandoffProjectionV1.validate_shape:b8ad6559cc4f9f83",
+        "name": "HydratedVersionHandoffProjectionV1.validate_shape",
+        "kind": "method",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 106,
+        "end_line": 111,
+        "signature_hash": "324a5e1b2423f7c1",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#method:ProgressBoundHandoffReceiptV1.ready:6baeab16882636f9",
+        "name": "ProgressBoundHandoffReceiptV1.ready",
+        "kind": "method",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 194,
+        "end_line": 195,
+        "signature_hash": "98033e7220e3ac8b",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#method:RetrievalProgressProjectionV1.fingerprint_payload:2f7af87931895cc4",
+        "name": "RetrievalProgressProjectionV1.fingerprint_payload",
+        "kind": "method",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 139,
+        "end_line": 147,
+        "signature_hash": "e40b503b702b686d",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
+        "semantic_id": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py#method:RetrievalProgressProjectionV1.validate_shape:bf92997146782fde",
+        "name": "RetrievalProgressProjectionV1.validate_shape",
+        "kind": "method",
+        "file": "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
+        "line": 149,
+        "end_line": 168,
+        "signature_hash": "324a5e1b2423f7c1",
+        "file_digest8": "ae82422a6dad04da"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -452474,7 +455177,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "9929d40e7311c99f9af87eaab4b79951",
-    "payload_hash": "f0542478055e50050601e45d29bca6a2"
+    "record_fingerprint": "ff18dd79be32b80e22b2d24182dcfe48",
+    "payload_hash": "088398d2e628d7ea78a88139f1829dac"
   }
 }
