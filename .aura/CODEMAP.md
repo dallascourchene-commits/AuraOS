@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1661
-- **total_bytes**: 26601447
-- **text_tokens_est**: 6640719
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1011, 'schema_or_lexicon': 278, 'support_file': 49}
+- **file_count**: 1667
+- **total_bytes**: 26650731
+- **text_tokens_est**: 6653043
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1015, 'schema_or_lexicon': 280, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1661,
+  "repo_file_count": 1667,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -154,6 +154,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-q15-execution-qualified-portable-materialization.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1352,6 +1353,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/fixtures/amd_track3/demo_one.py",
     "tests/fixtures/amd_track3/demo_three.py",
     "tests/fixtures/amd_track3/demo_two.py",
+    "tests/fixtures/q14_official_source_e8_materialization_receipt.json",
     "tests/fixtures/relationship_atlas/relational_index_fixture.json",
     "tests/pascal_spatial_presentation_test_contracts.py",
     "tests/pascal_spatial_presentation_test_lifecycle.py",
@@ -1491,6 +1493,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_event_contracts.py",
     "tests/test_aura_event_privacy_hardening.py",
     "tests/test_aura_exact_head_transport.py",
+    "tests/test_aura_execution_qualified_portable_materialization_evidence.py",
     "tests/test_aura_external_llm_session.py",
     "tests/test_aura_fetch_construction_demo_source.py",
     "tests/test_aura_financial_contracts.py",
@@ -1661,8 +1664,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/aura_execution_qualified_portable_evidence_admission.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/quantization/aura_execution_qualified_portable_materialization_currentness.py",
+    "tools/quantization/aura_execution_qualified_portable_materialization_evidence.py",
     "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
     "tools/quantization/aura_glm53_full_representative_canonical_source_set.py",
     "tools/quantization/aura_glm53_lattice_quantization_feasibility.py",
@@ -1801,16 +1807,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1661,
-  "bytes": 26601447,
-  "tokens_est": 6640719,
+  "files": 1667,
+  "bytes": 26650731,
+  "tokens_est": 6653043,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1011,
-    "schema_or_lexicon": 278,
+    "python_module": 1015,
+    "schema_or_lexicon": 280,
     "support_file": 49
   }
 }
