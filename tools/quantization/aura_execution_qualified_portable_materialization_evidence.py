@@ -26,8 +26,12 @@ CONVERGENCE_COMMIT = "886a8282feedc4abb5ca517d6293945a1c34abc1"
 Q14_HEAD = "ee70934e0c45572588829e742e512a897b23863f"
 A7_HEAD = "10481aa76117c24e5fdf7f93752e7820713a8285"
 
-Q14_SEMANTIC_HEAD = "5269c1ce8f6ba7017d6f02b6bd4624953a2a9113"
-Q14_SEMANTIC_GENERATED_AT = "2026-08-31T13:45:40Z"
+# Q14's semantic source generation is the commit that first materialized the
+# bounded official-source E8 pages. Q14_HEAD is the later terminal semantic
+# repair/proof generation that revalidated the exact Q13 FP8 owners. Keeping
+# both identities prevents replay/proof time from replacing source generation.
+Q14_SEMANTIC_HEAD = "74e5ee32379ddabb498587b08ba40ff21cebf13d"
+Q14_SEMANTIC_GENERATED_AT = "2026-08-31T13:43:26Z"
 A7_SEMANTIC_HEAD = "1801de258fa88075565e62bd8f2ce9dbe6663f09"
 A7_SEMANTIC_GENERATED_AT = "2026-08-31T13:44:56Z"
 
@@ -396,6 +400,7 @@ def main() -> None:
     body["laws"] = [
         "PageExistence!=ProviderExecution!=PageIdentity",
         "PortableIntegrity!=ExecutionQualification!=SemanticFreshness",
+        "InitialSemanticMaterializerGeneration!=TerminalSemanticRepairGeneration!=ReplayTimestamp",
         "AuthenticatedPostCutSemanticGeneration!=ReplayOrTransferTimestamp",
         "ExactOfficialSourceSlice+CanonicalE8Page+ExactSuccessfulProducerRunJob=>ExecutionQualifiedPortableMaterializationEvidence",
         "CoordinateMemory!=SemanticAuthority",
