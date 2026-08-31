@@ -258,12 +258,12 @@ fn project_named_preorder(
     });
 
     for child_index in 0..node.named_child_count() {
-        let child = node.named_child(child_index).ok_or_else(|| {
-            ProfiledScopeError::NamedChildMissing {
-                parent_kind: node.kind().to_owned(),
-                child_index,
-            }
-        })?;
+        let child =
+            node.named_child(child_index)
+                .ok_or_else(|| ProfiledScopeError::NamedChildMissing {
+                    parent_kind: node.kind().to_owned(),
+                    child_index,
+                })?;
         let child_local_node_id =
             u64::try_from(nodes.len()).map_err(|_| ProfiledScopeError::SyntaxOrdinalOverflow)?;
         edges.push(SyntaxEdgeProjectionV1 {
@@ -331,7 +331,13 @@ fn bind_scope_anchors(
         let syntax_ordinal = match scope.ast_node_id {
             None => None,
             Some(ast_node_id) => {
-                validate_scope_node(scope, ast_node_id, ingested.file_id, &node_by_id, semantic_handles)?;
+                validate_scope_node(
+                    scope,
+                    ast_node_id,
+                    ingested.file_id,
+                    &node_by_id,
+                    semantic_handles,
+                )?;
                 Some(
                     *ordinal_by_node
                         .get(&ast_node_id)
@@ -355,12 +361,7 @@ fn bind_scope_anchors(
 
     let mut bindings = Vec::with_capacity(scope_index.bindings.len());
     for binding in &scope_index.bindings {
-        validate_binding_node(
-            binding,
-            ingested.file_id,
-            &node_by_id,
-            semantic_handles,
-        )?;
+        validate_binding_node(binding, ingested.file_id, &node_by_id, semantic_handles)?;
         let syntax_ordinal = *ordinal_by_node
             .get(&binding.ast_node_id)
             .ok_or(ProfiledScopeError::ScopeAstNodeMissing(binding.ast_node_id))?;
@@ -442,7 +443,8 @@ fn validate_binding_node(
 mod tests {
     use super::*;
 
-    const FIXTURE: &str = include_str!("../../aura-k27-astge-scopes/fixtures/python_nested_scopes.py");
+    const FIXTURE: &str =
+        include_str!("../../aura-k27-astge-scopes/fixtures/python_nested_scopes.py");
 
     fn handles(source: &str, file_id: u32) -> HashMap<u64, [u8; 32]> {
         parse_python_named_ast(source, file_id)
@@ -549,8 +551,14 @@ mod tests {
                 child_local_node_id: remap[&edge.child_local_node_id],
             })
             .collect();
-        let remapped =
-            admit_syntax_graph(&grammar, &profile, &source, &remapped_nodes, &remapped_edges).unwrap();
+        let remapped = admit_syntax_graph(
+            &grammar,
+            &profile,
+            &source,
+            &remapped_nodes,
+            &remapped_edges,
+        )
+        .unwrap();
         assert_eq!(baseline.graph_sha256, remapped.graph_sha256);
     }
 
