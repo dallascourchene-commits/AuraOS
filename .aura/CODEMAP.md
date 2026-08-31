@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1661
-- **total_bytes**: 26603809
-- **text_tokens_est**: 6641308
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 17, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 280, 'support_file': 49}
+- **file_count**: 1666
+- **total_bytes**: 26649693
+- **text_tokens_est**: 6652782
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 17, 'operator_script': 9, 'python_module': 1007, 'schema_or_lexicon': 281, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1661,
+  "repo_file_count": 1666,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -173,6 +173,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/human-agent-emergent-research.yml",
     ".github/workflows/k27-astge-current-ingest-convergence.yml",
     ".github/workflows/k27-astge-immutability-capability.yml",
+    ".github/workflows/k27-astge-plan-bound-thinkpad-benchmark.yml",
     ".github/workflows/k27-astge-thinkpad-owner-host-benchmark.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
     ".github/workflows/model-cognome-governed-routing.yml",
@@ -1657,6 +1658,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_huggingface_space_deployment.py",
+    "tests/test_k27_astge_plan_bound_thinkpad_benchmark.py",
     "tests/test_k27_astge_thinkpad_owner_host_benchmark.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
@@ -1670,8 +1672,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/aura_review/aura_review_context_compiler.py",
     "tools/aura_review/test_aura_review_cache_policy.py",
     "tools/aura_review/test_aura_review_context_compiler.py",
+    "tools/awj032/test_thinkpad_nvme_residency_plan.py",
+    "tools/awj032/thinkpad_nvme_residency_plan.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/k27_astge_plan_bound_thinkpad_benchmark.py",
     "tools/k27_astge_thinkpad_owner_host_benchmark.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
@@ -1801,16 +1806,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1661,
-  "bytes": 26603809,
-  "tokens_est": 6641308,
+  "files": 1666,
+  "bytes": 26649693,
+  "tokens_est": 6652782,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 17,
     "operator_script": 9,
-    "python_module": 1003,
-    "schema_or_lexicon": 280,
+    "python_module": 1007,
+    "schema_or_lexicon": 281,
     "support_file": 49
   }
 }
