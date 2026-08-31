@@ -129,12 +129,12 @@ fn walk_named_preorder(node: Node<'_>, out: &mut Vec<AstNodeV1>) -> Result<u64, 
     });
 
     for child_index in 0..node.named_child_count() {
-        let child =
-            node.named_child(child_index as u32)
-                .ok_or_else(|| IngestError::NamedChildMissing {
-                    parent_kind: node.kind().to_owned(),
-                    child_index,
-                })?;
+        let child = node
+            .named_child(child_index)
+            .ok_or_else(|| IngestError::NamedChildMissing {
+                parent_kind: node.kind().to_owned(),
+                child_index,
+            })?;
         let child_id = walk_named_preorder(child, out)?;
         out[slot].children.push(child_id);
     }
