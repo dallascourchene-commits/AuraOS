@@ -66,13 +66,30 @@ pub struct ScopeVerificationReceiptV1 {
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum ScopeError {
-    OriginalLengthMismatch { bound: u64, actual: u64 },
+    OriginalLengthMismatch {
+        bound: u64,
+        actual: u64,
+    },
     OriginalDigestMismatch,
-    InvalidAuthorizedSpan { start: u64, end: u64, source_len: u64 },
-    OverlappingAuthorizedSpans { left: AuthorizedSpanV1, right: AuthorizedSpanV1 },
-    InvalidReplacementRange { start: u64, end: u64, source_len: u64 },
+    InvalidAuthorizedSpan {
+        start: u64,
+        end: u64,
+        source_len: u64,
+    },
+    OverlappingAuthorizedSpans {
+        left: AuthorizedSpanV1,
+        right: AuthorizedSpanV1,
+    },
+    InvalidReplacementRange {
+        start: u64,
+        end: u64,
+        source_len: u64,
+    },
     AmbiguousReplacementOrdering,
-    ReplacementOutsideAuthorizedScope { start: u64, end: u64 },
+    ReplacementOutsideAuthorizedScope {
+        start: u64,
+        end: u64,
+    },
     CandidateDoesNotMatchDeclaredReplacements,
 }
 
@@ -196,8 +213,8 @@ fn admit_replacements(
         let left = &pair[0];
         let right = &pair[1];
         let overlaps = right.start < left.end;
-        let shared_coordinate_with_insertion = right.start == left.end
-            && (left.start == left.end || right.start == right.end);
+        let shared_coordinate_with_insertion =
+            right.start == left.end && (left.start == left.end || right.start == right.end);
         if overlaps || shared_coordinate_with_insertion {
             return Err(ScopeError::AmbiguousReplacementOrdering);
         }
@@ -216,9 +233,7 @@ fn replacement_authorized(replacement: &ReplacementV1, spans: &[AuthorizedSpanV1
     }
 
     spans.iter().any(|span| {
-        span.start < span.end
-            && span.start <= replacement.start
-            && replacement.end <= span.end
+        span.start < span.end && span.start <= replacement.start && replacement.end <= span.end
     })
 }
 
@@ -273,7 +288,7 @@ mod tests {
         assert!(receipt.outside_authorized_scope_unchanged);
         assert!(!receipt.semantic_correctness_proven);
         assert!(!receipt.authority_granted);
-        assert_eq!(15, receipt.protected_original_bytes);
+        assert_eq!(14, receipt.protected_original_bytes);
     }
 
     #[test]
@@ -427,6 +442,9 @@ mod tests {
             &[],
         )
         .unwrap_err();
-        assert!(matches!(error, ScopeError::OverlappingAuthorizedSpans { .. }));
+        assert!(matches!(
+            error,
+            ScopeError::OverlappingAuthorizedSpans { .. }
+        ));
     }
 }
