@@ -18,7 +18,12 @@ fn main() {
         .collect();
     let index = index_python_module_symbols(source, file_id, &handles).expect("symbol index");
     for symbol in &index.symbols {
-        println!("{}|{}|{}", symbol.ordinal, symbol.kind.as_str(), symbol.name);
+        println!(
+            "{}|{}|{}",
+            symbol.ordinal,
+            symbol.kind.as_str(),
+            symbol.name
+        );
     }
     println!("DUP|{}", index.duplicate_names.join(","));
 }
