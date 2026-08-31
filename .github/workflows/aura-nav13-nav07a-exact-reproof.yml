@@ -79,22 +79,17 @@ jobs:
           if writer.get("conclusion") != "success" or writer.get("head_sha") != "b13ba81aa671693828e4fd97bd5b222db5d49d94":
               raise SystemExit("PR739_WRITER_PROOF_NOT_EXACT_GREEN")
           writer_job = get("https://api.github.com/repos/dallascourchene-commits/AuraOS/actions/jobs/99580171818")
-          if writer_job.get("conclusion") != "success":
+          if writer_job.get("conclusion") != "success" or writer_job.get("run_id") != 33420122351:
               raise SystemExit("PR739_WRITER_JOB_NOT_SUCCESS")
 
+          read_run = get("https://api.github.com/repos/dallascourchene-commits/AuraOS/actions/runs/33422235195")
+          if read_run.get("head_sha") != "2a41a281a1f92cd5a54bbfc36524420386de17e9":
+              raise SystemExit("PR737_PROOF_MIRROR_HEAD_MISMATCH")
           read_job = get("https://api.github.com/repos/dallascourchene-commits/AuraOS/actions/jobs/99587232912")
-          if (
-              read_job.get("conclusion") != "success"
-              or read_job.get("run_id") != 33422235195
-              or read_job.get("head_sha", "2a41a281a1f92cd5a54bbfc36524420386de17e9") not in (
-                  "2a41a281a1f92cd5a54bbfc36524420386de17e9",
-                  "",
-              )
-          ):
+          if read_job.get("conclusion") != "success" or read_job.get("run_id") != 33422235195:
               raise SystemExit("PR737_READ_CURRENTNESS_JOB_NOT_SUCCESS")
-          # The broad CI run is known to include unrelated failures. The focused
-          # EKI job is the claimed proof unit; never cross-cast whole-run failure
-          # into failure of this isolated successfully executed contract.
+          # The broad CI run contains unrelated failures. The focused EKI job is
+          # the exact claimed proof unit and executed successfully.
           PY
 
       - name: Compile unchanged classifier
@@ -111,7 +106,6 @@ jobs:
           python3 - <<'PY'
           from tools.aura_nav_epistemic_route import (
               EpistemicState,
-              NextTransition,
               classify_decision_tree,
               classify_rule_table,
               exhaustive_projection_space,
@@ -130,17 +124,7 @@ jobs:
               n += 1
           if n != 8000:
               raise SystemExit(f"NAV07A_STATE_COUNT_MISMATCH:{n}")
-          required_states = {
-              EpistemicState.KNOWN_CURRENT.value,
-              EpistemicState.STALE.value,
-              EpistemicState.HISTORICAL.value,
-              EpistemicState.UNRESOLVED.value,
-              EpistemicState.COLLISION.value,
-              EpistemicState.EXTERNAL_UNHYDRATED.value,
-              EpistemicState.OWNER_MISSING.value,
-              EpistemicState.MAP_GAP.value,
-              EpistemicState.UNKNOWN.value,
-          }
+          required_states = {state.value for state in EpistemicState}
           if set(counts) != required_states:
               raise SystemExit(f"NAV07A_STATE_COVERAGE_MISMATCH:{counts}")
           print("NAV07A_EXHAUSTIVE_STATES_OK=8000")
@@ -149,7 +133,5 @@ jobs:
 
       - name: Assert proof-only ownership boundary
         run: |
-          git diff --name-only 019b9e3dcab37fb9a3549bbaf78296da223b557a...HEAD \
-            | grep -v '^.github/workflows/aura-nav13-nav07a-exact-reproof.yml$' \
-            | test ! -s /dev/stdin
-          grep -q 'PersistedCurrentLabel != ReadCurrentnessWitness' <(printf '%s\n' 'PersistedCurrentLabel != ReadCurrentnessWitness')
+          unexpected="$(git diff --name-only 019b9e3dcab37fb9a3549bbaf78296da223b557a...HEAD | grep -v '^.github/workflows/aura-nav13-nav07a-exact-reproof.yml$' || true)"
+          test -z "$unexpected" || { printf 'UNEXPECTED_SEMANTIC_DIFF\n%s\n' "$unexpected"; exit 1; }
