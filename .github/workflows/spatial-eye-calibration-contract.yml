@@ -1,0 +1,53 @@
+name: Aura Spatial Eye Calibration Contract
+
+on:
+  pull_request:
+    paths:
+      - "tools/spatial/eye_calibration_contract.py"
+      - "tests/test_spatial_eye_calibration_contract.py"
+      - ".github/workflows/spatial-eye-calibration-contract.yml"
+  workflow_dispatch:
+
+jobs:
+  eye-calibration-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Assert exact PR head
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run calibration/uncertainty tests
+        run: python -m unittest -v tests.test_spatial_eye_calibration_contract
+
+      - name: Emit assumption-path receipt
+        run: python tools/spatial/eye_calibration_contract.py | tee "${RUNNER_TEMP}/eye-receipt.json"
+
+      - name: Enforce assumption and privacy ceilings
+        shell: python
+        run: |
+          import json, os
+          from pathlib import Path
+          r = json.loads(Path(os.environ['RUNNER_TEMP'], 'eye-receipt.json').read_text())
+          assert r['metric_geometry_eligible'] is False
+          assert r['fixed_64mm_ipd_is_user_ground_truth'] is False
+          assert r['nominal_fov_is_calibrated_intrinsics'] is False
+          assert r['renderer_pose_part_of_calibration_identity'] is False
+          assert r['raw_sensor_persistence_authorized'] is False
+          assert r['physical_gaze_accuracy_proven'] is False
+          assert r['vergence_accommodation_conflict_eliminated'] is False
+          assert r['semantic_k27_authority'] is False
+          assert r['native_transformer_kv_accessed'] is False
+          print('EYE_CALIBRATION_CONTRACT_EXECUTED=true')
+          print('ASSUMED_IPD_METRIC_AUTHORITY=false')
+          print('NOMINAL_FOV_INTRINSICS_METRIC_AUTHORITY=false')
+          print('RAW_SENSOR_PERSISTENCE_AUTHORIZED=false')
