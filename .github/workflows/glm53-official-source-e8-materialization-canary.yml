@@ -16,6 +16,13 @@ jobs:
   q14-official-source-e8-canary:
     runs-on: ubuntu-24.04
     timeout-minutes: 25
+    env:
+      TRANSFORMERS_COMMIT: e2b35502af756b9ad0f50ff667ffcccfac2d6293
+      TRANSFORMERS_MODELING_BLOB: 5d7ba1a8f3df219e6104f550c7cd58efecd722f9
+      TRANSFORMERS_CONVERSION_BLOB: 3c79fe2a37d2f120e2c64097975415d1caf014b0
+      TRANSFORMERS_FP8_BLOB: 910a8bd82ac2b396cfc6312cb901985501083add
+      SAFETENSORS_COMMIT: 6eb4dc9a28ebce297606e0f4836bbf28839cacef
+      SAFETENSORS_TORCH_BLOB: 29be7bd99fdddd5512d41a21d5e829bf9d5c166e
     steps:
       - name: Checkout exact Q14 head with parent history
         uses: actions/checkout@v4
@@ -66,6 +73,56 @@ jobs:
           git show 8179ffe054abc2ec144757888957c9ca27df991c:tools/aura_execution_aware_hyperscale_admission.py | grep -F 'PRE_JOB_ACTION_REQUIRED'
           git show 8179ffe054abc2ec144757888957c9ca27df991c:tools/aura_execution_aware_hyperscale_admission.py | grep -F 'provider_gate_counts_as_new_sck=False'
           echo 'Q14_EXACT_OWNER_BLOBS_PINNED=true'
+
+      - name: Revalidate exact external semantic owners inherited by Q13
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/transformers-q14 /tmp/safetensors-q14
+          git init /tmp/transformers-q14
+          git -C /tmp/transformers-q14 remote add origin https://github.com/huggingface/transformers.git
+          git -C /tmp/transformers-q14 fetch --no-tags --depth=1 origin "$TRANSFORMERS_COMMIT"
+          git -C /tmp/transformers-q14 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/transformers-q14 rev-parse HEAD)" = "$TRANSFORMERS_COMMIT"
+          test "$(git -C /tmp/transformers-q14 rev-parse HEAD:src/transformers/models/glm_moe_dsa/modeling_glm_moe_dsa.py)" = "$TRANSFORMERS_MODELING_BLOB"
+          test "$(git -C /tmp/transformers-q14 rev-parse HEAD:src/transformers/conversion_mapping.py)" = "$TRANSFORMERS_CONVERSION_BLOB"
+          test "$(git -C /tmp/transformers-q14 rev-parse HEAD:src/transformers/integrations/finegrained_fp8.py)" = "$TRANSFORMERS_FP8_BLOB"
+          git init /tmp/safetensors-q14
+          git -C /tmp/safetensors-q14 remote add origin https://github.com/safetensors/safetensors.git
+          git -C /tmp/safetensors-q14 fetch --no-tags --depth=1 origin "$SAFETENSORS_COMMIT"
+          git -C /tmp/safetensors-q14 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/safetensors-q14 rev-parse HEAD)" = "$SAFETENSORS_COMMIT"
+          test "$(git -C /tmp/safetensors-q14 rev-parse HEAD:bindings/python/py_src/safetensors/torch.py)" = "$SAFETENSORS_TORCH_BLOB"
+          python3 - <<'PY'
+          from pathlib import Path
+          st=(Path('/tmp/safetensors-q14')/'bindings/python/py_src/safetensors/torch.py').read_text(encoding='utf-8')
+          fp8=(Path('/tmp/transformers-q14')/'src/transformers/integrations/finegrained_fp8.py').read_text(encoding='utf-8')
+          mapping=(Path('/tmp/transformers-q14')/'src/transformers/conversion_mapping.py').read_text(encoding='utf-8')
+          model=(Path('/tmp/transformers-q14')/'src/transformers/models/glm_moe_dsa/modeling_glm_moe_dsa.py').read_text(encoding='utf-8')
+          assert '_float8_e4m3fn = getattr(torch, "float8_e4m3fn", None)' in st
+          assert '"F8_E4M3": _float8_e4m3fn' in st
+          for required in (
+              'Dequantize FP8 weights using their per-block ``weight_scale_inv``.',
+              'scale_rows, scale_cols = scales.shape[-2:]',
+              'block_m = rows // scale_rows',
+              'block_n = cols // scale_cols',
+              's_fp32 = scales.to(torch.float32)',
+              'return (q * s).to(output_dtype).reshape(original_shape)',
+          ):
+              assert required in fp8, required
+          assert '"glm_moe_dsa": "qwen2_moe"' in mapping
+          start=mapping.index('"qwen2_moe": [')
+          window=mapping[start:start+1800]
+          gate='"mlp.experts.*.gate_proj.weight"'; up='"mlp.experts.*.up_proj.weight"'
+          assert gate in window and up in window and window.index(gate)<window.index(up)
+          assert 'target_patterns="mlp.experts.gate_up_proj"' in window
+          assert 'operations=[MergeModulelist(dim=0), Concatenate(dim=1)]' in window
+          assert 'self.gate_up_proj = nn.Parameter(torch.empty(self.num_experts, 2 * self.intermediate_dim, self.hidden_dim))' in model
+          assert 'gate, up = nn.functional.linear(current_state, self.gate_up_proj[expert_idx]).chunk(2, dim=-1)' in model
+          print('Q14_INHERITED_Q13_F8_DTYPE_OWNER_EXACT=true')
+          print('Q14_INHERITED_Q13_DEQUANT_OWNER_EXACT=true')
+          print('Q14_INHERITED_Q13_COMPOSITION_OWNER_EXACT=true')
+          PY
 
       - name: Compile and run Q14 adversarial contract
         run: |
