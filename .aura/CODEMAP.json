@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788207460,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-retrieval-progress-guard.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1097,6 +1098,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/ARENA_RETRIEVAL_PROGRESS_GUARD_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -1542,6 +1544,7 @@
       "tests/test_aura_relationship_compass_finalization.py",
       "tests/test_aura_relationship_contracts.py",
       "tests/test_aura_research_cockpit_adapter.py",
+      "tests/test_aura_retrieval_progress_guard.py",
       "tests/test_aura_review_arena.py",
       "tests/test_aura_review_arena_mcp.py",
       "tests/test_aura_review_learning_mcp_codex.py",
@@ -1631,6 +1634,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_retrieval_progress_guard.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1643,
+      "bytes": 26434113,
+      "tokens_est": 6598880,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -148953,6 +148957,156 @@
         "signature_hash": "f0e8313f70572fd4"
       }
     ],
+    "RetrievalProgressGuardTests": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 103,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#class:RetrievalProgressGuardTests:e3b4558d6f115e54",
+        "signature_hash": "8ea826719cba7e9b"
+      }
+    ],
+    "RetrievalProgressGuardTests.fp": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.fp:d4823cc8f3a8e065",
+        "signature_hash": "a1f273f91362af29"
+      }
+    ],
+    "RetrievalProgressGuardTests.obs": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.obs:a0805e3f05d8626c",
+        "signature_hash": "c9b6ce9fa1201475"
+      }
+    ],
+    "RetrievalProgressGuardTests.test_initial_is_allowed_but_nonpromoting": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 33,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_initial_is_allowed_but_nonpromoting:cac4801b58fa159a",
+        "signature_hash": "99500a725b4f29d9"
+      }
+    ],
+    "RetrievalProgressGuardTests.test_first_identical_no_progress_requires_axis_change": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 40,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_first_identical_no_progress_requires_axis_change:5704da45f8469ce6",
+        "signature_hash": "28fe1736370dd6cf"
+      }
+    ],
+    "RetrievalProgressGuardTests.test_second_identical_no_progress_collapses_cone": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 47,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_second_identical_no_progress_collapses_cone:21aca0bd3fe7aaf0",
+        "signature_hash": "8b035b55f24fd9bf"
+      }
+    ],
+    "RetrievalProgressGuardTests.test_changed_tool_is_changed_axis": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 54,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_changed_tool_is_changed_axis:92c07e14ff72d371",
+        "signature_hash": "5fe9c4106edb762f"
+      }
+    ],
+    "RetrievalProgressGuardTests.test_changed_provider_state_is_progress_without_currentness_promotion": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 62,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_changed_provider_state_is_progress_without_currentness_promotion:22e6c93b3d3db35f",
+        "signature_hash": "58a97d8f93989cca"
+      }
+    ],
+    "RetrievalProgressGuardTests.test_changed_evidence_is_progress": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 69,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_changed_evidence_is_progress:32166d00b51a7dc3",
+        "signature_hash": "3222f815326a49c2"
+      }
+    ],
+    "RetrievalProgressGuardTests.test_initial_cannot_inherit_no_progress_debt": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 75,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_initial_cannot_inherit_no_progress_debt:e1c401055b1b86ca",
+        "signature_hash": "d0d157cc8550c956"
+      }
+    ],
+    "RetrievalProgressGuardTests.test_blank_fingerprint_axis_rejected": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 79,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_blank_fingerprint_axis_rejected:96394abcadd983bf",
+        "signature_hash": "0e684ce425fa11dc"
+      }
+    ],
+    "RetrievalProgressGuardTests.test_blank_state_or_evidence_rejected": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 85,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_blank_state_or_evidence_rejected:7a0237020e894b1e",
+        "signature_hash": "cea26cc6db4cd038"
+      }
+    ],
+    "RetrievalProgressGuardTests.test_negative_or_boolean_counter_rejected": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 95,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_negative_or_boolean_counter_rejected:3e3ea0e6aef8d850",
+        "signature_hash": "c78f8fdfa9a23f97"
+      }
+    ],
+    "RetrievalProgressGuardTests.test_receipt_is_deterministic": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 100,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_receipt_is_deterministic:be3bbf3a113fff13",
+        "signature_hash": "4676c27ccb236b1c"
+      }
+    ],
+    "RetrievalProgressGuardTests.test_different_j_exhausts_24_state_matrix": [
+      {
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 103,
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_different_j_exhausts_24_state_matrix:0c7bc73e66b0f450",
+        "signature_hash": "96b6fb9dce7307b0"
+      }
+    ],
     "_commit": [
       {
         "file": "tests/test_aura_review_arena.py",
@@ -157179,6 +157333,136 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "RetrievalDecision": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 15,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#class:RetrievalDecision:0ce6446a3f9f4609",
+        "signature_hash": "cb96e423750734f4"
+      }
+    ],
+    "RetrievalFingerprint": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 47,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#class:RetrievalFingerprint:17c2c4b5a1c5f26e",
+        "signature_hash": "e010b4068639a302"
+      }
+    ],
+    "RetrievalFingerprint.__post_init__": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#method:RetrievalFingerprint.__post_init__:5493b60a9f6f8a31",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RetrievalFingerprint.canonical_payload": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 40,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#method:RetrievalFingerprint.canonical_payload:9c53346e30b0c571",
+        "signature_hash": "5aac0e95c9ede280"
+      }
+    ],
+    "RetrievalFingerprint.digest": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 47,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#method:RetrievalFingerprint.digest:e9896e8d65fb82c7",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "RetrievalObservation": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 60,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#class:RetrievalObservation:e7cb559a7363e6ed",
+        "signature_hash": "dd0c8c83013279f0"
+      }
+    ],
+    "RetrievalObservation.__post_init__": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 60,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#method:RetrievalObservation.__post_init__:a5a07fc5251d1908",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "RetrievalProgressReceipt": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "class",
+        "line": 64,
+        "end_line": 87,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#class:RetrievalProgressReceipt:507f6a45748ce705",
+        "signature_hash": "378749a257295b26"
+      }
+    ],
+    "RetrievalProgressReceipt.validate_claim_ceiling": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 87,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#method:RetrievalProgressReceipt.validate_claim_ceiling:b1da05dc26033342",
+        "signature_hash": "d379bda2928aaff4"
+      }
+    ],
+    "_decision_tree": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 106,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#function:_decision_tree:7ee7882805eeaa4f",
+        "signature_hash": "5ece67111bab809a"
+      }
+    ],
+    "_decision_table": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 138,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#function:_decision_table:3569d3a48d26fad4",
+        "signature_hash": "65babaa67a986ba1"
+      }
+    ],
+    "assess_retrieval_progress": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 212,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#function:assess_retrieval_progress:ea1ce0aca3bc608a",
+        "signature_hash": "576d1bdb1d351440"
+      }
+    ],
+    "prove_different_j": [
+      {
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "kind": "function",
+        "line": 215,
+        "end_line": 234,
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#function:prove_different_j:cf8b81fe745c17e7",
+        "signature_hash": "545054efddc8fb30"
       }
     ],
     "_coordinates": [
@@ -167737,6 +168021,53 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-retrieval-progress-guard.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1278,
+      "lines": 39,
+      "tokens_est": 320,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6be79e9bcef1f352",
+      "vector": [
+        0.158779,
+        0.038054,
+        0.27163,
+        -0.111539,
+        0.266381,
+        -0.148281,
+        0.182399,
+        0.090543,
+        0.066923,
+        -0.303124,
+        0.051177,
+        -0.014434,
+        -0.303124,
+        0.310997,
+        -0.253259,
+        0.211268,
+        0.003937,
+        -0.198146,
+        -0.009186,
+        -0.077421,
+        -0.316246,
+        -0.10629,
+        0.137783,
+        0.122037,
+        -0.263757,
+        -0.203395,
+        -0.05905,
+        0.087919,
+        -0.166652,
+        0.087919,
+        0.014434,
+        -0.087919
       ]
     },
     {
@@ -234820,6 +235151,53 @@
       ]
     },
     {
+      "path": "docs/arena/ARENA_RETRIEVAL_PROGRESS_GUARD_V1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 5181,
+      "lines": 110,
+      "tokens_est": 1295,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5755601f94f05d74",
+      "vector": [
+        -0.07408,
+        0.067775,
+        0.165497,
+        -0.212782,
+        0.064623,
+        0.001576,
+        0.11506,
+        -0.042556,
+        -0.178107,
+        0.25061,
+        0.297895,
+        -0.149736,
+        -0.152888,
+        -0.256915,
+        -0.102451,
+        -0.152888,
+        -0.007881,
+        -0.042556,
+        -0.203325,
+        0.001576,
+        -0.203325,
+        0.291591,
+        0.310505,
+        0.149736,
+        -0.023642,
+        -0.401922,
+        0.042556,
+        0.260067,
+        0.045709,
+        0.127669,
+        -0.011033,
+        0.174954
+      ]
+    },
+    {
       "path": "docs/aura_substrate_manifest.files.01.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -258465,6 +258843,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_retrieval_progress_guard.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4350,
+      "lines": 108,
+      "tokens_est": 1088,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a35105d16a5ddc77",
+      "vector": [
+        0.219116,
+        -0.021482,
+        0.061582,
+        -0.20193,
+        -0.287858,
+        -0.164695,
+        0.207659,
+        0.055853,
+        -0.267808,
+        -0.018618,
+        0.02721,
+        0.055853,
+        -0.296451,
+        0.264944,
+        0.287858,
+        -0.322229,
+        0.161831,
+        0.018618,
+        0.196202,
+        -0.230573,
+        0.075903,
+        -0.116003,
+        0.121731,
+        0.070174,
+        0.044396,
+        -0.075903,
+        -0.093088,
+        -0.113138,
+        0.124595,
+        0.136052,
+        -0.147509,
+        0.296451
+      ]
+    },
+    {
       "path": "tests/test_aura_review_arena.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +263070,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_retrieval_progress_guard.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8256,
+      "lines": 235,
+      "tokens_est": 2064,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f847ef311f2bcc69",
+      "vector": [
+        -0.136197,
+        -0.222978,
+        0.0229,
+        0.259136,
+        0.085575,
+        -0.169945,
+        -0.271189,
+        -0.288063,
+        -0.071112,
+        0.138608,
+        -0.268779,
+        0.078344,
+        -0.027722,
+        -0.162713,
+        0.150661,
+        -0.242262,
+        0.254315,
+        0.145839,
+        -0.259136,
+        0.121734,
+        0.23262,
+        -0.261547,
+        0.116913,
+        -0.225388,
+        0.066291,
+        -0.230209,
+        -0.167535,
+        0.085575,
+        0.032543,
+        0.085575,
+        0.044596,
+        -0.044596
       ]
     },
     {
@@ -286646,16 +287118,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1643,
+    "total_bytes": 26434113,
+    "text_tokens_est": 6598880,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286801,6 +287273,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-retrieval-progress-guard.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -287762,6 +288235,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/ARENA_RETRIEVAL_PROGRESS_GUARD_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -288207,6 +288681,7 @@
       "tests/test_aura_relationship_compass_finalization.py",
       "tests/test_aura_relationship_contracts.py",
       "tests/test_aura_research_cockpit_adapter.py",
+      "tests/test_aura_retrieval_progress_guard.py",
       "tests/test_aura_review_arena.py",
       "tests/test_aura_review_arena_mcp.py",
       "tests/test_aura_review_learning_mcp_codex.py",
@@ -288296,6 +288771,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_retrieval_progress_guard.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -436694,6 +437170,156 @@
         "file_digest8": "32dc9837c40012d5"
       },
       {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#class:RetrievalProgressGuardTests:e3b4558d6f115e54",
+        "name": "RetrievalProgressGuardTests",
+        "kind": "class",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 15,
+        "end_line": 103,
+        "signature_hash": "8ea826719cba7e9b",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.fp:d4823cc8f3a8e065",
+        "name": "RetrievalProgressGuardTests.fp",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 16,
+        "end_line": 24,
+        "signature_hash": "a1f273f91362af29",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.obs:a0805e3f05d8626c",
+        "name": "RetrievalProgressGuardTests.obs",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "c9b6ce9fa1201475",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_blank_fingerprint_axis_rejected:96394abcadd983bf",
+        "name": "RetrievalProgressGuardTests.test_blank_fingerprint_axis_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 77,
+        "end_line": 79,
+        "signature_hash": "0e684ce425fa11dc",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_blank_state_or_evidence_rejected:7a0237020e894b1e",
+        "name": "RetrievalProgressGuardTests.test_blank_state_or_evidence_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 81,
+        "end_line": 85,
+        "signature_hash": "cea26cc6db4cd038",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_changed_evidence_is_progress:32166d00b51a7dc3",
+        "name": "RetrievalProgressGuardTests.test_changed_evidence_is_progress",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 64,
+        "end_line": 69,
+        "signature_hash": "3222f815326a49c2",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_changed_provider_state_is_progress_without_currentness_promotion:22e6c93b3d3db35f",
+        "name": "RetrievalProgressGuardTests.test_changed_provider_state_is_progress_without_currentness_promotion",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 56,
+        "end_line": 62,
+        "signature_hash": "58a97d8f93989cca",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_changed_tool_is_changed_axis:92c07e14ff72d371",
+        "name": "RetrievalProgressGuardTests.test_changed_tool_is_changed_axis",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 49,
+        "end_line": 54,
+        "signature_hash": "5fe9c4106edb762f",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_different_j_exhausts_24_state_matrix:0c7bc73e66b0f450",
+        "name": "RetrievalProgressGuardTests.test_different_j_exhausts_24_state_matrix",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 102,
+        "end_line": 103,
+        "signature_hash": "96b6fb9dce7307b0",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_first_identical_no_progress_requires_axis_change:5704da45f8469ce6",
+        "name": "RetrievalProgressGuardTests.test_first_identical_no_progress_requires_axis_change",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 35,
+        "end_line": 40,
+        "signature_hash": "28fe1736370dd6cf",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_initial_cannot_inherit_no_progress_debt:e1c401055b1b86ca",
+        "name": "RetrievalProgressGuardTests.test_initial_cannot_inherit_no_progress_debt",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 71,
+        "end_line": 75,
+        "signature_hash": "d0d157cc8550c956",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_initial_is_allowed_but_nonpromoting:cac4801b58fa159a",
+        "name": "RetrievalProgressGuardTests.test_initial_is_allowed_but_nonpromoting",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 29,
+        "end_line": 33,
+        "signature_hash": "99500a725b4f29d9",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_negative_or_boolean_counter_rejected:3e3ea0e6aef8d850",
+        "name": "RetrievalProgressGuardTests.test_negative_or_boolean_counter_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 87,
+        "end_line": 95,
+        "signature_hash": "c78f8fdfa9a23f97",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_receipt_is_deterministic:be3bbf3a113fff13",
+        "name": "RetrievalProgressGuardTests.test_receipt_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 97,
+        "end_line": 100,
+        "signature_hash": "4676c27ccb236b1c",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_guard.py#method:RetrievalProgressGuardTests.test_second_identical_no_progress_collapses_cone:21aca0bd3fe7aaf0",
+        "name": "RetrievalProgressGuardTests.test_second_identical_no_progress_collapses_cone",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_guard.py",
+        "line": 42,
+        "end_line": 47,
+        "signature_hash": "8b035b55f24fd9bf",
+        "file_digest8": "a35105d16a5ddc77"
+      },
+      {
         "semantic_id": "tests/test_aura_review_arena.py#function:_commit:eaf51295dfeaa12c",
         "name": "_commit",
         "kind": "function",
@@ -445634,6 +446260,136 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#class:RetrievalDecision:0ce6446a3f9f4609",
+        "name": "RetrievalDecision",
+        "kind": "class",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 10,
+        "end_line": 15,
+        "signature_hash": "cb96e423750734f4",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#class:RetrievalFingerprint:17c2c4b5a1c5f26e",
+        "name": "RetrievalFingerprint",
+        "kind": "class",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 19,
+        "end_line": 47,
+        "signature_hash": "e010b4068639a302",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#class:RetrievalObservation:e7cb559a7363e6ed",
+        "name": "RetrievalObservation",
+        "kind": "class",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 51,
+        "end_line": 60,
+        "signature_hash": "dd0c8c83013279f0",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#class:RetrievalProgressReceipt:507f6a45748ce705",
+        "name": "RetrievalProgressReceipt",
+        "kind": "class",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 64,
+        "end_line": 87,
+        "signature_hash": "378749a257295b26",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#function:_decision_table:3569d3a48d26fad4",
+        "name": "_decision_table",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 109,
+        "end_line": 138,
+        "signature_hash": "65babaa67a986ba1",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#function:_decision_tree:7ee7882805eeaa4f",
+        "name": "_decision_tree",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 90,
+        "end_line": 106,
+        "signature_hash": "5ece67111bab809a",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#function:assess_retrieval_progress:ea1ce0aca3bc608a",
+        "name": "assess_retrieval_progress",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 141,
+        "end_line": 212,
+        "signature_hash": "576d1bdb1d351440",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#function:prove_different_j:cf8b81fe745c17e7",
+        "name": "prove_different_j",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 215,
+        "end_line": 234,
+        "signature_hash": "545054efddc8fb30",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#method:RetrievalFingerprint.__post_init__:5493b60a9f6f8a31",
+        "name": "RetrievalFingerprint.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#method:RetrievalFingerprint.canonical_payload:9c53346e30b0c571",
+        "name": "RetrievalFingerprint.canonical_payload",
+        "kind": "method",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 32,
+        "end_line": 40,
+        "signature_hash": "5aac0e95c9ede280",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#method:RetrievalFingerprint.digest:e9896e8d65fb82c7",
+        "name": "RetrievalFingerprint.digest",
+        "kind": "method",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 43,
+        "end_line": 47,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#method:RetrievalObservation.__post_init__:a5a07fc5251d1908",
+        "name": "RetrievalObservation.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 56,
+        "end_line": 60,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_guard.py#method:RetrievalProgressReceipt.validate_claim_ceiling:b1da05dc26033342",
+        "name": "RetrievalProgressReceipt.validate_claim_ceiling",
+        "kind": "method",
+        "file": "tools/aura_retrieval_progress_guard.py",
+        "line": 79,
+        "end_line": 87,
+        "signature_hash": "d379bda2928aaff4",
+        "file_digest8": "f847ef311f2bcc69"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447640,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "5406d8e4fae156cc3b875637949b6e1a",
+    "payload_hash": "bee5220405b9f397800a0494457cc2ef"
   }
 }
