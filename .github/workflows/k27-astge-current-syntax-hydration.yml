@@ -1,0 +1,70 @@
+name: K27 ASTGE current SyntaxGraph hydration
+
+on:
+  pull_request:
+    paths:
+      - 'crates/aura-k27-astge-syntax-profile/**'
+      - 'crates/aura-k27-astge-current-syntax/**'
+      - 'scripts/aura_astge_anchor_hydration.py'
+      - 'tests/test_aura_astge_anchor_hydration.py'
+      - '.github/workflows/k27-astge-current-syntax-hydration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  current-syntax-hydration:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove SyntaxGraph profile owner
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-syntax-profile/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-syntax-profile/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-syntax-profile/Cargo.toml --all-targets -- -D warnings
+
+      - name: Re-prove source-body currentness owner
+        run: |
+          python3 -m py_compile scripts/aura_source_anchor_map.py scripts/aura_astge_anchor_hydration.py
+          python3 scripts/aura_source_anchor_map.py --root . --check
+          python3 -m unittest -v tests.test_aura_astge_anchor_hydration
+
+      - name: Verify current SyntaxGraph hydration bridge
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-current-syntax/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-current-syntax/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-current-syntax/Cargo.toml --all-targets -- -D warnings
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'SYNTAX_GRAPH_PROFILE_REUSED=true'
+          echo 'SOURCE_BODY_CURRENTNESS_OWNER_REUSED=true'
+          echo 'CALLER_SOURCE_BINDING_OVERRIDE_ACCEPTED=false'
+          echo 'CURRENT_BODY_REQUIRED_FOR_SYNTAX_HYDRATION=true'
+          echo 'STALE_OR_UNKNOWN_SYNTAX_HYDRATION_ADMITTED=false'
+          echo 'SOURCE_GENERATION_NAMESPACE_EXPLICIT=AURA_SOURCE_BODY_GENERATION_V1'
+          echo 'FULL_BODY_SHA_BOUND_IN_SYNTAX_IDENTITY=true'
+          echo 'SYNTAX_SPANS_BOUNDED_BY_CURRENT_BODY=true'
+          echo 'STORAGE_LOCAL_NODE_ID_IS_SEMANTIC_ID=false'
+          echo 'LANGUAGE_NEUTRAL_AST_SEMANTICS_PROVEN=false'
+          echo 'SYMBOL_GRAPH_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'SOURCE_AUTHORITY_MINTED=false'
+          echo 'REVIEW_AUTHORITY_MINTED=false'
+          echo 'EXTERNAL_EFFECT=false'
