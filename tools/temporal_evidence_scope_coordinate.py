@@ -1,10 +1,15 @@
 """Bind point evidence to a historical interval without currentness/authentication laundering.
 
 PR610 V2 can prove its software estimator/gate was traversed, but intentionally
-does not authenticate physical sensor capture or effect-time currentness. This
-coordinate therefore emits UNKNOWN/HOLD until the point evidence itself is
-admitted by an appropriate producer/host owner. Time arithmetic cannot upgrade
-an unauthenticated timestamp into an observed event.
+does not authenticate physical sensor capture or effect-time currentness. The
+in-process coordinate therefore emits UNKNOWN/HOLD on this surface.
+
+V3 additionally closes the portable-serialization boundary: a portable
+coordinate is a digest-protected summary only. Because it does not carry the
+complete PR610 receipt + PR614 series needed for producer replay, it is
+non-authorizing and may represent only the current UNKNOWN/HOLD consequence.
+Any future authenticated BEFORE/DURING/AFTER portable form requires a distinct
+producer/attestation owner and schema.
 """
 from __future__ import annotations
 
@@ -18,10 +23,11 @@ from typing import Any, Mapping
 from tools.k27_eye_pose_observation_contract import verify_eye_pose_receipt
 from tools.thinkpad_longitudinal_envelope_series import ThinkPadLongitudinalEnvelopeSeries
 
-SCHEMA = "AuraTemporalEvidenceScopeCoordinateV2"
+SCHEMA = "AuraTemporalEvidenceScopeCoordinateV3"
 PR610_REPAIR_HEAD = "3503065b862fd23a5df4ecd350a33c49496349a8"
 PR614_EXACT_HEAD = "c2c112f627e93b8fd0b11c971be41badd1902cb6"
 RELATIONS = {"BEFORE", "DURING", "AFTER", "UNKNOWN"}
+PORTABLE_SCOPE = "SOFTWARE_UNAUTHENTICATED_POINT_V1"
 
 
 class TemporalEvidenceScopeError(ValueError):
@@ -32,7 +38,9 @@ class TemporalEvidenceScopeError(ValueError):
 
 
 def _canonical(value: Any) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("utf-8")
+    return json.dumps(
+        value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False
+    ).encode("utf-8")
 
 
 def _digest(value: Any) -> str:
@@ -68,6 +76,8 @@ class TemporalEvidenceScopeCoordinate:
     point_observation_software_gate_admissible: bool
     point_observation_temporal_admissible: bool
     hold_reason: str | None
+    portable_scope: str = PORTABLE_SCOPE
+    portable_producer_traversal_replayable: bool = False
     point_observation_current_now_proven: bool = False
     historical_series_current_now_proven: bool = False
     shared_current_world_proven: bool = False
@@ -97,16 +107,25 @@ class TemporalEvidenceScopeCoordinate:
         return "temporal-evidence-scope-sha256:" + self.coordinate_digest
 
 
-def _validate_series(longitudinal_series: ThinkPadLongitudinalEnvelopeSeries) -> tuple[int, int]:
+def _validate_series(
+    longitudinal_series: ThinkPadLongitudinalEnvelopeSeries,
+) -> tuple[int, int]:
     if type(longitudinal_series) is not ThinkPadLongitudinalEnvelopeSeries:
         raise TemporalEvidenceScopeError("EXACT_LONGITUDINAL_SERIES_TYPE_REQUIRED")
     if longitudinal_series.historical_series_only is not True:
         raise TemporalEvidenceScopeError("HISTORICAL_SERIES_SCOPE_REQUIRED")
     for name in (
-        "same_host_proven", "benchmark_execution_proven", "thermal_throttling_proven",
-        "temperature_caused_performance_change", "memory_pressure_caused_performance_change",
-        "battery_state_caused_performance_change", "performance_winner_proven",
-        "current_now_proven", "producer_authenticated", "g2_admitted", "effect_authority_proven",
+        "same_host_proven",
+        "benchmark_execution_proven",
+        "thermal_throttling_proven",
+        "temperature_caused_performance_change",
+        "memory_pressure_caused_performance_change",
+        "battery_state_caused_performance_change",
+        "performance_winner_proven",
+        "current_now_proven",
+        "producer_authenticated",
+        "g2_admitted",
+        "effect_authority_proven",
     ):
         if getattr(longitudinal_series, name) is not False:
             raise TemporalEvidenceScopeError("LONGITUDINAL_SERIES_CEILING_WIDENED", name)
@@ -120,7 +139,11 @@ def _validate_series(longitudinal_series: ThinkPadLongitudinalEnvelopeSeries) ->
     return start_ns, end_ns
 
 
-def bind_temporal_evidence_scope(*, eye_pose_receipt: Mapping[str, object], longitudinal_series: ThinkPadLongitudinalEnvelopeSeries) -> TemporalEvidenceScopeCoordinate:
+def bind_temporal_evidence_scope(
+    *,
+    eye_pose_receipt: Mapping[str, object],
+    longitudinal_series: ThinkPadLongitudinalEnvelopeSeries,
+) -> TemporalEvidenceScopeCoordinate:
     eye = dict(eye_pose_receipt)
     if not verify_eye_pose_receipt(eye):
         raise TemporalEvidenceScopeError("EYE_POSE_RECEIPT_INVALID")
@@ -161,43 +184,112 @@ def bind_temporal_evidence_scope(*, eye_pose_receipt: Mapping[str, object], long
         eye_pose_receipt_sha256=str(eye["receipt_sha256"]),
         longitudinal_series_evidence_ref=longitudinal_series.evidence_ref,
         longitudinal_series_digest=longitudinal_series.series_digest,
-        point_capture_time_ns=capture_ns, series_start_time_ns=start_ns, series_end_time_ns=end_ns,
-        point_vs_series_relation=relation, temporal_overlap=overlap, eye_k27_coordinate=k27,
+        point_capture_time_ns=capture_ns,
+        series_start_time_ns=start_ns,
+        series_end_time_ns=end_ns,
+        point_vs_series_relation=relation,
+        temporal_overlap=overlap,
+        eye_k27_coordinate=k27,
         point_observation_software_gate_admissible=software_gate,
-        point_observation_temporal_admissible=temporal_admissible, hold_reason=hold,
+        point_observation_temporal_admissible=temporal_admissible,
+        hold_reason=hold,
     )
 
 
+_HARD_FALSE = (
+    "portable_producer_traversal_replayable",
+    "point_observation_temporal_admissible",
+    "point_observation_current_now_proven",
+    "historical_series_current_now_proven",
+    "shared_current_world_proven",
+    "same_host_proven",
+    "temporal_overlap_proves_causality",
+    "operating_envelope_caused_eye_pose",
+    "eye_pose_caused_operating_envelope",
+    "calibrated_metric_eye_truth_proven",
+    "physical_steering_authority",
+    "performance_causality_proven",
+    "producer_authenticated",
+    "semantic_k27_authority_proven",
+    "effect_authority_proven",
+    "native_private_transformer_kv_accessed",
+    "gate10_promoted",
+)
+
+
 def verify_temporal_evidence_scope_coordinate(value: Mapping[str, Any]) -> bool:
+    """Verify only the current non-authorizing portable V3 summary.
+
+    A portable object does not carry the complete lower producer inputs needed
+    to replay PR610 + PR614. Therefore this verifier deliberately refuses every
+    positive temporal-admission or BEFORE/DURING/AFTER claim. A future portable
+    positive form must have a distinct attested producer schema.
+    """
     try:
-        payload = dict(value); supplied = payload.pop("coordinate_digest")
+        payload = dict(value)
+        supplied = payload.pop("coordinate_digest")
     except (KeyError, TypeError, ValueError):
         return False
-    relation = payload.get("point_vs_series_relation")
-    if payload.get("schema") != SCHEMA or relation not in RELATIONS:
+
+    expected_keys = set(asdict(TemporalEvidenceScopeCoordinate(
+        eye_pose_receipt_sha256="0" * 64,
+        longitudinal_series_evidence_ref="x",
+        longitudinal_series_digest="0" * 64,
+        point_capture_time_ns=0,
+        series_start_time_ns=0,
+        series_end_time_ns=1,
+        point_vs_series_relation="UNKNOWN",
+        temporal_overlap=False,
+        eye_k27_coordinate=0,
+        point_observation_software_gate_admissible=False,
+        point_observation_temporal_admissible=False,
+        hold_reason="POINT_SOFTWARE_GATE_NOT_ADMISSIBLE",
+    )))
+    if set(payload) != expected_keys:
         return False
-    if relation == "UNKNOWN":
-        if payload.get("temporal_overlap") is not False or not payload.get("hold_reason"):
-            return False
-    else:
-        if payload.get("point_observation_temporal_admissible") is not True or payload.get("hold_reason") is not None:
-            return False
-        if payload.get("temporal_overlap") is not (relation == "DURING"):
-            return False
+    if payload.get("schema") != SCHEMA or payload.get("portable_scope") != PORTABLE_SCOPE:
+        return False
+    if payload.get("point_vs_series_relation") != "UNKNOWN":
+        return False
+    if payload.get("temporal_overlap") is not False:
+        return False
+    if payload.get("hold_reason") not in {
+        "POINT_EVIDENCE_NOT_AUTHENTICATED",
+        "POINT_SOFTWARE_GATE_NOT_ADMISSIBLE",
+    }:
+        return False
+    if not isinstance(payload.get("point_observation_software_gate_admissible"), bool):
+        return False
+    if any(payload.get(key) is not False for key in _HARD_FALSE):
+        return False
     for key in (
-        "point_observation_current_now_proven", "historical_series_current_now_proven",
-        "shared_current_world_proven", "same_host_proven", "temporal_overlap_proves_causality",
-        "operating_envelope_caused_eye_pose", "eye_pose_caused_operating_envelope",
-        "calibrated_metric_eye_truth_proven", "physical_steering_authority",
-        "performance_causality_proven", "producer_authenticated", "semantic_k27_authority_proven",
-        "effect_authority_proven", "native_private_transformer_kv_accessed", "gate10_promoted",
+        "point_capture_time_ns",
+        "series_start_time_ns",
+        "series_end_time_ns",
+        "eye_k27_coordinate",
     ):
-        if payload.get(key) is not False:
+        item = payload.get(key)
+        if isinstance(item, bool) or not isinstance(item, int):
             return False
+    if not (0 <= payload["eye_k27_coordinate"] <= 26):
+        return False
+    if not (0 <= payload["series_start_time_ns"] < payload["series_end_time_ns"]):
+        return False
+    if payload["point_capture_time_ns"] < 0:
+        return False
     return supplied == _digest(payload)
 
 
-def portable_temporal_evidence_scope_receipt(*, eye_pose_receipt: Mapping[str, object], longitudinal_series: ThinkPadLongitudinalEnvelopeSeries) -> dict[str, Any]:
-    coordinate = bind_temporal_evidence_scope(eye_pose_receipt=eye_pose_receipt, longitudinal_series=longitudinal_series)
+def portable_temporal_evidence_scope_receipt(
+    *,
+    eye_pose_receipt: Mapping[str, object],
+    longitudinal_series: ThinkPadLongitudinalEnvelopeSeries,
+) -> dict[str, Any]:
+    coordinate = bind_temporal_evidence_scope(
+        eye_pose_receipt=eye_pose_receipt,
+        longitudinal_series=longitudinal_series,
+    )
     payload = coordinate.to_dict()
+    if coordinate.point_observation_temporal_admissible or coordinate.point_vs_series_relation != "UNKNOWN":
+        raise TemporalEvidenceScopeError("PORTABLE_POSITIVE_TEMPORAL_RELATION_REQUIRES_ATTESTED_OWNER")
     return {**payload, "coordinate_digest": coordinate.coordinate_digest}
