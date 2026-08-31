@@ -1,0 +1,211 @@
+name: Aura O65-R Authority Materialization Proposal Conformance Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_authority_materialization_proposal_conformance.py"
+      - "tests/test_aura_authority_materialization_proposal_conformance.py"
+      - ".github/workflows/aura-o65r-authority-materialization-proposal-conformance-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  SEMANTIC_HEAD: fff1e38f78c54c387c1131543ce332d115ad7f5c
+  SEMANTIC_CUT: "2026-08-31T15:43:13+00:00"
+  SOURCE_BLOB: bdaa9b0338cdab05c48dc0337ab46522b40ac42f
+  TEST_BLOB: d71563cbfa3e0a29b86056fbd5ac27916e039624
+  Q20_RUN: "33408333739"
+  Q20_JOB: "99541395341"
+  Q20_HEAD: 8122131047477c65030af8a3dce97a7881a42c28
+  Q20_WORKFLOW: GLM53 Q20 Materialization Bound Proposal
+  O64_RUN: "33408498622"
+  O64_JOB: "99541935417"
+  O64_HEAD: 860b6cb41774e31c1f1ba1942d2f5c91914af0c3
+  O64_WORKFLOW: Aura O64 Authority Representation Evidence Proof
+
+jobs:
+  o65r-authority-materialization-proposal-conformance-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact proof descendant
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate post-cut semantic generation and immutable blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$SEMANTIC_HEAD" HEAD
+          test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_authority_materialization_proposal_conformance.py")" = "$SOURCE_BLOB"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_authority_materialization_proposal_conformance.py")" = "$TEST_BLOB"
+          python - <<'PY'
+          import datetime as dt
+          import os
+          import subprocess
+          observed = subprocess.check_output(
+              ["git", "show", "-s", "--format=%cI", os.environ["SEMANTIC_HEAD"]], text=True
+          ).strip()
+          observed_dt = dt.datetime.fromisoformat(observed.replace("Z", "+00:00"))
+          cut_dt = dt.datetime.fromisoformat(os.environ["SEMANTIC_CUT"])
+          assert observed_dt > cut_dt, (observed_dt, cut_dt)
+          print(f"O65R_POST_CUT_SEMANTIC_GENERATION={observed_dt.isoformat()}")
+          PY
+
+      - name: Revalidate exact hosted Q20 and O64 parent jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = os.environ["REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+
+          def jobs(run_id: str):
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs?per_page=100",
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  return json.load(response)["jobs"]
+
+          for prefix in ("Q20", "O64"):
+              expected_job = int(os.environ[f"{prefix}_JOB"])
+              expected_head = os.environ[f"{prefix}_HEAD"]
+              expected_workflow = os.environ[f"{prefix}_WORKFLOW"]
+              candidates = jobs(os.environ[f"{prefix}_RUN"])
+              matched = [job for job in candidates if job["id"] == expected_job]
+              assert len(matched) == 1, (prefix, expected_job, [j["id"] for j in candidates])
+              job = matched[0]
+              assert job["status"] == "completed", (prefix, job["status"])
+              assert job["conclusion"] == "success", (prefix, job["conclusion"])
+              assert job["head_sha"] == expected_head, (prefix, job["head_sha"], expected_head)
+              assert job["workflow_name"] == expected_workflow, (prefix, job["workflow_name"], expected_workflow)
+              print(f"{prefix}_EXACT_HOSTED_PARENT_SUCCESS=true")
+          PY
+
+      - name: Compile O65-R semantic surface
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/aura_authority_materialization_proposal_conformance.py \
+            tests/test_aura_authority_materialization_proposal_conformance.py
+
+      - name: Run O65-R adversarial suite
+        run: |
+          set -euo pipefail
+          python -m unittest tests.test_aura_authority_materialization_proposal_conformance -v
+
+      - name: Independently prove bounded conformance and nonpromotion
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from dataclasses import replace
+          from tools.aura_authority_materialization_proposal_conformance import (
+              O64_JOB, O64_PROOF_HEAD, O64_RUN, O64_SEMANTIC_HEAD, O64_WORKFLOW,
+              Q20_ACCOUNTING_DOMAIN, Q20_Q19_REPRESENTATION_IDENTITY,
+              Q20_REPRESENTATION_FAMILY,
+              AuthorityScopedEvidenceProjection,
+              exact_q20_projection,
+              prove_proposal_evidence_conformance,
+              q20_accounting_contract_digest,
+              q20_representation_fingerprint,
+              q20_scope_digest,
+          )
+
+          evidence = AuthorityScopedEvidenceProjection(
+              proof_head=O64_PROOF_HEAD,
+              semantic_head=O64_SEMANTIC_HEAD,
+              run_id=O64_RUN,
+              job_id=O64_JOB,
+              workflow_name=O64_WORKFLOW,
+              authority_fingerprint="a" * 64,
+              admission_policy_fingerprint="b" * 64,
+              evidence_admission_fingerprint="c" * 64,
+              representation_fingerprint=q20_representation_fingerprint(),
+              representation_family=Q20_REPRESENTATION_FAMILY,
+              representation_digest=Q20_Q19_REPRESENTATION_IDENTITY,
+              accounting_domain=Q20_ACCOUNTING_DOMAIN,
+              accounting_contract_digest=q20_accounting_contract_digest(),
+              rate_numerator=225,
+              rate_denominator=100,
+              bounded_scope_digest=q20_scope_digest(),
+              evidence_scope_digest=q20_scope_digest(),
+              currentness_roots=("authority:exact", "source:exact", "policy:exact", "science:exact"),
+              disposition="VERIFIED_BOUNDED",
+              score_mass_eligible=True,
+              proposal_mass_eligible=True,
+          )
+          exact = prove_proposal_evidence_conformance(proposal=exact_q20_projection(), evidence=evidence)
+          assert exact.disposition == "CONFORMANT_BOUNDED_SUPPORT"
+          assert exact.bounded_evidence_supports_exact_proposal is True
+          assert exact.proposal_evidence_support_digest
+          assert exact.live_proposal_currentness_resolved is False
+          assert exact.execution_authorized is False
+          assert exact.provider_effect_authorized is False
+          assert exact.semantic_k27_authority is False
+          assert exact.native_private_transformer_kv_accessed is False
+          assert exact.gate10_promoted is False
+          assert exact.merge_or_deployment_authorized is False
+
+          crosscast = prove_proposal_evidence_conformance(
+              proposal=exact_q20_projection(),
+              evidence=replace(evidence, accounting_domain="SERIALIZED_CONTAINER_ONLY"),
+          )
+          assert crosscast.disposition == "REVIEW"
+          assert crosscast.reason_code == "ACCOUNTING_DOMAIN_DIVERGENCE"
+
+          receipt = {
+              "schema": "AURA-O65R-HOSTED-PROOF-v1",
+              "semantic_head": "fff1e38f78c54c387c1131543ce332d115ad7f5c",
+              "q20_parent_exact_success": True,
+              "o64_parent_exact_success": True,
+              "bounded_conformance": True,
+              "rational_alias_collapsed": True,
+              "accounting_crosscast_rejected": True,
+              "live_proposal_currentness_resolved": False,
+              "execution_authorized": False,
+              "provider_effect_authorized": False,
+              "semantic_k27_authority": False,
+              "native_private_transformer_kv_accessed": False,
+              "gate10_promoted": False,
+              "merge_or_deployment_authorized": False,
+              "proposal_evidence_support_digest": exact.proposal_evidence_support_digest,
+              "receipt_digest": exact.receipt_digest,
+          }
+          with open("/tmp/o65r-proof.json", "w", encoding="utf-8") as handle:
+              json.dump(receipt, handle, sort_keys=True, indent=2)
+              handle.write("\n")
+          print("O65R_AUTHORITY_MATERIALIZATION_CONFORMANCE_PROVEN=true")
+          PY
+
+      - name: Preserve O65-R proof receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: o65r-authority-materialization-proposal-conformance-proof
+          path: /tmp/o65r-proof.json
+          retention-days: 90
+
+      - name: Consequence ceiling
+        run: |
+          echo 'MaterializationBoundProposal!=AuthorityAdmittedEvidence'
+          echo 'SameOutcome!=SameRepresentation'
+          echo 'SameNominalRate!=SameAccountingDomain'
+          echo 'EquivalentRationalRate==OneCanonicalRateIdentity'
+          echo 'BoundedProposalSupport!=LiveProposalCurrentness!=ExecutionAuthority'
+          echo 'K27Coordinate!=EvidenceTruth!=ProposalAuthority'
+          echo 'O65R_PROOF_COMPLETE=true'
