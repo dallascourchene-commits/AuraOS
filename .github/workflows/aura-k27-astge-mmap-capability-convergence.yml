@@ -1,0 +1,59 @@
+name: Aura K27 ASTGE mmap capability convergence
+
+on:
+  pull_request:
+    paths:
+      - 'crates/aura-k27-astge/**'
+      - 'crates/aura-k27-astge-mmap/**'
+      - 'crates/aura-k27-astge-canonical-backend/**'
+      - '.github/workflows/aura-k27-astge-mmap-capability-convergence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  convergence:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify inherited selector and mmap executor
+        run: |
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+          cargo test --manifest-path crates/aura-k27-astge-mmap/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-mmap/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify canonical fail-closed convergence membrane
+        run: |
+          cargo test --manifest-path crates/aura-k27-astge-canonical-backend/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-canonical-backend/Cargo.toml --all-targets -- -D warnings
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'PR471_MMAP_EXECUTOR_PRESENT=true'
+          echo 'PR472_SOURCE_OWNED_SELECTOR_PRESENT=true'
+          echo 'SNAPSHOT_GENERATION_INDEPENDENTLY_BOUND=false'
+          echo 'PLACEMENT_GENERATION_SEPARATE_COORDINATE=true'
+          echo 'CANONICAL_MMAP_EXECUTION=HOLD_SNAPSHOT_AXIS_UNBOUND'
+          echo 'PRODUCTION_BACKEND=READ_SEEK_SAFE_DEFAULT'
+          echo 'MMAP_PERFORMANCE_SUPERIORITY_PROVEN=false'
+          echo 'HOSTILE_MUTATION_SAFE=false'
+          echo 'PHYSICAL_CRASH_DURABILITY_PROVEN=false'
+          echo 'HUMAN_AUTHORITY=false'
+          echo 'EXTERNAL_EFFECT=false'
