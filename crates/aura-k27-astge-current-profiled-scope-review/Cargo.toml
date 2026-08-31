@@ -3,7 +3,7 @@ name = "aura-k27-astge-current-profiled-scope-review"
 version = "0.1.0"
 edition = "2024"
 publish = false
-description = "Bind independently current typed profiled Python scopes to exact-current-source review"
+description = "Bind current typed profiled Python scopes to producer-bound exact-current-source review"
 license = "MIT"
 
 [lib]
@@ -15,9 +15,9 @@ aura-k27-astge-current-profiled-scopes = { path = "../aura-k27-astge-current-pro
 aura-k27-astge-materialize = { path = "../aura-k27-astge-materialize" }
 aura-k27-astge-profiled-scope-review = { path = "../aura-k27-astge-profiled-scope-review" }
 aura-k27-astge-scope = { path = "../aura-k27-astge-scope" }
+sha2 = "=0.10.9"
 
 [dev-dependencies]
 aura-k27-astge-ingest = { path = "../aura-k27-astge-ingest" }
 aura-k27-astge-profiled-scopes = { path = "../aura-k27-astge-profiled-scopes" }
 serde_json = "1"
-sha2 = "=0.10.9"
