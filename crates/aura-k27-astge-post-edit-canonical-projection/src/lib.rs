@@ -232,6 +232,61 @@ fn require_owner_ceiling(
             receipt.external_effect_authorized,
             "external_effect_authorized",
         ),
+        (
+            receipt.post_edit_current.runtime_name_resolution_proven,
+            "post_edit.runtime_name_resolution_proven",
+        ),
+        (
+            receipt.post_edit_current.call_graph_proven,
+            "post_edit.call_graph_proven",
+        ),
+        (
+            receipt.post_edit_current.semantic_patch_correctness_proven,
+            "post_edit.semantic_patch_correctness_proven",
+        ),
+        (
+            receipt.post_edit_current.b_minus_approved,
+            "post_edit.b_minus_approved",
+        ),
+        (
+            receipt.post_edit_current.commit_authorized,
+            "post_edit.commit_authorized",
+        ),
+        (
+            receipt.post_edit_current.execution_authorized,
+            "post_edit.execution_authorized",
+        ),
+        (
+            receipt.post_edit_current.human_authority,
+            "post_edit.human_authority",
+        ),
+        (
+            receipt.post_edit_current.external_effect_authorized,
+            "post_edit.external_effect_authorized",
+        ),
+        (
+            receipt
+                .post_edit_current
+                .candidate_current
+                .runtime_name_resolution_proven,
+            "candidate_current.runtime_name_resolution_proven",
+        ),
+        (
+            receipt.post_edit_current.candidate_current.call_graph_proven,
+            "candidate_current.call_graph_proven",
+        ),
+        (
+            receipt.post_edit_current.candidate_current.semantic_k27_derived,
+            "candidate_current.semantic_k27_derived",
+        ),
+        (
+            receipt.post_edit_current.candidate_current.human_authority,
+            "candidate_current.human_authority",
+        ),
+        (
+            receipt.post_edit_current.candidate_current.external_effect,
+            "candidate_current.external_effect",
+        ),
     ];
     if let Some((_, name)) = values.into_iter().find(|(value, _)| *value) {
         return Err(ProjectionErrorV1::CeilingViolation(name));
