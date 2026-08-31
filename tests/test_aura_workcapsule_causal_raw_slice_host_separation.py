@@ -83,7 +83,7 @@ class CausalRawSliceHostSeparationTests(unittest.TestCase):
 
     def test_unknown_causal_host_state_stays_unknown_with_exact_raw_slice(self):
         host = host_receipt()
-        with patch.object(target, "verify_causal_raw_slice_host_separation", return_value=[]), patch.object(
+        with patch.object(target, "_verify_snapshot_and_causal_host", return_value=[]), patch.object(
             target, "admit_causal_temporal_host_observation_admission", return_value=host
         ):
             out = target.admit_causal_raw_slice_host_separation(
@@ -102,7 +102,7 @@ class CausalRawSliceHostSeparationTests(unittest.TestCase):
             state="PASS",
             disposition="HOST_OBSERVATIONS_COMPLETE_NONAUTHORIZING",
         )
-        with patch.object(target, "verify_causal_raw_slice_host_separation", return_value=[]), patch.object(
+        with patch.object(target, "_verify_snapshot_and_causal_host", return_value=[]), patch.object(
             target, "admit_causal_temporal_host_observation_admission", return_value=host
         ):
             out = target.admit_causal_raw_slice_host_separation(
@@ -149,7 +149,7 @@ class CausalRawSliceHostSeparationTests(unittest.TestCase):
         host["host_gate_states"] = states
         host["disposition"] = "FAIL_CLOSED"
         host["host_observation_set_complete"] = False
-        with patch.object(target, "verify_causal_raw_slice_host_separation", return_value=[]), patch.object(
+        with patch.object(target, "_verify_snapshot_and_causal_host", return_value=[]), patch.object(
             target, "admit_causal_temporal_host_observation_admission", return_value=host
         ):
             out = target.admit_causal_raw_slice_host_separation(
@@ -158,9 +158,35 @@ class CausalRawSliceHostSeparationTests(unittest.TestCase):
         self.assertEqual(out["host_gate_states"], states)
         self.assertEqual(out["host_disposition"], "FAIL_CLOSED")
 
+    def test_host_callback_cannot_mutate_validated_raw_evidence_identity(self):
+        original = raw_slice()
+        expected_digest = target._sha256(original)
+        shared = dict(original)
+        host = host_receipt()
+
+        def mutating_host_owner(**_kwargs):
+            shared["producer_authenticated"] = True
+            return host
+
+        with patch.object(target, "_verify_snapshot_and_causal_host", return_value=[]), patch.object(
+            target,
+            "admit_causal_temporal_host_observation_admission",
+            side_effect=mutating_host_owner,
+        ):
+            out = target.admit_causal_raw_slice_host_separation(
+                raw_slice_receipt=shared,
+                host_observations={"U_HEAD": shared},
+            )
+
+        self.assertTrue(shared["producer_authenticated"])
+        self.assertEqual(out["raw_slice_receipt_digest"], expected_digest)
+        self.assertNotEqual(out["raw_slice_receipt_digest"], target._sha256(shared))
+        self.assertFalse(out["raw_slice_producer_authenticated"])
+        self.assertTrue(out["raw_slice_exact_current_local_evidence_validated"])
+
     def test_receipt_identity_is_deterministic(self):
         host = host_receipt()
-        with patch.object(target, "verify_causal_raw_slice_host_separation", return_value=[]), patch.object(
+        with patch.object(target, "_verify_snapshot_and_causal_host", return_value=[]), patch.object(
             target, "admit_causal_temporal_host_observation_admission", return_value=host
         ):
             first = target.admit_causal_raw_slice_host_separation(
