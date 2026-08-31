@@ -1,0 +1,110 @@
+name: Aura HyperScale Work Admission
+
+on:
+  pull_request:
+    paths:
+      - tools/aura_hyperscale_work_admission.py
+      - tests/test_aura_hyperscale_work_admission.py
+      - .github/workflows/aura-hyperscale-work-admission.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  hyperscale-work-admission:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact A4 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Revalidate exact PR651 and PR652 hosted parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+
+          parents = (
+              (33374140559, '202a742de6919b51fac8ec4fb33312290337f907'),
+              (33374060046, '73491807ab2f1f977e2f2b491607893de0ccec23'),
+          )
+          headers = {
+              'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          for run_id, head in parents:
+              request = urllib.request.Request(
+                  f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  run = json.load(response)
+              assert run['status'] == 'completed', (run_id, run['status'])
+              assert run['conclusion'] == 'success', (run_id, run['conclusion'])
+              assert run['head_sha'] == head, (run_id, run['head_sha'], head)
+          print('A4_EXACT_PARENT_RUNS_GREEN=true')
+          PY
+
+      - name: Prove exact parent semantic source blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          PR651=202a742de6919b51fac8ec4fb33312290337f907
+          PR652=73491807ab2f1f977e2f2b491607893de0ccec23
+          git fetch --no-tags origin "$PR651" "$PR652"
+          test "$(git rev-parse "$PR651:tools/aura_semantic_sibling_admission.py")" = "29c7517645b9af6410ad92ed151d908744902101"
+          test "$(git rev-parse "$PR652:tools/quantization/aura_glm53_bounded_official_payload_range_manifest.py")" = "743e1699ae33c36f684206ccfe6278e7830d716c"
+          echo 'A4_PARENT_SEMANTIC_BLOBS_PINNED=true'
+
+      - name: Run HyperScale work-admission adversarial suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_hyperscale_work_admission.py \
+            tests/test_aura_hyperscale_work_admission.py
+          python3 -m unittest -v tests.test_aura_hyperscale_work_admission
+          python3 -m tools.aura_hyperscale_work_admission | tee /tmp/a4.json
+
+      - name: Assert exploration-verification separation and current minimum cone
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r = json.load(open('/tmp/a4.json', encoding='utf-8'))
+          assert r['schema'] == 'AURA_HYPERSCALE_WORK_ADMISSION_V1'
+          assert r['semantic_disposition'] == 'SUPPORT_MERGE'
+          assert r['mode'] == 'VERIFICATION'
+          assert r['admitted'] is True
+          assert r['selected_observation_ids'] == ['down-pair', 'up-pair']
+          assert r['selected_cost_score'] == 2
+          assert r['selected_byte_cost'] == 25_171_968
+          assert len(r['unresolved_leaves']) == 4
+          assert r['minimum_cover_complete'] is True
+          assert r['eligible_to_seek_new_sck'] is False
+          assert r['eligible_to_add_new_egk'] is True
+          for key in (
+              'counts_as_terminal_semantic_sibling_now',
+              'verification_inflates_semantic_mass',
+              'process_retry_inflates_evidence_mass',
+              'k27_coordinate_growth_grants_semantic_authority',
+              'automatic_effect_execution',
+              'semantic_truth_minted',
+              'native_private_transformer_kv_accessed',
+              'gate10_promoted',
+              'merge_or_deployment_authorized',
+          ):
+              assert r[key] is False, key
+          print('A4_MINIMUM_EVIDENCE_CONE_ADMITTED_WITHOUT_SEMANTIC_INFLATION=true')
+          PY

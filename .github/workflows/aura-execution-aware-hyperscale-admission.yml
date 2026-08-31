@@ -1,0 +1,177 @@
+name: Aura Execution-Aware HyperScale Admission
+
+on:
+  pull_request:
+    paths:
+      - tools/arena_workflow_execution_evidence.py
+      - tools/aura_hyperscale_work_admission.py
+      - tools/aura_execution_aware_hyperscale_admission.py
+      - tests/test_aura_execution_aware_hyperscale_admission.py
+      - .github/workflows/aura-execution-aware-hyperscale-admission.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  execution-aware-hyperscale-admission:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact A6 head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact PR654 x PR637 convergence and green proof generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence = '637abca5487d8ce23824f1ce1ee94f9d924a0bfd'
+          a4 = '26e377fe543b8c1906832b8c1e968dfe63480005'
+          i1 = 'a99e7744b4f276733357e78d212dfa3ea4416180'
+          parents = subprocess.check_output(
+              ['git','rev-list','--parents','-n','1',convergence], text=True
+          ).strip().split()
+          assert parents == [convergence, a4, i1], parents
+          headers = {
+              'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          for run_id, head in ((33375530171, a4), (33369448704, i1)):
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  run = json.load(response)
+              assert run['status'] == 'completed', (run_id, run['status'])
+              assert run['conclusion'] == 'success', (run_id, run['conclusion'])
+              assert run['head_sha'] == head, (run_id, run['head_sha'], head)
+          print('A6_EXACT_TWO_PARENT_PROOFS_GREEN=true')
+          PY
+
+      - name: Prove exact parent owner blobs are retained
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:tools/arena_workflow_execution_evidence.py)" = "150aba95dc1aed3e938892a742a6d5f65d75e41d"
+          test "$(git rev-parse HEAD:tools/aura_hyperscale_work_admission.py)" = "0b6a53612d4d2d9993da49180cfc74d5f4996548"
+          echo 'A6_PARENT_OWNER_BLOBS_RETAINED=true'
+
+      - name: Run parent admission plus A6 adversarial suites
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/arena_workflow_execution_evidence.py \
+            tools/aura_hyperscale_work_admission.py \
+            tools/aura_execution_aware_hyperscale_admission.py \
+            tests/test_aura_hyperscale_work_admission.py \
+            tests/test_aura_execution_aware_hyperscale_admission.py
+          python3 -m unittest -v \
+            tests.test_aura_hyperscale_work_admission \
+            tests.test_aura_execution_aware_hyperscale_admission
+
+      - name: Revalidate two independent current pre-job gates through the child
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          from tools.aura_execution_aware_hyperscale_admission import route_workflow_through_hyperscale
+
+          observations = (
+              (33372603380, 'b6e7c1f8a5442a7f3531928a24c01c98318aed95'),
+              (33395824230, '676e2f3f62122a82a4201315f3c0808fe1cd18da'),
+          )
+          headers = {
+              'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          for run_id, expected_head in observations:
+              base = f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}"
+              with urllib.request.urlopen(urllib.request.Request(base, headers=headers), timeout=30) as response:
+                  run = json.load(response)
+              with urllib.request.urlopen(urllib.request.Request(base + '/jobs', headers=headers), timeout=30) as response:
+                  jobs = json.load(response)['jobs']
+              assert run['status'] == 'completed'
+              assert run['conclusion'] == 'action_required'
+              assert run['head_sha'] == expected_head
+              assert jobs == []
+              receipt = route_workflow_through_hyperscale(
+                  run=run,
+                  jobs=jobs,
+                  semantic_disposition='SEMANTIC_SIBLING',
+                  hard_gates_pass=True,
+                  exploration_benefit_score=100,
+                  exploration_cost_score=1,
+              )
+              assert receipt.execution_classification == 'PRE_JOB_ACTION_REQUIRED'
+              assert receipt.route == 'PROVIDER_ELIGIBILITY_HOLD'
+              assert receipt.semantic_admission_evaluated is False
+              assert receipt.provider_eligibility_repair_required is True
+              assert receipt.provider_gate_counts_as_semantic_failure is False
+              assert receipt.provider_gate_counts_as_new_sck is False
+              assert receipt.provider_gate_counts_as_new_egk is False
+              assert receipt.automatic_retry_scheduled is False
+          print('A6_TWO_LANE_PROVIDER_GATE_FIREWALL=true')
+          PY
+
+      - name: Emit exact A6 receipt and assert nonpromotion ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m tools.aura_execution_aware_hyperscale_admission > /tmp/a6.json
+          python3 - <<'PY'
+          import json
+          r = json.load(open('/tmp/a6.json', encoding='utf-8'))
+          assert r['schema'] == 'AURA_EXECUTION_AWARE_HYPERSCALE_ADMISSION_V1'
+          assert r['execution_classification'] == 'PRE_JOB_ACTION_REQUIRED'
+          assert r['route'] == 'PROVIDER_ELIGIBILITY_HOLD'
+          assert r['semantic_admission_evaluated'] is False
+          assert r['provider_eligibility_repair_required'] is True
+          for key in (
+              'provider_gate_counts_as_semantic_failure',
+              'provider_gate_counts_as_new_sck',
+              'provider_gate_counts_as_new_egk',
+              'execution_evidence_grants_semantic_meaning',
+              'execution_evidence_grants_effect_authority',
+              'automatic_retry_scheduled',
+              'process_retry_inflates_evidence_mass',
+              'k27_coordinate_growth_grants_semantic_authority',
+              'native_private_transformer_kv_accessed',
+              'gate10_promoted',
+              'merge_or_deployment_authorized',
+          ):
+              assert r[key] is False, key
+          print('A6_PROVIDER_GATE_NOT_SEMANTIC_WORK=true')
+          PY
+
+      - name: Consequence ceiling
+        run: |
+          cat <<'EOF'
+          PROVIDER_GATE_BYPASSED=false
+          PRE_JOB_GATE_IS_SEMANTIC_FAILURE=false
+          PRE_JOB_GATE_CREATES_SCK=false
+          PRE_JOB_GATE_CREATES_EGK=false
+          EXECUTION_EVIDENCE_DERIVES_SEMANTIC_MEANING=false
+          AUTOMATIC_RETRY_SCHEDULED=false
+          EFFECT_AUTHORITY=false
+          K27_SEMANTIC_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTED=false
+          MERGE_OR_DEPLOYMENT_AUTHORIZED=false
+          EOF
