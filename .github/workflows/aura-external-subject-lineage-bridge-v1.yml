@@ -45,17 +45,29 @@ jobs:
       - name: Compile and run EKI-3 adversarials
         shell: bash
         run: |
-          set -euo pipefail
-          python -m py_compile tools/aura_external_subject_lineage_bridge.py
-          python -m pytest -q tests/test_aura_external_subject_lineage_bridge.py --junitxml=eki3-junit.xml
+          set +e
+          : > eki3-test.log
+          python -m py_compile tools/aura_external_subject_lineage_bridge.py >>eki3-test.log 2>&1
+          compile_status=$?
+          echo "COMPILE_STATUS=${compile_status}" >>eki3-test.log
+          test_status=${compile_status}
+          if [ "${compile_status}" -eq 0 ]; then
+            python -m pytest -q tests/test_aura_external_subject_lineage_bridge.py --junitxml=eki3-junit.xml >>eki3-test.log 2>&1
+            test_status=$?
+            echo "PYTEST_STATUS=${test_status}" >>eki3-test.log
+          fi
+          cat eki3-test.log
+          exit "${test_status}"
 
       - name: Upload EKI-3 adversarial receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: eki3-adversarial-receipt-${{ github.event.pull_request.head.sha }}
-          path: eki3-junit.xml
-          if-no-files-found: warn
+          path: |
+            eki3-test.log
+            eki3-junit.xml
+          if-no-files-found: error
 
       - name: Validate bounded external coordinate map
         shell: bash
