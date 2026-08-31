@@ -1,0 +1,109 @@
+name: GLM53 Owner Host Source Header Materializer
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_owner_host_source_header_materializer.py"
+      - "tests/test_glm53_owner_host_source_header_materializer.py"
+      - ".github/workflows/glm53-owner-host-source-header-materializer.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-header-materializer:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact S1 head with full parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          submodules: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Prove exact Q7 x Q5 two-parent convergence and hosted parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence='63a411a0eaea18bfbdf60346fe19bdc7fa93d397'
+          q7='7340091202f3f1a859841c3ec4314191f18fa1ad'
+          q5='23c8345a1e3d5034ce88bea1ab32c69c1a9cf3f2'
+          parents=subprocess.check_output(['git','rev-list','--parents','-n','1',convergence],text=True).strip().split()
+          assert parents == [convergence,q7,q5], parents
+          expected=((33400557094,99515552580,q7),(33400399223,99515030515,q5))
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          for run_id,job_id,head in expected:
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as response: run=json.load(response)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as response: job=json.load(response)
+              assert job['status']=='completed' and job['conclusion']=='success',(job_id,job['status'],job['conclusion'])
+              assert job['head_sha']==head,(job_id,job['head_sha'],head)
+          print('S1_EXACT_Q7_Q5_PARENTS_GREEN=true')
+          PY
+
+      - name: Run materializer adversarial contract
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/quantization/aura_glm53_owner_host_source_header_materializer.py tests/test_glm53_owner_host_source_header_materializer.py
+          python -m unittest -v tests.test_glm53_owner_host_source_header_materializer
+
+      - name: Materialize exact official index and representative headers
+        run: |
+          set -euo pipefail
+          python -m tools.quantization.aura_glm53_owner_host_source_header_materializer | tee /tmp/s1-a.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/s1-a.json',encoding='utf-8'))
+          assert r['exact_parent_heads']==['7340091202f3f1a859841c3ec4314191f18fa1ad','23c8345a1e3d5034ce88bea1ab32c69c1a9cf3f2']
+          assert r['index_sha256']=='e0fe7f28c1f853d4824e4d796374e3dacf1fe470988773952c79b063768134bf'
+          assert r['index_size_bytes']==11359251
+          assert r['index_k27_coordinate']==[9,13,4]
+          assert r['source_header_trial_eligible'] is True
+          assert r['source_bound_c2_request_admissible'] is True
+          assert r['blocker']=='NONE_HEADER_LEVEL_REQUEST_ADMISSIBLE'
+          assert r['q5_aggregate_e8_over_control']==0.6220981458103897
+          assert r['q5_scope_only'] is True
+          assert r['representative_shards']
+          assert r['total_source_evidence_bytes_materialized'] > r['index_size_bytes']
+          for key in ('tensor_payload_bytes_materialized','model_execution_observed','physical_io_performance_proven','native_private_transformer_kv_accessed','semantic_k27_authority_minted','gate10_promoted','execution_authorized_by_this_contract'):
+              assert r[key] is False,key
+          print('S1_EXACT_SOURCE_HEADER_EVIDENCE_MATERIALIZED=true')
+          print('S1_SOURCE_ADMISSION_DIGEST='+r['source_admission_digest'])
+          print('S1_RECEIPT_DIGEST='+r['receipt_digest'])
+          PY
+
+      - name: Independently reproduce exact source/header receipt
+        run: |
+          set -euo pipefail
+          python -m tools.quantization.aura_glm53_owner_host_source_header_materializer > /tmp/s1-b.json
+          python3 - <<'PY'
+          import json
+          a=json.load(open('/tmp/s1-a.json',encoding='utf-8'))
+          b=json.load(open('/tmp/s1-b.json',encoding='utf-8'))
+          for key in ('index_sha256','index_size_bytes','index_url_sha256','index_k27_coordinate','representative_shards','header_prefix_sha256_by_shard','header_prefix_bytes_by_shard','source_admission_digest','source_header_trial_eligible','source_bound_c2_request_admissible','blocker','receipt_digest'):
+              assert a[key]==b[key],key
+          print('S1_INDEPENDENT_SOURCE_HEADER_REPLAY=true')
+          PY
+
+      - name: Preserve source/header receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: glm53-owner-host-source-header-materializer
+          path: /tmp/s1-a.json
+          if-no-files-found: error
