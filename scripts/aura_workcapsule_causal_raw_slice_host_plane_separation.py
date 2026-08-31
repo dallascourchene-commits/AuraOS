@@ -39,6 +39,8 @@ def verify_causal_raw_slice_host_plane_separation(
     raw_violations = verify_raw_slice_receipt(raw_slice_receipt)
     if raw_violations:
         return raw_violations
+    if raw_slice_receipt["target_byte_end"] > raw_slice_receipt["full_source_byte_len"]:
+        return ["RAW_SLICE_SPAN_EXCEEDS_FULL_SOURCE"]
     host_violations = verify_causal_temporal_host_observation_admission(
         host_observations=host_observations,
         host_observation_resolver=host_observation_resolver,
@@ -84,6 +86,7 @@ def admit_causal_raw_slice_host_plane_separation(
         "raw_slice_receipt_digest": raw_digest,
         "raw_slice_exact_current_local_evidence_validated": True,
         "raw_slice_source_currentness_revalidated": True,
+        "raw_slice_span_within_full_source": True,
         "raw_slice_semantic_identity_proven": False,
         "raw_slice_producer_authenticated": False,
         "raw_slice_promoted_to_host_rank": False,
