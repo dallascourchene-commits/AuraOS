@@ -1,0 +1,137 @@
+name: Aura O66 Pre-Attempt Lifecycle Conformance
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_pre_attempt_lifecycle_conformance.py"
+      - "tests/test_aura_pre_attempt_lifecycle_conformance.py"
+      - ".github/workflows/aura-o66-pre-attempt-lifecycle-conformance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  o66-pre-attempt-lifecycle-conformance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      CONVERGENCE_COMMIT: "88502b4f44018de688386a7e71a5143a4471e28f"
+      O65_HEAD: "7efca33d95f6dc39c4e159250d45373b260060ed"
+      O65_RUN: "33410032496"
+      O65_JOB: "99546999922"
+      O65_SOURCE_BLOB: "34fae4a7d850a79e61a5f0690bbc0ca3321808d1"
+      O65_TEST_BLOB: "4636e310915db0d8b15fa3d7eb19fdcb3d94f1c7"
+      Q20_HEAD: "22e72fd3de7b008752bbb5176347d61518f4e83a"
+      Q20_RUN: "33409821076"
+      Q20_JOB: "99546289815"
+      Q20_SOURCE_BLOB: "78281b7a1f78f380997bd30ab3becfcb838edf85"
+      Q20_TEST_BLOB: "4e73b9b5172824690570351cc2dc1f834f847a82"
+    steps:
+      - name: Exact authenticated checkout without mutable actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=30 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Authenticate exact O65 x Q20 convergence and parent blobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          token=os.environ['GH_TOKEN']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json'}
+          def get(path):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/{path}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  return json.load(r)
+          convergence=os.environ['CONVERGENCE_COMMIT']
+          commit=get(f'commits/{convergence}')
+          parents=[p['sha'] for p in commit['parents']]
+          expected=[os.environ['Q20_HEAD'],os.environ['O65_HEAD']]
+          assert parents == expected,(parents,expected)
+          paths={
+              'tools/aura_pre_attempt_admission.py':os.environ['O65_SOURCE_BLOB'],
+              'tests/test_aura_pre_attempt_admission.py':os.environ['O65_TEST_BLOB'],
+              'tools/aura_owner_resolved_proposal_lifecycle_bridge.py':os.environ['Q20_SOURCE_BLOB'],
+              'tests/test_aura_owner_resolved_proposal_lifecycle_bridge.py':os.environ['Q20_TEST_BLOB'],
+          }
+          for ref in (convergence, os.environ.get('GITHUB_SHA')):
+              for path,blob in paths.items():
+                  encoded=urllib.parse.quote(path,safe='/')
+                  obj=get(f'contents/{encoded}?ref={ref}')
+                  assert obj['sha']==blob,(ref,path,obj['sha'],blob)
+          print('O66_TRUE_TWO_PARENT_CONVERGENCE=true')
+          print('O66_PARENT_BLOBS_EXACT=true')
+          PY
+
+      - name: Revalidate exact current parent hosted proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'}
+          expected=(
+              (int(os.environ['O65_RUN']),int(os.environ['O65_JOB']),os.environ['O65_HEAD']),
+              (int(os.environ['Q20_RUN']),int(os.environ['Q20_JOB']),os.environ['Q20_HEAD']),
+          )
+          for run_id,job_id,head in expected:
+              with urllib.request.urlopen(urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers),timeout=30) as r: run=json.load(r)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              with urllib.request.urlopen(urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}',headers=headers),timeout=30) as r: job=json.load(r)
+              assert job['status']=='completed' and job['conclusion']=='success',(job_id,job['status'],job['conclusion'])
+          print('O66_PARENT_PROOFS_EXACT_CURRENT_GREEN=true')
+          PY
+
+      - name: Compile and run parent plus O66 adversarial contracts
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_pre_attempt_admission.py \
+            tools/aura_owner_resolved_proposal_lifecycle_bridge.py \
+            tools/aura_pre_attempt_lifecycle_conformance.py \
+            tests/test_aura_pre_attempt_admission.py \
+            tests/test_aura_owner_resolved_proposal_lifecycle_bridge.py \
+            tests/test_aura_pre_attempt_lifecycle_conformance.py
+          python3 -m unittest -v \
+            tests.test_aura_pre_attempt_admission \
+            tests.test_aura_owner_resolved_proposal_lifecycle_bridge \
+            tests.test_aura_pre_attempt_lifecycle_conformance
+
+      - name: Prove O66 nonpromotion and coordinate separation
+        run: |
+          set -euo pipefail
+          python3 -m tools.aura_pre_attempt_lifecycle_conformance > /tmp/o66.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/o66.json',encoding='utf-8'))
+          laws=set(d['laws'])
+          required={
+              'EpochSerializablePreAttempt!=TypedWitnessLifecycleUntilExactLineageRelation',
+              'PreAttemptId!=ExecutionAttemptId',
+              'PreAttemptArtifactMustBePresentAndPolicyRequired',
+              'PreAttemptRouteAndObserverMustEqualLifecycleRouteAndObserver',
+              'RelationMayBindFailureWithoutPromotingSuccess',
+              'StableRelationEpochDoesNotAuthorizeExecution',
+              'K27Coordinate!=PreAttemptCurrentness!=LifecycleEvidence!=Authority',
+          }
+          assert required <= laws, required-laws
+          assert all(v is False for v in d['claim_ceiling'].values()), d['claim_ceiling']
+          print('O66_PRE_ATTEMPT_LIFECYCLE_CONFORMANCE_CONTRACT=true')
+          print('O66_EXECUTION_EFFECT_AUTHORITY=false')
+          PY
