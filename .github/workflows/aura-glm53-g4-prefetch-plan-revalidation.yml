@@ -1,0 +1,134 @@
+name: Aura GLM53 G4 Prefetch Plan Revalidation
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g4-prefetch-plan-revalidation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify pull-request exact head
+        if: github.event_name == 'pull_request'
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Authenticate terminal G3 proof coordinates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = "dallascourchene-commits/AuraOS"
+          semantic_head = "bdcd92c25308a70f263439c23a73d0240b511d86"
+          coordinates = (
+              (33428379023, 99607453967, "G3_SEMANTIC_PROOF"),
+              (33428378932, 99607453756, "G3_DESCENDANT_SAFE_PROOF"),
+          )
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          for run_id, job_id, label in coordinates:
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{run_id}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  run = json.load(response)
+              if run.get("conclusion") != "success":
+                  raise SystemExit(f"{label}_RUN_NOT_SUCCESS")
+              if run.get("head_sha") != semantic_head:
+                  raise SystemExit(f"{label}_HEAD_MISMATCH:{run.get('head_sha')}")
+
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/jobs/{job_id}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  job = json.load(response)
+              if job.get("conclusion") != "success":
+                  raise SystemExit(f"{label}_JOB_NOT_SUCCESS")
+          PY
+
+      - name: Compile G3 and G4 proof surfaces
+        run: |
+          python3 -m py_compile \
+            tools/awj032/glm53_prefetch_transfer_admission.py \
+            tools/awj032/glm53_router_separated_prefetch.py \
+            tools/awj032/glm53_g4_prefetch_plan_revalidation.py \
+            tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py \
+            tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py
+
+      - name: Reexecute inherited G3 adversarial contract
+        run: python3 -m unittest tools.awj032.test_glm53_g3_abstention_safe_transfer_admission -v
+
+      - name: Execute G4 adversarial contract
+        run: python3 -m unittest tools.awj032.test_glm53_g4_prefetch_plan_revalidation -v
+
+      - name: Exhaust finite eight-axis drift lattice
+        run: |
+          python3 - <<'PY'
+          from tools.awj032.glm53_g4_prefetch_plan_revalidation import (
+              G3PlanProjection,
+              prove_finite_drift_lattice,
+          )
+          plan = G3PlanProjection(
+              g3_receipt_digest="a" * 64,
+              prediction_digest="b" * 64,
+              layer_id="moe.17",
+              binding_digest="binding::glm53::rev::idx",
+              admitted_experts=(1, 4),
+              prediction_generation="pred::17",
+              calibration_generation="cal::17",
+              policy_generation="policy::17",
+              source_binding_generation="source::17",
+              runtime_generation="runtime::17",
+              cache_generation="cache::17",
+              storage_geometry_generation="storage::17",
+              host_profile_generation="host::17",
+          )
+          proof = prove_finite_drift_lattice(plan)
+          if proof != {"states": 256, "unchanged": 1, "held": 255}:
+              raise SystemExit(f"G4_FINITE_PROOF_MISMATCH:{proof}")
+          print(proof)
+          PY
+
+      - name: Enforce nonpromotion ceiling in source
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path("tools/awj032/glm53_g4_prefetch_plan_revalidation.py").read_text()
+          required = (
+              "plan_executed_by_this_contract: bool = False",
+              "transfer_effect_authorized: bool = False",
+              "native_route_mutated: bool = False",
+              "physical_io_proven: bool = False",
+              "semantic_k27_authority_minted: bool = False",
+              "native_private_transformer_kv_accessed: bool = False",
+              "gate10_promoted: bool = False",
+          )
+          for marker in required:
+              if marker not in text:
+                  raise SystemExit(f"G4_CLAIM_CEILING_MARKER_MISSING:{marker}")
+          PY
