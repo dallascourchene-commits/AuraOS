@@ -1,0 +1,130 @@
+name: Aura GLM53 G2 C2 Transfer Plan Attachment
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_g2_c2_transfer_plan_attachment.py"
+      - "tools/awj032/test_glm53_g2_c2_transfer_plan_attachment.py"
+      - ".github/workflows/aura-glm53-g2-c2-transfer-plan-attachment.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g2-c2-transfer-plan-attachment:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      C2_HEAD: "aed91d3dc1d6bafdf51bd977fcb5b42d196e2d07"
+      C2_SOURCE_BLOB: "91da9f6f5c9c8175fbe123634e53e14bc9ba3cbe"
+      C2_TEST_BLOB: "c2ade84d0f16ba43a752eb01fe1cbbd629210dd0"
+      G1_QUARANTINE_HEAD: "de33bd7d5d1bdc3e8374e42dd5ec533c6536b3de"
+      G1_QUARANTINE_BLOB: "dcf54745dc4e938ad55a9874df7b289ef5fab92d"
+      G1_QUARANTINE_RUN: "33415290167"
+      G2_CALIBRATION_SEMANTIC_HEAD: "0aa762e11d9de31378658b6a40cdf0205209d3ac"
+      G2_CALIBRATION_SOURCE_BLOB: "9ecba5cd71a2fe6096e9fde08a139a5feace3f53"
+      G2_CALIBRATION_TEST_BLOB: "c084d71182519d49463072fd3d3a1da155e3ce05"
+      G2_CALIBRATION_VERIFICATION_HEAD: "543391fd79d150a33fda972817a179ae6ce4f1f5"
+      G2_CALIBRATION_REPROOF_RUN: "33417068092"
+
+    steps:
+      - name: Exact authenticated checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin \
+            "$TARGET_SHA" "$C2_HEAD" "$G1_QUARANTINE_HEAD" \
+            "$G2_CALIBRATION_SEMANTIC_HEAD" "$G2_CALIBRATION_VERIFICATION_HEAD"
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Authenticate owner plus semantic and verification surfaces
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$C2_HEAD:tools/awj032/glm53_owner_host_c2_handoff.py")" = "$C2_SOURCE_BLOB"
+          test "$(git rev-parse "$C2_HEAD:tools/awj032/test_glm53_owner_host_c2_handoff.py")" = "$C2_TEST_BLOB"
+          test "$(git rev-parse "$G1_QUARANTINE_HEAD:tools/awj032/glm53_router_separated_prefetch.py")" = "$G1_QUARANTINE_BLOB"
+          test "$(git rev-parse "$G2_CALIBRATION_SEMANTIC_HEAD:tools/awj032/glm53_g2_predictor_calibration_binding.py")" = "$G2_CALIBRATION_SOURCE_BLOB"
+          test "$(git rev-parse "$G2_CALIBRATION_VERIFICATION_HEAD:tools/awj032/glm53_g2_predictor_calibration_binding.py")" = "$G2_CALIBRATION_SOURCE_BLOB"
+          test "$(git rev-parse "$G2_CALIBRATION_VERIFICATION_HEAD:tools/awj032/test_glm53_g2_predictor_calibration_binding.py")" = "$G2_CALIBRATION_TEST_BLOB"
+          test "$(git hash-object tools/awj032/glm53_owner_host_c2_handoff.py)" = "$C2_SOURCE_BLOB"
+          echo "C2_OWNER_UNCHANGED=true"
+          echo "FOREIGN_SEMANTIC_BLOBS_EXACT=true"
+          echo "SEMANTIC_GENERATION_DISTINCT_FROM_VERIFICATION_GENERATION=true"
+
+      - name: Revalidate G1 hosted proof and G2 repaired verification proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          expected = (
+              (
+                  int(os.environ["G1_QUARANTINE_RUN"]),
+                  os.environ["G1_QUARANTINE_HEAD"],
+                  "Aura GLM53 G1 Physical IO Quarantine W3",
+              ),
+              (
+                  int(os.environ["G2_CALIBRATION_REPROOF_RUN"]),
+                  os.environ["G2_CALIBRATION_VERIFICATION_HEAD"],
+                  "Aura GLM53 G2 Calibration W3 Exact Reproof",
+              ),
+          )
+          headers = {
+              "Authorization": f"Bearer {token}",
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          for run_id, head, name in expected:
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{run_id}", headers=headers
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  run = json.load(response)
+              assert run["head_sha"] == head, (run_id, run["head_sha"], head)
+              assert run["name"] == name, (run_id, run["name"], name)
+              assert run["status"] == "completed" and run["conclusion"] == "success", (
+                  run_id, run["status"], run["conclusion"]
+              )
+              print(f"EXACT_HOSTED_SUCCESS run={run_id} head={head}")
+          print("REPROOF_SUCCESS_IS_VERIFICATION_NOT_NEW_SEMANTICS=true")
+          PY
+
+      - name: Revalidate canonical C2 and attachment contracts
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/awj032/glm53_owner_host_c2_handoff.py \
+            tools/awj032/glm53_g2_c2_transfer_plan_attachment.py \
+            tools/awj032/test_glm53_g2_c2_transfer_plan_attachment.py
+          python3 -m unittest -v \
+            tools.awj032.test_glm53_owner_host_c2_handoff \
+            tools.awj032.test_glm53_g2_c2_transfer_plan_attachment
+
+      - name: Enforce relation and claim ceiling
+        run: |
+          set -euo pipefail
+          grep -q 'G2PlanEligibility!=C2TransferAuthority' tools/awj032/glm53_g2_c2_transfer_plan_attachment.py
+          grep -q 'SemanticGeneration!=VerificationGeneration' tools/awj032/glm53_g2_c2_transfer_plan_attachment.py
+          grep -q 'ReproofSuccess!=NewSemanticConsequence' tools/awj032/glm53_g2_c2_transfer_plan_attachment.py
+          grep -q 'PhysicalIOMustRemainUnknownBeforeOwnerHostAttempt' tools/awj032/glm53_g2_c2_transfer_plan_attachment.py
+          grep -q 'SourceBindingCarried!=C2SourceEquivalenceProof' tools/awj032/glm53_g2_c2_transfer_plan_attachment.py
+          grep -q 'K27Coordinate!=PlanIdentity!=MeasurementAuthority!=ExecutionAuthority' tools/awj032/glm53_g2_c2_transfer_plan_attachment.py
+          echo "G2_C2_TRANSFER_PLAN_ATTACHMENT=PASS"
+          echo "C2_REQUEST_MUTATED=false"
+          echo "PHYSICAL_IO_PROVEN=false"
+          echo "EXECUTION_AUTHORIZED=false"
+          echo "TRANSFER_EFFECT_AUTHORIZED=false"
+          echo "G2_ADMITTED=false"
+          echo "NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false"
+          echo "SEMANTIC_K27_AUTHORITY=false"
+          echo "GATE10_PROMOTED=false"
