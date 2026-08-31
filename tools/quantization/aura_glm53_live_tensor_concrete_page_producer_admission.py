@@ -2,14 +2,15 @@
 """Fail-closed admission for a live official-tensor -> concrete-page producer.
 
 Q9 joins two exact-green consequence owners:
-- Q8/PR645: the current official-source -> concrete-page provenance frontier.
+- Q8/PR645: the pinned official-source -> concrete-page provenance frontier.
 - Q6/PR646: exact historical official W2 representative-header evidence rebound
   through the current Q5 source grammar.
 
 Historical source evidence may constrain expected schema/geometry and provenance,
 but it cannot mint present tensor-byte residency, a source-tensor -> page relation,
-or a page materialization owner.  V1 therefore has no caller-controlled positive
-path and remains HOLD until a future owner supplies new typed live evidence.
+or a page materialization owner. V2 also distinguishes equality inside the pinned
+frontier generation from ambient repository-head currentness. The deterministic Q9
+process does not observe ambient repository head and therefore cannot claim it.
 """
 from __future__ import annotations
 
@@ -21,7 +22,7 @@ import json
 from tools.quantization import aura_glm53_historical_official_w2_bridge as historical
 from tools.quantization import aura_glm53_official_source_concrete_page_provenance_join as provenance
 
-SCHEMA = "AURA_GLM53_LIVE_TENSOR_CONCRETE_PAGE_PRODUCER_ADMISSION_V1"
+SCHEMA = "AURA_GLM53_LIVE_TENSOR_CONCRETE_PAGE_PRODUCER_ADMISSION_V2"
 CONVERGENCE_COMMIT = "fa9f17fba4f9e0011c35fc6404789bf13692b4ec"
 PR645_HEAD = "e97c584e79439f599f7a443d86df23a11cab75ad"
 PR645_RUN = 33371374486
@@ -58,7 +59,8 @@ class LiveTensorConcretePageProducerAdmissionReceipt:
     historical_representative_header_schema_qualified: bool
     historical_representative_header_provenance_bound: bool
     historical_fp8_companion_geometry_bound: bool
-    historical_evidence_revision_matches_current_frontier_revision: bool
+    historical_evidence_revision_matches_pinned_frontier_revision: bool
+    ambient_repository_head_observed_by_q9_process: bool
     current_concrete_page_frontier_bound: bool
     current_concrete_candidate_identity_bound: bool
     current_concrete_candidate_sample_bound: bool
@@ -139,7 +141,8 @@ def _join_exact_parents(
         historical_representative_header_schema_qualified=True,
         historical_representative_header_provenance_bound=True,
         historical_fp8_companion_geometry_bound=True,
-        historical_evidence_revision_matches_current_frontier_revision=True,
+        historical_evidence_revision_matches_pinned_frontier_revision=True,
+        ambient_repository_head_observed_by_q9_process=False,
         current_concrete_page_frontier_bound=True,
         current_concrete_candidate_identity_bound=True,
         current_concrete_candidate_sample_bound=True,
@@ -169,14 +172,14 @@ def _join_exact_parents(
 
 
 def current_live_producer_admission() -> LiveTensorConcretePageProducerAdmissionReceipt:
-    """Recompute exact parent consequences and return the current fail-closed Q9 state."""
+    """Recompute exact pinned-parent consequences and return fail-closed Q9 state."""
     current = provenance.current_provenance_frontier()
     past = historical.build_historical_official_w2_bridge(historical.canonical_pr398_observation())
     return _join_exact_parents(current, past)
 
 
 def public_api_has_promotion_inputs() -> bool:
-    """V1 must not accept caller-authored booleans that can self-mint producer authority."""
+    """V2 must not accept caller-authored booleans that can self-mint producer authority."""
     return len(inspect.signature(current_live_producer_admission).parameters) != 0
 
 
@@ -186,7 +189,8 @@ def main() -> None:
     body["receipt_digest"] = receipt.receipt_digest
     body["law"] = (
         "HistoricalRepresentativeOfficialHeaderEvidence != LiveTensorPayloadResidency != "
-        "ExactOfficialTensorToConcretePageProducerRelation"
+        "ExactOfficialTensorToConcretePageProducerRelation; "
+        "PinnedFrontierRevisionMatch != AmbientRepositoryHeadCurrentness"
     )
     print(json.dumps(body, sort_keys=True, indent=2))
 
