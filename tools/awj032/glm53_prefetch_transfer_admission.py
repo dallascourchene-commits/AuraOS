@@ -37,6 +37,8 @@ SKIP_WINDOW = "SKIP_PREFETCH_WINDOW_CAPACITY"
 SKIP_BATCH_BYTES = "SKIP_BATCH_LOGICAL_BYTE_CAP"
 SKIP_ENERGY = "SKIP_ENERGY_BUDGET"
 HOLD_ENERGY = "HOLD_ENERGY_ESTIMATE_REQUIRED"
+REUSE_APPLICABLE = "APPLICABLE_POSITIVE_LOGICAL_BYTES"
+REUSE_NOT_APPLICABLE = "NOT_APPLICABLE_ZERO_LOGICAL_BYTES"
 
 
 def _canonical(value: Any) -> bytes:
@@ -183,7 +185,8 @@ class PrefetchTransferAdmissionReceipt:
     admitted_experts: tuple[int, ...]
     candidate_decisions: tuple[ExpertTransferDecision, ...]
     cold_predicted_logical_bytes: int
-    cold_required_reuse_for_window: float
+    cold_required_reuse_for_window: float | None
+    cold_required_reuse_disposition: str
     admitted_logical_bytes: int
     admitted_logical_transfer_seconds: float
     admitted_expected_latency_margin_seconds: float
@@ -203,6 +206,18 @@ class PrefetchTransferAdmissionReceipt:
     def validate_claim_ceiling(self) -> None:
         if self.schema != SCHEMA:
             raise ValueError("TRANSFER_ADMISSION_SCHEMA_MISMATCH")
+        if self.cold_predicted_logical_bytes == 0:
+            if self.cold_required_reuse_for_window is not None:
+                raise ValueError("ZERO_BYTE_REUSE_MUST_BE_NOT_APPLICABLE")
+            if self.cold_required_reuse_disposition != REUSE_NOT_APPLICABLE:
+                raise ValueError("ZERO_BYTE_REUSE_DISPOSITION_MISMATCH")
+        elif self.cold_predicted_logical_bytes > 0:
+            if self.cold_required_reuse_for_window is None:
+                raise ValueError("POSITIVE_BYTE_REUSE_VALUE_REQUIRED")
+            if self.cold_required_reuse_disposition != REUSE_APPLICABLE:
+                raise ValueError("POSITIVE_BYTE_REUSE_DISPOSITION_MISMATCH")
+        else:
+            raise ValueError("COLD_PREDICTED_LOGICAL_BYTES_MUST_BE_NONNEGATIVE")
         if self.physical_io_attested is not False or self.physical_prefetch_bytes is not None:
             raise ValueError("TRANSFER_ADMISSION_CANNOT_SELF_ATTEST_PHYSICAL_IO")
         if self.physical_storage_budget_proven is not False:
@@ -237,10 +252,10 @@ def admit_prefetch_transfers(
     Ranking is by expected latency margin descending, then expert id. This is a
     deterministic bounded heuristic, not a claim of global knapsack optimality.
 
-    A lawful predictor abstention is represented as an empty predicted set. In
-    that case no storage transfer is required, so the cold reuse requirement is
-    exactly 0.0. This is a planning identity only: it is not a physical-I/O
-    savings claim and grants no execution or transfer authority.
+    A lawful predictor abstention is represented as an empty predicted set. With
+    no speculative bytes, W4's positive-byte reuse equation has no input in its
+    mathematical domain. Reuse feasibility is therefore explicitly NOT_APPLICABLE,
+    not numerical zero. Zero transfer bytes/time remain ordinary additive zeros.
     """
     prediction.validate(num_experts=num_experts)
     policy.validate()
@@ -262,41 +277,34 @@ def admit_prefetch_transfers(
 
     bandwidth = policy.effective_storage_bandwidth_bytes_per_second
     cold_bytes = sum(by_expert[e].logical_expert_bytes for e in prediction.predicted_experts)
-    cold_reuse_needed = (
-        0.0
-        if cold_bytes == 0
-        else required_reuse(
+    if cold_bytes == 0:
+        cold_reuse_needed = None
+        cold_reuse_disposition = REUSE_NOT_APPLICABLE
+    else:
+        cold_reuse_needed = required_reuse(
             logical_expert_bytes_required=cold_bytes,
             effective_storage_bandwidth_bytes_per_second=bandwidth,
             target_expert_io_seconds=policy.prefetch_window_seconds,
         )
-    )
+        cold_reuse_disposition = REUSE_APPLICABLE
 
     evaluated: list[tuple[CalibratedExpertForecast, ExpertTransferDecision]] = []
     for expert_id in prediction.predicted_experts:
         forecast = by_expert[expert_id]
         transfer_seconds = forecast.logical_expert_bytes / bandwidth
         expected_avoidance = forecast.hit_probability * forecast.expected_miss_stall_seconds
-        planning_cost = (
-            transfer_seconds
-            + policy.eviction_penalty_seconds
-            + policy.rework_penalty_seconds
-        )
+        planning_cost = transfer_seconds + policy.eviction_penalty_seconds + policy.rework_penalty_seconds
         margin = expected_avoidance - planning_cost
         if forecast.hit_probability < policy.minimum_hit_probability:
             disposition = SKIP_CONFIDENCE
         elif margin <= 0:
             disposition = SKIP_MARGIN
-        elif (
-            policy.max_estimated_transfer_energy_joules is not None
-            and forecast.estimated_transfer_energy_joules is None
-        ):
+        elif policy.max_estimated_transfer_energy_joules is not None and forecast.estimated_transfer_energy_joules is None:
             disposition = HOLD_ENERGY
         elif (
             policy.max_estimated_transfer_energy_joules is not None
             and forecast.estimated_transfer_energy_joules is not None
-            and forecast.estimated_transfer_energy_joules
-            > policy.max_estimated_transfer_energy_joules
+            and forecast.estimated_transfer_energy_joules > policy.max_estimated_transfer_energy_joules
         ):
             disposition = SKIP_ENERGY
         else:
@@ -356,9 +364,7 @@ def admit_prefetch_transfers(
 
     ordered_decisions = tuple(final_by_expert[e] for e in prediction.predicted_experts)
     admitted_experts = tuple(e for e in prediction.predicted_experts if e in admitted)
-    margin_total = sum(
-        final_by_expert[e].expected_latency_margin_seconds for e in admitted_experts
-    )
+    margin_total = sum(final_by_expert[e].expected_latency_margin_seconds for e in admitted_experts)
     receipt = PrefetchTransferAdmissionReceipt(
         schema=SCHEMA,
         g1_head=G1_HEAD,
@@ -373,6 +379,7 @@ def admit_prefetch_transfers(
         candidate_decisions=ordered_decisions,
         cold_predicted_logical_bytes=cold_bytes,
         cold_required_reuse_for_window=cold_reuse_needed,
+        cold_required_reuse_disposition=cold_reuse_disposition,
         admitted_logical_bytes=used_bytes,
         admitted_logical_transfer_seconds=used_seconds,
         admitted_expected_latency_margin_seconds=margin_total,
