@@ -21,9 +21,12 @@ from tests.test_aura_workcapsule_current_recursive_target_raw_slice_binding impo
 
 
 def _sha(value) -> str:
-    raw = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode(
-        "utf-8"
-    )
+    raw = json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+    ).encode("utf-8")
     return hashlib.sha256(raw).hexdigest()
 
 
@@ -40,7 +43,7 @@ def _default_states() -> dict[str, str]:
 def _fixture_resolution(gate: str, state: str, target_ref: str) -> dict | None:
     if state == "UNKNOWN":
         return None
-    return {
+    resolution = {
         "schema": "AURA_HOST_OBSERVATION_RESOLUTION_V1",
         "version": 1,
         "gate": gate,
@@ -54,8 +57,9 @@ def _fixture_resolution(gate: str, state: str, target_ref: str) -> dict | None:
         "resolver_ref": "resolver://fixture",
         "resolver_generation": "3",
         "revoked": False,
-        "resolution_digest": "ab" * 32,
     }
+    resolution["resolution_digest"] = _sha(resolution)
+    return resolution
 
 
 def _gate_reason(state: str) -> str:
@@ -86,18 +90,26 @@ def _seal(receipt: dict) -> dict:
     return receipt
 
 
+def _reseal(receipt: dict) -> dict:
+    receipt.pop("receipt_identity", None)
+    return _seal(receipt)
+
+
 class WorkCapsuleArtifactQualifiedHostObservationTests(
     WorkCapsuleCurrentRecursiveTargetRawSliceBindingTests
 ):
     def local_receipt(self, raw=None) -> dict:
         chosen_raw = raw if raw is not None else self.raw_receipt()
-        return admit_current_recursive_target_raw_slice_binding(**self.join_kwargs(raw=chosen_raw))
+        return admit_current_recursive_target_raw_slice_binding(
+            **self.join_kwargs(raw=chosen_raw)
+        )
 
     def host_receipt(self, *, states=None, target_ref=None, **overrides) -> dict:
         gate_states = dict(states or _default_states())
         exact_target_ref = target_ref or artifact_target_ref(self.local_receipt())
         resolutions = {
-            gate: _fixture_resolution(gate, gate_states[gate], exact_target_ref) for gate in GATES
+            gate: _fixture_resolution(gate, gate_states[gate], exact_target_ref)
+            for gate in GATES
         }
         reasons = {gate: _gate_reason(gate_states[gate]) for gate in GATES}
         fail_mask = _mask(gate_states, "FAIL")
@@ -156,7 +168,10 @@ class WorkCapsuleArtifactQualifiedHostObservationTests(
         }
 
     def test_resolved_host_gate_is_bound_to_exact_local_artifact(self) -> None:
-        self.assertEqual([], verify_artifact_qualified_host_observation(**self.child_kwargs()))
+        self.assertEqual(
+            [],
+            verify_artifact_qualified_host_observation(**self.child_kwargs()),
+        )
         receipt = admit_artifact_qualified_host_observation(**self.child_kwargs())
         self.assertTrue(receipt["current_recursive_raw_target_reproved"])
         self.assertTrue(receipt["resolved_host_gates_bound_to_exact_artifact"])
@@ -167,19 +182,56 @@ class WorkCapsuleArtifactQualifiedHostObservationTests(
         self.assertFalse(any(receipt["authority"].values()))
 
     def test_resealed_foreign_target_ref_rejects(self) -> None:
-        host = self.host_receipt(target_ref="aura-workcapsule-target-sha256:" + "cd" * 32)
-        violations = verify_artifact_qualified_host_observation(**self.child_kwargs(host=host))
+        host = self.host_receipt(
+            target_ref="aura-workcapsule-target-sha256:" + "cd" * 32
+        )
+        violations = verify_artifact_qualified_host_observation(
+            **self.child_kwargs(host=host)
+        )
         self.assertIn(f"{TARGET_REF_MISMATCH}:U_HEAD", violations)
+
+    def test_nested_resolution_tamper_resealed_only_outside_rejects(self) -> None:
+        host = self.host_receipt()
+        host["host_gate_resolutions"]["U_HEAD"]["target_ref"] = (
+            "aura-workcapsule-target-sha256:" + "ef" * 32
+        )
+        _reseal(host)
+        violations = verify_artifact_qualified_host_observation(
+            **self.child_kwargs(host=host)
+        )
+        self.assertIn(
+            HOST_PREFIX + "HOST_RESOLUTION_DIGEST_MISMATCH:U_HEAD",
+            violations,
+        )
+
+    def test_nested_resolution_bool_version_rejects_after_full_reseal(self) -> None:
+        host = self.host_receipt()
+        resolution = host["host_gate_resolutions"]["U_HEAD"]
+        resolution["version"] = True
+        resolution.pop("resolution_digest")
+        resolution["resolution_digest"] = _sha(resolution)
+        _reseal(host)
+        violations = verify_artifact_qualified_host_observation(
+            **self.child_kwargs(host=host)
+        )
+        self.assertIn(
+            HOST_PREFIX + "HOST_RESOLUTION_VERSION_MISMATCH:U_HEAD",
+            violations,
+        )
 
     def test_tampered_host_receipt_without_reseal_rejects_integrity(self) -> None:
         host = self.host_receipt()
         host["host_gate_reasons"]["U_HEAD"] = "TAMPERED"
-        violations = verify_artifact_qualified_host_observation(**self.child_kwargs(host=host))
+        violations = verify_artifact_qualified_host_observation(
+            **self.child_kwargs(host=host)
+        )
         self.assertIn(HOST_PREFIX + "HOST_RECEIPT_IDENTITY_MISMATCH", violations)
 
     def test_unknown_gates_need_no_target_binding_and_remain_unknown(self) -> None:
         host = self.host_receipt(states={gate: "UNKNOWN" for gate in GATES})
-        receipt = admit_artifact_qualified_host_observation(**self.child_kwargs(host=host))
+        receipt = admit_artifact_qualified_host_observation(
+            **self.child_kwargs(host=host)
+        )
         self.assertEqual(list(GATES), receipt["unknown_host_gates"])
         self.assertEqual(0, receipt["resolved_host_gate_count"])
         self.assertFalse(receipt["all_host_gates_pass_for_exact_artifact"])
@@ -187,7 +239,9 @@ class WorkCapsuleArtifactQualifiedHostObservationTests(
 
     def test_all_pass_for_exact_artifact_remains_nonauthorizing(self) -> None:
         host = self.host_receipt(states={gate: "PASS" for gate in GATES})
-        receipt = admit_artifact_qualified_host_observation(**self.child_kwargs(host=host))
+        receipt = admit_artifact_qualified_host_observation(
+            **self.child_kwargs(host=host)
+        )
         self.assertTrue(receipt["all_host_gates_pass_for_exact_artifact"])
         self.assertTrue(receipt["host_observation_set_complete"])
         self.assertFalse(receipt["host_resolver_trust_proven"])
@@ -197,14 +251,24 @@ class WorkCapsuleArtifactQualifiedHostObservationTests(
 
     def test_host_receipt_cannot_widen_effect_authority(self) -> None:
         host = self.host_receipt(host_effect_ready=True)
-        violations = verify_artifact_qualified_host_observation(**self.child_kwargs(host=host))
-        self.assertIn(HOST_PREFIX + "HOST_CEILING_VIOLATED:host_effect_ready", violations)
+        violations = verify_artifact_qualified_host_observation(
+            **self.child_kwargs(host=host)
+        )
+        self.assertIn(
+            HOST_PREFIX + "HOST_CEILING_VIOLATED:host_effect_ready",
+            violations,
+        )
 
     def test_unknown_host_envelope_field_fails_closed(self) -> None:
         host = self.host_receipt()
         host["host_semantic_truth"] = True
-        violations = verify_artifact_qualified_host_observation(**self.child_kwargs(host=host))
-        self.assertEqual([HOST_PREFIX + "MALFORMED_HOST_ADMISSION_ENVELOPE"], violations)
+        violations = verify_artifact_qualified_host_observation(
+            **self.child_kwargs(host=host)
+        )
+        self.assertEqual(
+            [HOST_PREFIX + "MALFORMED_HOST_ADMISSION_ENVELOPE"],
+            violations,
+        )
 
     def test_raw_slice_change_changes_artifact_target_reference(self) -> None:
         first = self.local_receipt()
@@ -213,7 +277,9 @@ class WorkCapsuleArtifactQualifiedHostObservationTests(
         self.assertNotEqual(artifact_target_ref(first), artifact_target_ref(second))
 
     def test_public_boundary_has_no_resolver_or_effect_override(self) -> None:
-        params = inspect.signature(verify_artifact_qualified_host_observation).parameters
+        params = inspect.signature(
+            verify_artifact_qualified_host_observation
+        ).parameters
         self.assertEqual(
             {
                 "scoped_target_inputs",
