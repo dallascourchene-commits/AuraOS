@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1653
-- **total_bytes**: 26535385
-- **text_tokens_est**: 6624203
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1662
+- **total_bytes**: 26597917
+- **text_tokens_est**: 6639840
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1015, 'schema_or_lexicon': 276, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1653,
+  "repo_file_count": 1662,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -156,6 +156,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-k27-optics-import-currentness-domain.yml",
     ".github/workflows/aura-provenance-corroboration-memory-admission.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
@@ -163,6 +164,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-spatial-s3-s4a.yml",
     ".github/workflows/aura-spatial-s4.yml",
     ".github/workflows/aura-spatial-s5-s6-construction.yml",
+    ".github/workflows/awj032-storage-probe-currentness-domain.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1246,6 +1248,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_architecture_harness_core.py",
     "scripts/aura_awj032_lifecycle_return_currentness_domain.py",
     "scripts/aura_awj032_owner_host_c2_memory_bridge.py",
+    "scripts/aura_awj032_storage_probe_currentness_domain.py",
     "scripts/aura_benchmark_suite.py",
     "scripts/aura_blind_gate10_benchmark.py",
     "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -1254,6 +1257,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_global_benchmark_daemon.py",
     "scripts/aura_ifc_storey_index.py",
     "scripts/aura_industry_benchmark_validation.py",
+    "scripts/aura_k27_optics_import_currentness_domain.py",
     "scripts/aura_mesh_to_gaussian.py",
     "scripts/aura_navigation_refresh.py",
     "scripts/aura_prepare_construction_demo_assets.py",
@@ -1385,6 +1389,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_wfst_phase_a.py",
     "tests/test_aura_awj032_lifecycle_return_currentness_domain.py",
     "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+    "tests/test_aura_awj032_storage_probe_currentness_domain.py",
     "tests/test_aura_benchmark_four.py",
     "tests/test_aura_benchmark_four_hardening.py",
     "tests/test_aura_bilateral_gate_dialogue.py",
@@ -1519,6 +1524,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_intent_ingestion_bilateral.py",
     "tests/test_aura_intent_refinement.py",
     "tests/test_aura_jspace_codec.py",
+    "tests/test_aura_k27_optics_import_currentness_domain.py",
     "tests/test_aura_mesh_to_gaussian.py",
     "tests/test_aura_model_cognome.py",
     "tests/test_aura_model_cognome_call_logger.py",
@@ -1650,6 +1656,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_huggingface_space_deployment.py",
+    "tests/test_k27_optics_candidate_falsifier.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
     "third_party/pascal/LICENSE",
@@ -1662,9 +1669,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
     "tools/awj032/test_glm53_owner_host_c2_handoff.py",
     "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+    "tools/awj032/test_thinkpad_bounded_storage_probe.py",
     "tools/awj032/thinkpad_bounded_storage_probe.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/k27_optics_candidate_falsifier.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1707,6 +1716,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_architecture_harness_core.py",
     "scripts/aura_awj032_lifecycle_return_currentness_domain.py",
     "scripts/aura_awj032_owner_host_c2_memory_bridge.py",
+    "scripts/aura_awj032_storage_probe_currentness_domain.py",
     "scripts/aura_benchmark_suite.py",
     "scripts/aura_blind_gate10_benchmark.py",
     "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -1715,6 +1725,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_global_benchmark_daemon.py",
     "scripts/aura_ifc_storey_index.py",
     "scripts/aura_industry_benchmark_validation.py",
+    "scripts/aura_k27_optics_import_currentness_domain.py",
     "scripts/aura_mesh_to_gaussian.py",
     "scripts/aura_navigation_refresh.py",
     "scripts/aura_prepare_construction_demo_assets.py",
@@ -1774,12 +1785,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_wfst_phase_a.py",
     "tests/test_aura_awj032_lifecycle_return_currentness_domain.py",
     "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+    "tests/test_aura_awj032_storage_probe_currentness_domain.py",
     "tests/test_aura_benchmark_four.py",
     "tests/test_aura_benchmark_four_hardening.py",
-    "tests/test_aura_bilateral_gate_dialogue.py",
-    "tests/test_aura_bilateral_live_repair_foundry.py",
-    "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    "tests/test_aura_bilateral_planning_enforcement.py"
+    "tests/test_aura_bilateral_gate_dialogue.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1793,16 +1802,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1653,
-  "bytes": 26535385,
-  "tokens_est": 6624203,
+  "files": 1662,
+  "bytes": 26597917,
+  "tokens_est": 6639840,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1008,
-    "schema_or_lexicon": 274,
+    "python_module": 1015,
+    "schema_or_lexicon": 276,
     "support_file": 49
   }
 }
