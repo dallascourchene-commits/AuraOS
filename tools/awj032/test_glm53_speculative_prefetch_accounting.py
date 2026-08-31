@@ -9,6 +9,7 @@ from tools.awj032.glm53_packed_expert_pager import (
 )
 from tools.awj032.glm53_speculative_prefetch_accounting import (
     PrefetchAccountingError,
+    ROUTE_EVIDENCE_CLASS,
     account_speculative_prefetch,
 )
 
@@ -81,7 +82,7 @@ class RouterSeparatedPrefetchAccountingTests(unittest.TestCase):
         self.assertTrue(out.demand_load_required_for_misses)
         self.assertFalse(out.demand_load_observed)
 
-    def test_prediction_never_changes_native_route(self):
+    def test_prediction_never_changes_or_observes_native_route(self):
         first_source, first_prefetch = staged((1, 2))
         second_source, second_prefetch = staged((3, 4), source=first_source)
         route = (5, 6)
@@ -99,6 +100,10 @@ class RouterSeparatedPrefetchAccountingTests(unittest.TestCase):
         )
         self.assertEqual(first.native_route_experts, (5, 6))
         self.assertEqual(second.native_route_experts, (5, 6))
+        self.assertEqual(first.native_route_evidence_class, ROUTE_EVIDENCE_CLASS)
+        self.assertTrue(first.native_route_required_for_execution_selection)
+        self.assertFalse(first.native_route_observed)
+        self.assertFalse(second.native_route_observed)
         self.assertFalse(first.prediction_can_change_native_route)
         self.assertFalse(second.prediction_can_change_native_route)
         self.assertEqual(first.demand_load_experts, (5, 6))
@@ -184,6 +189,7 @@ class RouterSeparatedPrefetchAccountingTests(unittest.TestCase):
         first = account_speculative_prefetch(**kwargs)
         second = account_speculative_prefetch(**kwargs)
         self.assertEqual(first.receipt_digest, second.receipt_digest)
+        self.assertFalse(first.native_route_observed)
         self.assertFalse(first.execution_authorized)
         self.assertFalse(first.provider_effect_authorized)
         self.assertFalse(first.g2_admitted)
