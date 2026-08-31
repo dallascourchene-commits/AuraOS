@@ -1,0 +1,109 @@
+name: Aura WorkCapsule Causal Raw-Slice Host Plane
+
+on:
+  pull_request:
+    paths:
+      - scripts/aura_workcapsule_causal_raw_slice_host_plane_separation.py
+      - scripts/aura_workcapsule_raw_slice_host_plane_separation.py
+      - scripts/aura_workcapsule_causal_temporal_host_observation_admission.py
+      - tests/test_aura_workcapsule_causal_raw_slice_host_plane_separation.py
+      - tests/test_aura_workcapsule_causal_temporal_host_observation_admission.py
+      - .github/workflows/aura-workcapsule-causal-raw-slice-host-plane.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  causal-current-raw-slice-host-separation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      PR567_SHA: 4f107f06fcb8bf82a9c8adf188278f57f9443714
+      PR566_SHA: 282f8932a191544124096a0387b3ab16405a1cbf
+      CONVERGENCE_SEED_SHA: e3ffbb34947e6ae87946aed102aeea7e6369150b
+    steps:
+      - name: Fetch exact child and prove PR567 plus PR566 convergence
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=250 origin "$TARGET_SHA" "$PR567_SHA" "$PR566_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor "$PR567_SHA" HEAD
+          git merge-base --is-ancestor "$PR566_SHA" HEAD
+          test "$(git cat-file -p "$CONVERGENCE_SEED_SHA" | grep -c '^parent ')" -eq 2
+          git cat-file -p "$CONVERGENCE_SEED_SHA" | grep -Fx "parent $PR567_SHA"
+          git cat-file -p "$CONVERGENCE_SEED_SHA" | grep -Fx "parent $PR566_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR567 causal-current host owner
+        run: |
+          python -m py_compile scripts/aura_workcapsule_causal_temporal_host_observation_admission.py
+          python -m unittest discover -s tests -p 'test_aura_workcapsule_causal_temporal_host_observation_admission.py' -v
+
+      - name: Fetch and re-prove exact PR566 raw-slice plane owner
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr566 && mkdir -p /tmp/pr566
+          git -C /tmp/pr566 init .
+          git -C /tmp/pr566 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr566 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR566_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr566 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr566 rev-parse HEAD)" = "$PR566_SHA"
+          (cd /tmp/pr566 && python -m py_compile scripts/aura_workcapsule_raw_slice_host_plane_separation.py)
+          (cd /tmp/pr566 && python -m unittest discover -s tests -p 'test_aura_workcapsule_raw_slice_host_plane_separation.py' -v)
+
+      - name: Prove exact PR566 raw validator materialization
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -C /tmp/pr566 show "$PR566_SHA:scripts/aura_workcapsule_raw_slice_host_plane_separation.py" > /tmp/pr566-owner.py
+          cmp /tmp/pr566-owner.py scripts/aura_workcapsule_raw_slice_host_plane_separation.py
+
+      - name: Prove causal-current raw-slice host separation
+        run: |
+          python -m py_compile scripts/aura_workcapsule_causal_raw_slice_host_plane_separation.py
+          python -m unittest discover -s tests -p 'test_aura_workcapsule_causal_raw_slice_host_plane_separation.py' -v
+
+      - name: Assert live owner delegation and narrow public boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          src=scripts/aura_workcapsule_causal_raw_slice_host_plane_separation.py
+          grep -q 'aura_workcapsule_causal_temporal_host_observation_admission' "$src"
+          grep -q 'verify_raw_slice_receipt' "$src"
+          ! grep -q '^def verify_raw_slice_receipt' "$src"
+          ! grep -q 'verify_temporal_host_observation_admission' "$src"
+          ! grep -Eq 'raw_slice_promoted_to_host_rank[[:space:]]*:[[:space:]]*True|host_effect_ready[[:space:]]*:[[:space:]]*True|execution_authorized[[:space:]]*:[[:space:]]*True' "$src"
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'RAW_SLICE_HOST_PLANE_CURRENT_AGAINST_CAUSAL_TEMPORAL_OWNER=true'
+          echo 'RAW_SLICE_PROMOTED_TO_HOST_RANK=false'
+          echo 'HOST_RANK_CHANGE_REQUIRES_EXPLICIT_RESOLVER=true'
+          echo 'PRE_REENTRY_REUSED_FOR_POST_O10=true'
+          echo 'FRESH_POST_REENTRY_SUBSTITUTED=false'
+          echo 'RAW_SLICE_SEMANTIC_IDENTITY_PROVEN=false'
+          echo 'RAW_SLICE_PRODUCER_AUTHENTICATED=false'
+          echo 'HOST_OBSERVATION_AUTHORITY_PROVEN=false'
+          echo 'TRUSTED_CONTINUATION_READY=false'
+          echo 'HOST_EFFECT_READY=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false'
