@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1658
-- **total_bytes**: 26553668
-- **text_tokens_est**: 6628771
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 275, 'support_file': 56}
+- **file_count**: 1659
+- **total_bytes**: 26561569
+- **text_tokens_est**: 6630739
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 275, 'support_file': 56}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1658,
+  "repo_file_count": 1659,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1124,6 +1124,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/arena/.eki2-state",
     "docs/arena/.eki2-verifier",
     "docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json",
+    "docs/arena/EXTERNAL_SUBJECT_LINEAGE_BRIDGE_V1.md",
     "docs/arena/eki2-external-cognition-store-writer-v1.md",
     "docs/arena/eki2-proof-target-v2.txt",
     "docs/arena/eki2-proof-target.txt",
@@ -1798,12 +1799,12 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1658,
-  "bytes": 26553668,
-  "tokens_est": 6628771,
+  "files": 1659,
+  "bytes": 26561569,
+  "tokens_est": 6630739,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 238,
+    "knowledge_artifact": 239,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1004,
