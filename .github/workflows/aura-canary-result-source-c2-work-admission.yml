@@ -1,0 +1,69 @@
+name: Aura Canary Result Source C2 Work Admission
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_canary_result_source_c2_work_admission.py"
+      - "tests/test_aura_canary_result_source_c2_work_admission.py"
+      - ".github/workflows/aura-canary-result-source-c2-work-admission.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  canary-result-source-c2-work-admission:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Revalidate exact other-agent Q5 and Q7 generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          q5_head="23c8345a1e3d5034ce88bea1ab32c69c1a9cf3f2"
+          q5_run="33400399223"
+          q5_path="tools/quantization/aura_glm53_official_equal_rate_e8_canary.py"
+          q5_blob="5b39ce1132f8ef520529487411628be04e51f32a"
+          q7_head="7340091202f3f1a859841c3ec4314191f18fa1ad"
+          q7_run="33400557094"
+          q7_path="tools/quantization/aura_glm53_official_source_c2_request_admission.py"
+          q7_blob="31837eb716139170cbdd5290f7aae889cd7b90be"
+
+          for sha in "$q5_head" "$q7_head"; do
+            git fetch --no-tags --depth=1 origin "$sha"
+            git cat-file -e "$sha^{commit}"
+          done
+          test "$(git show "$q5_head:$q5_path" | git hash-object --stdin)" = "$q5_blob"
+          test "$(git show "$q7_head:$q7_path" | git hash-object --stdin)" = "$q7_blob"
+          test "$(gh api "repos/$repo/actions/runs/$q5_run" --jq '.head_sha')" = "$q5_head"
+          test "$(gh api "repos/$repo/actions/runs/$q5_run" --jq '.conclusion')" = "success"
+          test "$(gh api "repos/$repo/actions/runs/$q7_run" --jq '.head_sha')" = "$q7_head"
+          test "$(gh api "repos/$repo/actions/runs/$q7_run" --jq '.conclusion')" = "success"
+
+      - name: Run focused work-admission suite
+        run: |
+          python -m pip install --disable-pip-version-check pytest
+          python -m pytest -q tests/test_aura_canary_result_source_c2_work_admission.py
+          python -m tools.quantization.aura_canary_result_source_c2_work_admission | tee /tmp/q8.json
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/q8.json', encoding='utf-8'))
+          assert r['representative_outcome'] == 'E8_WIN'
+          assert r['disposition'] == 'SOURCE_ADMISSION_HOLD'
+          assert r['c2_request_proposal_eligible'] is False
+          assert r['reason'] == 'OFFICIAL_INDEX_BYTES_AND_REPRESENTATIVE_HEADERS_NOT_MATERIALIZED'
+          assert r['execution_authorized'] is False
+          assert r['gate10_promoted'] is False
+          print('FAVORABLE_CANARY_DOES_NOT_BYPASS_SOURCE_GATE=true')
+          PY
