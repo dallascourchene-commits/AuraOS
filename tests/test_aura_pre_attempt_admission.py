@@ -16,6 +16,7 @@ from tools.aura_bounded_proposal_capsule import (
 from tools.aura_pre_attempt_admission import (
     ELIGIBLE,
     POLICY_SCHEMA,
+    PreAttemptAdmissionReceipt,
     PreAttemptPolicyState,
     admit_pre_attempt,
 )
@@ -99,6 +100,10 @@ class Resolver:
         self.conflict = False
         self.raise_policy = False
         self.raise_concurrency = False
+        self.raise_epoch = False
+        self.epoch = "proposal-scope-epoch-1"
+        self.epoch_sequence = None
+        self.epoch_calls = 0
 
     def resolve_eligibility(self, *, owner_ref: str, transition_id: str):
         return self.eligibility_state
@@ -127,6 +132,15 @@ class Resolver:
         if self.raise_concurrency:
             raise RuntimeError("concurrency unavailable")
         return self.conflict
+
+    def resolve_pre_attempt_state_epoch(self, *, proposal_id: str):
+        if self.raise_epoch:
+            raise RuntimeError("epoch unavailable")
+        self.epoch_calls += 1
+        if self.epoch_sequence is not None:
+            index = min(self.epoch_calls - 1, len(self.epoch_sequence) - 1)
+            return self.epoch_sequence[index]
+        return self.epoch
 
 
 def policy_for(b: ProposalBasis, **overrides):
@@ -166,6 +180,8 @@ class PreAttemptAdmissionTests(unittest.TestCase):
         result = admit_pre_attempt(capsule=capsule, owner_resolver=resolver)
         self.assertEqual(result.disposition, ELIGIBLE)
         self.assertEqual(len(result.pre_attempt_id or ""), 64)
+        self.assertEqual(result.owner_state_epoch, "proposal-scope-epoch-1")
+        self.assertEqual(resolver.epoch_calls, 2)
         self.assertTrue(result.proposal_current)
         self.assertTrue(result.policy_current)
         self.assertFalse(result.execution_authorized)
@@ -189,6 +205,46 @@ class PreAttemptAdmissionTests(unittest.TestCase):
         result = admit_pre_attempt(capsule=capsule, owner_resolver=None)
         self.assertEqual(result.reason_code, "OWNER_RESOLVER_UNAVAILABLE")
         self.assertIsNone(result.pre_attempt_id)
+
+    def test_missing_invalid_or_exceptional_epoch_fails_closed_before_currentness_reads(self):
+        cases = (
+            (None, False, "OWNER_STATE_EPOCH_UNAVAILABLE_OR_UNKNOWN"),
+            ("", False, "OWNER_STATE_EPOCH_INVALID"),
+            (None, True, "OWNER_STATE_EPOCH_RESOLVER_ERROR"),
+        )
+        for epoch, raises, reason in cases:
+            with self.subTest(reason=reason):
+                capsule, resolver = capsule_and_resolver()
+                resolver.epoch = epoch
+                resolver.raise_epoch = raises
+                result = admit_pre_attempt(capsule=capsule, owner_resolver=resolver)
+                self.assertEqual(result.reason_code, reason)
+                self.assertIsNone(result.pre_attempt_id)
+
+    def test_epoch_change_during_successful_read_set_blocks_torn_snapshot(self):
+        capsule, resolver = capsule_and_resolver()
+        resolver.epoch_sequence = ["proposal-scope-epoch-1", "proposal-scope-epoch-2"]
+        result = admit_pre_attempt(capsule=capsule, owner_resolver=resolver)
+        self.assertEqual(result.reason_code, "OWNER_STATE_EPOCH_CHANGED_DURING_ADMISSION")
+        self.assertIsNone(result.pre_attempt_id)
+        self.assertEqual(result.owner_state_epoch, "proposal-scope-epoch-2")
+        self.assertFalse(result.execution_authorized)
+
+    def test_epoch_failure_at_final_serializability_barrier_blocks_admission(self):
+        capsule, resolver = capsule_and_resolver()
+        resolver.epoch_sequence = ["proposal-scope-epoch-1", None]
+        result = admit_pre_attempt(capsule=capsule, owner_resolver=resolver)
+        self.assertEqual(result.reason_code, "OWNER_STATE_EPOCH_UNAVAILABLE_OR_UNKNOWN")
+        self.assertIsNone(result.pre_attempt_id)
+
+    def test_relevant_owner_epoch_is_bound_into_pre_attempt_identity(self):
+        capsule, resolver = capsule_and_resolver()
+        first = admit_pre_attempt(capsule=capsule, owner_resolver=resolver)
+        capsule2, resolver2 = capsule_and_resolver()
+        resolver2.epoch = "proposal-scope-epoch-2"
+        second = admit_pre_attempt(capsule=capsule2, owner_resolver=resolver2)
+        self.assertEqual(second.disposition, ELIGIBLE)
+        self.assertNotEqual(first.pre_attempt_id, second.pre_attempt_id)
 
     def test_stale_proposal_currentness_holds_before_policy(self):
         capsule, resolver = capsule_and_resolver()
@@ -222,6 +278,17 @@ class PreAttemptAdmissionTests(unittest.TestCase):
         resolver.policy = replace(resolver.policy, policy_current=False)
         result = admit_pre_attempt(capsule=capsule, owner_resolver=resolver)
         self.assertEqual(result.reason_code, "POLICY_NOT_CURRENT")
+
+    def test_policy_proposal_and_domain_action_mismatch_hold(self):
+        capsule, resolver = capsule_and_resolver()
+        resolver.policy = replace(resolver.policy, proposal_id="6" * 64)
+        result = admit_pre_attempt(capsule=capsule, owner_resolver=resolver)
+        self.assertEqual(result.reason_code, "POLICY_PROPOSAL_MISMATCH")
+
+        capsule, resolver = capsule_and_resolver()
+        resolver.policy = replace(resolver.policy, domain_id="other-domain")
+        result = admit_pre_attempt(capsule=capsule, owner_resolver=resolver)
+        self.assertEqual(result.reason_code, "POLICY_DOMAIN_OR_ACTION_MISMATCH")
 
     def test_authority_action_and_resource_mismatches_are_noncompensatory(self):
         cases = (
@@ -277,6 +344,32 @@ class PreAttemptAdmissionTests(unittest.TestCase):
         second = admit_pre_attempt(capsule=capsule, owner_resolver=resolver)
         self.assertEqual(first.receipt_digest, second.receipt_digest)
         self.assertEqual(first.to_dict(), second.to_dict())
+
+    def test_forged_eligible_receipt_without_epoch_or_all_gates_fails_validation(self):
+        capsule, _ = capsule_and_resolver()
+        forged = PreAttemptAdmissionReceipt(
+            schema_version="AURA-PRE-ATTEMPT-ADMISSION-RECEIPT-v1",
+            disposition=ELIGIBLE,
+            reason_code="forged",
+            proposal_id=capsule.proposal_id,
+            proposal_basis_digest=capsule.proposal_basis_digest,
+            pre_attempt_id="9" * 64,
+            owner_state_epoch=None,
+            policy_generation="p",
+            policy_digest="8" * 64,
+            expected_route_fingerprint="route",
+            expected_observer_identity="observer",
+            concurrency_scope_digest="7" * 64,
+            minimum_invalidated_cone=(),
+            proposal_current=True,
+            policy_current=True,
+            authority_scope_matches=True,
+            action_matches_proposal=True,
+            resource_envelope_matches=True,
+            concurrent_live_attempt_conflict=False,
+        )
+        with self.assertRaisesRegex(ValueError, "OWNER_STATE_EPOCH_REQUIRED"):
+            forged.validate_claim_ceiling()
 
 
 if __name__ == "__main__":
