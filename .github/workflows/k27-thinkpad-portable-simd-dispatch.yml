@@ -1,0 +1,65 @@
+name: K27 ThinkPad Portable SIMD Dispatch
+
+on:
+  pull_request:
+    paths:
+      - "tools/k27/thinkpad_portable_simd_dispatch.cpp"
+      - ".github/workflows/k27-thinkpad-portable-simd-dispatch.yml"
+  workflow_dispatch:
+
+jobs:
+  portable-dispatch-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Assert exact PR head
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+
+      - name: Reject global build-host ISA capture
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -R --line-number --fixed-strings -- '-march=native' tools/k27/thinkpad_portable_simd_dispatch.cpp .github/workflows/k27-thinkpad-portable-simd-dispatch.yml
+          ! grep -R --line-number --fixed-strings -- '-mavx512' .github/workflows/k27-thinkpad-portable-simd-dispatch.yml
+          ! grep -R --line-number --fixed-strings -- '-mavx2' .github/workflows/k27-thinkpad-portable-simd-dispatch.yml
+
+      - name: Compile baseline translation unit with function-scoped ISA targets
+        shell: bash
+        run: |
+          set -euo pipefail
+          g++ -O3 -std=c++17 -Wall -Wextra -Wpedantic -Werror \
+            tools/k27/thinkpad_portable_simd_dispatch.cpp \
+            -o "${RUNNER_TEMP}/k27-portable-simd"
+
+      - name: Execute consequence-equivalence witness
+        shell: bash
+        run: |
+          set -euo pipefail
+          "${RUNNER_TEMP}/k27-portable-simd" | tee "${RUNNER_TEMP}/receipt.txt"
+          grep -q '^SCALAR_SELECTED_EQUIVALENT=true$' "${RUNNER_TEMP}/receipt.txt"
+          grep -q '^GLOBAL_MARCH_NATIVE_REQUIRED=false$' "${RUNNER_TEMP}/receipt.txt"
+          grep -q '^P_CORE_ONLY_OBSERVED=false$' "${RUNNER_TEMP}/receipt.txt"
+          grep -q '^CACHE_RESIDENCY_PROVEN=false$' "${RUNNER_TEMP}/receipt.txt"
+          grep -q '^THERMAL_POWER_REDUCTION_PROVEN=false$' "${RUNNER_TEMP}/receipt.txt"
+          grep -q '^PERFORMANCE_SUPERIORITY_PROVEN=false$' "${RUNNER_TEMP}/receipt.txt"
+          grep -q '^SEMANTIC_K27_AUTHORITY=false$' "${RUNNER_TEMP}/receipt.txt"
+          grep -q '^NATIVE_TRANSFORMER_KV_ACCESSED=false$' "${RUNNER_TEMP}/receipt.txt"
+
+      - name: Prove CPUID is not the sole vector-state gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'xgetbv' tools/k27/thinkpad_portable_simd_dispatch.cpp
+          grep -q 'xmm_ymm_state' tools/k27/thinkpad_portable_simd_dispatch.cpp
+          grep -q 'zmm_state' tools/k27/thinkpad_portable_simd_dispatch.cpp
+          echo 'PORTABLE_SIMD_DISPATCH_CONTRACT_EXECUTED=true'
+          echo 'CPUID_ONLY_DISPATCH_ACCEPTED=false'
+          echo 'GLOBAL_MARCH_NATIVE_ACCEPTED=false'
+          echo 'P_CORE_ONLY_CLAIM_EARNED=false'
+          echo 'PERFORMANCE_SUPERIORITY_PROVEN=false'
