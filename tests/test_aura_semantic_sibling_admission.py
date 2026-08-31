@@ -146,7 +146,8 @@ class SemanticSiblingAdmissionTests(unittest.TestCase):
             candidates=(pending, other), cut=OBJECTIVE_2_CUT, current_agent_id="SELF"
         )
         self.assertFalse(receipt.successor_admissible)
-        self.assertEqual(receipt.classifications[0].disposition, "NOT_TERMINAL_GREEN")
+        dispositions = {c.artifact_id: c.disposition for c in receipt.classifications}
+        self.assertEqual(dispositions["pending"], "NOT_TERMINAL_GREEN")
 
     def test_semantic_state_change_can_be_second_sibling(self) -> None:
         hold = self._candidate(
