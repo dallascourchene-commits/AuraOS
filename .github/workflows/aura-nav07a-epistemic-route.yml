@@ -15,10 +15,11 @@ jobs:
   exact-epistemic-route-proof:
     runs-on: ubuntu-24.04
     steps:
-      - name: Checkout exact source head
+      - name: Checkout exact source head with convergence history
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
 
       - name: Verify exact source head
         shell: bash
