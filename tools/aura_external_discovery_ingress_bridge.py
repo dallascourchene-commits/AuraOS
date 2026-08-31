@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from dataclasses import replace
 from datetime import datetime, timezone
-from typing import Mapping
 
 from tools.aura_external_discovery import DiscoveryRecord
 from tools.aura_external_knowledge_ingress import (
@@ -84,7 +83,7 @@ def discovery_to_l0_node(
         source_generated_at=record.source_generated_at,
         exact_source_uri=record.exact_source_uri,
         verifier_generation=validator_generation,
-        verified_fields=("canonical_id", "exact_source_uri", "provider_revision", "provider_metadata"),
+        verified_fields=("canonical_id", "exact_source_uri", "provider_metadata", "provider_revision"),
         license_id=(record.metadata.get("license") if isinstance(record.metadata.get("license"), str) else None),
         security_flags=_security_flags(record),
         provider_metadata_digest=record.provider_metadata_digest,
