@@ -112,7 +112,34 @@ fn native_reader(adjacency: &[Vec<u64>]) -> Result<SPlaneGraphReader<MemoryPages
     SPlaneGraphReader::new(records, MemoryPages { pages })
 }
 
-fn main() -> Result<(), Box<dyn std::error::Error>> {
+fn emit_failure_cases() -> Result<(), Box<dyn std::error::Error>> {
+    let adjacency = build_balanced_tree(DEPTH, BRANCHING);
+
+    let mut reader = native_reader(&adjacency)?;
+    match reader.query_cone(999_999, 1, MAX_NODES, None) {
+        Err(StorageError::MissingRoot(_)) => println!("MISSING_ROOT\tMISSING_ROOT"),
+        other => return Err(format!("missing-root case drifted: {other:?}").into()),
+    }
+
+    let mut reader = native_reader(&adjacency)?;
+    match reader.query_cone(0, 3, 2, None) {
+        Err(StorageError::ConeBudgetExceeded { max_nodes: 2 }) => {
+            println!("BUDGET_2\tCONE_BUDGET_EXCEEDED")
+        }
+        other => return Err(format!("budget case drifted: {other:?}").into()),
+    }
+
+    let malformed_adjacency = vec![vec![99_u64]];
+    let mut reader = native_reader(&malformed_adjacency)?;
+    match reader.query_cone(0, 1, 10, None) {
+        Err(StorageError::MissingTarget(99)) => println!("MISSING_TARGET\tQUERY_MISSING_TARGET"),
+        other => return Err(format!("missing-target case drifted: {other:?}").into()),
+    }
+
+    Ok(())
+}
+
+fn emit_success_matrix() -> Result<(), Box<dyn std::error::Error>> {
     let adjacency = build_balanced_tree(DEPTH, BRANCHING);
     if adjacency.len() != 3_280 {
         return Err(format!("fixture node count drifted: {}", adjacency.len()).into());
@@ -136,4 +163,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
     Ok(())
+}
+
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    if std::env::args().nth(1).as_deref() == Some("--failure-cases") {
+        emit_failure_cases()
+    } else {
+        emit_success_matrix()
+    }
 }
