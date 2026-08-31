@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788197402,
+  "generated_at_unix": 1788198915,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1654,
+    "repo_file_count": 1659,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -138,6 +138,7 @@
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-external-knowledge-ingress.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+      ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1104,6 +1105,8 @@
       "docs/arena/.eki2-objective",
       "docs/arena/.eki2-state",
       "docs/arena/.eki2-verifier",
+      "docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json",
+      "docs/arena/EXTERNAL_SUBJECT_LINEAGE_BRIDGE_V1.md",
       "docs/arena/eki2-external-cognition-store-writer-v1.md",
       "docs/arena/eki2-proof-target-v2.txt",
       "docs/arena/eki2-proof-target.txt",
@@ -1479,6 +1482,7 @@
       "tests/test_aura_external_knowledge_store_reader_integration.py",
       "tests/test_aura_external_knowledge_store_writer.py",
       "tests/test_aura_external_llm_session.py",
+      "tests/test_aura_external_subject_lineage_bridge.py",
       "tests/test_aura_fetch_construction_demo_source.py",
       "tests/test_aura_financial_contracts.py",
       "tests/test_aura_financial_contracts_regressions.py",
@@ -1646,6 +1650,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/aura_external_knowledge_ingress.py",
       "tools/aura_external_knowledge_store_writer.py",
+      "tools/aura_external_subject_lineage_bridge.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1770,16 +1775,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1654,
-      "bytes": 26509585,
-      "tokens_est": 6617749,
+      "files": 1659,
+      "bytes": 26562681,
+      "tokens_est": 6631017,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 238,
+        "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1002,
-        "schema_or_lexicon": 273,
+        "python_module": 1004,
+        "schema_or_lexicon": 275,
         "support_file": 56
       }
     },
@@ -3925,6 +3930,14 @@
         "line": 103,
         "end_line": 110,
         "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_canonical:af142ecd08e466a2",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "function",
+        "line": 89,
+        "end_line": 97,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_canonical:ecc9c85ee78af929",
         "signature_hash": "8d5bf5695239b859"
       }
     ],
@@ -8121,6 +8134,14 @@
         "line": 61,
         "end_line": 62,
         "semantic_id": "tools/aura_external_knowledge_store_writer.py#function:_sha:e19cf647fa7eed39",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 101,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_sha:c76a80c22b50a90e",
         "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
@@ -13762,6 +13783,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "function",
+        "line": 114,
+        "end_line": 118,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_sha256:213a1c3c146dfa50",
+        "signature_hash": "fda5827e1e9021fd"
       }
     ],
     "PullRequestRouteBinding": [
@@ -15836,6 +15865,14 @@
         "end_line": 72,
         "semantic_id": "tools/aura_external_knowledge_store_writer.py#function:_required:3d12d827cda0ea63",
         "signature_hash": "9737d32c1db83273"
+      },
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "function",
+        "line": 108,
+        "end_line": 111,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_required:81252ba66344027a",
+        "signature_hash": "8b28cfce6f68b96b"
       }
     ],
     "_hash": [
@@ -24366,6 +24403,14 @@
         "end_line": 108,
         "semantic_id": "aura_civic_planning.py#function:_snapshot:9add783eaef79622",
         "signature_hash": "aff363bfdf9353d0"
+      },
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "function",
+        "line": 80,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#function:_snapshot:ebdad67917777aae",
+        "signature_hash": "5b7180687f17339d"
       },
       {
         "file": "tests/test_aura_financial_contracts.py",
@@ -74920,6 +74965,14 @@
         "end_line": 30,
         "semantic_id": "aura_refactor_state_identity.py#function:_key:a20071f3b969acc4",
         "signature_hash": "bf3a233f00be2a47"
+      },
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#function:_key:0e910f77d0f92a83",
+        "signature_hash": "276018c83ec69645"
       }
     ],
     "normalize": [
@@ -136282,6 +136335,186 @@
         "signature_hash": "6ad272ce7a1924bf"
       }
     ],
+    "_subject": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 38,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#function:_subject:09b787039ee021a2",
+        "signature_hash": "590b8518207dc1bf"
+      }
+    ],
+    "_row": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 77,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#function:_row:22f02cc87b98765c",
+        "signature_hash": "638a7f3b3459775b"
+      }
+    ],
+    "_resolve": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 119,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#function:_resolve:ab50eb7dd1bb28ec",
+        "signature_hash": "b29cc139e4298566"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "class",
+        "line": 122,
+        "end_line": 214,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#class:ExternalSubjectLineageBridgeTests:ea689c9683756e7b",
+        "signature_hash": "a585f8cc3e4e2c34"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_identity_domains_remain_distinct_but_exact_descriptor_bridges_them": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 141,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_identity_domains_remain_distinct_but_exact_descriptor_bridges_them:bf39ae9143a8c769",
+        "signature_hash": "3a9518007b954220"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_explicit_successor_beats_lexical_or_timestamp_like_order": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 147,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_explicit_successor_beats_lexical_or_timestamp_like_order:059498e62515299d",
+        "signature_hash": "a8bec4e312bf40f9"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_unknown_currentness_requires_revalidation": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 152,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_unknown_currentness_requires_revalidation:13e2a8054c512f16",
+        "signature_hash": "f467072067a6ba3b"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_stale_terminal_reopens_source_currentness": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 156,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_stale_terminal_reopens_source_currentness:5ab751c76f65c71f",
+        "signature_hash": "eb96b1ad6b158fd5"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_persisted_cell_or_k27_like_placement_cannot_change_lineage": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 164,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_persisted_cell_or_k27_like_placement_cannot_change_lineage:5083dcbf353cad63",
+        "signature_hash": "b99bc0ad91d2903e"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_current_subject_key_cannot_be_claimed_without_exact_digest": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 169,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_current_subject_key_cannot_be_claimed_without_exact_digest:d4ba3f1942b14840",
+        "signature_hash": "88cc4a064dd864c8"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_provider_and_source_kind_bridge_is_typed_not_inferred": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 171,
+        "end_line": 175,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_provider_and_source_kind_bridge_is_typed_not_inferred:6275ff912442accc",
+        "signature_hash": "e1f96dce88875212"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_canonical_uri_drift_requires_explicit_alias_or_reopen_proof": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 180,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_canonical_uri_drift_requires_explicit_alias_or_reopen_proof:6d0305e623d49734",
+        "signature_hash": "b8a0672da12842f8"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_disconnected_same_subject_versions_do_not_infer_latest": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 185,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_disconnected_same_subject_versions_do_not_infer_latest:e22e5213ecca09fa",
+        "signature_hash": "aa55cf6b3a5c086c"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_successor_must_remain_inside_exact_subject_lineage": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 190,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_successor_must_remain_inside_exact_subject_lineage:1b3859beefcc081a",
+        "signature_hash": "f9cc961be895df8e"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_store_sha_is_exact_not_prefix_compatible_at_bridge": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 192,
+        "end_line": 194,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_store_sha_is_exact_not_prefix_compatible_at_bridge:e286fde1e2eb60c7",
+        "signature_hash": "33cc319a38963207"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_model_prefix_kv_routes_to_wrong_owner": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 196,
+        "end_line": 199,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_model_prefix_kv_routes_to_wrong_owner:5448f4fe55d77edc",
+        "signature_hash": "035ff9be2c12ef2b"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_unsupported_legacy_kind_requires_explicit_bridge_owner": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 201,
+        "end_line": 204,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_unsupported_legacy_kind_requires_explicit_bridge_owner:b0f6d414273e0d67",
+        "signature_hash": "8b6f641b189aae80"
+      }
+    ],
+    "ExternalSubjectLineageBridgeTests.test_snapshot_schema_and_duplicates_fail_closed_at_construction": [
+      {
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 206,
+        "end_line": 214,
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_snapshot_schema_and_duplicates_fail_closed_at_construction:1395964aa87af2bd",
+        "signature_hash": "b7222c27a9387957"
+      }
+    ],
     "_Response": [
       {
         "file": "tests/test_aura_fetch_construction_demo_source.py",
@@ -158338,6 +158571,14 @@
         "end_line": 66,
         "semantic_id": "tools/aura_external_knowledge_store_writer.py#function:_sha_bytes:6008d73713c32577",
         "signature_hash": "aa36b9c776037732"
+      },
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "function",
+        "line": 104,
+        "end_line": 105,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_sha_bytes:0d59eae6bf051a91",
+        "signature_hash": "aa36b9c776037732"
       }
     ],
     "_record_generation_payload": [
@@ -158548,6 +158789,156 @@
         "end_line": 528,
         "semantic_id": "tools/aura_external_knowledge_store_writer.py#function:_cli:93fd1fee1cd5a69c",
         "signature_hash": "9942606d5f7a2989"
+      }
+    ],
+    "LineageDisposition": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 76,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:LineageDisposition:4907a7dd0997eac5",
+        "signature_hash": "258dfd18ba464fab"
+      }
+    ],
+    "CurrentnessStatus": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "class",
+        "line": 79,
+        "end_line": 82,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:CurrentnessStatus:7c9e6519f54e2a58",
+        "signature_hash": "d23a19aea559196f"
+      }
+    ],
+    "SubjectLineageBridgeError": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "class",
+        "line": 85,
+        "end_line": 86,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:SubjectLineageBridgeError:c3a9cedb8161e114",
+        "signature_hash": "c3ba05d4bd524afb"
+      }
+    ],
+    "legacy_semantic_id": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 130,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:legacy_semantic_id:434bb27fbfba5878",
+        "signature_hash": "1bdf4193d7211fd4"
+      }
+    ],
+    "current_subject_key": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "function",
+        "line": 133,
+        "end_line": 144,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:current_subject_key:4823f3c41b517bc3",
+        "signature_hash": "924b24151b5ffc26"
+      }
+    ],
+    "CurrentSubjectDescriptorV1": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "class",
+        "line": 148,
+        "end_line": 167,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:CurrentSubjectDescriptorV1:789c1165eda66454",
+        "signature_hash": "4fefbc5bed13e394"
+      }
+    ],
+    "CurrentSubjectDescriptorV1.validate": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 167,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#method:CurrentSubjectDescriptorV1.validate:28498ea9b1dd432d",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SubjectLineageRequestV1": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "class",
+        "line": 171,
+        "end_line": 177,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:SubjectLineageRequestV1:f5cabb270d4fb8a7",
+        "signature_hash": "c0540fa0f639fc35"
+      }
+    ],
+    "SubjectLineageValidationContextV1": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "class",
+        "line": 181,
+        "end_line": 183,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:SubjectLineageValidationContextV1:d7e632e5f3d0b7e6",
+        "signature_hash": "6e2daa754e4afbbf"
+      }
+    ],
+    "SubjectLineageReceiptV1": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "class",
+        "line": 187,
+        "end_line": 209,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:SubjectLineageReceiptV1:ed3722dab6f12fdc",
+        "signature_hash": "d0bdb87ede901937"
+      }
+    ],
+    "ExternalSubjectLineageBridgeV1": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "class",
+        "line": 212,
+        "end_line": 522,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:ExternalSubjectLineageBridgeV1:bbfc2979722d260f",
+        "signature_hash": "c8de08b872182975"
+      }
+    ],
+    "ExternalSubjectLineageBridgeV1.__init__": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 215,
+        "end_line": 246,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeV1.__init__:16662d52cbc7a51a",
+        "signature_hash": "1cf4294fec8f1026"
+      }
+    ],
+    "ExternalSubjectLineageBridgeV1._request_digest": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 248,
+        "end_line": 249,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeV1._request_digest:6098f21c5a340242",
+        "signature_hash": "221e837a0c646544"
+      }
+    ],
+    "ExternalSubjectLineageBridgeV1._receipt": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 251,
+        "end_line": 305,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeV1._receipt:e65896e459664878",
+        "signature_hash": "3ce0cdc33499d634"
+      }
+    ],
+    "ExternalSubjectLineageBridgeV1.resolve": [
+      {
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "kind": "method",
+        "line": 307,
+        "end_line": 522,
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeV1.resolve:d821aa73e0ffd6cd",
+        "signature_hash": "516d8b0907581cee"
       }
     ],
     "_coordinates": [
@@ -159662,6 +160053,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+      ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -159967,6 +160359,7 @@
     ],
     "python -m unittest": [
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+      ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
@@ -169233,6 +169626,63 @@
         0.201356,
         0.173495,
         0.310265
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 10223,
+      "lines": 242,
+      "tokens_est": 2556,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          50
+        ],
+        "python -m unittest": [
+          55
+        ]
+      },
+      "topology": {},
+      "digest8": "bdc41dad261d5545",
+      "vector": [
+        0.140003,
+        0.290964,
+        0.19844,
+        0.12296,
+        -0.298268,
+        0.19844,
+        -0.186265,
+        0.10835,
+        0.008522,
+        0.249571,
+        0.26905,
+        0.220353,
+        0.020696,
+        -0.115655,
+        -0.028001,
+        -0.152178,
+        -0.035305,
+        -0.110785,
+        -0.222788,
+        -0.230093,
+        -0.227658,
+        -0.208179,
+        0.149743,
+        -0.222788,
+        0.11809,
+        -0.149743,
+        0.025566,
+        -0.003652,
+        -0.200874,
+        -0.225223,
+        -0.125394,
+        0.135134
       ]
     },
     {
@@ -236551,6 +237001,100 @@
       ]
     },
     {
+      "path": "docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3771,
+      "lines": 76,
+      "tokens_est": 943,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4d387362a580175e",
+      "vector": [
+        0.15945,
+        0.296786,
+        0.115223,
+        -0.178072,
+        0.08729,
+        -0.070996,
+        -0.094273,
+        0.257215,
+        -0.050046,
+        0.03608,
+        0.247904,
+        0.245576,
+        0.1385,
+        -0.236265,
+        0.08729,
+        -0.275837,
+        0.145483,
+        -0.075651,
+        0.136173,
+        0.096601,
+        -0.098929,
+        -0.122206,
+        0.28282,
+        -0.273509,
+        -0.182727,
+        0.150139,
+        -0.094273,
+        -0.203677,
+        -0.157122,
+        0.219971,
+        0.080307,
+        0.222299
+      ]
+    },
+    {
+      "path": "docs/arena/EXTERNAL_SUBJECT_LINEAGE_BRIDGE_V1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 7901,
+      "lines": 134,
+      "tokens_est": 1968,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2b0971fc3931b877",
+      "vector": [
+        0.262425,
+        0.222245,
+        0.254892,
+        0.089149,
+        0.2122,
+        -0.053992,
+        -0.15193,
+        0.126818,
+        0.038924,
+        0.104217,
+        -0.166998,
+        0.244847,
+        0.264937,
+        0.053992,
+        -0.051481,
+        -0.154442,
+        -0.061526,
+        -0.061526,
+        0.041436,
+        0.031391,
+        0.086638,
+        -0.254892,
+        0.194622,
+        -0.247358,
+        0.053992,
+        0.295072,
+        -0.17202,
+        -0.239824,
+        -0.194622,
+        0.267448,
+        0.043947,
+        -0.227268
+      ]
+    },
+    {
       "path": "docs/arena/eki2-external-cognition-store-writer-v1.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -256906,6 +257450,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_external_subject_lineage_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9650,
+      "lines": 219,
+      "tokens_est": 2413,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "640daa60ebe6c01e",
+      "vector": [
+        -0.111173,
+        -0.240277,
+        -0.037058,
+        0.235495,
+        -0.092046,
+        0.180506,
+        -0.084874,
+        0.240277,
+        0.295265,
+        0.142253,
+        -0.202024,
+        -0.276139,
+        -0.056184,
+        0.27853,
+        0.19007,
+        -0.020322,
+        -0.07292,
+        0.302438,
+        -0.154207,
+        0.099219,
+        0.113564,
+        0.142253,
+        0.261794,
+        0.025104,
+        -0.173334,
+        -0.154207,
+        0.07292,
+        0.01554,
+        0.247449,
+        0.242667,
+        -0.092046,
+        0.068138
+      ]
+    },
+    {
       "path": "tests/test_aura_fetch_construction_demo_source.py",
       "role": "python_module",
       "binary": false,
@@ -264752,6 +265343,53 @@
         -0.15247,
         -0.110324,
         -0.21197
+      ]
+    },
+    {
+      "path": "tools/aura_external_subject_lineage_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 21551,
+      "lines": 523,
+      "tokens_est": 5388,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "02767792e434ce3f",
+      "vector": [
+        -0.260845,
+        -0.15833,
+        -0.174276,
+        -0.094542,
+        0.217561,
+        -0.044423,
+        -0.213005,
+        0.028477,
+        0.256289,
+        0.215283,
+        -0.267679,
+        -0.08543,
+        0.267679,
+        0.162886,
+        0.003417,
+        0.083151,
+        -0.258567,
+        -0.017086,
+        0.142383,
+        0.037589,
+        0.201614,
+        0.160608,
+        0.199336,
+        0.069483,
+        -0.167442,
+        0.092264,
+        -0.028477,
+        0.288183,
+        0.126436,
+        0.176555,
+        -0.178833,
+        -0.276792
       ]
     },
     {
@@ -288753,16 +289391,16 @@
     }
   },
   "summary": {
-    "file_count": 1654,
-    "total_bytes": 26509585,
-    "text_tokens_est": 6617749,
+    "file_count": 1659,
+    "total_bytes": 26562681,
+    "text_tokens_est": 6631017,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 238,
+      "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1002,
-      "schema_or_lexicon": 273,
+      "python_module": 1004,
+      "schema_or_lexicon": 275,
       "support_file": 56
     },
     "topology_nodes": 11478,
@@ -288910,6 +289548,7 @@
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-external-knowledge-ingress.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+      ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -289876,6 +290515,8 @@
       "docs/arena/.eki2-objective",
       "docs/arena/.eki2-state",
       "docs/arena/.eki2-verifier",
+      "docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json",
+      "docs/arena/EXTERNAL_SUBJECT_LINEAGE_BRIDGE_V1.md",
       "docs/arena/eki2-external-cognition-store-writer-v1.md",
       "docs/arena/eki2-proof-target-v2.txt",
       "docs/arena/eki2-proof-target.txt",
@@ -290251,6 +290892,7 @@
       "tests/test_aura_external_knowledge_store_reader_integration.py",
       "tests/test_aura_external_knowledge_store_writer.py",
       "tests/test_aura_external_llm_session.py",
+      "tests/test_aura_external_subject_lineage_bridge.py",
       "tests/test_aura_fetch_construction_demo_source.py",
       "tests/test_aura_financial_contracts.py",
       "tests/test_aura_financial_contracts_regressions.py",
@@ -290418,6 +291060,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/aura_external_knowledge_ingress.py",
       "tools/aura_external_knowledge_store_writer.py",
+      "tools/aura_external_subject_lineage_bridge.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -425406,6 +426049,206 @@
         "file_digest8": "9e4334abc2fa4d15"
       },
       {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#class:ExternalSubjectLineageBridgeTests:ea689c9683756e7b",
+        "name": "ExternalSubjectLineageBridgeTests",
+        "kind": "class",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 122,
+        "end_line": 214,
+        "signature_hash": "a585f8cc3e4e2c34",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#function:_key:0e910f77d0f92a83",
+        "name": "_key",
+        "kind": "function",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 41,
+        "end_line": 43,
+        "signature_hash": "276018c83ec69645",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#function:_resolve:ab50eb7dd1bb28ec",
+        "name": "_resolve",
+        "kind": "function",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 91,
+        "end_line": 119,
+        "signature_hash": "b29cc139e4298566",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#function:_row:22f02cc87b98765c",
+        "name": "_row",
+        "kind": "function",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 46,
+        "end_line": 77,
+        "signature_hash": "638a7f3b3459775b",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#function:_snapshot:ebdad67917777aae",
+        "name": "_snapshot",
+        "kind": "function",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 80,
+        "end_line": 88,
+        "signature_hash": "5b7180687f17339d",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#function:_subject:09b787039ee021a2",
+        "name": "_subject",
+        "kind": "function",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 30,
+        "end_line": 38,
+        "signature_hash": "590b8518207dc1bf",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_canonical_uri_drift_requires_explicit_alias_or_reopen_proof:6d0305e623d49734",
+        "name": "ExternalSubjectLineageBridgeTests.test_canonical_uri_drift_requires_explicit_alias_or_reopen_proof",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 177,
+        "end_line": 180,
+        "signature_hash": "b8a0672da12842f8",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_current_subject_key_cannot_be_claimed_without_exact_digest:d4ba3f1942b14840",
+        "name": "ExternalSubjectLineageBridgeTests.test_current_subject_key_cannot_be_claimed_without_exact_digest",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 166,
+        "end_line": 169,
+        "signature_hash": "88cc4a064dd864c8",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_disconnected_same_subject_versions_do_not_infer_latest:e22e5213ecca09fa",
+        "name": "ExternalSubjectLineageBridgeTests.test_disconnected_same_subject_versions_do_not_infer_latest",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 182,
+        "end_line": 185,
+        "signature_hash": "aa55cf6b3a5c086c",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_explicit_successor_beats_lexical_or_timestamp_like_order:059498e62515299d",
+        "name": "ExternalSubjectLineageBridgeTests.test_explicit_successor_beats_lexical_or_timestamp_like_order",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 143,
+        "end_line": 147,
+        "signature_hash": "a8bec4e312bf40f9",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_identity_domains_remain_distinct_but_exact_descriptor_bridges_them:bf39ae9143a8c769",
+        "name": "ExternalSubjectLineageBridgeTests.test_identity_domains_remain_distinct_but_exact_descriptor_bridges_them",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 123,
+        "end_line": 141,
+        "signature_hash": "3a9518007b954220",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_model_prefix_kv_routes_to_wrong_owner:5448f4fe55d77edc",
+        "name": "ExternalSubjectLineageBridgeTests.test_model_prefix_kv_routes_to_wrong_owner",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 196,
+        "end_line": 199,
+        "signature_hash": "035ff9be2c12ef2b",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_persisted_cell_or_k27_like_placement_cannot_change_lineage:5083dcbf353cad63",
+        "name": "ExternalSubjectLineageBridgeTests.test_persisted_cell_or_k27_like_placement_cannot_change_lineage",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 158,
+        "end_line": 164,
+        "signature_hash": "b99bc0ad91d2903e",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_provider_and_source_kind_bridge_is_typed_not_inferred:6275ff912442accc",
+        "name": "ExternalSubjectLineageBridgeTests.test_provider_and_source_kind_bridge_is_typed_not_inferred",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 171,
+        "end_line": 175,
+        "signature_hash": "e1f96dce88875212",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_snapshot_schema_and_duplicates_fail_closed_at_construction:1395964aa87af2bd",
+        "name": "ExternalSubjectLineageBridgeTests.test_snapshot_schema_and_duplicates_fail_closed_at_construction",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 206,
+        "end_line": 214,
+        "signature_hash": "b7222c27a9387957",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_stale_terminal_reopens_source_currentness:5ab751c76f65c71f",
+        "name": "ExternalSubjectLineageBridgeTests.test_stale_terminal_reopens_source_currentness",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 154,
+        "end_line": 156,
+        "signature_hash": "eb96b1ad6b158fd5",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_store_sha_is_exact_not_prefix_compatible_at_bridge:e286fde1e2eb60c7",
+        "name": "ExternalSubjectLineageBridgeTests.test_store_sha_is_exact_not_prefix_compatible_at_bridge",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 192,
+        "end_line": 194,
+        "signature_hash": "33cc319a38963207",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_successor_must_remain_inside_exact_subject_lineage:1b3859beefcc081a",
+        "name": "ExternalSubjectLineageBridgeTests.test_successor_must_remain_inside_exact_subject_lineage",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 187,
+        "end_line": 190,
+        "signature_hash": "f9cc961be895df8e",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_unknown_currentness_requires_revalidation:13e2a8054c512f16",
+        "name": "ExternalSubjectLineageBridgeTests.test_unknown_currentness_requires_revalidation",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 149,
+        "end_line": 152,
+        "signature_hash": "f467072067a6ba3b",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeTests.test_unsupported_legacy_kind_requires_explicit_bridge_owner:b0f6d414273e0d67",
+        "name": "ExternalSubjectLineageBridgeTests.test_unsupported_legacy_kind_requires_explicit_bridge_owner",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_lineage_bridge.py",
+        "line": 201,
+        "end_line": 204,
+        "signature_hash": "8b6f641b189aae80",
+        "file_digest8": "640daa60ebe6c01e"
+      },
+      {
         "semantic_id": "tests/test_aura_fetch_construction_demo_source.py#class:_Opener:f6571662cc6ec3ca",
         "name": "_Opener",
         "kind": "class",
@@ -449126,6 +449969,206 @@
         "file_digest8": "c9e3a31674645088"
       },
       {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:CurrentSubjectDescriptorV1:789c1165eda66454",
+        "name": "CurrentSubjectDescriptorV1",
+        "kind": "class",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 148,
+        "end_line": 167,
+        "signature_hash": "4fefbc5bed13e394",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:CurrentnessStatus:7c9e6519f54e2a58",
+        "name": "CurrentnessStatus",
+        "kind": "class",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 79,
+        "end_line": 82,
+        "signature_hash": "d23a19aea559196f",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:ExternalSubjectLineageBridgeV1:bbfc2979722d260f",
+        "name": "ExternalSubjectLineageBridgeV1",
+        "kind": "class",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 212,
+        "end_line": 522,
+        "signature_hash": "c8de08b872182975",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:LineageDisposition:4907a7dd0997eac5",
+        "name": "LineageDisposition",
+        "kind": "class",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 66,
+        "end_line": 76,
+        "signature_hash": "258dfd18ba464fab",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:SubjectLineageBridgeError:c3a9cedb8161e114",
+        "name": "SubjectLineageBridgeError",
+        "kind": "class",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 85,
+        "end_line": 86,
+        "signature_hash": "c3ba05d4bd524afb",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:SubjectLineageReceiptV1:ed3722dab6f12fdc",
+        "name": "SubjectLineageReceiptV1",
+        "kind": "class",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 187,
+        "end_line": 209,
+        "signature_hash": "d0bdb87ede901937",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:SubjectLineageRequestV1:f5cabb270d4fb8a7",
+        "name": "SubjectLineageRequestV1",
+        "kind": "class",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 171,
+        "end_line": 177,
+        "signature_hash": "c0540fa0f639fc35",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#class:SubjectLineageValidationContextV1:d7e632e5f3d0b7e6",
+        "name": "SubjectLineageValidationContextV1",
+        "kind": "class",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 181,
+        "end_line": 183,
+        "signature_hash": "6e2daa754e4afbbf",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_canonical:ecc9c85ee78af929",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 89,
+        "end_line": 97,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_required:81252ba66344027a",
+        "name": "_required",
+        "kind": "function",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 108,
+        "end_line": 111,
+        "signature_hash": "8b28cfce6f68b96b",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_sha256:213a1c3c146dfa50",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 114,
+        "end_line": 118,
+        "signature_hash": "fda5827e1e9021fd",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_sha:c76a80c22b50a90e",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 100,
+        "end_line": 101,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:_sha_bytes:0d59eae6bf051a91",
+        "name": "_sha_bytes",
+        "kind": "function",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 104,
+        "end_line": 105,
+        "signature_hash": "aa36b9c776037732",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:current_subject_key:4823f3c41b517bc3",
+        "name": "current_subject_key",
+        "kind": "function",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 133,
+        "end_line": 144,
+        "signature_hash": "924b24151b5ffc26",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#function:legacy_semantic_id:434bb27fbfba5878",
+        "name": "legacy_semantic_id",
+        "kind": "function",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 121,
+        "end_line": 130,
+        "signature_hash": "1bdf4193d7211fd4",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#method:CurrentSubjectDescriptorV1.validate:28498ea9b1dd432d",
+        "name": "CurrentSubjectDescriptorV1.validate",
+        "kind": "method",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 155,
+        "end_line": 167,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeV1.__init__:16662d52cbc7a51a",
+        "name": "ExternalSubjectLineageBridgeV1.__init__",
+        "kind": "method",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 215,
+        "end_line": 246,
+        "signature_hash": "1cf4294fec8f1026",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeV1._receipt:e65896e459664878",
+        "name": "ExternalSubjectLineageBridgeV1._receipt",
+        "kind": "method",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 251,
+        "end_line": 305,
+        "signature_hash": "3ce0cdc33499d634",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeV1._request_digest:6098f21c5a340242",
+        "name": "ExternalSubjectLineageBridgeV1._request_digest",
+        "kind": "method",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 248,
+        "end_line": 249,
+        "signature_hash": "221e837a0c646544",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_lineage_bridge.py#method:ExternalSubjectLineageBridgeV1.resolve:d821aa73e0ffd6cd",
+        "name": "ExternalSubjectLineageBridgeV1.resolve",
+        "kind": "method",
+        "file": "tools/aura_external_subject_lineage_bridge.py",
+        "line": 307,
+        "end_line": 522,
+        "signature_hash": "516d8b0907581cee",
+        "file_digest8": "02767792e434ce3f"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -450376,7 +451419,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "0e637ae69faf6ce398f3804e2e3dfdb7",
-    "payload_hash": "0c0a157ce13a9fdc01cafe046ba87e0d"
+    "record_fingerprint": "ccd8bfbd66936e5b579e9a74340f9a2b",
+    "payload_hash": "988a19ea6e44941956e10a2ae64e30a2"
   }
 }
