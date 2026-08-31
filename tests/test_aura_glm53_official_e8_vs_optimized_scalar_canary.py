@@ -1,4 +1,3 @@
-# Owner-authored reproof trigger only; comparator semantics are unchanged.
 import math
 import struct
 import unittest
@@ -16,6 +15,7 @@ class OfficialE8VsOptimizedScalarCanaryTests(unittest.TestCase):
         self.assertEqual(q6.SCALAR_PAYLOAD_BYTES, 18)
         self.assertEqual(q6.SCALAR_BITS_PER_WEIGHT, 2.25)
         self.assertEqual(q6.SCALAR_LEVELS, (-3.0, -1.0, 1.0, 3.0))
+        self.assertEqual(q6._codec_payload_bytes(2.25), 18)
 
     def test_two_bit_labels_pack_and_unpack_exactly(self):
         labels = tuple(i % 4 for i in range(64))
@@ -64,11 +64,26 @@ class OfficialE8VsOptimizedScalarCanaryTests(unittest.TestCase):
             q6.decode_optimized_scalar(bytes(17))
         with self.assertRaises(q6.ScalarCanaryError):
             q6.decode_optimized_scalar(struct.pack("<e", float("inf")) + bytes(16))
+        with self.assertRaises(q6.ScalarCanaryError):
+            q6._codec_payload_bytes(2.2)
 
     def test_scientific_outcome_is_neutral(self):
         self.assertEqual(q6._classify(1.0, 2.0), "E8_WIN")
         self.assertEqual(q6._classify(2.0, 1.0), "SCALAR_WIN")
         self.assertEqual(q6._classify(1.0, 1.0), "TIE")
+
+    def test_live_receipt_preserves_codec_vs_container_domain_separation(self):
+        receipt = q6.current_official_e8_vs_scalar_canary()
+        self.assertEqual(len(receipt.roles), 2)
+        self.assertTrue(receipt.codec_rate_domain_only)
+        self.assertFalse(receipt.container_rate_comparison_claimed)
+        self.assertTrue(all(role.equal_codec_rate for role in receipt.roles))
+        self.assertTrue(all(role.equal_codec_payload_bytes for role in receipt.roles))
+        self.assertTrue(all(role.q14_e8_codec_payload_bytes == 18 for role in receipt.roles))
+        self.assertTrue(all(role.scalar_codec_payload_bytes == 18 for role in receipt.roles))
+        self.assertTrue(all(role.q14_e8_container_bytes > role.q14_e8_codec_payload_bytes for role in receipt.roles))
+        self.assertTrue(all(role.q14_e8_serialized_bits_per_weight > role.q14_e8_codec_bits_per_weight for role in receipt.roles))
+        self.assertTrue(all(role.container_rate_comparison_claimed is False for role in receipt.roles))
 
     def test_live_receipt_preserves_representative_nonpromotion_ceiling(self):
         receipt = q6.current_official_e8_vs_scalar_canary()
@@ -78,7 +93,6 @@ class OfficialE8VsOptimizedScalarCanaryTests(unittest.TestCase):
         self.assertTrue(receipt.official_source_equal_rate_distortion_evidence)
         self.assertTrue(receipt.representative_canary_scope_only)
         self.assertAlmostEqual(receipt.exact_codec_rate_bpw, 2.25)
-        self.assertTrue(all(role.equal_codec_rate for role in receipt.roles))
         self.assertTrue(all(math.isclose(role.q14_e8_codec_bits_per_weight, 2.25, abs_tol=1e-12) for role in receipt.roles))
         self.assertTrue(all(math.isclose(role.scalar_codec_bits_per_weight, 2.25, abs_tol=1e-12) for role in receipt.roles))
         self.assertIn(receipt.aggregate_outcome, {"E8_WIN", "SCALAR_WIN", "TIE"})
