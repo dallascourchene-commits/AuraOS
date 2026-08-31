@@ -23,6 +23,8 @@ from scripts.aura_workcapsule_causal_temporal_host_observation_admission import 
 from scripts.aura_workcapsule_raw_slice_host_plane_separation import verify_raw_slice_receipt
 
 VERSION = "AURA_WORKCAPSULE_CAUSAL_RAW_SLICE_HOST_SEPARATION_V1"
+RAW_SLICE_OWNER = "PR566.verify_raw_slice_receipt"
+CAUSAL_HOST_OWNER = "PR567.admit_causal_temporal_host_observation_admission"
 
 
 def _canonical_bytes(value: Any) -> bytes:
@@ -32,6 +34,10 @@ def _canonical_bytes(value: Any) -> bytes:
         separators=(",", ":"),
         ensure_ascii=False,
     ).encode("utf-8")
+
+
+def _sha256(value: Any) -> str:
+    return hashlib.sha256(_canonical_bytes(value)).hexdigest()
 
 
 def verify_causal_raw_slice_host_separation(
@@ -53,36 +59,27 @@ def verify_causal_raw_slice_host_separation(
     return ["CAUSAL_HOST_" + item for item in causal_violations]
 
 
-def admit_causal_raw_slice_host_separation(
-    *,
-    raw_slice_receipt: Mapping[str, Any],
-    host_observations: Mapping[str, Any] | None = None,
-    host_observation_resolver: Any = None,
-    **temporal_kwargs: Any,
-) -> dict[str, Any]:
-    """Emit a causal-host/current-raw-slice conjunction without rank promotion."""
-    violations = verify_causal_raw_slice_host_separation(
-        raw_slice_receipt=raw_slice_receipt,
-        host_observations=host_observations,
-        host_observation_resolver=host_observation_resolver,
-        **temporal_kwargs,
-    )
-    if violations:
-        raise ValueError(
-            "causal raw-slice host separation failed: " + ",".join(violations)
-        )
+def _authority_ceiling() -> dict[str, bool]:
+    return {
+        "review_authorized": False,
+        "execution_authorized": False,
+        "commit_authorized": False,
+        "merge_authorized": False,
+        "promotion_authorized": False,
+        "provider_effect_authorized": False,
+        "public_effect_authorized": False,
+        "human_authority": False,
+    }
 
-    host = admit_causal_temporal_host_observation_admission(
-        host_observations=host_observations,
-        host_observation_resolver=host_observation_resolver,
-        **temporal_kwargs,
-    )
-    raw_digest = hashlib.sha256(_canonical_bytes(dict(raw_slice_receipt))).hexdigest()
-    out: dict[str, Any] = {
+
+def _admission_payload(
+    *, host: Mapping[str, Any], raw_slice_receipt: Mapping[str, Any]
+) -> dict[str, Any]:
+    return {
         "version": VERSION,
-        "raw_slice_contract_owner": "PR566.verify_raw_slice_receipt",
-        "causal_host_owner": "PR567.admit_causal_temporal_host_observation_admission",
-        "raw_slice_receipt_digest": raw_digest,
+        "raw_slice_contract_owner": RAW_SLICE_OWNER,
+        "causal_host_owner": CAUSAL_HOST_OWNER,
+        "raw_slice_receipt_digest": _sha256(dict(raw_slice_receipt)),
         "raw_slice_exact_current_local_evidence_validated": True,
         "causal_temporal_owner_reproved": bool(host["causal_temporal_owner_reproved"]),
         "pre_reentry_receipt_reused_for_post_o10": bool(
@@ -103,23 +100,46 @@ def admit_causal_raw_slice_host_separation(
         "trusted_continuation_ready": False,
         "host_effect_ready": False,
         "semantic_repair_correctness_minted": False,
-        "authority": {
-            "review_authorized": False,
-            "execution_authorized": False,
-            "commit_authorized": False,
-            "merge_authorized": False,
-            "promotion_authorized": False,
-            "provider_effect_authorized": False,
-            "public_effect_authorized": False,
-            "human_authority": False,
-        },
+        "authority": _authority_ceiling(),
     }
+
+
+def _seal(payload: dict[str, Any]) -> dict[str, Any]:
+    out = dict(payload)
     out["receipt_identity"] = {
         "kind": "DIGEST",
         "algorithm_or_provider": "sha256",
         "canonicalization_profile": "JSON_SORT_KEYS_COMPACT_UTF8_V1",
         "scope_profile": VERSION,
-        "value": hashlib.sha256(_canonical_bytes(out)).hexdigest(),
+        "value": _sha256(payload),
         "schema_version": "DigestOrImmutableIdentityV1-compatible",
     }
     return out
+
+
+def admit_causal_raw_slice_host_separation(
+    *,
+    raw_slice_receipt: Mapping[str, Any],
+    host_observations: Mapping[str, Any] | None = None,
+    host_observation_resolver: Any = None,
+    **temporal_kwargs: Any,
+) -> dict[str, Any]:
+    """Emit a causal-host/current-raw-slice conjunction without rank promotion."""
+    violations = verify_causal_raw_slice_host_separation(
+        raw_slice_receipt=raw_slice_receipt,
+        host_observations=host_observations,
+        host_observation_resolver=host_observation_resolver,
+        **temporal_kwargs,
+    )
+    if violations:
+        raise ValueError(
+            "causal raw-slice host separation failed: " + ",".join(violations)
+        )
+    host = admit_causal_temporal_host_observation_admission(
+        host_observations=host_observations,
+        host_observation_resolver=host_observation_resolver,
+        **temporal_kwargs,
+    )
+    return _seal(
+        _admission_payload(host=host, raw_slice_receipt=raw_slice_receipt)
+    )
