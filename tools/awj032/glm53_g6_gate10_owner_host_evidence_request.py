@@ -1,35 +1,34 @@
-"""G6 W3: compile a current, provenance-bound owner-host evidence request toward Gate 10.
+"""G6: compile a current, identity-preserving owner-host Gate-10 evidence request.
 
 D0 / HS1 / NONPROMOTING.
 
-Exactly two terminal foreign parents:
-- PR #769: generation-bound admission reuse. A historical bounded C2 proposal is not
-  reusable at owner-host use time until producer/subject/source/evidence/owner/decision
-  generations commute. Positive state is REUSE_CANDIDATE only.
-- PR #727: secure operation-bound observation envelope. Physical observation requires
-  exact operation/workload/source plus observer/backend provenance; a caller boolean or
-  structurally matching witness cannot manufacture physical truth.
+Exactly two terminal foreign semantic parents:
+- PR #769 generation-bound admission reuse.
+- PR #727 operation/observer/backend provenance contract.
 
-Existing transport owners remain canonical downstream constraints rather than new
-objective parents: PR #582 owns OwnerHostC2CanaryRequest/Receipt/join and PR #586 owns
-its nonmetric lifecycle-return packet. This module compiles a request into that future
-owner-host world. It never executes GLM-5.3, authenticates the future owner-host
-producer, observes physical I/O, or promotes Gate 10.
+PR #582 and PR #586 remain canonical downstream transport/return owners. They are
+compatibility constraints, not additional derivation parents.
+
+This module compiles a request only. It does not authenticate the projected PR #769
+receipt producer, prove source currentness, execute GLM-5.3, observe physical I/O,
+authorize effects, or promote Gate 10.
 """
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-import hashlib, itertools, json
+import hashlib
+import itertools
+import json
 from typing import Any
 
-SCHEMA = "AURA-GLM53-G6-GATE10-OWNER-HOST-EVIDENCE-REQUEST-v2"
+SCHEMA = "AURA-GLM53-G6-GATE10-OWNER-HOST-EVIDENCE-REQUEST-v3"
 
 REUSE_HEAD = "d1a0f94255527835a59a70a0af7dc417ba1d023d"
 REUSE_SOURCE_BLOB = "d171d0938e469a4383490d1a691750c2068f21e7"
 REUSE_TEST_BLOB = "58fad37a0f89853098fa3dbbe2f2a1771574e449"
 REUSE_RUN = 33437612722
 REUSE_JOB = 99637780915
-REUSE_FAMILY = "BOUNDED_C2_PROPOSAL"
+REUSE_FAMILY = "GLM53_BOUNDED_C2_PROPOSAL"
 REUSE_DISPOSITION = "REUSE_CANDIDATE"
 
 PROV_HEAD = "293c59d7260372ccd3b9e8130b12979b052c3ed9"
@@ -37,8 +36,7 @@ PROV_SOURCE_BLOB = "98db548b6e8f7443b79d979eb0e177ac6aa68534"
 PROV_RUN = 33416248604
 PROV_JOB = 99567478616
 
-# Canonical downstream transport owners. These are collision/compatibility constraints,
-# not derivation parents for this objective.
+# Canonical downstream transport owners; zero derivation-parent credit here.
 C2_HANDOFF_HEAD = "24a5404ee3b987dee12192917e40b35d3a43e81c"
 C2_HANDOFF_RUN = 33360061584
 LIFECYCLE_RETURN_HEAD = "aa3fcd9a4cefd18dbc991c3e8a450fcfbbb6726b"
@@ -48,9 +46,8 @@ OFFICIAL_REPOSITORY = "zai-org/GLM-5.3"
 PINNED_OFFICIAL_REVISION = "7cda81930d6e4cef42f48555de830aa32ecdde28"
 SOURCE_SET_DIGEST = "f41495beb566f4c49f5674f2820f3d5c32591647be552048cf711a885a1b71b6"
 
-REQUEST_SCOPE = "BOUNDED_C2_OWNER_HOST_EVIDENCE_TRIAL"
 COMPILED = "OWNER_HOST_BOUNDED_C2_EVIDENCE_REQUEST_ENVELOPE_COMPILED"
-HOLD_REUSE = "HOLD_CURRENT_REUSE_CANDIDATE_REQUIRED"
+HOLD_REUSE = "HOLD_EXACT_CURRENT_GLM53_REUSE_IDENTITY_REQUIRED"
 HOLD_PROVENANCE = "HOLD_OPERATION_PROVENANCE_CONTRACT_REQUIRED"
 HOLD_SOURCE = "HOLD_EXACT_FLAGSHIP_SOURCE_IDENTITY_REQUIRED"
 HOLD_OWNER = "HOLD_OWNER_HOST_TARGET_REQUIRED"
@@ -82,29 +79,37 @@ OPEN_GATE10_DEBT = (
 )
 
 
-def _canonical(v: Any) -> bytes:
-    return json.dumps(v, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False).encode("ascii")
+def _canonical(value: Any) -> bytes:
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        allow_nan=False,
+    ).encode("ascii")
 
 
-def _sha(v: Any) -> str:
-    return hashlib.sha256(_canonical(v)).hexdigest()
+def _sha(value: Any) -> str:
+    return hashlib.sha256(_canonical(value)).hexdigest()
 
 
-def _text(v: str, code: str) -> str:
-    if not isinstance(v, str) or not v.strip():
+def _text(value: str, code: str) -> str:
+    if not isinstance(value, str) or not value.strip():
         raise ValueError(code)
-    return v.strip()
+    return value.strip()
 
 
-def _digest(v: str, code: str) -> str:
-    v = _text(v, code)
-    if len(v) != 64 or any(c not in "0123456789abcdef" for c in v):
+def _digest(value: str, code: str) -> str:
+    value = _text(value, code).lower()
+    if len(value) != 64 or any(ch not in "0123456789abcdef" for ch in value):
         raise ValueError(code)
-    return v
+    return value
 
 
 @dataclass(frozen=True)
 class AdmissionReuseProjection:
+    """Lossless consequence-bearing projection of one PR #769 reuse receipt."""
+
     proof_head: str
     proof_run: int
     proof_job: int
@@ -112,12 +117,24 @@ class AdmissionReuseProjection:
     test_blob: str
     admission_family: str
     disposition: str
+    admission_receipt_digest: str
+    reuse_digest: str
+    subject_identity: str
+    source_generation_key: str
+    evidence_generation_key: str
+    owner_context_key: str
+    decision_context_key: str
     current_context_exact: bool
+    candidate_only: bool = True
+    reuse_receipt_authenticated_by_this_projection: bool = False
     source_currentness_proven: bool = False
     execution_authorized: bool = False
+    effect_authorized: bool = False
+    semantic_k27_authority: bool = False
+    native_private_transformer_kv_accessed: bool = False
     gate10_promoted: bool = False
 
-    def validate(self) -> None:
+    def validate_shape(self) -> None:
         if (
             self.proof_head,
             self.proof_run,
@@ -125,11 +142,60 @@ class AdmissionReuseProjection:
             self.source_blob,
             self.test_blob,
         ) != (REUSE_HEAD, REUSE_RUN, REUSE_JOB, REUSE_SOURCE_BLOB, REUSE_TEST_BLOB):
-            raise ValueError("REUSE_PROOF_MISMATCH")
-        if self.admission_family != REUSE_FAMILY:
-            raise ValueError("REUSE_FAMILY_MISMATCH")
-        if self.source_currentness_proven or self.execution_authorized or self.gate10_promoted:
-            raise ValueError("REUSE_PROJECTION_EXCEEDS_CEILING")
+            raise ValueError("REUSE_PARENT_PROOF_MISMATCH")
+        _text(self.admission_family, "REUSE_FAMILY_REQUIRED")
+        _text(self.disposition, "REUSE_DISPOSITION_REQUIRED")
+        _digest(self.admission_receipt_digest, "ADMISSION_RECEIPT_DIGEST_INVALID")
+        _digest(self.reuse_digest, "REUSE_DIGEST_INVALID")
+        for value, code in (
+            (self.subject_identity, "SUBJECT_IDENTITY_REQUIRED"),
+            (self.source_generation_key, "SOURCE_GENERATION_REQUIRED"),
+            (self.evidence_generation_key, "EVIDENCE_GENERATION_REQUIRED"),
+            (self.owner_context_key, "OWNER_CONTEXT_REQUIRED"),
+            (self.decision_context_key, "DECISION_CONTEXT_REQUIRED"),
+        ):
+            _text(value, code)
+        if not isinstance(self.current_context_exact, bool):
+            raise ValueError("CURRENT_CONTEXT_EXACT_MUST_BE_BOOL")
+        if self.candidate_only is not True:
+            raise ValueError("REUSE_MUST_REMAIN_CANDIDATE_ONLY")
+        if any(
+            (
+                self.reuse_receipt_authenticated_by_this_projection,
+                self.source_currentness_proven,
+                self.execution_authorized,
+                self.effect_authorized,
+                self.semantic_k27_authority,
+                self.native_private_transformer_kv_accessed,
+                self.gate10_promoted,
+            )
+        ):
+            raise ValueError("REUSE_PROJECTION_EXCEEDS_PARENT_CEILING")
+
+    @property
+    def identity_digest(self) -> str:
+        self.validate_shape()
+        return _sha(
+            {
+                "family": self.admission_family,
+                "admission_receipt_digest": self.admission_receipt_digest,
+                "reuse_digest": self.reuse_digest,
+                "subject_identity": self.subject_identity,
+                "source_generation_key": self.source_generation_key,
+                "evidence_generation_key": self.evidence_generation_key,
+                "owner_context_key": self.owner_context_key,
+                "decision_context_key": self.decision_context_key,
+            }
+        )
+
+    @property
+    def exact_glm53_candidate(self) -> bool:
+        self.validate_shape()
+        return (
+            self.admission_family == REUSE_FAMILY
+            and self.disposition == REUSE_DISPOSITION
+            and self.current_context_exact
+        )
 
 
 @dataclass(frozen=True)
@@ -173,7 +239,9 @@ class SourceIdentityProjection:
         if self.source_currentness_proven or self.tensor_payload_bound:
             raise ValueError("SOURCE_PROJECTION_EXCEEDS_CEILING")
 
+    @property
     def exact_request_identity(self) -> bool:
+        self.validate()
         return (
             self.repository == OFFICIAL_REPOSITORY
             and self.pinned_revision == PINNED_OFFICIAL_REVISION
@@ -196,7 +264,7 @@ class OwnerHostTargetProjection:
     execution_authorized_by_this_contract: bool = False
 
     def validate(self) -> None:
-        for v, c in (
+        for value, code in (
             (self.owner_host_ref, "OWNER"),
             (self.principal_generation, "PRINCIPAL"),
             (self.host_profile_generation, "HOST"),
@@ -205,7 +273,7 @@ class OwnerHostTargetProjection:
             (self.storage_geometry_generation, "STORAGE"),
             (self.evidence_sink_ref, "SINK"),
         ):
-            _text(v, c)
+            _text(value, code)
         _digest(self.resource_envelope_digest, "RESOURCE_DIGEST")
         if self.owner_authenticated_by_this_contract or self.execution_authorized_by_this_contract:
             raise ValueError("OWNER_PROJECTION_EXCEEDS_CEILING")
@@ -225,13 +293,13 @@ class EvidenceContractProjection:
     gate10_promoted: bool = False
 
     def validate(self) -> None:
-        for v, c in (
+        for value, code in (
             (self.request_manifest_digest, "MANIFEST"),
             (self.benchmark_harness_digest, "HARNESS"),
             (self.replay_contract_digest, "REPLAY"),
             (self.recovery_contract_digest, "RECOVERY"),
         ):
-            _digest(v, c)
+            _digest(value, code)
         if self.required_evidence_axes != REQUIRED_EVIDENCE_AXES:
             raise ValueError("EVIDENCE_AXES_MISMATCH")
         if self.open_gate10_debt != OPEN_GATE10_DEBT:
@@ -259,6 +327,15 @@ class G6RequestReceipt:
     required_evidence_axes: tuple[str, ...]
     open_gate10_debt: tuple[str, ...]
     current_reuse_candidate_bound: bool
+    exact_glm53_reuse_identity_bound: bool
+    admission_reuse_identity_digest: str
+    admission_receipt_digest: str
+    reuse_digest: str
+    subject_identity: str
+    source_generation_key: str
+    evidence_generation_key: str
+    owner_context_key: str
+    decision_context_key: str
     operation_provenance_contract_bound: bool
     exact_source_request_identity_bound: bool
     official_revision_revalidation_required: bool = True
@@ -266,6 +343,8 @@ class G6RequestReceipt:
     canonical_c2_handoff_run: int = C2_HANDOFF_RUN
     canonical_lifecycle_return_head: str = LIFECYCLE_RETURN_HEAD
     canonical_lifecycle_return_run: int = LIFECYCLE_RETURN_RUN
+    reuse_receipt_authenticated_by_this_contract: bool = False
+    source_currentness_proven_by_this_contract: bool = False
     tensor_payload_bound: bool = False
     real_tensor_quantization_observed: bool = False
     owner_host_execution_observed: bool = False
@@ -283,8 +362,17 @@ class G6RequestReceipt:
     def validate_claim_ceiling(self) -> None:
         if (self.disposition == COMPILED) != self.request_envelope_compiled:
             raise ValueError("DISPOSITION_BOOLEAN_MISMATCH")
+        if self.request_envelope_compiled and not (
+            self.current_reuse_candidate_bound
+            and self.exact_glm53_reuse_identity_bound
+            and self.operation_provenance_contract_bound
+            and self.exact_source_request_identity_bound
+        ):
+            raise ValueError("COMPILED_REQUEST_MISSING_REQUIRED_BINDING")
         if any(
             (
+                self.reuse_receipt_authenticated_by_this_contract,
+                self.source_currentness_proven_by_this_contract,
                 self.tensor_payload_bound,
                 self.real_tensor_quantization_observed,
                 self.owner_host_execution_observed,
@@ -316,51 +404,52 @@ class _Flags:
     ceiling: bool
 
 
-def _tree(f: _Flags) -> str:
-    if not f.reuse:
+def _tree(flags: _Flags) -> str:
+    if not flags.reuse:
         return HOLD_REUSE
-    if not f.provenance:
+    if not flags.provenance:
         return HOLD_PROVENANCE
-    if not f.source:
+    if not flags.source:
         return HOLD_SOURCE
-    if not f.owner:
+    if not flags.owner:
         return HOLD_OWNER
-    if not f.resource:
+    if not flags.resource:
         return HOLD_RESOURCE
-    if not f.evidence:
+    if not flags.evidence:
         return HOLD_EVIDENCE
-    if not f.replay:
+    if not flags.replay:
         return HOLD_REPLAY
-    if not f.debt:
+    if not flags.debt:
         return HOLD_DEBT
-    if not f.ceiling:
+    if not flags.ceiling:
         return HOLD_CEILING
     return COMPILED
 
 
-def _table(f: _Flags) -> str:
-    rows = (
-        (not f.reuse, HOLD_REUSE),
-        (not f.provenance, HOLD_PROVENANCE),
-        (not f.source, HOLD_SOURCE),
-        (not f.owner, HOLD_OWNER),
-        (not f.resource, HOLD_RESOURCE),
-        (not f.evidence, HOLD_EVIDENCE),
-        (not f.replay, HOLD_REPLAY),
-        (not f.debt, HOLD_DEBT),
-        (not f.ceiling, HOLD_CEILING),
+def _table(flags: _Flags) -> str:
+    ordered = (
+        (not flags.reuse, HOLD_REUSE),
+        (not flags.provenance, HOLD_PROVENANCE),
+        (not flags.source, HOLD_SOURCE),
+        (not flags.owner, HOLD_OWNER),
+        (not flags.resource, HOLD_RESOURCE),
+        (not flags.evidence, HOLD_EVIDENCE),
+        (not flags.replay, HOLD_REPLAY),
+        (not flags.debt, HOLD_DEBT),
+        (not flags.ceiling, HOLD_CEILING),
         (True, COMPILED),
     )
-    return next(d for p, d in rows if p)
+    return next(disposition for predicate, disposition in ordered if predicate)
 
 
 def prove_different_j() -> int:
-    n = 0
+    checked = 0
     for bits in itertools.product((False, True), repeat=9):
-        f = _Flags(*bits)
-        assert _tree(f) == _table(f)
-        n += 1
-    return n
+        flags = _Flags(*bits)
+        if _tree(flags) != _table(flags):
+            raise AssertionError("G6_DIFFERENT_J_DIVERGED")
+        checked += 1
+    return checked
 
 
 def compile_gate10_owner_host_evidence_request(
@@ -371,18 +460,23 @@ def compile_gate10_owner_host_evidence_request(
     owner: OwnerHostTargetProjection,
     evidence: EvidenceContractProjection,
 ) -> G6RequestReceipt:
-    reuse.validate()
+    reuse.validate_shape()
     provenance.validate()
     source.validate()
     owner.validate()
     evidence.validate()
 
-    flags = _Flags(
-        reuse.disposition == REUSE_DISPOSITION and reuse.current_context_exact,
+    reuse_ok = reuse.exact_glm53_candidate
+    provenance_ok = (
         provenance.exact_operation_binding_required
         and provenance.observer_backend_provenance_required
-        and provenance.producer_authentication_required,
-        source.exact_request_identity(),
+        and provenance.producer_authentication_required
+    )
+    source_ok = source.exact_request_identity
+    flags = _Flags(
+        reuse_ok,
+        provenance_ok,
+        source_ok,
         bool(owner.owner_host_ref and owner.principal_generation),
         bool(
             owner.host_profile_generation
@@ -399,10 +493,12 @@ def compile_gate10_owner_host_evidence_request(
         True,
     )
     disposition = _tree(flags)
-    assert disposition == _table(flags)
+    if disposition != _table(flags):
+        raise RuntimeError("G6_DIFFERENT_J_RUNTIME_DIVERGED")
+
     reason = {
-        COMPILED: "current bounded C2 reuse candidate, exact source request identity, and operation-provenance requirements commute into a nonexecuting owner-host evidence request",
-        HOLD_REUSE: "current bounded C2 reuse candidate missing",
+        COMPILED: "exact PR769 GLM reuse identity, source request identity, operation provenance and owner-host evidence contracts commute into a nonexecuting request",
+        HOLD_REUSE: "exact current GLM-5.3 PR769 reuse identity required",
         HOLD_PROVENANCE: "operation/observer/backend provenance contract missing",
         HOLD_SOURCE: "exact flagship source request identity missing",
         HOLD_OWNER: "owner-host target missing",
@@ -412,11 +508,13 @@ def compile_gate10_owner_host_evidence_request(
         HOLD_DEBT: "Gate-10 debt not carried",
         HOLD_CEILING: "claim ceiling widened",
     }[disposition]
+
     body = {
         "schema": SCHEMA,
         "disposition": disposition,
-        "reuse_head": reuse.proof_head,
-        "provenance_head": provenance.proof_head,
+        "reuse": asdict(reuse),
+        "reuse_identity_digest": reuse.identity_digest,
+        "provenance": asdict(provenance),
         "source": asdict(source),
         "owner": asdict(owner),
         "evidence": asdict(evidence),
@@ -427,34 +525,46 @@ def compile_gate10_owner_host_evidence_request(
             "lifecycle_return_run": LIFECYCLE_RETURN_RUN,
         },
     }
-    # Held receipts suppress the caller-supplied source identity rather than echoing an
-    # unaccepted value as though it were the canonical current request source.
-    accepted_repo = source.repository if flags.source else ""
-    accepted_revision = source.pinned_revision if flags.source else ""
-    accepted_source_set = source.source_set_digest if flags.source else ""
-    r = G6RequestReceipt(
-        disposition,
-        reason,
-        _sha(body),
-        disposition == COMPILED,
-        accepted_repo,
-        accepted_revision,
-        accepted_source_set,
-        owner.owner_host_ref,
-        evidence.required_evidence_axes,
-        evidence.open_gate10_debt,
-        flags.reuse,
-        flags.provenance,
-        flags.source,
-        evidence.official_revision_revalidation_required,
+
+    # Invalid candidate/source identity is never echoed as accepted current identity.
+    accepted_reuse = reuse if reuse_ok else None
+    accepted_source = source if source_ok else None
+    receipt = G6RequestReceipt(
+        disposition=disposition,
+        reason=reason,
+        request_digest=_sha(body),
+        request_envelope_compiled=disposition == COMPILED,
+        official_repository=accepted_source.repository if accepted_source else "",
+        pinned_official_revision=accepted_source.pinned_revision if accepted_source else "",
+        source_set_digest=accepted_source.source_set_digest if accepted_source else "",
+        owner_host_ref=owner.owner_host_ref,
+        required_evidence_axes=evidence.required_evidence_axes,
+        open_gate10_debt=evidence.open_gate10_debt,
+        current_reuse_candidate_bound=reuse_ok,
+        exact_glm53_reuse_identity_bound=reuse_ok,
+        admission_reuse_identity_digest=accepted_reuse.identity_digest if accepted_reuse else "",
+        admission_receipt_digest=accepted_reuse.admission_receipt_digest if accepted_reuse else "",
+        reuse_digest=accepted_reuse.reuse_digest if accepted_reuse else "",
+        subject_identity=accepted_reuse.subject_identity if accepted_reuse else "",
+        source_generation_key=accepted_reuse.source_generation_key if accepted_reuse else "",
+        evidence_generation_key=accepted_reuse.evidence_generation_key if accepted_reuse else "",
+        owner_context_key=accepted_reuse.owner_context_key if accepted_reuse else "",
+        decision_context_key=accepted_reuse.decision_context_key if accepted_reuse else "",
+        operation_provenance_contract_bound=provenance_ok,
+        exact_source_request_identity_bound=source_ok,
+        official_revision_revalidation_required=evidence.official_revision_revalidation_required,
     )
-    r.validate_claim_ceiling()
-    return r
+    receipt.validate_claim_ceiling()
+    return receipt
 
 
 LAWS = (
     "AdmissionValidAtProduce!=AdmissionReusableAtUse",
-    "ReuseCandidate!=ExecutionAuthority",
+    "ReuseCandidateSummary!=AdmissionReuseReceiptIdentity",
+    "GLM53AdmissionFamilyMustRemainExact",
+    "AdmissionReceiptDigest+Subject+Source+Evidence+Owner+Decision+ReuseDigestMustSurviveProjection",
+    "IdentityBinding!=ReceiptProducerAuthentication",
+    "IdentityBinding!=SourceCurrentnessTruth",
     "CallerWitness!=BackendObservationProvenance",
     "PhysicalAttestationBoolean!=PhysicalObservationProvenance",
     "RequestEnvelopeCompiled!=TensorPayloadBound!=ExecutionObserved",
