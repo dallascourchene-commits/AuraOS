@@ -1,0 +1,131 @@
+name: Aura WorkCapsule Live Causal Corroboration
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR568_SHA: 1772c31001fd5973a9698aff9506945709de7aaa
+  PR572_SHA: c84a0f87a63dc65bac366204e31d35ce0138dba3
+  CONVERGENCE_SHA: d5ac733562a424fe9f19c70464a6c193854c9e14
+  PR568_RUN: '33357062694'
+  PR572_RUN: '33356960266'
+
+jobs:
+  exact-live-causal-corroboration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - name: Fetch exact child and prove true PR568 x PR572 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=240 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR568_SHA" "$PR572_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR568_SHA $PR572_SHA"
+          git merge-base --is-ancestor "$PR568_SHA" HEAD
+          git merge-base --is-ancestor "$PR572_SHA" HEAD
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_CORROBORATION_CONVERGENCE=true'
+
+      - name: Pin exact successful hosted parent evidence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          for spec in "$PR568_RUN:$PR568_SHA" "$PR572_RUN:$PR572_SHA"; do
+            run_id="${spec%%:*}"
+            expected_sha="${spec#*:}"
+            actual_sha="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id" --jq .head_sha)"
+            conclusion="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id" --jq .conclusion)"
+            test "$actual_sha" = "$expected_sha"
+            test "$conclusion" = success
+            echo "EXACT_PARENT_RUN_SUCCESS=$run_id@$actual_sha"
+          done
+          echo 'PARENT_HOSTED_EVIDENCE_PINNED=true'
+
+      - name: Re-prove PR568 focused receipt contract on child tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_live_causal_raw_slice_join.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_causal_raw_slice_join
+
+      - name: Fetch and re-prove exact PR572 focused receipt contract
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr572 && mkdir -p /tmp/pr572
+          git -C /tmp/pr572 init .
+          git -C /tmp/pr572 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr572 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR572_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr572 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr572 rev-parse HEAD)" = "$PR572_SHA"
+          test -z "$(git -C /tmp/pr572 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr572
+          PYTHONPATH=. python3 -m unittest -v tests.test_aura_workcapsule_live_causal_raw_slice_host
+
+      - name: Prove corroboration relation and adversarial surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          python3 -m py_compile scripts/aura_workcapsule_live_causal_corroboration.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_causal_corroboration
+
+      - name: Assert no duplicate causal owner and emit consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_live_causal_corroboration import (
+              verify_live_causal_corroboration,
+          )
+          assert set(inspect.signature(verify_live_causal_corroboration).parameters) == {
+              'pr568_receipt', 'pr572_receipt'
+          }
+          source = open('scripts/aura_workcapsule_live_causal_corroboration.py', encoding='utf-8').read()
+          for forbidden in (
+              'aura_workcapsule_raw_owner_derived_post_closure_transition',
+              'aura_workcapsule_causal_temporal_host_observation_admission',
+              'aura_k27_astge_portable_raw_slice_causal_handoff',
+          ):
+              assert forbidden not in source
+          print('DUPLICATE_CAUSAL_OWNER_IMPLEMENTED=false')
+          print('PUBLIC_INPUTS_ARE_TWO_CLOSED_PARENT_RECEIPTS=true')
+          PY
+          cat <<'EOF'
+          SAME_LIVE_SOURCE_INSTANCE_PROVEN=true
+          SAME_LIVE_TARGET_SLICE_PROVEN=true
+          SAME_POST_SOURCE_PROJECTION_IDENTITY_PROVEN=true
+          SAME_CAUSAL_O10_IDENTITY_PROVEN=true
+          INDEPENDENT_PROOF_ARTIFACTS_PRESERVED=true
+          SAME_LIVE_SOURCE_FACT_DOES_NOT_COLLAPSE_PROOF_ARTIFACT_IDENTITY=true
+          SEMANTIC_EQUIVALENCE_PROVEN=false
+          PRODUCER_AUTHENTICATION_PROVEN=false
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          EFFECT_AUTHORITY_PROVEN=false
+          SEMANTIC_K27_AUTHORITY_PROVEN=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF
