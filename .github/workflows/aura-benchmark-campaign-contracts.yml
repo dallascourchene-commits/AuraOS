@@ -7,6 +7,7 @@ on:
       - "tools/benchmarks/**"
       - "tests/test_aura_benchmark_score_admission.py"
       - "tests/test_select_swe_verified_smoke.py"
+      - "tests/test_long_horizon_state_benchmark.py"
       - ".github/workflows/aura-benchmark-campaign-contracts.yml"
   workflow_dispatch:
 
@@ -36,12 +37,15 @@ jobs:
           python -m py_compile \
             tools/benchmarks/aura_benchmark_score_admission.py \
             tools/benchmarks/select_swe_verified_smoke.py \
+            tools/benchmarks/long_horizon_state_benchmark.py \
             tests/test_aura_benchmark_score_admission.py \
-            tests/test_select_swe_verified_smoke.py
+            tests/test_select_swe_verified_smoke.py \
+            tests/test_long_horizon_state_benchmark.py
       - name: Validate campaign manifest JSON
         run: python -m json.tool benchmarks/arena/campaign_v1.json > /dev/null
       - name: Run focused adversarial suite
         run: |
           python -m pytest -q \
             tests/test_aura_benchmark_score_admission.py \
-            tests/test_select_swe_verified_smoke.py
+            tests/test_select_swe_verified_smoke.py \
+            tests/test_long_horizon_state_benchmark.py
