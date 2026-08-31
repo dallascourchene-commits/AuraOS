@@ -8,9 +8,11 @@
 //! matched benchmarks and consequence-specific receipts.
 
 pub mod coord;
+pub mod generation;
 pub mod storage;
 
 pub use coord::{CoordinateError, K27Coordinate, K27_TRITS};
+pub use generation::{GenerationError, GenerationManifest, GenerationStore};
 pub use storage::{
     CsrPage, GraphSegment, GraphSegmentBuilder, NodeRecord, StorageError, MAX_CSR_EDGES,
     MAX_CSR_ROWS, NODE_RECORD_SIZE, PAGE_SIZE,
