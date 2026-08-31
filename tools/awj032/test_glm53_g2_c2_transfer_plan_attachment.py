@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from dataclasses import replace
 import unittest
 
 from tools.awj032.glm53_owner_host_c2_handoff import OwnerHostC2CanaryRequest
@@ -10,6 +9,8 @@ from tools.awj032.glm53_g2_c2_transfer_plan_attachment import (
     C2_OWNER_HEAD,
     G1_PHYSICAL_QUARANTINE_HEAD,
     G2_PREDICTOR_CALIBRATION_HEAD,
+    G2_PREDICTOR_CALIBRATION_TEST_BLOB,
+    G2_PREDICTOR_CALIBRATION_VERIFICATION_HEAD,
     PHYSICAL_IO_UNKNOWN,
     CalibratedTransferPlanRef,
     attach_calibrated_g2_plan_to_c2_request,
@@ -82,13 +83,26 @@ class G2C2TransferPlanAttachmentTests(unittest.TestCase):
         self.assertEqual(0, out.admitted_logical_bytes)
         self.assertFalse(out.execution_authorized)
 
-    def test_foreign_parent_substitution_is_rejected(self):
+    def test_foreign_parent_semantics_and_verification_are_distinct_and_exact(self):
         with self.assertRaisesRegex(ValueError, "G1_PHYSICAL_QUARANTINE_HEAD_MISMATCH"):
             plan(g1_physical_quarantine_head="0" * 40).validate()
         with self.assertRaisesRegex(ValueError, "G2_PREDICTOR_CALIBRATION_HEAD_MISMATCH"):
             plan(g2_predictor_calibration_head="f" * 40).validate()
+        with self.assertRaisesRegex(ValueError, "G2_PREDICTOR_CALIBRATION_TEST_BLOB_MISMATCH"):
+            plan(g2_predictor_calibration_test_blob="a" * 40).validate()
+        with self.assertRaisesRegex(ValueError, "G2_PREDICTOR_CALIBRATION_VERIFICATION_HEAD_MISMATCH"):
+            plan(g2_predictor_calibration_verification_head="b" * 40).validate()
         self.assertEqual(G1_PHYSICAL_QUARANTINE_HEAD, plan().g1_physical_quarantine_head)
         self.assertEqual(G2_PREDICTOR_CALIBRATION_HEAD, plan().g2_predictor_calibration_head)
+        self.assertEqual(G2_PREDICTOR_CALIBRATION_TEST_BLOB, plan().g2_predictor_calibration_test_blob)
+        self.assertEqual(
+            G2_PREDICTOR_CALIBRATION_VERIFICATION_HEAD,
+            plan().g2_predictor_calibration_verification_head,
+        )
+        self.assertNotEqual(
+            plan().g2_predictor_calibration_head,
+            plan().g2_predictor_calibration_verification_head,
+        )
         self.assertEqual(C2_OWNER_HEAD, attach_calibrated_g2_plan_to_c2_request(request=request(), plan_ref=plan()).c2_owner_head)
 
     def test_caller_physical_truth_cannot_cross_into_attachment(self):
