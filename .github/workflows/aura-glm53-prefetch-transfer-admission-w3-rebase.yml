@@ -1,0 +1,157 @@
+name: Aura GLM53 G2 W3 Rebase Proof
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_prefetch_transfer_admission.py'
+      - 'tools/awj032/test_glm53_prefetch_transfer_admission.py'
+      - 'tools/awj032/glm53_router_separated_prefetch.py'
+      - 'tools/awj032/test_glm53_router_separated_prefetch.py'
+      - '.github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  REBASE_HEAD: df923b0de9603eca0639616e637dd07619270b20
+  PRE_REBASE_G2_HEAD: 47951586b7e5d3cc08710b2e180b37eb5640d9cc
+  G1_W3_HEAD: 4d30e9a6462073e60e94a85f0878072e3cc07d31
+  G1_W3_SOURCE_BLOB: 3abb810257f4e26b006186daac73e8726aa69d07
+  G1_W3_TEST_BLOB: 55ea4b322c98b2267ee4c7386f0dd6f1e54af70e
+  G1_W3_RUN: '33414244385'
+  G1_W3_JOB: '99560983305'
+  G1_WORKFLOW: Aura GLM53 Router Separated Expert Prefetch
+  G2_SOURCE_HEAD: 17c276209a8ac3d4af7cca8c9c582b4b89465e49
+  G2_SOURCE_BLOB: eba980416b47fb3b4c2391a915ebe3d9db9bebb4
+  G2_TEST_BLOB: ba07d409c9407edce03688c4a703f70abc501878
+  W4_HEAD: 9a1ddd1ccf0376ce8a944fde72241314b9ee7e13
+  W4_SOURCE_BLOB: 50c460fb8034d0e70f6189960674fae83a199129
+  W4_TEST_BLOB: 26f585888e5ddfabec366991a612d4f17854531f
+  GH_TOKEN: ${{ github.token }}
+  REPO: ${{ github.repository }}
+
+jobs:
+  g2-w3-rebase-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout complete rebase world
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prove cognition-preserving W3 merge and exact blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$REBASE_HEAD" HEAD
+          git fetch -q --no-tags origin "$REBASE_HEAD" "$PRE_REBASE_G2_HEAD" "$G1_W3_HEAD" "$W4_HEAD"
+          parents="$(git rev-list --parents -n 1 "$REBASE_HEAD")"
+          case "$parents" in
+            "$REBASE_HEAD $PRE_REBASE_G2_HEAD $G1_W3_HEAD"|"$REBASE_HEAD $G1_W3_HEAD $PRE_REBASE_G2_HEAD") ;;
+            *) echo "unexpected W3 rebase parents: $parents"; exit 1 ;;
+          esac
+          test "$(git rev-parse "$G1_W3_HEAD:tools/awj032/glm53_router_separated_prefetch.py")" = "$G1_W3_SOURCE_BLOB"
+          test "$(git rev-parse "$G1_W3_HEAD:tools/awj032/test_glm53_router_separated_prefetch.py")" = "$G1_W3_TEST_BLOB"
+          test "$(git rev-parse "$G2_SOURCE_HEAD:tools/awj032/glm53_prefetch_transfer_admission.py")" = "$G2_SOURCE_BLOB"
+          test "$(git rev-parse "$G2_SOURCE_HEAD:tools/awj032/test_glm53_prefetch_transfer_admission.py")" = "$G2_TEST_BLOB"
+          test "$(git rev-parse "$W4_HEAD:tools/awj032/glm53_io_feasibility.py")" = "$W4_SOURCE_BLOB"
+          test "$(git rev-parse "$W4_HEAD:tools/awj032/test_glm53_io_feasibility.py")" = "$W4_TEST_BLOB"
+          test "$(git rev-parse HEAD:tools/awj032/glm53_router_separated_prefetch.py)" = "$G1_W3_SOURCE_BLOB"
+          echo 'G2_COST_COGNITION_PRESERVED=true'
+          echo 'G1_W3_PAGER_RESULT_REPAIR_REBASED=true'
+
+      - name: Revalidate exact hosted repaired G1 job
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['REPO']
+          token = os.environ['GH_TOKEN']
+          run_id = int(os.environ['G1_W3_RUN'])
+          job_id = int(os.environ['G1_W3_JOB'])
+          headers = {
+              'Authorization': f'Bearer {token}',
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          def get(url):
+              req = urllib.request.Request(url, headers=headers)
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  return json.load(response)
+          run = get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}')
+          assert run['head_sha'] == os.environ['G1_W3_HEAD']
+          assert run['name'] == os.environ['G1_WORKFLOW']
+          assert run['status'] == 'completed' and run['conclusion'] == 'success'
+          jobs = get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs?per_page=100')['jobs']
+          job = next(j for j in jobs if j['id'] == job_id)
+          assert job['head_sha'] == os.environ['G1_W3_HEAD']
+          assert job['status'] == 'completed' and job['conclusion'] == 'success'
+          print('G1_W3_EXACT_HOSTED_SUCCESS=true')
+          PY
+
+      - name: Reexecute repaired G1 and W4 contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/awj032/glm53_router_separated_prefetch.py \
+            tools/awj032/test_glm53_router_separated_prefetch.py
+          python -m unittest tools.awj032.test_glm53_router_separated_prefetch -v
+          cd tools/awj032
+          python -m unittest test_glm53_io_feasibility -v
+          echo 'W4_SOURCE_REEXECUTED_NOT_HOSTED_PROMOTED=true'
+
+      - name: Reprove G2 cost-admission delta on repaired parent
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/awj032/glm53_prefetch_transfer_admission.py \
+            tools/awj032/test_glm53_prefetch_transfer_admission.py
+          python -m unittest tools.awj032.test_glm53_prefetch_transfer_admission -v
+          python - <<'PY'
+          from tools.awj032.glm53_router_separated_prefetch import PREFETCH_SCHEMA, PrefetchPrediction
+          from tools.awj032.glm53_prefetch_transfer_admission import (
+              CalibratedExpertForecast, PrefetchTransferPolicy, admit_prefetch_transfers,
+          )
+          prediction = PrefetchPrediction(
+              schema=PREFETCH_SCHEMA,
+              predictor_generation='predictor:w3-rebase',
+              layer_id='layer:w3',
+              binding_digest='binding:w3',
+              predicted_experts=(3,),
+          )
+          receipt = admit_prefetch_transfers(
+              prediction=prediction,
+              forecasts=[CalibratedExpertForecast(3, 'cal:w3', 9, 10, 0.05, 1_000_000, 0.1)],
+              policy=PrefetchTransferPolicy(
+                  policy_generation='policy:w3',
+                  predictor_calibration_generation='cal:w3',
+                  layer_id='layer:w3',
+                  binding_digest='binding:w3',
+                  effective_storage_bandwidth_bytes_per_second=1_000_000_000,
+                  prefetch_window_seconds=0.01,
+                  minimum_hit_probability_numerator=1,
+                  minimum_hit_probability_denominator=2,
+                  max_estimated_transfer_energy_joules=1.0,
+              ),
+              num_experts=8,
+          )
+          assert receipt.admitted_experts == (3,)
+          assert receipt.physical_io_attested is False
+          assert receipt.transfer_effect_authorized is False
+          assert receipt.g2_admitted is False
+          print('G2_REBASED_COST_ADMISSION_PROVEN=true')
+          PY
+
+      - name: Rebase consequence ceiling
+        run: |
+          echo 'LaterParentRepair!=DiscardDerivedCostCognition'
+          echo 'G1PagerResultBindingMustPrecedeTransferPlanTrust'
+          echo 'CostEligiblePlan!=PagerTransferTruth!=EffectAuthority'
+          echo 'PhysicalIOUnknownRemainsUnknown'
+          echo 'K27Coordinate!=PagerBinding!=RoutingAuthority!=TransformerKV'
