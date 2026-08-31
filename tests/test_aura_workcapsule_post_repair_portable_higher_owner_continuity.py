@@ -179,7 +179,8 @@ class WorkCapsulePostRepairPortableHigherOwnerContinuityTests(
         source = Path(
             "scripts/aura_workcapsule_post_repair_portable_higher_owner_continuity.py"
         ).read_text()
-        self.assertIn("verify_post_repair_source_projection_continuity", source)
+        self.assertIn("aura_workcapsule_post_source_portable_higher_owner_continuity", source)
+        self.assertNotIn("verify_post_repair_source_projection_continuity", source)
         self.assertNotIn("compile_source_reentry_observations", source)
         self.assertNotIn("compile_observation_bound_reentry_closure", source)
         self.assertNotIn("derive_post_reentry_candidate", source)
