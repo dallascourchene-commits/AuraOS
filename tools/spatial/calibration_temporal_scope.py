@@ -17,20 +17,47 @@ PARENT_TEMPORAL = "PR622:ccc932fc02caf59686e08c3d77ef6154c0cb2b67"
 EXACT_PARENT_IDS = (PARENT_CALIBRATION, PARENT_TEMPORAL)
 TEMPORAL_SCHEMA = "AuraTemporalEvidenceScopeCoordinateV1"
 
-_TEMPORAL_HARD_FALSE = (
+_TEMPORAL_KEYS = frozenset({
+    "eye_pose_receipt_sha256",
+    "longitudinal_series_evidence_ref",
+    "longitudinal_series_digest",
+    "point_capture_time_ns",
+    "series_start_time_ns",
+    "series_end_time_ns",
+    "point_vs_series_relation",
+    "temporal_overlap",
+    "eye_k27_coordinate",
+    "point_observation_was_gate_admissible",
     "point_observation_current_now_proven",
     "historical_series_current_now_proven",
     "shared_current_world_proven",
     "same_host_proven",
     "temporal_overlap_proves_causality",
+    "operating_envelope_caused_eye_pose",
+    "eye_pose_caused_operating_envelope",
     "calibrated_metric_eye_truth_proven",
     "physical_steering_authority",
+    "performance_causality_proven",
     "producer_authenticated",
     "semantic_k27_authority_proven",
     "effect_authority_proven",
     "native_private_transformer_kv_accessed",
     "gate10_promoted",
-)
+    "schema",
+})
+_TEMPORAL_HARD_FALSE = tuple(_TEMPORAL_KEYS - {
+    "eye_pose_receipt_sha256",
+    "longitudinal_series_evidence_ref",
+    "longitudinal_series_digest",
+    "point_capture_time_ns",
+    "series_start_time_ns",
+    "series_end_time_ns",
+    "point_vs_series_relation",
+    "temporal_overlap",
+    "eye_k27_coordinate",
+    "point_observation_was_gate_admissible",
+    "schema",
+})
 
 
 def _canonical(value: Any) -> bytes:
@@ -71,21 +98,30 @@ def _parents(values: Sequence[str]) -> tuple[str, str]:
 
 def verify_parent_temporal_coordinate(value: Mapping[str, Any]) -> bool:
     try:
-        payload = dict(value)
-        supplied = payload.pop("coordinate_digest")
+        full = dict(value)
+        supplied = full.pop("coordinate_digest")
     except (TypeError, ValueError, KeyError):
         return False
-    if payload.get("schema") != TEMPORAL_SCHEMA:
+    if set(full) != _TEMPORAL_KEYS:
         return False
-    if payload.get("point_observation_was_gate_admissible") is not True:
+    if full.get("schema") != TEMPORAL_SCHEMA:
         return False
-    if payload.get("point_vs_series_relation") not in {"BEFORE", "DURING", "AFTER"}:
+    if full.get("point_observation_was_gate_admissible") is not True:
         return False
-    if payload.get("temporal_overlap") is not (payload.get("point_vs_series_relation") == "DURING"):
+    if full.get("point_vs_series_relation") not in {"BEFORE", "DURING", "AFTER"}:
         return False
-    if any(payload.get(key) is not False for key in _TEMPORAL_HARD_FALSE):
+    if full.get("temporal_overlap") is not (full.get("point_vs_series_relation") == "DURING"):
         return False
-    return supplied == _digest(payload)
+    if any(full.get(key) is not False for key in _TEMPORAL_HARD_FALSE):
+        return False
+    for key in ("point_capture_time_ns", "series_start_time_ns", "series_end_time_ns", "eye_k27_coordinate"):
+        if isinstance(full.get(key), bool) or not isinstance(full.get(key), int):
+            return False
+    if not (0 <= full["eye_k27_coordinate"] <= 26):
+        return False
+    if not (0 <= full["series_start_time_ns"] < full["series_end_time_ns"]):
+        return False
+    return supplied == _digest(full)
 
 
 @dataclass(frozen=True)
@@ -105,8 +141,10 @@ class CalibrationTemporalScopeReceipt:
     eye_origin_sigma_m: float
     declared_scope_admissible: bool = True
     metric_geometry_parent_eligible: bool = True
+    sensor_identity_bound_for_downstream_replay: bool = True
     calibration_current_now_proven: bool = False
     calibration_accuracy_at_use_time_proven: bool = False
+    sensor_matches_original_calibration_proven: bool = False
     unchanged_physical_mount_proven: bool = False
     same_physical_world_proven: bool = False
     physical_gaze_accuracy_proven: bool = False
@@ -147,8 +185,7 @@ def bind_calibration_temporal_scope(
     if eligible.physical_gaze_accuracy_proven is not False:
         raise ValueError("parent calibration ceiling widened")
 
-    use_time_ns = temporal_coordinate.get("point_capture_time_ns")
-    use_time_ns = _nonnegative_int("point_capture_time_ns", use_time_ns)
+    use_time_ns = _nonnegative_int("point_capture_time_ns", temporal_coordinate.get("point_capture_time_ns"))
     calibration_observed_at_ns = _nonnegative_int("calibration_observed_at_ns", calibration_observed_at_ns)
     max_calibration_age_ns = _positive_int("max_calibration_age_ns", max_calibration_age_ns)
     if calibration_observed_at_ns > use_time_ns:
