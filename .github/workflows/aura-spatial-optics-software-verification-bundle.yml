@@ -86,7 +86,7 @@ jobs:
           PYTHONPATH: tools
         run: python -m unittest tests.test_k27_optics_independent_conformance
 
-      - name: Prove O58 two-lane bundle adversarials
+      - name: Prove O59 two-lane bundle adversarials
         env:
           PYTHONPATH: tools
         run: python -m unittest tests.test_spatial_optics_software_verification_bundle
@@ -96,7 +96,6 @@ jobs:
           PYTHONPATH: tools
         run: |
           python - <<'PY'
-          from dataclasses import asdict
           from spatial import optical_invariant_witness as inv
           import k27_optics_independent_conformance as conf
           import spatial_optics_software_verification_bundle as bundle
