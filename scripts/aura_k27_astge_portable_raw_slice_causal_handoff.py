@@ -16,7 +16,6 @@ from typing import Any
 SCHEMA = "AURA_K27_ASTGE_PORTABLE_TARGET_RAW_SLICE_PROJECTION_V1"
 RAW_SLICE_VERSION = "AURA_K27_ASTGE_PORTABLE_TARGET_RAW_SLICE_V1"
 CANONICALIZATION = "AURA_SERDE_JSON_STRUCT_ORDER_COMPACT_V1"
-SOURCE_DOMAIN = "SOURCE"
 CURRENT = "CURRENT"
 
 PAYLOAD_FIELDS = (
@@ -133,23 +132,26 @@ def verify_portable_raw_slice_projection(projection: dict[str, Any]) -> list[str
         if not _digest(payload.get(field)):
             violations.append(f"INVALID_DIGEST:{field}")
 
-    for field in (
+    integer_fields = (
         "file_id",
         "source_generation",
         "full_source_byte_len",
         "target_byte_start",
         "target_byte_end",
         "target_slice_byte_len",
-    ):
+    )
+    for field in integer_fields:
         if not _exact_int(payload.get(field)):
             violations.append(f"INVALID_INTEGER:{field}")
 
     if not isinstance(payload.get("relative_path"), str) or not payload["relative_path"].strip():
         violations.append("INVALID_RELATIVE_PATH")
 
-    if all(_exact_int(payload.get(field)) for field in ("target_byte_start", "target_byte_end", "target_slice_byte_len")):
+    if all(_exact_int(payload.get(field)) for field in integer_fields):
         if payload["target_byte_start"] >= payload["target_byte_end"]:
             violations.append("INVALID_TARGET_SPAN")
+        elif payload["target_byte_end"] > payload["full_source_byte_len"]:
+            violations.append("TARGET_SPAN_OUT_OF_SOURCE_BOUNDS")
         elif payload["target_slice_byte_len"] != payload["target_byte_end"] - payload["target_byte_start"]:
             violations.append("TARGET_SLICE_LENGTH_MISMATCH")
 
