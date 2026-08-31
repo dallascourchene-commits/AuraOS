@@ -133,9 +133,12 @@ def _resolve_host_gates(
     host_observations: Mapping[str, Any] | None,
     host_observation_resolver: HostObservationResolverV1 | None,
 ) -> tuple[dict[str, dict[str, Any]], list[str]]:
-    observations: Mapping[str, Any] = host_observations or {}
-    if not isinstance(observations, Mapping):
+    if host_observations is None:
+        observations: Mapping[str, Any] = {}
+    elif not isinstance(host_observations, Mapping):
         return {}, ["HOST_OBSERVATIONS_NOT_MAPPING"]
+    else:
+        observations = host_observations
     unknown_keys = set(observations) - set(GATES)
     if unknown_keys:
         return {}, ["HOST_OBSERVATIONS_UNKNOWN_GATE:" + ",".join(sorted(unknown_keys))]
