@@ -4,9 +4,13 @@ on:
   pull_request:
     paths:
       - "tools/aura_materialization_support_lifecycle_lineage.py"
+      - "tools/aura_q22_materialization_support_lifecycle.py"
       - "tools/aura_authority_materialization_proposal_conformance.py"
+      - "tools/aura_pre_attempt_lifecycle_lineage.py"
       - "tests/test_aura_materialization_support_lifecycle_lineage.py"
+      - "tests/test_aura_q22_materialization_support_lifecycle.py"
       - "tests/test_aura_authority_materialization_proposal_conformance.py"
+      - "tests/test_aura_pre_attempt_lifecycle_lineage.py"
       - ".github/workflows/aura-q22-materialization-support-lifecycle-lineage.yml"
   workflow_dispatch:
 
@@ -38,11 +42,14 @@ jobs:
           test "$(git rev-parse HEAD)" = "${EXPECTED}"
           echo "Q22_HEAD=${EXPECTED}" >> "$GITHUB_ENV"
 
-      - name: Authenticate exact PR708 inherited semantic blobs
+      - name: Authenticate exact inherited parent semantic blobs
         run: |
           set -euo pipefail
           test "$(git hash-object tools/aura_authority_materialization_proposal_conformance.py)" = "bdaa9b0338cdab05c48dc0337ab46522b40ac42f"
           test "$(git hash-object tests/test_aura_authority_materialization_proposal_conformance.py)" = "d71563cbfa3e0a29b86056fbd5ac27916e039624"
+          test "$(git hash-object tools/aura_pre_attempt_lifecycle_lineage.py)" = "9557192fc857a1fa05ef45803bddf863b44ddbe1"
+          test "$(git hash-object tests/test_aura_pre_attempt_lifecycle_lineage.py)" = "1eb25d6c4c57ec8722941fb9e984eb75d97c894f"
+          test "$(git hash-object .github/workflows/aura-q21-pre-attempt-lifecycle-lineage.yml)" = "356136b36e6b15a6cdf99e25e74013ed7d56d624"
 
       - name: Revalidate exact hosted parent runs and jobs
         env:
@@ -84,34 +91,31 @@ jobs:
           print("Q22_PARENT_EXACT_HOSTED_PROOFS=PASS")
           PY
 
-      - name: Replay exact PR709 lineage parent source and adversarial tests
-        run: |
-          set -euo pipefail
-          ROOT="/tmp/q22-q21-parent"
-          mkdir -p "$ROOT/tools" "$ROOT/tests"
-          touch "$ROOT/tools/__init__.py" "$ROOT/tests/__init__.py"
-          curl -fsSL "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/e83d18126cae4e95abf679f74ee585e6a4025831/tools/aura_pre_attempt_lifecycle_lineage.py" > "$ROOT/tools/aura_pre_attempt_lifecycle_lineage.py"
-          curl -fsSL "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/e83d18126cae4e95abf679f74ee585e6a4025831/tests/test_aura_pre_attempt_lifecycle_lineage.py" > "$ROOT/tests/test_aura_pre_attempt_lifecycle_lineage.py"
-          test "$(git hash-object "$ROOT/tools/aura_pre_attempt_lifecycle_lineage.py")" = "9557192fc857a1fa05ef45803bddf863b44ddbe1"
-          test "$(git hash-object "$ROOT/tests/test_aura_pre_attempt_lifecycle_lineage.py")" = "1eb25d6c4c57ec8722941fb9e984eb75d97c894f"
-          PYTHONPATH="$ROOT" python3 -m unittest tests.test_aura_pre_attempt_lifecycle_lineage
-
-      - name: Run inherited PR708 and Q22 adversarial suites
+      - name: Replay exact parent adversarial surfaces
         run: |
           set -euo pipefail
           python3 -m unittest \
             tests.test_aura_authority_materialization_proposal_conformance \
-            tests.test_aura_materialization_support_lifecycle_lineage
+            tests.test_aura_pre_attempt_lifecycle_lineage
 
-      - name: Compile and enforce Q22 nonpromotion receipt
+      - name: Run Q22 inner and exact-producer guard adversarials
+        run: |
+          set -euo pipefail
+          python3 -m unittest \
+            tests.test_aura_materialization_support_lifecycle_lineage \
+            tests.test_aura_q22_materialization_support_lifecycle
+
+      - name: Compile and enforce hardened Q22 nonpromotion receipt
         run: |
           set -euo pipefail
           python3 -m py_compile \
             tools/aura_authority_materialization_proposal_conformance.py \
-            tools/aura_materialization_support_lifecycle_lineage.py
-          python3 -m tools.aura_materialization_support_lifecycle_lineage > /tmp/q22.json
+            tools/aura_pre_attempt_lifecycle_lineage.py \
+            tools/aura_materialization_support_lifecycle_lineage.py \
+            tools/aura_q22_materialization_support_lifecycle.py
+          python3 -m tools.aura_q22_materialization_support_lifecycle > /tmp/q22.json
           python3 - <<'PY'
-          import json
+          import json, os
           with open("/tmp/q22.json", "r", encoding="utf-8") as f:
               receipt = json.load(f)
           assert receipt["schema"] == "AURA-MATERIALIZATION-SUPPORT-LIFECYCLE-LINEAGE-v1"
@@ -134,7 +138,8 @@ jobs:
           assert len(receipt["base_to_materialization_relation_digest"]) == 64
           assert len(receipt["supported_lineage_digest"]) == 64
           assert len(receipt["receipt_digest"]) == 64
+          print("Q22_EXACT_Q21_LINEAGE_RECONSTRUCTION=PASS")
           print("Q22_NONPROMOTION=PASS")
-          print("Q22_HEAD=" + __import__("os").environ["Q22_HEAD"])
+          print("Q22_HEAD=" + os.environ["Q22_HEAD"])
           print("Q22_RECEIPT_DIGEST=" + receipt["receipt_digest"])
           PY
