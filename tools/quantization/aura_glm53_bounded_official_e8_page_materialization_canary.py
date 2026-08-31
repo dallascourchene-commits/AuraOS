@@ -43,7 +43,11 @@ A6_JOB = 99506305907
 A6_RECEIPT_DIGEST = "86f7f614167e95c0099c828f91b091675238c177c202beb65e11450bec97f847"
 
 PR628_HEAD = "b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae"
-PR628_CODEC_BLOB = "5df2cd69a1519b2626cb52c1d8f23a25504425d9"
+# PR628 owns two distinct historical surfaces.  The codec source file has
+# remained byte-identical through Q13; the source/page-identity owner is a
+# separate blob and must never be substituted for the executable codec blob.
+PR628_CODEC_BLOB = "0f37a4c98d4aae2a1b248cf61f4a3b03e11c3139"
+PR628_PAGE_SOURCE_IDENTITY_BLOB = "5df2cd69a1519b2626cb52c1d8f23a25504425d9"
 REPRESENTATION_REVISION = f"{page_ref.SCHEME}@{PR628_HEAD}"
 
 OFFICIAL_REPOSITORY = q13.OFFICIAL_REPOSITORY
@@ -141,6 +145,7 @@ class BoundedOfficialE8PageMaterializationReceipt:
     a6_receipt_digest: str
     pr628_historical_codec_head: str
     pr628_historical_codec_blob: str
+    pr628_page_source_identity_blob: str
     historical_codec_reuse_requires_no_fresh_sibling_credit: bool
     official_repository: str
     official_revision: str
@@ -302,6 +307,7 @@ def current_bounded_materialization() -> BoundedOfficialE8PageMaterializationRec
         a6_receipt_digest=A6_RECEIPT_DIGEST,
         pr628_historical_codec_head=PR628_HEAD,
         pr628_historical_codec_blob=PR628_CODEC_BLOB,
+        pr628_page_source_identity_blob=PR628_PAGE_SOURCE_IDENTITY_BLOB,
         historical_codec_reuse_requires_no_fresh_sibling_credit=True,
         official_repository=OFFICIAL_REPOSITORY,
         official_revision=OFFICIAL_REVISION,
