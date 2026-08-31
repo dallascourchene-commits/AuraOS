@@ -1,0 +1,65 @@
+name: Aura Structural Archive Probe
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_structural_archive_probe.py"
+      - "tests/test_aura_structural_archive_probe.py"
+      - ".github/workflows/aura-structural-archive-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-structural-archive-probe:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Verify exact PR head
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+      - name: Compile archive surface
+        run: python -m py_compile tools/aura_structural_archive_probe.py tests/test_aura_structural_archive_probe.py
+      - name: Run exactness and falsification suite
+        run: python -m unittest tests.test_aura_structural_archive_probe -v
+      - name: Prove 40-rack mixed-domain behavior
+        shell: bash
+        run: |
+          python - <<'PY'
+          import lzma, zlib
+          from tools.aura_structural_archive_probe import build_40_rack_matrix, decode, encode
+
+          racks = build_40_rack_matrix()
+          structural = 0
+          fallback = 0
+          candidate_total = 0
+          generic_total = 0
+          for rack in racks:
+              blob, receipt = encode(rack)
+              assert decode(blob) == rack
+              assert receipt.responsibility == "ARTIFACT_COMPRESSION"
+              assert not receipt.transformer_kv_claim
+              assert not receipt.coordinate_memory_claim
+              assert not receipt.model_state_claim
+              assert not receipt.semantic_truth_claim
+              assert not receipt.k27_authority
+              assert not receipt.effect_authority
+              structural += int(receipt.structured_candidate_selected)
+              fallback += int(not receipt.structured_candidate_selected)
+              candidate_total += len(blob)
+              generic_total += min(len(rack), len(zlib.compress(rack, 9)), len(lzma.compress(rack, preset=9)))
+
+          assert len(racks) == 40
+          assert structural > 0 and fallback > 0
+          assert candidate_total < generic_total
+          print({
+              "racks": 40,
+              "structural_selected": structural,
+              "fallback_selected": fallback,
+              "candidate_total": candidate_total,
+              "best_generic_total": generic_total,
+              "artifact_compression_only": True,
+          })
+          PY
