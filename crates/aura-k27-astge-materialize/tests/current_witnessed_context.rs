@@ -1,14 +1,14 @@
 use aura_k27_astge::{
-    BackendAdmissionReasonV1, DataServingBackendV1, GenerationBoundGraphReader,
-    StorageGenerationBindingV1, admit_data_serving_backend,
+    admit_data_serving_backend, BackendAdmissionReasonV1, DataServingBackendV1,
+    GenerationBoundGraphReader, StorageGenerationBindingV1,
 };
 use aura_k27_astge_ingest::{
-    EDGE_KIND_AST_CHILD, ParsedAstGraphV1, direct_ast_cone, encode_ast_to_splane,
-    parse_python_named_ast,
+    direct_ast_cone, encode_ast_to_splane, parse_python_named_ast, ParsedAstGraphV1,
+    EDGE_KIND_AST_CHILD,
 };
 use aura_k27_astge_materialize::{AdmittedSourceCatalogV1, SourceLocatorV1};
 use std::collections::HashMap;
-use std::fs::{File, create_dir_all, remove_dir_all, write};
+use std::fs::{create_dir_all, remove_dir_all, write, File};
 use std::io::Write;
 use std::path::PathBuf;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -92,7 +92,10 @@ fn exact_current_source_and_safe_current_graph_form_readonly_context_only() {
 
     let backend = admit_data_serving_backend(&root, &node_path, &page_path, &binding, [0xA1; 32])
         .expect("admit production backend");
-    assert_eq!(backend.receipt().backend, DataServingBackendV1::ReadSeekSafeDefault);
+    assert_eq!(
+        backend.receipt().backend,
+        DataServingBackendV1::ReadSeekSafeDefault
+    );
     assert_eq!(
         backend.receipt().reason,
         BackendAdmissionReasonV1::CapabilityUnavailable
