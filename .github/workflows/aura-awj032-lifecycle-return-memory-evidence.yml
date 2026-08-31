@@ -1,0 +1,215 @@
+name: Aura AWJ032 Lifecycle Return Memory Evidence
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR581_SHA: 45f06a317456ee2ac31c1bfdcd7b3e4f1058ad73
+  PR586_SHA: aa3fcd9a4cefd18dbc991c3e8a450fcfbbb6726b
+  CONVERGENCE_SHA: 81029612d01f1c42d07527c6583fd33d6d8dc450
+  PR581_RUN: '33360644088'
+  PR586_RUN: '33360529366'
+  PR581_OWNER_BLOB: 08e56979c0d80834d7e92858f3b64321cf8f6c1d
+  PR581_TEST_BLOB: 2b60f04bf25638c20e2d9670516510f3b88b5f45
+  PR586_C2_OWNER_BLOB: 91da9f6f5c9c8175fbe123634e53e14bc9ba3cbe
+  PR586_C2_TEST_BLOB: c2ade84d0f16ba43a752eb01fe1cbbd629210dd0
+  PR586_RETURN_OWNER_BLOB: 8e57494c1c77eb41d6a402aa7dceb43121512863
+  PR586_RETURN_TEST_BLOB: 88d899169f8335e3822063761836391372600482
+
+jobs:
+  exact-lifecycle-return-memory-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Fetch exact child and prove PR581 x PR586 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=160 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR581_SHA" "$PR586_SHA"
+          unset AUTH_HEADER
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR581_SHA $PR586_SHA"
+          git merge-base --is-ancestor "$PR581_SHA" HEAD
+          git merge-base --is-ancestor "$PR586_SHA" HEAD
+          test "$(git hash-object scripts/aura_provenance_corroboration_memory_admission.py)" = "$PR581_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_provenance_corroboration_memory_admission.py)" = "$PR581_TEST_BLOB"
+          test "$(git hash-object tools/awj032/glm53_owner_host_c2_handoff.py)" = "$PR586_C2_OWNER_BLOB"
+          test "$(git hash-object tools/awj032/test_glm53_owner_host_c2_handoff.py)" = "$PR586_C2_TEST_BLOB"
+          test "$(git hash-object tools/awj032/glm53_owner_host_lifecycle_return_packet.py)" = "$PR586_RETURN_OWNER_BLOB"
+          test "$(git hash-object tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py)" = "$PR586_RETURN_TEST_BLOB"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+          echo 'EXACT_PARENT_OWNER_AND_TEST_BLOBS=true'
+
+      - name: Pin exact successful parent hosted runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          expected = {
+              os.environ['PR581_RUN']: os.environ['PR581_SHA'],
+              os.environ['PR586_RUN']: os.environ['PR586_SHA'],
+          }
+          for run_id, sha in expected.items():
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json'},
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  data = json.load(response)
+              assert data['head_sha'] == sha, (run_id, data['head_sha'], sha)
+              assert data['status'] == 'completed', (run_id, data['status'])
+              assert data['conclusion'] == 'success', (run_id, data['conclusion'])
+              print(f'PINNED_PARENT_RUN={run_id}@{sha}=SUCCESS')
+          PY
+
+      - name: Re-prove exact PR581 memory admission owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_provenance_corroboration_memory_admission.py
+          python3 -m unittest -v tests.test_aura_provenance_corroboration_memory_admission
+
+      - name: Re-prove exact PR586 C2 and lifecycle-return owners
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/awj032/glm53_owner_host_c2_handoff.py \
+            tools/awj032/glm53_owner_host_lifecycle_return_packet.py
+          python3 -m unittest -v \
+            tools.awj032.test_glm53_owner_host_c2_handoff \
+            tools.awj032.test_glm53_owner_host_lifecycle_return_packet
+
+      - name: Prove O46 memory/lifecycle nonpromotion adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_awj032_lifecycle_return_memory_evidence.py
+          python3 -m unittest -v tests.test_aura_awj032_lifecycle_return_memory_evidence
+
+      - name: Prove exact lifecycle return is remembered without W4 promotion
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts.aura_awj032_lifecycle_return_memory_evidence import (
+              EVIDENCE_TYPE,
+              admit_lifecycle_return_memory_evidence,
+              packet_artifact_ref,
+          )
+          from tests.test_aura_provenance_corroboration_memory_admission import node
+          from tools.awj032.test_glm53_owner_host_lifecycle_return_packet import OwnerHostLifecycleReturnPacketTests
+
+          packet = OwnerHostLifecycleReturnPacketTests().packet()
+          ref = packet_artifact_ref(packet)
+          evidence = node(
+              ref,
+              evidence_type=EVIDENCE_TYPE,
+              claim_key='awj032:lifecycle-return-artifact',
+              claim_value_ref='packet-digest:' + packet.packet_digest,
+              world_ref='awj032:glm53:c2-return-world',
+              dependency_class_ref='awj032:c2-owner-host-attempt',
+              generation_ref='pr586:aa3fcd9a4cefd18dbc991c3e8a450fcfbbb6726b',
+          )
+          context = {
+              'scope': 'arena',
+              'use_class': 'retrieval',
+              'accepted_evidence_types': [EVIDENCE_TYPE],
+          }
+          out = admit_lifecycle_return_memory_evidence(
+              lifecycle_return_packet=packet,
+              evidence_node=evidence,
+              context=context,
+          )
+          assert out['memory_evidence_eligible'] is True
+          assert out['lifecycle_return_evidence_artifact_ref'] == ref
+          assert out['attempt_telemetry_remembered_as_evidence_only'] is True
+          assert out['memory_admission_is_lifecycle_measurement_admission'] is False
+          assert out['memory_admission_is_lifecycle_registry_admission'] is False
+          assert out['memory_admission_is_real_w4_policy_winner'] is False
+          assert out['attempt_telemetry_promoted_to_lifecycle_metric_vector'] is False
+          assert out['attempt_reported_physical_read_bytes_independently_attested'] is False
+          assert out['input_currentness_reproved_by_child'] is False
+          assert out['claim_world_semantics_reproved_by_child'] is False
+          assert out['producer_authentication_proven'] is False
+          assert out['semantic_truth_proven'] is False
+          assert out['g2_admitted'] is False
+          assert out['effect_authority_proven'] is False
+          assert not any(out['authority'].values())
+          print('EXACT_PR586_PACKET_ADMITTED_AS_PR581_EVIDENCE=true')
+          print('MEMORY_ADMISSION_IS_LIFECYCLE_MEASUREMENT_ADMISSION=false')
+          print('MEMORY_ADMISSION_IS_REGISTRY_ADMISSION=false')
+          print('ATTEMPT_TELEMETRY_IS_PHYSICAL_IO_ATTESTATION=false')
+          PY
+
+      - name: Assert owner reuse and complete consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_awj032_lifecycle_return_memory_evidence.py
+          grep -q 'admit_evidence_nodes' "$child"
+          grep -q 'OwnerHostLifecycleReturnPacket' "$child"
+          if grep -q '^def admit_evidence_nodes' "$child"; then
+            echo 'child duplicated PR581 memory admission owner' >&2
+            exit 1
+          fi
+          if grep -q '^def build_owner_host_lifecycle_return_packet' "$child"; then
+            echo 'child duplicated PR586 lifecycle-return owner' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_awj032_lifecycle_return_memory_evidence import verify_lifecycle_return_memory_evidence
+          params = set(inspect.signature(verify_lifecycle_return_memory_evidence).parameters)
+          assert params == {'lifecycle_return_packet', 'evidence_node', 'context'}
+          forbidden = {
+              'cache_hit_ratio', 'energy_joules', 'peak_resident_bytes',
+              'warmup_seconds', 'restart_seconds', 'revalidation_seconds',
+              'control_overhead_seconds', 'physical_io_attested', 'registry',
+              'registry_record', 'producer_authenticated', 'real_w4_policy_winner_proven',
+              'g2_admitted', 'effect_authority_proven', 'semantic_truth', 'k27_coordinate',
+          }
+          assert params.isdisjoint(forbidden)
+          PY
+          cat <<'EOF'
+          PR581_MEMORY_ADMISSION_OWNER_REUSED=true
+          PR586_LIFECYCLE_RETURN_OWNER_REUSED=true
+          EXACT_PACKET_DIGEST_BOUND_TO_TYPED_MEMORY_ARTIFACT_REF=true
+          MEMORY_ELIGIBILITY_MUST_BE_EARNED_BY_PR581=true
+          ATTEMPT_TELEMETRY_REMEMBERED_AS_EVIDENCE_ONLY=true
+          MEMORY_ADMISSION_IS_LIFECYCLE_MEASUREMENT_ADMISSION=false
+          MEMORY_ADMISSION_IS_LIFECYCLE_REGISTRY_ADMISSION=false
+          MEMORY_ADMISSION_IS_REAL_W4_POLICY_WINNER=false
+          ATTEMPT_TELEMETRY_PROMOTED_TO_LIFECYCLE_METRICS=false
+          ATTEMPT_PHYSICAL_READ_BYTES_INDEPENDENTLY_ATTESTED=false
+          INPUT_CURRENTNESS_REPROVED_BY_CHILD=false
+          CLAIM_WORLD_SEMANTICS_REPROVED_BY_CHILD=false
+          PRODUCER_AUTHENTICATION_PROVEN=false
+          SEMANTIC_TRUTH_PROVEN=false
+          FULL_MODEL_RUNTIME_PROVEN=false
+          QUALITY_PROVEN=false
+          G2_ADMITTED=false
+          EFFECT_AUTHORITY_PROVEN=false
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_PROVIDER_PUBLIC_HUMAN_AUTHORITY=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF
