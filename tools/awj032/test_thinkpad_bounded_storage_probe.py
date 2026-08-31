@@ -19,16 +19,16 @@ class ThinkPadBoundedStorageProbeTests(unittest.TestCase):
         self.payload = (b"aura-thinkpad-probe\n" * 8192) + b"tail"
         (self.root / "model.safetensors").write_bytes(self.payload)
         self.request = OwnerHostC2CanaryRequest(
-            w3_proof_logical_id="fixture:w3",
-            preflight_receipt_digest="1" * 64,
-            airllm_source_revision="fixture-airllm-revision",
-            airllm_security_evidence_digest="2" * 64,
-            host_snapshot_digest="3" * 64,
-            storage_plan_digest="4" * 64,
+            w3_proof_logical_id="ab" * 32,
+            preflight_receipt_digest="cd" * 32,
+            airllm_source_revision="airllm-reviewed-source@deadbeef",
+            airllm_security_evidence_digest="12" * 32,
+            host_snapshot_digest="34" * 32,
+            storage_plan_digest="56" * 32,
             workspace_root=str(self.root),
             max_payload_bytes=2 * 1024 * 1024,
             max_wall_seconds=10,
-            effect_admission_ref="effect:none",
+            effect_admission_ref="owner-effect:awj032:c2:storage-probe-fixture",
         )
 
     def tearDown(self):
