@@ -1,0 +1,156 @@
+name: Aura WorkCapsule Recursive Portable Derived Scoped Continuity
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_recursive_portable_derived_scoped_continuity.py'
+      - 'scripts/aura_workcapsule_portable_derived_scoped_rebind.py'
+      - 'scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py'
+      - 'scripts/aura_workcapsule_post_world_bound_scoped_rebind.py'
+      - 'scripts/aura_workcapsule_scoped_portable_target_identity.py'
+      - 'scripts/aura_workcapsule_scoped_higher_owner_portable_continuity.py'
+      - 'tests/test_aura_workcapsule_recursive_portable_derived_scoped_continuity.py'
+      - 'tests/test_aura_workcapsule_portable_derived_scoped_rebind.py'
+      - 'tests/test_aura_workcapsule_post_source_portable_higher_owner_continuity.py'
+      - '.github/workflows/aura-workcapsule-recursive-portable-derived-scoped-continuity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR561_SHA: f0f3c18e281eaf8f634e54dd8b49dd7046c63c63
+      PR549_SHA: 278e4b4ab7c8a9ff296508cfdb70155ffb2e9250
+      PR549_DERIVED_BLOB: c58b44b3c83ed0db0d8d4b90777bf1cf9efe006c
+      PR549_POST_WORLD_BLOB: df6273f2993e01c0da87979ef7a0bf0b31ce7a87
+      PR549_POST_SOURCE_BLOB: 50c48fce25971d2fc13293932bd8af2b6b6ba233
+      PR549_TEST_BLOB: 27337d82aa3e26e0854aaa7bf8a8419c412d681f
+      PR549_POST_SOURCE_TEST_BLOB: 5064cc4edc729188c3627766183f19c32d599cc2
+    steps:
+      - name: Fetch exact child and prove earned ancestry
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=180 origin "$TARGET_SHA" "$PR561_SHA" "$PR549_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor "$PR561_SHA" HEAD
+          git merge-base --is-ancestor "$PR549_SHA" HEAD
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'PR561_CURRENT_RECURSIVE_OWNER_ANCESTOR=true'
+          echo 'PR549_LOWER_INPUT_OWNER_ANCESTOR=true'
+
+      - name: Prove exact PR549 executable substrate restored
+        run: |
+          test "$(git hash-object scripts/aura_workcapsule_portable_derived_scoped_rebind.py)" = "$PR549_DERIVED_BLOB"
+          test "$(git hash-object scripts/aura_workcapsule_post_world_bound_scoped_rebind.py)" = "$PR549_POST_WORLD_BLOB"
+          test "$(git hash-object scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py)" = "$PR549_POST_SOURCE_BLOB"
+          test "$(git hash-object tests/test_aura_workcapsule_portable_derived_scoped_rebind.py)" = "$PR549_TEST_BLOB"
+          test "$(git hash-object tests/test_aura_workcapsule_post_source_portable_higher_owner_continuity.py)" = "$PR549_POST_SOURCE_TEST_BLOB"
+          echo 'PR549_EXECUTABLE_SUBSTRATE_BYTE_IDENTICAL=true'
+
+      - name: Re-prove PR561 current recursive owner chain
+        run: |
+          python3 -m py_compile \
+            scripts/aura_workcapsule_scoped_portable_target_identity.py \
+            scripts/aura_workcapsule_scoped_higher_owner_portable_continuity.py
+          python3 -m unittest -v \
+            tests.test_aura_workcapsule_recursive_portable_current_shared_owner \
+            tests.test_aura_workcapsule_scoped_higher_owner_portable_continuity
+
+      - name: Re-prove exact PR549 in isolation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf /tmp/pr549 && mkdir -p /tmp/pr549
+          git -C /tmp/pr549 init .
+          git -C /tmp/pr549 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr549 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR549_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr549 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr549 rev-parse HEAD)" = "$PR549_SHA"
+          test -z "$(git -C /tmp/pr549 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr549
+          python3 -m py_compile \
+            scripts/aura_workcapsule_portable_derived_scoped_rebind.py \
+            scripts/aura_workcapsule_post_world_bound_scoped_rebind.py \
+            scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py
+          python3 -m unittest -v tests.test_aura_workcapsule_portable_derived_scoped_rebind
+
+      - name: Re-prove PR549 lower-input surface under current owner tree
+        run: |
+          python3 -m unittest -v tests.test_aura_workcapsule_portable_derived_scoped_rebind
+
+      - name: Prove recursive lower-input consequence
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_recursive_portable_derived_scoped_continuity.py
+          python3 -m unittest -v tests.test_aura_workcapsule_recursive_portable_derived_scoped_continuity
+
+      - name: Assert single-owner and lower-input boundary
+        run: |
+          python3 - <<'PY'
+          import ast
+          import inspect
+          from pathlib import Path
+          from scripts.aura_workcapsule_recursive_portable_derived_scoped_continuity import (
+              verify_recursive_portable_derived_scoped_continuity,
+          )
+
+          params = inspect.signature(verify_recursive_portable_derived_scoped_continuity).parameters
+          assert 'portable_higher_owner_projection' in params
+          for forbidden in (
+              'scoped_target_inputs', 'scoped_rebind_inputs', 'post_edit_witness',
+              'astge_projection', 'canonical_target_projection'
+          ):
+              assert forbidden not in params
+
+          child = Path('scripts/aura_workcapsule_recursive_portable_derived_scoped_continuity.py').read_text()
+          lower = Path('scripts/aura_workcapsule_scoped_portable_target_identity.py').read_text()
+          child_names = {
+              node.name for node in ast.walk(ast.parse(child)) if isinstance(node, ast.FunctionDef)
+          }
+          lower_names = {
+              node.name for node in ast.walk(ast.parse(lower)) if isinstance(node, ast.FunctionDef)
+          }
+          assert 'verify_shared_target_coordinates' not in child_names
+          assert 'verify_shared_target_coordinates' in lower_names
+          assert 'shared_owner.verify_shared_target_coordinates' in child
+          print('CALLER_SCOPED_TARGET_INPUTS_ACCEPTED=false')
+          print('CALLER_POST_EDIT_WITNESS_ACCEPTED=false')
+          print('SECOND_TARGET_PROJECTION_ACCEPTED=false')
+          print('PR555_REMAINS_SOLE_SHARED_COORDINATE_OWNER=true')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'PR549_DERIVED_SCOPED_EVIDENCE_CONSUMED=true'
+          echo 'PR561_RECURSIVE_OWNER_CURRENT=true'
+          echo 'RECURSIVE_CROSS_RUNTIME_CANONICALIZATION_REUSED=true'
+          echo 'SECOND_SHARED_COORDINATE_OWNER_MINTED=false'
+          echo 'STRUCTURAL_HANDLE_BOUND_TO_RAW_BYTES=false'
+          echo 'PRODUCER_AUTHENTICATED=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_PROVEN=false'
+          echo 'REENTRY_CLOSED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_INVALIDATION_CONE_PROVEN=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
