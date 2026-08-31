@@ -9,7 +9,10 @@ on:
       - 'tests/test_aura_external_cognition_resolve_adapter.py'
       - 'tools/aura_external_knowledge_coordinate_memory_candidate.py'
       - 'tests/test_aura_external_knowledge_coordinate_memory_candidate.py'
+      - 'tools/aura_external_knowledge_coordinate_memory_read_guard.py'
+      - 'tests/test_aura_external_knowledge_coordinate_memory_read_guard.py'
       - '.github/workflows/aura-eki-coordinate-memory-candidate.yml'
+      - '.github/workflows/aura-eki-wp03-read-currentness-obligation.yml'
   workflow_dispatch:
 
 permissions:
@@ -68,7 +71,6 @@ jobs:
           set -euo pipefail
           python - <<'PY'
           import json, os, urllib.request
-
           repo = os.environ['GITHUB_REPOSITORY']
           token = os.environ['GH_TOKEN']
           pairs = [
@@ -118,7 +120,6 @@ jobs:
               READY,
               project_external_knowledge_candidate,
           )
-
           node = current_node()
           decision = project_external_knowledge_candidate(node=node)
           assert decision.disposition == READY
@@ -151,3 +152,97 @@ jobs:
           echo 'ExternalStanding!=InstructionAuthority'
           echo 'CoordinateMemory!=MODEL_PREFIX_KV'
           echo 'K27Routing!=EvidenceTruth!=WriteAuthority'
+
+  eki-read-currentness-obligation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact read-guard descendant
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate exact read-currentness semantic surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/aura_external_knowledge_coordinate_memory_candidate.py)" = "$CANDIDATE_SOURCE_BLOB"
+          test "$(git hash-object tests/test_aura_external_knowledge_coordinate_memory_candidate.py)" = "$CANDIDATE_TEST_BLOB"
+          test "$(git hash-object tools/aura_external_cognition_resolve_adapter.py)" = "$WP03_SOURCE_BLOB"
+          grep -q 'CURRENT_REFERENCE@Projection!=Current@Read' tools/aura_external_knowledge_coordinate_memory_read_guard.py
+          grep -q 'Required(source)+NOT_REQUIRED(source)=>FailClosed' tools/aura_external_knowledge_coordinate_memory_read_guard.py
+          echo 'EKIR1_SEMANTIC_SURFACES_EXACT=true'
+
+      - name: Revalidate exact green candidate and WP03 generations
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          expected = (
+              (33417664825, '89a66cdb972d3eab19c9408356b7061d1529947d', 'Aura EKI Coordinate Memory Candidate'),
+              (33416056653, '9865c42f3ada2520141bd2fe30a439ce160ce2f8', 'Aura External Cognition Resolve Adapter'),
+          )
+          for run_id, head, name in expected:
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={
+                      'Authorization': f'Bearer {token}',
+                      'Accept': 'application/vnd.github+json',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  run = json.load(response)
+              assert run['head_sha'] == head
+              assert run['name'] == name
+              assert run['status'] == 'completed' and run['conclusion'] == 'success'
+          print('EKIR1_EXACT_GREEN_PARENTS=true')
+          PY
+
+      - name: Replay candidate reader and read-currentness adversarials
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/aura_external_knowledge_coordinate_memory_candidate.py \
+            tools/aura_external_cognition_resolve_adapter.py \
+            tools/aura_external_knowledge_coordinate_memory_read_guard.py \
+            tests/test_aura_external_knowledge_coordinate_memory_read_guard.py
+          python -m unittest \
+            tests.test_aura_external_knowledge_coordinate_memory_candidate \
+            tests.test_aura_external_cognition_resolve_adapter \
+            tests.test_aura_external_knowledge_coordinate_memory_read_guard -v
+
+      - name: Independently prove use-time source currentness cannot be omitted
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from tools.aura_external_cognition_resolve_adapter import CurrentnessStatus, ResolveDisposition
+          from tools.aura_external_knowledge_coordinate_memory_candidate import project_external_knowledge_candidate
+          from tools.aura_external_knowledge_coordinate_memory_read_guard import resolve_with_read_currentness
+          from tests.test_aura_external_knowledge_coordinate_memory_read_guard import current_node, materialize, guarded, context
+
+          candidate = project_external_knowledge_candidate(node=current_node()).candidate
+          assert candidate is not None
+          snapshot_bytes, adapter = materialize(candidate)
+          contract = guarded(candidate, snapshot_bytes)
+
+          missing = resolve_with_read_currentness(adapter=adapter, contract=contract, context=context())
+          assert missing.disposition is ResolveDisposition.SOURCE_REVALIDATION_REQUIRED
+          stale = resolve_with_read_currentness(adapter=adapter, contract=contract, context=context(CurrentnessStatus.STALE))
+          assert stale.disposition is ResolveDisposition.CURRENTNESS_REOPEN
+          current = resolve_with_read_currentness(adapter=adapter, contract=contract, context=context(CurrentnessStatus.RESOLVED_CURRENT))
+          assert current.disposition is ResolveDisposition.FOUND_VERIFIED
+          assert current.candidate is not None
+          assert current.candidate.source_currentness == CurrentnessStatus.RESOLVED_CURRENT.value
+          assert current.candidate.instruction_authority is False
+          assert current.candidate.write_authority is False
+          assert current.candidate.effect_authority is False
+          print('CURRENT_REFERENCE_AT_PROJECTION_NE_CURRENT_AT_READ=true')
+          print('READ_TIME_SOURCE_REVALIDATION_REQUIRED=true')
+          print('READ_REMAINS_CANDIDATE_ONLY=true')
+          PY
