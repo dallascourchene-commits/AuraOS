@@ -1,0 +1,112 @@
+name: Aura WorkCapsule Scoped Portable Target Identity
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_scoped_post_repair_rebind.py'
+      - 'tests/test_aura_workcapsule_scoped_post_repair_rebind.py'
+      - 'scripts/aura_workcapsule_post_repair_source_projection_continuity.py'
+      - 'tests/test_aura_workcapsule_post_repair_source_projection_continuity.py'
+      - 'scripts/aura_workcapsule_scoped_portable_target_identity.py'
+      - 'tests/test_aura_workcapsule_scoped_portable_target_identity.py'
+      - '.github/workflows/aura-workcapsule-scoped-portable-target-identity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scoped-portable-target-identity:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR532_SHA: e7133873664c5bf5eb7c18f4b33e9d1ae63d0120
+      PR539_SHA: a4faca716c83643eca1566df235b51affc1b6889
+    steps:
+      - name: Fetch exact head and both parent anchors without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=80 origin "$TARGET_SHA" "$PR532_SHA" "$PR539_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor "$PR532_SHA" HEAD
+          git merge-base --is-ancestor "$PR539_SHA" HEAD
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR532 scoped post-repair owner
+        run: |
+          python3 -m py_compile \
+            scripts/aura_workcapsule_source_bound_exact_reentry.py \
+            scripts/aura_workcapsule_stale_exact_reentry.py \
+            scripts/aura_workcapsule_raw_owner_stale_safe_reentry.py \
+            scripts/aura_workcapsule_scoped_post_repair_rebind.py
+          python3 -m unittest -v tests.test_aura_workcapsule_scoped_post_repair_rebind
+
+      - name: Re-prove PR539 exact POST-source owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_post_repair_source_projection_continuity.py
+          python3 -m unittest -v tests.test_aura_workcapsule_post_repair_source_projection_continuity
+
+      - name: Prove scoped witness and portable target identity convergence
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_scoped_portable_target_identity.py
+          python3 -m unittest -v tests.test_aura_workcapsule_scoped_portable_target_identity
+
+      - name: Assert owner-only boundary and asymmetric claim ceiling
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from pathlib import Path
+          from scripts.aura_workcapsule_scoped_portable_target_identity import verify_scoped_portable_target_identity
+          params = set(inspect.signature(verify_scoped_portable_target_identity).parameters)
+          assert params == {'scoped_rebind_inputs', 'post_source_inputs'}
+          source = Path('scripts/aura_workcapsule_scoped_portable_target_identity.py').read_text()
+          assert 'verify_scoped_post_repair_rebind' in source
+          assert 'verify_post_repair_source_projection_continuity' in source
+          for forbidden in ('compile_source_reentry_observations', 'compile_observation_bound_reentry_closure', 'parse_python', 'derive_post_reentry_candidate'):
+              assert forbidden not in source, forbidden
+          assert 'cross_parent_owner_parent_equality_proven": False' in source
+          assert 'scoped_witness_owner_parent_relation_proven": False' in source
+          print('PR532_OWNER_REUSED=true')
+          print('PR539_OWNER_REUSED=true')
+          print('THIRD_TARGET_PIVOT_ACCEPTED=false')
+          print('CROSS_PARENT_OWNER_PARENT_EQUALITY_PROVEN=false')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'SCOPED_PORTABLE_POST_EDIT_TARGET_IDENTITY_V1=true'
+          echo 'SAME_DEPENDENCY_IDENTITY_REQUIRED=true'
+          echo 'SAME_POST_SOURCE_GENERATION_SHA_LENGTH_REQUIRED=true'
+          echo 'SAME_SYNTAX_ORDINAL_REQUIRED=true'
+          echo 'SAME_TARGET_SPAN_REQUIRED=true'
+          echo 'SAME_SEMANTIC_HANDLE_REQUIRED=true'
+          echo 'PR539_CANONICAL_OWNER_PARENT_RELATION_CARRIED=true'
+          echo 'PR532_OWNER_PARENT_RELATION_PROVEN=false'
+          echo 'CROSS_PARENT_OWNER_PARENT_EQUALITY_PROVEN=false'
+          echo 'REENTRY_CLOSED=false'
+          echo 'REENTRY_SCOPE_NARROWED_BY_CHILD=false'
+          echo 'SOURCE_CURRENTNESS_MINTED_BY_CHILD=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_PROVEN=false'
+          echo 'PRODUCER_AUTHENTICATED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_DEPENDENCY_CONE_PROVEN=false'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
