@@ -71,7 +71,10 @@ fn module_symbols_bind_exact_current_ast_records_and_consequences() {
         .collect();
     assert_eq!(duplicate_targets.len(), 2);
     assert_ne!(duplicate_targets[0].node_id, duplicate_targets[1].node_id);
-    assert_ne!(duplicate_targets[0].byte_start, duplicate_targets[1].byte_start);
+    assert_ne!(
+        duplicate_targets[0].byte_start,
+        duplicate_targets[1].byte_start
+    );
 
     let placement_generation = 31;
     let placement_scheme_digest = [0xA5; 32];
@@ -83,7 +86,10 @@ fn module_symbols_bind_exact_current_ast_records_and_consequences() {
         placement_scheme_digest,
     )
     .expect("encode current S-plane graph");
-    assert!(encoded.pages.len() > 1, "fixture must span multiple physical pages");
+    assert!(
+        encoded.pages.len() > 1,
+        "fixture must span multiple physical pages"
+    );
 
     // Representation-order substitution: the current S-plane reader indexes by storage-local
     // node ID. Symbol referential integrity must therefore survive a different record order.
@@ -110,7 +116,10 @@ fn module_symbols_bind_exact_current_ast_records_and_consequences() {
         assert_eq!(record.byte_start, symbol.byte_start);
         assert_eq!(record.byte_end, symbol.byte_end);
         assert_eq!(record.semantic_handle_digest, symbol.semantic_handle_digest);
-        assert_eq!(symbol.semantic_handle_digest, semantic_handles[&symbol.node_id]);
+        assert_eq!(
+            symbol.semantic_handle_digest,
+            semantic_handles[&symbol.node_id]
+        );
     }
 
     let binding = StorageGenerationBindingV1 {
@@ -137,14 +146,8 @@ fn module_symbols_bind_exact_current_ast_records_and_consequences() {
     }
     page_file.sync_all().expect("sync pages");
 
-    let admission = admit_data_serving_backend(
-        &root,
-        &node_path,
-        &page_path,
-        &binding,
-        [0xD9; 32],
-    )
-    .expect("admit safe-default backend");
+    let admission = admit_data_serving_backend(&root, &node_path, &page_path, &binding, [0xD9; 32])
+        .expect("admit safe-default backend");
     assert_eq!(
         admission.receipt().backend,
         DataServingBackendV1::ReadSeekSafeDefault
@@ -167,7 +170,11 @@ fn module_symbols_bind_exact_current_ast_records_and_consequences() {
             .expect("hydrate symbol AST consequence");
         let (expected_nodes, expected_edges) =
             direct_ast_cone(&graph, symbol.node_id, 2).expect("direct syntax oracle");
-        assert_eq!(observed.node_ids, expected_nodes, "symbol {} node consequence", symbol.name);
+        assert_eq!(
+            observed.node_ids, expected_nodes,
+            "symbol {} node consequence",
+            symbol.name
+        );
         assert_eq!(
             observed.edges_traversed, expected_edges,
             "symbol {} edge consequence",
