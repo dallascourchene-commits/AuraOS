@@ -1,0 +1,144 @@
+name: Aura Alias Stable Future Read Currentness Preflight
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_alias_stable_future_read_currentness_preflight.py"
+      - "tests/test_aura_alias_stable_future_read_currentness_preflight.py"
+      - "docs/arena/ALIAS_STABLE_FUTURE_READ_CURRENTNESS_PREFLIGHT_V1.md"
+      - ".github/workflows/aura-alias-stable-future-read-currentness-preflight.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-future-read-preflight-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      PR759_SEMANTIC_HEAD: "658b3bc651ee39454f6b94039d26ff76d48f73d8"
+      PR759_SOURCE_BLOB: "1abd821beb2a8a9a96b5ac2f0956195b20a321c7"
+      PR759_TEST_BLOB: "ddc88a73f49d6a09d67b388cf5c4958317e10ae2"
+      PR759_PROOF_HEAD: "cf6b07e5c498d7c429e6679a8ba5cec5e1e46ca6"
+      PR759_PROOF_RUN: "33436588718"
+      PR759_PROOF_JOB: "99634405807"
+      PR760_SEMANTIC_HEAD: "1a7ab9d884acc917ea28bea2b28bc747222f1aed"
+      PR760_SOURCE_BLOB: "edac88e89e0659cd6bbf99c7a138e2ae3f516ae8"
+      PR760_TEST_BLOB: "268889ff864c1fd7f80469071d6ec6738e941f36"
+      PR760_PROOF_RUN: "33436321891"
+      PR760_PROOF_JOB: "99633531552"
+    steps:
+      - name: Exact authenticated checkout and parent fetch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "$TARGET_SHA" "$PR759_SEMANTIC_HEAD" "$PR759_PROOF_HEAD" "$PR760_SEMANTIC_HEAD"
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Authenticate exact parent semantic blobs
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$PR759_SEMANTIC_HEAD:tools/aura_retrieval_progress_k27_alias_guard.py")" = "$PR759_SOURCE_BLOB"
+          test "$(git rev-parse "$PR759_SEMANTIC_HEAD:tests/test_aura_retrieval_progress_k27_alias_guard.py")" = "$PR759_TEST_BLOB"
+          test "$(git rev-parse "$PR759_PROOF_HEAD:tools/aura_retrieval_progress_k27_alias_guard.py")" = "$PR759_SOURCE_BLOB"
+          test "$(git rev-parse "$PR759_PROOF_HEAD:tests/test_aura_retrieval_progress_k27_alias_guard.py")" = "$PR759_TEST_BLOB"
+          test "$(git rev-parse "$PR760_SEMANTIC_HEAD:tools/aura_nav13d_eki4_hydrated_version_handoff.py")" = "$PR760_SOURCE_BLOB"
+          test "$(git rev-parse "$PR760_SEMANTIC_HEAD:tests/test_aura_nav13d_eki4_hydrated_version_handoff.py")" = "$PR760_TEST_BLOB"
+          test "$(git hash-object tools/aura_nav13d_eki4_hydrated_version_handoff.py)" = "$PR760_SOURCE_BLOB"
+          test "$(git hash-object tests/test_aura_nav13d_eki4_hydrated_version_handoff.py)" = "$PR760_TEST_BLOB"
+          echo "PARENT_SEMANTIC_BLOBS_EXACT=true"
+
+      - name: Revalidate exact hosted parent proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          token=os.environ['GH_TOKEN']
+          headers={
+              'Authorization':f'Bearer {token}',
+              'Accept':'application/vnd.github+json',
+              'X-GitHub-Api-Version':'2022-11-28',
+          }
+          expected=(
+              (
+                  int(os.environ['PR759_PROOF_RUN']),
+                  os.environ['PR759_PROOF_HEAD'],
+                  'Aura Retrieval Progress K27 Alias Guard Proof',
+                  int(os.environ['PR759_PROOF_JOB']),
+                  'exact-alias-aware-progress-proof',
+              ),
+              (
+                  int(os.environ['PR760_PROOF_RUN']),
+                  os.environ['PR760_SEMANTIC_HEAD'],
+                  'Aura NAV13D EKI4 Hydrated Version Handoff Proof',
+                  int(os.environ['PR760_PROOF_JOB']),
+                  'exact-handoff-proof',
+              ),
+          )
+          for run_id, head, workflow_name, job_id, job_name in expected:
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  run=json.load(response)
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['name']==workflow_name,(run_id,run['name'],workflow_name)
+              assert run['status']=='completed' and run['conclusion']=='success',run
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}',
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  job=json.load(response)
+              assert job['name']==job_name,(job_id,job['name'],job_name)
+              assert job['status']=='completed' and job['conclusion']=='success',job
+          print('EXACT_PARENT_HOSTED_PROOFS_REVALIDATED=true')
+          PY
+
+      - name: Compile and run parent plus future-read adversarials
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_nav13d_eki4_hydrated_version_handoff.py \
+            tools/aura_alias_stable_future_read_currentness_preflight.py \
+            tests/test_aura_nav13d_eki4_hydrated_version_handoff.py \
+            tests/test_aura_alias_stable_future_read_currentness_preflight.py
+          python3 -m unittest -v \
+            tests.test_aura_nav13d_eki4_hydrated_version_handoff \
+            tests.test_aura_alias_stable_future_read_currentness_preflight
+
+      - name: Exhaust 192-state Different-J preflight lattice
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from tools.aura_alias_stable_future_read_currentness_preflight import prove_different_j
+          checked=prove_different_j()
+          assert checked==192,checked
+          print(f'FUTURE_READ_DIFFERENT_J_STATES={checked}')
+          PY
+
+      - name: Enforce temporal debt and nonpromotion laws
+        run: |
+          set -euo pipefail
+          f=tools/aura_alias_stable_future_read_currentness_preflight.py
+          grep -q 'FutureReadDebtCarried!=FutureReadDebtResolved' "$f"
+          grep -q 'RouteAliasRotationCannotPayFutureReadCurrentnessDebt' "$f"
+          grep -q 'AliasAwareRetrievalProgress!=ReadCurrentnessWitness' "$f"
+          grep -q 'ProbeAdmission!=ReadCurrentness!=EvidenceAdmission!=UseAuthority' "$f"
+          grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' "$f"
+          echo "SOURCE_CURRENTNESS_PROVEN=false"
+          echo "READ_CURRENTNESS_PROVEN=false"
+          echo "PERSISTENT_USE_AUTHORIZED=false"
+          echo "EFFECT_AUTHORIZED=false"
+          echo "NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false"
