@@ -37,6 +37,20 @@ def _sha(value: Any) -> str:
     return hashlib.sha256(_canonical(value)).hexdigest()
 
 
+def _canonical_prefetch_expert_ids(expert_ids: Sequence[int], num_experts: int) -> tuple[int, ...]:
+    """Canonicalize a speculative transfer set while permitting abstention.
+
+    PR338's ``canonical_expert_ids`` correctly forbids an empty routed-expert
+    request. A speculative predictor has a different contract: it may safely
+    abstain and let the authoritative native route demand-load every required
+    expert. Non-empty predictions retain the exact PR338 range/canonicalization
+    rules rather than introducing a second expert-ID policy.
+    """
+    if not expert_ids:
+        return ()
+    return canonical_expert_ids(expert_ids, num_experts)
+
+
 @dataclass(frozen=True)
 class PrefetchPrediction:
     schema: str
@@ -50,7 +64,7 @@ class PrefetchPrediction:
             raise ValueError("PREFETCH_SCHEMA_MISMATCH")
         if not self.predictor_generation.strip() or not self.layer_id.strip() or not self.binding_digest.strip():
             raise ValueError("PREFETCH_IDENTITY_FIELDS_REQUIRED")
-        expected = canonical_expert_ids(self.predicted_experts, num_experts)
+        expected = _canonical_prefetch_expert_ids(self.predicted_experts, num_experts)
         if expected != self.predicted_experts:
             raise ValueError("PREDICTED_EXPERTS_MUST_BE_CANONICAL")
 
@@ -205,13 +219,7 @@ def _validate_loaded_pages(
     num_experts: int,
     phase: str,
 ) -> None:
-    """Require the pager result to prove the exact requested source-bound pages.
-
-    Passing a model revision/index digest *into* a pager is insufficient relation proof:
-    the returned page object must itself carry the same immutable binding used by the
-    prediction/native-route relation and the exact canonical expert set requested for
-    this transfer phase.
-    """
+    """Require the pager result to prove the exact requested source-bound pages."""
     observed_binding = getattr(result, "binding_digest", None)
     if not isinstance(observed_binding, str) or not observed_binding.strip():
         raise ValueError(f"{phase}_PAGER_RESULT_BINDING_REQUIRED")
@@ -238,11 +246,7 @@ def build_prefetch_trace(
     logical_bytes_by_expert: Mapping[int, int],
     physical_io: PhysicalIOAttestation | None = None,
 ) -> PrefetchTrace:
-    """Join prediction and native route without allowing prediction to affect execution.
-
-    The predictor owns transfer speculation only. The native router owns execution.
-    Every native-selected expert absent from the prediction becomes a demand miss.
-    """
+    """Join prediction and native route without allowing prediction to affect execution."""
     prediction.validate(num_experts=num_experts)
     native_route.validate(num_experts=num_experts)
     if prediction.layer_id != native_route.layer_id:
@@ -321,14 +325,7 @@ def stage_then_demand_load(
     model_revision: str,
     index_digest: str,
 ) -> PrefetchTrace:
-    """Exercise the transfer order while preserving native execution semantics.
-
-    Prediction pages are staged first. Any missed native experts are then demand-loaded.
-    This function never calls a model forward and returns only a bounded trace. Each
-    successful pager response must itself prove the exact source binding and expert set
-    used by the prediction/native-route relation; caller-supplied source labels alone
-    cannot establish that relation.
-    """
+    """Exercise transfer order while preserving native execution semantics."""
     trace = build_prefetch_trace(
         prediction=prediction,
         native_route=native_route,
@@ -368,6 +365,11 @@ LAWS = (
     "PrefetchPrediction!=NativeExecutionRoute",
     "PredictionMiss=>DemandLoadExactNativeExpertsNotRouteMutation",
     "PredictionWasteMayIncreaseIOWithoutChangingExecutedExperts",
+    "PredictionAbstention!=RoutingFailure",
+    "EmptyTransferPlan!=EmptyExecutionPlan",
+    "NoPrefetchPrediction=>DemandLoadExactNativeRoute",
+    "PredictorMayAbstainNativeRouterMayNot",
+    "Abstention!=PhysicalIOSavingsProof",
     "PagerResultMustBindExactRequestedExpertsAndSource",
     "LogicalPrefetchBytes!=PhysicalNVMeBytesAbsentAttestation",
     "FullShardLoad!=SelectivePrefetch",
