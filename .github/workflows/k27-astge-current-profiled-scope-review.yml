@@ -84,6 +84,7 @@ jobs:
           entry=crates/aura-k27-astge-current-profiled-scope-review/src/lib.rs
           lower=crates/aura-k27-astge-current-profiled-scope-review/src/producer_bound.rs
           trust=crates/aura-k27-astge-current-profiled-scope-review/src/trusted_registry.rs
+          scopes=crates/aura-k27-astge-current-profiled-scopes/src/lib.rs
 
           # Trigger coverage for direct and behavior-relevant internal dependencies.
           for required_path in \
@@ -100,7 +101,10 @@ jobs:
           # Canonical public route: lower evidence is public, weaker consequence helper is not.
           grep -q '^mod producer_bound;' "$entry"
           grep -q '^mod trusted_registry;' "$entry"
-          ! grep -q '^pub use producer_bound::\*;' "$entry"
+          if grep -q '^pub use producer_bound::\*;' "$entry"; then
+            echo 'Forbidden public wildcard export of producer_bound' >&2
+            exit 1
+          fi
           grep -q 'validate_current_profiled_scope_review_candidate' "$entry"
           grep -q 'CurrentProfiledScopeReviewAdmissionV3' "$entry"
           grep -q 'admit_current_profiled_scope_review' "$entry"
@@ -110,6 +114,14 @@ jobs:
           grep -q 'lower_review_context_validated: true' "$lower"
           grep -q 'hydration_producer_trust_proven: false' "$lower"
           grep -q 'ready_for_current_profiled_scope_semantic_review: false' "$lower"
+
+          # Current syntax projection must not recursively consume caller-controlled nesting.
+          grep -q 'let mut stack = vec!\[(root, None)\];' "$scopes"
+          grep -q 'deep_valid_named_projection_uses_explicit_stack' "$scopes"
+          if grep -q 'project_named_preorder(child' "$scopes"; then
+            echo 'Recursive caller-controlled named-syntax projection reintroduced' >&2
+            exit 1
+          fi
 
           # V3 source-owned trust binds exact receipt + exact reviewed consequence context.
           grep -q 'ASTGE_HYDRATION_PRODUCER_TRUST_REGISTRY_HOLD_V3' "$trust"
@@ -145,17 +157,25 @@ jobs:
 
           # Caller cannot inject any trust-root or trusted context selector into canonical admission.
           sig="$(sed -n '/pub fn admit_current_profiled_scope_review(/,/^)/p' "$trust")"
-          ! grep -q 'selected_scope_id' <<<"$sig"
-          ! grep -q 'source_owner_ref' <<<"$sig"
-          ! grep -q 'expected_source_generation' <<<"$sig"
-          ! grep -q 'expected_producer' <<<"$sig"
-          ! grep -q 'expected_observer' <<<"$sig"
-          ! grep -q 'registry:' <<<"$sig"
-          ! grep -q 'trusted' <<<"$sig"
-          ! grep -q 'review_context_sha256' <<<"$sig"
-          ! grep -q 'grammar' <<<"$sig"
-          ! grep -q 'profile_ref' <<<"$sig"
-          ! grep -q 'graph_sha' <<<"$sig"
+          test -n "$sig"
+          for forbidden in \
+            'selected_scope_id' \
+            'source_owner_ref' \
+            'expected_source_generation' \
+            'expected_producer' \
+            'expected_observer' \
+            'registry:' \
+            'trusted' \
+            'review_context_sha256' \
+            'grammar' \
+            'profile_ref' \
+            'graph_sha'
+          do
+            if grep -Fq "$forbidden" <<<"$sig"; then
+              echo "Forbidden caller override in canonical admission signature: $forbidden" >&2
+              exit 1
+            fi
+          done
 
           grep -q 'runtime_name_resolution_proven: false' "$trust"
           grep -q 'semantic_correctness_proven: false' "$trust"
@@ -164,6 +184,8 @@ jobs:
           grep -q 'external_effect_authorized: false' "$trust"
 
           echo 'LOWER_REVIEW_CONTEXT_VALIDATION_PROVEN=true'
+          echo 'ITERATIVE_NAMED_SYNTAX_PROJECTION=true'
+          echo 'CALLER_CONTROLLED_PROJECTION_RECURSION_ALLOWED=false'
           echo 'HYDRATION_PRODUCER_TRUST_REGISTRY_GENERATION=ASTGE_HYDRATION_PRODUCER_TRUST_REGISTRY_HOLD_V3'
           echo 'PRODUCTION_HYDRATION_PRODUCER_TRUST_RECORDS=0'
           echo 'EXACT_REVIEW_CONTEXT_DIGEST_REQUIRED=true'
