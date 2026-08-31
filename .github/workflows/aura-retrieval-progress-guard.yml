@@ -1,0 +1,38 @@
+name: Aura Retrieval Progress Guard
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_retrieval_progress_guard.py"
+      - "tests/test_aura_retrieval_progress_guard.py"
+      - "docs/arena/ARENA_RETRIEVAL_PROGRESS_GUARD_V1.md"
+      - ".github/workflows/aura-retrieval-progress-guard.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Compile
+        run: python -m py_compile tools/aura_retrieval_progress_guard.py tests/test_aura_retrieval_progress_guard.py
+      - name: Focused adversarial tests
+        run: python -m unittest tests/test_aura_retrieval_progress_guard.py -v
+      - name: Different-J finite proof
+        run: |
+          python - <<'PY'
+          import importlib.util
+          import sys
+          spec = importlib.util.spec_from_file_location("guard", "tools/aura_retrieval_progress_guard.py")
+          module = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = module
+          spec.loader.exec_module(module)
+          assert module.prove_different_j() == 24
+          print("DIFFERENT_J_24_STATE_PROOF=PASS")
+          PY
