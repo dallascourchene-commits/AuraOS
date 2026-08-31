@@ -1,0 +1,70 @@
+name: Aura K27 ASTGE Current Module Symbols
+
+on:
+  pull_request:
+    paths:
+      - 'crates/aura-k27-astge/**'
+      - 'crates/aura-k27-astge-ingest/**'
+      - 'crates/aura-k27-astge-symbols/**'
+      - 'tools/k27_astge_python_module_symbol_oracle.py'
+      - '.github/workflows/aura-k27-astge-current-module-symbols.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  current-module-symbols:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify current symbol convergence
+        run: |
+          rustc --version
+          cargo --version
+          python3 --version
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets
+          cargo fmt --manifest-path crates/aura-k27-astge-symbols/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-symbols/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+          cargo clippy --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets -- -D warnings
+          cargo clippy --manifest-path crates/aura-k27-astge-symbols/Cargo.toml --all-targets -- -D warnings
+          cargo run --quiet --manifest-path crates/aura-k27-astge-symbols/Cargo.toml --example symbol_fixture > /tmp/tree_sitter_symbols.txt
+          python3 tools/k27_astge_python_module_symbol_oracle.py > /tmp/cpython_symbols.txt
+          diff -u /tmp/cpython_symbols.txt /tmp/tree_sitter_symbols.txt
+          if grep -R --line-number -E 'unsafe\s*\{' crates/aura-k27-astge/src crates/aura-k27-astge-ingest/src crates/aura-k27-astge-symbols/src; then
+            echo 'unsafe block found in safe current symbol path' >&2
+            exit 1
+          fi
+
+      - name: Emit claim ceiling
+        run: |
+          echo "CURRENT_GENERATION_MODULE_SYMBOL_PERSISTENCE=true"
+          echo "TREE_SITTER_CPYTHON_SYMBOL_CONFORMANCE=true"
+          echo "PRODUCTION_BACKEND_DEFAULT=READ_SEEK_SAFE_DEFAULT"
+          echo "PRODUCTION_IMMUTABILITY_CAPABILITIES=0"
+          echo "DUPLICATE_SYMBOL_NAMES_RETAINED=true"
+          echo "RUNTIME_NAME_RESOLUTION_PROVEN=false"
+          echo "IMPORT_GRAPH_PROVEN=false"
+          echo "CALL_GRAPH_PROVEN=false"
+          echo "SEMANTIC_HANDLE_MINTED_BY_SYMBOL_LAYER=false"
+          echo "SEMANTIC_K27_DERIVED=false"
+          echo "AURAOS_RUNTIME_INTEGRATION_PROVEN=false"
+          echo "HUMAN_AUTHORITY=false"
+          echo "EXTERNAL_EFFECT=false"
