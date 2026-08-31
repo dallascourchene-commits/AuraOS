@@ -1,0 +1,74 @@
+name: K27 ASTGE snapshot-aware open-handle selector V4
+
+on:
+  pull_request:
+    paths:
+      - 'crates/aura-k27-astge/**'
+      - '.github/workflows/k27-astge-snapshot-open-handle-selector-v2.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  selector-v4:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify inherited and V4 Rust contracts
+        run: |
+          rustc --version
+          cargo --version
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify public boundary has no caller capability injection
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('crates/aura-k27-astge/src/v4.rs').read_text()
+          tail = text.split('pub fn admit_data_serving_backend_v2(', 1)[1]
+          sig = tail.split(') -> Result<', 1)[0]
+          forbidden = ('BackingFileImmutabilityCapability', 'records:', 'registry', 'trusted', 'authority', 'preopened', 'pre_opened')
+          for token in forbidden:
+              assert token not in sig, (token, sig)
+          assert 'record.snapshot_generation == snapshot_generation' in text
+          assert 'record.placement_generation == binding.placement_generation' in text
+          assert 'static CANONICAL_IMMUTABILITY_CAPABILITIES_V2' in text
+          assert 'pub struct MmapCandidateLeaseV2' in text
+          print('CALLER_CAPABILITY_OVERRIDE_ACCEPTED=false')
+          print('SNAPSHOT_PLACEMENT_AXES_SEPARATE=true')
+          print('SOURCE_OWNED_REGISTRY=true')
+          print('OPAQUE_MMAP_LEASE=true')
+          PY
+
+      - name: Emit claim ceiling
+        run: |
+          echo 'PRODUCTION_IMMUTABILITY_CAPABILITIES_V2=0'
+          echo 'PRODUCTION_BACKEND=READ_SEEK_SAFE_DEFAULT'
+          echo 'SNAPSHOT_GENERATION_INDEPENDENTLY_BOUND_BY_V4=true'
+          echo 'PLACEMENT_GENERATION_INDEPENDENTLY_BOUND_BY_V4=true'
+          echo 'EXACT_OPENED_HANDLES_REQUIRED_FOR_POSITIVE_LEASE=true'
+          echo 'FINAL_OPEN_HANDLE_REVALIDATION=true'
+          echo 'MMAP_EXECUTION_IN_SELECTOR=false'
+          echo 'LIFETIME_IMMUTABILITY_SELF_PROVEN=false'
+          echo 'SIGBUS_IMPOSSIBLE_PROVEN=false'
+          echo 'PHYSICAL_CRASH_DURABILITY_PROVEN=false'
+          echo 'PERFORMANCE_SUPERIORITY_PROVEN=false'
+          echo 'HUMAN_AUTHORITY=false'
+          echo 'EXTERNAL_EFFECT=false'
