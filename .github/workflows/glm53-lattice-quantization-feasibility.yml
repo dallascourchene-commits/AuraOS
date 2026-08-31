@@ -1,0 +1,73 @@
+name: GLM53 Lattice Quantization Feasibility
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SOURCE_SHA256: f03d16c029a809f04c8ae069c51f9d07f0f10aeb0745bc8e3ee276ead22df582
+
+jobs:
+  q1-feasibility:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Prove exact source and compile
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_lattice_quantization_feasibility.py \
+            tools/quantization/test_aura_glm53_lattice_quantization_feasibility.py
+          python3 - <<'PY'
+          from tools.quantization.aura_glm53_lattice_quantization_feasibility import SUPPLIED_SOURCE_SHA256
+          import os
+          assert SUPPLIED_SOURCE_SHA256 == os.environ['SOURCE_SHA256']
+          PY
+
+      - name: Run Q1 adversarial feasibility suite
+        run: python3 -m unittest -v tools.quantization.test_aura_glm53_lattice_quantization_feasibility
+
+      - name: Emit deterministic feasibility receipt
+        run: python3 -m tools.quantization.aura_glm53_lattice_quantization_feasibility
+
+      - name: Prove fixed feasibility ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from tools.quantization.aura_glm53_lattice_quantization_feasibility import build_feasibility_receipt
+          r = build_feasibility_receipt()
+          assert r.lattice_vq_mechanism_feasible is True
+          assert r.pasted_representation_bpw == 8.25
+          assert r.pasted_int8_preserves_half_coset is False
+          assert r.pasted_e8_nsm_matches_reference is False
+          assert r.practical_sub2bit_glm53_quality_proven is False
+          assert r.toroidal_phase_only_kv_preserves_attention_logits is False
+          assert r.coordinate_address_is_physical_sector_proof is False
+          assert r.out_of_core_expert_streaming_proven_on_owner_host is False
+          assert r.native_private_transformer_kv_accessed is False
+          assert r.semantic_k27_authority_minted is False
+          assert r.model_execution_performed is False
+          assert r.deployment_authorized is False
+          print('LATTICE_VQ_MECHANISM_FEASIBLE=true')
+          print('PASTED_REPRESENTATION_IS_SUB2BIT=false')
+          print('PASTED_INT8_PRESERVES_E8_HALF_COSET=false')
+          print('PASTED_E8_NSM_IDENTITY_CORRECT=false')
+          print('PHASE_ONLY_KV_PRESERVES_ATTENTION_LOGITS=false')
+          print('GLM53_SUB2BIT_QUALITY_PROVEN=false')
+          print('OUT_OF_CORE_OWNER_HOST_EXECUTION_PROVEN=false')
+          print('NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false')
+          print('SEMANTIC_K27_AUTHORITY_MINTED=false')
+          print('DEPLOYMENT_AUTHORIZED=false')
+          PY
