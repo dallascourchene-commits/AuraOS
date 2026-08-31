@@ -21,6 +21,7 @@ class LiveTensorConcretePageProducerAdmissionTests(unittest.TestCase):
         second = q9.current_live_producer_admission()
         self.assertEqual(first, second)
         self.assertEqual(first.receipt_digest, second.receipt_digest)
+        self.assertEqual(first.schema, "AURA_GLM53_LIVE_TENSOR_CONCRETE_PAGE_PRODUCER_ADMISSION_V2")
         self.assertEqual(
             first.disposition,
             "HOLD_LIVE_OFFICIAL_TENSOR_TO_CONCRETE_PAGE_PRODUCER",
@@ -28,6 +29,8 @@ class LiveTensorConcretePageProducerAdmissionTests(unittest.TestCase):
         self.assertTrue(first.historical_representative_header_schema_qualified)
         self.assertTrue(first.historical_representative_header_provenance_bound)
         self.assertTrue(first.historical_fp8_companion_geometry_bound)
+        self.assertTrue(first.historical_evidence_revision_matches_pinned_frontier_revision)
+        self.assertFalse(first.ambient_repository_head_observed_by_q9_process)
         self.assertTrue(first.historical_evidence_reduces_header_schema_uncertainty)
         self.assertTrue(first.current_concrete_page_frontier_bound)
         self.assertFalse(first.historical_header_evidence_sufficient_for_live_producer)
