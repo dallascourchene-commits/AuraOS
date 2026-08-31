@@ -1,0 +1,41 @@
+name: K27 ASTGE Imported Draft Falsifier
+
+on:
+  pull_request:
+    paths:
+      - "tools/k27_astge_candidate_design_falsifier.py"
+      - "tests/test_k27_astge_candidate_design_falsifier.py"
+      - ".github/workflows/k27-astge-imported-draft-falsifier.yml"
+  workflow_dispatch:
+
+jobs:
+  exact-imported-draft-falsifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Exact head
+        if: github.event_name == 'pull_request'
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+      - name: Execute falsifiers
+        run: python -m unittest -v tests.test_k27_astge_candidate_design_falsifier
+      - name: Emit report and ceiling
+        run: |
+          python tools/k27_astge_candidate_design_falsifier.py > "${RUNNER_TEMP}/draft-falsifier.json"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          r=json.loads(Path(os.environ['RUNNER_TEMP'],'draft-falsifier.json').read_text())
+          assert r['candidate_csr_block_size_bytes'] == 4160
+          assert r['fixed_csr_block_size_bytes'] == 4096
+          assert r['node_id_equals_table_index'] is False
+          assert r['claim_exceeds_theoretical_memory_payload_rate'] is True
+          assert r['replace_verified_aura_splane_abi'] is False
+          print('IMPORTED_DRAFT_FALSIFICATION_EXECUTED=true')
+          print('CANDIDATE_CSR_4096_CLAIM=false')
+          print('CANDIDATE_NODE_INDEX_IDENTITY=false')
+          print('FILTER_LT_1P25MS_CLAIM_ADMISSIBLE=false')
+          print('REPLACE_VERIFIED_AURA_SPLANE_ABI=false')
+          PY
