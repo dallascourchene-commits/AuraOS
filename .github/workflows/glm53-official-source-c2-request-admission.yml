@@ -1,0 +1,123 @@
+name: GLM53 Official Source C2 Request Admission
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-bound-c2-request:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      SEMANTIC_SHA: 2be5ce7dc44b1fb76b030a349be70d924dbcdfb3
+      SOURCE_SHA: 730426b82235b0ff4e75fef1cff00707877a84ad
+      SOURCE_RUN: "33369967425"
+      C2_SHA: 24a5404ee3b987dee12192917e40b35d3a43e81c
+      C2_RUN: "33360061584"
+    steps:
+      - name: Exact authenticated checkout without legacy submodule traversal
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Prove semantic two-parent convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/git/commits/{os.environ['SEMANTIC_SHA']}",
+              headers={'Authorization': f"Bearer {os.environ['GH_TOKEN']}", 'Accept':'application/vnd.github+json'},
+          )
+          with urllib.request.urlopen(req) as response:
+              data = json.load(response)
+          parents = [p['sha'] for p in data['parents']]
+          expected = [os.environ['SOURCE_SHA'], os.environ['C2_SHA']]
+          assert parents == expected, (parents, expected)
+          print('TRUE_SOURCE_C2_CONVERGENCE=true')
+          PY
+
+      - name: Revalidate exact hosted parent generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          headers={'Authorization': f"Bearer {os.environ['GH_TOKEN']}", 'Accept':'application/vnd.github+json'}
+          for sha_key, run_key in (('SOURCE_SHA','SOURCE_RUN'),('C2_SHA','C2_RUN')):
+              run = os.environ[run_key]
+              req = urllib.request.Request(f"https://api.github.com/repos/{repo}/actions/runs/{run}", headers=headers)
+              with urllib.request.urlopen(req) as response:
+                  data = json.load(response)
+              assert data['head_sha'] == os.environ[sha_key], (run, data['head_sha'], os.environ[sha_key])
+              assert data['status'] == 'completed' and data['conclusion'] == 'success', data
+              print(f"PARENT_RUN_OK={run}:{os.environ[sha_key]}")
+          PY
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          check-latest: false
+
+      - name: Run source-to-C2 admission adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_official_source_admission.py \
+            tools/awj032/glm53_owner_host_c2_handoff.py \
+            tools/quantization/aura_glm53_official_source_c2_request_admission.py \
+            tests/test_aura_glm53_official_source_c2_request_admission.py
+          python3 -m unittest -v tests.test_aura_glm53_official_source_c2_request_admission
+          python3 -m tools.quantization.aura_glm53_official_source_c2_request_admission | tee /tmp/q7.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q7.json', encoding='utf-8'))
+          assert r['c2_request_source_matches'] is True
+          assert r['source_header_trial_eligible'] is False
+          assert r['source_bound_c2_request_admissible'] is False
+          assert r['blocker'] == 'OFFICIAL_INDEX_BYTES_AND_REPRESENTATIVE_HEADERS_NOT_MATERIALIZED'
+          for key in (
+              'source_tensor_payload_bound','real_tensor_quantization_eligible',
+              'execution_authorized_by_this_contract','owner_host_execution_observed',
+              'physical_io_attested','lifecycle_producer_authenticated','g2_admitted',
+              'semantic_k27_authority_minted','native_private_transformer_kv_accessed','gate10_promoted'):
+              assert r[key] is False, (key, r[key])
+          print('MODEL_REVISION_BOUND_NE_SOURCE_BYTES_ADMITTED=true')
+          print('HEADER_REQUEST_ADMISSION_NE_EXECUTION_AUTHORITY=true')
+          PY
+
+      - name: Emit fixed claim ceiling
+        run: |
+          cat <<'EOF'
+          OFFICIAL_MODEL_REVISION_BOUND_NE_OFFICIAL_SOURCE_BYTES_ADMITTED=true
+          SOURCE_HEADER_TRIAL_ELIGIBLE=false
+          SOURCE_BOUND_C2_REQUEST_ADMISSIBLE=false
+          SOURCE_TENSOR_PAYLOAD_BOUND=false
+          OWNER_HOST_EXECUTION_OBSERVED=false
+          PHYSICAL_IO_ATTESTED=false
+          G2_ADMITTED=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTED=false
+          EOF
