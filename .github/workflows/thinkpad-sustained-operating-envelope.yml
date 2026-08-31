@@ -1,0 +1,106 @@
+name: ThinkPad Sustained Operating Envelope
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PR597_SHA: 28867452e25c0fe0159014c8bebc2ee18c925dd7
+  PR590_SHA: 3b1da2d20f633109944b416bcc27a30112706964
+  CONVERGENCE_SHA: 717335269e8e43e525cf81745c1cea33292639ad
+  PR597_RUN: '33363191808'
+  PR590_RUN: '33361708119'
+
+jobs:
+  exact-sustained-envelope:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Fetch exact child and prove PR597 x PR590 convergence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=260 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR597_SHA" "$PR590_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR597_SHA $PR590_SHA"
+          git merge-base --is-ancestor "$PR597_SHA" HEAD
+          git merge-base --is-ancestor "$PR590_SHA" HEAD
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Pin both exact-green parent artifacts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          expected = {
+              os.environ["PR597_RUN"]: os.environ["PR597_SHA"],
+              os.environ["PR590_RUN"]: os.environ["PR590_SHA"],
+          }
+          for run_id, sha in expected.items():
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{run_id}",
+                  headers={"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json"},
+              )
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  run = json.load(response)
+              assert run["conclusion"] == "success", run
+              assert run["head_sha"] == sha, (run["head_sha"], sha)
+          print("PARENT_ARTIFACTS_EXACT_GREEN=true")
+          PY
+
+      - name: Prove read-only sustained operating envelope
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/thinkpad_sustained_operating_envelope.py \
+            tools/test_thinkpad_sustained_operating_envelope.py
+          python3 -m unittest -v tools.test_thinkpad_sustained_operating_envelope
+
+      - name: Assert observation-only boundary and ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from tools.thinkpad_sustained_operating_envelope import SustainedOperatingEnvelope, observe_sustained_operating_envelope
+          assert list(inspect.signature(observe_sustained_operating_envelope).parameters) == ["proc_root", "sys_root", "observed_at_utc"]
+          forbidden = {
+              "thermal_throttling_proven",
+              "battery_power_limit_proven",
+              "memory_pressure_safe_for_model",
+              "performance_effect_proven",
+              "model_execution_observed",
+              "producer_authenticated",
+              "effect_authority_proven",
+              "g2_admitted",
+          }
+          fields = SustainedOperatingEnvelope.__dataclass_fields__
+          assert forbidden <= fields.keys()
+          for name in forbidden:
+              assert fields[name].default is False
+          source = inspect.getsource(observe_sustained_operating_envelope)
+          assert "subprocess" not in source
+          assert "os.system" not in source
+          print("OBSERVED_STATE_NE_THROTTLING_PROOF=true")
+          print("OBSERVED_AT_T_NE_AMBIENT_CURRENT_AT_T_PLUS_N=true")
+          print("HOSTED_CI_NE_THINKPAD_OBSERVATION=true")
+          print("G2_ADMITTED=false")
+          PY
