@@ -136,11 +136,12 @@ pub fn admit_current_syntax_hydration(
     if matches.len() != 1 {
         return Err(CurrentSyntaxHydrationError::AnchorAmbiguous);
     }
-    let receipt = matches[0]
-        .as_object()
-        .ok_or(CurrentSyntaxHydrationError::HydrationContractInvalid(
-            "anchor_receipt",
-        ))?;
+    let receipt =
+        matches[0]
+            .as_object()
+            .ok_or(CurrentSyntaxHydrationError::HydrationContractInvalid(
+                "anchor_receipt",
+            ))?;
 
     let currentness = string_field(receipt.get("body_currentness_status"))?;
     match currentness {
@@ -222,13 +223,7 @@ pub fn admit_current_syntax_hydration(
         file_id,
         source_sha256,
     };
-    let syntax_graph = admit_syntax_graph(
-        grammar,
-        profile,
-        &source,
-        ordered_nodes,
-        ordered_edges,
-    )?;
+    let syntax_graph = admit_syntax_graph(grammar, profile, &source, ordered_nodes, ordered_edges)?;
 
     Ok(CurrentSyntaxHydrationIdentityV1 {
         syntax_graph,
@@ -266,7 +261,10 @@ fn string_field(value: Option<&Value>) -> Result<&str, CurrentSyntaxHydrationErr
         ))
 }
 
-fn u64_field(value: Option<&Value>, field: &'static str) -> Result<u64, CurrentSyntaxHydrationError> {
+fn u64_field(
+    value: Option<&Value>,
+    field: &'static str,
+) -> Result<u64, CurrentSyntaxHydrationError> {
     value
         .and_then(Value::as_u64)
         .ok_or(CurrentSyntaxHydrationError::InvalidLocator(field))
@@ -569,7 +567,10 @@ mod tests {
     fn duplicate_anchor_receipts_are_ambiguous() {
         let mut value: Value = serde_json::from_str(&hydration(CURRENT, true, 41, SHA_A)).unwrap();
         let duplicate = value["anchor_receipts"][0].clone();
-        value["anchor_receipts"].as_array_mut().unwrap().push(duplicate);
+        value["anchor_receipts"]
+            .as_array_mut()
+            .unwrap()
+            .push(duplicate);
         assert_eq!(
             admit_current_syntax_hydration(
                 &value.to_string(),
