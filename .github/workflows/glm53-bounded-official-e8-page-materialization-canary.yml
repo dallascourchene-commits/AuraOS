@@ -7,6 +7,9 @@ on:
       - "tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py"
       - "tests/test_glm53_bounded_official_e8_page_materialization_canary.py"
       - ".github/workflows/glm53-bounded-official-e8-page-materialization-canary.yml"
+  push:
+    branches:
+      - arena/glm53-q14-bounded-official-e8-page-materialization-canary-v1-20260831
   workflow_dispatch:
 
 permissions:
@@ -18,11 +21,11 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - name: Checkout exact Q14 head with parent history
+      - name: Checkout exact Q14 head
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -40,10 +43,13 @@ jobs:
           Q13=eb09b5ffd14577d1676f57bb908e5ddd81125605
           A6=fa428111f83a0f69319c10c1b28bde910544b776
           PR628=b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae
+          CODEC=5df2cd69a1519b2626cb52c1d8f23a25504425d9
+          git fetch --no-tags origin "$CONVERGENCE" "$Q13" "$A6" "$PR628"
           test "$(git show -s --format=%P "$CONVERGENCE")" = "$Q13 $A6"
           git merge-base --is-ancestor "$CONVERGENCE" HEAD
-          test "$(git rev-parse "$PR628:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py")" = "5df2cd69a1519b2626cb52c1d8f23a25504425d9"
-          test "$(git rev-parse HEAD:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py)" = "5df2cd69a1519b2626cb52c1d8f23a25504425d9"
+          test "$(git rev-parse "$PR628:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py")" = "$CODEC"
+          test "$(git rev-parse "$Q13:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py")" = "$CODEC"
+          test "$(git rev-parse HEAD:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py)" = "$CODEC"
           echo Q14_TRUE_TWO_PARENT_CONVERGENCE_AND_CODEC_PIN=true
 
       - name: Revalidate exact Q13 and A6 hosted generations
@@ -79,9 +85,12 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m py_compile \
+            tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py \
             tools/quantization/aura_glm53_bounded_official_e8_page_materialization_canary.py \
             tests/test_glm53_bounded_official_e8_page_materialization_canary.py
-          PYTHONPATH=. python3 -m unittest -v tests.test_glm53_bounded_official_e8_page_materialization_canary
+          PYTHONPATH=. python3 -m unittest -v \
+            tools.quantization.test_aura_glm53_e8_indexed_expert_page_reference \
+            tests.test_glm53_bounded_official_e8_page_materialization_canary
 
       - name: Materialize exact bounded live source slices into E8 pages
         shell: bash
@@ -99,36 +108,90 @@ jobs:
           assert r['actual_e8_page_payloads_materialized'] is True
           assert r['bounded_source_slice_to_page_derivation_proven'] is True
           assert r['candidate_page_materialization_owner_bound_for_bounded_canary'] is True
+          assert r['historical_codec_reuse_requires_no_fresh_sibling_credit'] is True
+          assert r['pr628_historical_codec_blob']=='5df2cd69a1519b2626cb52c1d8f23a25504425d9'
           assert sorted(p['tensor_role'] for p in r['pages'])==['down_proj','gate_up_proj']
+          for p in r['pages']:
+              assert p['slice_weight_count']==64 and p['slice_flat_offset']==0
+              assert p['source_slice_sha256'] != p['parent_full_source_sha256']
+              assert p['page_payload_bytes']>0
           for key in ('source_slice_identity_is_full_tensor_identity','bounded_materialization_is_full_representative_source_set_materialization','baseline_same_official_source_tensor_set_proven','whole_model_coverage_proven','model_execution_observed','generalized_quality_proven','runtime_performance_proven','semantic_k27_authority','native_private_transformer_kv_accessed','gate10_promoted','merge_or_deployment_authorized'):
               assert r[key] is False,key
           print('Q14_BOUNDED_SOURCE_TO_PAGE_MATERIALIZATION=true')
           print('Q14_RECEIPT_DIGEST='+r['receipt_digest'])
           PY
 
-      - name: Independently refetch and reproduce bounded page receipt
+      - name: Clean-room refetch decode and page replay without Q14 implementation
         shell: bash
         run: |
           set -euo pipefail
-          PYTHONPATH=. python3 -m tools.quantization.aura_glm53_bounded_official_e8_page_materialization_canary | tee /tmp/q14-b.json
           python3 - <<'PY'
-          import json
-          a=json.load(open('/tmp/q14-a.json',encoding='utf-8'))
-          b=json.load(open('/tmp/q14-b.json',encoding='utf-8'))
-          assert a['receipt_digest']==b['receipt_digest'],(a['receipt_digest'],b['receipt_digest'])
-          assert a['live_header_sha256']==b['live_header_sha256']
-          assert a['pages']==b['pages']
-          assert a['new_raw_payload_bytes_read']==b['new_raw_payload_bytes_read']==136
-          print('Q14_INDEPENDENT_LIVE_REFETCH_AND_PAGE_REPRODUCTION=true')
+          import hashlib, json, math, struct
+          import numpy as np
+          from tools.quantization import aura_glm53_e8_indexed_expert_page_reference as page_ref
+          from tools.quantization import aura_glm53_live_official_tensor_payload_canary as canary
+
+          observed=json.load(open('/tmp/q14-a.json',encoding='utf-8'))
+          expected={p['tensor_role']:p for p in observed['pages']}
+          assert set(expected)=={'gate_up_proj','down_proj'}
+          repo='zai-org/GLM-5.3'; rev='7cda81930d6e4cef42f48555de830aa32ecdde28'
+          shard='model-00038-of-00141.safetensors'
+          url=canary.hf_resolve_url(repo,rev,shard)
+          prefix=canary.urllib_read_range(url,0,8)
+          hlen=struct.unpack('<Q',prefix)[0]
+          assert hlen==105424
+          header=canary.urllib_read_range(url,8,hlen)
+          assert hashlib.sha256(header).hexdigest()=='8607b1b281f5ca8c7b166376e8f6d7eb9ca07f79200f6095f0f55ca35149ba56'
+          base=8+hlen
+
+          table=np.empty(256,dtype='<f4')
+          for code in range(256):
+              sign=-1.0 if code & 0x80 else 1.0
+              exponent=(code>>3)&0x0F; mantissa=code&0x07
+              if exponent==0x0F and mantissa==0x07: table[code]=np.nan
+              elif exponent==0: table[code]=sign*math.ldexp(float(mantissa),-9)
+              else: table[code]=sign*math.ldexp(1.0+mantissa/8.0,exponent-7)
+
+          def decode64(weight_offset,scale_offset):
+              wr=canary.urllib_read_range(url,base+weight_offset,64)
+              sr=canary.urllib_read_range(url,base+scale_offset,4)
+              codes=np.frombuffer(wr,dtype=np.uint8)
+              assert not np.any((codes==0x7F)|(codes==0xFF))
+              scale=struct.unpack('<f',sr)[0]
+              assert math.isfinite(scale) and scale>0.0
+              out=np.asarray(table[codes]*np.float32(scale),dtype='<f4',order='C')
+              assert out.shape==(64,) and np.all(np.isfinite(out))
+              return out
+
+          cases=(
+              ('gate_up_proj',4070207936,993728,'46eb726b48a423865b50ffe261881dc5b3667344f93e24e5732b2484d6096c4a',(4096,6144)),
+              ('down_proj',4057625024,990656,'6ddd0776b011cde6948d5d780630700dfd69ce49907356d371a6d54b59040953',(6144,2048)),
+          )
+          for role,woff,soff,parent_sha,parent_shape in cases:
+              values=decode64(woff,soff)
+              slice_sha=hashlib.sha256(values.tobytes(order='C')).hexdigest()
+              page=page_ref.pack_expert_page(
+                  values,model_revision=rev,
+                  representation_revision=f'{page_ref.SCHEME}@b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae',
+                  layer_id=3,expert_id=0,tensor_role=role,block_size=64,
+              )
+              page.validate(); p=expected[role]
+              assert p['parent_full_source_sha256']==parent_sha
+              assert tuple(p['parent_full_source_shape'])==parent_shape
+              assert p['source_slice_sha256']==slice_sha==page.identity.source_tensor_sha256
+              assert p['page_identity_digest']==page.identity.digest()
+              assert p['page_payload_sha256']==page.payload_sha256
+              assert p['page_payload_bytes']==len(page.payload)
+              assert tuple(p['k27_coordinate'])==page.k27_coordinate
+              assert p['codebook_digest']==page_ref.codebook_digest()
+          print('Q14_CLEAN_ROOM_PAGE_REPLAY_GREEN=true')
           PY
 
-      - name: Preserve Q14 receipts
+      - name: Preserve Q14 receipt
         uses: actions/upload-artifact@v4
         with:
-          name: q14-bounded-official-e8-page-materialization-receipts
-          path: |
-            /tmp/q14-a.json
-            /tmp/q14-b.json
+          name: q14-bounded-official-e8-page-materialization-receipt
+          path: /tmp/q14-a.json
           if-no-files-found: error
           retention-days: 30
 
