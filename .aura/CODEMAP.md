@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1664
-- **total_bytes**: 26610996
-- **text_tokens_est**: 6643097
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 240, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1006, 'schema_or_lexicon': 277, 'support_file': 56}
+- **file_count**: 1672
+- **total_bytes**: 26684256
+- **text_tokens_est**: 6661405
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 279, 'support_file': 56}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1664,
+  "repo_file_count": 1672,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -158,6 +158,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
     ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
     ".github/workflows/aura-external-version-transition-envelope-v1.yml",
+    ".github/workflows/aura-nav13d-eki4-hydrated-version-handoff.yml",
+    ".github/workflows/aura-nav14-progress-bound-hydrated-version-handoff.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1128,6 +1130,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/arena/EKI4_EXTERNAL_COORDINATE_MAP_V1.json",
     "docs/arena/EXTERNAL_SUBJECT_LINEAGE_BRIDGE_V1.md",
     "docs/arena/EXTERNAL_VERSION_TRANSITION_ENVELOPE_V1.md",
+    "docs/arena/NAV13D_EKI4_HYDRATED_VERSION_HANDOFF_V1.md",
+    "docs/arena/NAV14_PROGRESS_BOUND_HYDRATED_VERSION_HANDOFF_V1.md",
     "docs/arena/eki2-external-cognition-store-writer-v1.md",
     "docs/arena/eki2-proof-target-v2.txt",
     "docs/arena/eki2-proof-target.txt",
@@ -1543,6 +1547,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_model_connectome_bridge.py",
     "tests/test_aura_music_mitosis_adapter.py",
     "tests/test_aura_native_cockpit_contract.py",
+    "tests/test_aura_nav13d_eki4_hydrated_version_handoff.py",
+    "tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py",
     "tests/test_aura_node_inspector.py",
     "tests/test_aura_pascal_spatial_presentation.py",
     "tests/test_aura_persistence_integrations.py",
@@ -1674,6 +1680,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/aura_external_knowledge_store_writer.py",
     "tools/aura_external_subject_lineage_bridge.py",
     "tools/aura_external_version_transition_envelope.py",
+    "tools/aura_nav13d_eki4_hydrated_version_handoff.py",
+    "tools/aura_nav14_progress_bound_hydrated_version_handoff.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1804,16 +1812,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1664,
-  "bytes": 26610996,
-  "tokens_est": 6643097,
+  "files": 1672,
+  "bytes": 26684256,
+  "tokens_est": 6661405,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 240,
+    "knowledge_artifact": 242,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1006,
-    "schema_or_lexicon": 277,
+    "python_module": 1010,
+    "schema_or_lexicon": 279,
     "support_file": 56
   }
 }
