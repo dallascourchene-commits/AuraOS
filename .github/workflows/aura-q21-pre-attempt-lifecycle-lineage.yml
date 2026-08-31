@@ -1,0 +1,100 @@
+name: Aura Q21 Pre-Attempt Lifecycle Lineage
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_pre_attempt_lifecycle_lineage.py'
+      - 'tests/test_aura_pre_attempt_lifecycle_lineage.py'
+      - '.github/workflows/aura-q21-pre-attempt-lifecycle-lineage.yml'
+
+permissions:
+  contents: read
+  pull-requests: read
+  actions: read
+
+jobs:
+  q21-pre-attempt-lifecycle-lineage:
+    runs-on: ubuntu-24.04
+    env:
+      O65_HEAD: 7efca33d95f6dc39c4e159250d45373b260060ed
+      O65_RUN: '33410032496'
+      LIFECYCLE_HEAD: 22e72fd3de7b008752bbb5176347d61518f4e83a
+      LIFECYCLE_RUN: '33409821076'
+      TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Exact authenticated checkout without mutable actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Revalidate exact-current O65 and lifecycle parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'}
+          def get(url):
+              req=urllib.request.Request(url,headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  return json.load(r)
+          parents=(
+              (704, os.environ['O65_HEAD'], int(os.environ['O65_RUN']), 'Aura O65 Owner-Resolved Pre-Attempt Admission'),
+              (705, os.environ['LIFECYCLE_HEAD'], int(os.environ['LIFECYCLE_RUN']), 'Aura Q20 Owner Resolved Proposal Lifecycle Bridge'),
+          )
+          for pr_number, head, run_id, workflow in parents:
+              pr=get(f'https://api.github.com/repos/{repo}/pulls/{pr_number}')
+              assert pr['head']['sha']==head,(pr_number,pr['head']['sha'],head)
+              run=get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}')
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['name']==workflow,(run_id,run['name'],workflow)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+          print('Q21_EXACT_CURRENT_PARENTS=true')
+          PY
+
+      - name: Run Q21 adversarial lineage contract
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/aura_pre_attempt_lifecycle_lineage.py tests/test_aura_pre_attempt_lifecycle_lineage.py
+          python3 -m unittest -v tests.test_aura_pre_attempt_lifecycle_lineage
+
+      - name: Materialize bounded lineage receipt and enforce ceiling
+        run: |
+          set -euo pipefail
+          python3 -m tools.aura_pre_attempt_lifecycle_lineage | tee /tmp/q21.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q21.json',encoding='utf-8'))
+          assert r['schema']=='AURA-PRE-ATTEMPT-LIFECYCLE-LINEAGE-v1'
+          assert r['o65_head']=='7efca33d95f6dc39c4e159250d45373b260060ed'
+          assert r['lifecycle_head']=='22e72fd3de7b008752bbb5176347d61518f4e83a'
+          assert r['proposal_identity_shared'] is True
+          assert r['lineage_association_bound'] is True
+          assert len(r['lineage_digest'])==64
+          assert len(r['receipt_digest'])==64
+          assert r['effect_boundary_revalidation_still_required'] is True
+          for key in (
+              'route_observer_to_host_witness_relation_proven',
+              'pre_attempt_caused_execution',
+              'pre_attempt_authorized_execution',
+              'terminal_result_retroactively_authorizes_pre_attempt',
+              'execution_lease_minted',
+              'execution_authority_granted',
+              'provider_effect_authority_granted',
+              'semantic_k27_authority_minted',
+              'native_private_transformer_kv_accessed',
+              'gate10_promoted',
+              'merge_deploy_spend_public_financial_human_effect_authorized',
+          ):
+              assert r[key] is False,key
+          print('Q21_EXACT_LINEAGE_ASSOCIATION_ONLY=true')
+          PY
