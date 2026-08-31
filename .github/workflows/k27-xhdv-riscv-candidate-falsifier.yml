@@ -39,6 +39,23 @@ jobs:
           python -m py_compile tools/k27_xhdv_riscv_candidate_falsifier.py tests/test_k27_xhdv_riscv_candidate_falsifier.py
           python -m unittest -v tests.test_k27_xhdv_riscv_candidate_falsifier
 
+      - name: Cross-assemble supplied inline-asm defect on riscv64
+        shell: bash
+        run: |
+          set -euo pipefail
+          command -v clang
+          clang --target=riscv64 -march=rv64gc -O2 -S \
+            tests/fixtures/k27_xhdv_candidate_inline_asm.c -o /tmp/xhdv-candidate.s
+          python - <<'PY'
+          import re
+          text = open('/tmp/xhdv-candidate.s', encoding='utf-8').read()
+          normalized = re.sub(r'\s+', ' ', text)
+          assert re.search(r'\.insn r 11, 0, 0, zero, zero, zero', normalized), text
+          assert re.search(r'\.insn r 11, 0, 0, ra, sp, gp', normalized), text
+          print('BROKEN_MACRO_DISCARDS_OPERANDS=true')
+          print('NUMBERED_MACRO_USES_ORDINARY_GPR_NAMES=true')
+          PY
+
       - name: Emit and assert falsifier receipt
         shell: bash
         run: |
