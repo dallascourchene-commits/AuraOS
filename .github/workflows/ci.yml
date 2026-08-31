@@ -10,6 +10,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: aura-ci-${{ github.workflow }}-${{ github.ref }}
@@ -280,9 +281,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          # CODEMAP is a committed artifact of the source branch. Test jobs exercise
-          # GitHub's synthetic merge ref, while this job verifies the exact source
-          # tree that produced the committed navigation artifacts.
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@v5
         with:
@@ -309,6 +307,84 @@ jobs:
           retention-days: 7
       - name: Verify topology and stable committed structure
         run: python -m aura_codemap_verify --compare-json "${RUNNER_TEMP}/CODEMAP.committed.json"
+
+  eki-subject-identity-bridge-proof:
+    name: EKI subject identity bridge proof
+    if: github.event_name == 'pull_request' && github.event.pull_request.number == 741
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CONVERGENCE_COMMIT: 090b0aaa1e3bf38a3272c92e44969b74ab29d7db
+      LEGACY_EKI2_HEAD: 5ed2489b93c8a039ebc372fdf2f4a6c80eed6ebd
+      CURRENT_EKI_HEAD: 18c9193ca029eb06b8696c2625d82cf8ee97e4f7
+      LEGACY_EKI2_RUN: '33419848006'
+      CURRENT_EKI_RUN: '33417095599'
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+      - name: Authenticate exact parent Diamond
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$CONVERGENCE_COMMIT" HEAD
+          test "$(git show -s --format=%P "$CONVERGENCE_COMMIT")" = "$LEGACY_EKI2_HEAD $CURRENT_EKI_HEAD"
+      - name: Revalidate exact parent hosted proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']
+          expected=((int(os.environ['LEGACY_EKI2_RUN']),os.environ['LEGACY_EKI2_HEAD']), (int(os.environ['CURRENT_EKI_RUN']),os.environ['CURRENT_EKI_HEAD']))
+          for run_id, head in expected:
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'})
+              with urllib.request.urlopen(req,timeout=30) as response: run=json.load(response)
+              assert run['head_sha']==head
+              assert run['status']=='completed' and run['conclusion']=='success'
+          print('OBJECTIVE_F_PARENTS_EXACT_GREEN=true')
+          PY
+      - name: Reexecute current EKI identity owner in exact source world
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp -d)"
+          trap 'git worktree remove --force "$tmp" >/dev/null 2>&1 || true; rm -rf "$tmp"' EXIT
+          git worktree add --detach "$tmp" "$CURRENT_EKI_HEAD"
+          (
+            cd "$tmp"
+            python -m unittest tests.test_aura_external_knowledge_ingress -v
+            python - <<'PY' > /tmp/current-subject.json
+          import json
+          from tools.aura_external_knowledge_ingress import ExternalSubject
+          subject=ExternalSubject(provider='GITHUB',source_kind='REPOSITORY',canonical_id='owner/repo',canonical_uri='https://github.com/owner/repo',sector='06_RUN')
+          print(json.dumps({'provider':subject.provider,'source_kind':subject.source_kind,'canonical_id':subject.canonical_id,'canonical_uri':subject.canonical_uri,'subject_key':subject.subject_key,'sector':subject.sector},sort_keys=True))
+          PY
+          )
+      - name: Run bridge adversarials and exact cross-parent fixture
+        run: |
+          set -euo pipefail
+          python -m unittest tests.test_aura_external_knowledge_ingress tests.test_aura_external_subject_identity_bridge -v
+          python - <<'PY'
+          import json
+          from tools import aura_external_knowledge_ingress as legacy
+          from tools.aura_external_subject_identity_bridge import CurrentExternalSubjectProjectionV1, IdentityBridgeDisposition, LegacyExternalIdentityProjectionV1, bridge_external_subject_identity
+          observation=legacy.ExternalDiscoveryObservation(source_kind=legacy.SourceKind.GITHUB,artifact_class=legacy.ArtifactClass.CODE,canonical_id='owner/repo',canonical_uri='https://github.com/owner/repo',title='owner/repo',thesis='identity bridge fixture')
+          a=LegacyExternalIdentityProjectionV1(source_kind=observation.source_kind.value,artifact_class=observation.artifact_class.value,canonical_id=observation.canonical_id,canonical_uri=observation.canonical_uri,semantic_id=observation.semantic_id)
+          b=CurrentExternalSubjectProjectionV1(**json.load(open('/tmp/current-subject.json',encoding='utf-8')))
+          r=bridge_external_subject_identity(legacy=a,current=b)
+          assert r.disposition is IdentityBridgeDisposition.MATCHED_SUBJECT
+          assert r.same_external_subject is True
+          assert r.legacy_semantic_id != r.current_subject_key
+          assert r.version_equivalence_proven is False
+          assert r.generation_equivalence_proven is False
+          assert r.current_version_selected is False
+          assert r.source_currentness_proven is False
+          assert r.write_authority is False and r.read_authority is False and r.effect_authority is False
+          print('OBJECTIVE_F_EXACT_SUBJECT_RELATION=true')
+          print('SUBJECT_RELATION_NE_VERSION_OR_CURRENTNESS=true')
+          PY
 
   sync-codemap:
     name: Synchronize CODEMAP on refactor branches
