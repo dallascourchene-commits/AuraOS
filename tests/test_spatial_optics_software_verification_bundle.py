@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 import unittest
 
+# Hosted W3 retrigger marker: no semantic behavior change; forces exact-head reproof.
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "tools"))
 
