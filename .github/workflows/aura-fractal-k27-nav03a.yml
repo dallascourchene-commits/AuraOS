@@ -1,0 +1,46 @@
+name: Aura Fractal K27 NAV-03A
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_fractal_k27.py"
+      - "tests/test_aura_fractal_k27.py"
+      - ".github/workflows/aura-fractal-k27-nav03a.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-fractal-k27-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify exact source head
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="${{ github.event.pull_request.head.sha || github.sha }}"
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$expected"
+
+      - name: Compile NAV-03A surface
+        run: python -m py_compile tools/aura_fractal_k27.py tests/test_aura_fractal_k27.py
+
+      - name: Run exhaustive compatibility and Different-J tests
+        run: python -m unittest -v tests/test_aura_fractal_k27.py
+
+      - name: Prove living-primer K27 handle compatibility
+        shell: bash
+        run: |
+          python - <<'PY'
+          from tools.aura_fractal_k27 import K27Segment, legacy_segment_micro_equivalence
+          segment = K27Segment(11, 17, 15)
+          expected = ((1,1,1),(0,2,2),(2,2,0))
+          assert legacy_segment_micro_equivalence(segment) == expected
+          print("NAV03A_K27_COMPATIBILITY_OK", segment, expected)
+          PY
