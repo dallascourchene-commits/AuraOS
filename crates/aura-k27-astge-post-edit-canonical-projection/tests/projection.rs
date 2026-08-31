@@ -60,6 +60,18 @@ fn owner_relation_and_authority_substitutions_fail_closed() {
         Err(ProjectionErrorV1::LocalScopeSemanticIdentity)
     );
 
+    let mut nested_elevated = receipt.clone();
+    nested_elevated
+        .post_edit_current
+        .candidate_current
+        .semantic_k27_derived = true;
+    assert_eq!(
+        project_canonical_definition_target(&nested_elevated),
+        Err(ProjectionErrorV1::CeilingViolation(
+            "candidate_current.semantic_k27_derived"
+        ))
+    );
+
     let mut elevated = receipt;
     elevated.commit_authorized = true;
     assert_eq!(
