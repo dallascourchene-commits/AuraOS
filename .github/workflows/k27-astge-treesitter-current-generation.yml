@@ -1,0 +1,65 @@
+name: K27 ASTGE Tree-Sitter current generation
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - "crates/aura-k27-astge-ingest/**"
+      - ".github/workflows/k27-astge-treesitter-current-generation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: k27-astge-treesitter-current-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  treesitter-current-generation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact candidate head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify toolchain
+        run: |
+          rustc --version
+          cargo --version
+
+      - name: Format producer integration
+        run: cargo fmt --manifest-path crates/aura-k27-astge-ingest/Cargo.toml -- --check
+
+      - name: Execute pinned Tree-Sitter current-generation contract
+        run: cargo test --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets --verbose
+
+      - name: Clippy producer and current storage fail closed
+        run: |
+          cargo clippy --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets -- -D warnings
+          cargo clippy --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+
+      - name: Emit claim ceiling
+        run: |
+          echo "TREE_SITTER_PYTHON_CURRENT_STORAGE_EXECUTED=true"
+          echo "PRODUCTION_BACKEND_DEFAULT=READ_SEEK_SAFE_DEFAULT"
+          echo "DIRECT_AST_ORACLE_EQUIVALENCE_REQUIRED=true"
+          echo "DISK_GENERATION_ROUNDTRIP_REQUIRED=true"
+          echo "MMAP_EXECUTED=false"
+          echo "SYMBOL_GRAPH_PROVEN=false"
+          echo "CALL_GRAPH_PROVEN=false"
+          echo "AURAOS_RUNTIME_INTEGRATION_PROVEN=false"
+          echo "COLD_NVME_PERFORMANCE_PROVEN=false"
+          echo "EXTERNAL_EFFECT_AUTHORIZED=false"
