@@ -56,12 +56,14 @@ jobs:
         run: |
           python - <<'PY' > /tmp/reference.tsv
           import importlib.util
+          import sys
           import tempfile
           from pathlib import Path
 
           spec = importlib.util.spec_from_file_location("k27_astge_reference", "/tmp/k27_astge_reference.py")
           module = importlib.util.module_from_spec(spec)
           assert spec.loader is not None
+          sys.modules[spec.name] = module
           spec.loader.exec_module(module)
 
           roots = (0, 1, 2, 5, 40, 120, 121, 500, 1000, 2000, 3279)
