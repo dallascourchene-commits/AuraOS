@@ -154,8 +154,8 @@ class CorroborationPreservesEvidenceClassesTests(unittest.TestCase):
         )
 
     def test_pr577_world_drift_stops_before_class_preservation_claim(self) -> None:
-        live, raw, a, b = exact_inputs()
-        b["source_generation"] = 44
+        live, raw, a, _ = exact_inputs()
+        b = pr572_receipt(source_generation=44)
         self.assertIn(
             "CORROBORATION_LIVE_SOURCE_INSTANCE_MISMATCH",
             verify_corroboration_preserves_evidence_classes(
