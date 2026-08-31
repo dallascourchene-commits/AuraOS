@@ -17,24 +17,51 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
+          fetch-depth: 8
 
       - name: Prove post-cut CODEMAP falsifier is derived-only
         shell: bash
         run: |
           set -euo pipefail
-          CODEMAP=c9739c9a7d8c3c4329f10df93d4cc4afe8c4dee7
-          SEMANTIC=202a742de6919b51fac8ec4fb33312290337f907
-          test "$(git rev-parse "$CODEMAP^")" = "$SEMANTIC"
-          test "$(git show -s --format=%cI "$CODEMAP")" = "2026-08-31T09:05:07+00:00"
-          test "$(git show -s --format=%cI "$SEMANTIC")" = "2026-08-31T08:42:01+00:00"
-          test "$(git rev-parse "$CODEMAP:tools/aura_semantic_sibling_admission.py")" = "29c7517645b9af6410ad92ed151d908744902101"
-          test "$(git rev-parse "$SEMANTIC:tools/aura_semantic_sibling_admission.py")" = "29c7517645b9af6410ad92ed151d908744902101"
-          mapfile -t changed < <(git diff-tree --no-commit-id --name-only -r "$CODEMAP")
-          test "${#changed[@]}" -eq 2
-          printf '%s\n' "${changed[@]}" | grep -Fx '.aura/CODEMAP.json'
-          printf '%s\n' "${changed[@]}" | grep -Fx '.aura/CODEMAP.md'
-          echo DERIVED_HEAD_ADVANCE_WITHOUT_A3_SOURCE_CHANGE=true
+          python3 - <<'PY'
+          from datetime import datetime, timezone
+          import subprocess
+
+          codemap='c9739c9a7d8c3c4329f10df93d4cc4afe8c4dee7'
+          semantic='202a742de6919b51fac8ec4fb33312290337f907'
+          cut=datetime.fromisoformat('2026-08-31T09:01:32+00:00')
+
+          parents=subprocess.check_output(
+              ['git','rev-list','--parents','-n','1',codemap], text=True
+          ).strip().split()
+          assert parents == [codemap, semantic], parents
+
+          def commit_time(sha: str) -> datetime:
+              raw=subprocess.check_output(['git','show','-s','--format=%cI',sha], text=True).strip()
+              parsed=datetime.fromisoformat(raw.replace('Z','+00:00'))
+              return parsed.astimezone(timezone.utc)
+
+          codemap_time=commit_time(codemap)
+          semantic_time=commit_time(semantic)
+          assert codemap_time > cut, (codemap_time, cut)
+          assert semantic_time <= cut, (semantic_time, cut)
+
+          path='tools/aura_semantic_sibling_admission.py'
+          blob_new=subprocess.check_output(['git','rev-parse',f'{codemap}:{path}'], text=True).strip()
+          blob_old=subprocess.check_output(['git','rev-parse',f'{semantic}:{path}'], text=True).strip()
+          assert blob_new == blob_old == '29c7517645b9af6410ad92ed151d908744902101', (blob_new, blob_old)
+
+          changed=subprocess.check_output(
+              ['git','diff-tree','--no-commit-id','--name-only','-r',codemap], text=True
+          ).splitlines()
+          assert changed, changed
+          assert all(p.startswith('.aura/CODEMAP.') for p in changed), changed
+          assert '.aura/CODEMAP.json' in changed, changed
+          assert '.aura/CODEMAP.md' in changed, changed
+          print('CODEMAP_TIME_UTC='+codemap_time.isoformat())
+          print('SEMANTIC_TIME_UTC='+semantic_time.isoformat())
+          print('DERIVED_HEAD_ADVANCE_WITHOUT_A3_SOURCE_CHANGE=true')
+          PY
 
       - name: Revalidate exact A3 hosted semantic generation
         env:
