@@ -142,13 +142,6 @@ impl From<IngestError> for ScopeIndexError {
     }
 }
 
-/// Build a conservative lexical-scope inventory for Python module/function/class definitions.
-///
-/// Statement containers such as `if`, `for`, `try`, and `with` do not create Python lexical
-/// scopes, so this traversal descends through them while retaining the same owner scope. A
-/// function/class definition creates a child scope and recursion continues only through that
-/// definition's body under the new owner. Duplicate names are retained and reported, never
-/// resolved to a winner.
 pub fn index_python_nested_scopes(
     source: &str,
     file_id: u32,
@@ -231,12 +224,12 @@ fn walk_scope_contents(
     bindings: &mut Vec<ScopeBindingV1>,
 ) -> Result<(), ScopeIndexError> {
     for child_index in 0..container.named_child_count() {
-        let child = container
-            .named_child(child_index)
-            .ok_or_else(|| ScopeIndexError::NamedChildMissing {
+        let child = container.named_child(child_index).ok_or_else(|| {
+            ScopeIndexError::NamedChildMissing {
                 parent_kind: container.kind().to_owned(),
                 child_index,
-            })?;
+            }
+        })?;
         if let Some(definition) = scope_definition(child) {
             add_definition_scope(
                 definition,
@@ -305,18 +298,16 @@ fn add_definition_scope(
             .count(),
     )
     .map_err(|_| ScopeIndexError::OrdinalOverflow)?;
-    let byte_start = u32::try_from(definition.start_byte()).map_err(|_| {
-        ScopeIndexError::InvalidSourceSpan {
+    let byte_start =
+        u32::try_from(definition.start_byte()).map_err(|_| ScopeIndexError::InvalidSourceSpan {
             byte_start: definition.start_byte(),
             byte_end: definition.end_byte(),
-        }
-    })?;
-    let byte_end = u32::try_from(definition.end_byte()).map_err(|_| {
-        ScopeIndexError::InvalidSourceSpan {
+        })?;
+    let byte_end =
+        u32::try_from(definition.end_byte()).map_err(|_| ScopeIndexError::InvalidSourceSpan {
             byte_start: definition.start_byte(),
             byte_end: definition.end_byte(),
-        }
-    })?;
+        })?;
     let line_start = u32::try_from(definition.start_position().row + 1)
         .map_err(|_| ScopeIndexError::LineOverflow)?;
 
@@ -503,7 +494,11 @@ mod tests {
     #[test]
     fn class_and_function_boundaries_keep_exact_definition_owner() {
         let index = index_python_nested_scopes(FIXTURE, 34, &handles(FIXTURE, 34)).unwrap();
-        let local = index.scopes.iter().find(|scope| scope.name == "Local").unwrap();
+        let local = index
+            .scopes
+            .iter()
+            .find(|scope| scope.name == "Local")
+            .unwrap();
         let local_method = index
             .scopes
             .iter()
