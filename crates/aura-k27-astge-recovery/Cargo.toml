@@ -1,0 +1,17 @@
+[package]
+name = "aura-k27-astge-recovery"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.80"
+description = "Fail-closed recovery inventory for immutable Aura K27 ASTGE generations"
+license = "MIT"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+aura-k27-astge-mmap = { path = "../aura-k27-astge-mmap" }
+
+[dev-dependencies]
+aura-k27-astge = { path = "../aura-k27-astge" }
