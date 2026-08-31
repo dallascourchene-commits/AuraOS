@@ -54,10 +54,20 @@ jobs:
           assert r['xor_binding_functional'] is True
           assert r['rotate_functional'] is True
           assert r['popcount_hamming_functional'] is True
+          assert r['i_type_aligned_displacement_count'] == 32
+          assert r['i_type_aligned_min_displacement'] == -2048
+          assert r['i_type_aligned_max_displacement'] == 1920
           assert r['pasted_emulator_target_recovered'] is True
           assert r['pasted_threshold_discriminative'] is False
           assert r['hidden_h_register_file_modeled_by_shown_gnu_insn'] is False
           assert r['shown_inline_asm_compiler_sound_for_hidden_h_registers'] is False
+          assert r['rtl_hidden_h_register_file_implemented'] is False
+          assert r['rtl_hdv_load_store_implemented'] is False
+          assert r['rtl_decode_and_hazards_integrated'] is False
+          assert r['architectural_context_switch_semantics_defined'] is False
+          assert r['debugger_and_abi_state_defined'] is False
+          assert r['precise_128byte_memory_exception_semantics_defined'] is False
+          assert r['full_six_instruction_isa_implemented'] is False
           assert r['rtl_synthesized'] is False
           assert r['rtl_timing_closed'] is False
           assert r['two_cycle_popcount_latency_proven'] is False
@@ -69,6 +79,9 @@ jobs:
         shell: bash
         run: |
           echo 'CUSTOM_0_VALID_NE_TOOLCHAIN_ABI=true'
+          echo 'ALU_REFERENCE_NE_SIX_INSTRUCTION_ARCHITECTURE=true'
+          echo 'HIDDEN_H_REGISTERS_REQUIRE_ABI_OS_SIMULATOR_OWNERS=true'
+          echo 'HDV_128BYTE_MEMORY_OP_NE_PRECISE_EXCEPTION_CONTRACT=true'
           echo 'FUNCTIONAL_HDV_MATH_NE_SYNTHESIZED_RTL=true'
           echo 'SOFTWARE_SCAN_NE_HARDWARE_RATE=true'
           echo 'K27_COORDINATE_NE_SEMANTIC_AUTHORITY=true'
