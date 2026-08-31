@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788208051,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -137,6 +137,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-review-learning.yml",
+      ".github/workflows/aura-scheme-serializable-hydration-transaction.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
       ".github/workflows/aura-spatial-s3-s4a.yml",
@@ -1097,6 +1098,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/ARENA_SCHEME_SERIALIZABLE_HYDRATION_TRANSACTION_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -1549,6 +1551,7 @@
       "tests/test_aura_review_lessons_codex_regressions.py",
       "tests/test_aura_runtime_profile_v2_adapter.py",
       "tests/test_aura_runtime_refactor_harness.py",
+      "tests/test_aura_scheme_serializable_hydration_transaction.py",
       "tests/test_aura_shadow_model_router.py",
       "tests/test_aura_shadow_tool_observability.py",
       "tests/test_aura_showcase_attempt_archive.py",
@@ -1631,6 +1634,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_scheme_serializable_hydration_transaction.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1643,
+      "bytes": 26451266,
+      "tokens_est": 6603168,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3895,6 +3899,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 56,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:_canonical:924897a2dc1f4e2a",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -4337,6 +4349,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 73,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:_digest:f6489573c4693c01",
+        "signature_hash": "5880d7b3614e1b56"
       }
     ],
     "_token_proxy": [
@@ -8067,6 +8087,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 60,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:_sha:522ffd62ca68f7cf",
+        "signature_hash": "5eb5b88823de3596"
       }
     ],
     "_repo": [
@@ -14653,6 +14681,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 66,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:_text:b8ef4471c8c6f66f",
+        "signature_hash": "0f196e838c2631a3"
       }
     ],
     "_bounded": [
@@ -149759,6 +149795,216 @@
         "signature_hash": "de706d016aa5115a"
       }
     ],
+    "SchemeSerializableHydrationTransactionTests": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 157,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#class:SchemeSerializableHydrationTransactionTests:f6604ae16cc0d180",
+        "signature_hash": "46138be61ffb5b50"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.route": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 37,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.route:70f84689102b718a",
+        "signature_hash": "fe5c2fdb04d4c31e"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.retrieval": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 49,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.retrieval:9b9d9f448756501d",
+        "signature_hash": "fa6de39d379efbda"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.intent": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 60,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.intent:383f0e475d5a1c7f",
+        "signature_hash": "ac7927c675e7764c"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.admit": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 68,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.admit:b858f6b6962e73b7",
+        "signature_hash": "3064f2e49b3dffb4"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_stable_route_epoch_and_state_delta_admits_bounded_transaction": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 81,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_stable_route_epoch_and_state_delta_admits_bounded_transaction:def147dc424b81c3",
+        "signature_hash": "b6c800bb9d2a39d4"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_initial_retrieval_is_admissible_but_nonpromoting": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 86,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_initial_retrieval_is_admissible_but_nonpromoting:c30835ae15d23480",
+        "signature_hash": "9261bebb62399832"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_changed_retrieval_axis_is_admissible": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 90,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_changed_retrieval_axis_is_admissible:d6270310cd8b880c",
+        "signature_hash": "dafa3d690f9c9f90"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_source_identity_change_holds_before_other_axes": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 94,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_source_identity_change_holds_before_other_axes:ffa30a11abe36dd1",
+        "signature_hash": "975f5b8338d76f84"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_owner_epoch_drift_holds": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 98,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_owner_epoch_drift_holds:63ea623ddf654569",
+        "signature_hash": "43759eeb54202061"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_scheme_change_requires_route_recompute_without_semantic_divergence": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 103,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_scheme_change_requires_route_recompute_without_semantic_divergence:0e0c94bdcceda000",
+        "signature_hash": "6160799ed979acc0"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_normalization_or_coordinate_route_change_requires_recompute": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 118,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_normalization_or_coordinate_route_change_requires_recompute:c8a16f4e39cad56f",
+        "signature_hash": "4f3ef804fe0c121e"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_new_hydration_requires_exact_reopen_handle": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 122,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_new_hydration_requires_exact_reopen_handle:6865c6d30bfd8be1",
+        "signature_hash": "b6f3f63fb63535e8"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_no_new_hydration_does_not_require_reopen_handle": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 126,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_no_new_hydration_does_not_require_reopen_handle:7b95e3305a8dbcb4",
+        "signature_hash": "21b6bb46daaf8c03"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_first_identical_no_progress_requires_axis_change": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 131,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_first_identical_no_progress_requires_axis_change:e3f0ec3711278b02",
+        "signature_hash": "28fe1736370dd6cf"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_repeated_identical_no_progress_collapses_cone": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 136,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_repeated_identical_no_progress_collapses_cone:823ae87a3c4a8f55",
+        "signature_hash": "b31b1d6ec0819c1d"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_route_authority_widening_rejected": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 140,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_route_authority_widening_rejected:5d4bbd3548d66ba0",
+        "signature_hash": "77f6ac727f610c53"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_retrieval_authority_widening_rejected": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 144,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_retrieval_authority_widening_rejected:7c98e85be497abc3",
+        "signature_hash": "940dcb208bca23fa"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_transaction_identity_is_deterministic": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 149,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_transaction_identity_is_deterministic:4bf24658bbbdbb00",
+        "signature_hash": "ed375d1a104db73b"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_retrieval_evidence_generation_is_identity_bearing": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 154,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_retrieval_evidence_generation_is_identity_bearing:f047a89ca4959852",
+        "signature_hash": "df60d8503455448b"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionTests.test_different_j_exhaustive_matrix": [
+      {
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 157,
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_different_j_exhaustive_matrix:2e9f6283f1793aa2",
+        "signature_hash": "935c0b46384f350e"
+      }
+    ],
     "context": [
       {
         "file": "tests/test_aura_shadow_model_router.py",
@@ -157181,6 +157427,166 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "RetrievalProgressDisposition": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 36,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#class:RetrievalProgressDisposition:79a809f6d1f1d653",
+        "signature_hash": "ba205bfc7f157758"
+      }
+    ],
+    "HydrationTransactionDisposition": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "class",
+        "line": 39,
+        "end_line": 46,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#class:HydrationTransactionDisposition:2f6eeda37813f612",
+        "signature_hash": "d6f4202dfae10e14"
+      }
+    ],
+    "SchemeBoundRouteProjection": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "class",
+        "line": 77,
+        "end_line": 140,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#class:SchemeBoundRouteProjection:ce7c0706bd77327a",
+        "signature_hash": "f47f35ab12078ff2"
+      }
+    ],
+    "SchemeBoundRouteProjection.validate": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 125,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#method:SchemeBoundRouteProjection.validate:17f13f9b783c59bb",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SchemeBoundRouteProjection.projection_digest": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 130,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#method:SchemeBoundRouteProjection.projection_digest:8dd9d8f0f7a16fc1",
+        "signature_hash": "adbbf6f578ff20ea"
+      }
+    ],
+    "SchemeBoundRouteProjection.scheme_identity": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 140,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#method:SchemeBoundRouteProjection.scheme_identity:77061aefd3628a94",
+        "signature_hash": "399dfea369d804c7"
+      }
+    ],
+    "RetrievalProgressProjection": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "class",
+        "line": 144,
+        "end_line": 182,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#class:RetrievalProgressProjection:8c9165948ae62c3a",
+        "signature_hash": "222f3ec1f82c2bd9"
+      }
+    ],
+    "RetrievalProgressProjection.validate": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 182,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#method:RetrievalProgressProjection.validate:02bf0bc9ee558af1",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "HydrationIntentProjection": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "class",
+        "line": 186,
+        "end_line": 205,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#class:HydrationIntentProjection:1de0bf8542cb677a",
+        "signature_hash": "ef968fd70173bbab"
+      }
+    ],
+    "HydrationIntentProjection.validate": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 205,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#method:HydrationIntentProjection.validate:35f7d45455e84a9a",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionReceipt": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "class",
+        "line": 209,
+        "end_line": 264,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#class:SchemeSerializableHydrationTransactionReceipt:16ef44cc78a12d0f",
+        "signature_hash": "b52f987f9d84e8d0"
+      }
+    ],
+    "SchemeSerializableHydrationTransactionReceipt.validate": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "method",
+        "line": 235,
+        "end_line": 264,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionReceipt.validate:e91063f34ca96c39",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "_classify_tree": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "function",
+        "line": 267,
+        "end_line": 293,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:_classify_tree:91c6cbcbb358ba39",
+        "signature_hash": "ab218306595dcefa"
+      }
+    ],
+    "_classify_table": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "function",
+        "line": 296,
+        "end_line": 341,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:_classify_table:ed7ed25d3e9f797d",
+        "signature_hash": "7c05aa44978de52e"
+      }
+    ],
+    "admit_scheme_serializable_hydration_transaction": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "function",
+        "line": 344,
+        "end_line": 427,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:admit_scheme_serializable_hydration_transaction:a8e72cac18edad02",
+        "signature_hash": "31320077b3c63eff"
+      }
+    ],
+    "prove_different_j": [
+      {
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "kind": "function",
+        "line": 430,
+        "end_line": 486,
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:prove_different_j:cfdfc886457b9cac",
+        "signature_hash": "545054efddc8fb30"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158293,6 +158699,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-review-learning.yml",
+      ".github/workflows/aura-scheme-serializable-hydration-transaction.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
       ".github/workflows/aura-spatial-s3-s4a.yml",
@@ -167798,6 +168205,60 @@
         -0.212442,
         -0.196608,
         0.212442
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-scheme-serializable-hydration-transaction.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1807,
+      "lines": 49,
+      "tokens_est": 452,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          25,
+          26
+        ]
+      },
+      "topology": {},
+      "digest8": "68b574ea2d82c56b",
+      "vector": [
+        -0.151187,
+        -0.129433,
+        0.227324,
+        -0.259955,
+        0.183817,
+        -0.090277,
+        0.031543,
+        0.116381,
+        0.249078,
+        -0.031543,
+        -0.181642,
+        0.196869,
+        -0.068524,
+        -0.246903,
+        0.166414,
+        -0.220798,
+        0.220798,
+        -0.042419,
+        -0.077225,
+        0.181642,
+        0.035893,
+        -0.275182,
+        0.088102,
+        -0.2295,
+        0.205571,
+        -0.001088,
+        0.266481,
+        -0.236026,
+        0.088102,
+        -0.268656,
+        -0.172941,
+        -0.044595
       ]
     },
     {
@@ -234820,6 +235281,53 @@
       ]
     },
     {
+      "path": "docs/arena/ARENA_SCHEME_SERIALIZABLE_HYDRATION_TRANSACTION_V1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 6565,
+      "lines": 102,
+      "tokens_est": 1641,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a692f33fd43299a9",
+      "vector": [
+        -0.147183,
+        0.061445,
+        -0.307226,
+        0.347236,
+        0.210057,
+        -0.047156,
+        -0.132893,
+        0.144325,
+        -0.104314,
+        -0.087166,
+        -0.16433,
+        -0.021434,
+        -0.024292,
+        0.195767,
+        0.030008,
+        0.001429,
+        0.101456,
+        -0.158614,
+        -0.224346,
+        0.28722,
+        -0.290078,
+        -0.250067,
+        -0.007145,
+        -0.270073,
+        0.058587,
+        0.184335,
+        0.127177,
+        0.118603,
+        -0.17862,
+        0.272931,
+        -0.144325,
+        0.078593
+      ]
+    },
+    {
       "path": "docs/aura_substrate_manifest.files.01.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -258794,6 +259302,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7322,
+      "lines": 162,
+      "tokens_est": 1831,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "062ecc7e4e9e45ef",
+      "vector": [
+        -0.024167,
+        -0.150757,
+        0.157662,
+        0.208298,
+        -0.065597,
+        -0.107026,
+        -0.19679,
+        -0.18298,
+        0.28195,
+        -0.014961,
+        0.054088,
+        -0.189885,
+        0.180678,
+        0.284252,
+        -0.010357,
+        -0.212901,
+        -0.215203,
+        0.136947,
+        -0.219806,
+        -0.208298,
+        -0.293458,
+        0.051787,
+        0.291156,
+        0.18298,
+        0.148455,
+        0.097819,
+        -0.238219,
+        -0.031072,
+        0.005754,
+        -0.093216,
+        0.132344,
+        -0.252029
+      ]
+    },
+    {
       "path": "tests/test_aura_shadow_model_router.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +263200,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_scheme_serializable_hydration_transaction.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 20524,
+      "lines": 501,
+      "tokens_est": 5131,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3ee6826c489a005d",
+      "vector": [
+        0.272596,
+        -0.212019,
+        -0.063942,
+        -0.252403,
+        0.003365,
+        -0.054968,
+        -0.196314,
+        -0.13125,
+        0.245673,
+        -0.037019,
+        0.034776,
+        -0.209775,
+        -0.066186,
+        -0.274839,
+        -0.140224,
+        0.209775,
+        0.003365,
+        -0.182852,
+        -0.241185,
+        0.191827,
+        0.261378,
+        -0.007853,
+        -0.077404,
+        0.153686,
+        -0.22548,
+        0.203044,
+        -0.129006,
+        -0.144711,
+        -0.13125,
+        -0.238942,
+        -0.270352,
+        0.01234
       ]
     },
     {
@@ -286646,16 +287248,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1643,
+    "total_bytes": 26451266,
+    "text_tokens_est": 6603168,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286802,6 +287404,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-review-learning.yml",
+      ".github/workflows/aura-scheme-serializable-hydration-transaction.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
       ".github/workflows/aura-spatial-s3-s4a.yml",
@@ -287762,6 +288365,7 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/ARENA_SCHEME_SERIALIZABLE_HYDRATION_TRANSACTION_V1.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -288214,6 +288818,7 @@
       "tests/test_aura_review_lessons_codex_regressions.py",
       "tests/test_aura_runtime_profile_v2_adapter.py",
       "tests/test_aura_runtime_refactor_harness.py",
+      "tests/test_aura_scheme_serializable_hydration_transaction.py",
       "tests/test_aura_shadow_model_router.py",
       "tests/test_aura_shadow_tool_observability.py",
       "tests/test_aura_showcase_attempt_archive.py",
@@ -288296,6 +288901,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_scheme_serializable_hydration_transaction.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -437584,6 +438190,216 @@
         "file_digest8": "a6154801e53baa50"
       },
       {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#class:SchemeSerializableHydrationTransactionTests:f6604ae16cc0d180",
+        "name": "SchemeSerializableHydrationTransactionTests",
+        "kind": "class",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 21,
+        "end_line": 157,
+        "signature_hash": "46138be61ffb5b50",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.admit:b858f6b6962e73b7",
+        "name": "SchemeSerializableHydrationTransactionTests.admit",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 62,
+        "end_line": 68,
+        "signature_hash": "3064f2e49b3dffb4",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.intent:383f0e475d5a1c7f",
+        "name": "SchemeSerializableHydrationTransactionTests.intent",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 51,
+        "end_line": 60,
+        "signature_hash": "ac7927c675e7764c",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.retrieval:9b9d9f448756501d",
+        "name": "SchemeSerializableHydrationTransactionTests.retrieval",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 39,
+        "end_line": 49,
+        "signature_hash": "fa6de39d379efbda",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.route:70f84689102b718a",
+        "name": "SchemeSerializableHydrationTransactionTests.route",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 22,
+        "end_line": 37,
+        "signature_hash": "fe5c2fdb04d4c31e",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_changed_retrieval_axis_is_admissible:d6270310cd8b880c",
+        "name": "SchemeSerializableHydrationTransactionTests.test_changed_retrieval_axis_is_admissible",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 88,
+        "end_line": 90,
+        "signature_hash": "dafa3d690f9c9f90",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_different_j_exhaustive_matrix:2e9f6283f1793aa2",
+        "name": "SchemeSerializableHydrationTransactionTests.test_different_j_exhaustive_matrix",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 156,
+        "end_line": 157,
+        "signature_hash": "935c0b46384f350e",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_first_identical_no_progress_requires_axis_change:e3f0ec3711278b02",
+        "name": "SchemeSerializableHydrationTransactionTests.test_first_identical_no_progress_requires_axis_change",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 128,
+        "end_line": 131,
+        "signature_hash": "28fe1736370dd6cf",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_initial_retrieval_is_admissible_but_nonpromoting:c30835ae15d23480",
+        "name": "SchemeSerializableHydrationTransactionTests.test_initial_retrieval_is_admissible_but_nonpromoting",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 83,
+        "end_line": 86,
+        "signature_hash": "9261bebb62399832",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_new_hydration_requires_exact_reopen_handle:6865c6d30bfd8be1",
+        "name": "SchemeSerializableHydrationTransactionTests.test_new_hydration_requires_exact_reopen_handle",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 120,
+        "end_line": 122,
+        "signature_hash": "b6f3f63fb63535e8",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_no_new_hydration_does_not_require_reopen_handle:7b95e3305a8dbcb4",
+        "name": "SchemeSerializableHydrationTransactionTests.test_no_new_hydration_does_not_require_reopen_handle",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 124,
+        "end_line": 126,
+        "signature_hash": "21b6bb46daaf8c03",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_normalization_or_coordinate_route_change_requires_recompute:c8a16f4e39cad56f",
+        "name": "SchemeSerializableHydrationTransactionTests.test_normalization_or_coordinate_route_change_requires_recompute",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 105,
+        "end_line": 118,
+        "signature_hash": "4f3ef804fe0c121e",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_owner_epoch_drift_holds:63ea623ddf654569",
+        "name": "SchemeSerializableHydrationTransactionTests.test_owner_epoch_drift_holds",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 96,
+        "end_line": 98,
+        "signature_hash": "43759eeb54202061",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_repeated_identical_no_progress_collapses_cone:823ae87a3c4a8f55",
+        "name": "SchemeSerializableHydrationTransactionTests.test_repeated_identical_no_progress_collapses_cone",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 133,
+        "end_line": 136,
+        "signature_hash": "b31b1d6ec0819c1d",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_retrieval_authority_widening_rejected:7c98e85be497abc3",
+        "name": "SchemeSerializableHydrationTransactionTests.test_retrieval_authority_widening_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 142,
+        "end_line": 144,
+        "signature_hash": "940dcb208bca23fa",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_retrieval_evidence_generation_is_identity_bearing:f047a89ca4959852",
+        "name": "SchemeSerializableHydrationTransactionTests.test_retrieval_evidence_generation_is_identity_bearing",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 151,
+        "end_line": 154,
+        "signature_hash": "df60d8503455448b",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_route_authority_widening_rejected:5d4bbd3548d66ba0",
+        "name": "SchemeSerializableHydrationTransactionTests.test_route_authority_widening_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 138,
+        "end_line": 140,
+        "signature_hash": "77f6ac727f610c53",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_scheme_change_requires_route_recompute_without_semantic_divergence:0e0c94bdcceda000",
+        "name": "SchemeSerializableHydrationTransactionTests.test_scheme_change_requires_route_recompute_without_semantic_divergence",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 100,
+        "end_line": 103,
+        "signature_hash": "6160799ed979acc0",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_source_identity_change_holds_before_other_axes:ffa30a11abe36dd1",
+        "name": "SchemeSerializableHydrationTransactionTests.test_source_identity_change_holds_before_other_axes",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 92,
+        "end_line": 94,
+        "signature_hash": "975f5b8338d76f84",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_stable_route_epoch_and_state_delta_admits_bounded_transaction:def147dc424b81c3",
+        "name": "SchemeSerializableHydrationTransactionTests.test_stable_route_epoch_and_state_delta_admits_bounded_transaction",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 70,
+        "end_line": 81,
+        "signature_hash": "b6c800bb9d2a39d4",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
+        "semantic_id": "tests/test_aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionTests.test_transaction_identity_is_deterministic:4bf24658bbbdbb00",
+        "name": "SchemeSerializableHydrationTransactionTests.test_transaction_identity_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_scheme_serializable_hydration_transaction.py",
+        "line": 146,
+        "end_line": 149,
+        "signature_hash": "ed375d1a104db73b",
+        "file_digest8": "062ecc7e4e9e45ef"
+      },
+      {
         "semantic_id": "tests/test_aura_shadow_model_router.py#function:candidate:2c8026203668f9f4",
         "name": "candidate",
         "kind": "function",
@@ -445634,6 +446450,206 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#class:HydrationIntentProjection:1de0bf8542cb677a",
+        "name": "HydrationIntentProjection",
+        "kind": "class",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 186,
+        "end_line": 205,
+        "signature_hash": "ef968fd70173bbab",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#class:HydrationTransactionDisposition:2f6eeda37813f612",
+        "name": "HydrationTransactionDisposition",
+        "kind": "class",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 39,
+        "end_line": 46,
+        "signature_hash": "d6f4202dfae10e14",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#class:RetrievalProgressDisposition:79a809f6d1f1d653",
+        "name": "RetrievalProgressDisposition",
+        "kind": "class",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 31,
+        "end_line": 36,
+        "signature_hash": "ba205bfc7f157758",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#class:RetrievalProgressProjection:8c9165948ae62c3a",
+        "name": "RetrievalProgressProjection",
+        "kind": "class",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 144,
+        "end_line": 182,
+        "signature_hash": "222f3ec1f82c2bd9",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#class:SchemeBoundRouteProjection:ce7c0706bd77327a",
+        "name": "SchemeBoundRouteProjection",
+        "kind": "class",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 77,
+        "end_line": 140,
+        "signature_hash": "f47f35ab12078ff2",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#class:SchemeSerializableHydrationTransactionReceipt:16ef44cc78a12d0f",
+        "name": "SchemeSerializableHydrationTransactionReceipt",
+        "kind": "class",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 209,
+        "end_line": 264,
+        "signature_hash": "b52f987f9d84e8d0",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:_canonical:924897a2dc1f4e2a",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 49,
+        "end_line": 56,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:_classify_table:ed7ed25d3e9f797d",
+        "name": "_classify_table",
+        "kind": "function",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 296,
+        "end_line": 341,
+        "signature_hash": "7c05aa44978de52e",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:_classify_tree:91c6cbcbb358ba39",
+        "name": "_classify_tree",
+        "kind": "function",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 267,
+        "end_line": 293,
+        "signature_hash": "ab218306595dcefa",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:_digest:f6489573c4693c01",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 69,
+        "end_line": 73,
+        "signature_hash": "5880d7b3614e1b56",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:_sha:522ffd62ca68f7cf",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 59,
+        "end_line": 60,
+        "signature_hash": "5eb5b88823de3596",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:_text:b8ef4471c8c6f66f",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 63,
+        "end_line": 66,
+        "signature_hash": "0f196e838c2631a3",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:admit_scheme_serializable_hydration_transaction:a8e72cac18edad02",
+        "name": "admit_scheme_serializable_hydration_transaction",
+        "kind": "function",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 344,
+        "end_line": 427,
+        "signature_hash": "31320077b3c63eff",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#function:prove_different_j:cfdfc886457b9cac",
+        "name": "prove_different_j",
+        "kind": "function",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 430,
+        "end_line": 486,
+        "signature_hash": "545054efddc8fb30",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#method:HydrationIntentProjection.validate:35f7d45455e84a9a",
+        "name": "HydrationIntentProjection.validate",
+        "kind": "method",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 193,
+        "end_line": 205,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#method:RetrievalProgressProjection.validate:02bf0bc9ee558af1",
+        "name": "RetrievalProgressProjection.validate",
+        "kind": "method",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 159,
+        "end_line": 182,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#method:SchemeBoundRouteProjection.projection_digest:8dd9d8f0f7a16fc1",
+        "name": "SchemeBoundRouteProjection.projection_digest",
+        "kind": "method",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 128,
+        "end_line": 130,
+        "signature_hash": "adbbf6f578ff20ea",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#method:SchemeBoundRouteProjection.scheme_identity:77061aefd3628a94",
+        "name": "SchemeBoundRouteProjection.scheme_identity",
+        "kind": "method",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 133,
+        "end_line": 140,
+        "signature_hash": "399dfea369d804c7",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#method:SchemeBoundRouteProjection.validate:17f13f9b783c59bb",
+        "name": "SchemeBoundRouteProjection.validate",
+        "kind": "method",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 98,
+        "end_line": 125,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
+        "semantic_id": "tools/aura_scheme_serializable_hydration_transaction.py#method:SchemeSerializableHydrationTransactionReceipt.validate:e91063f34ca96c39",
+        "name": "SchemeSerializableHydrationTransactionReceipt.validate",
+        "kind": "method",
+        "file": "tools/aura_scheme_serializable_hydration_transaction.py",
+        "line": 235,
+        "end_line": 264,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "3ee6826c489a005d"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447900,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "7367c67ad901585c6ab718061fe49634",
+    "payload_hash": "7eb4d370d9251446e0859c368aa081e4"
   }
 }
