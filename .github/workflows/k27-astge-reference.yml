@@ -1,0 +1,58 @@
+name: K27 ASTGE Reference Contract
+
+on:
+  pull_request:
+    paths:
+      - 'tools/k27_astge_reference.py'
+      - 'tests/test_k27_astge_reference.py'
+      - '.github/workflows/k27-astge-reference.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reference-contract:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          check-latest: false
+      - name: Run deterministic ASTGE reference contract
+        run: |
+          python -m py_compile tools/k27_astge_reference.py tests/test_k27_astge_reference.py
+          PYTHONPATH=tools python -m unittest -v tests/test_k27_astge_reference.py
+          PYTHONPATH=tools python tools/k27_astge_reference.py self-test
+          PYTHONPATH=tools python tools/k27_astge_reference.py benchmark --queries 300 | tee /tmp/astge-benchmark.json
+          python - <<'PY'
+          import json
+          r = json.load(open('/tmp/astge-benchmark.json', encoding='utf-8'))
+          assert r['same_graph'] is True
+          assert r['cone_equivalence_verified'] is True
+          assert r['trithash_page_amplification_over_contiguous'] > 1.0
+          assert r['os_page_cache_coldness_proven'] is False
+          assert r['physical_nvme_reads_proven'] is False
+          assert r['performance_superiority_proven'] is False
+          print('ASTGE_REFERENCE_CONTRACT=PASS')
+          print('CONTIGUOUS_BLOCKS=' + str(r['contiguous_blocks']))
+          print('TRITHASH_BLOCKS=' + str(r['trithash_blocks']))
+          print('TRITHASH_PAGE_AMPLIFICATION=' + str(r['trithash_page_amplification_over_contiguous']))
+          print('CONTIGUOUS_MMAP_OVER_HEAP=' + str(r['ratio_contiguous_mmap_over_heap']))
+          print('TRITHASH_MMAP_OVER_HEAP=' + str(r['ratio_trithash_mmap_over_heap']))
+          PY
