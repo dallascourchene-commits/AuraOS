@@ -54,6 +54,16 @@ class Q22ExactLineageGuardTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Q22_LINEAGE_DIGEST_MISMATCH"):
             self.bind(lineage=forged)
 
+    def test_self_resealed_nonboolean_q21_evidence_flag_is_rejected(self):
+        forged = deepcopy(public_q22.example_lineage())
+        forged["lifecycle_reusable_evidence_eligible"] = "true"
+        body = dict(forged)
+        body.pop("receipt_digest", None)
+        typed = q21.PreAttemptLifecycleLineageReceipt(**body)
+        forged["receipt_digest"] = typed.receipt_digest
+        with self.assertRaisesRegex(ValueError, "Q22_LINEAGE_REUSABLE_EVIDENCE_MUST_BE_BOOL"):
+            self.bind(lineage=forged)
+
     def test_public_example_reconstructs_exact_q21_lineage_algebra(self):
         lineage = public_q22.example_lineage()
         typed = public_q22._canonical_q21_receipt(lineage)
