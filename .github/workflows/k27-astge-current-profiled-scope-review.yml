@@ -56,11 +56,12 @@ jobs:
           cargo test --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml
           cargo clippy --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml --all-targets -- -D warnings
 
-      - name: Prove current profiled review membrane
+      - name: Prove producer-bound current profiled review membrane
         shell: bash
         run: |
           set -euo pipefail
           cargo test --manifest-path crates/aura-k27-astge-current-profiled-scope-review/Cargo.toml
+          cargo test --doc --manifest-path crates/aura-k27-astge-current-profiled-scope-review/Cargo.toml
           cargo clippy --manifest-path crates/aura-k27-astge-current-profiled-scope-review/Cargo.toml --all-targets -- -D warnings
 
       - name: Independent CPython scope oracle
@@ -69,24 +70,47 @@ jobs:
           set -euo pipefail
           python tools/k27_astge_python_scope_oracle.py
 
-      - name: Public boundary and claim-ceiling assertions
+      - name: Producer trust HOLD and public-boundary assertions
         shell: bash
         run: |
           set -euo pipefail
-          src=crates/aura-k27-astge-current-profiled-scope-review/src/lib.rs
+          entry=crates/aura-k27-astge-current-profiled-scope-review/src/lib.rs
+          src=crates/aura-k27-astge-current-profiled-scope-review/src/producer_bound.rs
+
+          grep -q '^mod producer_bound;' "$entry"
+          grep -q '^pub use producer_bound::\*;' "$entry"
+          grep -q 'pub fn validate_current_profiled_scope_review_candidate' "$src"
           grep -q 'pub fn admit_current_profiled_scope_review' "$src"
-          ! grep -A18 'pub fn admit_current_profiled_scope_review' "$src" | grep -q 'selected_scope_id'
-          ! grep -A18 'pub fn admit_current_profiled_scope_review' "$src" | grep -q 'source_owner_ref'
-          ! grep -A18 'pub fn admit_current_profiled_scope_review' "$src" | grep -q 'expected_source_generation'
-          ! grep -A18 'pub fn admit_current_profiled_scope_review' "$src" | grep -q 'grammar'
-          ! grep -A18 'pub fn admit_current_profiled_scope_review' "$src" | grep -q 'profile_ref'
-          ! grep -A18 'pub fn admit_current_profiled_scope_review' "$src" | grep -q 'graph_sha'
+          grep -q 'ASTGE_HYDRATION_PRODUCER_REGISTRY_HOLD_V1' "$src"
+          grep -q 'const PRODUCTION_HYDRATION_PRODUCERS: &\[HydrationProducerRecordV1\] = &\[\];' "$src"
+          grep -q 'lower_review_context_validated: true' "$src"
+          grep -q 'hydration_producer_trust_proven: false' "$src"
+          grep -q 'ready_for_current_profiled_scope_semantic_review: false' "$src"
+
+          sig="$(sed -n '/pub fn admit_current_profiled_scope_review(/,/^)/p' "$src")"
+          ! grep -q 'selected_scope_id' <<<"$sig"
+          ! grep -q 'source_owner_ref' <<<"$sig"
+          ! grep -q 'expected_source_generation' <<<"$sig"
+          ! grep -q 'expected_producer' <<<"$sig"
+          ! grep -q 'registry:' <<<"$sig"
+          ! grep -q 'trusted' <<<"$sig"
+          ! grep -q 'grammar' <<<"$sig"
+          ! grep -q 'profile_ref' <<<"$sig"
+          ! grep -q 'graph_sha' <<<"$sig"
+
           grep -q 'runtime_name_resolution_proven: false' "$src"
           grep -q 'semantic_correctness_proven: false' "$src"
           grep -q 'b_minus_approved: false' "$src"
           grep -q 'commit_authorized: false' "$src"
           grep -q 'external_effect_authorized: false' "$src"
-          echo 'CURRENT_PROFILED_SCOPE_REVIEW_READY=true'
+
+          echo 'LOWER_REVIEW_CONTEXT_VALIDATION_PROVEN=true'
+          echo 'HYDRATION_PRODUCER_REGISTRY_GENERATION=ASTGE_HYDRATION_PRODUCER_REGISTRY_HOLD_V1'
+          echo 'PRODUCTION_HYDRATION_PRODUCERS=0'
+          echo 'HYDRATION_PRODUCER_TRUST_PROVEN=false'
+          echo 'CURRENT_PROFILED_SCOPE_REVIEW_READY=false'
+          echo 'CALLER_REGISTRY_OVERRIDE=false'
+          echo 'CALLER_EXPECTED_PRODUCER_OVERRIDE=false'
           echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
           echo 'SEMANTIC_CORRECTNESS_PROVEN=false'
           echo 'B_MINUS_APPROVED=false'
