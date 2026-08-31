@@ -29,7 +29,7 @@ PR650_RUN = 33374008643
 PR650_JOB = 99431263469
 PR641_HEAD = "a8d4605a36e04d64cf03f43f457be4bde553e602"
 PR641_RUN = 33370700852
-PR641_SOURCE_BLOB = "7951124182a0ed9396cf294a8c811bf8555391a9"
+PR641_SOURCE_BLOB = "157afcb2e457c630d03a8c72aef09f0a6ba04a4d"
 PR628_HEAD = "b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae"
 PR628_SOURCE_BLOB = "5df2cd69a1519b2626cb52c1d8f23a25504425d9"
 
@@ -70,7 +70,7 @@ def decode_e4m3fn_byte(code: int) -> float:
     if exponent == 0x0F and mantissa == 0x07:
         raise GateDequantizationError("E4M3FN NaN code in weight payload")
     if exponent == 0:
-        magnitude = math.ldexp(float(mantissa), -9)  # 2^(1-bias) * mantissa/8
+        magnitude = math.ldexp(float(mantissa), -9)
     else:
         magnitude = math.ldexp(1.0 + mantissa / 8.0, exponent - 7)
     if magnitude == 0.0 and sign < 0:
