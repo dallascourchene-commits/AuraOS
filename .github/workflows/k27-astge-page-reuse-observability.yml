@@ -1,0 +1,39 @@
+name: K27 ASTGE Page Reuse Observability
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge-page-reuse-observability/**"
+      - ".github/workflows/k27-astge-page-reuse-observability.yml"
+  workflow_dispatch:
+
+jobs:
+  exact-page-reuse-observability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Assert exact PR head
+        if: github.event_name == 'pull_request'
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+      - name: Test trace membrane
+        run: cargo test --manifest-path crates/aura-k27-astge-page-reuse-observability/Cargo.toml --all-targets
+      - name: Format check
+        run: cargo fmt --manifest-path crates/aura-k27-astge-page-reuse-observability/Cargo.toml -- --check
+      - name: Fatal Clippy
+        run: cargo clippy --manifest-path crates/aura-k27-astge-page-reuse-observability/Cargo.toml --all-targets -- -D warnings
+      - name: Claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'underlying_reads_elided: 0' crates/aura-k27-astge-page-reuse-observability/src/lib.rs
+          grep -q 'cache_admission_proven: false' crates/aura-k27-astge-page-reuse-observability/src/lib.rs
+          grep -q 'backend_promotion_authorized: false' crates/aura-k27-astge-page-reuse-observability/src/lib.rs
+          echo 'PAGE_REUSE_OBSERVABILITY_EXECUTED=true'
+          echo 'GRAPH_CONSEQUENCE_PRESERVED=true'
+          echo 'UNDERLYING_READS_ELIDED=0'
+          echo 'CACHE_ADMISSION_PROVEN=false'
+          echo 'BACKEND_PROMOTION_AUTHORIZED=false'
+          echo 'SEMANTIC_K27_AUTHORITY=false'
