@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1655
-- **total_bytes**: 26612001
-- **text_tokens_est**: 6643356
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1009, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1658
+- **total_bytes**: 26639763
+- **text_tokens_est**: 6650298
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1011, 'schema_or_lexicon': 276, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1655,
+  "repo_file_count": 1658,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -157,6 +157,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-o63-hard-gate-proposal-proof.yml",
     ".github/workflows/aura-o65-owner-resolved-pre-attempt-proof.yml",
     ".github/workflows/aura-o66-pre-attempt-lifecycle-conformance.yml",
+    ".github/workflows/aura-o67-materialization-support-lineage-attachment.yml",
     ".github/workflows/aura-q20-owner-resolved-proposal-lifecycle.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
@@ -1518,6 +1519,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_intent_ingestion_bilateral.py",
     "tests/test_aura_intent_refinement.py",
     "tests/test_aura_jspace_codec.py",
+    "tests/test_aura_materialization_support_lineage_attachment.py",
     "tests/test_aura_mesh_to_gaussian.py",
     "tests/test_aura_model_cognome.py",
     "tests/test_aura_model_cognome_call_logger.py",
@@ -1662,6 +1664,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/aura_bounded_proposal_capsule.py",
     "tools/aura_closed_world_result_lifecycle_gate.py",
     "tools/aura_hard_gate_transition_admission.py",
+    "tools/aura_materialization_support_lineage_attachment.py",
     "tools/aura_owner_resolved_proposal_lifecycle_bridge.py",
     "tools/aura_pre_attempt_admission.py",
     "tools/aura_pre_attempt_lifecycle_conformance.py",
@@ -1795,16 +1798,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1655,
-  "bytes": 26612001,
-  "tokens_est": 6643356,
+  "files": 1658,
+  "bytes": 26639763,
+  "tokens_est": 6650298,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1009,
-    "schema_or_lexicon": 275,
+    "python_module": 1011,
+    "schema_or_lexicon": 276,
     "support_file": 49
   }
 }
