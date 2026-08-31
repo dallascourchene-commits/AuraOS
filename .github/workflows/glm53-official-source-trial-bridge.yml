@@ -18,6 +18,7 @@ jobs:
       PR639_SHA: 730426b82235b0ff4e75fef1cff00707877a84ad
       PR639_RUN: "33369967425"
       PR629_TRIAL_BLOB: 3985095e122e9d3a7867452c6ae0fdba41d200f1
+      PR639_SOURCE_BLOB: 7ed09c57699fe303f555a3b6bdaadb791c64223f
     steps:
       - name: Checkout exact child with parent history
         uses: actions/checkout@v4
@@ -70,11 +71,14 @@ jobs:
               print(f"EXACT_PARENT_GREEN={run_id}:{expected}")
           PY
 
-      - name: Assert exact PR629 trial surface materialized
+      - name: Assert exact parent owner blobs materialized
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD:tools/quantization/aura_glm53_quantized_representation_trial.py)" = "$PR629_TRIAL_BLOB"
+          test "$(git rev-parse HEAD:tools/quantization/aura_glm53_official_source_admission.py)" = "$PR639_SOURCE_BLOB"
+          echo "Q5_SOURCE_PRODUCER_MATERIALIZED=true"
+          echo "Q3_TRIAL_OWNER_MATERIALIZED=true"
 
       - name: Run bridge adversarials
         shell: bash
@@ -87,16 +91,20 @@ jobs:
             tools/quantization/test_aura_glm53_official_source_trial_bridge.py
           python3 -m unittest -v tools.quantization.test_aura_glm53_official_source_trial_bridge
 
-      - name: Assert current HOLD and nonpromotion ceiling
+      - name: Assert current producer-traversed HOLD and vector
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          from tools.quantization.aura_glm53_official_source_admission import OFFICIAL_COMMIT, current_public_state
-          from tools.quantization.aura_glm53_official_source_trial_bridge import classify_official_source_trial
+          from tools.quantization.aura_glm53_official_source_admission import OFFICIAL_COMMIT
+          from tools.quantization.aura_glm53_official_source_trial_bridge import current_official_source_trial_hold
           from tools.quantization.test_aura_glm53_official_source_trial_bridge import request, comparison
           req = request(OFFICIAL_COMMIT)
-          out = classify_official_source_trial(source_state=current_public_state(), request=req, comparison=comparison(req))
+          out = current_official_source_trial_hold(request=req, comparison=comparison(req))
+          assert out.source_producer_traversed is True
+          assert out.source_state_synthetic is False
+          assert out.source_evidence_vector == (True, True, False, False, False, False, False)
+          assert out.hold_disposition_is_evidence is False
           assert out.model_revision_matches_official_source is True
           assert out.trial_internal_byte_domain_bound is True
           assert out.official_source_headers_trial_eligible is False
@@ -108,12 +116,17 @@ jobs:
           assert out.native_private_transformer_kv_accessed is False
           assert out.gate10_promoted is False
           assert out.deployment_authorized is False
+          print('Q5_SOURCE_PRODUCER_TRAVERSED=true')
+          print('SOURCE_EVIDENCE_VECTOR=1,1,0,0,0,0,0')
+          print('HOLD_DISPOSITION_IS_EVIDENCE=false')
           print('OFFICIAL_SOURCE_TRIAL_CURRENT_HOLD=true')
           PY
 
       - name: Emit consequence ceiling
         run: |
           cat <<'EOF'
+          HOLD_DISPOSITION_DEPTH_NE_EVIDENCE_ADVANCE=true
+          SYNTHETIC_SOURCE_STATE_NE_PRODUCER_OBSERVATION=true
           TRIAL_MODEL_REVISION_LABEL_NE_OFFICIAL_SOURCE_PROVENANCE=true
           TRIAL_INTERNAL_BYTE_DOMAIN_NE_OFFICIAL_SOURCE_BYTE_DOMAIN_BINDING=true
           HEADER_TRIAL_ELIGIBLE_NE_CANDIDATE_MATERIALIZATION_OWNER_BOUND=true
