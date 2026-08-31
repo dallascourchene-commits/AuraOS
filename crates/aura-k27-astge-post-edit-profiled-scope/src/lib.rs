@@ -361,11 +361,13 @@ mod tests {
             .iter()
             .find(|scope| scope.name == "inner")
             .unwrap();
+        let selected_scope_id = selected.scope_id;
+        let selected_ast_node_id = selected.ast_node_id.unwrap();
         let encoded = encode_ast_to_splane(&graph, &old_handles, 0, 41, [0x91; 32]).unwrap();
         let record = encoded
             .records
             .iter()
-            .find(|record| record.node_id == selected.ast_node_id.unwrap())
+            .find(|record| record.node_id == selected_ast_node_id)
             .unwrap()
             .clone();
         let catalog = AdmittedSourceCatalogV1::admit(
@@ -383,7 +385,7 @@ mod tests {
             root,
             file_id,
             scope_index,
-            selected_scope_id: selected.scope_id,
+            selected_scope_id,
             record,
             catalog,
             old_handles,
