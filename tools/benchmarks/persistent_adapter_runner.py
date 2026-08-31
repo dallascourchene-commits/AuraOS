@@ -73,6 +73,43 @@ def _terminate(process: subprocess.Popen[str], *, grace_seconds: float = 1.0) ->
             return {"disposition": "KILLED", "returncode": returncode}
 
 
+def _startup_failure_report(
+    *,
+    startup_disposition: str,
+    startup_error: str,
+    rounds: int,
+    seed: int,
+    startup_timeout_seconds: float,
+    turn_timeout_seconds: float,
+    workload_digest: str,
+    adapter_command_digest: str,
+    teardown: dict[str, Any],
+    stderr_lines: list[str],
+) -> dict[str, Any]:
+    report = {
+        "schema_id": RUNNER_SCHEMA_ID,
+        "campaign_disposition": "INCONCLUSIVE",
+        "startup_disposition": startup_disposition,
+        "startup_error": startup_error,
+        "handshake": None,
+        "adapter_generation": None,
+        "adapter_command_digest": adapter_command_digest,
+        "rounds": rounds,
+        "seed": seed,
+        "startup_timeout_seconds": startup_timeout_seconds,
+        "turn_timeout_seconds": turn_timeout_seconds,
+        "workload_digest": workload_digest,
+        "state_drift_detected": False,
+        "inconclusive_turns": rounds,
+        "disposition_counts": {name: 0 for name in sorted(TURN_DISPOSITIONS)},
+        "turns": [],
+        "teardown": teardown,
+        "stderr": stderr_lines,
+    }
+    report["evidence_digest"] = _canonical_digest(report)
+    return report
+
+
 def run_persistent_adapter(
     command: Sequence[str],
     *,
@@ -90,6 +127,8 @@ def run_persistent_adapter(
         raise ValueError("TURN_TIMEOUT_SECONDS_MUST_BE_POSITIVE")
 
     workload = build_workload(rounds, seed=seed)
+    workload_digest = _canonical_digest(workload)
+    adapter_command_digest = _canonical_digest(list(command))
     process = subprocess.Popen(
         list(command),
         stdin=subprocess.PIPE,
@@ -118,32 +157,32 @@ def run_persistent_adapter(
         handshake = validate_handshake(handshake_payload)
     except TimeoutError as exc:
         teardown = _terminate(process)
-        return {
-            "schema_id": RUNNER_SCHEMA_ID,
-            "campaign_disposition": "INCONCLUSIVE",
-            "startup_disposition": "TIMEOUT",
-            "startup_error": str(exc),
-            "handshake": None,
-            "rounds": rounds,
-            "seed": seed,
-            "turns": [],
-            "teardown": teardown,
-            "stderr": stderr_lines,
-        }
+        return _startup_failure_report(
+            startup_disposition="TIMEOUT",
+            startup_error=str(exc),
+            rounds=rounds,
+            seed=seed,
+            startup_timeout_seconds=startup_timeout_seconds,
+            turn_timeout_seconds=turn_timeout_seconds,
+            workload_digest=workload_digest,
+            adapter_command_digest=adapter_command_digest,
+            teardown=teardown,
+            stderr_lines=stderr_lines,
+        )
     except (EOFError, json.JSONDecodeError, ValueError) as exc:
         teardown = _terminate(process)
-        return {
-            "schema_id": RUNNER_SCHEMA_ID,
-            "campaign_disposition": "INCONCLUSIVE",
-            "startup_disposition": "PROTOCOL_ERROR",
-            "startup_error": str(exc),
-            "handshake": None,
-            "rounds": rounds,
-            "seed": seed,
-            "turns": [],
-            "teardown": teardown,
-            "stderr": stderr_lines,
-        }
+        return _startup_failure_report(
+            startup_disposition="PROTOCOL_ERROR",
+            startup_error=str(exc),
+            rounds=rounds,
+            seed=seed,
+            startup_timeout_seconds=startup_timeout_seconds,
+            turn_timeout_seconds=turn_timeout_seconds,
+            workload_digest=workload_digest,
+            adapter_command_digest=adapter_command_digest,
+            teardown=teardown,
+            stderr_lines=stderr_lines,
+        )
 
     generation = handshake["adapter_generation"]
     turns: list[dict[str, Any]] = []
@@ -273,8 +312,8 @@ def run_persistent_adapter(
         "seed": seed,
         "startup_timeout_seconds": startup_timeout_seconds,
         "turn_timeout_seconds": turn_timeout_seconds,
-        "workload_digest": _canonical_digest(workload),
-        "adapter_command_digest": _canonical_digest(list(command)),
+        "workload_digest": workload_digest,
+        "adapter_command_digest": adapter_command_digest,
         "state_drift_detected": state_drift_detected,
         "inconclusive_turns": inconclusive_turns,
         "disposition_counts": disposition_counts,
