@@ -53,9 +53,10 @@ jobs:
           git show 730426b82235b0ff4e75fef1cff00707877a84ad:tools/quantization/aura_glm53_official_source_admission.py > /tmp/q5_source_admission.py
           python3 - <<'PY'
           from dataclasses import asdict
-          import importlib.util, json
+          import importlib.util, json, sys
           spec=importlib.util.spec_from_file_location('q5_source_admission','/tmp/q5_source_admission.py')
           mod=importlib.util.module_from_spec(spec)
+          sys.modules[spec.name]=mod
           spec.loader.exec_module(mod)
           state=asdict(mod.current_public_state())
           json.dump(state,open('/tmp/q5-current.json','w',encoding='utf-8'),sort_keys=True,separators=(',',':'))
