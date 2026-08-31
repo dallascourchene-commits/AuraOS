@@ -5,14 +5,18 @@ on:
     paths:
       - 'tools/aura_external_knowledge_ingress.py'
       - 'tools/aura_external_knowledge_store_writer.py'
+      - 'tools/aura_external_subject_identity_bridge.py'
       - 'tools/powershell/Invoke-AuraExternalKnowledgeIngress.ps1'
       - 'tests/test_aura_external_knowledge_store_writer.py'
       - 'tests/test_aura_external_knowledge_store_reader_integration.py'
+      - 'tests/test_aura_external_subject_identity_bridge.py'
       - '.github/workflows/aura-external-knowledge-store-writer-v1.yml'
+      - '.github/workflows/aura-eki-subject-identity-bridge.yml'
   workflow_dispatch:
 
 permissions:
   contents: read
+  actions: read
 
 env:
   PR728_READER_HEAD: 9865c42f3ada2520141bd2fe30a439ce160ce2f8
@@ -84,6 +88,154 @@ jobs:
           grep -F 'semantic_k27_authority: bool = False' tools/aura_external_knowledge_store_writer.py
           grep -F 'tool_execution_authority: bool = False' tools/aura_external_knowledge_store_writer.py
           grep -F 'provider_effect_authority: bool = False' tools/aura_external_knowledge_store_writer.py
+
+  legacy-current-subject-identity:
+    runs-on: ubuntu-24.04
+    env:
+      CONVERGENCE_COMMIT: 090b0aaa1e3bf38a3272c92e44969b74ab29d7db
+      LEGACY_EKI2_HEAD: 5ed2489b93c8a039ebc372fdf2f4a6c80eed6ebd
+      CURRENT_EKI_HEAD: 18c9193ca029eb06b8696c2625d82cf8ee97e4f7
+      LEGACY_EKI2_RUN: '33419848006'
+      CURRENT_EKI_RUN: '33417095599'
+      LEGACY_INGRESS_BLOB: 7a5e113568bef07019146005c2a00b8acf196e60
+      CURRENT_INGRESS_BLOB: 457cd08eafdf06820d257e1c79c3be51baf009a5
+    steps:
+      - name: Checkout exact bridge descendant
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Authenticate exact two-parent identity convergence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$CONVERGENCE_COMMIT" HEAD
+          parents="$(git show -s --format=%P "$CONVERGENCE_COMMIT")"
+          test "$parents" = "$LEGACY_EKI2_HEAD $CURRENT_EKI_HEAD"
+          test "$(git rev-parse "$LEGACY_EKI2_HEAD:tools/aura_external_knowledge_ingress.py")" = "$LEGACY_INGRESS_BLOB"
+          test "$(git rev-parse "$CURRENT_EKI_HEAD:tools/aura_external_knowledge_ingress.py")" = "$CURRENT_INGRESS_BLOB"
+          echo 'TRUE_LEGACY_X_CURRENT_IDENTITY_DIAMOND=true'
+
+      - name: Revalidate exact hosted parent generations
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          expected = (
+              (int(os.environ['LEGACY_EKI2_RUN']), os.environ['LEGACY_EKI2_HEAD'], 'Aura External Knowledge Store Writer V1'),
+              (int(os.environ['CURRENT_EKI_RUN']), os.environ['CURRENT_EKI_HEAD'], 'Aura External Knowledge Ingress'),
+          )
+          for run_id, head, name in expected:
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={
+                      'Authorization': f'Bearer {token}',
+                      'Accept': 'application/vnd.github+json',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  run = json.load(response)
+              assert run['head_sha'] == head, (run_id, run['head_sha'], head)
+              assert run['name'] == name, (run_id, run['name'], name)
+              assert run['status'] == 'completed' and run['conclusion'] == 'success'
+              print(f'{name}:EXACT_HOSTED_SUCCESS=true')
+          PY
+
+      - name: Reexecute legacy identity owner
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/aura_external_knowledge_ingress.py
+          python -m unittest tests.test_aura_external_knowledge_ingress -v
+
+      - name: Reexecute current identity owner in its source world
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp -d)"
+          trap 'git worktree remove --force "$tmp" >/dev/null 2>&1 || true; rm -rf "$tmp"' EXIT
+          git worktree add --detach "$tmp" "$CURRENT_EKI_HEAD"
+          (
+            cd "$tmp"
+            python -m py_compile tools/aura_external_knowledge_ingress.py tests/test_aura_external_knowledge_ingress.py
+            python -m unittest tests.test_aura_external_knowledge_ingress -v
+            python - <<'PY' > /tmp/current-subject.json
+          import json
+          from tools.aura_external_knowledge_ingress import ExternalSubject
+          subject = ExternalSubject(
+              provider='GITHUB',
+              source_kind='REPOSITORY',
+              canonical_id='owner/repo',
+              canonical_uri='https://github.com/owner/repo',
+              sector='06_RUN',
+          )
+          print(json.dumps({
+              'provider': subject.provider,
+              'source_kind': subject.source_kind,
+              'canonical_id': subject.canonical_id,
+              'canonical_uri': subject.canonical_uri,
+              'subject_key': subject.subject_key,
+              'sector': subject.sector,
+          }, sort_keys=True))
+          PY
+          )
+
+      - name: Run identity bridge adversarials
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/aura_external_subject_identity_bridge.py tests/test_aura_external_subject_identity_bridge.py
+          python -m unittest tests.test_aura_external_subject_identity_bridge -v
+
+      - name: Prove actual cross-parent subject relation
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from tools import aura_external_knowledge_ingress as legacy_eki
+          from tools.aura_external_subject_identity_bridge import (
+              CurrentExternalSubjectProjectionV1,
+              IdentityBridgeDisposition,
+              LegacyExternalIdentityProjectionV1,
+              bridge_external_subject_identity,
+          )
+          observation = legacy_eki.ExternalDiscoveryObservation(
+              source_kind=legacy_eki.SourceKind.GITHUB,
+              artifact_class=legacy_eki.ArtifactClass.CODE,
+              canonical_id='owner/repo',
+              canonical_uri='https://github.com/owner/repo',
+              title='owner/repo',
+              thesis='identity bridge fixture',
+          )
+          legacy = LegacyExternalIdentityProjectionV1(
+              source_kind=observation.source_kind.value,
+              artifact_class=observation.artifact_class.value,
+              canonical_id=observation.canonical_id,
+              canonical_uri=observation.canonical_uri,
+              semantic_id=observation.semantic_id,
+          )
+          current = CurrentExternalSubjectProjectionV1(**json.load(open('/tmp/current-subject.json', encoding='utf-8')))
+          receipt = bridge_external_subject_identity(legacy=legacy, current=current)
+          assert receipt.disposition is IdentityBridgeDisposition.MATCHED_SUBJECT
+          assert receipt.same_external_subject is True
+          assert receipt.legacy_semantic_id != receipt.current_subject_key
+          assert receipt.mapping_rule == 'GITHUB->GITHUB+REPOSITORY'
+          assert receipt.version_equivalence_proven is False
+          assert receipt.generation_equivalence_proven is False
+          assert receipt.current_version_selected is False
+          assert receipt.source_currentness_proven is False
+          assert receipt.write_authority is False
+          assert receipt.read_authority is False
+          assert receipt.effect_authority is False
+          print('EXACT_CROSS_PARENT_SUBJECT_RELATION=true')
+          print('SUBJECT_RELATION_NE_VERSION_SELECTION=true')
+          print('IDENTITY_RELATION_NE_AUTHORITY=true')
+          PY
 
   windows-provider-ingress:
     runs-on: windows-2025
