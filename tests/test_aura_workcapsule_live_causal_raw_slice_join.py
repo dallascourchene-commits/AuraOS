@@ -174,7 +174,7 @@ class WorkCapsuleLiveCausalRawSliceJoinTests(
         violations = verify_live_causal_raw_slice_join(
             **self.o38_kwargs(post_witness=witness)
         )
-        self.assertTrue(any(item.startswith("CAUSAL_POST_") for item in violations))
+        self.assertIn("CAUSAL_HANDOFF_SOURCE_GENERATION_MISMATCH", violations)
 
     def test_public_boundary_has_no_causal_or_source_intermediate_escape_hatch(self) -> None:
         params = set(inspect.signature(verify_live_causal_raw_slice_join).parameters)
