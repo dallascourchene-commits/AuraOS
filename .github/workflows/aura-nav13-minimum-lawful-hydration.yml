@@ -1,0 +1,221 @@
+name: Aura NAV-13 Minimum Lawful Hydration Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_nav13_minimum_hydration.py"
+      - "tests/test_aura_nav13_minimum_hydration.py"
+      - "tools/aura_nav13_lawfield.py"
+      - "tools/aura_fractal_k27.py"
+      - ".github/workflows/aura-nav13-minimum-lawful-hydration.yml"
+  push:
+    branches:
+      - "arena/nav13-minimum-lawful-hydration-v1-20260831-sol"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nav13-minimum-hydration-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  exact-minimum-hydration-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=100 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Revalidate four earned parent and substrate proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+          }
+          def get(path):
+              req = urllib.request.Request(
+                  "https://api.github.com/repos/dallascourchene-commits/AuraOS/" + path,
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  return json.load(response)
+
+          expected_runs = {
+              33428219562: "59efe2859a2e02893df4d91c69bde87a7cc39d84",
+              33428855887: "1cc6ac3ca3732252e678e99d519294ea7186b4d0",
+              33417095599: "18c9193ca029eb06b8696c2625d82cf8ee97e4f7",
+              33416056653: "9865c42f3ada2520141bd2fe30a439ce160ce2f8",
+          }
+          for run_id, expected_head in expected_runs.items():
+              run = get(f"actions/runs/{run_id}")
+              if run.get("conclusion") != "success":
+                  raise SystemExit(f"PARENT_RUN_NOT_SUCCESS:{run_id}:{run.get('conclusion')}")
+              if run.get("head_sha") != expected_head:
+                  raise SystemExit(
+                      f"PARENT_RUN_HEAD_MISMATCH:{run_id}:{run.get('head_sha')}:{expected_head}"
+                  )
+
+          expected_blobs = {
+              "457cd08eafdf06820d257e1c79c3be51baf009a5": "EKI1_INGRESS",
+              "53de9d551c81a0eb495eb180294c0aba5eb359d0": "WP03_READER",
+          }
+          for blob_sha, label in expected_blobs.items():
+              blob = get(f"git/blobs/{blob_sha}")
+              if blob.get("sha") != blob_sha or blob.get("encoding") != "base64":
+                  raise SystemExit(f"PARENT_BLOB_AUTH_FAILED:{label}:{blob_sha}")
+          PY
+
+      - name: Compile exact NAV-13 hydration surface
+        run: |
+          python3 -m py_compile \
+            tools/aura_nav13_minimum_hydration.py \
+            tests/test_aura_nav13_minimum_hydration.py
+
+      - name: Run focused adversarial contracts
+        run: python3 -m unittest -v tests.test_aura_nav13_minimum_hydration
+
+      - name: Exhaust single-source level-currentness-handle lattice
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          from tools.aura_fractal_k27 import K27Path
+          from tools.aura_nav13_lawfield import LawFieldOverlay, root_law_field
+          from tools.aura_nav13_minimum_hydration import (
+              ROUTE_PROJECTION_SCHEMA,
+              SOURCE_PROJECTION_SCHEMA,
+              EpistemicRouteProjection,
+              EvidenceRequirement,
+              HydrationLevel,
+              HydrationSourceProjection,
+              PlanDisposition,
+              compile_minimum_hydration_route,
+          )
+
+          def d(x):
+              return hashlib.sha256(x.encode()).hexdigest()
+
+          law = root_law_field(LawFieldOverlay(
+              path=K27Path.parse("K27:/11.17.15"),
+              owner_ref="owner:nav13-proof",
+              rule_generation="law-proof-g1",
+              hard_constraints_add=("NO_EFFECT",),
+              allowed_actions_limit=("HYDRATE", "READ"),
+              required_evidence_add=("REQ",),
+              authority_scopes_limit=("NAVIGATE",),
+              effect_scopes_limit=("READ_ONLY",),
+              domain_roles=("EVIDENCE",),
+              evidence_state_digest=d("e"),
+              authority_state_digest=d("a"),
+              temporal_state_digest=d("t"),
+              provider_policy_digest=d("p"),
+          ))
+          route = EpistemicRouteProjection(
+              schema=ROUTE_PROJECTION_SCHEMA,
+              state="EXTERNAL_UNHYDRATED",
+              next_transition="HYDRATE_MINIMUM",
+              route_receipt_digest=d("route"),
+          )
+
+          count = 0
+          for available in HydrationLevel:
+              for target in HydrationLevel:
+                  for currentness in ("RESOLVED_CURRENT", "STALE", "UNKNOWN", "NOT_REQUIRED"):
+                      for exact_required in (False, True):
+                          for uri_present in (False, True):
+                              req = EvidenceRequirement(
+                                  requirement_id="REQ",
+                                  semantic_key="S",
+                                  minimum_level=target,
+                                  currentness_required=True,
+                                  exact_source_required=exact_required,
+                              )
+                              src = HydrationSourceProjection(
+                                  schema=SOURCE_PROJECTION_SCHEMA,
+                                  semantic_key="S",
+                                  subject_key=d("subject"),
+                                  evidence_generation_key=d("eg"),
+                                  knowledge_node_digest=d("node"),
+                                  validation_fingerprint=d("vf"),
+                                  reader_receipt_digest=d("reader"),
+                                  knowledge_state="CURRENT_REFERENCE",
+                                  reader_disposition="FOUND_VERIFIED",
+                                  source_currentness=currentness,
+                                  available_level=available,
+                                  exact_source_uri="https://example.org/S" if uri_present else None,
+                                  evidence_domain="EXTERNAL_RESEARCH",
+                                  principal="navigator:nav13",
+                                  k27_placement_hint=(1,2,3),
+                              )
+                              plan = compile_minimum_hydration_route(
+                                  law=law,
+                                  epistemic_route=route,
+                                  requirements=(req,),
+                                  sources=(src,),
+                              )
+                              deficit = available < target
+                              if currentness != "RESOLVED_CURRENT":
+                                  expected = PlanDisposition.HOLD_SOURCE_CURRENTNESS_UNRESOLVED
+                              elif exact_required and not uri_present:
+                                  expected = PlanDisposition.HOLD_EXACT_SOURCE_UNRESOLVED
+                              elif deficit and not uri_present:
+                                  expected = PlanDisposition.HOLD_EXACT_SOURCE_UNRESOLVED
+                              elif deficit:
+                                  expected = PlanDisposition.HYDRATE_MINIMUM
+                              else:
+                                  expected = PlanDisposition.HOLD_ROUTE_REBASE_REQUIRED
+                              if plan.disposition is not expected:
+                                  raise SystemExit(
+                                      f"LATTICE_MISMATCH:{available}:{target}:{currentness}:"
+                                      f"{exact_required}:{uri_present}:{plan.disposition}:{expected}"
+                                  )
+                              if plan.disposition is PlanDisposition.HYDRATE_MINIMUM:
+                                  step = plan.steps[0]
+                                  if step.target_level != target:
+                                      raise SystemExit("MINIMUM_TARGET_LEVEL_MISMATCH")
+                                  if not step.exact_source_uri:
+                                      raise SystemExit("HYDRATION_STEP_MISSING_REOPEN_HANDLE")
+                              if any((
+                                  plan.minimum_bytes_proven,
+                                  plan.minimum_ast_cone_proven,
+                                  plan.materialization_started,
+                                  plan.source_truth_proven,
+                                  plan.authorization_issued,
+                                  plan.effect_authorized,
+                                  plan.effect_executed,
+                                  plan.semantic_k27_authority,
+                                  plan.native_private_transformer_kv_accessed,
+                              )):
+                                  raise SystemExit("NONPROMOTION_CEILING_BREACH")
+                              count += 1
+          if count != 400:
+              raise SystemExit(f"LATTICE_COUNT_MISMATCH:{count}")
+          print("NAV13_MINIMUM_HYDRATION_LATTICE_OK=400")
+          PY
+
+      - name: Assert scope and coordinate separation laws
+        run: |
+          grep -q 'SemanticHydrationNeed!=K27PlacementHint' tools/aura_nav13_minimum_hydration.py
+          grep -q 'ExactSourceOptionalForSatisfiedEvidence!=ExactSourceOptionalForNewHydration' tools/aura_nav13_minimum_hydration.py
+          grep -q 'MinimumHydrationLevel!=MinimumBytes!=MinimumASTCone' tools/aura_nav13_minimum_hydration.py
+          grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' tools/aura_nav13_minimum_hydration.py
