@@ -9,6 +9,8 @@ Exactly two semantic parents:
 
 This module creates no network/tool execution, currentness witness, persistence,
 authorization, semantic K27 authority, or native/private transformer KV access.
+The attempt-ledger input is an opaque upstream projection: this contract requires
+it structurally but does not authenticate its producer or prove durable storage.
 """
 from __future__ import annotations
 
@@ -42,8 +44,14 @@ class AttemptDisposition(str, Enum):
 
 
 def _canonical(value: object) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=True, allow_nan=False,
-                      default=lambda o: o.value if isinstance(o, Enum) else str(o)).encode("ascii")
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=True,
+        allow_nan=False,
+        default=lambda o: o.value if isinstance(o, Enum) else str(o),
+    ).encode("ascii")
 
 
 def _sha(value: object) -> str:
@@ -59,6 +67,12 @@ def _text(value: str, code: str) -> str:
 def _digest(value: str, code: str) -> str:
     value = _text(value, code).lower()
     if len(value) != 64 or any(ch not in HEX for ch in value):
+        raise ValueError(code)
+    return value
+
+
+def _bool(value: bool, code: str) -> bool:
+    if not isinstance(value, bool):
         raise ValueError(code)
     return value
 
@@ -82,16 +96,30 @@ class ProgressBoundHandoffProjectionV1:
     native_private_transformer_kv_accessed: bool = False
 
     def validate(self) -> None:
+        _text(self.parent_head, "HANDOFF_PARENT_HEAD_REQUIRED")
         _digest(self.candidate_digest, "CANDIDATE_DIGEST_REQUIRED")
+        _text(self.disposition, "HANDOFF_DISPOSITION_REQUIRED")
         _digest(self.subject_key, "SUBJECT_KEY_REQUIRED")
         _digest(self.evidence_generation_key, "EVIDENCE_GENERATION_REQUIRED")
         _digest(self.material_digest, "MATERIAL_DIGEST_REQUIRED")
         _text(self.exact_source_uri, "EXACT_SOURCE_URI_REQUIRED")
+        for value, code in (
+            (self.candidate_only, "CANDIDATE_ONLY_MUST_BE_BOOL"),
+            (self.persistent_write_authorized, "PERSISTENT_WRITE_AUTH_MUST_BE_BOOL"),
+            (self.evidence_admitted, "EVIDENCE_ADMITTED_MUST_BE_BOOL"),
+            (self.source_truth_proven, "SOURCE_TRUTH_MUST_BE_BOOL"),
+            (self.read_currentness_proven, "READ_CURRENTNESS_MUST_BE_BOOL"),
+            (self.effect_authorized, "EFFECT_AUTH_MUST_BE_BOOL"),
+            (self.semantic_k27_authority, "SEMANTIC_K27_AUTH_MUST_BE_BOOL"),
+            (self.native_private_transformer_kv_accessed, "NATIVE_KV_MUST_BE_BOOL"),
+        ):
+            _bool(value, code)
 
 
 @dataclass(frozen=True)
 class AttemptLedgerProjectionV1:
-    """Opaque durable-state projection; this contract does not authenticate its producer."""
+    """Opaque upstream state projection; producer/persistence are not self-proved."""
+
     candidate_digest: str
     session_id: str
     ledger_generation: str
@@ -105,10 +133,24 @@ class AttemptLedgerProjectionV1:
         _digest(self.candidate_digest, "LEDGER_CANDIDATE_DIGEST_REQUIRED")
         _text(self.session_id, "SESSION_ID_REQUIRED")
         _text(self.ledger_generation, "LEDGER_GENERATION_REQUIRED")
-        if not isinstance(self.attempt_ordinal, int) or isinstance(self.attempt_ordinal, bool) or self.attempt_ordinal < 0:
+        if (
+            not isinstance(self.attempt_ordinal, int)
+            or isinstance(self.attempt_ordinal, bool)
+            or self.attempt_ordinal < 0
+        ):
             raise ValueError("ATTEMPT_ORDINAL_INVALID")
-        if not isinstance(self.prior_no_progress_debt, int) or isinstance(self.prior_no_progress_debt, bool) or self.prior_no_progress_debt < 0:
+        _bool(self.prior_terminalized, "PRIOR_TERMINALIZED_MUST_BE_BOOL")
+        if (
+            not isinstance(self.prior_no_progress_debt, int)
+            or isinstance(self.prior_no_progress_debt, bool)
+            or self.prior_no_progress_debt < 0
+        ):
             raise ValueError("PRIOR_NO_PROGRESS_DEBT_INVALID")
+        _bool(self.durable_identity_bound, "DURABLE_IDENTITY_BOUND_MUST_BE_BOOL")
+        _bool(
+            self.producer_authenticated_by_this_contract,
+            "LEDGER_PRODUCER_AUTHENTICATED_MUST_BE_BOOL",
+        )
         if self.producer_authenticated_by_this_contract:
             raise ValueError("LEDGER_AUTHENTICATION_CANNOT_BE_SELF_MINTED")
 
@@ -128,13 +170,43 @@ class LoopGuardSnapshotProjectionV1:
     native_private_transformer_kv: bool = False
 
     def validate(self) -> None:
+        _text(self.parent_head, "LOOP_PARENT_HEAD_REQUIRED")
         _text(self.objective_id, "GUARD_OBJECTIVE_ID_REQUIRED")
         if self.version != LOOP_VERSION:
             raise ValueError("LOOP_GUARD_VERSION_MISMATCH")
-        if not isinstance(self.incident_count, int) or isinstance(self.incident_count, bool) or self.incident_count < 0:
+        if (
+            not isinstance(self.incident_count, int)
+            or isinstance(self.incident_count, bool)
+            or self.incident_count < 0
+        ):
             raise ValueError("INCIDENT_COUNT_INVALID")
-        if any((self.effect_authority, self.semantic_authority, self.provider_authority,
-                self.native_private_transformer_kv)):
+        _bool(self.mutation_stop, "MUTATION_STOP_MUST_BE_BOOL")
+        if not isinstance(self.frozen_primitives, tuple) or any(
+            not isinstance(x, str) or not x for x in self.frozen_primitives
+        ):
+            raise ValueError("FROZEN_PRIMITIVES_INVALID")
+        if not isinstance(self.blocked_write_keys, tuple) or any(
+            not isinstance(x, tuple)
+            or len(x) != 2
+            or any(not isinstance(v, str) or not v for v in x)
+            for x in self.blocked_write_keys
+        ):
+            raise ValueError("BLOCKED_WRITE_KEYS_INVALID")
+        for value, code in (
+            (self.effect_authority, "GUARD_EFFECT_AUTH_MUST_BE_BOOL"),
+            (self.semantic_authority, "GUARD_SEMANTIC_AUTH_MUST_BE_BOOL"),
+            (self.provider_authority, "GUARD_PROVIDER_AUTH_MUST_BE_BOOL"),
+            (self.native_private_transformer_kv, "GUARD_NATIVE_KV_MUST_BE_BOOL"),
+        ):
+            _bool(value, code)
+        if any(
+            (
+                self.effect_authority,
+                self.semantic_authority,
+                self.provider_authority,
+                self.native_private_transformer_kv,
+            )
+        ):
             raise ValueError("LOOP_GUARD_PROJECTION_EXCEEDED_CEILING")
 
     @property
@@ -179,6 +251,7 @@ class LoopSafeAttemptReceiptV1:
     attempt_session_candidate: bool
     candidate_only: bool = True
     ledger_producer_authenticated: bool = False
+    ledger_persistence_proven: bool = False
     currentness_resolved: bool = False
     evidence_admitted: bool = False
     tool_execution_authorized: bool = False
@@ -187,20 +260,42 @@ class LoopSafeAttemptReceiptV1:
     native_private_transformer_kv_accessed: bool = False
 
 
-def _ceiling_breached(h: ProgressBoundHandoffProjectionV1, g: LoopGuardSnapshotProjectionV1) -> bool:
-    return any((not h.candidate_only, h.persistent_write_authorized, h.evidence_admitted,
-                h.source_truth_proven, h.read_currentness_proven, h.effect_authorized,
-                h.semantic_k27_authority, h.native_private_transformer_kv_accessed,
-                g.effect_authority, g.semantic_authority, g.provider_authority,
-                g.native_private_transformer_kv))
+def _ceiling_breached(
+    h: ProgressBoundHandoffProjectionV1, g: LoopGuardSnapshotProjectionV1
+) -> bool:
+    return any(
+        (
+            not h.candidate_only,
+            h.persistent_write_authorized,
+            h.evidence_admitted,
+            h.source_truth_proven,
+            h.read_currentness_proven,
+            h.effect_authorized,
+            h.semantic_k27_authority,
+            h.native_private_transformer_kv_accessed,
+            g.effect_authority,
+            g.semantic_authority,
+            g.provider_authority,
+            g.native_private_transformer_kv,
+        )
+    )
 
 
 def _guard_clean(g: LoopGuardSnapshotProjectionV1) -> bool:
-    return (g.incident_count == 0 and not g.mutation_stop and not g.frozen_primitives and not g.blocked_write_keys)
+    return (
+        g.incident_count == 0
+        and not g.mutation_stop
+        and not g.frozen_primitives
+        and not g.blocked_write_keys
+    )
 
 
-def _classify_tree(h: ProgressBoundHandoffProjectionV1, l: AttemptLedgerProjectionV1,
-                   g: LoopGuardSnapshotProjectionV1, i: AttemptIntentV1) -> AttemptDisposition:
+def _classify_tree(
+    h: ProgressBoundHandoffProjectionV1,
+    l: AttemptLedgerProjectionV1,
+    g: LoopGuardSnapshotProjectionV1,
+    i: AttemptIntentV1,
+) -> AttemptDisposition:
     if h.parent_head != NAV14_HEAD or g.parent_head != LOOP_HEAD:
         return AttemptDisposition.HOLD_PARENT_GENERATION
     if _ceiling_breached(h, g):
@@ -218,18 +313,37 @@ def _classify_tree(h: ProgressBoundHandoffProjectionV1, l: AttemptLedgerProjecti
     return AttemptDisposition.ATTEMPT_SESSION_CANDIDATE
 
 
-def _classify_rules(h: ProgressBoundHandoffProjectionV1, l: AttemptLedgerProjectionV1,
-                    g: LoopGuardSnapshotProjectionV1, i: AttemptIntentV1) -> AttemptDisposition:
+def _classify_rules(
+    h: ProgressBoundHandoffProjectionV1,
+    l: AttemptLedgerProjectionV1,
+    g: LoopGuardSnapshotProjectionV1,
+    i: AttemptIntentV1,
+) -> AttemptDisposition:
     rules = (
-        (h.parent_head != NAV14_HEAD or g.parent_head != LOOP_HEAD, AttemptDisposition.HOLD_PARENT_GENERATION),
+        (
+            h.parent_head != NAV14_HEAD or g.parent_head != LOOP_HEAD,
+            AttemptDisposition.HOLD_PARENT_GENERATION,
+        ),
         (_ceiling_breached(h, g), AttemptDisposition.HOLD_CLAIM_CEILING),
-        (h.disposition != "PROGRESS_BOUND_HANDOFF_CANDIDATE", AttemptDisposition.HOLD_HANDOFF_NOT_READY),
-        (h.candidate_digest != l.candidate_digest or h.candidate_digest != i.candidate_digest,
-         AttemptDisposition.HOLD_CANDIDATE_BINDING_MISMATCH),
-        (l.session_id != i.session_id or g.objective_id != i.session_id,
-         AttemptDisposition.HOLD_SESSION_BINDING_MISMATCH),
-        (l.prior_terminalized or l.prior_no_progress_debt > 0 or not l.durable_identity_bound,
-         AttemptDisposition.HOLD_ATTEMPT_LEDGER_REOPEN_REQUIRED),
+        (
+            h.disposition != "PROGRESS_BOUND_HANDOFF_CANDIDATE",
+            AttemptDisposition.HOLD_HANDOFF_NOT_READY,
+        ),
+        (
+            h.candidate_digest != l.candidate_digest
+            or h.candidate_digest != i.candidate_digest,
+            AttemptDisposition.HOLD_CANDIDATE_BINDING_MISMATCH,
+        ),
+        (
+            l.session_id != i.session_id or g.objective_id != i.session_id,
+            AttemptDisposition.HOLD_SESSION_BINDING_MISMATCH,
+        ),
+        (
+            l.prior_terminalized
+            or l.prior_no_progress_debt > 0
+            or not l.durable_identity_bound,
+            AttemptDisposition.HOLD_ATTEMPT_LEDGER_REOPEN_REQUIRED,
+        ),
         (not _guard_clean(g), AttemptDisposition.HOLD_LOOP_GUARD_TAINTED),
     )
     for predicate, disposition in rules:
@@ -238,28 +352,47 @@ def _classify_rules(h: ProgressBoundHandoffProjectionV1, l: AttemptLedgerProject
     return AttemptDisposition.ATTEMPT_SESSION_CANDIDATE
 
 
-def bind_loop_safe_attempt_session(*, handoff: ProgressBoundHandoffProjectionV1,
-                                   ledger: AttemptLedgerProjectionV1,
-                                   guard: LoopGuardSnapshotProjectionV1,
-                                   intent: AttemptIntentV1) -> LoopSafeAttemptReceiptV1:
-    handoff.validate(); ledger.validate(); guard.validate(); intent.validate()
+def bind_loop_safe_attempt_session(
+    *,
+    handoff: ProgressBoundHandoffProjectionV1,
+    ledger: AttemptLedgerProjectionV1,
+    guard: LoopGuardSnapshotProjectionV1,
+    intent: AttemptIntentV1,
+) -> LoopSafeAttemptReceiptV1:
+    handoff.validate()
+    ledger.validate()
+    guard.validate()
+    intent.validate()
     a = _classify_tree(handoff, ledger, guard, intent)
     b = _classify_rules(handoff, ledger, guard, intent)
     if a is not b:
         raise RuntimeError("DIFFERENT_J_ATTEMPT_SESSION_CLASSIFIERS_DIVERGED")
     ready = a is AttemptDisposition.ATTEMPT_SESSION_CANDIDATE
     reasons = {
-        AttemptDisposition.ATTEMPT_SESSION_CANDIDATE: "exact NAV-14 candidate is bound to one clean durable attempt-session projection",
+        AttemptDisposition.ATTEMPT_SESSION_CANDIDATE: (
+            "exact NAV-14 candidate is bound to one clean presented attempt-session projection; "
+            "ledger producer and persistence remain unproven by this contract"
+        ),
         AttemptDisposition.HOLD_PARENT_GENERATION: "parent semantic generation mismatch",
         AttemptDisposition.HOLD_HANDOFF_NOT_READY: "NAV-14 projection is not candidate-ready",
         AttemptDisposition.HOLD_CLAIM_CEILING: "upstream projection exceeds nonpromotion ceiling",
-        AttemptDisposition.HOLD_CANDIDATE_BINDING_MISMATCH: "candidate identity does not commute across handoff, ledger, and intent",
-        AttemptDisposition.HOLD_SESSION_BINDING_MISMATCH: "session identity does not commute across durable ledger, guard, and intent",
-        AttemptDisposition.HOLD_ATTEMPT_LEDGER_REOPEN_REQUIRED: "durable attempt history carries terminal/no-progress debt or lacks durable binding",
-        AttemptDisposition.HOLD_LOOP_GUARD_TAINTED: "loop guard carries incident, mutation-stop, frozen-primitive, or no-op write debt",
+        AttemptDisposition.HOLD_CANDIDATE_BINDING_MISMATCH: (
+            "candidate identity does not commute across handoff, ledger, and intent"
+        ),
+        AttemptDisposition.HOLD_SESSION_BINDING_MISMATCH: (
+            "session identity does not commute across ledger, guard, and intent"
+        ),
+        AttemptDisposition.HOLD_ATTEMPT_LEDGER_REOPEN_REQUIRED: (
+            "presented attempt-history projection carries terminal/no-progress debt or lacks durable identity binding"
+        ),
+        AttemptDisposition.HOLD_LOOP_GUARD_TAINTED: (
+            "loop guard carries incident, mutation-stop, frozen-primitive, or no-op write debt"
+        ),
     }
     body = {
-        "schema": SCHEMA, "disposition": a.value, "reason": reasons[a],
+        "schema": SCHEMA,
+        "disposition": a.value,
+        "reason": reasons[a],
         "candidate_digest": handoff.candidate_digest if ready else None,
         "session_id": ledger.session_id if ready else None,
         "ledger_generation": ledger.ledger_generation if ready else None,
@@ -269,31 +402,61 @@ def bind_loop_safe_attempt_session(*, handoff: ProgressBoundHandoffProjectionV1,
         "attempt_session_candidate": ready,
         "candidate_only": True,
         "ledger_producer_authenticated": False,
-        "currentness_resolved": False, "evidence_admitted": False,
-        "tool_execution_authorized": False, "effect_authorized": False,
-        "semantic_k27_authority": False, "native_private_transformer_kv_accessed": False,
+        "ledger_persistence_proven": False,
+        "currentness_resolved": False,
+        "evidence_admitted": False,
+        "tool_execution_authorized": False,
+        "effect_authorized": False,
+        "semantic_k27_authority": False,
+        "native_private_transformer_kv_accessed": False,
     }
     body["attempt_receipt_digest"] = _sha(body)
     return LoopSafeAttemptReceiptV1(**body)
 
 
-def _fixture(candidate_ready: bool = True, candidate_match: bool = True, session_match: bool = True,
-             ledger_open: bool = True, guard_clean: bool = True, ceiling_ok: bool = True):
+def _fixture(
+    candidate_ready: bool = True,
+    candidate_match: bool = True,
+    session_match: bool = True,
+    ledger_open: bool = True,
+    guard_clean: bool = True,
+    ceiling_ok: bool = True,
+):
     candidate = "1" * 64
     h = ProgressBoundHandoffProjectionV1(
-        NAV14_HEAD, candidate, "PROGRESS_BOUND_HANDOFF_CANDIDATE" if candidate_ready else "HOLD",
-        "2"*64, "3"*64, "4"*64, "https://example.test/source",
+        NAV14_HEAD,
+        candidate,
+        "PROGRESS_BOUND_HANDOFF_CANDIDATE" if candidate_ready else "HOLD",
+        "2" * 64,
+        "3" * 64,
+        "4" * 64,
+        "https://example.test/source",
         candidate_only=ceiling_ok,
     )
     l = AttemptLedgerProjectionV1(
-        candidate if candidate_match else "5"*64, "session-1", "ledger-gen-1", 0,
-        not ledger_open, 0 if ledger_open else 1, True,
+        candidate if candidate_match else "5" * 64,
+        "session-1",
+        "ledger-gen-1",
+        0,
+        not ledger_open,
+        0 if ledger_open else 1,
+        True,
     )
-    i = AttemptIntentV1(candidate, "session-1" if session_match else "session-x",
-                        "probe", "source:1", "advance-progress-bound-handoff")
+    i = AttemptIntentV1(
+        candidate,
+        "session-1" if session_match else "session-x",
+        "probe",
+        "source:1",
+        "advance-progress-bound-handoff",
+    )
     g = LoopGuardSnapshotProjectionV1(
-        LOOP_HEAD, LOOP_VERSION, "session-1", 0 if guard_clean else 1,
-        False, (), (),
+        LOOP_HEAD,
+        LOOP_VERSION,
+        "session-1",
+        0 if guard_clean else 1,
+        False,
+        (),
+        (),
     )
     return h, l, g, i
 
@@ -306,10 +469,29 @@ def prove_different_j() -> int:
                 for ledger_open in (False, True):
                     for guard_clean in (False, True):
                         for ceiling_ok in (False, True):
-                            h,l,g,i = _fixture(ready, candidate_match, session_match, ledger_open, guard_clean, ceiling_ok)
-                            a = _classify_tree(h,l,g,i); b = _classify_rules(h,l,g,i)
+                            h, l, g, i = _fixture(
+                                ready,
+                                candidate_match,
+                                session_match,
+                                ledger_open,
+                                guard_clean,
+                                ceiling_ok,
+                            )
+                            a = _classify_tree(h, l, g, i)
+                            b = _classify_rules(h, l, g, i)
                             if a is not b:
-                                raise AssertionError((ready,candidate_match,session_match,ledger_open,guard_clean,ceiling_ok,a,b))
+                                raise AssertionError(
+                                    (
+                                        ready,
+                                        candidate_match,
+                                        session_match,
+                                        ledger_open,
+                                        guard_clean,
+                                        ceiling_ok,
+                                        a,
+                                        b,
+                                    )
+                                )
                             checked += 1
     return checked
 
@@ -317,11 +499,11 @@ def prove_different_j() -> int:
 LAWS = (
     "ProgressBoundHandoffCandidate!=ToolExecutionAuthority",
     "CandidateIdentityMustBindAttemptSession",
-    "DurableAttemptHistoryCannotBeResetByNewInMemoryWrapper",
+    "AttemptHistoryProjectionRequiredBeforeSessionCandidate",
+    "AttemptHistoryProjection!=LedgerProducerAuthentication!=PersistenceProof",
     "LoopGuardIncidentDebtInvalidatesAttemptSession",
     "NoOpHistoryDrift!=ProofProgress",
     "AttemptSessionCandidate!=CurrentnessResolved",
-    "AttemptLedgerProjection!=LedgerProducerAuthentication",
     "K27Placement!=SemanticIdentity!=Currentness!=Authority",
     "CoordinateMemory!=MODEL_PREFIX_KV",
 )
