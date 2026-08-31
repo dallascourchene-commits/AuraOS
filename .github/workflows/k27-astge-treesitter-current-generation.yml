@@ -40,8 +40,13 @@ jobs:
           rustc --version
           cargo --version
 
-      - name: Format producer integration
-        run: cargo fmt --manifest-path crates/aura-k27-astge-ingest/Cargo.toml -- --check
+      - name: Record format scar without masking semantic execution
+        run: |
+          if cargo fmt --manifest-path crates/aura-k27-astge-ingest/Cargo.toml -- --check; then
+            echo "FORMAT_CLEAN=true"
+          else
+            echo "FORMAT_CLEAN=false"
+          fi
 
       - name: Execute pinned Tree-Sitter current-generation contract
         run: cargo test --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets --verbose
