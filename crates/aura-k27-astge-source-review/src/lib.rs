@@ -101,10 +101,7 @@ pub fn admit_source_review(
 
     let start = record.byte_start as usize;
     let end = record.byte_end as usize;
-    if original_source
-        .get(start..end)
-        .is_none_or(|bytes| bytes != materialized.bytes)
-    {
+    if original_source.get(start..end) != Some(materialized.bytes.as_slice()) {
         return Err(SourceReviewError::MaterializedSliceMismatch);
     }
 
