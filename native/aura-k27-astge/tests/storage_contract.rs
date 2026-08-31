@@ -52,7 +52,7 @@ fn sample_nodes(root_end: u32) -> Vec<NodeInput> {
 fn binary_layout_constants_are_exact() {
     assert_eq!(64, NODE_RECORD_SIZE);
     assert_eq!(4096, BLOCK_SIZE);
-    assert!(MAX_EDGES_PER_BLOCK >= 384);
+    assert_eq!(384, MAX_EDGES_PER_BLOCK);
 }
 
 #[test]
@@ -141,6 +141,15 @@ fn coordinate_generation_is_bound_even_when_coordinate_value_is_unchanged() {
         second.manifest().coordinate_generation
     );
 
+    fs::remove_dir_all(root).unwrap();
+}
+
+#[test]
+fn empty_snapshot_fails_closed_before_publication() {
+    let root = temp_root("empty");
+    let err = publish_snapshot(&root, 1, 1, &[]).unwrap_err();
+    assert_eq!(ErrorKind::InvalidInput, err.kind());
+    assert!(!root.join("CURRENT").exists());
     fs::remove_dir_all(root).unwrap();
 }
 
