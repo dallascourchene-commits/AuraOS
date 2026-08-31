@@ -1,0 +1,137 @@
+name: Aura Benchmark Score Owner Exact Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/benchmarks/aura_benchmark_score_admission.py"
+      - "tests/test_aura_benchmark_score_admission.py"
+      - ".github/workflows/aura-benchmark-score-owner-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SCORE_SOURCE_HEAD: 5b902e8c64cc2736bd37e49881f79b357155ec61
+  SCORE_TEST_HEAD: 9ad8f66c6a51e3abe9ad1256783782bf36c944b1
+  SCORE_SOURCE_BLOB: 0ad4ddb154644c1b177622f6147069618a4539f2
+  SCORE_TEST_BLOB: d2e8bb518464970ad7054d9a681500c333bbbe72
+
+jobs:
+  benchmark-score-owner-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout frozen proof descendant
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate exact current score-owner semantic surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$SCORE_SOURCE_HEAD" HEAD
+          git merge-base --is-ancestor "$SCORE_TEST_HEAD" HEAD
+          test "$(git rev-parse "$SCORE_SOURCE_HEAD:tools/benchmarks/aura_benchmark_score_admission.py")" = "$SCORE_SOURCE_BLOB"
+          test "$(git rev-parse "$SCORE_TEST_HEAD:tests/test_aura_benchmark_score_admission.py")" = "$SCORE_TEST_BLOB"
+          test "$(git rev-parse "HEAD:tools/benchmarks/aura_benchmark_score_admission.py")" = "$SCORE_SOURCE_BLOB"
+          test "$(git rev-parse "HEAD:tests/test_aura_benchmark_score_admission.py")" = "$SCORE_TEST_BLOB"
+          echo SCORE_OWNER_GENERATION_AUTHENTICATED=true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install focused dependency
+        run: python -m pip install "pytest>=8,<9"
+
+      - name: Compile exact score owner surface
+        run: |
+          python -m py_compile \
+            tools/benchmarks/aura_benchmark_score_admission.py \
+            tests/test_aura_benchmark_score_admission.py
+
+      - name: Run score-owner adversarial suite
+        run: python -m pytest -q tests/test_aura_benchmark_score_admission.py
+
+      - name: Independently prove trusted admission and exact-once ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from dataclasses import replace
+          from tools.benchmarks.aura_benchmark_score_admission import BenchmarkAdmissionPolicy, BenchmarkTaskReceipt, admit_score
+
+          policy = BenchmarkAdmissionPolicy(
+              policy_generation='benchmark-policy-gen-proof',
+              authority_scope='BENCHMARK_EVIDENCE_ONLY',
+              expected_execution_route_fingerprint='route:harbor:host-observed',
+              trusted_execution_observer_identity='BENCHMARK_HOST_OBSERVER',
+              trusted_source_verifier_identity='UPSTREAM_SOURCE_VERIFIER',
+              execution_authority_verified=True,
+              source_verifier_authority_verified=True,
+          )
+          base = BenchmarkTaskReceipt(
+              campaign_id='score-owner-proof', suite_id='terminal-bench@2.0',
+              suite_generation='pinned-suite-generation', harness_id='harbor',
+              harness_generation='pinned-harbor-generation', task_id='task-001',
+              task_input_digest='a'*64, agent_id='aura-adapter', agent_generation='b'*40,
+              model_id='provider/model', run_id='run-1', attempt_id='attempt-1',
+              result_state='PASS', measurement_class='OBSERVED', wall_time_ms=1.0,
+              source_verified=True, execution_observed=True,
+              execution_route_fingerprint='route:harbor:host-observed',
+              execution_observer_identity='BENCHMARK_HOST_OBSERVER',
+              source_verifier_identity='UPSTREAM_SOURCE_VERIFIER',
+          )
+          retry = replace(base, run_id='run-2', attempt_id='attempt-2')
+          result = admit_score([base, retry], policy=policy)
+          assert result['unique_task_count'] == 1 and result['passed'] == 1
+          assert result['duplicate_process_count'] == 1
+          assert result['policy_generation'] == policy.policy_generation
+          for bad, expected in (
+              (replace(base, execution_route_fingerprint='caller-route'), 'EXECUTION_ROUTE_FINGERPRINT_MISMATCH'),
+              (replace(base, execution_observer_identity='CALLER'), 'EXECUTION_OBSERVER_IDENTITY_MISMATCH'),
+              (replace(base, source_verifier_identity='CALLER'), 'SOURCE_VERIFIER_IDENTITY_MISMATCH'),
+          ):
+              try:
+                  admit_score([bad], policy=policy)
+              except ValueError as exc:
+                  assert expected in str(exc)
+              else:
+                  raise AssertionError(expected)
+          receipt = {
+              'schema': 'AURA-BENCHMARK-SCORE-OWNER-EXACT-PROOF-v1',
+              'source_semantic_generation': '5b902e8c64cc2736bd37e49881f79b357155ec61',
+              'test_generation': '9ad8f66c6a51e3abe9ad1256783782bf36c944b1',
+              'source_blob': '0ad4ddb154644c1b177622f6147069618a4539f2',
+              'test_blob': 'd2e8bb518464970ad7054d9a681500c333bbbe72',
+              'score_identity': base.score_identity,
+              'exact_once_unique_task_count': result['unique_task_count'],
+              'retry_does_not_inflate_score': True,
+              'trusted_route_observer_source_policy_required': True,
+              'execution_authorized': False,
+              'provider_effect_authorized': False,
+              'semantic_k27_authority': False,
+              'native_private_transformer_kv_accessed': False,
+              'gate10_promoted': False,
+          }
+          with open('/tmp/benchmark-score-owner-proof.json','w',encoding='utf-8') as f:
+              json.dump(receipt,f,sort_keys=True,indent=2); f.write('\n')
+          print('BENCHMARK_SCORE_OWNER_EXACT_PROOF=true')
+          PY
+
+      - name: Preserve exact proof receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-score-owner-exact-proof
+          path: /tmp/benchmark-score-owner-proof.json
+          retention-days: 90
+
+      - name: Consequence ceiling
+        run: |
+          echo 'ReceiptBooleans != TrustedAdmissionAuthority'
+          echo 'TaskExecution != ScoreAdmission'
+          echo 'ProofTriggerExecution != NewSemanticGeneration'
+          echo 'BENCHMARK_SCORE_OWNER_PROOF_COMPLETE=true'
