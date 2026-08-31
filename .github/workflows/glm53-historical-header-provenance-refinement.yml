@@ -1,0 +1,133 @@
+name: GLM53 Historical Header Provenance Refinement
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q9-historical-header-refinement:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact Q9 head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact PR645 x PR398 convergence and green runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence='9862565d1617bbce56cf65dafb5811e6491db686'
+          q8='e97c584e79439f599f7a443d86df23a11cab75ad'
+          w2='131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8'
+          parents=subprocess.check_output(['git','rev-list','--parents','-n','1',convergence],text=True).strip().split()
+          assert parents == [convergence,q8,w2], parents
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          for run_id, head in ((33371374486,q8),(33336508527,w2)):
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+              )
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  run=json.load(response)
+              assert run['conclusion']=='success', (run_id,run['conclusion'])
+              assert run['head_sha']==head, (run_id,run['head_sha'],head)
+          print('Q9_EXACT_PARENT_RUNS_GREEN=true')
+          PY
+
+      - name: Revalidate exact PR398 live official observation job
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          req=urllib.request.Request(
+              f'https://api.github.com/repos/{repo}/actions/jobs/99324255699',
+              headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+          )
+          with urllib.request.urlopen(req,timeout=30) as response:
+              job=json.load(response)
+          assert job['run_id']==33336508527, job['run_id']
+          assert job['head_sha']=='131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8', job['head_sha']
+          assert job['conclusion']=='success', job['conclusion']
+          step={s['name']:s for s in job['steps']}['Observe official GLM-5.3 header evidence without payload']
+          assert step['conclusion']=='success', step
+          print('Q9_PR398_LIVE_HEADER_OBSERVATION_REVALIDATED=true')
+          PY
+
+      - name: Prove exact historical transport semantics and Q8 coarse hold
+        shell: bash
+        run: |
+          set -euo pipefail
+          git show 131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8:tools/awj032/glm53_safetensors_header_transport.py > /tmp/pr398_transport.py
+          grep -F 'payload_bytes_read: int = 0' /tmp/pr398_transport.py
+          grep -F 'def collect_header_evidence(' /tmp/pr398_transport.py
+          git show e97c584e79439f599f7a443d86df23a11cab75ad:tools/quantization/aura_glm53_official_source_concrete_page_provenance_join.py > /tmp/q8.py
+          grep -F 'official_source_transport_frontier_complete=False' /tmp/q8.py
+          grep -F 'official_source_tensor_payload_observed=False' /tmp/q8.py
+          grep -F 'candidate_page_materialization_owner_bound=False' /tmp/q8.py
+
+      - name: Re-run Q8 and Q9 adversarial surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_official_source_concrete_page_provenance_join.py \
+            tools/quantization/aura_glm53_historical_header_provenance_refinement.py \
+            tools/quantization/test_aura_glm53_historical_header_provenance_refinement.py
+          python3 -m unittest -v tools.quantization.test_aura_glm53_official_source_concrete_page_provenance_join
+          python3 -m unittest -v tools.quantization.test_aura_glm53_historical_header_provenance_refinement
+          python3 -m tools.quantization.aura_glm53_historical_header_provenance_refinement | tee /tmp/q9.json
+
+      - name: Assert decomposed closure and remaining provenance leaves
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q9.json',encoding='utf-8'))
+          assert r['disposition']=='HOLD_TENSOR_TO_PAGE_PROVENANCE_AFTER_HISTORICAL_HEADER_CLOSURE'
+          assert r['historical_official_index_bytes_verified'] is True
+          assert r['historical_official_weight_map_observed'] is True
+          assert r['historical_representative_headers_observed'] is True
+          assert r['historical_fp8_companions_observed'] is True
+          assert r['historical_representative_header_transport_closed'] is True
+          assert r['historical_scope_is_representative_only'] is True
+          assert r['all_layer_expert_layout_uniformity_proven'] is False
+          assert r['current_process_raw_index_bytes_materialized'] is False
+          assert r['current_process_raw_header_prefixes_materialized'] is False
+          assert r['broad_official_source_transport_frontier_complete'] is False
+          assert r['official_source_tensor_payload_observed'] is False
+          assert r['concrete_page_source_tensor_set_bound_to_official_source'] is False
+          assert r['candidate_page_materialization_owner_bound'] is False
+          assert r['baseline_same_official_source_tensor_set_proven'] is False
+          assert len(r['required_successor_evidence']) == 4
+          print('Q9_HISTORICAL_HEADER_LEAF_CLOSED_TENSOR_PAGE_PROVENANCE_OPEN=true')
+          PY
+
+      - name: Consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q9.json',encoding='utf-8'))
+          for key in ('real_tensor_quantization_eligible','generalized_quality_proven','runtime_performance_proven','semantic_k27_authority','native_private_transformer_kv_accessed','gate10_promoted','deployment_authorized'):
+              assert r[key] is False, key
+          print('Q9_NONPROMOTION_CEILING=true')
+          PY
