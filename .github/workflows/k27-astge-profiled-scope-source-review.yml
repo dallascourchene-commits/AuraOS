@@ -1,0 +1,105 @@
+name: K27 ASTGE Profiled Scope Source Review
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge-profiled-scopes/**"
+      - "crates/aura-k27-astge-source-review/**"
+      - "crates/aura-k27-astge-profiled-scope-review/**"
+      - "crates/aura-k27-astge-scope/**"
+      - "crates/aura-k27-astge-materialize/**"
+      - "tools/k27_astge_python_scope_oracle.py"
+      - ".github/workflows/k27-astge-profiled-scope-source-review.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: k27-profiled-scope-source-review-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  profiled-scope-source-review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove profiled nested-scope owner and CPython oracle
+        shell: bash
+        run: |
+          rustc --version
+          cargo --version
+          python3 --version
+          cargo fmt --manifest-path crates/aura-k27-astge-profiled-scopes/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-profiled-scopes/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-profiled-scopes/Cargo.toml --all-targets -- -D warnings
+          python3 tools/k27_astge_python_scope_oracle.py
+
+      - name: Re-prove current-source review owner
+        shell: bash
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-materialize/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-materialize/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-materialize/Cargo.toml --all-targets -- -D warnings
+          cargo fmt --manifest-path crates/aura-k27-astge-scope/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-scope/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-scope/Cargo.toml --all-targets -- -D warnings
+          cargo fmt --manifest-path crates/aura-k27-astge-source-review/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-source-review/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-source-review/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify profiled nested-scope source-review bridge
+        shell: bash
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml --all-targets -- -D warnings
+
+      - name: Safe-path unsafe scan
+        shell: bash
+        run: |
+          if grep -R --line-number -E 'unsafe\s*\{' \
+            crates/aura-k27-astge-profiled-scopes/src \
+            crates/aura-k27-astge-materialize/src \
+            crates/aura-k27-astge-scope/src \
+            crates/aura-k27-astge-source-review/src \
+            crates/aura-k27-astge-profiled-scope-review/src; then
+            echo 'unsafe block found in profiled scope review safe path' >&2
+            exit 1
+          fi
+
+      - name: Emit claim ceiling
+        shell: bash
+        run: |
+          echo 'PROFILED_NESTED_SCOPE_SOURCE_REVIEW_EXECUTED=true'
+          echo 'PROFILED_SCOPE_OWNER_REPROVED=true'
+          echo 'CURRENT_SOURCE_REVIEW_OWNER_REPROVED=true'
+          echo 'CALLER_SOURCE_GENERATION_REF_OVERRIDE=false'
+          echo 'SELECTED_SCOPE_MATCHES_PERSISTED_NODE=true'
+          echo 'EXPLICIT_AUTHORIZED_SPAN_COVERS_SELECTED_SCOPE=true'
+          echo 'SCOPE_SPAN_GRANTS_MUTATION_AUTHORITY=false'
+          echo 'SOURCE_CURRENTNESS_REQUIRED=true'
+          echo 'OUTSIDE_AUTHORIZED_SCOPE_UNCHANGED=true'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'SEMANTIC_CORRECTNESS_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
+          echo 'EXTERNAL_EFFECT=false'
