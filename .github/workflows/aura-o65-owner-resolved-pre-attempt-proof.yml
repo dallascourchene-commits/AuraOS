@@ -15,7 +15,7 @@ jobs:
     env:
       O64_HEAD: 70aa3db4f11d035b52a81992c05c052f59683377
       O64_RUN: '33407842585'
-      O64_JOB: '99539248065'
+      O64_JOB: '99539751642'
       O64_CAPSULE_BLOB: 11ac9fd37aede4902b3c1029eddcbad96a828f45
     steps:
       - name: Exact authenticated checkout without mutable actions
@@ -33,15 +33,13 @@ jobs:
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
 
       - name: Revalidate exact hosted O64 owner generation
-        env:
-          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
           import json, os, urllib.request
           repo=os.environ['GITHUB_REPOSITORY']
-          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'}
+          headers={'Accept':'application/vnd.github+json','User-Agent':'AuraOS-O65-proof'}
           def get(url):
               req=urllib.request.Request(url,headers=headers)
               with urllib.request.urlopen(req,timeout=30) as r: return json.load(r)
@@ -50,10 +48,11 @@ jobs:
           assert run['head_sha']==os.environ['O64_HEAD'],(run['head_sha'],os.environ['O64_HEAD'])
           job=get(f"https://api.github.com/repos/{repo}/actions/jobs/{os.environ['O64_JOB']}")
           assert str(job['run_id'])==os.environ['O64_RUN']
+          assert job['name']=='o63-hard-gate-proposal-proof',job['name']
           assert job['status']=='completed' and job['conclusion']=='success',job
           print('O64_EXACT_HOSTED_OWNER_CURRENT=true')
           PY
-          test "$(git rev-parse "$O64_HEAD:tools/aura_bounded_proposal_capsule.py")" = "$O64_CAPSULE_BLOB"
+          test "$(git rev-parse HEAD:tools/aura_bounded_proposal_capsule.py)" = "$O64_CAPSULE_BLOB"
 
       - name: Compile and run O65 adversarial contract
         shell: bash
