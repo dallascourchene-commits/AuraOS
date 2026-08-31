@@ -1,0 +1,126 @@
+name: AWJ032 Secure Fixture Observation Envelope
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/airllm_secure_fixture_observation_envelope.py'
+      - 'tools/awj032/test_airllm_secure_fixture_observation_envelope.py'
+      - 'tools/awj032/airllm_runtime_hard_false.py'
+      - 'tools/awj032/airllm_tiny_fixture_probe.py'
+      - 'tools/awj032/glm53_w4_host_preflight.py'
+      - 'tools/awj032/test_glm53_w4_host_preflight.py'
+      - '.github/workflows/awj032-secure-fixture-observation-envelope.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CONVERGENCE_COMMIT: c895470f6c4366fb4ab14eb1a9dde9eb001f4153
+  AIRLLM_SOURCE_HEAD: d951404e0ba15a04682f47610f4643ce55d9ff7e
+  W4_SOURCE_HEAD: 3a7c562f2e0f278bc3f350416ff243893d0eb0ff
+  AIRLLM_RUNTIME_BLOB: 4e55c6443fcac4185fcb56a0f6a4b579bb21366a
+  AIRLLM_FIXTURE_BLOB: 57643f19ddbf8c35e838c2c9b21b520b052dcade
+  W4_SOURCE_BLOB: 094df93c87ccb7034f3db5d979cc858258efe2bf
+  W4_TEST_BLOB: dedc6e2f7e68c0458874d3de5d90f41b615ee4c0
+  BRIDGE_SOURCE_BLOB: 98db548b6e8f7443b79d979eb0e177ac6aa68534
+  BRIDGE_TEST_BLOB: c42f9324158f7c5125fc3118e9b82071dec59dac
+
+jobs:
+  secure-fixture-observation-envelope:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact convergence descendant
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate two-parent provenance and exact source blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$CONVERGENCE_COMMIT" HEAD
+          parents="$(git show -s --format=%P "$CONVERGENCE_COMMIT")"
+          test "$parents" = "$AIRLLM_SOURCE_HEAD $W4_SOURCE_HEAD"
+          git fetch -q --no-tags origin "$AIRLLM_SOURCE_HEAD" "$W4_SOURCE_HEAD"
+          test "$(git rev-parse "$AIRLLM_SOURCE_HEAD:tools/awj032/airllm_runtime_hard_false.py")" = "$AIRLLM_RUNTIME_BLOB"
+          test "$(git rev-parse "$AIRLLM_SOURCE_HEAD:tools/awj032/airllm_tiny_fixture_probe.py")" = "$AIRLLM_FIXTURE_BLOB"
+          test "$(git rev-parse "$W4_SOURCE_HEAD:tools/awj032/glm53_w4_host_preflight.py")" = "$W4_SOURCE_BLOB"
+          test "$(git rev-parse "$W4_SOURCE_HEAD:tools/awj032/test_glm53_w4_host_preflight.py")" = "$W4_TEST_BLOB"
+          test "$(git rev-parse HEAD:tools/awj032/airllm_secure_fixture_observation_envelope.py)" = "$BRIDGE_SOURCE_BLOB"
+          test "$(git rev-parse HEAD:tools/awj032/test_airllm_secure_fixture_observation_envelope.py)" = "$BRIDGE_TEST_BLOB"
+          echo 'AIRLLM_PR311_EXACT=true'
+          echo 'W4_PR408_EXACT=true'
+
+      - name: Reexecute source-controlled parent contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tools/awj032
+          python -m py_compile \
+            airllm_runtime_hard_false.py \
+            airllm_tiny_fixture_probe.py \
+            glm53_w4_host_preflight.py \
+            airllm_secure_fixture_observation_envelope.py \
+            test_airllm_secure_fixture_observation_envelope.py
+          python -m unittest test_airllm_runtime_hard_false -v
+          python -m unittest test_glm53_w4_host_preflight -v
+
+      - name: Run cross-plane adversarial envelope contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tools/awj032
+          python -m unittest test_airllm_secure_fixture_observation_envelope -v
+
+      - name: Independently prove HOLD and exact-bound states
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tools/awj032
+          python - <<'PY'
+          from dataclasses import replace
+          from airllm_secure_fixture_observation_envelope import BOUND, HOLD, bind_secure_fixture_observation
+          from test_airllm_secure_fixture_observation_envelope import fixture, observation
+
+          held = bind_secure_fixture_observation(fixture=fixture(), observation=None)
+          assert held.disposition == HOLD
+          assert held.physical_observation_bound is False
+          assert held.hard_false_runtime_preserved is True
+
+          bound = bind_secure_fixture_observation(fixture=fixture(), observation=observation())
+          assert bound.disposition == BOUND
+          assert bound.physical_observation_bound is True
+          assert bound.relation_id
+          assert not any((
+              bound.tiny_fixture_crosscast_to_glm53,
+              bound.glm53_performance_proven,
+              bound.model_admission_granted,
+              bound.execution_authority_granted,
+              bound.provider_effect_authority_granted,
+              bound.semantic_k27_authority,
+              bound.native_private_transformer_kv_accessed,
+              bound.gate10_promoted,
+          ))
+
+          try:
+              bind_secure_fixture_observation(
+                  fixture=fixture(),
+                  observation=replace(observation(), exact_operation_bound=False),
+              )
+          except ValueError as exc:
+              assert 'EXACT_OPERATION_BOUND_PHYSICAL_RECEIPT_REQUIRED' in str(exc)
+          else:
+              raise AssertionError('operation-unbound observation was accepted')
+          print('SECURE_FIXTURE_OBSERVATION_ENVELOPE_PROVEN=true')
+          PY
+
+      - name: Consequence ceiling
+        run: |
+          echo 'HardFalseFixtureRuntime!=PhysicalObservation'
+          echo 'PhysicalObservationMustBeExactOperationBoundAndBackendOwned'
+          echo 'TinyLlamaFixture!=GLM53PerformanceEvidence'
+          echo 'PhysicalAttestationBoolean!=PhysicalObservationProvenance'
+          echo 'FixtureObservationEnvelope!=ModelAdmission!=ExecutionAuthority'
+          echo 'K27Coordinate!=MeasurementAuthority!=TransformerKV'
