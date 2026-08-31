@@ -8,6 +8,12 @@ This membrane composes two exact non-self owners:
 The conjunction remains three-dimensional: portability/reuse, producer execution,
 and semantic freshness are independent. Historical exact evidence may therefore be
 execution-qualified and reusable without receiving fresh semantic-sibling credit.
+
+Structural post-cut freshness is not itself countable sibling credit. PR664's V1
+explicitly leaves producer-generation authentication false; A7 therefore exposes
+that structural result as a candidate only and refuses to promote it into fresh
+semantic-sibling credit until a separate typed generation-authentication owner is
+bound.
 """
 from __future__ import annotations
 
@@ -48,7 +54,10 @@ class ExecutionQualifiedPortableEvidenceReceipt:
     portable_semantic_evidence_admitted: bool
     portable_evidence_reuse_allowed: bool
     freshness_disposition: str
+    structural_freshness_candidate: bool
+    producer_generation_authenticated: bool
     semantic_sibling_credit: bool
+    structurally_fresh_but_generation_unauthenticated: bool
     execution_classification: str
     execution_route: str
     run_identity_exact: bool
@@ -95,6 +104,11 @@ def classify_execution_qualified_portable_evidence(
     The exact producer run/head/workflow/job must match the portable descriptor.
     PR661 owns the execution classification. A successful run label without the
     exact producer job cannot qualify portable semantic evidence.
+
+    PR664's structural freshness result is preserved, but its own
+    `producer_generation_authenticated` ceiling is authoritative: structural
+    freshness cannot become countable semantic-sibling credit while that field
+    is false.
     """
     portable = fresh.classify_fresh_portable_evidence(
         evidence=evidence,
@@ -132,8 +146,15 @@ def classify_execution_qualified_portable_evidence(
         and exact_job_success
         and executed_success
     )
-    historical = qualified and not portable.semantic_sibling_credit
-    fresh_qualified = qualified and portable.semantic_sibling_credit
+
+    structural_freshness = portable.semantic_sibling_credit
+    generation_authenticated = portable.producer_generation_authenticated
+    semantic_sibling_credit = bool(structural_freshness and generation_authenticated)
+    unauthenticated_freshness = bool(structural_freshness and not generation_authenticated)
+    historical = bool(
+        qualified and portable.freshness_disposition == "PRE_CUT_SEMANTIC_GENERATION"
+    )
+    fresh_qualified = bool(qualified and semantic_sibling_credit)
 
     if not portable.portable_semantic_evidence_admitted:
         reason = "PORTABLE_TRANSFER_NOT_ADMITTED"
@@ -147,10 +168,14 @@ def classify_execution_qualified_portable_evidence(
         reason = "EXACT_PRODUCER_JOB_NOT_SUCCESSFULLY_EXECUTED"
     elif not executed_success:
         reason = "WORKFLOW_EXECUTION_CLASS_NOT_SUCCESS"
-    elif portable.semantic_sibling_credit:
+    elif unauthenticated_freshness:
+        reason = "EXECUTION_QUALIFIED_PORTABLE_EVIDENCE_FRESHNESS_CANDIDATE_GENERATION_UNAUTHENTICATED"
+    elif semantic_sibling_credit:
         reason = "EXECUTION_QUALIFIED_FRESH_PORTABLE_SEMANTIC_EVIDENCE"
-    else:
+    elif historical:
         reason = "EXECUTION_QUALIFIED_HISTORICAL_PORTABLE_EVIDENCE_NO_FRESHNESS_RESET"
+    else:
+        reason = "EXECUTION_QUALIFIED_PORTABLE_EVIDENCE_NO_COUNTABLE_FRESHNESS"
 
     return ExecutionQualifiedPortableEvidenceReceipt(
         schema=VERSION,
@@ -166,7 +191,10 @@ def classify_execution_qualified_portable_evidence(
         portable_semantic_evidence_admitted=portable.portable_semantic_evidence_admitted,
         portable_evidence_reuse_allowed=portable.portable_evidence_reuse_allowed,
         freshness_disposition=portable.freshness_disposition,
-        semantic_sibling_credit=portable.semantic_sibling_credit,
+        structural_freshness_candidate=structural_freshness,
+        producer_generation_authenticated=generation_authenticated,
+        semantic_sibling_credit=semantic_sibling_credit,
+        structurally_fresh_but_generation_unauthenticated=unauthenticated_freshness,
         execution_classification=routed.execution_classification,
         execution_route=routed.route,
         run_identity_exact=run_exact,
@@ -222,6 +250,8 @@ def main() -> None:
         "PortableEvidenceReusable!=ExecutionQualified!=FreshSemanticSibling",
         "ExactProducerRun+ExactProducerJobSuccess+PortableScopeIdentity=>ExecutionQualifiedPortableEvidence",
         "HistoricalExecutionQualifiedEvidenceMayBeReusableWithoutResettingSemanticClock",
+        "CallerSuppliedGenerationTime!=ProducerGenerationAuthentication",
+        "StructuralPostCutFreshness!=CountableSemanticSiblingUntilGenerationAuthenticated",
         "PreJobProviderGate!=ExecutedProducerEvidence",
         "ExecutedJobFailure!=SemanticSupport",
         "ExecutionQualification!=SemanticTruth!=ProducerAuthentication!=EffectAuthority",
