@@ -72,7 +72,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 tools/k27_hdv1024_riscv_corpus_replay.py > /tmp/r3.json
+          PYTHONPATH=. python3 tools/k27_hdv1024_riscv_corpus_replay.py > /tmp/r3.json
           python3 - <<'PY'
           import json
           r=json.load(open('/tmp/r3.json'))
