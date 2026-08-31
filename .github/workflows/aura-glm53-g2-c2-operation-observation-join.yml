@@ -73,7 +73,7 @@ jobs:
               print(f'FOREIGN_EXACT_HOSTED_SUCCESS run={run_id} head={head}')
           PY
 
-      - name: Compile and run exact relation suites
+      - name: Compile and run exact structural-relation suites
         run: |
           set -euo pipefail
           python3 -m py_compile \
@@ -86,18 +86,21 @@ jobs:
             tools.awj032.test_glm53_g2_c2_transfer_plan_attachment \
             tools.awj032.test_glm53_g2_c2_operation_observation_join
 
-      - name: Prove observational attribution cannot become causal benefit
+      - name: Prove caller witness cannot manufacture observation or causality
         run: |
           set -euo pipefail
-          grep -q 'ObservationalAttribution!=CausalPlanBenefit' tools/awj032/glm53_g2_c2_operation_observation_join.py
-          grep -q 'ObservedPhysicalReadBytes!=BytesSaved' tools/awj032/glm53_g2_c2_operation_observation_join.py
+          grep -q 'PlanAttachment+ExactC2Attempt+CallerWitness=>StructuralRelationOnly' tools/awj032/glm53_g2_c2_operation_observation_join.py
+          grep -q 'StructuralWitnessRelation!=AuthenticatedObservationalAttribution' tools/awj032/glm53_g2_c2_operation_observation_join.py
+          grep -q 'CallerWitness!=BackendObservationProvenance' tools/awj032/glm53_g2_c2_operation_observation_join.py
+          grep -q 'UnauthenticatedC2Receipt+MatchingWitness!=PhysicalObservationTruth' tools/awj032/glm53_g2_c2_operation_observation_join.py
+          grep -q 'ProducerRegistryAuthenticationRequiredBeforeObservationalAttribution' tools/awj032/glm53_g2_c2_operation_observation_join.py
           grep -q 'PlanBenefitRequiresIndependentCounterfactualOrMatchedBaseline' tools/awj032/glm53_g2_c2_operation_observation_join.py
-          grep -q 'TinyFixtureObservationPattern!=GLM53PerformanceEvidence' tools/awj032/glm53_g2_c2_operation_observation_join.py
-          echo "PLAN_ATTEMPT_OPERATION_OBSERVATION_JOIN=PASS"
-          echo "OBSERVATIONAL_ATTRIBUTION_ONLY=true"
+          echo "PLAN_ATTEMPT_WITNESS_STRUCTURAL_JOIN=PASS"
+          echo "PHYSICAL_OBSERVATION_PROVEN=false"
+          echo "OBSERVATIONAL_ATTRIBUTION_PROVEN=false"
           echo "CAUSAL_PLAN_BENEFIT_PROVEN=false"
-          echo "BYTES_SAVED_PROVEN=false"
-          echo "LATENCY_SAVED_PROVEN=false"
+          echo "PRODUCER_REGISTRY_AUTHENTICATION_REQUIRED=true"
+          echo "OBSERVER_REGISTRY_AUTHENTICATION_REQUIRED=true"
           echo "MODEL_PROVIDER_EXECUTION=false"
           echo "G2_ADMITTED=false"
           echo "SEMANTIC_K27_AUTHORITY=false"
