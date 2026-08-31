@@ -1,0 +1,173 @@
+name: Aura WorkCapsule Portable Higher-Owner Owner Reduction
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py'
+      - 'scripts/aura_workcapsule_post_repair_portable_higher_owner_continuity.py'
+      - 'tests/test_aura_workcapsule_post_repair_portable_higher_owner_continuity.py'
+      - 'tests/test_aura_workcapsule_portable_higher_owner_owner_reduction.py'
+      - '.github/workflows/aura-workcapsule-portable-higher-owner-owner-reduction.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portable-higher-owner-owner-reduction:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR542_SHA: 4e2733b2b6600f74457850aaa45bfe399d7e8502
+      PR544_SHA: 753513acef919d45701291716aae1b0c8d6ecf21
+      PR542_CANONICAL_BLOB: 50c48fce25971d2fc13293932bd8af2b6b6ba233
+    steps:
+      - name: Fetch exact child head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Prove PR542 canonical owner is byte-identical in child
+        run: |
+          test "$(git hash-object scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py)" = "$PR542_CANONICAL_BLOB"
+          python3 -m py_compile scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py
+          echo 'PR542_CANONICAL_OWNER_MATERIALIZED_EXACTLY=true'
+
+      - name: Re-prove exact PR542 in isolated checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/pr542
+          git -C /tmp/pr542 init .
+          git -C /tmp/pr542 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr542 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR542_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr542 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr542 rev-parse HEAD)" = "$PR542_SHA"
+          test "$(git -C /tmp/pr542 hash-object /tmp/pr542/scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py)" = "$PR542_CANONICAL_BLOB"
+          test -z "$(git -C /tmp/pr542 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr542
+          python3 -m py_compile scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py
+          python3 -m unittest -v tests.test_aura_workcapsule_post_source_portable_higher_owner_continuity
+
+      - name: Re-prove exact PR544 legacy owner before reduction
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/pr544
+          git -C /tmp/pr544 init .
+          git -C /tmp/pr544 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr544 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR544_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr544 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr544 rev-parse HEAD)" = "$PR544_SHA"
+          test -z "$(git -C /tmp/pr544 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr544
+          python3 -m py_compile scripts/aura_workcapsule_post_repair_portable_higher_owner_continuity.py
+          python3 -m unittest -v tests.test_aura_workcapsule_post_repair_portable_higher_owner_continuity
+
+      - name: Prove legacy PR544 surface still passes through canonical owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_post_repair_portable_higher_owner_continuity.py
+          python3 -m unittest -v tests.test_aura_workcapsule_post_repair_portable_higher_owner_continuity
+
+      - name: Prove O18 owner reduction equivalence and delegation
+        run: |
+          python3 -m unittest -v tests.test_aura_workcapsule_portable_higher_owner_owner_reduction
+
+      - name: Assert duplicate semantic owner is absent from compatibility facade
+        run: |
+          python3 - <<'PY'
+          import ast
+          import inspect
+          from pathlib import Path
+          import scripts.aura_workcapsule_post_repair_portable_higher_owner_continuity as legacy
+
+          source = Path('scripts/aura_workcapsule_post_repair_portable_higher_owner_continuity.py').read_text()
+          assert 'aura_workcapsule_post_source_portable_higher_owner_continuity' in source
+          tree = ast.parse(source)
+          imported_modules = {
+              node.module
+              for node in ast.walk(tree)
+              if isinstance(node, ast.ImportFrom) and node.module is not None
+          }
+          assert 'scripts.aura_workcapsule_post_repair_source_projection_continuity' not in imported_modules
+
+          called_names = set()
+          for node in ast.walk(tree):
+              if not isinstance(node, ast.Call):
+                  continue
+              if isinstance(node.func, ast.Name):
+                  called_names.add(node.func.id)
+              elif isinstance(node.func, ast.Attribute):
+                  called_names.add(node.func.attr)
+          for forbidden_call in (
+              'verify_portable_canonical_target_projection',
+              'verify_post_repair_source_projection_continuity',
+              'admit_post_repair_source_projection_continuity',
+              '_owner_chain_payload_bytes',
+          ):
+              assert forbidden_call not in called_names, forbidden_call
+
+          assigned_names = {
+              target.id
+              for node in ast.walk(tree)
+              if isinstance(node, (ast.Assign, ast.AnnAssign))
+              for target in (node.targets if isinstance(node, ast.Assign) else [node.target])
+              if isinstance(target, ast.Name)
+          }
+          for forbidden_state in (
+              '_OWNER_CHAIN_FIELDS',
+              '_TARGET_PAYLOAD_FIELDS',
+              '_OWNER_CHAIN_POSITIVE_FIELDS',
+              '_OWNER_CHAIN_NEGATIVE_FIELDS',
+          ):
+              assert forbidden_state not in assigned_names, forbidden_state
+
+          params = inspect.signature(legacy.verify_post_repair_portable_higher_owner_continuity).parameters
+          assert 'higher_owner_projection' in params
+          assert 'astge_projection' not in params
+          assert 'canonical_target_projection' not in params
+          print('ONE_CANONICAL_SEMANTIC_OWNER=true')
+          print('PR544_COMPATIBILITY_FACADE_ONLY=true')
+          print('LEGACY_PUBLIC_BOUNDARY_PRESERVED=true')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'PR542_CANONICAL_OWNER=true'
+          echo 'PR544_DUPLICATE_SEMANTIC_OWNER=false'
+          echo 'PR544_COMPATIBILITY_FACADE=true'
+          echo 'CANONICAL_STRONGER_SOURCE_RECEIPT_CHECKS_PRESERVED=true'
+          echo 'LEGACY_VIOLATION_VOCABULARY_PRESERVED=true'
+          echo 'LEGACY_RECEIPT_VOCABULARY_PRESERVED=true'
+          echo 'PROJECTION_PRODUCER_AUTHENTICATED=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_MINTED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_DEPENDENCY_CONE_PROVEN=false'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
