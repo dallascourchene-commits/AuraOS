@@ -1,0 +1,107 @@
+name: Aura GLM53 G2 C2 Operation Observation Join
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_g2_c2_operation_observation_join.py"
+      - "tools/awj032/test_glm53_g2_c2_operation_observation_join.py"
+      - ".github/workflows/aura-glm53-g2-c2-operation-observation-join.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  plan-operation-observation-join:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      PLAN_PARENT_HEAD: "5d7180f9a899b07526fd36cb290c85c8ebab4969"
+      PLAN_PARENT_BLOB: "c7be999691ef1a8c3e58c918c12574eab192c9e3"
+      PLAN_PARENT_RUN: "33417331574"
+      OBS_PARENT_HEAD: "293c59d7260372ccd3b9e8130b12979b052c3ed9"
+      OBS_PARENT_BLOB: "98db548b6e8f7443b79d979eb0e177ac6aa68534"
+      OBS_PARENT_RUN: "33416248604"
+      CONVERGENCE_COMMIT: "f161d12d6f508349356909421dd6b9efc4425a68"
+
+    steps:
+      - name: Exact authenticated checkout and parent fetch
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "$TARGET_SHA" "$PLAN_PARENT_HEAD" "$OBS_PARENT_HEAD" "$CONVERGENCE_COMMIT"
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor "$PLAN_PARENT_HEAD" HEAD
+          git merge-base --is-ancestor "$OBS_PARENT_HEAD" HEAD
+          test "$(git rev-list --parents -n 1 "$CONVERGENCE_COMMIT" | wc -w)" -eq 3
+          echo "TWO_HISTORY_CONVERGENCE=true"
+
+      - name: Authenticate exact parent semantic blobs
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$PLAN_PARENT_HEAD:tools/awj032/glm53_g2_c2_transfer_plan_attachment.py")" = "$PLAN_PARENT_BLOB"
+          test "$(git rev-parse "$OBS_PARENT_HEAD:tools/awj032/airllm_secure_fixture_observation_envelope.py")" = "$OBS_PARENT_BLOB"
+          echo "PLAN_PARENT_EXACT=true"
+          echo "OBSERVATION_PATTERN_PARENT_EXACT=true"
+
+      - name: Revalidate both foreign hosted proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          token=os.environ['GH_TOKEN']
+          expected=(
+              (int(os.environ['PLAN_PARENT_RUN']), os.environ['PLAN_PARENT_HEAD'], 'Aura GLM53 G2 C2 Transfer Plan Attachment'),
+              (int(os.environ['OBS_PARENT_RUN']), os.environ['OBS_PARENT_HEAD'], 'AWJ032 Secure Fixture Observation Envelope'),
+          )
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          for run_id,head,name in expected:
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: run=json.load(r)
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['name']==name,(run_id,run['name'],name)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+              print(f'FOREIGN_EXACT_HOSTED_SUCCESS run={run_id} head={head}')
+          PY
+
+      - name: Compile and run exact structural-relation suites
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/awj032/glm53_owner_host_c2_handoff.py \
+            tools/awj032/glm53_g2_c2_transfer_plan_attachment.py \
+            tools/awj032/glm53_g2_c2_operation_observation_join.py \
+            tools/awj032/test_glm53_g2_c2_operation_observation_join.py
+          python3 -m unittest -v \
+            tools.awj032.test_glm53_owner_host_c2_handoff \
+            tools.awj032.test_glm53_g2_c2_transfer_plan_attachment \
+            tools.awj032.test_glm53_g2_c2_operation_observation_join
+
+      - name: Prove caller witness cannot manufacture observation or causality
+        run: |
+          set -euo pipefail
+          grep -q 'PlanAttachment+ExactC2Attempt+CallerWitness=>StructuralRelationOnly' tools/awj032/glm53_g2_c2_operation_observation_join.py
+          grep -q 'StructuralWitnessRelation!=AuthenticatedObservationalAttribution' tools/awj032/glm53_g2_c2_operation_observation_join.py
+          grep -q 'CallerWitness!=BackendObservationProvenance' tools/awj032/glm53_g2_c2_operation_observation_join.py
+          grep -q 'UnauthenticatedC2Receipt+MatchingWitness!=PhysicalObservationTruth' tools/awj032/glm53_g2_c2_operation_observation_join.py
+          grep -q 'ProducerRegistryAuthenticationRequiredBeforeObservationalAttribution' tools/awj032/glm53_g2_c2_operation_observation_join.py
+          grep -q 'PlanBenefitRequiresIndependentCounterfactualOrMatchedBaseline' tools/awj032/glm53_g2_c2_operation_observation_join.py
+          echo "PLAN_ATTEMPT_WITNESS_STRUCTURAL_JOIN=PASS"
+          echo "PHYSICAL_OBSERVATION_PROVEN=false"
+          echo "OBSERVATIONAL_ATTRIBUTION_PROVEN=false"
+          echo "CAUSAL_PLAN_BENEFIT_PROVEN=false"
+          echo "PRODUCER_REGISTRY_AUTHENTICATION_REQUIRED=true"
+          echo "OBSERVER_REGISTRY_AUTHENTICATION_REQUIRED=true"
+          echo "MODEL_PROVIDER_EXECUTION=false"
+          echo "G2_ADMITTED=false"
+          echo "SEMANTIC_K27_AUTHORITY=false"
+          echo "GATE10=false"
