@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788167104,
+  "generated_at_unix": 1788183798,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1645,
+    "repo_file_count": 1652,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -137,7 +137,9 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-dual-key-evidence-generation.yml",
+      ".github/workflows/aura-fresh-portable-semantic-evidence-admission.yml",
       ".github/workflows/aura-review-learning.yml",
+      ".github/workflows/aura-semantic-generation-freshness.yml",
       ".github/workflows/aura-semantic-sibling-admission.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1473,6 +1475,7 @@
       "tests/test_aura_financial_contracts.py",
       "tests/test_aura_financial_contracts_regressions.py",
       "tests/test_aura_forge.py",
+      "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
       "tests/test_aura_fst_provenance.py",
       "tests/test_aura_gate.py",
       "tests/test_aura_gate_adapters.py",
@@ -1552,6 +1555,7 @@
       "tests/test_aura_review_lessons_codex_regressions.py",
       "tests/test_aura_runtime_profile_v2_adapter.py",
       "tests/test_aura_runtime_refactor_harness.py",
+      "tests/test_aura_semantic_generation_freshness.py",
       "tests/test_aura_semantic_sibling_admission.py",
       "tests/test_aura_shadow_model_router.py",
       "tests/test_aura_shadow_tool_observability.py",
@@ -1635,7 +1639,10 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena_portable_semantic_evidence_transfer.py",
       "tools/aura_dual_key_evidence_generation.py",
+      "tools/aura_fresh_portable_semantic_evidence_admission.py",
+      "tools/aura_semantic_generation_freshness.py",
       "tools/aura_semantic_sibling_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -1761,16 +1768,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1645,
-      "bytes": 26456020,
-      "tokens_est": 6604359,
+      "files": 1652,
+      "bytes": 26513850,
+      "tokens_est": 6618818,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1001,
-        "schema_or_lexicon": 273,
+        "python_module": 1006,
+        "schema_or_lexicon": 275,
         "support_file": 49
       }
     },
@@ -3467,11 +3474,35 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 301,
+        "end_line": 302,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:main:f9b0b4a3073e3ab8",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "tools/aura_dual_key_evidence_generation.py",
         "kind": "function",
         "line": 170,
         "end_line": 191,
         "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:main:32673a022a942d4b",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "function",
+        "line": 242,
+        "end_line": 243,
+        "semantic_id": "tools/aura_fresh_portable_semantic_evidence_admission.py#function:main:c689d79074306656",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "kind": "function",
+        "line": 253,
+        "end_line": 268,
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#function:main:96e7c4f4b6a29fcf",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -3917,6 +3948,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 63,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_canonical:4ca8af6c47a0d938",
+        "signature_hash": "8d5bf5695239b859"
       },
       {
         "file": "tools/aura_dual_key_evidence_generation.py",
@@ -8105,6 +8144,30 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_sha:9aa320fe026efdd0",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 47,
+        "semantic_id": "tools/aura_fresh_portable_semantic_evidence_admission.py#function:_sha:96acf037b89b0bd8",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 50,
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#function:_sha:c5d672768048cbd8",
+        "signature_hash": "3c3bc3c037860fe9"
       },
       {
         "file": "tools/aura_semantic_sibling_admission.py",
@@ -136609,6 +136672,106 @@
         "signature_hash": "b6fec7335716ecbf"
       }
     ],
+    "FreshPortableSemanticEvidenceAdmissionTests": [
+      {
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 159,
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#class:FreshPortableSemanticEvidenceAdmissionTests:365b62a16d45a605",
+        "signature_hash": "6688baff57157300"
+      }
+    ],
+    "FreshPortableSemanticEvidenceAdmissionTests.test_q6_exact_portable_evidence_is_reusable_but_not_fresh": [
+      {
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "method",
+        "line": 9,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_q6_exact_portable_evidence_is_reusable_but_not_fresh:5729c27164ed9806",
+        "signature_hash": "0ee8a1f437248d6b"
+      }
+    ],
+    "FreshPortableSemanticEvidenceAdmissionTests.test_r3_exact_portable_evidence_is_reusable_but_not_fresh": [
+      {
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 37,
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_r3_exact_portable_evidence_is_reusable_but_not_fresh:5a98e1e4469f49d5",
+        "signature_hash": "0ce86d9e8e219edb"
+      }
+    ],
+    "FreshPortableSemanticEvidenceAdmissionTests.test_cross_domain_transfer_holds_before_freshness": [
+      {
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 54,
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_cross_domain_transfer_holds_before_freshness:747017e611573968",
+        "signature_hash": "4527cc68aab2bf7a"
+      }
+    ],
+    "FreshPortableSemanticEvidenceAdmissionTests.test_genuinely_post_cut_semantic_generation_can_receive_sibling_credit": [
+      {
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 77,
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_genuinely_post_cut_semantic_generation_can_receive_sibling_credit:eb5344119c714c0c",
+        "signature_hash": "cf456a7c3cb753e4"
+      }
+    ],
+    "FreshPortableSemanticEvidenceAdmissionTests.test_post_cut_transfer_of_pre_cut_semantics_never_resets_clock": [
+      {
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 97,
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_post_cut_transfer_of_pre_cut_semantics_never_resets_clock:c1d420a427dccdb3",
+        "signature_hash": "6db47a3eb36678b1"
+      }
+    ],
+    "FreshPortableSemanticEvidenceAdmissionTests.test_self_artifact_is_rejected_after_exact_transfer": [
+      {
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_self_artifact_is_rejected_after_exact_transfer:c84546e41d862eb2",
+        "signature_hash": "ca8f47685b200a9c"
+      }
+    ],
+    "FreshPortableSemanticEvidenceAdmissionTests.test_observation_before_cut_is_rejected_even_if_semantics_are_newer_than_old_history": [
+      {
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 129,
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_observation_before_cut_is_rejected_even_if_semantics_are_newer_than_old_history:56ca214db6565449",
+        "signature_hash": "228a362e191dad3c"
+      }
+    ],
+    "FreshPortableSemanticEvidenceAdmissionTests.test_fixture_is_deterministic_and_nonpromoting": [
+      {
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 146,
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_fixture_is_deterministic_and_nonpromoting:26389050fae307e8",
+        "signature_hash": "6b84ebb7e69e45f2"
+      }
+    ],
+    "FreshPortableSemanticEvidenceAdmissionTests.test_bad_timestamp_order_fails_closed": [
+      {
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 159,
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_bad_timestamp_order_fails_closed:35bed8f7101e2d85",
+        "signature_hash": "195eb0c1810d73c2"
+      }
+    ],
     "TestCanonicalSlotOrder": [
       {
         "file": "tests/test_aura_fst_provenance.py",
@@ -149895,6 +150058,116 @@
         "signature_hash": "de706d016aa5115a"
       }
     ],
+    "SemanticGenerationFreshnessTests": [
+      {
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "kind": "class",
+        "line": 7,
+        "end_line": 126,
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#class:SemanticGenerationFreshnessTests:4399a43d2b932be2",
+        "signature_hash": "f3473a90aaf61a35"
+      }
+    ],
+    "SemanticGenerationFreshnessTests.test_cross_plane_false_freshness_is_rejected": [
+      {
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 18,
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_cross_plane_false_freshness_is_rejected:e217811deef48dfd",
+        "signature_hash": "4afffc570fd3ce6d"
+      }
+    ],
+    "SemanticGenerationFreshnessTests.test_post_cut_semantic_generation_delegates_to_a3": [
+      {
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 38,
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_post_cut_semantic_generation_delegates_to_a3:2becd96b6deaf9a3",
+        "signature_hash": "e82608f8c44a37c0"
+      }
+    ],
+    "SemanticGenerationFreshnessTests.test_new_replica_of_old_unseen_sck_still_fails": [
+      {
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 52,
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_new_replica_of_old_unseen_sck_still_fails:f6069cf16d273b52",
+        "signature_hash": "8d589251c41b796c"
+      }
+    ],
+    "SemanticGenerationFreshnessTests.test_post_cut_observation_is_not_enough": [
+      {
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 57,
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_post_cut_observation_is_not_enough:5ce40dded5f103f1",
+        "signature_hash": "67accda5a237d0ea"
+      }
+    ],
+    "SemanticGenerationFreshnessTests.test_semantic_generation_after_observation_fails_closed": [
+      {
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "kind": "method",
+        "line": 59,
+        "end_line": 69,
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_semantic_generation_after_observation_fails_closed:ebb485086e92e65f",
+        "signature_hash": "01e0506d04ed19d4"
+      }
+    ],
+    "SemanticGenerationFreshnessTests.test_observation_after_terminal_fails_closed": [
+      {
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 81,
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_observation_after_terminal_fails_closed:58f0997cd0211716",
+        "signature_hash": "c0f6def53a9c25e6"
+      }
+    ],
+    "SemanticGenerationFreshnessTests.test_self_artifact_is_rejected_even_if_generation_fresh": [
+      {
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 93,
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_self_artifact_is_rejected_even_if_generation_fresh:21eb032883cb9a8c",
+        "signature_hash": "8c3686724bb81c08"
+      }
+    ],
+    "SemanticGenerationFreshnessTests.test_nonterminal_is_rejected_before_freshness_credit": [
+      {
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 106,
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_nonterminal_is_rejected_before_freshness_credit:22be30ce821105d7",
+        "signature_hash": "87ec7581025d495b"
+      }
+    ],
+    "SemanticGenerationFreshnessTests.test_permutation_is_deterministic": [
+      {
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 112,
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_permutation_is_deterministic:21606f379f5c44c5",
+        "signature_hash": "898dc4c41d1c4d2a"
+      }
+    ],
+    "SemanticGenerationFreshnessTests.test_claim_ceiling": [
+      {
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 126,
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_claim_ceiling:0e046ebf05566aba",
+        "signature_hash": "57c0081d51ab8a66"
+      }
+    ],
     "SemanticSiblingAdmissionTests": [
       {
         "file": "tests/test_aura_semantic_sibling_admission.py",
@@ -157437,6 +157710,146 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "_sha256_field": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 76,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_sha256_field:f6bb817065b38a91",
+        "signature_hash": "d31a90b28f5491df"
+      }
+    ],
+    "_head_field": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 85,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_head_field:8b80a71dbd085098",
+        "signature_hash": "8a8012a1dabf00ee"
+      }
+    ],
+    "SemanticEvidenceDescriptor": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "class",
+        "line": 89,
+        "end_line": 120,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#class:SemanticEvidenceDescriptor:14c34809ba0f8344",
+        "signature_hash": "fad6b4ae49d5c1a5"
+      }
+    ],
+    "SemanticEvidenceDescriptor.validate": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 115,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:SemanticEvidenceDescriptor.validate:678611bf1ca25703",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SemanticEvidenceDescriptor.descriptor_digest": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 120,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:SemanticEvidenceDescriptor.descriptor_digest:f63f188d1aa4cad4",
+        "signature_hash": "56ca270aa04c61dd"
+      }
+    ],
+    "ConsumerExpectation": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "class",
+        "line": 124,
+        "end_line": 144,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#class:ConsumerExpectation:69bd1ab7ca3cf7c5",
+        "signature_hash": "e79be931b2abf18e"
+      }
+    ],
+    "ConsumerExpectation.validate": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 144,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:ConsumerExpectation.validate:fd405d9d54e7a17f",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "EvidenceTransferReceipt": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "class",
+        "line": 148,
+        "end_line": 170,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#class:EvidenceTransferReceipt:bef6a191fbb87e70",
+        "signature_hash": "97462359b29ee9f4"
+      }
+    ],
+    "EvidenceTransferReceipt.receipt_digest": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 170,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:EvidenceTransferReceipt.receipt_digest:09e606aac98fd023",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "q6_descriptor": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 173,
+        "end_line": 191,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:q6_descriptor:89063cda370347a1",
+        "signature_hash": "266215226f239281"
+      }
+    ],
+    "r3_descriptor": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 194,
+        "end_line": 214,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:r3_descriptor:c1d60403485b1f89",
+        "signature_hash": "12bff2769760fdfd"
+      }
+    ],
+    "native_expectation": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 217,
+        "end_line": 227,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:native_expectation:28df57a6caf41e91",
+        "signature_hash": "88f0f2e0429fabfd"
+      }
+    ],
+    "classify_transfer": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 230,
+        "end_line": 274,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:classify_transfer:77e71b0d4ac6b84f",
+        "signature_hash": "a2d3bf06fb4ca04e"
+      }
+    ],
+    "portable_current_receipt": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 277,
+        "end_line": 298,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:portable_current_receipt:5e4e0857ee5ad1e8",
+        "signature_hash": "700fca9d450e4055"
+      }
+    ],
     "_domain_hash": [
       {
         "file": "tools/aura_dual_key_evidence_generation.py",
@@ -157537,7 +157950,55 @@
         "signature_hash": "d39a1373a1f61b90"
       }
     ],
+    "FreshPortableEvidenceReceipt": [
+      {
+        "file": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 78,
+        "semantic_id": "tools/aura_fresh_portable_semantic_evidence_admission.py#class:FreshPortableEvidenceReceipt:7154eb7d8a76c5b8",
+        "signature_hash": "fa79cf33b68890ad"
+      }
+    ],
+    "FreshPortableEvidenceReceipt.receipt_digest": [
+      {
+        "file": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 78,
+        "semantic_id": "tools/aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableEvidenceReceipt.receipt_digest:ce79ddc80dbe5fb2",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "classify_fresh_portable_evidence": [
+      {
+        "file": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "function",
+        "line": 81,
+        "end_line": 200,
+        "semantic_id": "tools/aura_fresh_portable_semantic_evidence_admission.py#function:classify_fresh_portable_evidence:dc9324ec176e5179",
+        "signature_hash": "1994ef1625dfb7fa"
+      }
+    ],
+    "current_historical_transfer_fixture": [
+      {
+        "file": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+        "kind": "function",
+        "line": 203,
+        "end_line": 239,
+        "semantic_id": "tools/aura_fresh_portable_semantic_evidence_admission.py#function:current_historical_transfer_fixture:4fde9341decd30cb",
+        "signature_hash": "f8c773b3bb39882e"
+      }
+    ],
     "_parse_utc": [
+      {
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 45,
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#function:_parse_utc:61adfd8984fba546",
+        "signature_hash": "9f2d3047113568be"
+      },
       {
         "file": "tools/aura_semantic_sibling_admission.py",
         "kind": "function",
@@ -157545,6 +158006,86 @@
         "end_line": 55,
         "semantic_id": "tools/aura_semantic_sibling_admission.py#function:_parse_utc:f09c108a9995f76b",
         "signature_hash": "9f2d3047113568be"
+      }
+    ],
+    "GenerationBoundCandidate": [
+      {
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 72,
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#class:GenerationBoundCandidate:913f915022de8dbe",
+        "signature_hash": "8e71e604fcce5b72"
+      }
+    ],
+    "GenerationBoundCandidate.validate": [
+      {
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 72,
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#method:GenerationBoundCandidate.validate:5eef175b2a5235d6",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "FreshnessClassification": [
+      {
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "kind": "class",
+        "line": 76,
+        "end_line": 84,
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#class:FreshnessClassification:b1445d1d44234ce7",
+        "signature_hash": "bf705a0d9b7cd192"
+      }
+    ],
+    "GenerationAwareAdmissionReceipt": [
+      {
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "kind": "class",
+        "line": 88,
+        "end_line": 107,
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#class:GenerationAwareAdmissionReceipt:6a28e27a3c0d7401",
+        "signature_hash": "389fd8c34cac12a2"
+      }
+    ],
+    "GenerationAwareAdmissionReceipt.receipt_digest": [
+      {
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 107,
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#method:GenerationAwareAdmissionReceipt.receipt_digest:60289cff8c160e70",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "admit_generation_aware_successor": [
+      {
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 196,
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#function:admit_generation_aware_successor:aab24cea620a9070",
+        "signature_hash": "c2f38781060f5ca0"
+      }
+    ],
+    "build_demo_candidate": [
+      {
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "kind": "function",
+        "line": 199,
+        "end_line": 227,
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#function:build_demo_candidate:3132c3a620f810e8",
+        "signature_hash": "c10a3f76e9b37ca9"
+      }
+    ],
+    "cross_plane_false_freshness_fixture": [
+      {
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "kind": "function",
+        "line": 230,
+        "end_line": 250,
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#function:cross_plane_false_freshness_fixture:5dd4998560b8ee70",
+        "signature_hash": "0e8df085a5b45e26"
       }
     ],
     "SemanticSiblingCandidate": [
@@ -159024,16 +159565,22 @@
     ],
     "python3 -m py_compile": [
       ".github/workflows/aura-dual-key-evidence-generation.yml",
+      ".github/workflows/aura-fresh-portable-semantic-evidence-admission.yml",
+      ".github/workflows/aura-semantic-generation-freshness.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
-      ".github/workflows/aura-dual-key-evidence-generation.yml"
+      ".github/workflows/aura-dual-key-evidence-generation.yml",
+      ".github/workflows/aura-semantic-generation-freshness.yml"
     ],
     "python3 -m tools.aura_dual_key_evidence_generation": [
       ".github/workflows/aura-dual-key-evidence-generation.yml"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
+    ],
+    "python3 -m tools.aura_semantic_generation_freshness": [
+      ".github/workflows/aura-semantic-generation-freshness.yml"
     ],
     "python -m unittest": [
       ".github/workflows/aura-semantic-sibling-admission.yml",
@@ -168249,6 +168796,59 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-fresh-portable-semantic-evidence-admission.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6940,
+      "lines": 140,
+      "tokens_est": 1735,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          106
+        ]
+      },
+      "topology": {},
+      "digest8": "06ab678ef2424f0d",
+      "vector": [
+        0.02207,
+        -0.270654,
+        -0.038333,
+        -0.235806,
+        -0.231159,
+        0.066211,
+        -0.131261,
+        0.001162,
+        0.272977,
+        -0.096413,
+        0.28227,
+        0.28227,
+        -0.203281,
+        -0.131261,
+        0.200957,
+        0.198634,
+        0.247422,
+        -0.168433,
+        -0.182372,
+        -0.156817,
+        0.098736,
+        -0.001162,
+        0.193988,
+        -0.008131,
+        -0.03601,
+        -0.10106,
+        -0.061565,
+        -0.182372,
+        0.2753,
+        -0.28227,
+        -0.105706,
+        -0.049949
+      ]
+    },
+    {
       "path": ".github/workflows/aura-review-learning.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -168307,6 +168907,67 @@
         -0.212442,
         -0.196608,
         0.212442
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-semantic-generation-freshness.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6084,
+      "lines": 138,
+      "tokens_est": 1521,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest",
+        "python3 -m tools.aura_semantic_generation_freshness"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          93
+        ],
+        "python3 -m unittest": [
+          98
+        ],
+        "python3 -m tools.aura_semantic_generation_freshness": [
+          106
+        ]
+      },
+      "topology": {},
+      "digest8": "a1671874d1399ff2",
+      "vector": [
+        0.040252,
+        -0.009716,
+        -0.159621,
+        0.220694,
+        0.104101,
+        -0.059684,
+        -0.254006,
+        0.131861,
+        -0.165173,
+        0.029148,
+        -0.19571,
+        -0.287318,
+        0.303974,
+        0.045804,
+        -0.353943,
+        -0.106877,
+        -0.129085,
+        -0.179053,
+        0.051356,
+        0.095773,
+        0.229022,
+        -0.084669,
+        -0.167949,
+        0.023596,
+        -0.256782,
+        0.284542,
+        0.173501,
+        -0.056908,
+        -0.040252,
+        -0.129085,
+        -0.051356,
+        -0.312302
       ]
     },
     {
@@ -255698,6 +256359,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7457,
+      "lines": 164,
+      "tokens_est": 1865,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4aaf4f5bd8ca7a49",
+      "vector": [
+        0.043086,
+        -0.252991,
+        0.215429,
+        -0.215429,
+        -0.093905,
+        -0.235314,
+        -0.001105,
+        0.244153,
+        -0.237524,
+        -0.244153,
+        0.142514,
+        0.151352,
+        -0.065181,
+        -0.076229,
+        -0.104952,
+        0.275086,
+        -0.0232,
+        -0.107162,
+        -0.186705,
+        -0.188914,
+        0.082857,
+        0.222057,
+        0.116,
+        0.153562,
+        0.204381,
+        -0.219848,
+        0.182286,
+        0.078438,
+        0.224267,
+        -0.173448,
+        -0.275086,
+        0.014362
+      ]
+    },
+    {
       "path": "tests/test_aura_fst_provenance.py",
       "role": "python_module",
       "binary": false,
@@ -259408,6 +260116,53 @@
         0.010661,
         -0.280747,
         0.297332
+      ]
+    },
+    {
+      "path": "tests/test_aura_semantic_generation_freshness.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6792,
+      "lines": 131,
+      "tokens_est": 1698,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f8f959a9695b014f",
+      "vector": [
+        -0.253237,
+        -0.17281,
+        0.233674,
+        0.018477,
+        -0.261932,
+        0.188026,
+        -0.007608,
+        0.042387,
+        0.181505,
+        -0.209763,
+        -0.153246,
+        -0.044561,
+        0.009782,
+        0.190199,
+        0.261932,
+        -0.270627,
+        -0.194547,
+        0.111946,
+        0.044561,
+        0.183678,
+        0.218458,
+        0.264105,
+        0.233674,
+        0.194547,
+        0.194547,
+        -0.122814,
+        0.029345,
+        -0.059777,
+        -0.016303,
+        0.194547,
+        0.188026,
+        -0.194547
       ]
     },
     {
@@ -263312,6 +264067,53 @@
       ]
     },
     {
+      "path": "tools/arena_portable_semantic_evidence_transfer.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10605,
+      "lines": 307,
+      "tokens_est": 2652,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4f7eb662a3ebfac4",
+      "vector": [
+        -0.064365,
+        -0.080174,
+        0.163737,
+        0.150186,
+        0.089208,
+        0.152444,
+        0.082433,
+        -0.220197,
+        -0.236007,
+        -0.197613,
+        0.001129,
+        0.24504,
+        -0.007905,
+        0.199872,
+        0.283434,
+        -0.041781,
+        -0.2744,
+        -0.023714,
+        -0.281175,
+        -0.095984,
+        0.032747,
+        -0.062107,
+        -0.213422,
+        -0.278917,
+        -0.003388,
+        -0.193096,
+        -0.247299,
+        -0.240523,
+        0.181804,
+        -0.147928,
+        -0.24504,
+        0.114051
+      ]
+    },
+    {
       "path": "tools/aura_dual_key_evidence_generation.py",
       "role": "python_module",
       "binary": false,
@@ -263356,6 +264158,100 @@
         -0.213841,
         -0.10981,
         0.153734
+      ]
+    },
+    {
+      "path": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9596,
+      "lines": 248,
+      "tokens_est": 2399,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "52ffb40ce05b99b1",
+      "vector": [
+        -0.232713,
+        -0.228035,
+        -0.23973,
+        0.068995,
+        0.101739,
+        0.214002,
+        -0.162548,
+        0.155532,
+        0.216341,
+        0.127466,
+        0.125127,
+        0.228035,
+        -0.094722,
+        -0.267795,
+        -0.01988,
+        -0.076012,
+        -0.183598,
+        0.270134,
+        0.064318,
+        -0.162548,
+        -0.174242,
+        -0.071334,
+        0.270134,
+        -0.071334,
+        -0.097061,
+        0.295861,
+        -0.111094,
+        -0.083028,
+        -0.21868,
+        -0.195292,
+        0.232713,
+        0.015202
+      ]
+    },
+    {
+      "path": "tools/aura_semantic_generation_freshness.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10356,
+      "lines": 273,
+      "tokens_est": 2589,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "513cbbf5a6327171",
+      "vector": [
+        -0.088794,
+        -0.037707,
+        0.261518,
+        -0.239623,
+        0.125285,
+        0.300441,
+        -0.003649,
+        0.008515,
+        -0.062034,
+        0.193401,
+        0.113122,
+        0.132583,
+        -0.280979,
+        -0.003649,
+        -0.152045,
+        -0.015813,
+        -0.310172,
+        0.027976,
+        -0.229892,
+        0.003649,
+        0.273681,
+        0.249354,
+        0.142314,
+        0.09366,
+        0.159343,
+        -0.144747,
+        -0.135016,
+        -0.052304,
+        -0.205565,
+        0.149612,
+        0.251787,
+        -0.271249
       ]
     },
     {
@@ -287404,16 +288300,16 @@
     }
   },
   "summary": {
-    "file_count": 1645,
-    "total_bytes": 26456020,
-    "text_tokens_est": 6604359,
+    "file_count": 1652,
+    "total_bytes": 26513850,
+    "text_tokens_est": 6618818,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1001,
-      "schema_or_lexicon": 273,
+      "python_module": 1006,
+      "schema_or_lexicon": 275,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287560,7 +288456,9 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-dual-key-evidence-generation.yml",
+      ".github/workflows/aura-fresh-portable-semantic-evidence-admission.yml",
       ".github/workflows/aura-review-learning.yml",
+      ".github/workflows/aura-semantic-generation-freshness.yml",
       ".github/workflows/aura-semantic-sibling-admission.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -288896,6 +289794,7 @@
       "tests/test_aura_financial_contracts.py",
       "tests/test_aura_financial_contracts_regressions.py",
       "tests/test_aura_forge.py",
+      "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
       "tests/test_aura_fst_provenance.py",
       "tests/test_aura_gate.py",
       "tests/test_aura_gate_adapters.py",
@@ -288975,6 +289874,7 @@
       "tests/test_aura_review_lessons_codex_regressions.py",
       "tests/test_aura_runtime_profile_v2_adapter.py",
       "tests/test_aura_runtime_refactor_harness.py",
+      "tests/test_aura_semantic_generation_freshness.py",
       "tests/test_aura_semantic_sibling_admission.py",
       "tests/test_aura_shadow_model_router.py",
       "tests/test_aura_shadow_tool_observability.py",
@@ -289058,7 +289958,10 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena_portable_semantic_evidence_transfer.py",
       "tools/aura_dual_key_evidence_generation.py",
+      "tools/aura_fresh_portable_semantic_evidence_admission.py",
+      "tools/aura_semantic_generation_freshness.py",
       "tools/aura_semantic_sibling_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -424408,6 +425311,106 @@
         "file_digest8": "364410d769abcf6f"
       },
       {
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#class:FreshPortableSemanticEvidenceAdmissionTests:365b62a16d45a605",
+        "name": "FreshPortableSemanticEvidenceAdmissionTests",
+        "kind": "class",
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 8,
+        "end_line": 159,
+        "signature_hash": "6688baff57157300",
+        "file_digest8": "4aaf4f5bd8ca7a49"
+      },
+      {
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_bad_timestamp_order_fails_closed:35bed8f7101e2d85",
+        "name": "FreshPortableSemanticEvidenceAdmissionTests.test_bad_timestamp_order_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 148,
+        "end_line": 159,
+        "signature_hash": "195eb0c1810d73c2",
+        "file_digest8": "4aaf4f5bd8ca7a49"
+      },
+      {
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_cross_domain_transfer_holds_before_freshness:747017e611573968",
+        "name": "FreshPortableSemanticEvidenceAdmissionTests.test_cross_domain_transfer_holds_before_freshness",
+        "kind": "method",
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 39,
+        "end_line": 54,
+        "signature_hash": "4527cc68aab2bf7a",
+        "file_digest8": "4aaf4f5bd8ca7a49"
+      },
+      {
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_fixture_is_deterministic_and_nonpromoting:26389050fae307e8",
+        "name": "FreshPortableSemanticEvidenceAdmissionTests.test_fixture_is_deterministic_and_nonpromoting",
+        "kind": "method",
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 131,
+        "end_line": 146,
+        "signature_hash": "6b84ebb7e69e45f2",
+        "file_digest8": "4aaf4f5bd8ca7a49"
+      },
+      {
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_genuinely_post_cut_semantic_generation_can_receive_sibling_credit:eb5344119c714c0c",
+        "name": "FreshPortableSemanticEvidenceAdmissionTests.test_genuinely_post_cut_semantic_generation_can_receive_sibling_credit",
+        "kind": "method",
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 56,
+        "end_line": 77,
+        "signature_hash": "cf456a7c3cb753e4",
+        "file_digest8": "4aaf4f5bd8ca7a49"
+      },
+      {
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_observation_before_cut_is_rejected_even_if_semantics_are_newer_than_old_history:56ca214db6565449",
+        "name": "FreshPortableSemanticEvidenceAdmissionTests.test_observation_before_cut_is_rejected_even_if_semantics_are_newer_than_old_history",
+        "kind": "method",
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 116,
+        "end_line": 129,
+        "signature_hash": "228a362e191dad3c",
+        "file_digest8": "4aaf4f5bd8ca7a49"
+      },
+      {
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_post_cut_transfer_of_pre_cut_semantics_never_resets_clock:c1d420a427dccdb3",
+        "name": "FreshPortableSemanticEvidenceAdmissionTests.test_post_cut_transfer_of_pre_cut_semantics_never_resets_clock",
+        "kind": "method",
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 79,
+        "end_line": 97,
+        "signature_hash": "6db47a3eb36678b1",
+        "file_digest8": "4aaf4f5bd8ca7a49"
+      },
+      {
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_q6_exact_portable_evidence_is_reusable_but_not_fresh:5729c27164ed9806",
+        "name": "FreshPortableSemanticEvidenceAdmissionTests.test_q6_exact_portable_evidence_is_reusable_but_not_fresh",
+        "kind": "method",
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 9,
+        "end_line": 23,
+        "signature_hash": "0ee8a1f437248d6b",
+        "file_digest8": "4aaf4f5bd8ca7a49"
+      },
+      {
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_r3_exact_portable_evidence_is_reusable_but_not_fresh:5a98e1e4469f49d5",
+        "name": "FreshPortableSemanticEvidenceAdmissionTests.test_r3_exact_portable_evidence_is_reusable_but_not_fresh",
+        "kind": "method",
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 25,
+        "end_line": 37,
+        "signature_hash": "0ce86d9e8e219edb",
+        "file_digest8": "4aaf4f5bd8ca7a49"
+      },
+      {
+        "semantic_id": "tests/test_aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableSemanticEvidenceAdmissionTests.test_self_artifact_is_rejected_after_exact_transfer:c84546e41d862eb2",
+        "name": "FreshPortableSemanticEvidenceAdmissionTests.test_self_artifact_is_rejected_after_exact_transfer",
+        "kind": "method",
+        "file": "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 99,
+        "end_line": 114,
+        "signature_hash": "ca8f47685b200a9c",
+        "file_digest8": "4aaf4f5bd8ca7a49"
+      },
+      {
         "semantic_id": "tests/test_aura_fst_provenance.py#class:TestCanonicalSlotOrder:5eb91cd81bed9c77",
         "name": "TestCanonicalSlotOrder",
         "kind": "class",
@@ -438438,6 +439441,116 @@
         "file_digest8": "a6154801e53baa50"
       },
       {
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#class:SemanticGenerationFreshnessTests:4399a43d2b932be2",
+        "name": "SemanticGenerationFreshnessTests",
+        "kind": "class",
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "line": 7,
+        "end_line": 126,
+        "signature_hash": "f3473a90aaf61a35",
+        "file_digest8": "f8f959a9695b014f"
+      },
+      {
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_claim_ceiling:0e046ebf05566aba",
+        "name": "SemanticGenerationFreshnessTests.test_claim_ceiling",
+        "kind": "method",
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "line": 114,
+        "end_line": 126,
+        "signature_hash": "57c0081d51ab8a66",
+        "file_digest8": "f8f959a9695b014f"
+      },
+      {
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_cross_plane_false_freshness_is_rejected:e217811deef48dfd",
+        "name": "SemanticGenerationFreshnessTests.test_cross_plane_false_freshness_is_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "line": 8,
+        "end_line": 18,
+        "signature_hash": "4afffc570fd3ce6d",
+        "file_digest8": "f8f959a9695b014f"
+      },
+      {
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_new_replica_of_old_unseen_sck_still_fails:f6069cf16d273b52",
+        "name": "SemanticGenerationFreshnessTests.test_new_replica_of_old_unseen_sck_still_fails",
+        "kind": "method",
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "line": 40,
+        "end_line": 52,
+        "signature_hash": "8d589251c41b796c",
+        "file_digest8": "f8f959a9695b014f"
+      },
+      {
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_nonterminal_is_rejected_before_freshness_credit:22be30ce821105d7",
+        "name": "SemanticGenerationFreshnessTests.test_nonterminal_is_rejected_before_freshness_credit",
+        "kind": "method",
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "line": 95,
+        "end_line": 106,
+        "signature_hash": "87ec7581025d495b",
+        "file_digest8": "f8f959a9695b014f"
+      },
+      {
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_observation_after_terminal_fails_closed:58f0997cd0211716",
+        "name": "SemanticGenerationFreshnessTests.test_observation_after_terminal_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "line": 71,
+        "end_line": 81,
+        "signature_hash": "c0f6def53a9c25e6",
+        "file_digest8": "f8f959a9695b014f"
+      },
+      {
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_permutation_is_deterministic:21606f379f5c44c5",
+        "name": "SemanticGenerationFreshnessTests.test_permutation_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "line": 108,
+        "end_line": 112,
+        "signature_hash": "898dc4c41d1c4d2a",
+        "file_digest8": "f8f959a9695b014f"
+      },
+      {
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_post_cut_observation_is_not_enough:5ce40dded5f103f1",
+        "name": "SemanticGenerationFreshnessTests.test_post_cut_observation_is_not_enough",
+        "kind": "method",
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "line": 54,
+        "end_line": 57,
+        "signature_hash": "67accda5a237d0ea",
+        "file_digest8": "f8f959a9695b014f"
+      },
+      {
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_post_cut_semantic_generation_delegates_to_a3:2becd96b6deaf9a3",
+        "name": "SemanticGenerationFreshnessTests.test_post_cut_semantic_generation_delegates_to_a3",
+        "kind": "method",
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "line": 20,
+        "end_line": 38,
+        "signature_hash": "e82608f8c44a37c0",
+        "file_digest8": "f8f959a9695b014f"
+      },
+      {
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_self_artifact_is_rejected_even_if_generation_fresh:21eb032883cb9a8c",
+        "name": "SemanticGenerationFreshnessTests.test_self_artifact_is_rejected_even_if_generation_fresh",
+        "kind": "method",
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "line": 83,
+        "end_line": 93,
+        "signature_hash": "8c3686724bb81c08",
+        "file_digest8": "f8f959a9695b014f"
+      },
+      {
+        "semantic_id": "tests/test_aura_semantic_generation_freshness.py#method:SemanticGenerationFreshnessTests.test_semantic_generation_after_observation_fails_closed:ebb485086e92e65f",
+        "name": "SemanticGenerationFreshnessTests.test_semantic_generation_after_observation_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_semantic_generation_freshness.py",
+        "line": 59,
+        "end_line": 69,
+        "signature_hash": "01e0506d04ed19d4",
+        "file_digest8": "f8f959a9695b014f"
+      },
+      {
         "semantic_id": "tests/test_aura_semantic_sibling_admission.py#class:SemanticSiblingAdmissionTests:e277284a3e20934d",
         "name": "SemanticSiblingAdmissionTests",
         "kind": "class",
@@ -446608,6 +447721,176 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#class:ConsumerExpectation:69bd1ab7ca3cf7c5",
+        "name": "ConsumerExpectation",
+        "kind": "class",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 124,
+        "end_line": 144,
+        "signature_hash": "e79be931b2abf18e",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#class:EvidenceTransferReceipt:bef6a191fbb87e70",
+        "name": "EvidenceTransferReceipt",
+        "kind": "class",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 148,
+        "end_line": 170,
+        "signature_hash": "97462359b29ee9f4",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#class:SemanticEvidenceDescriptor:14c34809ba0f8344",
+        "name": "SemanticEvidenceDescriptor",
+        "kind": "class",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 89,
+        "end_line": 120,
+        "signature_hash": "fad6b4ae49d5c1a5",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_canonical:4ca8af6c47a0d938",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 56,
+        "end_line": 63,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_head_field:8b80a71dbd085098",
+        "name": "_head_field",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 79,
+        "end_line": 85,
+        "signature_hash": "8a8012a1dabf00ee",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_sha256_field:f6bb817065b38a91",
+        "name": "_sha256_field",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 70,
+        "end_line": 76,
+        "signature_hash": "d31a90b28f5491df",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_sha:9aa320fe026efdd0",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 66,
+        "end_line": 67,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:classify_transfer:77e71b0d4ac6b84f",
+        "name": "classify_transfer",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 230,
+        "end_line": 274,
+        "signature_hash": "a2d3bf06fb4ca04e",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:main:f9b0b4a3073e3ab8",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 301,
+        "end_line": 302,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:native_expectation:28df57a6caf41e91",
+        "name": "native_expectation",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 217,
+        "end_line": 227,
+        "signature_hash": "88f0f2e0429fabfd",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:portable_current_receipt:5e4e0857ee5ad1e8",
+        "name": "portable_current_receipt",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 277,
+        "end_line": 298,
+        "signature_hash": "700fca9d450e4055",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:q6_descriptor:89063cda370347a1",
+        "name": "q6_descriptor",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 173,
+        "end_line": 191,
+        "signature_hash": "266215226f239281",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:r3_descriptor:c1d60403485b1f89",
+        "name": "r3_descriptor",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 194,
+        "end_line": 214,
+        "signature_hash": "12bff2769760fdfd",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:ConsumerExpectation.validate:fd405d9d54e7a17f",
+        "name": "ConsumerExpectation.validate",
+        "kind": "method",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 133,
+        "end_line": 144,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:EvidenceTransferReceipt.receipt_digest:09e606aac98fd023",
+        "name": "EvidenceTransferReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 169,
+        "end_line": 170,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:SemanticEvidenceDescriptor.descriptor_digest:f63f188d1aa4cad4",
+        "name": "SemanticEvidenceDescriptor.descriptor_digest",
+        "kind": "method",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 118,
+        "end_line": 120,
+        "signature_hash": "56ca270aa04c61dd",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:SemanticEvidenceDescriptor.validate:678611bf1ca25703",
+        "name": "SemanticEvidenceDescriptor.validate",
+        "kind": "method",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 100,
+        "end_line": 115,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
         "semantic_id": "tools/aura_dual_key_evidence_generation.py#class:EvidenceGeneration:cbdfdc2f03d53eb5",
         "name": "EvidenceGeneration",
         "kind": "class",
@@ -446726,6 +448009,176 @@
         "end_line": 78,
         "signature_hash": "3b9c982fbe5f1788",
         "file_digest8": "aab53a63200e7853"
+      },
+      {
+        "semantic_id": "tools/aura_fresh_portable_semantic_evidence_admission.py#class:FreshPortableEvidenceReceipt:7154eb7d8a76c5b8",
+        "name": "FreshPortableEvidenceReceipt",
+        "kind": "class",
+        "file": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 51,
+        "end_line": 78,
+        "signature_hash": "fa79cf33b68890ad",
+        "file_digest8": "52ffb40ce05b99b1"
+      },
+      {
+        "semantic_id": "tools/aura_fresh_portable_semantic_evidence_admission.py#function:_sha:96acf037b89b0bd8",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 39,
+        "end_line": 47,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "52ffb40ce05b99b1"
+      },
+      {
+        "semantic_id": "tools/aura_fresh_portable_semantic_evidence_admission.py#function:classify_fresh_portable_evidence:dc9324ec176e5179",
+        "name": "classify_fresh_portable_evidence",
+        "kind": "function",
+        "file": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 81,
+        "end_line": 200,
+        "signature_hash": "1994ef1625dfb7fa",
+        "file_digest8": "52ffb40ce05b99b1"
+      },
+      {
+        "semantic_id": "tools/aura_fresh_portable_semantic_evidence_admission.py#function:current_historical_transfer_fixture:4fde9341decd30cb",
+        "name": "current_historical_transfer_fixture",
+        "kind": "function",
+        "file": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 203,
+        "end_line": 239,
+        "signature_hash": "f8c773b3bb39882e",
+        "file_digest8": "52ffb40ce05b99b1"
+      },
+      {
+        "semantic_id": "tools/aura_fresh_portable_semantic_evidence_admission.py#function:main:c689d79074306656",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 242,
+        "end_line": 243,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "52ffb40ce05b99b1"
+      },
+      {
+        "semantic_id": "tools/aura_fresh_portable_semantic_evidence_admission.py#method:FreshPortableEvidenceReceipt.receipt_digest:ce79ddc80dbe5fb2",
+        "name": "FreshPortableEvidenceReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/aura_fresh_portable_semantic_evidence_admission.py",
+        "line": 77,
+        "end_line": 78,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "52ffb40ce05b99b1"
+      },
+      {
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#class:FreshnessClassification:b1445d1d44234ce7",
+        "name": "FreshnessClassification",
+        "kind": "class",
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "line": 76,
+        "end_line": 84,
+        "signature_hash": "bf705a0d9b7cd192",
+        "file_digest8": "513cbbf5a6327171"
+      },
+      {
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#class:GenerationAwareAdmissionReceipt:6a28e27a3c0d7401",
+        "name": "GenerationAwareAdmissionReceipt",
+        "kind": "class",
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "line": 88,
+        "end_line": 107,
+        "signature_hash": "389fd8c34cac12a2",
+        "file_digest8": "513cbbf5a6327171"
+      },
+      {
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#class:GenerationBoundCandidate:913f915022de8dbe",
+        "name": "GenerationBoundCandidate",
+        "kind": "class",
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "line": 54,
+        "end_line": 72,
+        "signature_hash": "8e71e604fcce5b72",
+        "file_digest8": "513cbbf5a6327171"
+      },
+      {
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#function:_parse_utc:61adfd8984fba546",
+        "name": "_parse_utc",
+        "kind": "function",
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "line": 39,
+        "end_line": 45,
+        "signature_hash": "9f2d3047113568be",
+        "file_digest8": "513cbbf5a6327171"
+      },
+      {
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#function:_sha:c5d672768048cbd8",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "line": 48,
+        "end_line": 50,
+        "signature_hash": "3c3bc3c037860fe9",
+        "file_digest8": "513cbbf5a6327171"
+      },
+      {
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#function:admit_generation_aware_successor:aab24cea620a9070",
+        "name": "admit_generation_aware_successor",
+        "kind": "function",
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "line": 110,
+        "end_line": 196,
+        "signature_hash": "c2f38781060f5ca0",
+        "file_digest8": "513cbbf5a6327171"
+      },
+      {
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#function:build_demo_candidate:3132c3a620f810e8",
+        "name": "build_demo_candidate",
+        "kind": "function",
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "line": 199,
+        "end_line": 227,
+        "signature_hash": "c10a3f76e9b37ca9",
+        "file_digest8": "513cbbf5a6327171"
+      },
+      {
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#function:cross_plane_false_freshness_fixture:5dd4998560b8ee70",
+        "name": "cross_plane_false_freshness_fixture",
+        "kind": "function",
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "line": 230,
+        "end_line": 250,
+        "signature_hash": "0e8df085a5b45e26",
+        "file_digest8": "513cbbf5a6327171"
+      },
+      {
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#function:main:96e7c4f4b6a29fcf",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "line": 253,
+        "end_line": 268,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "513cbbf5a6327171"
+      },
+      {
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#method:GenerationAwareAdmissionReceipt.receipt_digest:60289cff8c160e70",
+        "name": "GenerationAwareAdmissionReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "line": 106,
+        "end_line": 107,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "513cbbf5a6327171"
+      },
+      {
+        "semantic_id": "tools/aura_semantic_generation_freshness.py#method:GenerationBoundCandidate.validate:5eef175b2a5235d6",
+        "name": "GenerationBoundCandidate.validate",
+        "kind": "method",
+        "file": "tools/aura_semantic_generation_freshness.py",
+        "line": 61,
+        "end_line": 72,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "513cbbf5a6327171"
       },
       {
         "semantic_id": "tools/aura_semantic_sibling_admission.py#class:CandidateClassification:fbca44a9d8bc35b0",
@@ -448088,7 +449541,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "c7f449dfc5fccaec2668046aed071c71",
-    "payload_hash": "8cba0ca26065afdb90c1b524501f67c3"
+    "record_fingerprint": "5cf4dff7855358b2dc56547f737272ad",
+    "payload_hash": "818801f0a8f187dd204ef81eccaed464"
   }
 }
