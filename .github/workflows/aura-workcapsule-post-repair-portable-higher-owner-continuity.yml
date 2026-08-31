@@ -104,6 +104,7 @@ jobs:
       - name: Assert one outer projection boundary and no lower replay
         run: |
           python3 - <<'PY'
+          import ast
           import inspect
           from pathlib import Path
           from scripts.aura_workcapsule_post_repair_portable_higher_owner_continuity import verify_post_repair_portable_higher_owner_continuity
@@ -112,12 +113,25 @@ jobs:
           assert 'astge_projection' not in params
           assert 'canonical_target_projection' not in params
           source = Path('scripts/aura_workcapsule_post_repair_portable_higher_owner_continuity.py').read_text()
-          assert 'verify_post_repair_source_projection_continuity' in source
-          for forbidden in ('compile_source_reentry_observations', 'compile_observation_bound_reentry_closure', 'derive_post_reentry_candidate'):
-              assert forbidden not in source, forbidden
+          assert 'aura_workcapsule_post_source_portable_higher_owner_continuity' in source
+          tree = ast.parse(source)
+          imported_modules = {
+              node.module
+              for node in ast.walk(tree)
+              if isinstance(node, ast.ImportFrom) and node.module is not None
+          }
+          assert 'scripts.aura_workcapsule_post_repair_source_projection_continuity' not in imported_modules
+          called_names = {
+              node.func.attr if isinstance(node.func, ast.Attribute) else node.func.id
+              for node in ast.walk(tree)
+              if isinstance(node, ast.Call) and isinstance(node.func, (ast.Attribute, ast.Name))
+          }
+          for forbidden in ('verify_post_repair_source_projection_continuity', 'admit_post_repair_source_projection_continuity', 'compile_source_reentry_observations', 'compile_observation_bound_reentry_closure', 'derive_post_reentry_candidate'):
+              assert forbidden not in called_names, forbidden
           print('ONE_OUTER_PORTABLE_PROJECTION_BOUNDARY=true')
           print('SECOND_CALLER_NESTED_PROJECTION_ACCEPTED=false')
           print('LOWER_WORKCAPSULE_REPLAY_REIMPLEMENTED=false')
+          print('CANONICAL_OWNER_DELEGATION=true')
           PY
 
       - name: Emit consequence ceiling
