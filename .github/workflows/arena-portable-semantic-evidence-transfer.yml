@@ -1,0 +1,125 @@
+name: Aura Arena Portable Semantic Evidence Transfer
+
+on:
+  pull_request:
+    paths:
+      - "tools/arena_portable_semantic_evidence_transfer.py"
+      - "tests/test_arena_portable_semantic_evidence_transfer.py"
+      - ".github/workflows/arena-portable-semantic-evidence-transfer.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  portable-semantic-evidence-transfer:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact child head with parent history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Prove exact two-parent convergence
+        shell: bash
+        env:
+          CONVERGENCE: 9bf4ae330f6a4a12763c22b4f126ed9639a4557a
+          Q6_HEAD: 4137aabd972feff9c4412bb4786ef8fd4de207e0
+          R3_HEAD: 21e67a4a744806d7637f6d6d68e97801f692fef6
+        run: |
+          set -euo pipefail
+          git cat-file -e "${CONVERGENCE}^{commit}"
+          test "$(git show -s --format=%P "${CONVERGENCE}")" = "${Q6_HEAD} ${R3_HEAD}"
+          git merge-base --is-ancestor "${CONVERGENCE}" HEAD
+          git cat-file -e "${Q6_HEAD}:tools/quantization/aura_glm53_quantization_evidence_transfer.py"
+          git cat-file -e "${R3_HEAD}:tools/k27_hdv1024_riscv_corpus_replay.py"
+
+      - name: Revalidate exact hosted parent generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+
+          repo = os.environ["GH_REPO"]
+          token = os.environ["GH_TOKEN"]
+          expected = [
+              {
+                  "run": 33370305329,
+                  "head": "4137aabd972feff9c4412bb4786ef8fd4de207e0",
+                  "workflow": "GLM53 Quantization Evidence Transfer",
+                  "job": 99419644910,
+              },
+              {
+                  "run": 33370308884,
+                  "head": "21e67a4a744806d7637f6d6d68e97801f692fef6",
+                  "workflow": "K27 HDV1024 RISC-V Corpus Replay",
+                  "job": 99419657614,
+              },
+          ]
+
+          def get(path):
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/{path}",
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  },
+              )
+              with urllib.request.urlopen(req) as response:
+                  return json.load(response)
+
+          for item in expected:
+              run = get(f"actions/runs/{item['run']}")
+              assert run["head_sha"] == item["head"], run
+              assert run["name"] == item["workflow"], run
+              assert run["status"] == "completed", run
+              assert run["conclusion"] == "success", run
+              jobs = get(f"actions/runs/{item['run']}/jobs")["jobs"]
+              match = [job for job in jobs if job["id"] == item["job"]]
+              assert len(match) == 1, jobs
+              assert match[0]["status"] == "completed", match[0]
+              assert match[0]["conclusion"] == "success", match[0]
+          PY
+
+      - name: Compile and run adversarial transfer proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/arena_portable_semantic_evidence_transfer.py tests/test_arena_portable_semantic_evidence_transfer.py
+          PYTHONPATH=. python3 -m unittest -v tests.test_arena_portable_semantic_evidence_transfer
+
+      - name: Emit exact portable evidence receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 tools/arena_portable_semantic_evidence_transfer.py > /tmp/o61.json
+          python3 - <<'PY'
+          import json
+          receipt = json.load(open('/tmp/o61.json', encoding='utf-8'))
+          assert receipt['q6_native']['portable_semantic_evidence_admitted'] is True
+          assert receipt['r3_native']['portable_semantic_evidence_admitted'] is True
+          assert receipt['q6_to_r3_cross_domain']['portable_semantic_evidence_admitted'] is False
+          assert receipt['stale_pr_prose_run_rejected'] is True
+          for lane in ('q6_native', 'r3_native', 'q6_to_r3_cross_domain'):
+              r = receipt[lane]
+              assert r['producer_authenticated'] is False
+              assert r['semantic_truth_proven'] is False
+              assert r['broader_claims_inherited'] is False
+              assert r['effect_authority_granted'] is False
+              assert r['semantic_k27_authority_minted'] is False
+              assert r['native_private_transformer_kv_accessed'] is False
+              assert r['gate10_promoted'] is False
+          print(json.dumps(receipt, sort_keys=True, indent=2))
+          PY
+
+      - name: Consequence ceiling
+        run: |
+          echo 'Exact hosted execution != portable semantic evidence until subject + generation + job + scope + consequence + consumer identity are exact.'
+          echo 'Portable semantic evidence != producer authentication != semantic truth != broader claims != effects.'
+          echo 'K27 coordinate != semantic authority; no native/private transformer KV access; no Gate-10 promotion.'
