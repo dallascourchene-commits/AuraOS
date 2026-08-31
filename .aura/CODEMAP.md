@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1661
-- **total_bytes**: 26603809
-- **text_tokens_est**: 6641308
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 17, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 280, 'support_file': 49}
+- **file_count**: 1665
+- **total_bytes**: 26634889
+- **text_tokens_est**: 6649079
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 17, 'operator_script': 9, 'python_module': 1006, 'schema_or_lexicon': 281, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1661,
+  "repo_file_count": 1665,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -210,6 +210,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/sco-temporal-persistence-e9-e12.yml",
     ".github/workflows/source-anchor-verify.yml",
     ".github/workflows/sync-analysis-codemap.yml",
+    ".github/workflows/thinkpad-longitudinal-envelope-series.yml",
     ".github/workflows/triad2-codemap-repair.yml",
     ".github/workflows/triad2-full-codemap-repair-v2.yml",
     ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
@@ -1673,6 +1674,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/k27_astge_thinkpad_owner_host_benchmark.py",
+    "tools/test_thinkpad_longitudinal_envelope_series.py",
+    "tools/thinkpad_longitudinal_envelope_series.py",
+    "tools/thinkpad_sustained_operating_envelope.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1801,16 +1805,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1661,
-  "bytes": 26603809,
-  "tokens_est": 6641308,
+  "files": 1665,
+  "bytes": 26634889,
+  "tokens_est": 6649079,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 17,
     "operator_script": 9,
-    "python_module": 1003,
-    "schema_or_lexicon": 280,
+    "python_module": 1006,
+    "schema_or_lexicon": 281,
     "support_file": 49
   }
 }
