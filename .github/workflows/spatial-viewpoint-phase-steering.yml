@@ -1,0 +1,175 @@
+name: Aura Spatial Viewpoint Phase Steering
+
+on:
+  pull_request:
+    paths:
+      - "tools/spatial/viewpoint_phase_steering_witness.py"
+      - "tests/test_spatial_viewpoint_phase_steering.py"
+      - "docs/AURA_SPATIAL_VIEWPOINT_PHASE_STEERING_V1.md"
+      - ".github/workflows/spatial-viewpoint-phase-steering.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  viewpoint-steering:
+    runs-on: ubuntu-latest
+    env:
+      PR621_HEAD: 944c4e52be670d251ebf43b05558f7fab275bed2
+      PR621_BLOB: eba22a2fe052be27731d808a5c0b9f31ea9dc7bb
+      PR621_RUN: "33365864866"
+      PR620_HEAD: 1a4c3f6705964428b1d80f2bbd3f5ada8c000f8b
+      PR620_BLOB: 5aacc34ef9fba08ebedefd77efc964f92e6e3bbb
+      PR620_DEP_BLOB: 076080018f586bb10a0d9e18561d17db79c71f5a
+      PR620_RUN: "33365731815"
+    steps:
+      - name: Checkout exact child head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Bind exact child generation
+        shell: bash
+        env:
+          EXPECTED_CHILD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_CHILD_SHA"
+
+      - name: Revalidate exact non-self parent workflows
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          for run_id, expected_sha in (
+              (os.environ["PR621_RUN"], os.environ["PR621_HEAD"]),
+              (os.environ["PR620_RUN"], os.environ["PR620_HEAD"]),
+          ):
+              payload = subprocess.check_output(
+                  ["gh", "api", f"repos/{repo}/actions/runs/{run_id}"], text=True
+              )
+              run = json.loads(payload)
+              assert run["status"] == "completed", run
+              assert run["conclusion"] == "success", run
+              assert run["head_sha"] == expected_sha, (run["head_sha"], expected_sha)
+          PY
+
+      - name: Materialize exact parent sources
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/aura-spatial-parents
+          curl -fsSL \
+            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${PR621_HEAD}/tools/spatial/eye_calibration_contract.py" \
+            -o /tmp/aura-spatial-parents/eye_calibration_contract.py
+          test "$(git hash-object /tmp/aura-spatial-parents/eye_calibration_contract.py)" = "$PR621_BLOB"
+
+          curl -fsSL \
+            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${PR620_HEAD}/tools/k27_optics_candidate_falsifier.py" \
+            -o /tmp/aura-spatial-parents/k27_optics_candidate_falsifier.py
+          test "$(git hash-object /tmp/aura-spatial-parents/k27_optics_candidate_falsifier.py)" = "$PR620_DEP_BLOB"
+
+          curl -fsSL \
+            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${PR620_HEAD}/tools/k27_optics_independent_conformance.py" \
+            -o /tmp/aura-spatial-parents/k27_optics_independent_conformance.py
+          test "$(git hash-object /tmp/aura-spatial-parents/k27_optics_independent_conformance.py)" = "$PR620_BLOB"
+
+      - name: Re-exercise bounded parent semantics
+        shell: bash
+        env:
+          PYTHONPATH: /tmp/aura-spatial-parents
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import eye_calibration_contract as eye
+          import k27_optics_independent_conformance as optics
+
+          assert eye.assumed_population_ipd().metric_eye_origin_eligible is False
+          measured = eye.BinocularCalibrationV1(
+              ipd_m=0.064,
+              ipd_sigma_m=0.0005,
+              midpoint_sigma_m=0.001,
+              source=eye.IpdSource.MEASURED_USER,
+              calibration_ref="hosted-parent-reproof",
+          )
+          assert measured.metric_eye_origin_eligible is True
+          findings = optics.run_independent_conformance()
+          assert len(findings) == 12
+          assert all(item.within_tolerance for item in findings)
+          PY
+
+      - name: Run viewpoint steering adversarials
+        shell: bash
+        env:
+          PR621_EYE_MODULE: /tmp/aura-spatial-parents/eye_calibration_contract.py
+          PR620_OPTICS_MODULE: /tmp/aura-spatial-parents/k27_optics_independent_conformance.py
+        run: |
+          set -euo pipefail
+          python3 -m unittest -v tests.test_spatial_viewpoint_phase_steering
+
+      - name: Emit deterministic software-only receipt
+        shell: bash
+        env:
+          PYTHONPATH: .
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' | tee viewpoint-steering-receipt.json
+          from dataclasses import asdict
+          import json
+          import pathlib
+          from tools.spatial import viewpoint_phase_steering_witness as child
+
+          eye, optics = child.load_exact_parents(
+              eye_module_path=pathlib.Path('/tmp/aura-spatial-parents/eye_calibration_contract.py'),
+              optics_module_path=pathlib.Path('/tmp/aura-spatial-parents/k27_optics_independent_conformance.py'),
+          )
+          binocular = eye.BinocularCalibrationV1(
+              ipd_m=0.064,
+              ipd_sigma_m=0.0005,
+              midpoint_sigma_m=0.001,
+              source=eye.IpdSource.MEASURED_USER,
+              calibration_ref='fixture:measured-user-ipd:v1',
+          )
+          transform = child.DeclaredRigidTransformV1(
+              rotation_row_major=(1.0,0.0,0.0, 0.0,1.0,0.0, 0.0,0.0,1.0),
+              translation_m=(0.0,0.0,0.35),
+              frame_binding_id='fixture:binocular-midpoint-to-display:v1',
+          )
+          query = child.SteeringQueryV1(
+              selected_eye='LEFT',
+              sample_x_m=0.0002,
+              sample_y_m=-0.0001,
+              wavelength_m=532e-9,
+              base_phase_radians=0.15,
+          )
+          receipt = child.build_viewpoint_phase_steering_witness(
+              eye_module=eye,
+              optics_module=optics,
+              binocular_calibration=binocular,
+              transform=transform,
+              query=query,
+          )
+          assert child.verify_receipt(receipt)
+          print(json.dumps(asdict(receipt), sort_keys=True, indent=2))
+          PY
+          grep -q '"software_phase_conformance": true' viewpoint-steering-receipt.json
+          grep -q '"physical_extrinsics_calibrated": false' viewpoint-steering-receipt.json
+          grep -q '"gaze_direction_observed": false' viewpoint-steering-receipt.json
+          grep -q '"physical_display_observed": false' viewpoint-steering-receipt.json
+          grep -q '"gate10_promoted": false' viewpoint-steering-receipt.json
+
+      - name: Preserve receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: aura-spatial-viewpoint-phase-steering
+          path: viewpoint-steering-receipt.json
