@@ -27,6 +27,13 @@ def _canonical_q21_receipt(lineage: Mapping[str, Any]) -> q21.PreAttemptLifecycl
     except TypeError as exc:
         raise ValueError("Q22_LINEAGE_NONCANONICAL_FIELDS") from exc
 
+    # Dataclass annotations do not enforce runtime types. Reconstructing an exact
+    # producer receipt therefore has to enforce producer-side typed fields too;
+    # otherwise a self-resealed mapping could carry e.g. "true" instead of True
+    # while retaining a valid envelope digest and the same lineage identity.
+    if type(typed.lifecycle_reusable_evidence_eligible) is not bool:
+        raise ValueError("Q22_LINEAGE_REUSABLE_EVIDENCE_MUST_BE_BOOL")
+
     if supplied_receipt_digest != typed.receipt_digest:
         raise ValueError("Q22_LINEAGE_RECEIPT_DIGEST_MISMATCH")
 
