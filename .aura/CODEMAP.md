@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1656
-- **total_bytes**: 26540375
-- **text_tokens_est**: 6625447
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 273, 'support_file': 56}
+- **file_count**: 1658
+- **total_bytes**: 26553668
+- **text_tokens_est**: 6628771
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 275, 'support_file': 56}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1656,
+  "repo_file_count": 1658,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -156,6 +156,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
     ".github/workflows/aura-external-knowledge-ingress.yml",
     ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+    ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1122,6 +1123,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/arena/.eki2-objective",
     "docs/arena/.eki2-state",
     "docs/arena/.eki2-verifier",
+    "docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json",
     "docs/arena/eki2-external-cognition-store-writer-v1.md",
     "docs/arena/eki2-proof-target-v2.txt",
     "docs/arena/eki2-proof-target.txt",
@@ -1796,16 +1798,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1656,
-  "bytes": 26540375,
-  "tokens_est": 6625447,
+  "files": 1658,
+  "bytes": 26553668,
+  "tokens_est": 6628771,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1004,
-    "schema_or_lexicon": 273,
+    "schema_or_lexicon": 275,
     "support_file": 56
   }
 }

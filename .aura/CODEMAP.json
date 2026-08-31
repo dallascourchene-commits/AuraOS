@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788198051,
+  "generated_at_unix": 1788198155,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1656,
+    "repo_file_count": 1658,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -138,6 +138,7 @@
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-external-knowledge-ingress.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+      ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1104,6 +1105,7 @@
       "docs/arena/.eki2-objective",
       "docs/arena/.eki2-state",
       "docs/arena/.eki2-verifier",
+      "docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json",
       "docs/arena/eki2-external-cognition-store-writer-v1.md",
       "docs/arena/eki2-proof-target-v2.txt",
       "docs/arena/eki2-proof-target.txt",
@@ -1772,16 +1774,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1656,
-      "bytes": 26540375,
-      "tokens_est": 6625447,
+      "files": 1658,
+      "bytes": 26553668,
+      "tokens_est": 6628771,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1004,
-        "schema_or_lexicon": 273,
+        "schema_or_lexicon": 275,
         "support_file": 56
       }
     },
@@ -160040,6 +160042,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+      ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -160171,6 +160174,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -169611,6 +169615,63 @@
         0.201356,
         0.173495,
         0.310265
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 9522,
+      "lines": 224,
+      "tokens_est": 2381,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m pytest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          49
+        ],
+        "python -m pytest": [
+          50
+        ]
+      },
+      "topology": {},
+      "digest8": "24dfae8debc10f69",
+      "vector": [
+        0.205891,
+        0.237567,
+        0.127758,
+        0.250237,
+        0.195333,
+        -0.034843,
+        -0.235455,
+        0.19111,
+        -0.053849,
+        0.064407,
+        -0.100306,
+        0.110865,
+        -0.252349,
+        0.003168,
+        -0.237567,
+        -0.222785,
+        -0.180551,
+        -0.140429,
+        0.159434,
+        -0.138317,
+        -0.256572,
+        -0.102418,
+        -0.252349,
+        0.146764,
+        0.262908,
+        -0.087636,
+        -0.100306,
+        -0.047513,
+        -0.231232,
+        -0.258684,
+        0.053849,
+        -0.144652
       ]
     },
     {
@@ -236929,6 +236990,53 @@
       ]
     },
     {
+      "path": "docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3771,
+      "lines": 76,
+      "tokens_est": 943,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4d387362a580175e",
+      "vector": [
+        0.15945,
+        0.296786,
+        0.115223,
+        -0.178072,
+        0.08729,
+        -0.070996,
+        -0.094273,
+        0.257215,
+        -0.050046,
+        0.03608,
+        0.247904,
+        0.245576,
+        0.1385,
+        -0.236265,
+        0.08729,
+        -0.275837,
+        0.145483,
+        -0.075651,
+        0.136173,
+        0.096601,
+        -0.098929,
+        -0.122206,
+        0.28282,
+        -0.273509,
+        -0.182727,
+        0.150139,
+        -0.094273,
+        -0.203677,
+        -0.157122,
+        0.219971,
+        0.080307,
+        0.222299
+      ]
+    },
+    {
       "path": "docs/arena/eki2-external-cognition-store-writer-v1.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -289225,16 +289333,16 @@
     }
   },
   "summary": {
-    "file_count": 1656,
-    "total_bytes": 26540375,
-    "text_tokens_est": 6625447,
+    "file_count": 1658,
+    "total_bytes": 26553668,
+    "text_tokens_est": 6628771,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1004,
-      "schema_or_lexicon": 273,
+      "schema_or_lexicon": 275,
       "support_file": 56
     },
     "topology_nodes": 11478,
@@ -289382,6 +289490,7 @@
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-external-knowledge-ingress.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+      ".github/workflows/aura-external-subject-lineage-bridge-v1.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -290348,6 +290457,7 @@
       "docs/arena/.eki2-objective",
       "docs/arena/.eki2-state",
       "docs/arena/.eki2-verifier",
+      "docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json",
       "docs/arena/eki2-external-cognition-store-writer-v1.md",
       "docs/arena/eki2-proof-target-v2.txt",
       "docs/arena/eki2-proof-target.txt",
@@ -451241,6 +451351,6 @@
       }
     ],
     "record_fingerprint": "2794ae93cf35445b0b60e291f6720134",
-    "payload_hash": "57170fe2cb796b9a558d272c6500fa7d"
+    "payload_hash": "185ed10f7ee169d0206c5d900fbdb253"
   }
 }
