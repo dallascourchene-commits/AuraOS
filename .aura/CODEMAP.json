@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788107771,
+  "generated_at_unix": 1788194711,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1671,
+    "repo_file_count": 1680,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -139,6 +139,9 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
+      ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
+      ".github/workflows/aura-glm53-router-separated-prefetch.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1655,14 +1658,20 @@
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_io_feasibility.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
+      "tools/awj032/glm53_prefetch_transfer_admission.py",
+      "tools/awj032/glm53_router_separated_prefetch.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_io_feasibility.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
+      "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+      "tools/awj032/test_glm53_router_separated_prefetch.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1787,16 +1796,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1671,
-      "bytes": 26538030,
-      "tokens_est": 6624903,
+      "files": 1680,
+      "bytes": 26620501,
+      "tokens_est": 6645525,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1018,
-        "schema_or_lexicon": 276,
+        "python_module": 1024,
+        "schema_or_lexicon": 279,
         "support_file": 49
       }
     },
@@ -3635,6 +3644,14 @@
         "end_line": 50,
         "semantic_id": "06_refactor/D0_MUTANT_HARNESS.py#function:route:eb0e206255813d1b",
         "signature_hash": "3dcdb4dda21086ef"
+      },
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 43,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#function:route:caa805652903064a",
+        "signature_hash": "b9784c21663e17c7"
       }
     ],
     "run": [
@@ -3966,6 +3983,22 @@
         "line": 50,
         "end_line": 57,
         "semantic_id": "tools/awj032/glm53_per_expert_index_pager.py#function:_canonical:714c5d4c48f7a6b2",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_canonical:858f6db0e16226a4",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "function",
+        "line": 32,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#function:_canonical:f6be82754f84b70c",
         "signature_hash": "8d5bf5695239b859"
       }
     ],
@@ -8147,6 +8180,22 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_sha:b8aa5d8ca3840c90",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#function:_sha:136f2cdfdacc0379",
+        "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
     "_repo": [
@@ -18611,6 +18660,14 @@
         "end_line": 31,
         "semantic_id": "aura_model_cognome_replay.py#function:_nonnegative:71b0ef67894c1097",
         "signature_hash": "e665849be5cbd205"
+      },
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 61,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_nonnegative:4122bf1d65e0fc07",
+        "signature_hash": "704365746c822d12"
       }
     ],
     "_optional_nonnegative": [
@@ -33127,6 +33184,14 @@
         "end_line": 50,
         "semantic_id": "aura_shadow_model_router.py#function:_probability:c5b4f0171886a488",
         "signature_hash": "c494b515ad1b5c70"
+      },
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 71,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_probability:98c8f47bfc825020",
+        "signature_hash": "2ffc720c71aa1ef2"
       }
     ],
     "_require_canonical_enum": [
@@ -137367,6 +137432,14 @@
         "end_line": 184,
         "semantic_id": "tests/test_aura_gate.py#function:policy:6c4234b7f9aaa5a3",
         "signature_hash": "96c8d2d81ca0f6b2"
+      },
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 70,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#function:policy:b503e73927181d6f",
+        "signature_hash": "fc96ac7c083ba2d2"
       }
     ],
     "test_policy_round_trip_and_strict_contract": [
@@ -158227,6 +158300,86 @@
         "signature_hash": "3313625eaf98b5c7"
       }
     ],
+    "TargetClass": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 21,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:TargetClass:24f309ad2aee8c56",
+        "signature_hash": "a7ac8aec9ac587d8"
+      }
+    ],
+    "TargetResult": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 30,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:TargetResult:596f1cb7c931161a",
+        "signature_hash": "e30083dda0592a4b"
+      }
+    ],
+    "IOFeasibilityReceipt": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "class",
+        "line": 34,
+        "end_line": 48,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:IOFeasibilityReceipt:6d9e8e12da87a4af",
+        "signature_hash": "3ed1a2f22c823f6c"
+      }
+    ],
+    "IOFeasibilityReceipt.to_dict": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 48,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#method:IOFeasibilityReceipt.to_dict:4424409aeabea8d3",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "_positive_finite": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:_positive_finite:535270431a26d93c",
+        "signature_hash": "76c04857f9f65b36"
+      }
+    ],
+    "required_reuse": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 73,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:required_reuse:eb7c8552954c3a0c",
+        "signature_hash": "1adf0f6a536ddefe"
+      }
+    ],
+    "observed_reuse": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 87,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:observed_reuse:8e00faa3c756f325",
+        "signature_hash": "0de9435df042493e"
+      }
+    ],
+    "evaluate_io_feasibility": [
+      {
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 168,
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:evaluate_io_feasibility:7c047d0b26744c46",
+        "signature_hash": "626c83e1d0757dfe"
+      }
+    ],
     "PagerError": [
       {
         "file": "tools/awj032/glm53_packed_expert_pager.py",
@@ -159033,6 +159186,296 @@
         "signature_hash": "2ed156b615b1bfef"
       }
     ],
+    "_positive": [
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 54,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_positive:f72ed10110b8ce84",
+        "signature_hash": "6f85663f977a6da9"
+      }
+    ],
+    "CalibratedExpertForecast": [
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "class",
+        "line": 75,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#class:CalibratedExpertForecast:c60d2d780c95ae56",
+        "signature_hash": "2ee8667a584f61d7"
+      }
+    ],
+    "CalibratedExpertForecast.hit_probability": [
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 90,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:CalibratedExpertForecast.hit_probability:2478bdd5de97230a",
+        "signature_hash": "53371b7c9ffaa707"
+      }
+    ],
+    "CalibratedExpertForecast.validate": [
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:CalibratedExpertForecast.validate:51c2cd71da03bfbc",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "PrefetchTransferPolicy": [
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "class",
+        "line": 106,
+        "end_line": 156,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#class:PrefetchTransferPolicy:55359bd16a3db088",
+        "signature_hash": "55483fc508e9429d"
+      }
+    ],
+    "PrefetchTransferPolicy.minimum_hit_probability": [
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 126,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:PrefetchTransferPolicy.minimum_hit_probability:860b538706dc4cbd",
+        "signature_hash": "41d1c8641a853069"
+      }
+    ],
+    "PrefetchTransferPolicy.validate": [
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 156,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:PrefetchTransferPolicy.validate:6f274d3d13a25650",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ExpertTransferDecision": [
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "class",
+        "line": 160,
+        "end_line": 169,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#class:ExpertTransferDecision:a02c2a70a74f8a74",
+        "signature_hash": "1b8e66524a1feefe"
+      }
+    ],
+    "PrefetchTransferAdmissionReceipt": [
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "class",
+        "line": 173,
+        "end_line": 225,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#class:PrefetchTransferAdmissionReceipt:0d99911460ce180d",
+        "signature_hash": "69997fdff16d5494"
+      }
+    ],
+    "PrefetchTransferAdmissionReceipt.validate_claim_ceiling": [
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 203,
+        "end_line": 220,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionReceipt.validate_claim_ceiling:9a074384eb9897fa",
+        "signature_hash": "d379bda2928aaff4"
+      }
+    ],
+    "PrefetchTransferAdmissionReceipt.receipt_digest": [
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 223,
+        "end_line": 225,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionReceipt.receipt_digest:696b0b3354895843",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "admit_prefetch_transfers": [
+      {
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "kind": "function",
+        "line": 228,
+        "end_line": 373,
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:admit_prefetch_transfers:8f106534b1e5a1eb",
+        "signature_hash": "a94e8d542a185ce5"
+      }
+    ],
+    "PrefetchPrediction": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 59,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#class:PrefetchPrediction:39e9c1e9a472506e",
+        "signature_hash": "224e1d25fcbe0408"
+      }
+    ],
+    "PrefetchPrediction.validate": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 55,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:PrefetchPrediction.validate:a7433a517bc50fab",
+        "signature_hash": "fd62f548fa98dca9"
+      }
+    ],
+    "PrefetchPrediction.digest": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 59,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:PrefetchPrediction.digest:400a2c48f27b6edc",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "NativeRoute": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 86,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#class:NativeRoute:b02e0599e32db6c1",
+        "signature_hash": "4e86db0b375d328f"
+      }
+    ],
+    "NativeRoute.validate": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 82,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:NativeRoute.validate:e27689b8dd23cb1a",
+        "signature_hash": "fd62f548fa98dca9"
+      }
+    ],
+    "NativeRoute.digest": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 86,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:NativeRoute.digest:20b2e98d722ab37e",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "PhysicalIOAttestation": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "class",
+        "line": 90,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#class:PhysicalIOAttestation:4978594fc9c0f8b2",
+        "signature_hash": "c495b31a2c7e7f49"
+      }
+    ],
+    "PhysicalIOAttestation.validate": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:PhysicalIOAttestation.validate:878a7ac7cfcf18eb",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "PrefetchTrace": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "class",
+        "line": 118,
+        "end_line": 181,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#class:PrefetchTrace:5e1f840f8e2c4d26",
+        "signature_hash": "15b6cc1efa4b9ca3"
+      }
+    ],
+    "PrefetchTrace.validate_claim_ceiling": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 153,
+        "end_line": 176,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:PrefetchTrace.validate_claim_ceiling:eaa64bf4634f491c",
+        "signature_hash": "d379bda2928aaff4"
+      }
+    ],
+    "PrefetchTrace.receipt_digest": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 179,
+        "end_line": 181,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:PrefetchTrace.receipt_digest:85fde2070e9b8573",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "ExpertPageLoader": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "class",
+        "line": 184,
+        "end_line": 185,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#class:ExpertPageLoader:839b89724a2b5dcb",
+        "signature_hash": "929aaacfbb1aa7c5"
+      }
+    ],
+    "ExpertPageLoader.load_selected": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 185,
+        "end_line": 185,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:ExpertPageLoader.load_selected:edf104adbf927b07",
+        "signature_hash": "fd5747276363a079"
+      }
+    ],
+    "_logical_bytes": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "function",
+        "line": 188,
+        "end_line": 197,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#function:_logical_bytes:a01b9cd26e840e36",
+        "signature_hash": "f3eebeec3f25ac05"
+      }
+    ],
+    "_validate_loaded_pages": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "function",
+        "line": 200,
+        "end_line": 230,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#function:_validate_loaded_pages:dadc9c2867d228c8",
+        "signature_hash": "042bb24fcb1d0362"
+      }
+    ],
+    "build_prefetch_trace": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "function",
+        "line": 233,
+        "end_line": 311,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#function:build_prefetch_trace:1c97876e4d2e4bbb",
+        "signature_hash": "de3936d639bdf657"
+      }
+    ],
+    "stage_then_demand_load": [
+      {
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "kind": "function",
+        "line": 314,
+        "end_line": 364,
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#function:stage_then_demand_load:68218a35810ead32",
+        "signature_hash": "9965060dc016d449"
+      }
+    ],
     "make_tree": [
       {
         "file": "tools/awj032/test_airllm_source_admission.py",
@@ -159311,6 +159754,106 @@
         "end_line": 159,
         "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_probe_never_admits_g2:f5368fa39d715758",
         "signature_hash": "a6a2281c320c3c5b"
+      }
+    ],
+    "IOFeasibilityTests": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "class",
+        "line": 7,
+        "end_line": 116,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#class:IOFeasibilityTests:592a54c05aff6953",
+        "signature_hash": "261098e087c6b776"
+      }
+    ],
+    "IOFeasibilityTests.test_cold_one_gbps_one_second_requires_about_96_percent_reuse": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 8,
+        "end_line": 14,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_cold_one_gbps_one_second_requires_about_96_percent_reuse:b3759c379ac7eb1b",
+        "signature_hash": "e92ea83b48c72168"
+      }
+    ],
+    "IOFeasibilityTests.test_large_time_budget_needs_no_reuse": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 22,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_large_time_budget_needs_no_reuse:26a28adafa6916f9",
+        "signature_hash": "f449e60ca68579b1"
+      }
+    ],
+    "IOFeasibilityTests.test_unknown_physical_bytes_remain_unknown": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_unknown_physical_bytes_remain_unknown:6d823c1a7e985822",
+        "signature_hash": "af070d480c77e2d2"
+      }
+    ],
+    "IOFeasibilityTests.test_cache_only_zero_backend_bytes_is_full_observed_reuse": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 43,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_cache_only_zero_backend_bytes_is_full_observed_reuse:6fa99707a9e31354",
+        "signature_hash": "a454045371ed1f2f"
+      }
+    ],
+    "IOFeasibilityTests.test_measured_bytes_classify_each_caller_supplied_budget": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 45,
+        "end_line": 62,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_measured_bytes_classify_each_caller_supplied_budget:a6d0ffed447e87a8",
+        "signature_hash": "bcf06e0e508325fc"
+      }
+    ],
+    "IOFeasibilityTests.test_physical_io_amplification_clamps_reuse_to_zero_but_stays_visible": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 73,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_physical_io_amplification_clamps_reuse_to_zero_but_stays_visible:f0148c762201de4c",
+        "signature_hash": "9e292b38d5dcdde4"
+      }
+    ],
+    "IOFeasibilityTests.test_receipt_claim_ceiling_never_promotes_g2": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 86,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_receipt_claim_ceiling_never_promotes_g2:95bb37a664d0013b",
+        "signature_hash": "edcfaf214c0d6f24"
+      }
+    ],
+    "IOFeasibilityTests.test_bad_units_fail_closed": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_bad_units_fail_closed:8769ff87182ed057",
+        "signature_hash": "91d9ffa502c5add2"
+      }
+    ],
+    "IOFeasibilityTests.test_empty_or_duplicate_targets_fail_closed": [
+      {
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 116,
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_empty_or_duplicate_targets_fail_closed:fbabd92200c9efe4",
+        "signature_hash": "4bdd14bb2b886b2e"
       }
     ],
     "FakeSliceBackend": [
@@ -159991,6 +160534,374 @@
         "end_line": 196,
         "semantic_id": "tools/awj032/test_glm53_per_expert_index_pager.py#method:PerExpertIndexPagerTests.test_gate_up_fusion_order_matches_runtime_contract:57d224d8b17cdab7",
         "signature_hash": "367b939ef8a336f6"
+      }
+    ],
+    "prediction": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 31,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#function:prediction:8a4653f2f37bbaf5",
+        "signature_hash": "0ce22c2e769a0307"
+      },
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 31,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#function:prediction:c2de094acbd9a97c",
+        "signature_hash": "86f7696292c83298"
+      }
+    ],
+    "forecast": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#function:forecast:1b91c65faa05f591",
+        "signature_hash": "e9993e9c23983a9c"
+      }
+    ],
+    "PrefetchTransferAdmissionTests": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "class",
+        "line": 73,
+        "end_line": 208,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#class:PrefetchTransferAdmissionTests:2d490abbd7e28744",
+        "signature_hash": "3e9b62f19a0e406c"
+      }
+    ],
+    "PrefetchTransferAdmissionTests.test_positive_expected_latency_value_admits_without_effect_authority": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 94,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_positive_expected_latency_value_admits_without_effect_authority:3010cfe27db81152",
+        "signature_hash": "8c2c6de30652c9b1"
+      }
+    ],
+    "PrefetchTransferAdmissionTests.test_low_confidence_skips_even_with_positive_raw_margin": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 104,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_low_confidence_skips_even_with_positive_raw_margin:fea11886d0fe0f6f",
+        "signature_hash": "08e47fd99c07ed06"
+      }
+    ],
+    "PrefetchTransferAdmissionTests.test_nonpositive_latency_margin_skips": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 114,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_nonpositive_latency_margin_skips:8015bb22368e042b",
+        "signature_hash": "9c6b74fd8640cd26"
+      }
+    ],
+    "PrefetchTransferAdmissionTests.test_window_capacity_prefers_higher_expected_margin_deterministically": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 129,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_window_capacity_prefers_higher_expected_margin_deterministically:af3f61526f2e78db",
+        "signature_hash": "d67afe5f414f2693"
+      }
+    ],
+    "PrefetchTransferAdmissionTests.test_batch_logical_byte_cap_is_independent_hard_gate": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 140,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_batch_logical_byte_cap_is_independent_hard_gate:33a0b44ec037cb6b",
+        "signature_hash": "c622bfa42ce0eda2"
+      }
+    ],
+    "PrefetchTransferAdmissionTests.test_energy_budget_requires_typed_estimate_when_enabled": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 150,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_energy_budget_requires_typed_estimate_when_enabled:111f1d650907f7fb",
+        "signature_hash": "3f24a4d73f8a8625"
+      }
+    ],
+    "PrefetchTransferAdmissionTests.test_energy_budget_cannot_be_paid_by_latency_margin": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 160,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_energy_budget_cannot_be_paid_by_latency_margin:f93dcde595f90f36",
+        "signature_hash": "32ee236c4141c1be"
+      }
+    ],
+    "PrefetchTransferAdmissionTests.test_storage_reuse_requirement_is_preserved_as_storage_only_math": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 162,
+        "end_line": 176,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_storage_reuse_requirement_is_preserved_as_storage_only_math:30c56a14b008747e",
+        "signature_hash": "8c29ffd6cee6ecfd"
+      }
+    ],
+    "PrefetchTransferAdmissionTests.test_binding_layer_and_calibration_substitutions_fail_closed": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 199,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_binding_layer_and_calibration_substitutions_fail_closed:871e1a4bfa41d30c",
+        "signature_hash": "02bc62b9efabaf45"
+      }
+    ],
+    "PrefetchTransferAdmissionTests.test_forecast_set_must_exactly_match_prediction": [
+      {
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "kind": "method",
+        "line": 201,
+        "end_line": 208,
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_forecast_set_must_exactly_match_prediction:2d49c1fb6dcd5e21",
+        "signature_hash": "2402c9d0a3f2ceda"
+      }
+    ],
+    "FakePager": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#class:FakePager:d678a302d9aef044",
+        "signature_hash": "62e9f636582fee07"
+      }
+    ],
+    "FakePager.__init__": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 50,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:FakePager.__init__:8c16766b7fa691e0",
+        "signature_hash": "d2c75c59d9f316b5"
+      }
+    ],
+    "FakePager.load_selected": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 58,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:FakePager.load_selected:72689a7c93d9777c",
+        "signature_hash": "10be5b181eaf52ed"
+      }
+    ],
+    "MissingProofPager": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "class",
+        "line": 61,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#class:MissingProofPager:f5b27b2a106d3d77",
+        "signature_hash": "4571bc0e6d51b76a"
+      }
+    ],
+    "MissingProofPager.load_selected": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:MissingProofPager.load_selected:9ceb51ff914471d1",
+        "signature_hash": "10be5b181eaf52ed"
+      }
+    ],
+    "RouterSeparatedPrefetchTests": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 315,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#class:RouterSeparatedPrefetchTests:f0ef5c2317fda086",
+        "signature_hash": "07ff8996b4e45558"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_partial_prediction_demand_loads_miss_without_route_mutation": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_partial_prediction_demand_loads_miss_without_route_mutation:cbd365f11d74fdd7",
+        "signature_hash": "86d8b137702bdf92"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_stage_then_demand_load_calls_prediction_then_only_native_misses": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 96,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_stage_then_demand_load_calls_prediction_then_only_native_misses:0d1a0c4710ceb5a2",
+        "signature_hash": "f60d6dc0dbb1a32d"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_stage_requires_prefetch_result_to_bind_exact_source": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 109,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_stage_requires_prefetch_result_to_bind_exact_source:25cd48e047e97d9b",
+        "signature_hash": "5aaa4e0df06a45e3"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_stage_requires_demand_result_to_bind_exact_source": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 122,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_stage_requires_demand_result_to_bind_exact_source:f45afe0ed05348d9",
+        "signature_hash": "a0d04120ff453623"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_stage_requires_exact_expert_set_from_pager_result": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 135,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_stage_requires_exact_expert_set_from_pager_result:d72372726c2536a0",
+        "signature_hash": "8f43f72ee400136c"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_stage_rejects_unproved_loader_result": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 147,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_stage_rejects_unproved_loader_result:36eec48ee0c577cc",
+        "signature_hash": "107ee7dc7e62194b"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_perfect_prediction_has_no_demand_or_waste": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 159,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_perfect_prediction_has_no_demand_or_waste:e70cecd6360c0768",
+        "signature_hash": "f6042103ddb21fed"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_extra_predictions_are_waste_not_execution": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 169,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_extra_predictions_are_waste_not_execution:2519b3e514032c29",
+        "signature_hash": "cb1d913a98baa9e2"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_predictor_cannot_change_native_route_by_label": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 171,
+        "end_line": 185,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_predictor_cannot_change_native_route_by_label:5765175554dd93f3",
+        "signature_hash": "73eb88ad80a1beef"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_layer_and_source_binding_mismatch_fail_closed": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 201,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_layer_and_source_binding_mismatch_fail_closed:774a67249c1ccc8a",
+        "signature_hash": "54fb4d0afcd4e312"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_noncanonical_duplicate_or_out_of_range_predictions_reject": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 203,
+        "end_line": 212,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_noncanonical_duplicate_or_out_of_range_predictions_reject:ab1f4bb8e33dadea",
+        "signature_hash": "56562b9251ec8a7b"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_native_top_k_mismatch_rejects": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 214,
+        "end_line": 221,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_native_top_k_mismatch_rejects:b044f48073f07136",
+        "signature_hash": "1deece3125957175"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_logical_bytes_never_self_mint_physical_bytes": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 223,
+        "end_line": 231,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_logical_bytes_never_self_mint_physical_bytes:e7c433719f1b02a9",
+        "signature_hash": "52a3e0a53a84c541"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_exact_bound_physical_attestation_may_fill_physical_plane": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 233,
+        "end_line": 255,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_exact_bound_physical_attestation_may_fill_physical_plane:1e15438acc967815",
+        "signature_hash": "ef60b5bc33f63867"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_physical_attestation_cross_casts_reject": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 257,
+        "end_line": 287,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_physical_attestation_cross_casts_reject:cfaaaaf923f202d2",
+        "signature_hash": "d47c2abce8864c5f"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_prediction_and_route_identity_are_order_canonical_not_process_identity": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 289,
+        "end_line": 298,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_prediction_and_route_identity_are_order_canonical_not_process_identity:a14de504bafc4ef0",
+        "signature_hash": "cd893543f2163244"
+      }
+    ],
+    "RouterSeparatedPrefetchTests.test_claim_ceiling_stays_false": [
+      {
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "kind": "method",
+        "line": 300,
+        "end_line": 315,
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_claim_ceiling_stays_false:3900c097009def9a",
+        "signature_hash": "f8b5020f06049ad5"
       }
     ],
     "_coordinates": [
@@ -161104,6 +162015,8 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
+      ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -161398,6 +162311,20 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python -m unittest": [
+      ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
+      ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
+      ".github/workflows/awj032-glm53-01a-pager.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
+      "tools/awj032/README.md"
+    ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-glm53-router-separated-prefetch.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/aura-glm53-router-separated-prefetch.yml"
+    ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
     ],
@@ -161418,11 +162345,6 @@
     ],
     "python scripts/aura_spatial_s5_s6_construction_architect_harness.py --repo-root . --base-ref \"origin/$BASE_REF\" --head-ref HEAD --observed-head \"$(git rev-parse HEAD)\" --receipt /tmp/aura-spatial-s5-s6-receipts/full.json": [
       ".github/workflows/aura-spatial-s5-s6-construction.yml"
-    ],
-    "python -m unittest": [
-      ".github/workflows/awj032-glm53-01a-pager.yml",
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
-      "tools/awj032/README.md"
     ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
@@ -161965,9 +162887,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -170708,6 +171627,182 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 7293,
+      "lines": 158,
+      "tokens_est": 1824,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          100,
+          112
+        ],
+        "python -m unittest": [
+          103,
+          105,
+          115
+        ]
+      },
+      "topology": {},
+      "digest8": "2bc9b69e0891ece4",
+      "vector": [
+        0.151239,
+        0.091696,
+        -0.2346,
+        -0.127422,
+        -0.098841,
+        -0.286998,
+        -0.129804,
+        -0.272707,
+        0.246508,
+        0.196492,
+        0.04168,
+        0.2346,
+        -0.051207,
+        -0.079788,
+        -0.139331,
+        0.163148,
+        -0.132186,
+        -0.036917,
+        0.296524,
+        0.267944,
+        -0.005954,
+        -0.160766,
+        0.182202,
+        0.005954,
+        -0.236981,
+        -0.144094,
+        -0.191729,
+        0.044062,
+        -0.236981,
+        -0.275089,
+        -0.046444,
+        -0.12504
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 8144,
+      "lines": 182,
+      "tokens_est": 2036,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          96,
+          105
+        ],
+        "python -m unittest": [
+          97,
+          108
+        ]
+      },
+      "topology": {},
+      "digest8": "64c80d81e3718791",
+      "vector": [
+        -0.012997,
+        0.225683,
+        0.005908,
+        0.211504,
+        0.031903,
+        0.209141,
+        0.187872,
+        -0.244589,
+        0.17842,
+        0.133519,
+        -0.161877,
+        -0.043719,
+        0.261131,
+        0.220957,
+        0.124067,
+        0.138246,
+        0.131156,
+        -0.213867,
+        -0.265857,
+        0.232773,
+        -0.244589,
+        0.232773,
+        -0.239862,
+        0.048445,
+        -0.057898,
+        -0.020087,
+        0.095709,
+        -0.254041,
+        -0.02954,
+        0.012997,
+        0.284763,
+        -0.116977
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-router-separated-prefetch.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3855,
+      "lines": 93,
+      "tokens_est": 964,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          57
+        ],
+        "python3 -m unittest": [
+          65
+        ]
+      },
+      "topology": {},
+      "digest8": "0727117c724ce7e1",
+      "vector": [
+        0.043172,
+        0.17138,
+        -0.019624,
+        0.103351,
+        0.215861,
+        0.014391,
+        -0.048405,
+        -0.077187,
+        -0.098118,
+        -0.307438,
+        -0.262957,
+        -0.058871,
+        0.098118,
+        -0.160914,
+        0.192312,
+        0.124283,
+        -0.043172,
+        -0.155681,
+        0.17923,
+        -0.116434,
+        -0.103351,
+        0.066721,
+        0.32837,
+        0.105968,
+        -0.058871,
+        -0.147832,
+        0.27604,
+        -0.304821,
+        -0.307438,
+        0.255108,
+        -0.077187,
+        0.26819
       ]
     },
     {
@@ -266648,6 +267743,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_io_feasibility.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6016,
+      "lines": 169,
+      "tokens_est": 1504,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "465b894a0625f913",
+      "vector": [
+        -0.246543,
+        -0.320633,
+        -0.144349,
+        -0.008942,
+        0.228659,
+        -0.031936,
+        0.021716,
+        -0.072813,
+        -0.088142,
+        -0.192891,
+        0.047265,
+        0.200556,
+        0.310414,
+        0.167342,
+        0.272091,
+        0.318078,
+        -0.037045,
+        0.175007,
+        0.093252,
+        -0.220994,
+        0.047265,
+        0.146904,
+        -0.139239,
+        0.042155,
+        0.12391,
+        -0.305304,
+        0.139239,
+        -0.223549,
+        -0.195446,
+        -0.095807,
+        -0.037045,
+        0.090697
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_packed_expert_pager.py",
       "role": "python_module",
       "binary": false,
@@ -266789,6 +267931,100 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_prefetch_transfer_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15734,
+      "lines": 374,
+      "tokens_est": 3934,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "191ba21e6a0eb667",
+      "vector": [
+        -0.017189,
+        0.186782,
+        0.241786,
+        -0.127195,
+        -0.273871,
+        -0.127195,
+        -0.108861,
+        0.056149,
+        -0.2097,
+        0.150113,
+        -0.074484,
+        0.113444,
+        0.122612,
+        -0.058441,
+        0.104277,
+        -0.118028,
+        0.134071,
+        0.253245,
+        0.273871,
+        -0.00573,
+        0.273871,
+        0.127195,
+        0.163864,
+        0.269287,
+        0.230327,
+        0.092818,
+        -0.205117,
+        0.269287,
+        0.198241,
+        -0.198241,
+        -0.18449,
+        0.138654
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_router_separated_prefetch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15281,
+      "lines": 377,
+      "tokens_est": 3821,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5539e8061e5aa4fd",
+      "vector": [
+        -0.124132,
+        0.180261,
+        -0.251502,
+        0.016191,
+        -0.078797,
+        0.264455,
+        0.037779,
+        -0.011873,
+        0.264455,
+        0.171626,
+        -0.188896,
+        -0.007556,
+        0.009715,
+        0.19969,
+        0.191055,
+        -0.098226,
+        -0.01835,
+        -0.266614,
+        0.249343,
+        0.139244,
+        0.014032,
+        0.113338,
+        -0.115497,
+        -0.247184,
+        -0.240708,
+        -0.268773,
+        0.03562,
+        -0.245026,
+        0.232073,
+        0.275249,
+        -0.007556,
+        0.167308
+      ]
+    },
+    {
       "path": "tools/awj032/test_airllm_source_admission.py",
       "role": "python_module",
       "binary": false,
@@ -266880,6 +268116,53 @@
         0.046165,
         -0.170935,
         -0.185908
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_io_feasibility.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4933,
+      "lines": 121,
+      "tokens_est": 1234,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "642aa07201d42582",
+      "vector": [
+        -0.12924,
+        0.171964,
+        -0.011749,
+        0.018158,
+        -0.231777,
+        -0.163419,
+        0.195462,
+        -0.069426,
+        -0.184781,
+        0.08438,
+        0.259548,
+        -0.105742,
+        0.080107,
+        -0.259548,
+        0.259548,
+        -0.024566,
+        -0.259548,
+        0.268093,
+        -0.229641,
+        -0.171964,
+        -0.092925,
+        -0.216824,
+        -0.050201,
+        -0.026702,
+        0.270229,
+        0.268093,
+        0.026702,
+        0.086516,
+        0.1741,
+        0.137785,
+        -0.268093,
+        -0.116423
       ]
     },
     {
@@ -267021,6 +268304,100 @@
         -0.003564,
         -0.267318,
         -0.253061
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8274,
+      "lines": 213,
+      "tokens_est": 2069,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3eebbf84284f34b0",
+      "vector": [
+        0.179652,
+        -0.319238,
+        0.210671,
+        -0.169312,
+        -0.011632,
+        -0.25203,
+        -0.065915,
+        0.019387,
+        -0.08401,
+        -0.019387,
+        -0.133123,
+        0.135708,
+        -0.117614,
+        0.25203,
+        0.23652,
+        0.037481,
+        0.277879,
+        -0.205501,
+        0.275294,
+        0.153803,
+        -0.156388,
+        -0.259784,
+        0.055576,
+        -0.029727,
+        0.135708,
+        0.24686,
+        -0.133123,
+        -0.016802,
+        -0.016802,
+        0.280464,
+        -0.016802,
+        0.233935
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_router_separated_prefetch.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12941,
+      "lines": 320,
+      "tokens_est": 3236,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "943473972e549af6",
+      "vector": [
+        -0.148369,
+        -0.166771,
+        -0.074759,
+        0.267984,
+        0.047156,
+        0.208176,
+        0.198975,
+        0.288687,
+        0.065558,
+        0.063258,
+        -0.23578,
+        -0.226579,
+        0.051757,
+        -0.254182,
+        0.097762,
+        -0.24038,
+        -0.070159,
+        0.210477,
+        -0.284086,
+        0.189774,
+        -0.111564,
+        -0.07936,
+        -0.182873,
+        -0.224278,
+        -0.244981,
+        0.226579,
+        -0.201276,
+        -0.060958,
+        -0.07936,
+        0.086261,
+        0.116165,
+        0.056357
       ]
     },
     {
@@ -291022,16 +292399,16 @@
     }
   },
   "summary": {
-    "file_count": 1671,
-    "total_bytes": 26538030,
-    "text_tokens_est": 6624903,
+    "file_count": 1680,
+    "total_bytes": 26620501,
+    "text_tokens_est": 6645525,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1018,
-      "schema_or_lexicon": 276,
+      "python_module": 1024,
+      "schema_or_lexicon": 279,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -291180,6 +292557,9 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
+      ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
+      ".github/workflows/aura-glm53-router-separated-prefetch.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -292696,14 +294076,20 @@
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_io_feasibility.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
       "tools/awj032/glm53_per_expert_index_pager.py",
+      "tools/awj032/glm53_prefetch_transfer_admission.py",
+      "tools/awj032/glm53_router_separated_prefetch.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_io_feasibility.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
       "tools/awj032/test_glm53_per_expert_index_pager.py",
+      "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+      "tools/awj032/test_glm53_router_separated_prefetch.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -451052,6 +452438,86 @@
         "file_digest8": "e47f5028c4e7cc25"
       },
       {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:IOFeasibilityReceipt:6d9e8e12da87a4af",
+        "name": "IOFeasibilityReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 34,
+        "end_line": 48,
+        "signature_hash": "3ed1a2f22c823f6c",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:TargetClass:24f309ad2aee8c56",
+        "name": "TargetClass",
+        "kind": "class",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 19,
+        "end_line": 21,
+        "signature_hash": "a7ac8aec9ac587d8",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:TargetResult:596f1cb7c931161a",
+        "name": "TargetResult",
+        "kind": "class",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 25,
+        "end_line": 30,
+        "signature_hash": "e30083dda0592a4b",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:_positive_finite:535270431a26d93c",
+        "name": "_positive_finite",
+        "kind": "function",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 51,
+        "end_line": 55,
+        "signature_hash": "76c04857f9f65b36",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:evaluate_io_feasibility:7c047d0b26744c46",
+        "name": "evaluate_io_feasibility",
+        "kind": "function",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 90,
+        "end_line": 168,
+        "signature_hash": "626c83e1d0757dfe",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:observed_reuse:8e00faa3c756f325",
+        "name": "observed_reuse",
+        "kind": "function",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 76,
+        "end_line": 87,
+        "signature_hash": "0de9435df042493e",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#function:required_reuse:eb7c8552954c3a0c",
+        "name": "required_reuse",
+        "kind": "function",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 58,
+        "end_line": 73,
+        "signature_hash": "1adf0f6a536ddefe",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_io_feasibility.py#method:IOFeasibilityReceipt.to_dict:4424409aeabea8d3",
+        "name": "IOFeasibilityReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_io_feasibility.py",
+        "line": 45,
+        "end_line": 48,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "465b894a0625f913"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_packed_expert_pager.py#class:ExpertRangeError:a8c6d962660c0c2f",
         "name": "ExpertRangeError",
         "kind": "class",
@@ -451892,6 +453358,356 @@
         "file_digest8": "d0a2de3800965bca"
       },
       {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#class:CalibratedExpertForecast:c60d2d780c95ae56",
+        "name": "CalibratedExpertForecast",
+        "kind": "class",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 75,
+        "end_line": 102,
+        "signature_hash": "2ee8667a584f61d7",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#class:ExpertTransferDecision:a02c2a70a74f8a74",
+        "name": "ExpertTransferDecision",
+        "kind": "class",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 160,
+        "end_line": 169,
+        "signature_hash": "1b8e66524a1feefe",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#class:PrefetchTransferAdmissionReceipt:0d99911460ce180d",
+        "name": "PrefetchTransferAdmissionReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 173,
+        "end_line": 225,
+        "signature_hash": "69997fdff16d5494",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#class:PrefetchTransferPolicy:55359bd16a3db088",
+        "name": "PrefetchTransferPolicy",
+        "kind": "class",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 106,
+        "end_line": 156,
+        "signature_hash": "55483fc508e9429d",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_canonical:858f6db0e16226a4",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_nonnegative:4122bf1d65e0fc07",
+        "name": "_nonnegative",
+        "kind": "function",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 57,
+        "end_line": 61,
+        "signature_hash": "704365746c822d12",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_positive:f72ed10110b8ce84",
+        "name": "_positive",
+        "kind": "function",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 50,
+        "end_line": 54,
+        "signature_hash": "6f85663f977a6da9",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_probability:98c8f47bfc825020",
+        "name": "_probability",
+        "kind": "function",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 64,
+        "end_line": 71,
+        "signature_hash": "2ffc720c71aa1ef2",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_sha:b8aa5d8ca3840c90",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:admit_prefetch_transfers:8f106534b1e5a1eb",
+        "name": "admit_prefetch_transfers",
+        "kind": "function",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 228,
+        "end_line": 373,
+        "signature_hash": "a94e8d542a185ce5",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:CalibratedExpertForecast.hit_probability:2478bdd5de97230a",
+        "name": "CalibratedExpertForecast.hit_probability",
+        "kind": "method",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 85,
+        "end_line": 90,
+        "signature_hash": "53371b7c9ffaa707",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:CalibratedExpertForecast.validate:51c2cd71da03bfbc",
+        "name": "CalibratedExpertForecast.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 92,
+        "end_line": 102,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionReceipt.receipt_digest:696b0b3354895843",
+        "name": "PrefetchTransferAdmissionReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 223,
+        "end_line": 225,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionReceipt.validate_claim_ceiling:9a074384eb9897fa",
+        "name": "PrefetchTransferAdmissionReceipt.validate_claim_ceiling",
+        "kind": "method",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 203,
+        "end_line": 220,
+        "signature_hash": "d379bda2928aaff4",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:PrefetchTransferPolicy.minimum_hit_probability:860b538706dc4cbd",
+        "name": "PrefetchTransferPolicy.minimum_hit_probability",
+        "kind": "method",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 121,
+        "end_line": 126,
+        "signature_hash": "41d1c8641a853069",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:PrefetchTransferPolicy.validate:6f274d3d13a25650",
+        "name": "PrefetchTransferPolicy.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
+        "line": 128,
+        "end_line": 156,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "191ba21e6a0eb667"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#class:ExpertPageLoader:839b89724a2b5dcb",
+        "name": "ExpertPageLoader",
+        "kind": "class",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 184,
+        "end_line": 185,
+        "signature_hash": "929aaacfbb1aa7c5",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#class:NativeRoute:b02e0599e32db6c1",
+        "name": "NativeRoute",
+        "kind": "class",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 63,
+        "end_line": 86,
+        "signature_hash": "4e86db0b375d328f",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#class:PhysicalIOAttestation:4978594fc9c0f8b2",
+        "name": "PhysicalIOAttestation",
+        "kind": "class",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 90,
+        "end_line": 114,
+        "signature_hash": "c495b31a2c7e7f49",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#class:PrefetchPrediction:39e9c1e9a472506e",
+        "name": "PrefetchPrediction",
+        "kind": "class",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 41,
+        "end_line": 59,
+        "signature_hash": "224e1d25fcbe0408",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#class:PrefetchTrace:5e1f840f8e2c4d26",
+        "name": "PrefetchTrace",
+        "kind": "class",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 118,
+        "end_line": 181,
+        "signature_hash": "15b6cc1efa4b9ca3",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#function:_canonical:f6be82754f84b70c",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 32,
+        "end_line": 33,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#function:_logical_bytes:a01b9cd26e840e36",
+        "name": "_logical_bytes",
+        "kind": "function",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 188,
+        "end_line": 197,
+        "signature_hash": "f3eebeec3f25ac05",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#function:_sha:136f2cdfdacc0379",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#function:_validate_loaded_pages:dadc9c2867d228c8",
+        "name": "_validate_loaded_pages",
+        "kind": "function",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 200,
+        "end_line": 230,
+        "signature_hash": "042bb24fcb1d0362",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#function:build_prefetch_trace:1c97876e4d2e4bbb",
+        "name": "build_prefetch_trace",
+        "kind": "function",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 233,
+        "end_line": 311,
+        "signature_hash": "de3936d639bdf657",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#function:stage_then_demand_load:68218a35810ead32",
+        "name": "stage_then_demand_load",
+        "kind": "function",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 314,
+        "end_line": 364,
+        "signature_hash": "9965060dc016d449",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:ExpertPageLoader.load_selected:edf104adbf927b07",
+        "name": "ExpertPageLoader.load_selected",
+        "kind": "method",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 185,
+        "end_line": 185,
+        "signature_hash": "fd5747276363a079",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:NativeRoute.digest:20b2e98d722ab37e",
+        "name": "NativeRoute.digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 85,
+        "end_line": 86,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:NativeRoute.validate:e27689b8dd23cb1a",
+        "name": "NativeRoute.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 71,
+        "end_line": 82,
+        "signature_hash": "fd62f548fa98dca9",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:PhysicalIOAttestation.validate:878a7ac7cfcf18eb",
+        "name": "PhysicalIOAttestation.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 101,
+        "end_line": 114,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:PrefetchPrediction.digest:400a2c48f27b6edc",
+        "name": "PrefetchPrediction.digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 58,
+        "end_line": 59,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:PrefetchPrediction.validate:a7433a517bc50fab",
+        "name": "PrefetchPrediction.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 48,
+        "end_line": 55,
+        "signature_hash": "fd62f548fa98dca9",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:PrefetchTrace.receipt_digest:85fde2070e9b8573",
+        "name": "PrefetchTrace.receipt_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 179,
+        "end_line": 181,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#method:PrefetchTrace.validate_claim_ceiling:eaa64bf4634f491c",
+        "name": "PrefetchTrace.validate_claim_ceiling",
+        "kind": "method",
+        "file": "tools/awj032/glm53_router_separated_prefetch.py",
+        "line": 153,
+        "end_line": 176,
+        "signature_hash": "d379bda2928aaff4",
+        "file_digest8": "5539e8061e5aa4fd"
+      },
+      {
         "semantic_id": "tools/awj032/test_airllm_source_admission.py#class:GateTests:ca7ae84afcba696b",
         "name": "GateTests",
         "kind": "class",
@@ -452170,6 +453986,106 @@
         "end_line": 97,
         "signature_hash": "b67b9af0cf1f2b78",
         "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#class:IOFeasibilityTests:592a54c05aff6953",
+        "name": "IOFeasibilityTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 7,
+        "end_line": 116,
+        "signature_hash": "261098e087c6b776",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_bad_units_fail_closed:8769ff87182ed057",
+        "name": "IOFeasibilityTests.test_bad_units_fail_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 88,
+        "end_line": 102,
+        "signature_hash": "91d9ffa502c5add2",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_cache_only_zero_backend_bytes_is_full_observed_reuse:6fa99707a9e31354",
+        "name": "IOFeasibilityTests.test_cache_only_zero_backend_bytes_is_full_observed_reuse",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 35,
+        "end_line": 43,
+        "signature_hash": "a454045371ed1f2f",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_cold_one_gbps_one_second_requires_about_96_percent_reuse:b3759c379ac7eb1b",
+        "name": "IOFeasibilityTests.test_cold_one_gbps_one_second_requires_about_96_percent_reuse",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 8,
+        "end_line": 14,
+        "signature_hash": "e92ea83b48c72168",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_empty_or_duplicate_targets_fail_closed:fbabd92200c9efe4",
+        "name": "IOFeasibilityTests.test_empty_or_duplicate_targets_fail_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 104,
+        "end_line": 116,
+        "signature_hash": "4bdd14bb2b886b2e",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_large_time_budget_needs_no_reuse:26a28adafa6916f9",
+        "name": "IOFeasibilityTests.test_large_time_budget_needs_no_reuse",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 16,
+        "end_line": 22,
+        "signature_hash": "f449e60ca68579b1",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_measured_bytes_classify_each_caller_supplied_budget:a6d0ffed447e87a8",
+        "name": "IOFeasibilityTests.test_measured_bytes_classify_each_caller_supplied_budget",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 45,
+        "end_line": 62,
+        "signature_hash": "bcf06e0e508325fc",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_physical_io_amplification_clamps_reuse_to_zero_but_stays_visible:f0148c762201de4c",
+        "name": "IOFeasibilityTests.test_physical_io_amplification_clamps_reuse_to_zero_but_stays_visible",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 64,
+        "end_line": 73,
+        "signature_hash": "9e292b38d5dcdde4",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_receipt_claim_ceiling_never_promotes_g2:95bb37a664d0013b",
+        "name": "IOFeasibilityTests.test_receipt_claim_ceiling_never_promotes_g2",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 75,
+        "end_line": 86,
+        "signature_hash": "edcfaf214c0d6f24",
+        "file_digest8": "642aa07201d42582"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#method:IOFeasibilityTests.test_unknown_physical_bytes_remain_unknown:6d823c1a7e985822",
+        "name": "IOFeasibilityTests.test_unknown_physical_bytes_remain_unknown",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_io_feasibility.py",
+        "line": 24,
+        "end_line": 33,
+        "signature_hash": "af070d480c77e2d2",
+        "file_digest8": "642aa07201d42582"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_packed_expert_pager.py#class:FakeSliceBackend:bf8532e42602b3b5",
@@ -452850,6 +454766,396 @@
         "end_line": 43,
         "signature_hash": "b5e86620f84079e9",
         "file_digest8": "e9bb5b42a937bc9d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#class:PrefetchTransferAdmissionTests:2d490abbd7e28744",
+        "name": "PrefetchTransferAdmissionTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 73,
+        "end_line": 208,
+        "signature_hash": "3e9b62f19a0e406c",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#function:forecast:1b91c65faa05f591",
+        "name": "forecast",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 34,
+        "end_line": 51,
+        "signature_hash": "e9993e9c23983a9c",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#function:policy:b503e73927181d6f",
+        "name": "policy",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 54,
+        "end_line": 70,
+        "signature_hash": "fc96ac7c083ba2d2",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#function:prediction:8a4653f2f37bbaf5",
+        "name": "prediction",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 24,
+        "end_line": 31,
+        "signature_hash": "0ce22c2e769a0307",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_batch_logical_byte_cap_is_independent_hard_gate:33a0b44ec037cb6b",
+        "name": "PrefetchTransferAdmissionTests.test_batch_logical_byte_cap_is_independent_hard_gate",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 131,
+        "end_line": 140,
+        "signature_hash": "c622bfa42ce0eda2",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_binding_layer_and_calibration_substitutions_fail_closed:871e1a4bfa41d30c",
+        "name": "PrefetchTransferAdmissionTests.test_binding_layer_and_calibration_substitutions_fail_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 178,
+        "end_line": 199,
+        "signature_hash": "02bc62b9efabaf45",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_energy_budget_cannot_be_paid_by_latency_margin:f93dcde595f90f36",
+        "name": "PrefetchTransferAdmissionTests.test_energy_budget_cannot_be_paid_by_latency_margin",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 152,
+        "end_line": 160,
+        "signature_hash": "32ee236c4141c1be",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_energy_budget_requires_typed_estimate_when_enabled:111f1d650907f7fb",
+        "name": "PrefetchTransferAdmissionTests.test_energy_budget_requires_typed_estimate_when_enabled",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 142,
+        "end_line": 150,
+        "signature_hash": "3f24a4d73f8a8625",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_forecast_set_must_exactly_match_prediction:2d49c1fb6dcd5e21",
+        "name": "PrefetchTransferAdmissionTests.test_forecast_set_must_exactly_match_prediction",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 201,
+        "end_line": 208,
+        "signature_hash": "2402c9d0a3f2ceda",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_low_confidence_skips_even_with_positive_raw_margin:fea11886d0fe0f6f",
+        "name": "PrefetchTransferAdmissionTests.test_low_confidence_skips_even_with_positive_raw_margin",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 96,
+        "end_line": 104,
+        "signature_hash": "08e47fd99c07ed06",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_nonpositive_latency_margin_skips:8015bb22368e042b",
+        "name": "PrefetchTransferAdmissionTests.test_nonpositive_latency_margin_skips",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 106,
+        "end_line": 114,
+        "signature_hash": "9c6b74fd8640cd26",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_positive_expected_latency_value_admits_without_effect_authority:3010cfe27db81152",
+        "name": "PrefetchTransferAdmissionTests.test_positive_expected_latency_value_admits_without_effect_authority",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 74,
+        "end_line": 94,
+        "signature_hash": "8c2c6de30652c9b1",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_storage_reuse_requirement_is_preserved_as_storage_only_math:30c56a14b008747e",
+        "name": "PrefetchTransferAdmissionTests.test_storage_reuse_requirement_is_preserved_as_storage_only_math",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 162,
+        "end_line": 176,
+        "signature_hash": "8c29ffd6cee6ecfd",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionTests.test_window_capacity_prefers_higher_expected_margin_deterministically:af3f61526f2e78db",
+        "name": "PrefetchTransferAdmissionTests.test_window_capacity_prefers_higher_expected_margin_deterministically",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_prefetch_transfer_admission.py",
+        "line": 116,
+        "end_line": 129,
+        "signature_hash": "d67afe5f414f2693",
+        "file_digest8": "3eebbf84284f34b0"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#class:FakePager:d678a302d9aef044",
+        "name": "FakePager",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 46,
+        "end_line": 58,
+        "signature_hash": "62e9f636582fee07",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#class:MissingProofPager:f5b27b2a106d3d77",
+        "name": "MissingProofPager",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 61,
+        "end_line": 63,
+        "signature_hash": "4571bc0e6d51b76a",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#class:RouterSeparatedPrefetchTests:f0ef5c2317fda086",
+        "name": "RouterSeparatedPrefetchTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 66,
+        "end_line": 315,
+        "signature_hash": "07ff8996b4e45558",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#function:prediction:c2de094acbd9a97c",
+        "name": "prediction",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 23,
+        "end_line": 31,
+        "signature_hash": "86f7696292c83298",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#function:route:caa805652903064a",
+        "name": "route",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 34,
+        "end_line": 43,
+        "signature_hash": "b9784c21663e17c7",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:FakePager.__init__:8c16766b7fa691e0",
+        "name": "FakePager.__init__",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 47,
+        "end_line": 50,
+        "signature_hash": "d2c75c59d9f316b5",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:FakePager.load_selected:72689a7c93d9777c",
+        "name": "FakePager.load_selected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 52,
+        "end_line": 58,
+        "signature_hash": "10be5b181eaf52ed",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:MissingProofPager.load_selected:9ceb51ff914471d1",
+        "name": "MissingProofPager.load_selected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 62,
+        "end_line": 63,
+        "signature_hash": "10be5b181eaf52ed",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_claim_ceiling_stays_false:3900c097009def9a",
+        "name": "RouterSeparatedPrefetchTests.test_claim_ceiling_stays_false",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 300,
+        "end_line": 315,
+        "signature_hash": "f8b5020f06049ad5",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_exact_bound_physical_attestation_may_fill_physical_plane:1e15438acc967815",
+        "name": "RouterSeparatedPrefetchTests.test_exact_bound_physical_attestation_may_fill_physical_plane",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 233,
+        "end_line": 255,
+        "signature_hash": "ef60b5bc33f63867",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_extra_predictions_are_waste_not_execution:2519b3e514032c29",
+        "name": "RouterSeparatedPrefetchTests.test_extra_predictions_are_waste_not_execution",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 161,
+        "end_line": 169,
+        "signature_hash": "cb1d913a98baa9e2",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_layer_and_source_binding_mismatch_fail_closed:774a67249c1ccc8a",
+        "name": "RouterSeparatedPrefetchTests.test_layer_and_source_binding_mismatch_fail_closed",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 187,
+        "end_line": 201,
+        "signature_hash": "54fb4d0afcd4e312",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_logical_bytes_never_self_mint_physical_bytes:e7c433719f1b02a9",
+        "name": "RouterSeparatedPrefetchTests.test_logical_bytes_never_self_mint_physical_bytes",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 223,
+        "end_line": 231,
+        "signature_hash": "52a3e0a53a84c541",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_native_top_k_mismatch_rejects:b044f48073f07136",
+        "name": "RouterSeparatedPrefetchTests.test_native_top_k_mismatch_rejects",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 214,
+        "end_line": 221,
+        "signature_hash": "1deece3125957175",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_noncanonical_duplicate_or_out_of_range_predictions_reject:ab1f4bb8e33dadea",
+        "name": "RouterSeparatedPrefetchTests.test_noncanonical_duplicate_or_out_of_range_predictions_reject",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 203,
+        "end_line": 212,
+        "signature_hash": "56562b9251ec8a7b",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_partial_prediction_demand_loads_miss_without_route_mutation:cbd365f11d74fdd7",
+        "name": "RouterSeparatedPrefetchTests.test_partial_prediction_demand_loads_miss_without_route_mutation",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 67,
+        "end_line": 80,
+        "signature_hash": "86d8b137702bdf92",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_perfect_prediction_has_no_demand_or_waste:e70cecd6360c0768",
+        "name": "RouterSeparatedPrefetchTests.test_perfect_prediction_has_no_demand_or_waste",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 149,
+        "end_line": 159,
+        "signature_hash": "f6042103ddb21fed",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_physical_attestation_cross_casts_reject:cfaaaaf923f202d2",
+        "name": "RouterSeparatedPrefetchTests.test_physical_attestation_cross_casts_reject",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 257,
+        "end_line": 287,
+        "signature_hash": "d47c2abce8864c5f",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_prediction_and_route_identity_are_order_canonical_not_process_identity:a14de504bafc4ef0",
+        "name": "RouterSeparatedPrefetchTests.test_prediction_and_route_identity_are_order_canonical_not_process_identity",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 289,
+        "end_line": 298,
+        "signature_hash": "cd893543f2163244",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_predictor_cannot_change_native_route_by_label:5765175554dd93f3",
+        "name": "RouterSeparatedPrefetchTests.test_predictor_cannot_change_native_route_by_label",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 171,
+        "end_line": 185,
+        "signature_hash": "73eb88ad80a1beef",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_stage_rejects_unproved_loader_result:36eec48ee0c577cc",
+        "name": "RouterSeparatedPrefetchTests.test_stage_rejects_unproved_loader_result",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 137,
+        "end_line": 147,
+        "signature_hash": "107ee7dc7e62194b",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_stage_requires_demand_result_to_bind_exact_source:f45afe0ed05348d9",
+        "name": "RouterSeparatedPrefetchTests.test_stage_requires_demand_result_to_bind_exact_source",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 111,
+        "end_line": 122,
+        "signature_hash": "a0d04120ff453623",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_stage_requires_exact_expert_set_from_pager_result:d72372726c2536a0",
+        "name": "RouterSeparatedPrefetchTests.test_stage_requires_exact_expert_set_from_pager_result",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 124,
+        "end_line": 135,
+        "signature_hash": "8f43f72ee400136c",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_stage_requires_prefetch_result_to_bind_exact_source:25cd48e047e97d9b",
+        "name": "RouterSeparatedPrefetchTests.test_stage_requires_prefetch_result_to_bind_exact_source",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 98,
+        "end_line": 109,
+        "signature_hash": "5aaa4e0df06a45e3",
+        "file_digest8": "943473972e549af6"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_router_separated_prefetch.py#method:RouterSeparatedPrefetchTests.test_stage_then_demand_load_calls_prediction_then_only_native_misses:0d1a0c4710ceb5a2",
+        "name": "RouterSeparatedPrefetchTests.test_stage_then_demand_load_calls_prediction_then_only_native_misses",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_router_separated_prefetch.py",
+        "line": 82,
+        "end_line": 96,
+        "signature_hash": "f60d6dc0dbb1a32d",
+        "file_digest8": "943473972e549af6"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -454102,7 +456408,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "8d27c07d8e96856178971532f0748488",
-    "payload_hash": "0f4f24be3f3881e0df8c47971c0a618d"
+    "record_fingerprint": "29b4c6e0e92fc7c2e6d9010b79540a8e",
+    "payload_hash": "9b4923534c9447c165e4fb25dcc1af44"
   }
 }
