@@ -70,47 +70,69 @@ jobs:
           set -euo pipefail
           python tools/k27_astge_python_scope_oracle.py
 
-      - name: Producer trust HOLD and public-boundary assertions
+      - name: Producer plus observer trust HOLD and canonical public-boundary assertions
         shell: bash
         run: |
           set -euo pipefail
           entry=crates/aura-k27-astge-current-profiled-scope-review/src/lib.rs
-          src=crates/aura-k27-astge-current-profiled-scope-review/src/producer_bound.rs
+          lower=crates/aura-k27-astge-current-profiled-scope-review/src/producer_bound.rs
+          trust=crates/aura-k27-astge-current-profiled-scope-review/src/trusted_registry.rs
 
           grep -q '^mod producer_bound;' "$entry"
-          grep -q '^pub use producer_bound::\*;' "$entry"
-          grep -q 'pub fn validate_current_profiled_scope_review_candidate' "$src"
-          grep -q 'pub fn admit_current_profiled_scope_review' "$src"
-          grep -q 'ASTGE_HYDRATION_PRODUCER_REGISTRY_HOLD_V1' "$src"
-          grep -q 'const PRODUCTION_HYDRATION_PRODUCERS: &\[HydrationProducerRecordV1\] = &\[\];' "$src"
-          grep -q 'lower_review_context_validated: true' "$src"
-          grep -q 'hydration_producer_trust_proven: false' "$src"
-          grep -q 'ready_for_current_profiled_scope_semantic_review: false' "$src"
+          grep -q '^mod trusted_registry;' "$entry"
+          ! grep -q '^pub use producer_bound::\*;' "$entry"
+          grep -q 'validate_current_profiled_scope_review_candidate' "$entry"
+          grep -q 'admit_current_profiled_scope_review' "$entry"
+          grep -q 'CurrentProfiledScopeReviewAdmissionV2' "$entry"
 
-          sig="$(sed -n '/pub fn admit_current_profiled_scope_review(/,/^)/p' "$src")"
+          grep -q 'pub fn validate_current_profiled_scope_review_candidate' "$lower"
+          grep -q 'lower_review_context_validated: true' "$lower"
+          grep -q 'hydration_producer_trust_proven: false' "$lower"
+          grep -q 'ready_for_current_profiled_scope_semantic_review: false' "$lower"
+
+          grep -q 'pub fn admit_current_profiled_scope_review' "$trust"
+          grep -q 'ASTGE_HYDRATION_PRODUCER_TRUST_REGISTRY_HOLD_V2' "$trust"
+          grep -q 'const PRODUCTION_HYDRATION_PRODUCER_TRUST: &\[HydrationProducerTrustRecordV2\] = &\[\];' "$trust"
+          grep -q 'producer_generation:' "$trust"
+          grep -q 'producer_currentness_ref:' "$trust"
+          grep -q 'observer_ref:' "$trust"
+          grep -q 'observer_generation:' "$trust"
+          grep -q 'observer_currentness_ref:' "$trust"
+          grep -q 'row.producer_ref != row.observer_ref' "$trust"
+          grep -q '!row.revoked' "$trust"
+
+          sig="$(sed -n '/pub fn admit_current_profiled_scope_review(/,/^)/p' "$trust")"
           ! grep -q 'selected_scope_id' <<<"$sig"
           ! grep -q 'source_owner_ref' <<<"$sig"
           ! grep -q 'expected_source_generation' <<<"$sig"
           ! grep -q 'expected_producer' <<<"$sig"
+          ! grep -q 'expected_observer' <<<"$sig"
           ! grep -q 'registry:' <<<"$sig"
           ! grep -q 'trusted' <<<"$sig"
           ! grep -q 'grammar' <<<"$sig"
           ! grep -q 'profile_ref' <<<"$sig"
           ! grep -q 'graph_sha' <<<"$sig"
 
-          grep -q 'runtime_name_resolution_proven: false' "$src"
-          grep -q 'semantic_correctness_proven: false' "$src"
-          grep -q 'b_minus_approved: false' "$src"
-          grep -q 'commit_authorized: false' "$src"
-          grep -q 'external_effect_authorized: false' "$src"
+          grep -q 'runtime_name_resolution_proven: false' "$trust"
+          grep -q 'semantic_correctness_proven: false' "$trust"
+          grep -q 'b_minus_approved: false' "$trust"
+          grep -q 'commit_authorized: false' "$trust"
+          grep -q 'external_effect_authorized: false' "$trust"
 
           echo 'LOWER_REVIEW_CONTEXT_VALIDATION_PROVEN=true'
-          echo 'HYDRATION_PRODUCER_REGISTRY_GENERATION=ASTGE_HYDRATION_PRODUCER_REGISTRY_HOLD_V1'
-          echo 'PRODUCTION_HYDRATION_PRODUCERS=0'
+          echo 'HYDRATION_PRODUCER_TRUST_REGISTRY_GENERATION=ASTGE_HYDRATION_PRODUCER_TRUST_REGISTRY_HOLD_V2'
+          echo 'PRODUCTION_HYDRATION_PRODUCER_TRUST_RECORDS=0'
+          echo 'PRODUCER_GENERATION_REQUIRED=true'
+          echo 'PRODUCER_CURRENTNESS_REQUIRED=true'
+          echo 'DISTINCT_OBSERVER_REQUIRED=true'
+          echo 'OBSERVER_GENERATION_REQUIRED=true'
+          echo 'OBSERVER_CURRENTNESS_REQUIRED=true'
+          echo 'REVOKED_RECORD_ADMITTED=false'
           echo 'HYDRATION_PRODUCER_TRUST_PROVEN=false'
           echo 'CURRENT_PROFILED_SCOPE_REVIEW_READY=false'
           echo 'CALLER_REGISTRY_OVERRIDE=false'
           echo 'CALLER_EXPECTED_PRODUCER_OVERRIDE=false'
+          echo 'CALLER_EXPECTED_OBSERVER_OVERRIDE=false'
           echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
           echo 'SEMANTIC_CORRECTNESS_PROVEN=false'
           echo 'B_MINUS_APPROVED=false'
