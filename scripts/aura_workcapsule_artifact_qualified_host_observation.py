@@ -26,6 +26,16 @@ HOST_VERSION = "AURA_WORKCAPSULE_TEMPORAL_HOST_OBSERVATION_ADMISSION_V1"
 HOST_RESOLUTION_SCHEMA = "AURA_HOST_OBSERVATION_RESOLUTION_V1"
 HOST_RESOLUTION_VERSION = 1
 GATES = ("U_HEAD", "U_ROUTE", "U_F2", "U_CUSTODY", "U_CANARY")
+GATE_INDEX = {gate: index for index, gate in enumerate(GATES)}
+GATE_PROBES = {
+    "U_HEAD": ("P_HEAD",),
+    "U_ROUTE": ("P_ROUTE",),
+    "U_F2": ("P_J",),
+    "U_CUSTODY": ("P_CUSTODY", "P_ROUTE"),
+    "U_CANARY": ("P_CANARY",),
+}
+PROBE_ORDER = ("P_HEAD", "P_ROUTE", "P_J", "P_CUSTODY", "P_CANARY")
+MINIMUM_COVER_REASON = "PROBE_COSTS_AND_WORLD_PAIR_SEPARATION_NOT_MEASURED"
 STATES = frozenset({"PASS", "FAIL", "UNKNOWN"})
 LOCAL_PREFIX = "LOCAL_ARTIFACT_"
 HOST_PREFIX = "HOST_ADMISSION_"
@@ -236,6 +246,71 @@ def _gate_shape_violations(
     return violations
 
 
+def _derived_host_state(states: dict[str, Any]) -> dict[str, Any] | None:
+    if set(states) != set(GATES) or any(states.get(gate) not in STATES for gate in GATES):
+        return None
+    fail_mask = sum(
+        1 << GATE_INDEX[gate] for gate in GATES if states[gate] == "FAIL"
+    )
+    unknown_mask = sum(
+        1 << GATE_INDEX[gate] for gate in GATES if states[gate] == "UNKNOWN"
+    )
+    if fail_mask:
+        disposition = "FAIL_CLOSED"
+    elif unknown_mask:
+        disposition = "HOST_OBSERVATION_REQUIRED"
+    else:
+        disposition = "HOST_OBSERVATIONS_COMPLETE_NONAUTHORIZING"
+    unknown_gates = [gate for gate in GATES if states[gate] == "UNKNOWN"]
+    candidate_probes = {gate: list(GATE_PROBES[gate]) for gate in unknown_gates}
+    probe_union = {probe for probes in candidate_probes.values() for probe in probes}
+    ordered_required_probes = [probe for probe in PROBE_ORDER if probe in probe_union]
+    return {
+        "fail_mask": fail_mask,
+        "unknown_mask": unknown_mask,
+        "disposition": disposition,
+        "candidate_probes_by_unknown_gate": candidate_probes,
+        "ordered_required_probes": ordered_required_probes,
+        "minimum_cover_computed": False,
+        "minimum_cover_reason": MINIMUM_COVER_REASON,
+        "host_observation_set_complete": fail_mask == 0 and unknown_mask == 0,
+    }
+
+
+def _derived_host_state_violations(
+    receipt: dict[str, Any], states: dict[str, Any]
+) -> list[str]:
+    expected = _derived_host_state(states)
+    if expected is None:
+        return []
+    violations: list[str] = []
+    fail_mask = receipt.get("fail_mask")
+    if type(fail_mask) is not int or fail_mask != expected["fail_mask"]:
+        violations.append("HOST_FAIL_MASK_MISMATCH")
+    unknown_mask = receipt.get("unknown_mask")
+    if type(unknown_mask) is not int or unknown_mask != expected["unknown_mask"]:
+        violations.append("HOST_UNKNOWN_MASK_MISMATCH")
+    if receipt.get("disposition") != expected["disposition"]:
+        violations.append("HOST_DISPOSITION_MISMATCH")
+    if (
+        receipt.get("candidate_probes_by_unknown_gate")
+        != expected["candidate_probes_by_unknown_gate"]
+    ):
+        violations.append("HOST_CANDIDATE_PROBES_MISMATCH")
+    if receipt.get("ordered_required_probes") != expected["ordered_required_probes"]:
+        violations.append("HOST_ORDERED_REQUIRED_PROBES_MISMATCH")
+    if receipt.get("minimum_cover_computed") is not False:
+        violations.append("HOST_MINIMUM_COVER_COMPUTED_INVALID")
+    if receipt.get("minimum_cover_reason") != MINIMUM_COVER_REASON:
+        violations.append("HOST_MINIMUM_COVER_REASON_MISMATCH")
+    if (
+        receipt.get("host_observation_set_complete")
+        is not expected["host_observation_set_complete"]
+    ):
+        violations.append("HOST_OBSERVATION_COMPLETENESS_MISMATCH")
+    return violations
+
+
 def _ceiling_violations(receipt: dict[str, Any]) -> list[str]:
     violations = [
         "HOST_CEILING_VIOLATED:" + field
@@ -268,12 +343,13 @@ def _identity_violations(receipt: dict[str, Any]) -> list[str]:
 
 
 def verify_host_admission_envelope(receipt: dict[str, Any]) -> list[str]:
-    """Check #559 envelope and nested resolution integrity, never producer trust."""
+    """Check #559 envelope and nested/derived integrity, never producer trust."""
     if not isinstance(receipt, dict) or set(receipt) != _HOST_FIELDS:
         return ["MALFORMED_HOST_ADMISSION_ENVELOPE"]
     states, resolutions, violations = _gate_maps(receipt)
     violations.extend(_temporal_violations(receipt))
     violations.extend(_gate_shape_violations(states, resolutions))
+    violations.extend(_derived_host_state_violations(receipt, states))
     violations.extend(_ceiling_violations(receipt))
     violations.extend(_identity_violations(receipt))
     return list(dict.fromkeys(violations))
@@ -375,6 +451,7 @@ def admit_artifact_qualified_host_observation(**kwargs: Any) -> dict[str, Any]:
     host = kwargs["host_admission_receipt"]
     states = dict(host["host_gate_states"])
     resolved, unknown = _host_gate_partition(states)
+    all_pass = all(states[gate] == "PASS" for gate in GATES)
     return {
         "version": VERSION,
         "current_recursive_raw_target_reproved": True,
@@ -387,10 +464,8 @@ def admit_artifact_qualified_host_observation(**kwargs: Any) -> dict[str, Any]:
         "resolved_host_gates": resolved,
         "unknown_host_gates": unknown,
         "host_gate_states": states,
-        "host_observation_set_complete": bool(host["host_observation_set_complete"]),
-        "all_host_gates_pass_for_exact_artifact": all(
-            states[gate] == "PASS" for gate in GATES
-        ),
+        "host_observation_set_complete": all_pass,
+        "all_host_gates_pass_for_exact_artifact": all_pass,
         "target_slice_sha256_hex": local["target_slice_sha256_hex"],
         "target_slice_byte_len": local["target_slice_byte_len"],
         "dependency_key": dict(local["dependency_key"]),
