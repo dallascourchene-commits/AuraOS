@@ -1,0 +1,26 @@
+name: AURA ADOPT ZF-06A Low Storage Assessment
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_adopt/low_storage_mechanism_assessment.py'
+      - 'tools/aura_adopt/test_low_storage_mechanism_assessment.py'
+      - 'tools/aura_adopt/ZF06A_SOURCE_INVENTORY.md'
+      - '.github/workflows/aura-adopt-zf06a-low-storage-assessment.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  assessment-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile assessment contract
+        run: python -m py_compile tools/aura_adopt/low_storage_mechanism_assessment.py tools/aura_adopt/test_low_storage_mechanism_assessment.py
+      - name: Run focused falsification regressions
+        run: python -m unittest tools.aura_adopt.test_low_storage_mechanism_assessment -v
