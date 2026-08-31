@@ -1,0 +1,88 @@
+name: K27 ASTGE Plan-Bound ThinkPad Benchmark
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-plan-bound-benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact PR597 x PR599 convergence
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git show -s --format=%P 652199f1c61ba6500de5788a431da5acc9db546a)" = "28867452e25c0fe0159014c8bebc2ee18c925dd7 1a7e3ca521f43836c12cddb3cd5132264dce40da"
+          git merge-base --is-ancestor 652199f1c61ba6500de5788a431da5acc9db546a HEAD
+          test "$(git rev-parse 28867452e25c0fe0159014c8bebc2ee18c925dd7:tools/k27_astge_thinkpad_owner_host_benchmark.py)" = "273d92f4818ab477077ab84b11d7158e88501222"
+          test "$(git rev-parse 28867452e25c0fe0159014c8bebc2ee18c925dd7:tests/test_k27_astge_thinkpad_owner_host_benchmark.py)" = "bfba6b4928cd4fdd5d524e989f61a59651cfe56b"
+          test "$(git rev-parse 1a7e3ca521f43836c12cddb3cd5132264dce40da:tools/awj032/thinkpad_nvme_residency_plan.py)" = "1a802171273a8d7b4b60ef81bcd5649c858dfd0a"
+          test "$(git rev-parse 1a7e3ca521f43836c12cddb3cd5132264dce40da:tools/awj032/test_thinkpad_nvme_residency_plan.py)" = "3b14faf2d220391218dfc3445e947f59c3e0d3da"
+
+      - name: Re-prove exact PR597 three-phase benchmark owner
+        run: python -m unittest tests.test_k27_astge_thinkpad_owner_host_benchmark
+
+      - name: Re-prove exact PR599 deterministic residency planner
+        run: python -m unittest tools.awj032.test_thinkpad_nvme_residency_plan
+
+      - name: Prove O50 plan-binding adversarials
+        run: python -m unittest tests.test_k27_astge_plan_bound_thinkpad_benchmark
+
+      - name: Prove fixed public boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import inspect
+          from tools import k27_astge_plan_bound_thinkpad_benchmark as m
+          build = set(inspect.signature(m.build_plan_bound_benchmark_request).parameters)
+          assert 'storage_plan_digest' not in build
+          forbidden = {
+              'storage_plan_execution_observed', 'planned_backend_observed',
+              'physical_io_attested', 'os_page_cache_cold_required',
+              'device_cache_cold_required', 'performance_winner_claim_requested',
+              'effect_authority_requested', 'w4_admitted', 'producer_authenticated'
+          }
+          assert not (build & forbidden)
+          admit = set(inspect.signature(m.admit_plan_bound_benchmark_evidence).parameters)
+          assert admit == {'binding','samples','host_observation_id','runner_identity'}
+          PY
+
+      - name: Execute exact plan-to-benchmark fixture
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from tools.awj032.thinkpad_nvme_residency_plan import HostStorageProfile, ResidencyPolicy, TensorSlice
+          from tools.k27_astge_plan_bound_thinkpad_benchmark import build_plan_bound_benchmark_request, admit_plan_bound_benchmark_evidence
+          from tools.k27_astge_thinkpad_owner_host_benchmark import PR477_SAFE_SHA
+          from tests.test_k27_astge_thinkpad_owner_host_benchmark import D,E,F,samples
+          GiB=1024**3; MiB=1024**2
+          hp=HostStorageProfile(profile_kind='SYNTHETIC_TEST', available_ram_bytes=16*GiB, nvme_sequential_read_bytes_per_second=3*GiB, io_uring_supported=True, mmap_supported=True, source_ref='fixture:o50-ci')
+          pol=ResidencyPolicy(min_ram_reserve_bytes=4*GiB,max_resident_bytes=4*GiB,max_prefetch_bytes=256*MiB)
+          ts=(TensorSlice('router','s1',0,32*MiB,0,0.02,reuse_count=20,role='router',temperature='HOT'), TensorSlice('expert','s2',64*MiB,96*MiB,7,0.02,role='expert',temperature='COLD'))
+          bound=build_plan_bound_benchmark_request(host_profile=hp,tensors=ts,policy=pol,graph_sha256=D,source_fixture_sha256=E,root_node_ids=(0,17,99),max_depth=3,iterations=10,implementation_generation=PR477_SAFE_SHA,runner_generation='thinkpad-wsl-runner:v1',host_snapshot_digest=F)
+          assert bound.plan.storage_plan_digest == bound.request.storage_plan_digest
+          out=admit_plan_bound_benchmark_evidence(binding=bound,samples=samples(bound.request,with_device=True),host_observation_id='thinkpad-wsl:o50:ci',runner_identity='aura-owner-host-benchmark-runner')
+          assert out['storage_plan_digest_bound_to_request'] is True
+          for field in ('storage_plan_execution_observed','planned_backend_observed','host_profile_observed_by_this_membrane','benchmark_counters_prove_storage_plan_compliance','process_cold_proves_os_page_cache_cold','process_cold_proves_device_cache_cold','physical_io_attested','producer_authenticated','w4_admitted','real_performance_winner_proven','effect_authority_proven'):
+              assert out[field] is False, field
+          assert not any(out['authority'].values())
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'PlanDigestBoundToRequest != PlanExecuted.'
+          echo 'PlanMode != ObservedBackend.'
+          echo 'BenchmarkCounters != StoragePlanCompliance != PhysicalIOAttestation.'
+          echo 'PROCESS_COLD != OSPageCacheCold != DeviceCacheCold.'
+          echo 'No producer authentication, W4 admission, performance winner, effect authority, semantic K27 authority, native/private transformer KV access, merge, promotion, provider/public/human authority, or Gate-10 action is established.'
