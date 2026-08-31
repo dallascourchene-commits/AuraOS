@@ -5,6 +5,8 @@ import unittest
 
 from tools.quantization.aura_glm53_source_bound_quantization_evidence_gate import (
     HISTORICAL_BRIDGE_OWNER_BLOB_SHA,
+    HISTORICAL_BRIDGE_OWNER_HEAD,
+    HISTORICAL_BRIDGE_OWNER_RUN,
     HISTORICAL_BRIDGE_VERSION,
     HISTORICAL_W2_DRIVE_OBSERVATION,
     HISTORICAL_W2_HEADER_SHA256,
@@ -44,6 +46,8 @@ class SourceBoundEvidenceGateTests(unittest.TestCase):
         self.assertFalse(out.current_source_headers_observed)
         self.assertFalse(out.current_source_header_trial_eligible)
         self.assertEqual(out.historical_bridge_version, HISTORICAL_BRIDGE_VERSION)
+        self.assertEqual(out.historical_bridge_owner_head, HISTORICAL_BRIDGE_OWNER_HEAD)
+        self.assertEqual(out.historical_bridge_owner_run, HISTORICAL_BRIDGE_OWNER_RUN)
         self.assertEqual(out.historical_bridge_owner_blob, HISTORICAL_BRIDGE_OWNER_BLOB_SHA)
         self.assertEqual(out.historical_bridge_digest, bridge.digest)
         self.assertTrue(out.historical_official_index_relation_observed)
