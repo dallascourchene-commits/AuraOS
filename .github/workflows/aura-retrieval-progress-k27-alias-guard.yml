@@ -1,3 +1,4 @@
+# Proof-trigger child for PR #759; semantic source/test blobs remain unchanged.
 name: Aura Retrieval Progress K27 Alias Guard Proof
 
 on:
@@ -101,7 +102,6 @@ jobs:
 
           checked = 0
           a, b = view(), session_view()
-          # 24 same-SID / different-route states.
           for alias_present in (False, True):
               for state_changed in (False, True):
                   for evidence_changed in (False, True):
@@ -127,10 +127,9 @@ jobs:
                               expected = AliasAwareDecision.CHANGE_AXIS_REQUIRED
                           else:
                               expected = AliasAwareDecision.COLLAPSE_CONE
-                          assert receipt.decision is expected, (alias_present, state_changed, evidence_changed, prior, receipt.decision, expected)
+                          assert receipt.decision is expected
                           checked += 1
 
-          # 12 same-view states: route identity contributes no artificial progress.
           for state_changed in (False, True):
               for evidence_changed in (False, True):
                   for prior in (0, 1, 2):
@@ -154,7 +153,6 @@ jobs:
                       assert receipt.decision is expected
                       checked += 1
 
-          # 12 different-SID states: source identity itself is a genuine resource-axis change.
           c = view(
               canonical_key="https://arxiv.org/abs/2607.10487",
               xyz=(5, 3, 9),
