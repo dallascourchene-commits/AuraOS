@@ -236,6 +236,11 @@ def admit_prefetch_transfers(
 
     Ranking is by expected latency margin descending, then expert id. This is a
     deterministic bounded heuristic, not a claim of global knapsack optimality.
+
+    A lawful predictor abstention is represented as an empty predicted set. In
+    that case no storage transfer is required, so the cold reuse requirement is
+    exactly 0.0. This is a planning identity only: it is not a physical-I/O
+    savings claim and grants no execution or transfer authority.
     """
     prediction.validate(num_experts=num_experts)
     policy.validate()
@@ -257,10 +262,14 @@ def admit_prefetch_transfers(
 
     bandwidth = policy.effective_storage_bandwidth_bytes_per_second
     cold_bytes = sum(by_expert[e].logical_expert_bytes for e in prediction.predicted_experts)
-    cold_reuse_needed = required_reuse(
-        logical_expert_bytes_required=cold_bytes,
-        effective_storage_bandwidth_bytes_per_second=bandwidth,
-        target_expert_io_seconds=policy.prefetch_window_seconds,
+    cold_reuse_needed = (
+        0.0
+        if cold_bytes == 0
+        else required_reuse(
+            logical_expert_bytes_required=cold_bytes,
+            effective_storage_bandwidth_bytes_per_second=bandwidth,
+            target_expert_io_seconds=policy.prefetch_window_seconds,
+        )
     )
 
     evaluated: list[tuple[CalibratedExpertForecast, ExpertTransferDecision]] = []
