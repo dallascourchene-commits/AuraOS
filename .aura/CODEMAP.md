@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1645
-- **total_bytes**: 26479690
-- **text_tokens_est**: 6610276
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1001, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1669
+- **total_bytes**: 26644999
+- **text_tokens_est**: 6651610
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 18, 'operator_script': 9, 'python_module': 1007, 'schema_or_lexicon': 284, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1645,
+  "repo_file_count": 1669,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -154,6 +154,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-k27-astge-splane.yml",
     ".github/workflows/aura-review-ghr002.yml",
     ".github/workflows/aura-review-ghr015.yml",
     ".github/workflows/aura-review-learning.yml",
@@ -169,6 +170,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
+    ".github/workflows/k27-astge-immutability-capability.yml",
+    ".github/workflows/k27-astge-imported-draft-falsifier.yml",
+    ".github/workflows/k27-astge-io-uring-capability.yml",
+    ".github/workflows/k27-astge-page-reuse-observability.yml",
+    ".github/workflows/k27-astge-snapshot-open-handle-selector-v2.yml",
+    ".github/workflows/k27-astge-thinkpad-host-qualification.yml",
+    ".github/workflows/k27-astge-v4-lease-mmap-exec.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
     ".github/workflows/model-cognome-governed-routing.yml",
     ".github/workflows/model-cognome-replay-probes.yml",
@@ -947,6 +955,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "cognitive_search.rs",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
+    "crates/aura-k27-astge-page-reuse-observability/Cargo.toml",
+    "crates/aura-k27-astge-page-reuse-observability/src/lib.rs",
+    "crates/aura-k27-astge-v4-mmap-exec/Cargo.toml",
+    "crates/aura-k27-astge-v4-mmap-exec/src/lib.rs",
+    "crates/aura-k27-astge/Cargo.toml",
+    "crates/aura-k27-astge/README.md",
+    "crates/aura-k27-astge/src/lib.rs",
+    "crates/aura-k27-astge/src/v2.rs",
+    "crates/aura-k27-astge/src/v3.rs",
+    "crates/aura-k27-astge/src/v4.rs",
     "dag_executor.py",
     "dag_executor.rs",
     "debug_att.py",
@@ -1643,6 +1661,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_huggingface_space_deployment.py",
+    "tests/test_k27_astge_candidate_design_falsifier.py",
+    "tests/test_k27_astge_io_uring_capability_probe.py",
+    "tests/test_k27_astge_thinkpad_host_probe.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
     "third_party/pascal/LICENSE",
@@ -1657,6 +1678,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/aura_review/test_aura_review_context_compiler.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/k27_astge_candidate_design_falsifier.py",
+    "tools/k27_astge_io_uring_capability_probe.py",
+    "tools/k27_astge_thinkpad_host_probe.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1785,16 +1809,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1645,
-  "bytes": 26479690,
-  "tokens_est": 6610276,
+  "files": 1669,
+  "bytes": 26644999,
+  "tokens_est": 6651610,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 237,
-    "native_accelerator": 12,
+    "knowledge_artifact": 238,
+    "native_accelerator": 18,
     "operator_script": 9,
-    "python_module": 1001,
-    "schema_or_lexicon": 273,
+    "python_module": 1007,
+    "schema_or_lexicon": 284,
     "support_file": 49
   }
 }
@@ -1934,6 +1958,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_workspace/inbox/bounties/active/batch2/W8_rust-grpc-44/ALLOCATION.md",
     "aura_workspace/inbox/bounties/active/batch2/W9_BLOCKED_SOURCE_AUTHORITY.md",
     "aura_workspace/inbox/bounties/active/typeorm_3357_POLICY_BLOCK.md",
+    "crates/aura-k27-astge/README.md",
     "defensive-publications/Paper_XI_Predictive_Locality_Recursive_Cardinality_World_Seed_2026-08-12.md",
     "demo_assets/construction_tuwien/ATTRIBUTION.md",
     "demo_assets/construction_tuwien/README.md",
@@ -2078,8 +2103,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md"
+    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
   ]
 }
 ```
