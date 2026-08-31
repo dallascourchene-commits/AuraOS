@@ -44,9 +44,18 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git fetch --no-tags --depth=1 origin "$TRANSACTION_HEAD"
-          git fetch --no-tags --depth=1 origin "$ALIAS_HEAD"
-          git fetch --no-tags --depth=1 origin "$ALIAS_PROOF_HEAD"
+          # Fetch advertised branch histories rather than relying on raw historical-SHA
+          # shallow wants. The exact semantic/proof commits are then authenticated by
+          # commit identity and immutable blob identity below.
+          git fetch --no-tags --depth=8 origin \
+            '+refs/heads/arena/scheme-serializable-hydration-transaction-v1-20260831-sol:refs/remotes/origin/nav15-pr758'
+          git fetch --no-tags --depth=8 origin \
+            '+refs/heads/arena/retrieval-progress-k27-alias-guard-v1-20260831-sol:refs/remotes/origin/nav15-pr759'
+          git fetch --no-tags --depth=8 origin \
+            '+refs/heads/arena/proof-pr759-k27-alias-progress-20260831-sol:refs/remotes/origin/nav15-pr759-proof'
+          git cat-file -e "$TRANSACTION_HEAD^{commit}"
+          git cat-file -e "$ALIAS_HEAD^{commit}"
+          git cat-file -e "$ALIAS_PROOF_HEAD^{commit}"
           test "$(git rev-parse "$TRANSACTION_HEAD:tools/aura_scheme_serializable_hydration_transaction.py")" = "$TRANSACTION_BLOB"
           test "$(git rev-parse "$ALIAS_HEAD:tools/aura_retrieval_progress_k27_alias_guard.py")" = "$ALIAS_BLOB"
           test "$(git rev-parse "$ALIAS_HEAD:tests/test_aura_retrieval_progress_k27_alias_guard.py")" = "$ALIAS_TEST_BLOB"
