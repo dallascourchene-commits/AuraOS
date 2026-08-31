@@ -1,0 +1,145 @@
+name: Aura Objective H Hosted Proof Mirror
+
+on:
+  push:
+    branches:
+      - 'feature/arena-objective-h-hosted-proof-20260831-sol'
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  H_SOURCE_BLOB: 303bf85ddb57143766845070f839c1b66d9fc1a5
+  H_TEST_BLOB: 81befb3c9c539dd9fb39f91a35c64eb80180bb05
+  NAV_SOURCE_BLOB: 37260b421ff4e191d398f53673feba2cf4af5857
+  NAV_TEST_BLOB: 6aec5e515321037ccb6b423bfb63b61e1eda1f19
+  COLLISION_SOURCE_BLOB: f0939ff7d9b000f0bfcbe167028450067592c16c
+  COLLISION_TEST_BLOB: 1b829e7e8ebe389e905adfd78f35436fdd3f0f0b
+  TRUE_DIAMOND: 620bd0c02190d4efcb41978cf95a3268dfbe02a5
+  NAV_HEAD: d97012ce7d3dd221adac0f750db4b77ddf6a7ab9
+  COLLISION_HEAD: 88042284f44cce3bcad40097b069ca31348d133d
+  NAV_PROOF_HEAD: 91028c63155bbff891d780f123e4477f037f8096
+  NAV_PROOF_RUN: '33423871812'
+  NAV_PROOF_JOB: '99592589458'
+  COLLISION_PROOF_HEAD: ba5301429ae4ee00b44424397033568a00a956b6
+  COLLISION_PROOF_RUN: '33424128729'
+  COLLISION_PROOF_JOB: '99593429609'
+
+jobs:
+  objective-h-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact live H proof mirror
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+
+      - name: Authenticate exact semantic surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/aura_navigator_k27_collision_router.py)" = "$H_SOURCE_BLOB"
+          test "$(git hash-object tests/test_aura_navigator_k27_collision_router.py)" = "$H_TEST_BLOB"
+          test "$(git hash-object tools/aura_fractal_k27.py)" = "$NAV_SOURCE_BLOB"
+          test "$(git hash-object tests/test_aura_fractal_k27.py)" = "$NAV_TEST_BLOB"
+          test "$(git hash-object tools/aura_collision_safe_rebase.py)" = "$COLLISION_SOURCE_BLOB"
+          test "$(git hash-object tests/test_aura_collision_safe_rebase.py)" = "$COLLISION_TEST_BLOB"
+          echo 'OBJECTIVE_H_SURFACES_EXACT=true'
+
+      - name: Authenticate true two-parent Diamond and union tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "$NAV_HEAD" "$COLLISION_HEAD" "$TRUE_DIAMOND"
+          mapfile -t parents < <(git cat-file -p "$TRUE_DIAMOND" | awk '/^parent / {print $2}')
+          test "${#parents[@]}" -eq 2
+          test "${parents[0]}" = "$COLLISION_HEAD"
+          test "${parents[1]}" = "$NAV_HEAD"
+          test "$(git rev-parse "$TRUE_DIAMOND:tools/aura_fractal_k27.py")" = "$NAV_SOURCE_BLOB"
+          test "$(git rev-parse "$TRUE_DIAMOND:tests/test_aura_fractal_k27.py")" = "$NAV_TEST_BLOB"
+          test "$(git rev-parse "$TRUE_DIAMOND:tools/aura_collision_safe_rebase.py")" = "$COLLISION_SOURCE_BLOB"
+          test "$(git rev-parse "$TRUE_DIAMOND:tests/test_aura_collision_safe_rebase.py")" = "$COLLISION_TEST_BLOB"
+          echo 'OBJECTIVE_H_TRUE_DIAMOND_EXACT=true'
+
+      - name: Revalidate exact hosted parent proofs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']
+          checks=(
+              (int(os.environ['NAV_PROOF_RUN']), int(os.environ['NAV_PROOF_JOB']), os.environ['NAV_PROOF_HEAD'], 'Aura NAV03A Hosted Proof Mirror Sol2'),
+              (int(os.environ['COLLISION_PROOF_RUN']), int(os.environ['COLLISION_PROOF_JOB']), os.environ['COLLISION_PROOF_HEAD'], 'Aura Collision Safe Rebase Hosted Proof Mirror Sol2'),
+          )
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          for run_id, job_id, head, name in checks:
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as response: run=json.load(response)
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['name']==name,(run_id,run['name'],name)
+              assert run['status']=='completed' and run['conclusion']=='success',run_id
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as response: job=json.load(response)
+              assert job['run_id']==run_id,(job_id,job['run_id'],run_id)
+              assert job['status']=='completed' and job['conclusion']=='success',job_id
+          print('OBJECTIVE_H_PARENTS_EXACT_GREEN=true')
+          PY
+
+      - name: Replay both parent suites and H adversarial cross-product
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/aura_fractal_k27.py \
+            tools/aura_collision_safe_rebase.py \
+            tools/aura_navigator_k27_collision_router.py \
+            tests/test_aura_fractal_k27.py \
+            tests/test_aura_collision_safe_rebase.py \
+            tests/test_aura_navigator_k27_collision_router.py
+          python -m unittest -v \
+            tests.test_aura_fractal_k27 \
+            tests.test_aura_collision_safe_rebase \
+            tests.test_aura_navigator_k27_collision_router
+
+      - name: Independently prove orthogonal locality-semantic axes and ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          from tools.aura_collision_safe_rebase import CandidateContribution, OwnerState, CollisionDisposition
+          from tools.aura_fractal_k27 import K27Path, ZoomDisposition
+          from tools.aura_navigator_k27_collision_router import route_k27_collision, NavigatorRouteDisposition
+          h=lambda s: hashlib.sha256(s.encode()).hexdigest()
+          # Different K27, same semantics: locality distinction cannot create a new owner.
+          same=h('same')
+          r=route_k27_collision(
+              owner=OwnerState('owner','g1',same,True),
+              candidate=CandidateContribution('candidate',same,('shared',),('e',),('i',)),
+              owner_path=K27Path.parse('K27:/11.17.15'),
+              candidate_path=K27Path.parse('K27:/12.17.15'),
+              overlapping_claims=('shared',),unique_residual_claims=())
+          assert r.locality_disposition is ZoomDisposition.DISTINGUISHED
+          assert r.semantic_collision_disposition is CollisionDisposition.DUPLICATE_RETAINED_AS_LINEAGE
+          assert r.route_disposition is NavigatorRouteDisposition.RETAIN_DUPLICATE_LINEAGE
+          # Same K27, orthogonal semantics: locality collision cannot manufacture semantic duplication.
+          p=K27Path.parse('K27:/11.17.15')
+          r=route_k27_collision(
+              owner=OwnerState('owner','g1',h('owner'),True),
+              candidate=CandidateContribution('candidate',h('orth'),('orthogonal',),('e',),('i',)),
+              owner_path=p,candidate_path=p,
+              overlapping_claims=(),unique_residual_claims=('orthogonal',))
+          assert r.locality_disposition is ZoomDisposition.LOCALITY_COLLISION
+          assert r.semantic_collision_disposition is CollisionDisposition.ORTHOGONAL_OWNER_CANDIDATE
+          assert r.route_disposition is NavigatorRouteDisposition.ROUTE_ORTHOGONAL_CANDIDATE
+          assert not any((r.k27_semantic_identity,r.k27_evidence_rank,r.k27_currentness_witness,r.semantic_authority_granted,r.read_authority_granted,r.write_authority_granted,r.tool_execution_authority_granted,r.effect_authority_granted,r.native_private_transformer_kv_accessed,r.sibling_credit_earned))
+          print('DIFFERENT_K27_NE_DIFFERENT_SEMANTIC_OWNER=true')
+          print('SAME_K27_NE_DUPLICATE_SEMANTICS=true')
+          print('K27_LOCALITY_TO_HYDRATION_NOT_AUTHORITY=true')
+          print('OBJECTIVE_H_NEGATIVE_CAPABILITY_CEILING=true')
+          PY
