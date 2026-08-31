@@ -56,12 +56,20 @@ jobs:
           python3 tools/k27_astge_python_scope_oracle.py
           cargo clippy --manifest-path crates/aura-k27-astge-typed-nested-scope-review/Cargo.toml --all-targets -- -D warnings
 
-      - name: Verify post-edit currentness membrane
+      - name: Check post-edit currentness formatting
+        run: cargo fmt --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml -- --check
+
+      - name: Test post-edit currentness membrane
+        run: cargo test --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --all-targets
+
+      - name: Test post-edit currentness doctests
+        run: cargo test --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --doc
+
+      - name: Lint post-edit currentness membrane
+        run: cargo clippy --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --all-targets -- -D warnings
+
+      - name: Safe-path unsafe scan
         run: |
-          cargo fmt --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml -- --check
-          cargo test --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --all-targets
-          cargo test --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --doc
-          cargo clippy --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --all-targets -- -D warnings
           if grep -R -nE 'unsafe[[:space:]]*\{' crates/aura-k27-astge-post-edit-profiled-scope/src; then
             echo 'unsafe block found in post-edit currentness membrane' >&2
             exit 1
