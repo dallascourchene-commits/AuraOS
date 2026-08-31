@@ -1,0 +1,100 @@
+name: K27 ASTGE Current Typed Profiled Scope Convergence
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge-current-syntax/**"
+      - "crates/aura-k27-astge-generation-domain/**"
+      - "crates/aura-k27-astge-scopes/**"
+      - "crates/aura-k27-astge-profiled-scopes/**"
+      - "crates/aura-k27-astge-current-profiled-scopes/**"
+      - "tools/k27_astge_python_scope_oracle.py"
+      - ".github/workflows/k27-astge-current-typed-profiled-scopes.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  current-typed-profiled-scopes:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove current SyntaxGraph hydration parent
+        shell: bash
+        run: |
+          rustc --version
+          cargo --version
+          python3 --version
+          cargo fmt --manifest-path crates/aura-k27-astge-current-syntax/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-current-syntax/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-current-syntax/Cargo.toml --all-targets -- -D warnings
+
+      - name: Re-prove typed generation parent
+        shell: bash
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-generation-domain/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-generation-domain/Cargo.toml --all-targets
+          cargo test --doc --manifest-path crates/aura-k27-astge-generation-domain/Cargo.toml
+          cargo clippy --manifest-path crates/aura-k27-astge-generation-domain/Cargo.toml --all-targets -- -D warnings
+
+      - name: Re-prove profiled lexical scope substrate
+        shell: bash
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-profiled-scopes/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-profiled-scopes/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-profiled-scopes/Cargo.toml --all-targets -- -D warnings
+          python3 tools/k27_astge_python_scope_oracle.py
+
+      - name: Verify current typed profiled scope bridge
+        shell: bash
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-current-profiled-scopes/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-current-profiled-scopes/Cargo.toml --all-targets
+          cargo test --doc --manifest-path crates/aura-k27-astge-current-profiled-scopes/Cargo.toml
+          cargo clippy --manifest-path crates/aura-k27-astge-current-profiled-scopes/Cargo.toml --all-targets -- -D warnings
+
+      - name: Safe-path unsafe scan
+        shell: bash
+        run: |
+          if grep -R --line-number -E 'unsafe\s*\{' \
+            crates/aura-k27-astge-current-syntax/src \
+            crates/aura-k27-astge-generation-domain/src \
+            crates/aura-k27-astge-profiled-scopes/src \
+            crates/aura-k27-astge-current-profiled-scopes/src; then
+            echo 'unsafe block found in current typed profiled-scope safe path' >&2
+            exit 1
+          fi
+
+      - name: Emit claim ceiling
+        shell: bash
+        run: |
+          echo 'CURRENT_TYPED_PROFILED_SCOPE_CONVERGENCE_EXECUTED=true'
+          echo 'INDEPENDENT_CURRENT_BODY_BOUND=true'
+          echo 'ACTUAL_SOURCE_PROFILE_GRAPH_EQUAL=true'
+          echo 'SOURCE_GENERATION_TYPED=true'
+          echo 'SOURCE_PLACEMENT_GENERATION_ALIAS_ALLOWED=false'
+          echo 'CPYTHON_SYMTABLE_SCOPE_TREE_CONFORMANT=true'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'GLOBAL_NONLOCAL_RESOLUTION_PROVEN=false'
+          echo 'IMPORT_GRAPH_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'SEMANTIC_K27_DERIVED=false'
+          echo 'HUMAN_AUTHORITY=false'
+          echo 'EXTERNAL_EFFECT=false'
