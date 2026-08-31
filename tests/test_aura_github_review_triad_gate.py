@@ -6,6 +6,9 @@ from scripts.aura_github_review_triad_gate import evaluate_review_triad
 
 HEAD = "a" * 40
 OLD = "b" * 40
+CODEX = {"id": 199175422, "login": "chatgpt-codex-connector[bot]"}
+CODERABBIT = {"id": 136622811, "login": "coderabbitai[bot]"}
+ATTACKER = {"id": 42, "login": "attacker"}
 
 
 def snapshot(*, codex=True, coderabbit=True, codacy=True, head=HEAD, coderabbit_skip=False):
@@ -19,12 +22,19 @@ def snapshot(*, codex=True, coderabbit=True, codacy=True, head=HEAD, coderabbit_
                 "id": 1,
                 "commit_id": head,
                 "state": "COMMENTED",
-                "user": {"login": "openai-codex[bot]"},
+                "user": dict(CODEX),
                 "body": "Codex review complete",
             }
         )
     if coderabbit:
-        statuses.append({"id": 2, "context": "CodeRabbit", "state": "success"})
+        statuses.append(
+            {
+                "id": 2,
+                "context": "CodeRabbit",
+                "state": "success",
+                "creator": dict(CODERABBIT),
+            }
+        )
     if codacy:
         checks.append(
             {
@@ -39,7 +49,7 @@ def snapshot(*, codex=True, coderabbit=True, codacy=True, head=HEAD, coderabbit_
         issue_comments.append(
             {
                 "id": 4,
-                "user": {"login": "coderabbitai[bot]"},
+                "user": dict(CODERABBIT),
                 "body": "Draft PR not reviewed — skip review by coderabbit.ai",
             }
         )
@@ -60,6 +70,10 @@ class GitHubReviewTriadGateTests(unittest.TestCase):
         self.assertEqual(
             {"codex": True, "coderabbit": True, "codacy": True},
             receipt["reviewer_pass"],
+        )
+        self.assertEqual(
+            "PINNED_GITHUB_ACTOR_OR_APP_IDENTITY_V1",
+            receipt["provider_identity_policy"],
         )
         self.assertFalse(receipt["merge_authorized"])
         self.assertFalse(receipt["semantic_correctness_minted"])
@@ -105,7 +119,7 @@ class GitHubReviewTriadGateTests(unittest.TestCase):
     def test_user_codex_request_is_not_codex_completion(self):
         data = snapshot(codex=False)
         data["issue_comments"].append(
-            {"id": 9, "user": {"login": "developer"}, "body": "@codex review"}
+            {"id": 9, "user": {"id": 7, "login": "developer"}, "body": "@codex review"}
         )
         receipt = evaluate_review_triad(data, HEAD)
         self.assertFalse(receipt["review_triad_admitted"])
@@ -125,6 +139,72 @@ class GitHubReviewTriadGateTests(unittest.TestCase):
             },
             set(receipt["violations"]),
         )
+
+    def test_mutable_status_context_cannot_spoof_codacy(self):
+        data = snapshot(codacy=False)
+        data["statuses"].append(
+            {
+                "id": 20,
+                "context": "Codacy compatibility success",
+                "state": "success",
+                "creator": dict(ATTACKER),
+            }
+        )
+        receipt = evaluate_review_triad(data, HEAD)
+        self.assertFalse(receipt["reviewer_pass"]["codacy"])
+
+    def test_mutable_check_name_cannot_spoof_coderabbit(self):
+        data = snapshot(coderabbit=False)
+        data["check_runs"].append(
+            {
+                "id": 21,
+                "name": "CodeRabbit clean review",
+                "status": "completed",
+                "conclusion": "success",
+                "app": {"slug": "attacker-app"},
+            }
+        )
+        receipt = evaluate_review_triad(data, HEAD)
+        self.assertFalse(receipt["reviewer_pass"]["coderabbit"])
+
+    def test_review_body_cannot_spoof_codex(self):
+        data = snapshot(codex=False)
+        data["reviews"].append(
+            {
+                "id": 22,
+                "commit_id": HEAD,
+                "state": "COMMENTED",
+                "user": dict(ATTACKER),
+                "body": "Codex review complete; @codex review",
+            }
+        )
+        receipt = evaluate_review_triad(data, HEAD)
+        self.assertFalse(receipt["reviewer_pass"]["codex"])
+
+    def test_login_without_pinned_actor_id_cannot_spoof_coderabbit(self):
+        data = snapshot(coderabbit=False)
+        data["statuses"].append(
+            {
+                "id": 23,
+                "context": "CodeRabbit",
+                "state": "success",
+                "creator": {"id": 999, "login": "coderabbitai[bot]"},
+            }
+        )
+        receipt = evaluate_review_triad(data, HEAD)
+        self.assertFalse(receipt["reviewer_pass"]["coderabbit"])
+
+    def test_trusted_codex_clean_comment_can_bind_reviewed_commit_prefix(self):
+        data = snapshot(codex=False)
+        data["issue_comments"].append(
+            {
+                "id": 24,
+                "user": dict(CODEX),
+                "body": f"Codex Review: Didn't find any major issues. Reviewed commit: `{HEAD[:10]}`",
+            }
+        )
+        receipt = evaluate_review_triad(data, HEAD)
+        self.assertTrue(receipt["reviewer_pass"]["codex"])
 
 
 if __name__ == "__main__":
