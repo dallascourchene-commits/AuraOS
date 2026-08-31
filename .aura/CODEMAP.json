@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788199316,
+  "generated_at_unix": 1788199959,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1656,
+    "repo_file_count": 1657,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-eki-subject-version-resolver-proof.yml",
       ".github/workflows/aura-external-knowledge-ingress.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-review-learning.yml",
@@ -1772,16 +1773,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1656,
-      "bytes": 26529245,
-      "tokens_est": 6622664,
+      "files": 1657,
+      "bytes": 26531171,
+      "tokens_est": 6623146,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1004,
-        "schema_or_lexicon": 273,
+        "schema_or_lexicon": 274,
         "support_file": 56
       }
     },
@@ -159955,6 +159956,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-eki-subject-version-resolver-proof.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -160249,6 +160251,11 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python -m unittest": [
+      ".github/workflows/aura-eki-subject-version-resolver-proof.yml",
+      ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
     "python3 -m py_compile": [
       ".github/workflows/aura-external-knowledge-ingress.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
@@ -160258,10 +160265,6 @@
     ],
     "python3 -m tools.aura_external_knowledge_ingress": [
       ".github/workflows/aura-external-knowledge-ingress.yml"
-    ],
-    "python -m unittest": [
-      ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
@@ -169409,6 +169412,64 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-eki-subject-version-resolver-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1926,
+      "lines": 58,
+      "tokens_est": 482,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          35,
+          36
+        ],
+        "python -m unittest": [
+          41
+        ]
+      },
+      "topology": {},
+      "digest8": "8b73a75ce79e0f94",
+      "vector": [
+        -0.194885,
+        -0.24545,
+        0.148534,
+        0.190671,
+        0.159068,
+        0.249664,
+        0.161175,
+        0.097969,
+        0.055832,
+        0.260198,
+        -0.228595,
+        -0.25177,
+        -0.112717,
+        0.17171,
+        -0.17171,
+        -0.260198,
+        0.148534,
+        -0.083221,
+        -0.224381,
+        0.169603,
+        0.079007,
+        -0.17171,
+        0.017908,
+        0.138,
+        -0.121145,
+        0.169603,
+        -0.001053,
+        -0.112717,
+        0.220167,
+        -0.175923,
+        0.249664,
+        -0.182244
       ]
     },
     {
@@ -289141,16 +289202,16 @@
     }
   },
   "summary": {
-    "file_count": 1656,
-    "total_bytes": 26529245,
-    "text_tokens_est": 6622664,
+    "file_count": 1657,
+    "total_bytes": 26531171,
+    "text_tokens_est": 6623146,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1004,
-      "schema_or_lexicon": 273,
+      "schema_or_lexicon": 274,
       "support_file": 56
     },
     "topology_nodes": 11478,
@@ -289296,6 +289357,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-eki-subject-version-resolver-proof.yml",
       ".github/workflows/aura-external-knowledge-ingress.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-review-learning.yml",
@@ -451067,6 +451129,6 @@
       }
     ],
     "record_fingerprint": "5de784a74f19e6d00a08ea9b01cb1bcf",
-    "payload_hash": "41e61cf5d38b218bf8937442125765ad"
+    "payload_hash": "f7617d584f79c1ea996417129c65eb82"
   }
 }
