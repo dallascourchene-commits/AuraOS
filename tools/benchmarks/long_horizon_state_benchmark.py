@@ -10,6 +10,9 @@ from pathlib import Path
 from typing import Any, Sequence
 
 
+TURN_DISPOSITIONS = {"PASS", "STATE_DRIFT", "TIMEOUT", "ADAPTER_ERROR", "PROTOCOL_ERROR"}
+
+
 def _digest(state: dict[str, int]) -> str:
     payload = json.dumps(state, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(payload).hexdigest()
@@ -50,6 +53,7 @@ def build_workload(rounds: int, *, seed: int = 17) -> list[dict[str, Any]]:
 @dataclass(frozen=True)
 class TurnResult:
     turn: int
+    disposition: str
     returncode: int
     wall_time_ms: float
     expected_state_digest: str
@@ -88,62 +92,92 @@ def run_adapter(
     timeout_seconds: float = 120.0,
     cwd: Path | None = None,
 ) -> dict[str, Any]:
+    if timeout_seconds <= 0:
+        raise ValueError("TIMEOUT_SECONDS_MUST_BE_POSITIVE")
+
     workload = build_workload(rounds, seed=seed)
     results: list[TurnResult] = []
     for item in workload:
         start = time.perf_counter()
-        completed = subprocess.run(
-            list(command),
-            input=json.dumps(item) + "\n",
-            text=True,
-            capture_output=True,
-            timeout=timeout_seconds,
-            cwd=str(cwd) if cwd else None,
-            check=False,
-        )
-        elapsed_ms = (time.perf_counter() - start) * 1000.0
-        payload: dict[str, Any] = {}
         observed: str | None = None
         telemetry: dict[str, Any] = {"provenance": "UNKNOWN"}
-        if completed.returncode == 0:
-            try:
-                payload = json.loads(completed.stdout)
-                if not isinstance(payload, dict):
-                    raise ValueError("ADAPTER_OUTPUT_NOT_OBJECT")
-                observed = payload.get("state_digest")
-                if observed is not None and not isinstance(observed, str):
-                    raise ValueError("INVALID_STATE_DIGEST")
-                telemetry = _validate_telemetry(payload)
-            except (json.JSONDecodeError, ValueError) as exc:
-                completed = subprocess.CompletedProcess(
-                    completed.args, 65, completed.stdout, f"{completed.stderr}\nADAPTER_PROTOCOL_ERROR:{exc}"
-                )
+        stderr = ""
+        returncode = 0
+        disposition = "ADAPTER_ERROR"
+
+        try:
+            completed = subprocess.run(
+                list(command),
+                input=json.dumps(item) + "\n",
+                text=True,
+                capture_output=True,
+                timeout=timeout_seconds,
+                cwd=str(cwd) if cwd else None,
+                check=False,
+            )
+            elapsed_ms = (time.perf_counter() - start) * 1000.0
+            returncode = completed.returncode
+            stderr = completed.stderr
+
+            if completed.returncode == 0:
+                try:
+                    payload = json.loads(completed.stdout)
+                    if not isinstance(payload, dict):
+                        raise ValueError("ADAPTER_OUTPUT_NOT_OBJECT")
+                    observed = payload.get("state_digest")
+                    if observed is not None and not isinstance(observed, str):
+                        raise ValueError("INVALID_STATE_DIGEST")
+                    telemetry = _validate_telemetry(payload)
+                    disposition = "PASS" if observed == item["expected_state_digest"] else "STATE_DRIFT"
+                except (json.JSONDecodeError, ValueError) as exc:
+                    returncode = 65
+                    disposition = "PROTOCOL_ERROR"
+                    stderr = f"{stderr}\nADAPTER_PROTOCOL_ERROR:{exc}"
+            else:
+                disposition = "ADAPTER_ERROR"
+        except subprocess.TimeoutExpired as exc:
+            elapsed_ms = (time.perf_counter() - start) * 1000.0
+            returncode = 124
+            disposition = "TIMEOUT"
+            captured_stderr = exc.stderr if isinstance(exc.stderr, str) else ""
+            stderr = f"{captured_stderr}\nADAPTER_TIMEOUT:{timeout_seconds}"
+
+        if disposition not in TURN_DISPOSITIONS:
+            raise AssertionError(f"UNKNOWN_TURN_DISPOSITION:{disposition}")
+        state_match = disposition == "PASS"
         results.append(
             TurnResult(
                 turn=item["turn"],
-                returncode=completed.returncode,
+                disposition=disposition,
+                returncode=returncode,
                 wall_time_ms=elapsed_ms,
                 expected_state_digest=item["expected_state_digest"],
                 observed_state_digest=observed,
-                state_match=completed.returncode == 0 and observed == item["expected_state_digest"],
+                state_match=state_match,
                 telemetry=telemetry,
-                stderr=completed.stderr,
+                stderr=stderr,
             )
         )
 
     passed = sum(result.state_match for result in results)
     observed_turns = sum(result.telemetry.get("provenance") == "OBSERVED" for result in results)
     estimated_turns = sum(result.telemetry.get("provenance") == "ESTIMATED" for result in results)
+    disposition_counts = {
+        disposition: sum(result.disposition == disposition for result in results)
+        for disposition in sorted(TURN_DISPOSITIONS)
+    }
     return {
         "schema_id": "AURA_LONG_HORIZON_STATE_BENCHMARK_V1",
         "rounds": rounds,
         "seed": seed,
+        "timeout_seconds": timeout_seconds,
         "workload_digest": hashlib.sha256(json.dumps(workload, sort_keys=True).encode("utf-8")).hexdigest(),
         "passed_turns": passed,
         "state_drift_detected": passed != rounds,
         "runner_wall_time_ms": sum(result.wall_time_ms for result in results),
         "telemetry_observed_turns": observed_turns,
         "telemetry_estimated_turns": estimated_turns,
+        "disposition_counts": disposition_counts,
         "turns": [result.__dict__ for result in results],
     }
 
