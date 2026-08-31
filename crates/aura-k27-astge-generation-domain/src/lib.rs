@@ -110,10 +110,7 @@ pub struct MmapGenerationAxesV1 {
 }
 
 impl MmapGenerationAxesV1 {
-    pub const fn new(
-        snapshot: SnapshotGenerationV1,
-        placement: PlacementGenerationV1,
-    ) -> Self {
+    pub const fn new(snapshot: SnapshotGenerationV1, placement: PlacementGenerationV1) -> Self {
         Self {
             snapshot,
             placement,
@@ -138,10 +135,7 @@ pub struct TransactionGenerationAxesV1 {
 }
 
 impl TransactionGenerationAxesV1 {
-    pub const fn new(
-        source: SourceGenerationV1,
-        graph_serving: GraphServingGenerationV1,
-    ) -> Self {
+    pub const fn new(source: SourceGenerationV1, graph_serving: GraphServingGenerationV1) -> Self {
         Self {
             source,
             graph_serving,
