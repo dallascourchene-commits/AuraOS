@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1661
-- **total_bytes**: 26597267
-- **text_tokens_est**: 6639675
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1011, 'schema_or_lexicon': 278, 'support_file': 49}
+- **file_count**: 1662
+- **total_bytes**: 26615230
+- **text_tokens_est**: 6644165
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1012, 'schema_or_lexicon': 278, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1661,
+  "repo_file_count": 1662,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1669,6 +1669,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/quantization/aura_glm53_live_official_tensor_payload_canary.py",
     "tools/quantization/aura_glm53_live_payload_coverage_delta.py",
     "tools/quantization/aura_glm53_minimum_live_payload_cover_verification.py",
+    "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
     "tools/quantization/aura_glm53_official_source_e8_materialization_canary.py",
     "tools/quantization/test_aura_glm53_e8_indexed_expert_page_reference.py",
     "tools/quantization/test_aura_glm53_lattice_quantization_feasibility.py",
@@ -1801,15 +1802,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1661,
-  "bytes": 26597267,
-  "tokens_est": 6639675,
+  "files": 1662,
+  "bytes": 26615230,
+  "tokens_est": 6644165,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1011,
+    "python_module": 1012,
     "schema_or_lexicon": 278,
     "support_file": 49
   }

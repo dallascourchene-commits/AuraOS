@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788184106,
+  "generated_at_unix": 1788185815,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1661,
+    "repo_file_count": 1662,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1651,6 +1651,7 @@
       "tools/quantization/aura_glm53_live_official_tensor_payload_canary.py",
       "tools/quantization/aura_glm53_live_payload_coverage_delta.py",
       "tools/quantization/aura_glm53_minimum_live_payload_cover_verification.py",
+      "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
       "tools/quantization/aura_glm53_official_source_e8_materialization_canary.py",
       "tools/quantization/test_aura_glm53_e8_indexed_expert_page_reference.py",
       "tools/quantization/test_aura_glm53_lattice_quantization_feasibility.py",
@@ -1777,15 +1778,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1661,
-      "bytes": 26597267,
-      "tokens_est": 6639675,
+      "files": 1662,
+      "bytes": 26615230,
+      "tokens_est": 6644165,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1011,
+        "python_module": 1012,
         "schema_or_lexicon": 278,
         "support_file": 49
       }
@@ -3523,6 +3524,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 338,
+        "end_line": 342,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:main:2e5596a792aaa745",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "tools/quantization/aura_glm53_official_source_e8_materialization_canary.py",
         "kind": "function",
         "line": 331,
@@ -3996,6 +4005,14 @@
         "line": 47,
         "end_line": 48,
         "semantic_id": "tools/quantization/aura_glm53_minimum_live_payload_cover_verification.py#function:_canonical:92ce3cd252f30cbf",
+        "signature_hash": "707d518dafca1a42"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_canonical:be42620e59b24aa8",
         "signature_hash": "707d518dafca1a42"
       },
       {
@@ -8193,6 +8210,14 @@
         "end_line": 37,
         "semantic_id": "tools/quantization/aura_glm53_lattice_quantization_feasibility.py#function:_sha:a392a088d371d993",
         "signature_hash": "3c3bc3c037860fe9"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_sha:750cb517b9319f51",
+        "signature_hash": "5c1159d0eb804590"
       },
       {
         "file": "tools/quantization/aura_glm53_official_source_e8_materialization_canary.py",
@@ -73057,6 +73082,14 @@
         "end_line": 89,
         "semantic_id": "aura_qdkt_inventory.py#function:_classify:90621dc2b5159e06",
         "signature_hash": "93b84acccd5a0f93"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 175,
+        "end_line": 178,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_classify:3f8510733cb0af12",
+        "signature_hash": "b281ff69703efe81"
       }
     ],
     "_name_is_qdkt_constructor": [
@@ -158531,6 +158564,146 @@
         "signature_hash": "41f3669c1e7f8287"
       }
     ],
+    "ScalarCanaryError": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "class",
+        "line": 42,
+        "end_line": 43,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#class:ScalarCanaryError:8efedf2e7bdd2efb",
+        "signature_hash": "8addabef57b56f60"
+      }
+    ],
+    "scalar_representation_digest": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 62,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:scalar_representation_digest:95fb4e91355ad6cc",
+        "signature_hash": "49bc00d66f8c83a5"
+      }
+    ],
+    "_pack_labels": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 75,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_pack_labels:3d094ef22194663c",
+        "signature_hash": "0f72a95acbf95e8a"
+      }
+    ],
+    "_unpack_labels": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 84,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_unpack_labels:47806ed842ab86fa",
+        "signature_hash": "5646371322c1125b"
+      }
+    ],
+    "_f16_candidates": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 95,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_f16_candidates:44107188189a5557",
+        "signature_hash": "42112ea944fb13b7"
+      }
+    ],
+    "_candidate_scales": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 98,
+        "end_line": 119,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_candidate_scales:b7e829fdf92c97fe",
+        "signature_hash": "4e079c980a721e57"
+      }
+    ],
+    "_quantize_for_scale": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 128,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_quantize_for_scale:5634039108016c1d",
+        "signature_hash": "af67bb74c5e86640"
+      }
+    ],
+    "encode_optimized_scalar": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 131,
+        "end_line": 153,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:encode_optimized_scalar:f45f93368891df96",
+        "signature_hash": "39c8af48a28be914"
+      }
+    ],
+    "decode_optimized_scalar": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 164,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:decode_optimized_scalar:3091f9a8a90aacd1",
+        "signature_hash": "fdac5e6bb3393fc3"
+      }
+    ],
+    "_mse": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 167,
+        "end_line": 172,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_mse:d20b2654754bc450",
+        "signature_hash": "5d37cc9aad0c7696"
+      }
+    ],
+    "RoleComparison": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "class",
+        "line": 182,
+        "end_line": 196,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#class:RoleComparison:5ed8f7874d64c6d2",
+        "signature_hash": "0da12dfa08391804"
+      }
+    ],
+    "OfficialE8VsScalarReceipt": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "class",
+        "line": 200,
+        "end_line": 235,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#class:OfficialE8VsScalarReceipt:26843ae07be2fcb0",
+        "signature_hash": "cbdeb9e29a038967"
+      }
+    ],
+    "OfficialE8VsScalarReceipt.receipt_digest": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "method",
+        "line": 234,
+        "end_line": 235,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#method:OfficialE8VsScalarReceipt.receipt_digest:bb00db579e8c7c3d",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "current_official_e8_vs_scalar_canary": [
+      {
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "kind": "function",
+        "line": 238,
+        "end_line": 335,
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:current_official_e8_vs_scalar_canary:b58f626388cd1e4f",
+        "signature_hash": "d4fecf6db336dccc"
+      }
+    ],
     "MaterializationCanaryError": [
       {
         "file": "tools/quantization/aura_glm53_official_source_e8_materialization_canary.py",
@@ -170506,9 +170679,9 @@
       "path": ".github/workflows/glm53-official-source-e8-materialization-canary.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 9581,
-      "lines": 167,
-      "tokens_est": 2396,
+      "bytes": 13656,
+      "lines": 226,
+      "tokens_est": 3414,
       "symbol_count": 0,
       "commands": [
         "python -m py_compile",
@@ -170517,50 +170690,50 @@
       ],
       "command_lines": {
         "python -m py_compile": [
-          73
+          130
         ],
         "python -m unittest": [
-          74
+          131
         ],
         "python -m tools.quantization.aura_glm53_official_source_e8_materialization_canary": [
-          79
+          136
         ]
       },
       "topology": {},
-      "digest8": "6a08c8d107b458b3",
+      "digest8": "3a2eaeaabc9ab89f",
       "vector": [
-        -0.096533,
-        0.181165,
-        0.305468,
-        -0.096533,
-        0.083309,
-        0.093888,
-        0.088599,
-        -0.241994,
-        0.141494,
-        -0.003967,
-        0.003967,
-        -0.109757,
-        0.218191,
-        -0.313402,
-        0.07802,
-        0.048928,
-        -0.107112,
-        0.107112,
-        0.152073,
-        0.263152,
-        -0.23406,
-        -0.199678,
-        0.236705,
-        -0.255218,
-        0.17852,
-        0.170586,
-        -0.255218,
-        -0.146783,
-        0.202323,
-        -0.194389,
-        0.006612,
-        0.170586
+        -0.121384,
+        0.086345,
+        -0.196466,
+        -0.153919,
+        -0.25403,
+        -0.286565,
+        0.026279,
+        -0.066323,
+        0.316598,
+        0.011262,
+        -0.093853,
+        0.161428,
+        0.296576,
+        -0.076334,
+        -0.269046,
+        -0.261538,
+        0.133897,
+        -0.028782,
+        0.00876,
+        -0.003754,
+        0.291571,
+        -0.299079,
+        -0.03629,
+        0.106367,
+        0.166433,
+        0.111373,
+        -0.118881,
+        0.073831,
+        0.191461,
+        -0.101362,
+        -0.28156,
+        -0.046301
       ]
     },
     {
@@ -265405,6 +265578,53 @@
       ]
     },
     {
+      "path": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13888,
+      "lines": 347,
+      "tokens_est": 3472,
+      "symbol_count": 18,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2a388e027a019600",
+      "vector": [
+        -0.220115,
+        0.280676,
+        -0.019799,
+        0.208469,
+        0.040762,
+        0.280676,
+        -0.259713,
+        -0.152567,
+        0.024457,
+        -0.033774,
+        -0.136262,
+        0.194493,
+        -0.019799,
+        0.215457,
+        0.031445,
+        0.038433,
+        -0.033774,
+        0.185176,
+        0.278347,
+        0.264371,
+        0.271359,
+        0.187506,
+        -0.196823,
+        -0.108311,
+        0.241079,
+        0.166542,
+        0.182847,
+        -0.040762,
+        -0.217786,
+        -0.145579,
+        -0.098994,
+        -0.094335
+      ]
+    },
+    {
       "path": "tools/quantization/aura_glm53_official_source_e8_materialization_canary.py",
       "role": "python_module",
       "binary": false,
@@ -289497,15 +289717,15 @@
     }
   },
   "summary": {
-    "file_count": 1661,
-    "total_bytes": 26597267,
-    "text_tokens_est": 6639675,
+    "file_count": 1662,
+    "total_bytes": 26615230,
+    "text_tokens_est": 6644165,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1011,
+      "python_module": 1012,
       "schema_or_lexicon": 278,
       "support_file": 49
     },
@@ -291167,6 +291387,7 @@
       "tools/quantization/aura_glm53_live_official_tensor_payload_canary.py",
       "tools/quantization/aura_glm53_live_payload_coverage_delta.py",
       "tools/quantization/aura_glm53_minimum_live_payload_cover_verification.py",
+      "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
       "tools/quantization/aura_glm53_official_source_e8_materialization_canary.py",
       "tools/quantization/test_aura_glm53_e8_indexed_expert_page_reference.py",
       "tools/quantization/test_aura_glm53_lattice_quantization_feasibility.py",
@@ -449837,6 +450058,186 @@
         "file_digest8": "d737e3a915c3c8f7"
       },
       {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#class:OfficialE8VsScalarReceipt:26843ae07be2fcb0",
+        "name": "OfficialE8VsScalarReceipt",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 200,
+        "end_line": 235,
+        "signature_hash": "cbdeb9e29a038967",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#class:RoleComparison:5ed8f7874d64c6d2",
+        "name": "RoleComparison",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 182,
+        "end_line": 196,
+        "signature_hash": "0da12dfa08391804",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#class:ScalarCanaryError:8efedf2e7bdd2efb",
+        "name": "ScalarCanaryError",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 42,
+        "end_line": 43,
+        "signature_hash": "8addabef57b56f60",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_candidate_scales:b7e829fdf92c97fe",
+        "name": "_candidate_scales",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 98,
+        "end_line": 119,
+        "signature_hash": "4e079c980a721e57",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_canonical:be42620e59b24aa8",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_classify:3f8510733cb0af12",
+        "name": "_classify",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 175,
+        "end_line": 178,
+        "signature_hash": "b281ff69703efe81",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_f16_candidates:44107188189a5557",
+        "name": "_f16_candidates",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 87,
+        "end_line": 95,
+        "signature_hash": "42112ea944fb13b7",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_mse:d20b2654754bc450",
+        "name": "_mse",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 167,
+        "end_line": 172,
+        "signature_hash": "5d37cc9aad0c7696",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_pack_labels:3d094ef22194663c",
+        "name": "_pack_labels",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 65,
+        "end_line": 75,
+        "signature_hash": "0f72a95acbf95e8a",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_quantize_for_scale:5634039108016c1d",
+        "name": "_quantize_for_scale",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 122,
+        "end_line": 128,
+        "signature_hash": "af67bb74c5e86640",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_sha:750cb517b9319f51",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "5c1159d0eb804590",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:_unpack_labels:47806ed842ab86fa",
+        "name": "_unpack_labels",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 78,
+        "end_line": 84,
+        "signature_hash": "5646371322c1125b",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:current_official_e8_vs_scalar_canary:b58f626388cd1e4f",
+        "name": "current_official_e8_vs_scalar_canary",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 238,
+        "end_line": 335,
+        "signature_hash": "d4fecf6db336dccc",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:decode_optimized_scalar:3091f9a8a90aacd1",
+        "name": "decode_optimized_scalar",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 156,
+        "end_line": 164,
+        "signature_hash": "fdac5e6bb3393fc3",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:encode_optimized_scalar:f45f93368891df96",
+        "name": "encode_optimized_scalar",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 131,
+        "end_line": 153,
+        "signature_hash": "39c8af48a28be914",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:main:2e5596a792aaa745",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 338,
+        "end_line": 342,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#function:scalar_representation_digest:95fb4e91355ad6cc",
+        "name": "scalar_representation_digest",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 54,
+        "end_line": 62,
+        "signature_hash": "49bc00d66f8c83a5",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py#method:OfficialE8VsScalarReceipt.receipt_digest:bb00db579e8c7c3d",
+        "name": "OfficialE8VsScalarReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py",
+        "line": 234,
+        "end_line": 235,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "2a388e027a019600"
+      },
+      {
         "semantic_id": "tools/quantization/aura_glm53_official_source_e8_materialization_canary.py#class:MaterializationCanaryError:99923e190bdbb0f7",
         "name": "MaterializationCanaryError",
         "kind": "class",
@@ -451497,7 +451898,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "c1b4f53a159646f4e596c6f14ba4301b",
-    "payload_hash": "1e9e8e73825c0188facc92fb44372788"
+    "record_fingerprint": "7bdee4a14a175506b296720d4b824309",
+    "payload_hash": "88253a465e3c0dc70a504bb7d8601a85"
   }
 }
