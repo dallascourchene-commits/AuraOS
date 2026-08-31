@@ -15,6 +15,7 @@ from scripts.aura_workcapsule_post_source_portable_higher_owner_continuity impor
     verify_post_source_portable_higher_owner_continuity,
 )
 from scripts.aura_workcapsule_post_repair_source_projection_continuity import (
+    POST_SOURCE_BODY_SHA_MISMATCH,
     POST_SOURCE_GENERATION_MISMATCH,
 )
 from tests.test_aura_workcapsule_post_repair_source_projection_continuity import (
@@ -88,6 +89,7 @@ class WorkCapsulePostSourcePortableHigherOwnerContinuityTests(
         self.assertEqual("CLOSED", admitted["post_closure_status"])
         self.assertEqual("ab" * 32, admitted["continuous_semantic_handle_digest_hex"])
         self.assertFalse(admitted["projection_producer_authenticated"])
+        self.assertFalse(admitted["source_currentness_minted_by_child"])
         self.assertFalse(admitted["semantic_repair_correctness_minted"])
         self.assertFalse(any(admitted["authority"].values()))
 
@@ -112,6 +114,18 @@ class WorkCapsulePostSourcePortableHigherOwnerContinuityTests(
             violations,
         )
 
+    def test_locally_valid_owner_chain_for_wrong_post_body_is_rejected(self) -> None:
+        nested = self.projection(source_sha256_hex="11" * 32)
+        owner = self.owner_chain_projection(nested_projection=nested)
+        self.assertEqual([], verify_portable_higher_owner_owner_chain_projection(owner))
+        violations = verify_post_source_portable_higher_owner_continuity(
+            **self.child_kwargs(owner_projection=owner)
+        )
+        self.assertIn(
+            SOURCE_CONTINUITY_PREFIX + POST_SOURCE_BODY_SHA_MISMATCH,
+            violations,
+        )
+
     def test_nested_projection_tamper_is_not_hidden_by_outer_reseal(self) -> None:
         owner = self.owner_chain_projection()
         owner["payload"]["canonical_target_projection"]["payload"]["definition_name"] = "tampered"
@@ -125,6 +139,12 @@ class WorkCapsulePostSourcePortableHigherOwnerContinuityTests(
         owner = self.owner_chain_projection(commit_authorized=True)
         violations = verify_portable_higher_owner_owner_chain_projection(owner)
         self.assertIn("OWNER_CHAIN_CEILING_VIOLATED:commit_authorized", violations)
+
+    def test_outer_payload_digest_tamper_is_rejected(self) -> None:
+        owner = self.owner_chain_projection()
+        owner["payload_sha256"] = "00" * 32
+        violations = verify_portable_higher_owner_owner_chain_projection(owner)
+        self.assertIn("OWNER_CHAIN_PAYLOAD_DIGEST_MISMATCH", violations)
 
     def test_unknown_outer_field_is_rejected(self) -> None:
         owner = self.owner_chain_projection()
@@ -149,6 +169,7 @@ class WorkCapsulePostSourcePortableHigherOwnerContinuityTests(
         params = inspect.signature(verify_post_source_portable_higher_owner_continuity).parameters
         self.assertIn("portable_higher_owner_projection", params)
         self.assertNotIn("astge_projection", params)
+        self.assertNotIn("canonical_target_projection", params)
         for forbidden in (
             "candidate_binding",
             "observed_source_witnesses",
