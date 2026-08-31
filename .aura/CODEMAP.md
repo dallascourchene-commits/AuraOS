@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1657
-- **total_bytes**: 26540286
-- **text_tokens_est**: 6625425
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1005, 'schema_or_lexicon': 273, 'support_file': 56}
+- **file_count**: 1660
+- **total_bytes**: 26556551
+- **text_tokens_est**: 6629492
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1007, 'schema_or_lexicon': 274, 'support_file': 56}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1657,
+  "repo_file_count": 1660,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -156,6 +156,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
     ".github/workflows/aura-external-knowledge-ingress.yml",
     ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+    ".github/workflows/aura-nav03b-version-safe-fractal-k27.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1642,6 +1643,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_unified_memory_continuity_learning.py",
     "tests/test_aura_unified_memory_continuity_toolchain.py",
     "tests/test_aura_verify_construction_demo_assets.py",
+    "tests/test_aura_version_safe_fractal_k27_navigation.py",
     "tests/test_aura_waboose_callsite_resolution.py",
     "tests/test_aura_waboose_learning.py",
     "tests/test_aura_waboose_learning_mcp.py",
@@ -1667,6 +1669,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/aura_external_knowledge_ingress.py",
     "tools/aura_external_knowledge_store_writer.py",
     "tools/aura_fractal_k27.py",
+    "tools/aura_version_safe_fractal_k27_navigation.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1797,16 +1800,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1657,
-  "bytes": 26540286,
-  "tokens_est": 6625425,
+  "files": 1660,
+  "bytes": 26556551,
+  "tokens_est": 6629492,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1005,
-    "schema_or_lexicon": 273,
+    "python_module": 1007,
+    "schema_or_lexicon": 274,
     "support_file": 56
   }
 }
