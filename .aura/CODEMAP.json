@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788158969,
+  "generated_at_unix": 1788164534,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1696,
+    "repo_file_count": 1706,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -160,6 +160,8 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-hdv1024-cross-isa-corpus.yml",
+      ".github/workflows/k27-hdv1024-riscv-corpus-replay.yml",
       ".github/workflows/k27-thinkpad-portable-simd-dispatch.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
@@ -1352,7 +1354,9 @@
       "tests/fixtures/amd_track3/demo_one.py",
       "tests/fixtures/amd_track3/demo_three.py",
       "tests/fixtures/amd_track3/demo_two.py",
+      "tests/fixtures/k27_hdv1024_consequence_vectors_v1.json",
       "tests/fixtures/relationship_atlas/relational_index_fixture.json",
+      "tests/k27_hdv1024_pr608_replay.cpp",
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
@@ -1651,6 +1655,9 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_hdv1024_consequence_corpus.py",
+      "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+      "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -1690,6 +1697,9 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/k27/thinkpad_portable_simd_dispatch.cpp",
+      "tools/k27_hdv1024_consequence_corpus.py",
+      "tools/k27_hdv1024_riscv_corpus_replay.py",
+      "tools/k27_xhdv_riscv_candidate_falsifier.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1812,16 +1822,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1696,
-      "bytes": 26725103,
-      "tokens_est": 6671681,
+      "files": 1706,
+      "bytes": 26770890,
+      "tokens_est": 6683131,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
-        "native_accelerator": 13,
+        "native_accelerator": 14,
         "operator_script": 9,
-        "python_module": 1035,
-        "schema_or_lexicon": 283,
+        "python_module": 1041,
+        "schema_or_lexicon": 286,
         "support_file": 49
       }
     },
@@ -3542,6 +3552,30 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "kind": "function",
+        "line": 149,
+        "end_line": 164,
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:main:16f8f09ab7e512ab",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "function",
+        "line": 135,
+        "end_line": 136,
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#function:main:e12368892348de0a",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 206,
+        "end_line": 208,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:main:33ec1244a53e6a22",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -4063,6 +4097,14 @@
         "line": 37,
         "end_line": 43,
         "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_canonical:7dcbd184e4d64999",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#function:_canonical:907f7cebaf906d24",
         "signature_hash": "8d5bf5695239b859"
       }
     ],
@@ -8315,6 +8357,14 @@
         "line": 34,
         "end_line": 35,
         "semantic_id": "tools/awj032/glm53_source_bound_layout_bridge.py#function:_sha:2c848eaeb1dec83b",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#function:_sha:4e021efa5db9773c",
         "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
@@ -20402,6 +20452,14 @@
         "end_line": 58,
         "semantic_id": "aura_construction_foundry_director.py#function:canonical_bytes:7fd9402c68df2247",
         "signature_hash": "b8735a6f3e386d20"
+      },
+      {
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 40,
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:canonical_bytes:7315c4d7b6abf1fb",
+        "signature_hash": "b6f828a30fa83a26"
       }
     ],
     "digest": [
@@ -21968,6 +22026,14 @@
         "end_line": 109,
         "semantic_id": "aura_vsa_encoding_profile.py#function:bind:2d20904dbe815ba2",
         "signature_hash": "5cd660891da3ff69"
+      },
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 79,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:bind:8063b154f1f2a286",
+        "signature_hash": "9412f39b4cce75ed"
       }
     ],
     "unbind": [
@@ -158014,6 +158080,276 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "K27Hdv1024ConsequenceCorpusTests": [
+      {
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 73,
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#class:K27Hdv1024ConsequenceCorpusTests:2459b2763202cd2a",
+        "signature_hash": "364cfa1ac6e196c4"
+      }
+    ],
+    "K27Hdv1024ConsequenceCorpusTests.setUp": [
+      {
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.setUp:c17726b64e5238b6",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "K27Hdv1024ConsequenceCorpusTests.test_exact_frozen_digest_and_distances": [
+      {
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "kind": "method",
+        "line": 21,
+        "end_line": 25,
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_exact_frozen_digest_and_distances:447f31a5e28bcd4b",
+        "signature_hash": "2a48bfbc5821ff12"
+      }
+    ],
+    "K27Hdv1024ConsequenceCorpusTests.test_hamming_extrema_are_logical_1024_bit_consequences": [
+      {
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 29,
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_hamming_extrema_are_logical_1024_bit_consequences:b1843e8b41c6e880",
+        "signature_hash": "8c25e6d86c397bef"
+      }
+    ],
+    "K27Hdv1024ConsequenceCorpusTests.test_expected_distance_tamper_fails_closed": [
+      {
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 35,
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_expected_distance_tamper_fails_closed:782c019ea215e234",
+        "signature_hash": "ddfda03a4c6258aa"
+      }
+    ],
+    "K27Hdv1024ConsequenceCorpusTests.test_word_width_and_lowercase_hex_are_exact": [
+      {
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 45,
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_word_width_and_lowercase_hex_are_exact:42a245f90933ef82",
+        "signature_hash": "77e854723a9fb044"
+      }
+    ],
+    "K27Hdv1024ConsequenceCorpusTests.test_vector_order_and_identity_are_bound": [
+      {
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 51,
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_vector_order_and_identity_are_bound:449957a81ab45419",
+        "signature_hash": "1cdffc2f8d619427"
+      }
+    ],
+    "K27Hdv1024ConsequenceCorpusTests.test_width_or_distance_domain_change_fails": [
+      {
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 61,
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_width_or_distance_domain_change_fails:145930b6d5b0fe0e",
+        "signature_hash": "fe721951f993c57d"
+      }
+    ],
+    "K27Hdv1024ConsequenceCorpusTests.test_claim_ceiling_keeps_representation_and_hardware_separate": [
+      {
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 73,
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_claim_ceiling_keeps_representation_and_hardware_separate:c2cd2f53729d5f64",
+        "signature_hash": "c3fac90128844750"
+      }
+    ],
+    "RiscvCorpusReplayTests": [
+      {
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 89,
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#class:RiscvCorpusReplayTests:0d9cadb4ca22280e",
+        "signature_hash": "9e266de0d8441fee"
+      }
+    ],
+    "RiscvCorpusReplayTests.test_all_eight_canonical_consequences_match_pr623": [
+      {
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 28,
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_all_eight_canonical_consequences_match_pr623:e0aead0a6030479b",
+        "signature_hash": "48c1fe3674763dd3"
+      }
+    ],
+    "RiscvCorpusReplayTests.test_exact_parent_generations_are_pinned": [
+      {
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 35,
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_exact_parent_generations_are_pinned:96610a4a5a319e38",
+        "signature_hash": "2ae1a36e3c87b78e"
+      }
+    ],
+    "RiscvCorpusReplayTests.test_corpus_tamper_is_rejected_by_canonical_owner_before_replay": [
+      {
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 44,
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_corpus_tamper_is_rejected_by_canonical_owner_before_replay:2046b5df1f8d9334",
+        "signature_hash": "8bbe37091fbc3b80"
+      }
+    ],
+    "RiscvCorpusReplayTests.test_vector_order_tamper_is_rejected": [
+      {
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "method",
+        "line": 46,
+        "end_line": 53,
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_vector_order_tamper_is_rejected:694c06961555e9ef",
+        "signature_hash": "070d856f5a3998f5"
+      }
+    ],
+    "RiscvCorpusReplayTests.test_portable_receipt_is_deterministic_and_tamper_sensitive": [
+      {
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 61,
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_portable_receipt_is_deterministic_and_tamper_sensitive:7ad5762a3616c424",
+        "signature_hash": "d253b371e260f6c5"
+      }
+    ],
+    "RiscvCorpusReplayTests.test_logical_agreement_does_not_promote_representation_abi_or_hardware": [
+      {
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 83,
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_logical_agreement_does_not_promote_representation_abi_or_hardware:964c475ed4d8484d",
+        "signature_hash": "22bc08caec3918b2"
+      }
+    ],
+    "RiscvCorpusReplayTests.test_parent_ownership_is_preserved_not_reimplemented": [
+      {
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 89,
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_parent_ownership_is_preserved_not_reimplemented:741c4f6f07a14157",
+        "signature_hash": "31cc2c51591df2a1"
+      }
+    ],
+    "XhdvCandidateFalsifierTests": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 73,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#class:XhdvCandidateFalsifierTests:2724e878c9f433a7",
+        "signature_hash": "fcd35da815ab6c14"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_custom0_and_r_encoding_roundtrip": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 25,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_custom0_and_r_encoding_roundtrip:6510d5d403eb1ab6",
+        "signature_hash": "ddd7a120c99a7fb3"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_register_fields_are_strict_five_bit_ids": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 31,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_register_fields_are_strict_five_bit_ids:1605206584568cd9",
+        "signature_hash": "d28ee652af131bee"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_bind_is_exact_xor_and_hamming_extrema_fit_11_bits": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 39,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_bind_is_exact_xor_and_hamming_extrema_fit_11_bits:503a3bea032048c9",
+        "signature_hash": "0f9c3c0078b9a2ff"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_rotate_roundtrip_edge_and_random_shifts": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 46,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_rotate_roundtrip_edge_and_random_shifts:778e3b39f4486ffd",
+        "signature_hash": "a57143142cd99e38"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_pasted_dataset_recovers_target_but_threshold_rejects_nothing": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 52,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_pasted_dataset_recovers_target_but_threshold_rejects_nothing:60df202f9eda8fa0",
+        "signature_hash": "84fd07bf9927e4a2"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_pasted_threshold_is_not_discriminative": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 55,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_pasted_threshold_is_not_discriminative:75df0f33216e0625",
+        "signature_hash": "0422c043a5c2d1d2"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_shown_inline_asm_does_not_establish_hidden_h_register_abi": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 60,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_shown_inline_asm_does_not_establish_hidden_h_register_abi:e406efe2db58e485",
+        "signature_hash": "d507b3bc51040607"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_rtl_and_two_cycle_timing_remain_unproven": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 66,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_rtl_and_two_cycle_timing_remain_unproven:3b5c075b36f89213",
+        "signature_hash": "aff33ef43e84f3ed"
+      }
+    ],
+    "XhdvCandidateFalsifierTests.test_performance_k27_and_alignment_authority_remain_false": [
+      {
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 73,
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_performance_k27_and_alignment_authority_remain_false:e4366a2bea4e39f1",
+        "signature_hash": "58f89392af80d91f"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -162562,6 +162898,304 @@
         "signature_hash": "63009562ddb386e4"
       }
     ],
+    "CorpusError": [
+      {
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 36,
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#class:CorpusError:39ba7fb91362f8da",
+        "signature_hash": "69d10b5126da4ab8"
+      }
+    ],
+    "corpus_digest": [
+      {
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 44,
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:corpus_digest:5093323c3f212e02",
+        "signature_hash": "431a18e4ab7695db"
+      }
+    ],
+    "_decode_words": [
+      {
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 55,
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:_decode_words:46aa8431dc320c39",
+        "signature_hash": "94636ce9f14c1e17"
+      }
+    ],
+    "hamming_words": [
+      {
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 61,
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:hamming_words:da4fc4818f32beac",
+        "signature_hash": "5fba12fe982b44d6"
+      }
+    ],
+    "validate_corpus": [
+      {
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 120,
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:validate_corpus:daed7f1f24736af6",
+        "signature_hash": "a1a9e3f9b178df81"
+      }
+    ],
+    "replay_with_pr608_adapter": [
+      {
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "kind": "function",
+        "line": 123,
+        "end_line": 142,
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:replay_with_pr608_adapter:db1a39f8accd1cea",
+        "signature_hash": "02482b464392cb23"
+      }
+    ],
+    "load_corpus": [
+      {
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "kind": "function",
+        "line": 145,
+        "end_line": 146,
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:load_corpus:eb9f24d01105478e",
+        "signature_hash": "d194f645033ae6d8"
+      }
+    ],
+    "_words": [
+      {
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 50,
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#function:_words:11175a7d0dea6441",
+        "signature_hash": "74b1089d9d041f8b"
+      },
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 73,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_words:de0f6babdc114fe5",
+        "signature_hash": "0de3832501cca684"
+      }
+    ],
+    "RiscvCorpusReplayReceipt": [
+      {
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 86,
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#class:RiscvCorpusReplayReceipt:58d5157d241cf081",
+        "signature_hash": "3dd9909b0e1fbe1e"
+      }
+    ],
+    "RiscvCorpusReplayReceipt.receipt_digest": [
+      {
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 86,
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayReceipt.receipt_digest:75de7426984bd060",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "replay_corpus_through_pr623": [
+      {
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "function",
+        "line": 89,
+        "end_line": 126,
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#function:replay_corpus_through_pr623:e90fe5c49d338985",
+        "signature_hash": "59d4ea1274e2aeb8"
+      }
+    ],
+    "portable_riscv_corpus_replay_receipt": [
+      {
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "kind": "function",
+        "line": 129,
+        "end_line": 132,
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#function:portable_riscv_corpus_replay_receipt:197897cc99595f1a",
+        "signature_hash": "10f2d90fc21158a3"
+      }
+    ],
+    "XhdvError": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#class:XhdvError:7c34c85a1ad9b3c3",
+        "signature_hash": "5aafdad87ad4a512"
+      }
+    ],
+    "_strict_u5": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 28,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u5:f6305af9b22bae73",
+        "signature_hash": "1d2c4b3d000ca5b5"
+      }
+    ],
+    "_strict_u3": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u3:a894f4879e6da1d8",
+        "signature_hash": "fb33be0bc00ea2b8"
+      }
+    ],
+    "_strict_u7": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 40,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u7:990606cc383e955f",
+        "signature_hash": "f19b770d420add7a"
+      }
+    ],
+    "encode_r": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 51,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:encode_r:9c1d6903e712edd0",
+        "signature_hash": "f65dc6d2672b5e00"
+      }
+    ],
+    "decode_r": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 64,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:decode_r:fc27e7eda4e024d4",
+        "signature_hash": "6dc34b4fdee51bb7"
+      }
+    ],
+    "popcnt": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 83,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:popcnt:c5587374ec6ec42a",
+        "signature_hash": "434dda8e57bffe82"
+      }
+    ],
+    "hdist": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 87,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:hdist:fcea4835db3f0226",
+        "signature_hash": "e504eb10a5c40010"
+      }
+    ],
+    "_to_int": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 91,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_to_int:a7a861113a1266cf",
+        "signature_hash": "1f1bd39f49b24aa6"
+      }
+    ],
+    "_from_int": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 96,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_from_int:202a79685d5f7dad",
+        "signature_hash": "7177122ac6d4b414"
+      }
+    ],
+    "perm": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 99,
+        "end_line": 107,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:perm:cce177bbf741819c",
+        "signature_hash": "af16675f8cda24e5"
+      }
+    ],
+    "pasted_centroid_word": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 113,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:pasted_centroid_word:38fa02eb1d282b4c",
+        "signature_hash": "2b0a6019c1c535a1"
+      }
+    ],
+    "pasted_scan_falsifier": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 116,
+        "end_line": 139,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:pasted_scan_falsifier:1a40629c8fdb6336",
+        "signature_hash": "96e92dd86707d1a9"
+      }
+    ],
+    "XhdvCandidateDisposition": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "class",
+        "line": 143,
+        "end_line": 171,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#class:XhdvCandidateDisposition:60c84d34f6212fe5",
+        "signature_hash": "4494db9fefe25a3d"
+      }
+    ],
+    "XhdvCandidateDisposition.to_dict": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 166,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateDisposition.to_dict:72c166a106d95885",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "XhdvCandidateDisposition.digest": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 171,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateDisposition.digest:b5aef3ef80fc0adb",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "disposition": [
+      {
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "kind": "function",
+        "line": 174,
+        "end_line": 203,
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:disposition:e2d1b92a2f011265",
+        "signature_hash": "b75f037b7138c920"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -163688,6 +164322,7 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-hdv1024-cross-isa-corpus.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -163996,17 +164631,20 @@
     "python -m unittest": [
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
+      ".github/workflows/k27-hdv1024-cross-isa-corpus.yml",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
       "tools/awj032/README.md"
     ],
     "python3 -m py_compile": [
       ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
       ".github/workflows/awj032-thinkpad-bounded-storage-probe.yml",
+      ".github/workflows/k27-hdv1024-riscv-corpus-replay.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
       ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
-      ".github/workflows/awj032-thinkpad-bounded-storage-probe.yml"
+      ".github/workflows/awj032-thinkpad-bounded-storage-probe.yml",
+      ".github/workflows/k27-hdv1024-riscv-corpus-replay.yml"
     ],
     "python -m aura_codemap_verify": [
       ".github/workflows/ci.yml",
@@ -164029,6 +164667,12 @@
     ],
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
+    ],
+    "python tools/k27_hdv1024_consequence_corpus.py > /tmp/logical.json": [
+      ".github/workflows/k27-hdv1024-cross-isa-corpus.yml"
+    ],
+    "python tools/k27_hdv1024_consequence_corpus.py \\": [
+      ".github/workflows/k27-hdv1024-cross-isa-corpus.yml"
     ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
@@ -174525,6 +175169,128 @@
         0.193092,
         -0.001409,
         -0.102888
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-hdv1024-cross-isa-corpus.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4662,
+      "lines": 108,
+      "tokens_est": 1166,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest",
+        "python tools/k27_hdv1024_consequence_corpus.py > /tmp/logical.json",
+        "python tools/k27_hdv1024_consequence_corpus.py \\"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          64
+        ],
+        "python -m unittest": [
+          65
+        ],
+        "python tools/k27_hdv1024_consequence_corpus.py > /tmp/logical.json": [
+          66
+        ],
+        "python tools/k27_hdv1024_consequence_corpus.py \\": [
+          81
+        ]
+      },
+      "topology": {},
+      "digest8": "5c8c2c5a6d1e2531",
+      "vector": [
+        -0.275684,
+        -0.121116,
+        -0.079591,
+        -0.176484,
+        -0.248,
+        -0.116502,
+        -0.038065,
+        -0.040372,
+        -0.174177,
+        -0.109581,
+        0.206475,
+        0.227237,
+        -0.1488,
+        -0.204168,
+        -0.121116,
+        0.146493,
+        -0.282605,
+        0.014995,
+        -0.238772,
+        0.042679,
+        0.259535,
+        0.248,
+        0.222623,
+        -0.114195,
+        0.201861,
+        0.132651,
+        -0.137265,
+        -0.183405,
+        -0.063442,
+        -0.231851,
+        0.19494,
+        -0.141879
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-hdv1024-riscv-corpus-replay.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4864,
+      "lines": 111,
+      "tokens_est": 1216,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          59
+        ],
+        "python3 -m unittest": [
+          66
+        ]
+      },
+      "topology": {},
+      "digest8": "f0baa5b7069d3982",
+      "vector": [
+        -0.047512,
+        0.248419,
+        -0.047512,
+        -0.259279,
+        -0.071947,
+        0.107241,
+        0.025792,
+        0.006787,
+        0.036652,
+        -0.305434,
+        -0.2267,
+        -0.335298,
+        0.264709,
+        -0.321724,
+        0.050227,
+        0.090951,
+        -0.028507,
+        0.074662,
+        0.107241,
+        -0.316294,
+        0.028507,
+        0.120816,
+        0.023077,
+        -0.147966,
+        0.031222,
+        -0.118101,
+        0.21041,
+        -0.302719,
+        -0.272854,
+        -0.036652,
+        0.020362,
+        -0.153396
       ]
     },
     {
@@ -255035,6 +255801,53 @@
       ]
     },
     {
+      "path": "tests/fixtures/k27_hdv1024_consequence_vectors_v1.json",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5473,
+      "lines": 2,
+      "tokens_est": 1369,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "049e17dc019efdfe",
+      "vector": [
+        0.244054,
+        -0.075195,
+        0.030342,
+        0.038257,
+        -0.127963,
+        -0.275715,
+        -0.175455,
+        0.178093,
+        0.06728,
+        -0.21767,
+        0.288907,
+        0.138517,
+        0.064641,
+        0.164901,
+        0.11741,
+        0.328483,
+        -0.01715,
+        -0.038257,
+        -0.149071,
+        -0.175455,
+        -0.175455,
+        -0.085749,
+        0.091026,
+        -0.336399,
+        0.193924,
+        0.009234,
+        0.098941,
+        -0.273077,
+        0.178093,
+        -0.199201,
+        -0.207116,
+        0.138517
+      ]
+    },
+    {
       "path": "tests/fixtures/relationship_atlas/relational_index_fixture.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -255079,6 +255892,53 @@
         -0.0884,
         -0.188005,
         -0.118281
+      ]
+    },
+    {
+      "path": "tests/k27_hdv1024_pr608_replay.cpp",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 1546,
+      "lines": 43,
+      "tokens_est": 387,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "49531e1b1244867c",
+      "vector": [
+        -0.265278,
+        -0.019693,
+        0.063713,
+        0.281496,
+        0.070664,
+        -0.033594,
+        0.165654,
+        0.191139,
+        -0.096149,
+        0.091515,
+        -0.239793,
+        -0.237476,
+        0.11005,
+        0.214308,
+        0.133218,
+        0.244427,
+        -0.221258,
+        -0.010426,
+        -0.163337,
+        -0.15407,
+        -0.117,
+        0.082248,
+        -0.295397,
+        -0.149436,
+        0.172605,
+        0.012743,
+        -0.084565,
+        -0.184189,
+        0.149436,
+        0.216624,
+        -0.244427,
+        -0.281496
       ]
     },
     {
@@ -269088,6 +269948,147 @@
       ]
     },
     {
+      "path": "tests/test_k27_hdv1024_consequence_corpus.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3016,
+      "lines": 78,
+      "tokens_est": 754,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "054cc4bbe6a623eb",
+      "vector": [
+        -0.120034,
+        -0.074547,
+        -0.003791,
+        -0.087182,
+        0.092236,
+        0.094763,
+        0.041696,
+        -0.011372,
+        -0.049277,
+        -0.213534,
+        -0.236277,
+        0.006318,
+        -0.193317,
+        0.150358,
+        -0.112453,
+        -0.221115,
+        -0.074547,
+        -0.294399,
+        -0.193317,
+        0.026534,
+        0.264074,
+        0.269128,
+        0.23375,
+        -0.102345,
+        0.205953,
+        0.264074,
+        0.221115,
+        0.107399,
+        -0.299453,
+        -0.168047,
+        0.04675,
+        0.312088
+      ]
+    },
+    {
+      "path": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4021,
+      "lines": 94,
+      "tokens_est": 1006,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e65a33f602705a4b",
+      "vector": [
+        -0.209386,
+        0.248719,
+        -0.153859,
+        -0.262601,
+        0.107585,
+        0.163113,
+        -0.135349,
+        -0.292678,
+        0.269542,
+        0.098331,
+        -0.167741,
+        -0.133036,
+        0.114526,
+        -0.172368,
+        -0.024293,
+        -0.153859,
+        -0.23715,
+        0.07288,
+        0.230209,
+        -0.105272,
+        -0.077508,
+        -0.248719,
+        0.216327,
+        0.260287,
+        -0.107585,
+        0.170054,
+        0.024293,
+        -0.121467,
+        -0.223268,
+        0.128408,
+        -0.176995,
+        -0.052057
+      ]
+    },
+    {
+      "path": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2963,
+      "lines": 78,
+      "tokens_est": 741,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "807727167e835b3e",
+      "vector": [
+        -0.003326,
+        0.2406,
+        0.049894,
+        -0.134159,
+        -0.014414,
+        -0.034371,
+        -0.227295,
+        0.242817,
+        -0.216207,
+        0.034371,
+        -0.189597,
+        -0.211772,
+        0.211772,
+        0.209554,
+        0.096462,
+        -0.280515,
+        0.085374,
+        0.118637,
+        -0.25834,
+        0.156334,
+        0.149682,
+        0.041024,
+        0.025501,
+        0.145247,
+        0.034371,
+        0.22286,
+        0.27608,
+        0.23173,
+        -0.116419,
+        -0.22286,
+        0.280515,
+        0.151899
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -270928,6 +271929,147 @@
         -0.127064,
         0.107326,
         0.030841
+      ]
+    },
+    {
+      "path": "tools/k27_hdv1024_consequence_corpus.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6384,
+      "lines": 169,
+      "tokens_est": 1596,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2ad61e0475e7e065",
+      "vector": [
+        0.0849,
+        0.145723,
+        0.021542,
+        0.269905,
+        -0.039282,
+        -0.097571,
+        -0.201478,
+        0.054488,
+        0.224287,
+        -0.24963,
+        0.10264,
+        -0.117846,
+        -0.226822,
+        0.089968,
+        -0.310454,
+        -0.191341,
+        -0.198944,
+        -0.051954,
+        -0.127983,
+        0.206547,
+        -0.305385,
+        0.236959,
+        -0.209081,
+        -0.133052,
+        0.069694,
+        0.10264,
+        -0.315523,
+        -0.041816,
+        -0.062091,
+        -0.23189,
+        0.10264,
+        0.130517
+      ]
+    },
+    {
+      "path": "tools/k27_hdv1024_riscv_corpus_replay.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5168,
+      "lines": 141,
+      "tokens_est": 1292,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ba08a32557fce97f",
+      "vector": [
+        -0.270124,
+        -0.138063,
+        -0.301338,
+        -0.073234,
+        0.142865,
+        0.279728,
+        -0.159673,
+        0.135662,
+        0.231706,
+        -0.094843,
+        0.037217,
+        -0.037217,
+        0.294135,
+        0.200492,
+        -0.193289,
+        0.2173,
+        -0.19569,
+        0.102047,
+        -0.037217,
+        -0.303739,
+        0.099646,
+        0.193289,
+        0.205294,
+        -0.013206,
+        -0.104448,
+        -0.150069,
+        0.092442,
+        -0.23891,
+        0.164475,
+        0.037217,
+        -0.123657,
+        -0.133261
+      ]
+    },
+    {
+      "path": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7690,
+      "lines": 213,
+      "tokens_est": 1923,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "126ee50d8506a5b7",
+      "vector": [
+        0.231346,
+        0.011632,
+        -0.016802,
+        0.071084,
+        -0.019387,
+        0.213252,
+        -0.314062,
+        0.009047,
+        0.277873,
+        0.076254,
+        0.065914,
+        0.014217,
+        0.158969,
+        0.081423,
+        0.2391,
+        0.189988,
+        -0.246855,
+        -0.25461,
+        0.084008,
+        -0.314062,
+        0.125366,
+        -0.099517,
+        -0.184818,
+        0.04265,
+        0.151215,
+        -0.029726,
+        -0.231346,
+        0.146045,
+        -0.037481,
+        -0.316646,
+        -0.076254,
+        0.290798
       ]
     },
     {
@@ -294835,16 +295977,16 @@
     }
   },
   "summary": {
-    "file_count": 1696,
-    "total_bytes": 26725103,
-    "text_tokens_est": 6671681,
+    "file_count": 1706,
+    "total_bytes": 26770890,
+    "text_tokens_est": 6683131,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
-      "native_accelerator": 13,
+      "native_accelerator": 14,
       "operator_script": 9,
-      "python_module": 1035,
-      "schema_or_lexicon": 283,
+      "python_module": 1041,
+      "schema_or_lexicon": 286,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -295014,6 +296156,8 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-hdv1024-cross-isa-corpus.yml",
+      ".github/workflows/k27-hdv1024-riscv-corpus-replay.yml",
       ".github/workflows/k27-thinkpad-portable-simd-dispatch.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
@@ -296206,7 +297350,9 @@
       "tests/fixtures/amd_track3/demo_one.py",
       "tests/fixtures/amd_track3/demo_three.py",
       "tests/fixtures/amd_track3/demo_two.py",
+      "tests/fixtures/k27_hdv1024_consequence_vectors_v1.json",
       "tests/fixtures/relationship_atlas/relational_index_fixture.json",
+      "tests/k27_hdv1024_pr608_replay.cpp",
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
@@ -296505,6 +297651,9 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_hdv1024_consequence_corpus.py",
+      "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+      "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -296544,6 +297693,9 @@
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/k27/thinkpad_portable_simd_dispatch.cpp",
+      "tools/k27_hdv1024_consequence_corpus.py",
+      "tools/k27_hdv1024_riscv_corpus_replay.py",
+      "tools/k27_xhdv_riscv_candidate_falsifier.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -454350,6 +455502,276 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#class:K27Hdv1024ConsequenceCorpusTests:2459b2763202cd2a",
+        "name": "K27Hdv1024ConsequenceCorpusTests",
+        "kind": "class",
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "line": 17,
+        "end_line": 73,
+        "signature_hash": "364cfa1ac6e196c4",
+        "file_digest8": "054cc4bbe6a623eb"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.setUp:c17726b64e5238b6",
+        "name": "K27Hdv1024ConsequenceCorpusTests.setUp",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "054cc4bbe6a623eb"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_claim_ceiling_keeps_representation_and_hardware_separate:c2cd2f53729d5f64",
+        "name": "K27Hdv1024ConsequenceCorpusTests.test_claim_ceiling_keeps_representation_and_hardware_separate",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "line": 63,
+        "end_line": 73,
+        "signature_hash": "c3fac90128844750",
+        "file_digest8": "054cc4bbe6a623eb"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_exact_frozen_digest_and_distances:447f31a5e28bcd4b",
+        "name": "K27Hdv1024ConsequenceCorpusTests.test_exact_frozen_digest_and_distances",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "line": 21,
+        "end_line": 25,
+        "signature_hash": "2a48bfbc5821ff12",
+        "file_digest8": "054cc4bbe6a623eb"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_expected_distance_tamper_fails_closed:782c019ea215e234",
+        "name": "K27Hdv1024ConsequenceCorpusTests.test_expected_distance_tamper_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "line": 31,
+        "end_line": 35,
+        "signature_hash": "ddfda03a4c6258aa",
+        "file_digest8": "054cc4bbe6a623eb"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_hamming_extrema_are_logical_1024_bit_consequences:b1843e8b41c6e880",
+        "name": "K27Hdv1024ConsequenceCorpusTests.test_hamming_extrema_are_logical_1024_bit_consequences",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "line": 27,
+        "end_line": 29,
+        "signature_hash": "8c25e6d86c397bef",
+        "file_digest8": "054cc4bbe6a623eb"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_vector_order_and_identity_are_bound:449957a81ab45419",
+        "name": "K27Hdv1024ConsequenceCorpusTests.test_vector_order_and_identity_are_bound",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "line": 47,
+        "end_line": 51,
+        "signature_hash": "1cdffc2f8d619427",
+        "file_digest8": "054cc4bbe6a623eb"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_width_or_distance_domain_change_fails:145930b6d5b0fe0e",
+        "name": "K27Hdv1024ConsequenceCorpusTests.test_width_or_distance_domain_change_fails",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "line": 53,
+        "end_line": 61,
+        "signature_hash": "fe721951f993c57d",
+        "file_digest8": "054cc4bbe6a623eb"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_consequence_corpus.py#method:K27Hdv1024ConsequenceCorpusTests.test_word_width_and_lowercase_hex_are_exact:42a245f90933ef82",
+        "name": "K27Hdv1024ConsequenceCorpusTests.test_word_width_and_lowercase_hex_are_exact",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_consequence_corpus.py",
+        "line": 37,
+        "end_line": 45,
+        "signature_hash": "77e854723a9fb044",
+        "file_digest8": "054cc4bbe6a623eb"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#class:RiscvCorpusReplayTests:0d9cadb4ca22280e",
+        "name": "RiscvCorpusReplayTests",
+        "kind": "class",
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "line": 21,
+        "end_line": 89,
+        "signature_hash": "9e266de0d8441fee",
+        "file_digest8": "e65a33f602705a4b"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_all_eight_canonical_consequences_match_pr623:e0aead0a6030479b",
+        "name": "RiscvCorpusReplayTests.test_all_eight_canonical_consequences_match_pr623",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "line": 22,
+        "end_line": 28,
+        "signature_hash": "48c1fe3674763dd3",
+        "file_digest8": "e65a33f602705a4b"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_corpus_tamper_is_rejected_by_canonical_owner_before_replay:2046b5df1f8d9334",
+        "name": "RiscvCorpusReplayTests.test_corpus_tamper_is_rejected_by_canonical_owner_before_replay",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "line": 37,
+        "end_line": 44,
+        "signature_hash": "8bbe37091fbc3b80",
+        "file_digest8": "e65a33f602705a4b"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_exact_parent_generations_are_pinned:96610a4a5a319e38",
+        "name": "RiscvCorpusReplayTests.test_exact_parent_generations_are_pinned",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "line": 30,
+        "end_line": 35,
+        "signature_hash": "2ae1a36e3c87b78e",
+        "file_digest8": "e65a33f602705a4b"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_logical_agreement_does_not_promote_representation_abi_or_hardware:964c475ed4d8484d",
+        "name": "RiscvCorpusReplayTests.test_logical_agreement_does_not_promote_representation_abi_or_hardware",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "line": 63,
+        "end_line": 83,
+        "signature_hash": "22bc08caec3918b2",
+        "file_digest8": "e65a33f602705a4b"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_parent_ownership_is_preserved_not_reimplemented:741c4f6f07a14157",
+        "name": "RiscvCorpusReplayTests.test_parent_ownership_is_preserved_not_reimplemented",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "line": 85,
+        "end_line": 89,
+        "signature_hash": "31cc2c51591df2a1",
+        "file_digest8": "e65a33f602705a4b"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_portable_receipt_is_deterministic_and_tamper_sensitive:7ad5762a3616c424",
+        "name": "RiscvCorpusReplayTests.test_portable_receipt_is_deterministic_and_tamper_sensitive",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "line": 55,
+        "end_line": 61,
+        "signature_hash": "d253b371e260f6c5",
+        "file_digest8": "e65a33f602705a4b"
+      },
+      {
+        "semantic_id": "tests/test_k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayTests.test_vector_order_tamper_is_rejected:694c06961555e9ef",
+        "name": "RiscvCorpusReplayTests.test_vector_order_tamper_is_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_hdv1024_riscv_corpus_replay.py",
+        "line": 46,
+        "end_line": 53,
+        "signature_hash": "070d856f5a3998f5",
+        "file_digest8": "e65a33f602705a4b"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#class:XhdvCandidateFalsifierTests:2724e878c9f433a7",
+        "name": "XhdvCandidateFalsifierTests",
+        "kind": "class",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 21,
+        "end_line": 73,
+        "signature_hash": "fcd35da815ab6c14",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_bind_is_exact_xor_and_hamming_extrema_fit_11_bits:503a3bea032048c9",
+        "name": "XhdvCandidateFalsifierTests.test_bind_is_exact_xor_and_hamming_extrema_fit_11_bits",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 33,
+        "end_line": 39,
+        "signature_hash": "0f9c3c0078b9a2ff",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_custom0_and_r_encoding_roundtrip:6510d5d403eb1ab6",
+        "name": "XhdvCandidateFalsifierTests.test_custom0_and_r_encoding_roundtrip",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 22,
+        "end_line": 25,
+        "signature_hash": "ddd7a120c99a7fb3",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_pasted_dataset_recovers_target_but_threshold_rejects_nothing:60df202f9eda8fa0",
+        "name": "XhdvCandidateFalsifierTests.test_pasted_dataset_recovers_target_but_threshold_rejects_nothing",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 48,
+        "end_line": 52,
+        "signature_hash": "84fd07bf9927e4a2",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_pasted_threshold_is_not_discriminative:75df0f33216e0625",
+        "name": "XhdvCandidateFalsifierTests.test_pasted_threshold_is_not_discriminative",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 54,
+        "end_line": 55,
+        "signature_hash": "0422c043a5c2d1d2",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_performance_k27_and_alignment_authority_remain_false:e4366a2bea4e39f1",
+        "name": "XhdvCandidateFalsifierTests.test_performance_k27_and_alignment_authority_remain_false",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 68,
+        "end_line": 73,
+        "signature_hash": "58f89392af80d91f",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_register_fields_are_strict_five_bit_ids:1605206584568cd9",
+        "name": "XhdvCandidateFalsifierTests.test_register_fields_are_strict_five_bit_ids",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 27,
+        "end_line": 31,
+        "signature_hash": "d28ee652af131bee",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_rotate_roundtrip_edge_and_random_shifts:778e3b39f4486ffd",
+        "name": "XhdvCandidateFalsifierTests.test_rotate_roundtrip_edge_and_random_shifts",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 41,
+        "end_line": 46,
+        "signature_hash": "a57143142cd99e38",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_rtl_and_two_cycle_timing_remain_unproven:3b5c075b36f89213",
+        "name": "XhdvCandidateFalsifierTests.test_rtl_and_two_cycle_timing_remain_unproven",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 62,
+        "end_line": 66,
+        "signature_hash": "aff33ef43e84f3ed",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
+        "semantic_id": "tests/test_k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateFalsifierTests.test_shown_inline_asm_does_not_establish_hidden_h_register_abi:e406efe2db58e485",
+        "name": "XhdvCandidateFalsifierTests.test_shown_inline_asm_does_not_establish_hidden_h_register_abi",
+        "kind": "method",
+        "file": "tests/test_k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 57,
+        "end_line": 60,
+        "signature_hash": "d507b3bc51040607",
+        "file_digest8": "807727167e835b3e"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -459300,6 +460722,376 @@
         "file_digest8": "323452d323e79bce"
       },
       {
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#class:CorpusError:39ba7fb91362f8da",
+        "name": "CorpusError",
+        "kind": "class",
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "line": 35,
+        "end_line": 36,
+        "signature_hash": "69d10b5126da4ab8",
+        "file_digest8": "2ad61e0475e7e065"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:_decode_words:46aa8431dc320c39",
+        "name": "_decode_words",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "line": 47,
+        "end_line": 55,
+        "signature_hash": "94636ce9f14c1e17",
+        "file_digest8": "2ad61e0475e7e065"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:canonical_bytes:7315c4d7b6abf1fb",
+        "name": "canonical_bytes",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "line": 39,
+        "end_line": 40,
+        "signature_hash": "b6f828a30fa83a26",
+        "file_digest8": "2ad61e0475e7e065"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:corpus_digest:5093323c3f212e02",
+        "name": "corpus_digest",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "line": 43,
+        "end_line": 44,
+        "signature_hash": "431a18e4ab7695db",
+        "file_digest8": "2ad61e0475e7e065"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:hamming_words:da4fc4818f32beac",
+        "name": "hamming_words",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "line": 58,
+        "end_line": 61,
+        "signature_hash": "5fba12fe982b44d6",
+        "file_digest8": "2ad61e0475e7e065"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:load_corpus:eb9f24d01105478e",
+        "name": "load_corpus",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "line": 145,
+        "end_line": 146,
+        "signature_hash": "d194f645033ae6d8",
+        "file_digest8": "2ad61e0475e7e065"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:main:16f8f09ab7e512ab",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "line": 149,
+        "end_line": 164,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "2ad61e0475e7e065"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:replay_with_pr608_adapter:db1a39f8accd1cea",
+        "name": "replay_with_pr608_adapter",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "line": 123,
+        "end_line": 142,
+        "signature_hash": "02482b464392cb23",
+        "file_digest8": "2ad61e0475e7e065"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#function:validate_corpus:daed7f1f24736af6",
+        "name": "validate_corpus",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_consequence_corpus.py",
+        "line": 64,
+        "end_line": 120,
+        "signature_hash": "a1a9e3f9b178df81",
+        "file_digest8": "2ad61e0475e7e065"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#class:RiscvCorpusReplayReceipt:58d5157d241cf081",
+        "name": "RiscvCorpusReplayReceipt",
+        "kind": "class",
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "line": 54,
+        "end_line": 86,
+        "signature_hash": "3dd9909b0e1fbe1e",
+        "file_digest8": "ba08a32557fce97f"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#function:_canonical:907f7cebaf906d24",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "ba08a32557fce97f"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#function:_sha:4e021efa5db9773c",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "ba08a32557fce97f"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#function:_words:11175a7d0dea6441",
+        "name": "_words",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "line": 44,
+        "end_line": 50,
+        "signature_hash": "74b1089d9d041f8b",
+        "file_digest8": "ba08a32557fce97f"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#function:main:e12368892348de0a",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "line": 135,
+        "end_line": 136,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "ba08a32557fce97f"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#function:portable_riscv_corpus_replay_receipt:197897cc99595f1a",
+        "name": "portable_riscv_corpus_replay_receipt",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "line": 129,
+        "end_line": 132,
+        "signature_hash": "10f2d90fc21158a3",
+        "file_digest8": "ba08a32557fce97f"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#function:replay_corpus_through_pr623:e90fe5c49d338985",
+        "name": "replay_corpus_through_pr623",
+        "kind": "function",
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "line": 89,
+        "end_line": 126,
+        "signature_hash": "59d4ea1274e2aeb8",
+        "file_digest8": "ba08a32557fce97f"
+      },
+      {
+        "semantic_id": "tools/k27_hdv1024_riscv_corpus_replay.py#method:RiscvCorpusReplayReceipt.receipt_digest:75de7426984bd060",
+        "name": "RiscvCorpusReplayReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
+        "line": 85,
+        "end_line": 86,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "ba08a32557fce97f"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#class:XhdvCandidateDisposition:60c84d34f6212fe5",
+        "name": "XhdvCandidateDisposition",
+        "kind": "class",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 143,
+        "end_line": 171,
+        "signature_hash": "4494db9fefe25a3d",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#class:XhdvError:7c34c85a1ad9b3c3",
+        "name": "XhdvError",
+        "kind": "class",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "5aafdad87ad4a512",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_from_int:202a79685d5f7dad",
+        "name": "_from_int",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 94,
+        "end_line": 96,
+        "signature_hash": "7177122ac6d4b414",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u3:a894f4879e6da1d8",
+        "name": "_strict_u3",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "fb33be0bc00ea2b8",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u5:f6305af9b22bae73",
+        "name": "_strict_u5",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 25,
+        "end_line": 28,
+        "signature_hash": "1d2c4b3d000ca5b5",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_strict_u7:990606cc383e955f",
+        "name": "_strict_u7",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 37,
+        "end_line": 40,
+        "signature_hash": "f19b770d420add7a",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_to_int:a7a861113a1266cf",
+        "name": "_to_int",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 90,
+        "end_line": 91,
+        "signature_hash": "1f1bd39f49b24aa6",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:_words:de0f6babdc114fe5",
+        "name": "_words",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 67,
+        "end_line": 73,
+        "signature_hash": "0de3832501cca684",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:bind:8063b154f1f2a286",
+        "name": "bind",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 76,
+        "end_line": 79,
+        "signature_hash": "9412f39b4cce75ed",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:decode_r:fc27e7eda4e024d4",
+        "name": "decode_r",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 54,
+        "end_line": 64,
+        "signature_hash": "6dc34b4fdee51bb7",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:disposition:e2d1b92a2f011265",
+        "name": "disposition",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 174,
+        "end_line": 203,
+        "signature_hash": "b75f037b7138c920",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:encode_r:9c1d6903e712edd0",
+        "name": "encode_r",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 43,
+        "end_line": 51,
+        "signature_hash": "f65dc6d2672b5e00",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:hdist:fcea4835db3f0226",
+        "name": "hdist",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 86,
+        "end_line": 87,
+        "signature_hash": "e504eb10a5c40010",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:main:33ec1244a53e6a22",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 206,
+        "end_line": 208,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:pasted_centroid_word:38fa02eb1d282b4c",
+        "name": "pasted_centroid_word",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 110,
+        "end_line": 113,
+        "signature_hash": "2b0a6019c1c535a1",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:pasted_scan_falsifier:1a40629c8fdb6336",
+        "name": "pasted_scan_falsifier",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 116,
+        "end_line": 139,
+        "signature_hash": "96e92dd86707d1a9",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:perm:cce177bbf741819c",
+        "name": "perm",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 99,
+        "end_line": 107,
+        "signature_hash": "af16675f8cda24e5",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#function:popcnt:c5587374ec6ec42a",
+        "name": "popcnt",
+        "kind": "function",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 82,
+        "end_line": 83,
+        "signature_hash": "434dda8e57bffe82",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateDisposition.digest:b5aef3ef80fc0adb",
+        "name": "XhdvCandidateDisposition.digest",
+        "kind": "method",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 169,
+        "end_line": 171,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
+        "semantic_id": "tools/k27_xhdv_riscv_candidate_falsifier.py#method:XhdvCandidateDisposition.to_dict:72c166a106d95885",
+        "name": "XhdvCandidateDisposition.to_dict",
+        "kind": "method",
+        "file": "tools/k27_xhdv_riscv_candidate_falsifier.py",
+        "line": 165,
+        "end_line": 166,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "126ee50d8506a5b7"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -460550,7 +462342,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "7c8ded7186b07ae29b43995224aa7aff",
-    "payload_hash": "3a06d38519fe8ce1e9a8d5a13b58bf2c"
+    "record_fingerprint": "ee6f0788de3710f80dad02c28737901b",
+    "payload_hash": "923557feaf2e6ffb775406d3105c5fe3"
   }
 }
