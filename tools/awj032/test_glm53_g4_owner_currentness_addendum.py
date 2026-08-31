@@ -13,7 +13,7 @@ from tools.awj032.glm53_g4_owner_currentness_addendum import (
     HOLD_OWNER_CURRENTNESS_REQUIRED,
     HOLD_OWNER_STATE_EPOCH_CHANGED,
     HOLD_RECOMPUTE_G3_OWNER_RESOLVED,
-    OWNER_REVALIDATED_UNCHANGED,
+    RESOLVER_MATCHED_EXTERNAL_TRUST_REQUIRED,
     OwnerReuseStateObservation,
     revalidate_g3_plan_owner_resolved,
 )
@@ -24,7 +24,7 @@ def d(ch: str) -> str:
 
 
 class FakeResolver:
-    """Test double only; protocol shape proves neither authentication nor epoch semantics."""
+    """Test double only; Protocol shape proves neither authentication nor epoch truth."""
 
     def __init__(
         self,
@@ -106,21 +106,41 @@ class G4OwnerCurrentnessAddendumTests(unittest.TestCase):
         self.assertEqual(receipt.disposition, HOLD_OWNER_CURRENTNESS_REQUIRED)
         self.assertFalse(receipt.reusable_without_recompute)
 
-    def test_matching_resolver_context_in_stable_epoch_revalidates_structurally(self) -> None:
+    def test_matching_fake_resolver_is_candidate_not_reuse_authority(self) -> None:
         plan = self.plan()
         receipt = revalidate_g3_plan_owner_resolved(
             plan=plan, owner_resolver=FakeResolver(plan=plan)
         )
-        self.assertEqual(receipt.disposition, OWNER_REVALIDATED_UNCHANGED)
+        self.assertEqual(receipt.disposition, RESOLVER_MATCHED_EXTERNAL_TRUST_REQUIRED)
         self.assertTrue(receipt.owner_context_resolved)
         self.assertTrue(receipt.owner_state_epoch_stable)
-        self.assertTrue(receipt.reusable_without_recompute)
+        self.assertFalse(receipt.reusable_without_recompute)
         self.assertFalse(receipt.recompute_g3_required)
+        self.assertTrue(receipt.external_resolver_trust_required)
         self.assertFalse(receipt.owner_resolver_authenticated_by_this_contract)
         self.assertFalse(receipt.owner_currentness_truth_proven_by_this_contract)
         self.assertTrue(receipt.owner_epoch_change_complete_required)
         self.assertFalse(receipt.owner_epoch_change_complete_proven_by_this_contract)
         self.assertFalse(receipt.plan_executed_by_this_contract)
+
+    def test_arbitrary_matching_fake_resolver_cannot_authorize_reuse(self) -> None:
+        plan = replace(
+            self.plan(),
+            prediction_generation="fake::same",
+            calibration_generation="fake::same",
+            policy_generation="fake::same",
+            source_binding_generation="fake::same",
+            runtime_generation="fake::same",
+            cache_generation="fake::same",
+            storage_geometry_generation="fake::same",
+            host_profile_generation="fake::same",
+        )
+        receipt = revalidate_g3_plan_owner_resolved(
+            plan=plan, owner_resolver=FakeResolver(plan=plan)
+        )
+        self.assertEqual(receipt.disposition, RESOLVER_MATCHED_EXTERNAL_TRUST_REQUIRED)
+        self.assertFalse(receipt.reusable_without_recompute)
+        self.assertFalse(receipt.owner_resolver_authenticated_by_this_contract)
 
     def test_owner_resolved_axis_drift_requires_g3_recompute(self) -> None:
         plan = self.plan()
@@ -147,17 +167,17 @@ class G4OwnerCurrentnessAddendumTests(unittest.TestCase):
 
     def test_observation_must_belong_to_open_epoch(self) -> None:
         plan = self.plan()
-        resolver = FakeResolver(plan=plan, observation_epoch="epoch::other")
         receipt = revalidate_g3_plan_owner_resolved(
-            plan=plan, owner_resolver=resolver
+            plan=plan,
+            owner_resolver=FakeResolver(plan=plan, observation_epoch="epoch::other"),
         )
         self.assertEqual(receipt.disposition, HOLD_OWNER_STATE_EPOCH_CHANGED)
 
     def test_observation_must_bind_exact_plan_identity(self) -> None:
         plan = self.plan()
-        resolver = FakeResolver(plan=plan, observation_plan_identity=d("c"))
         receipt = revalidate_g3_plan_owner_resolved(
-            plan=plan, owner_resolver=resolver
+            plan=plan,
+            owner_resolver=FakeResolver(plan=plan, observation_plan_identity=d("c")),
         )
         self.assertEqual(receipt.disposition, HOLD_OWNER_CURRENTNESS_REQUIRED)
         self.assertEqual(
@@ -188,6 +208,14 @@ class G4OwnerCurrentnessAddendumTests(unittest.TestCase):
         )
         b = replace(a, resolver_generation="resolver::2")
         self.assertNotEqual(a.observation_digest, b.observation_digest)
+
+    def test_receipt_cannot_disable_external_trust_requirement(self) -> None:
+        plan = self.plan()
+        receipt = revalidate_g3_plan_owner_resolved(
+            plan=plan, owner_resolver=FakeResolver(plan=plan)
+        )
+        with self.assertRaises(ValueError):
+            replace(receipt, external_resolver_trust_required=False).validate_claim_ceiling()
 
     def test_receipt_cannot_self_authenticate_or_mint_effect_authority(self) -> None:
         plan = self.plan()
@@ -220,13 +248,16 @@ class G4OwnerCurrentnessAddendumTests(unittest.TestCase):
                 receipt, owner_epoch_change_complete_required=False
             ).validate_claim_ceiling()
 
-    def test_hold_cannot_claim_reusable(self) -> None:
+    def test_no_disposition_from_this_contract_can_claim_reusable(self) -> None:
         plan = self.plan()
-        receipt = revalidate_g3_plan_owner_resolved(
-            plan=plan, owner_resolver=None
+        candidate = revalidate_g3_plan_owner_resolved(
+            plan=plan, owner_resolver=FakeResolver(plan=plan)
         )
         with self.assertRaises(ValueError):
-            replace(receipt, reusable_without_recompute=True).validate_claim_ceiling()
+            replace(candidate, reusable_without_recompute=True).validate_claim_ceiling()
+        hold = revalidate_g3_plan_owner_resolved(plan=plan, owner_resolver=None)
+        with self.assertRaises(ValueError):
+            replace(hold, reusable_without_recompute=True).validate_claim_ceiling()
 
 
 if __name__ == "__main__":
