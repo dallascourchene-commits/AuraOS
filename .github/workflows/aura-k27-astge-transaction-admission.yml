@@ -1,0 +1,70 @@
+name: Aura K27 ASTGE Transaction Admission
+
+on:
+  pull_request:
+    paths:
+      - 'crates/aura-k27-astge-scope/**'
+      - 'crates/aura-k27-astge-recovery/**'
+      - 'crates/aura-k27-astge-transaction/**'
+      - '.github/workflows/aura-k27-astge-transaction-admission.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  transaction-admission:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Show toolchain
+        run: |
+          rustc --version
+          cargo --version
+
+      - name: Verify source-scope parent plane
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-scope/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-scope/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-scope/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify recovery parent plane
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-recovery/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-recovery/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-recovery/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify composed transaction membrane
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-transaction/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-transaction/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-transaction/Cargo.toml --all-targets -- -D warnings
+
+      - name: Emit claim ceiling
+        run: |
+          echo 'SOURCE_SCOPE_CONFINEMENT_REQUIRED=true'
+          echo 'VALID_CURRENT_GRAPH_GENERATION_REQUIRED=true'
+          echo 'EXPECTED_GRAPH_GENERATION_MATCH_REQUIRED=true'
+          echo 'READY_FOR_SEMANTIC_REVIEW_ONLY=true'
+          echo 'SEMANTIC_CORRECTNESS_PROVEN=false'
+          echo 'B_MINUS_APPROVAL_GRANTED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'ORPHAN_PROMOTION_AUTHORIZED=false'
+          echo 'PHYSICAL_CRASH_DURABILITY_PROVEN=false'
+          echo 'K27_AUTHORITY_GRANTED=false'
+          echo 'EXTERNAL_EFFECT_AUTHORIZED=false'
