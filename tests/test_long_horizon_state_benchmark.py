@@ -49,8 +49,11 @@ def test_workload_is_deterministic_and_contains_rollback():
 def test_neutral_adapter_can_pass_same_state_workload(tmp_path):
     adapter = write_adapter(tmp_path)
     report = run_adapter([sys.executable, str(adapter)], rounds=8, seed=17, cwd=tmp_path)
+    assert report["campaign_disposition"] == "PASS"
     assert report["passed_turns"] == 8
     assert report["state_drift_detected"] is False
+    assert report["inconclusive_observation_present"] is False
+    assert report["inconclusive_turns"] == 0
     assert report["telemetry_observed_turns"] == 0
     assert report["disposition_counts"]["PASS"] == 8
     assert all(turn["disposition"] == "PASS" for turn in report["turns"])
@@ -63,8 +66,10 @@ def test_wrong_digest_is_state_drift_not_success(tmp_path):
         'import json,sys\njson.loads(sys.stdin.read())\nprint(json.dumps({"state_digest":"wrong","telemetry":{"provenance":"UNKNOWN"}}))\n',
     )
     report = run_adapter([sys.executable, str(adapter)], rounds=4, cwd=tmp_path)
+    assert report["campaign_disposition"] == "STATE_DRIFT"
     assert report["passed_turns"] == 0
     assert report["state_drift_detected"] is True
+    assert report["inconclusive_observation_present"] is False
     assert report["disposition_counts"]["STATE_DRIFT"] == 4
 
 
@@ -74,12 +79,16 @@ def test_unknown_telemetry_cannot_carry_fake_zero(tmp_path):
         'import json,sys\nitem=json.loads(sys.stdin.read())\nprint(json.dumps({"state_digest":item["expected_state_digest"],"telemetry":{"provenance":"UNKNOWN","input_tokens":0}}))\n',
     )
     report = run_adapter([sys.executable, str(adapter)], rounds=4, cwd=tmp_path)
+    assert report["campaign_disposition"] == "INCONCLUSIVE"
+    assert report["state_drift_detected"] is False
+    assert report["inconclusive_observation_present"] is True
+    assert report["inconclusive_turns"] == 4
     assert report["passed_turns"] == 0
     assert report["disposition_counts"]["PROTOCOL_ERROR"] == 4
     assert all(turn["returncode"] == 65 for turn in report["turns"])
 
 
-def test_timeout_is_retained_and_campaign_continues(tmp_path):
+def test_timeout_is_retained_without_minting_state_drift(tmp_path):
     adapter = write_adapter(
         tmp_path,
         'import sys,time\nsys.stdin.read()\ntime.sleep(1.0)\n',
@@ -90,13 +99,32 @@ def test_timeout_is_retained_and_campaign_continues(tmp_path):
         timeout_seconds=0.02,
         cwd=tmp_path,
     )
+    assert report["campaign_disposition"] == "INCONCLUSIVE"
     assert report["passed_turns"] == 0
-    assert report["state_drift_detected"] is True
+    assert report["state_drift_detected"] is False
+    assert report["inconclusive_observation_present"] is True
+    assert report["inconclusive_turns"] == 4
     assert report["disposition_counts"]["TIMEOUT"] == 4
     assert len(report["turns"]) == 4
     assert all(turn["disposition"] == "TIMEOUT" for turn in report["turns"])
     assert all(turn["returncode"] == 124 for turn in report["turns"])
     assert all(turn["telemetry"] == {"provenance": "UNKNOWN"} for turn in report["turns"])
+
+
+def test_state_drift_and_adapter_error_remain_independent_campaign_axes(tmp_path):
+    adapter = write_adapter(
+        tmp_path,
+        'import json,sys\nitem=json.loads(sys.stdin.read())\n'
+        'turn=item["turn"]\n'
+        'sys.exit(7) if turn % 2 else print(json.dumps({"state_digest":"wrong","telemetry":{"provenance":"UNKNOWN"}}))\n',
+    )
+    report = run_adapter([sys.executable, str(adapter)], rounds=4, cwd=tmp_path)
+    assert report["campaign_disposition"] == "STATE_DRIFT_WITH_INCONCLUSIVE"
+    assert report["state_drift_detected"] is True
+    assert report["inconclusive_observation_present"] is True
+    assert report["inconclusive_turns"] == 2
+    assert report["disposition_counts"]["STATE_DRIFT"] == 2
+    assert report["disposition_counts"]["ADAPTER_ERROR"] == 2
 
 
 def test_timeout_must_be_positive(tmp_path):
