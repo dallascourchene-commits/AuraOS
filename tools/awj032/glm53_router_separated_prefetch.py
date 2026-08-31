@@ -2,10 +2,15 @@
 
 D0 / HS1 / NONPROMOTING.
 
-This module owns only the missing transfer-planning/accounting membrane between the
+This module owns only the transfer-planning/logical-accounting membrane between the
 native GLM router and PR338's source-bound pager. A predictor may stage expert pages,
 but it is never allowed to select the experts that execute. Prediction misses are
 recovered by demand-loading the exact native-selected experts.
+
+Physical I/O is deliberately NOT owned here. A caller-created attestation object may
+be structurally self-consistent without proving backend/owner observation. G1 therefore
+keeps all physical-byte fields UNKNOWN; physical evidence must remain in the existing
+backend/W4 provenance owners until an exact operation-bound receipt is available.
 
 No model/provider execution, physical-I/O claim, G2 admission, native/private KV
 access, semantic K27 authority, Gate-10, merge/deploy/spend or human/public effect
@@ -88,6 +93,12 @@ class NativeRoute:
 
 @dataclass(frozen=True)
 class PhysicalIOAttestation:
+    """Legacy structural shape; never sufficient to populate G1 physical truth.
+
+    The type remains import-compatible for callers while the G1 membrane rejects it
+    as an authority source. Exact physical evidence belongs to backend/W4 owners.
+    """
+
     schema: str
     binding_digest: str
     prediction_digest: str
@@ -168,12 +179,15 @@ class PrefetchTrace:
         )
         if any(v is not False for v in forbidden):
             raise ValueError("PREFETCH_TRACE_CANNOT_WIDEN_AUTHORITY_OR_ROUTING")
-        if self.physical_io_attested:
-            if None in (self.physical_prefetch_bytes, self.physical_demand_bytes, self.physical_total_bytes, self.io_attestation_id):
-                raise ValueError("ATTESTED_PHYSICAL_IO_REQUIRES_COMPLETE_FIELDS")
-        else:
-            if any(v is not None for v in (self.physical_prefetch_bytes, self.physical_demand_bytes, self.physical_total_bytes, self.io_attestation_id)):
-                raise ValueError("UNATTESTED_PHYSICAL_IO_MUST_REMAIN_UNKNOWN")
+        if self.physical_io_attested is not False:
+            raise ValueError("G1_PHYSICAL_IO_MUST_REMAIN_DELEGATED")
+        if any(v is not None for v in (
+            self.physical_prefetch_bytes,
+            self.physical_demand_bytes,
+            self.physical_total_bytes,
+            self.io_attestation_id,
+        )):
+            raise ValueError("G1_PHYSICAL_IO_FIELDS_MUST_REMAIN_UNKNOWN")
 
     @property
     def receipt_digest(self) -> str:
@@ -209,6 +223,10 @@ def build_prefetch_trace(
 
     The predictor owns transfer speculation only. The native router owns execution.
     Every native-selected expert absent from the prediction becomes a demand miss.
+
+    ``physical_io`` remains a compatibility parameter only. Supplying one is rejected:
+    caller-bound structure is not backend/owner observation and cannot populate G1's
+    physical plane. Use the W4 backend/owner-host evidence surfaces separately.
     """
     prediction.validate(num_experts=num_experts)
     native_route.validate(num_experts=num_experts)
@@ -216,6 +234,9 @@ def build_prefetch_trace(
         raise ValueError("PREFETCH_NATIVE_LAYER_MISMATCH")
     if prediction.binding_digest != native_route.binding_digest:
         raise ValueError("PREFETCH_NATIVE_SOURCE_BINDING_MISMATCH")
+    if physical_io is not None:
+        physical_io.validate()
+        raise ValueError("CALLER_PHYSICAL_IO_ATTESTATION_FORBIDDEN")
 
     predicted = set(prediction.predicted_experts)
     native = set(native_route.selected_experts)
@@ -227,26 +248,6 @@ def build_prefetch_trace(
     logical_native = _logical_bytes(native_route.selected_experts, logical_bytes_by_expert)
     logical_demand = _logical_bytes(misses, logical_bytes_by_expert) if misses else 0
     logical_waste = _logical_bytes(wasted, logical_bytes_by_expert) if wasted else 0
-
-    physical_attested = physical_io is not None
-    p_prefetch = p_demand = p_total = None
-    attestation_id = None
-    if physical_io is not None:
-        physical_io.validate()
-        if physical_io.binding_digest != prediction.binding_digest:
-            raise ValueError("PHYSICAL_IO_BINDING_MISMATCH")
-        if physical_io.prediction_digest != prediction.digest:
-            raise ValueError("PHYSICAL_IO_PREDICTION_MISMATCH")
-        if physical_io.native_route_digest != native_route.digest:
-            raise ValueError("PHYSICAL_IO_ROUTE_MISMATCH")
-        if physical_io.prefetch_experts != prediction.predicted_experts:
-            raise ValueError("PHYSICAL_IO_PREFETCH_SET_MISMATCH")
-        if physical_io.demand_experts != misses:
-            raise ValueError("PHYSICAL_IO_DEMAND_SET_MISMATCH")
-        p_prefetch = physical_io.physical_prefetch_bytes
-        p_demand = physical_io.physical_demand_bytes
-        p_total = p_prefetch + p_demand
-        attestation_id = physical_io.attestation_id
 
     trace = PrefetchTrace(
         schema=SCHEMA,
@@ -268,11 +269,11 @@ def build_prefetch_trace(
         prediction_recall_denominator=len(native_route.selected_experts),
         prediction_precision_numerator=len(hits),
         prediction_precision_denominator=len(prediction.predicted_experts),
-        physical_io_attested=physical_attested,
-        physical_prefetch_bytes=p_prefetch,
-        physical_demand_bytes=p_demand,
-        physical_total_bytes=p_total,
-        io_attestation_id=attestation_id,
+        physical_io_attested=False,
+        physical_prefetch_bytes=None,
+        physical_demand_bytes=None,
+        physical_total_bytes=None,
+        io_attestation_id=None,
     )
     trace.validate_claim_ceiling()
     return trace
@@ -291,7 +292,9 @@ def stage_then_demand_load(
     """Exercise the transfer order while preserving native execution semantics.
 
     Prediction pages are staged first. Any missed native experts are then demand-loaded.
-    This function never calls a model forward and returns only a bounded trace.
+    This function never calls a model forward and returns only a bounded logical trace.
+    Source-bound callers should use the PR719 guard, which validates the concrete pager
+    before reads and the returned pages after reads.
     """
     trace = build_prefetch_trace(
         prediction=prediction,
@@ -310,6 +313,9 @@ LAWS = (
     "PrefetchPrediction!=NativeExecutionRoute",
     "PredictionMiss=>DemandLoadExactNativeExpertsNotRouteMutation",
     "PredictionWasteMayIncreaseIOWithoutChangingExecutedExperts",
+    "CallerPhysicalIOAttestation!=PhysicalIOProvenance",
+    "G1PhysicalIOAlwaysUnknownUntilDelegatedOwnerReceipt",
+    "PhysicalIOAuthorityBelongsToBackendW4NotPrefetchPlanner",
     "LogicalPrefetchBytes!=PhysicalNVMeBytesAbsentAttestation",
     "FullShardLoad!=SelectivePrefetch",
     "CoordinateMemory!=TransformerKVCache",
