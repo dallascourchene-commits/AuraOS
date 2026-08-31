@@ -23,9 +23,6 @@ from tools.aura_external_cognition_resolve_adapter import (
     ResolveDisposition,
 )
 from tools.aura_eki_persistent_candidate_projection import (
-    REUSE_NOT_APPLICABLE if False else STORE_SCHEMA_NAME,  # keep import parser honest; no runtime alias
-)
-from tools.aura_eki_persistent_candidate_projection import (
     build_coordinate_store_snapshot,
     project_eki_l4_to_candidate,
 )
