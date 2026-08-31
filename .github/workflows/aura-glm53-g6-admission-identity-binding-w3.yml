@@ -129,6 +129,22 @@ jobs:
       - name: Execute G6 identity-binding W3 adversarials
         run: python3 -m unittest tools.awj032.test_glm53_g6_admission_identity_binding_addendum -v
 
+      - name: Enforce no caller-supplied base request on public W3 API
+        run: |
+          python3 - <<'PY'
+          import inspect
+          import tools.awj032.glm53_g6_admission_identity_binding_addendum as m
+          expected = ("reuse_identity", "provenance", "owner", "evidence")
+          if m.public_api_parameters() != expected:
+              raise SystemExit(f"G6_W3_PUBLIC_API_WIDENED:{m.public_api_parameters()}")
+          sig = inspect.signature(m.compile_identity_bound_g6_request)
+          if tuple(sig.parameters) != expected or "base_request" in sig.parameters:
+              raise SystemExit(f"G6_W3_CALLER_BASE_REQUEST_ACCEPTED:{sig}")
+          if hasattr(m, "bind_g6_request_to_admission_identity"):
+              raise SystemExit("G6_W3_UNSAFE_PUBLIC_PRECOMPILED_BINDER_PRESENT")
+          print("G6_W3_BASE_REQUEST_INTERNAL_CONSTRUCTION_ONLY=true")
+          PY
+
       - name: Exhaust base 512-state and W3 16-state lattices
         run: |
           python3 - <<'PY'
@@ -140,17 +156,20 @@ jobs:
           print("G6_IDENTITY_BINDING_W3_16=PASS")
           PY
 
-      - name: Enforce anti-collapse and nonpromotion laws
+      - name: Enforce anti-cross-cast and nonpromotion laws
         run: |
           set -euo pipefail
           target=tools/awj032/glm53_g6_admission_identity_binding_addendum.py
           grep -q 'ReuseCandidateSummary!=AdmissionReuseReceiptIdentity' "$target"
           grep -q 'GLM53AdmissionFamilyMustRemainExact' "$target"
           grep -q 'AdmissionReceiptDigest+Subject+Source+Evidence+Owner+Decision+ReuseDigestMustSurviveProjection' "$target"
+          grep -q 'CallerSuppliedBaseRequest+IndependentIdentity!=JoinedRequestIdentity' "$target"
+          grep -q 'IdentityBoundWrapperMustConstructBaseRequest' "$target"
           grep -q 'IdentityBinding!=ReceiptProducerAuthentication' "$target"
           grep -q 'IdentityBinding!=SourceCurrentnessTruth' "$target"
           grep -q 'RepoHeadChanged!=TensorSourceGenerationChanged' "$target"
           grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' "$target"
+          echo "CALLER_SUPPLIED_BASE_REQUEST_ACCEPTED=false"
           echo "REUSE_RECEIPT_AUTHENTICATED_BY_THIS_CONTRACT=false"
           echo "SOURCE_CURRENTNESS_PROVEN_BY_THIS_CONTRACT=false"
           echo "MODEL_OR_PROVIDER_EXECUTION_OBSERVED=false"
