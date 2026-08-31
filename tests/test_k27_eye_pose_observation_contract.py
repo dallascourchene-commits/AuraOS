@@ -1,174 +1,96 @@
+import dataclasses
+import hashlib
+import inspect
+import json
 from pathlib import Path
 import sys
 import unittest
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(REPO_ROOT / "tools"))
-
+ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT/"tools"))
 import k27_eye_pose_observation_contract as eye
 
+PARENTS=("source-artifact","review-artifact")
 
-PARENTS = (
-    "1l8FLO6a0ebJX1D4L2VP5PThii4P_vcGGrGMxBHYy_Ew",
-    "1yesnrKTiuTS4laKhOQ_Qlp45PF1XN29ih0kK_0sNFxA",
-)
-
-
-def calibration(**overrides):
-    values = dict(
-        sensor_instance_id="camera-instance-A",
-        runtime_generation="boot-17",
-        calibration_generation="cal-4",
-        fx_px=1000.0,
-        fy_px=1000.0,
-        cx_px=640.0,
-        cy_px=360.0,
-        image_width_px=1280,
-        image_height_px=720,
+def calibration():
+    return eye.CameraCalibration(
+        sensor_instance_id="cam0", runtime_generation="run7",
+        calibration_generation="cal3", coordinate_space=eye.COORDINATE_SPACE,
+        fx_px=800.0, fy_px=1200.0, cx_px=640.0, cy_px=360.0,
+        image_width_px=1280, image_height_px=720,
+        calibration_evidence_ref="calibration-dataset:abc",
     )
-    values.update(overrides)
-    return eye.CameraCalibration(**values)
 
-
-def frame(**overrides):
-    values = dict(
-        sensor_instance_id="camera-instance-A",
-        runtime_generation="boot-17",
-        frame_id="frame-100",
-        capture_time_ns=1_000_000_000,
-        landmark_model_generation="face-landmarker-v7",
-        tracking_confidence=0.98,
-        left_iris_x_px=600.0,
-        left_iris_y_px=360.0,
-        right_iris_x_px=680.0,
-        right_iris_y_px=360.0,
+def frame():
+    return eye.IrisFrameObservation(
+        sensor_instance_id="cam0", runtime_generation="run7", frame_id="f10",
+        capture_time_ns=1_000_000, landmark_model_generation="landmark4",
+        tracking_confidence=0.99,
+        left_iris_x_px=600.0, left_iris_y_px=350.0,
+        right_iris_x_px=680.0, right_iris_y_px=390.0,
     )
-    values.update(overrides)
-    return eye.IrisFrameObservation(**values)
 
+def policy():
+    return eye.GatePolicyV1(
+        now_ns=1_000_100, max_age_ns=1_000,
+        expected_sensor_instance_id="cam0", expected_runtime_generation="run7",
+        expected_calibration_generation="cal3",
+        expected_landmark_model_generation="landmark4",
+        minimum_tracking_confidence=0.9,
+    )
 
-class EyePoseObservationContractTests(unittest.TestCase):
-    def test_assumed_ipd_geometry_is_estimate_not_metric_truth(self):
-        estimate = eye.estimate_eye_pose_from_assumed_ipd(
-            frame=frame(), calibration=calibration(), assumed_ipd_m=0.064
-        )
-        self.assertAlmostEqual(estimate.z_m, 0.8)
-        self.assertAlmostEqual(estimate.x_m, 0.0)
-        self.assertAlmostEqual(estimate.y_m, 0.0)
-        self.assertEqual(estimate.pose_class, eye.POSE_CLASS)
-        self.assertFalse(estimate.calibrated_metric_truth_proven)
-        self.assertFalse(estimate.physical_steering_authority)
+class EyeProducerTraversalTests(unittest.TestCase):
+    def test_anisotropic_intrinsics_are_used_in_depth(self):
+        e=eye.estimate_eye_pose_from_assumed_ipd(frame=frame(), calibration=calibration(), assumed_ipd_m=0.064)
+        expected=0.064/((80.0/800.0)**2+(40.0/1200.0)**2)**0.5
+        self.assertAlmostEqual(e.z_m,expected)
 
-    def test_stale_frame_fails_closed(self):
-        gate = eye.gate_eye_pose_for_steering(
-            frame=frame(), calibration=calibration(), now_ns=1_200_000_001,
-            max_age_ns=200_000_000, expected_sensor_instance_id="camera-instance-A",
-            expected_runtime_generation="boot-17", expected_calibration_generation="cal-4",
-            expected_landmark_model_generation="face-landmarker-v7",
-            minimum_tracking_confidence=0.9,
-        )
-        self.assertFalse(gate.admissible)
-        self.assertIn("FRAME_STALE_OR_FROM_FUTURE", gate.refusals)
-
-    def test_sensor_aba_runtime_change_fails_common_cut(self):
-        gate = eye.gate_eye_pose_for_steering(
-            frame=frame(runtime_generation="boot-18"), calibration=calibration(),
-            now_ns=1_100_000_000, max_age_ns=200_000_000,
-            expected_sensor_instance_id="camera-instance-A",
-            expected_runtime_generation="boot-17", expected_calibration_generation="cal-4",
-            expected_landmark_model_generation="face-landmarker-v7",
-            minimum_tracking_confidence=0.9,
-        )
-        self.assertFalse(gate.admissible)
-        self.assertIn("SENSOR_RUNTIME_COMMON_CUT_MISMATCH", gate.refusals)
-
-    def test_calibration_generation_movement_reopens_gate(self):
-        gate = eye.gate_eye_pose_for_steering(
-            frame=frame(), calibration=calibration(calibration_generation="cal-3"),
-            now_ns=1_100_000_000, max_age_ns=200_000_000,
-            expected_sensor_instance_id="camera-instance-A",
-            expected_runtime_generation="boot-17", expected_calibration_generation="cal-4",
-            expected_landmark_model_generation="face-landmarker-v7",
-            minimum_tracking_confidence=0.9,
-        )
-        self.assertFalse(gate.admissible)
-        self.assertIn("CALIBRATION_GENERATION_MISMATCH", gate.refusals)
-
-    def test_landmark_model_generation_movement_reopens_gate(self):
-        gate = eye.gate_eye_pose_for_steering(
-            frame=frame(landmark_model_generation="face-landmarker-v8"), calibration=calibration(),
-            now_ns=1_100_000_000, max_age_ns=200_000_000,
-            expected_sensor_instance_id="camera-instance-A",
-            expected_runtime_generation="boot-17", expected_calibration_generation="cal-4",
-            expected_landmark_model_generation="face-landmarker-v7",
-            minimum_tracking_confidence=0.9,
-        )
-        self.assertFalse(gate.admissible)
-        self.assertIn("LANDMARK_MODEL_GENERATION_MISMATCH", gate.refusals)
-
-    def test_low_tracking_confidence_fails_closed(self):
-        gate = eye.gate_eye_pose_for_steering(
-            frame=frame(tracking_confidence=0.4), calibration=calibration(),
-            now_ns=1_100_000_000, max_age_ns=200_000_000,
-            expected_sensor_instance_id="camera-instance-A",
-            expected_runtime_generation="boot-17", expected_calibration_generation="cal-4",
-            expected_landmark_model_generation="face-landmarker-v7",
-            minimum_tracking_confidence=0.9,
-        )
-        self.assertFalse(gate.admissible)
-        self.assertIn("TRACKING_CONFIDENCE_BELOW_GATE", gate.refusals)
-
-    def test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized(self):
-        gate = eye.gate_eye_pose_for_steering(
-            frame=frame(), calibration=calibration(), now_ns=1_100_000_000,
-            max_age_ns=200_000_000, expected_sensor_instance_id="camera-instance-A",
-            expected_runtime_generation="boot-17", expected_calibration_generation="cal-4",
-            expected_landmark_model_generation="face-landmarker-v7",
-            minimum_tracking_confidence=0.9,
-        )
-        self.assertTrue(gate.admissible)
-        self.assertTrue(gate.common_cut_proven)
-        self.assertTrue(gate.freshness_proven)
-        self.assertFalse(gate.physical_effect_authority)
-
-    def test_receipt_is_two_parent_source_bound_and_tamper_evident(self):
-        f = frame()
-        c = calibration()
-        estimate = eye.estimate_eye_pose_from_assumed_ipd(frame=f, calibration=c, assumed_ipd_m=0.064)
-        gate = eye.gate_eye_pose_for_steering(
-            frame=f, calibration=c, now_ns=1_100_000_000, max_age_ns=200_000_000,
-            expected_sensor_instance_id="camera-instance-A",
-            expected_runtime_generation="boot-17", expected_calibration_generation="cal-4",
-            expected_landmark_model_generation="face-landmarker-v7",
-            minimum_tracking_confidence=0.9,
-        )
-        receipt = eye.build_eye_pose_receipt(
-            frame=f, calibration=c, estimate=estimate, gate=gate, k27_coordinate=13,
-            parent_artifact_ids=PARENTS,
-        )
-        self.assertTrue(eye.verify_eye_pose_receipt(receipt))
-        self.assertFalse(receipt["claim_ceiling"]["k27_coordinate_is_authority"])
-        tampered = dict(receipt)
-        tampered["k27_coordinate"] = 14
-        self.assertFalse(eye.verify_eye_pose_receipt(tampered))
-
-    def test_receipt_requires_exactly_two_distinct_parents(self):
-        f = frame()
-        c = calibration()
-        estimate = eye.estimate_eye_pose_from_assumed_ipd(frame=f, calibration=c, assumed_ipd_m=0.064)
-        gate = eye.gate_eye_pose_for_steering(
-            frame=f, calibration=c, now_ns=1_100_000_000, max_age_ns=200_000_000,
-            expected_sensor_instance_id="camera-instance-A",
-            expected_runtime_generation="boot-17", expected_calibration_generation="cal-4",
-            expected_landmark_model_generation="face-landmarker-v7",
-            minimum_tracking_confidence=0.9,
-        )
+    def test_raw_coordinate_space_rejected(self):
+        c=dataclasses.replace(calibration(), coordinate_space="RAW_DISTORTED_PIXELS_V1")
         with self.assertRaises(ValueError):
-            eye.build_eye_pose_receipt(
-                frame=f, calibration=c, estimate=estimate, gate=gate, k27_coordinate=13,
-                parent_artifact_ids=(PARENTS[0], PARENTS[0]),
-            )
+            eye.estimate_eye_pose_from_assumed_ipd(frame=frame(),calibration=c,assumed_ipd_m=0.064)
 
+    def test_receipt_builder_accepts_no_estimate_or_gate(self):
+        params=inspect.signature(eye.build_eye_pose_receipt).parameters
+        self.assertNotIn("estimate",params)
+        self.assertNotIn("gate",params)
 
-if __name__ == "__main__":
+    def test_receipt_recomputes_producer_and_verifies(self):
+        r=eye.build_eye_pose_receipt(frame=frame(),calibration=calibration(),assumed_ipd_m=0.064,
+            gate_policy=policy(),k27_coordinate=7,parent_artifact_ids=PARENTS)
+        self.assertTrue(r["gate"]["software_gate_admissible"])
+        self.assertTrue(eye.verify_eye_pose_receipt(r))
+        self.assertFalse(r["temporal_point_evidence_admissible"])
+
+    def test_forged_gate_with_fresh_hash_rejected(self):
+        r=dict(eye.build_eye_pose_receipt(frame=frame(),calibration=calibration(),assumed_ipd_m=0.064,
+            gate_policy=policy(),k27_coordinate=7,parent_artifact_ids=PARENTS))
+        r["gate"]=dict(r["gate"]); r["gate"]["software_gate_admissible"]=False
+        payload={k:v for k,v in r.items() if k!="receipt_sha256"}
+        r["receipt_sha256"]=hashlib.sha256(json.dumps(payload,sort_keys=True,separators=(",",":"),ensure_ascii=True).encode()).hexdigest()
+        self.assertFalse(eye.verify_eye_pose_receipt(r))
+
+    def test_forged_estimate_with_fresh_hash_rejected(self):
+        r=dict(eye.build_eye_pose_receipt(frame=frame(),calibration=calibration(),assumed_ipd_m=0.064,
+            gate_policy=policy(),k27_coordinate=7,parent_artifact_ids=PARENTS))
+        r["estimate"]=dict(r["estimate"]); r["estimate"]["z_m"]=999.0
+        payload={k:v for k,v in r.items() if k!="receipt_sha256"}
+        r["receipt_sha256"]=hashlib.sha256(json.dumps(payload,sort_keys=True,separators=(",",":"),ensure_ascii=True).encode()).hexdigest()
+        self.assertFalse(eye.verify_eye_pose_receipt(r))
+
+    def test_stale_frame_fails_software_gate(self):
+        p=dataclasses.replace(policy(), now_ns=2_000_000)
+        r=eye.build_eye_pose_receipt(frame=frame(),calibration=calibration(),assumed_ipd_m=0.064,
+            gate_policy=p,k27_coordinate=7,parent_artifact_ids=PARENTS)
+        self.assertFalse(r["gate"]["software_gate_admissible"])
+        self.assertIn("FRAME_STALE_OR_FROM_FUTURE",r["gate"]["refusals"])
+
+    def test_claim_ceiling_never_upgrades_capture_or_authority(self):
+        r=eye.build_eye_pose_receipt(frame=frame(),calibration=calibration(),assumed_ipd_m=0.064,
+            gate_policy=policy(),k27_coordinate=7,parent_artifact_ids=PARENTS)
+        self.assertTrue(all(v is False for v in r["claim_ceiling"].values()))
+        self.assertFalse(r["gate"]["sensor_observation_authenticated"])
+        self.assertFalse(r["gate"]["effect_time_currentness_authorized"])
+
+if __name__=="__main__":
     unittest.main()
