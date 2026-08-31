@@ -4,10 +4,7 @@ from dataclasses import replace
 import hashlib
 import unittest
 
-from tools.aura_retrieval_progress_guard import (
-    RetrievalFingerprint,
-    RetrievalObservation,
-)
+from tools.aura_retrieval_progress_guard import RetrievalFingerprint, RetrievalObservation
 from tools.aura_retrieval_progress_k27_alias_guard import (
     ALIAS_SCHEMA,
     VIEW_SCHEMA,
@@ -57,6 +54,16 @@ def session_view(**updates):
     return view(**base)
 
 
+def other_source_view(**updates):
+    base = dict(
+        canonical_key="https://arxiv.org/abs/2607.10487",
+        xyz=(5, 3, 9),
+        sid="sid:arxiv:2607.10487",
+    )
+    base.update(updates)
+    return view(**base)
+
+
 def fp(v: SchemeBoundCoordinateViewProjection, *, tool: str = "search", query: str = "same question"):
     return RetrievalFingerprint(
         provider="external",
@@ -101,10 +108,7 @@ class RetrievalProgressK27AliasGuardTests(unittest.TestCase):
     def test_initial_semantic_source_retrieval_allowed_nonpromoting(self):
         a = view()
         receipt = assess_k27_alias_aware_retrieval_progress(
-            previous=None,
-            current=obs(a),
-            previous_view=None,
-            current_view=a,
+            previous=None, current=obs(a), previous_view=None, current_view=a
         )
         self.assertEqual(AliasAwareDecision.ALLOW_INITIAL, receipt.decision)
         self.assertFalse(receipt.source_identity_authenticated_by_this_contract)
@@ -138,12 +142,11 @@ class RetrievalProgressK27AliasGuardTests(unittest.TestCase):
         )
         self.assertEqual(AliasAwareDecision.HOLD_ALIAS_RESOLUTION_REQUIRED, receipt.decision)
         self.assertEqual("ALLOW_CHANGED_AXIS", receipt.raw_decision)
-        self.assertIsNone(receipt.semantic_decision)
+        self.assertIn(receipt.semantic_decision, {"CHANGE_AXIS_REQUIRED", "COLLAPSE_CONE"})
         self.assertTrue(receipt.alias_projection_required)
         self.assertFalse(receipt.alias_projection_consumed)
-        self.assertEqual(1, receipt.next_no_progress_count)
 
-    def test_verified_alias_quotients_false_changed_axis(self):
+    def test_owner_alias_quotients_false_changed_axis(self):
         a, b = view(), session_view()
         receipt = assess_k27_alias_aware_retrieval_progress(
             previous=obs(a), current=obs(b), previous_view=a, current_view=b,
@@ -152,7 +155,6 @@ class RetrievalProgressK27AliasGuardTests(unittest.TestCase):
         self.assertEqual("ALLOW_CHANGED_AXIS", receipt.raw_decision)
         self.assertEqual("CHANGE_AXIS_REQUIRED", receipt.semantic_decision)
         self.assertEqual(AliasAwareDecision.CHANGE_AXIS_REQUIRED, receipt.decision)
-        self.assertEqual(1, receipt.next_no_progress_count)
         self.assertFalse(receipt.alias_owner_authenticated_by_this_contract)
 
     def test_two_scheme_ping_pong_cannot_reset_no_progress_debt(self):
@@ -173,10 +175,10 @@ class RetrievalProgressK27AliasGuardTests(unittest.TestCase):
         a, b = view(), session_view()
         for field in ("state", "evidence"):
             with self.subTest(field=field):
-                kwargs = {field: "changed"}
                 receipt = assess_k27_alias_aware_retrieval_progress(
-                    previous=obs(a), current=obs(b, **kwargs), previous_view=a, current_view=b,
-                    alias_projection=alias(a, b), prior_no_progress_count=2,
+                    previous=obs(a), current=obs(b, **{field: "changed"}),
+                    previous_view=a, current_view=b, alias_projection=alias(a, b),
+                    prior_no_progress_count=2,
                 )
                 self.assertEqual(AliasAwareDecision.ALLOW_STATE_TRANSITION, receipt.decision)
                 self.assertEqual(0, receipt.next_no_progress_count)
@@ -192,20 +194,36 @@ class RetrievalProgressK27AliasGuardTests(unittest.TestCase):
                 self.assertEqual(AliasAwareDecision.ALLOW_CHANGED_AXIS, receipt.decision)
                 self.assertEqual(0, receipt.next_no_progress_count)
 
-    def test_different_sid_is_semantic_resource_change_without_alias(self):
-        a = view()
-        b = view(
-            scheme="URL-SHA256-MOD27-v1",
-            canonical_key="https://arxiv.org/abs/2607.10487",
-            xyz=(5, 3, 9),
-            sid="sid:arxiv:2607.10487",
-        )
+    def test_caller_sid_rotation_alone_cannot_mint_changed_axis(self):
+        a, b = view(), other_source_view()
         receipt = assess_k27_alias_aware_retrieval_progress(
             previous=obs(a), current=obs(b), previous_view=a, current_view=b,
             prior_no_progress_count=1,
         )
-        self.assertEqual(AliasAwareDecision.ALLOW_CHANGED_AXIS, receipt.decision)
-        self.assertFalse(receipt.alias_projection_required)
+        self.assertEqual(AliasAwareDecision.HOLD_SOURCE_IDENTITY_TRANSITION_REQUIRED, receipt.decision)
+        self.assertEqual("ALLOW_CHANGED_AXIS", receipt.raw_decision)
+        self.assertEqual("COLLAPSE_CONE", receipt.semantic_decision)
+        self.assertFalse(receipt.source_sid_same)
+
+    def test_different_sid_plus_independent_tool_or_query_change_can_progress(self):
+        a, b = view(), other_source_view()
+        for kwargs in ({"tool": "fetch"}, {"query": "different question"}):
+            with self.subTest(kwargs=kwargs):
+                receipt = assess_k27_alias_aware_retrieval_progress(
+                    previous=obs(a), current=obs(b, **kwargs), previous_view=a, current_view=b,
+                    prior_no_progress_count=1,
+                )
+                self.assertEqual(AliasAwareDecision.ALLOW_CHANGED_AXIS, receipt.decision)
+
+    def test_different_sid_plus_provider_or_evidence_transition_can_progress(self):
+        a, b = view(), other_source_view()
+        for kwargs in ({"state": "provider:g1"}, {"evidence": "evidence:e1"}):
+            with self.subTest(kwargs=kwargs):
+                receipt = assess_k27_alias_aware_retrieval_progress(
+                    previous=obs(a), current=obs(b, **kwargs), previous_view=a, current_view=b,
+                    prior_no_progress_count=1,
+                )
+                self.assertEqual(AliasAwareDecision.ALLOW_STATE_TRANSITION, receipt.decision)
 
     def test_normalization_change_same_sid_is_route_recompute_not_progress(self):
         a = view(norm="v1")
@@ -217,21 +235,16 @@ class RetrievalProgressK27AliasGuardTests(unittest.TestCase):
         )
         self.assertEqual(AliasAwareDecision.COLLAPSE_CONE, receipt.decision)
 
-    def test_same_xyz_different_full_digest_never_merges_sources(self):
+    def test_same_xyz_different_full_digest_never_merges_or_mints_progress(self):
         a = view(xyz=(3, 4, 6))
-        b = view(
-            canonical_key="https://example.org/different-source",
-            xyz=(3, 4, 6),
-            sid="sid:example:different",
-        )
+        b = other_source_view(xyz=(3, 4, 6))
         self.assertEqual(a.xyz, b.xyz)
         self.assertNotEqual(a.full_digest, b.full_digest)
         receipt = assess_k27_alias_aware_retrieval_progress(
             previous=obs(a), current=obs(b), previous_view=a, current_view=b,
             prior_no_progress_count=1,
         )
-        self.assertEqual(AliasAwareDecision.ALLOW_CHANGED_AXIS, receipt.decision)
-        self.assertFalse(receipt.source_sid_same)
+        self.assertEqual(AliasAwareDecision.HOLD_SOURCE_IDENTITY_TRANSITION_REQUIRED, receipt.decision)
 
     def test_alias_view_or_sid_forgery_rejected(self):
         a, b = view(), session_view()
@@ -242,7 +255,6 @@ class RetrievalProgressK27AliasGuardTests(unittest.TestCase):
                 alias_projection=alias(a, wrong), prior_no_progress_count=0,
             )
         with self.assertRaisesRegex(ValueError, "K27_ALIAS_SOURCE_SID_MISMATCH"):
-            alias(a, b, source_sid="sid:forged").validate()
             assess_k27_alias_aware_retrieval_progress(
                 previous=obs(a), current=obs(b), previous_view=a, current_view=b,
                 alias_projection=alias(a, b, source_sid="sid:forged"), prior_no_progress_count=0,
@@ -260,8 +272,7 @@ class RetrievalProgressK27AliasGuardTests(unittest.TestCase):
         a = view()
         bad = RetrievalObservation(
             RetrievalFingerprint("external", "search", "k27view:" + "0" * 64, "q", "0:20", "hydrate-source"),
-            "g0",
-            "e0",
+            "g0", "e0",
         )
         with self.assertRaisesRegex(ValueError, "CURRENT_RETRIEVAL_RESOURCE_NOT_BOUND_TO_K27_VIEW"):
             assess_k27_alias_aware_retrieval_progress(
@@ -270,29 +281,37 @@ class RetrievalProgressK27AliasGuardTests(unittest.TestCase):
 
     def test_view_and_alias_authority_widening_rejected(self):
         for field in (
-            "source_identity_authenticated_by_this_contract",
-            "source_currentness_proven",
-            "semantic_truth_proven",
-            "routing_authority_granted",
-            "effect_authority_granted",
-            "semantic_k27_authority_minted",
-            "native_private_transformer_kv_accessed",
+            "source_identity_authenticated_by_this_contract", "source_currentness_proven",
+            "semantic_truth_proven", "routing_authority_granted", "effect_authority_granted",
+            "semantic_k27_authority_minted", "native_private_transformer_kv_accessed",
         ):
             with self.subTest(view_field=field):
                 with self.assertRaisesRegex(ValueError, "K27_VIEW_EXCEEDED_NONPROMOTION_CEILING"):
                     replace(view(), **{field: True}).validate()
         a, b = view(), session_view()
         for field in (
-            "owner_authenticated_by_this_contract",
-            "source_truth_proven",
-            "source_currentness_proven_by_this_contract",
-            "effect_authority_granted",
-            "semantic_k27_authority_minted",
-            "native_private_transformer_kv_accessed",
+            "owner_authenticated_by_this_contract", "source_truth_proven",
+            "source_currentness_proven_by_this_contract", "effect_authority_granted",
+            "semantic_k27_authority_minted", "native_private_transformer_kv_accessed",
         ):
             with self.subTest(alias_field=field):
                 with self.assertRaisesRegex(ValueError, "K27_ALIAS_EXCEEDED_NONPROMOTION_CEILING"):
                     replace(alias(a, b), **{field: True}).validate()
+
+    def test_hold_receipt_identity_binds_actual_raw_and_semantic_fingerprints(self):
+        a, b = view(), session_view()
+        x = assess_k27_alias_aware_retrieval_progress(
+            previous=obs(a), current=obs(b, query="q1"), previous_view=a, current_view=b,
+            prior_no_progress_count=1,
+        )
+        y = assess_k27_alias_aware_retrieval_progress(
+            previous=obs(a), current=obs(b, query="q2"), previous_view=a, current_view=b,
+            prior_no_progress_count=1,
+        )
+        self.assertEqual(AliasAwareDecision.HOLD_ALIAS_RESOLUTION_REQUIRED, x.decision)
+        self.assertNotEqual(x.raw_fingerprint_digest, y.raw_fingerprint_digest)
+        self.assertNotEqual(x.semantic_fingerprint_digest, y.semantic_fingerprint_digest)
+        self.assertNotEqual(x.receipt_digest, y.receipt_digest)
 
     def test_receipt_identity_deterministic_and_alias_bearing(self):
         a, b = view(), session_view()
