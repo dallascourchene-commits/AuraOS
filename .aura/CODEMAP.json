@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788201789,
+  "generated_at_unix": 1788202035,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1680,
+    "repo_file_count": 1686,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -139,6 +139,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-glm53-g3-abstention-safe-transfer-admission.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
@@ -1110,6 +1111,10 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/AWJ032_G3_ABSTENTION_SAFE_TRANSFER_ADMISSION_20260831.md",
+      "docs/arena/AWJ032_G3_COLLISION_SCAN_20260831.md",
+      "docs/arena/AWJ032_G3_EXTERNAL_COORDINATE_DELTA_20260831.md",
+      "docs/arena/AWJ032_G3_HOSTED_PROOF_EXPECTATIONS_20260831.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -1666,6 +1671,7 @@
       "tools/awj032/glm53_router_separated_prefetch.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
       "tools/awj032/test_glm53_io_feasibility.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
@@ -1796,16 +1802,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1680,
-      "bytes": 26620543,
-      "tokens_est": 6645535,
+      "files": 1686,
+      "bytes": 26645602,
+      "tokens_est": 6651801,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 243,
+        "knowledge_artifact": 247,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1024,
-        "schema_or_lexicon": 279,
+        "python_module": 1025,
+        "schema_or_lexicon": 280,
         "support_file": 49
       }
     },
@@ -159301,7 +159307,7 @@
         "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
         "kind": "function",
         "line": 228,
-        "end_line": 373,
+        "end_line": 382,
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:admit_prefetch_transfers:8f106534b1e5a1eb",
         "signature_hash": "a94e8d542a185ce5"
       }
@@ -159764,6 +159770,156 @@
         "end_line": 159,
         "semantic_id": "tools/awj032/test_glm53_compatibility_probe.py#method:GLM53CompatibilityProbeTests.test_probe_never_admits_g2:f5368fa39d715758",
         "signature_hash": "a6a2281c320c3c5b"
+      }
+    ],
+    "_PageResult": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 21,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#class:_PageResult:0fd0e540420fee24",
+        "signature_hash": "facfe0dd69b0a0f0"
+      }
+    ],
+    "_Pager": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "class",
+        "line": 24,
+        "end_line": 32,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#class:_Pager:f61a056cdf0756dd",
+        "signature_hash": "eca1480a80751cd6"
+      }
+    ],
+    "_Pager.__init__": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 27,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:_Pager.__init__:1c1165b63a1a3fdb",
+        "signature_hash": "50a225aa6b979acb"
+      }
+    ],
+    "_Pager.load_selected": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 32,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:_Pager.load_selected:24ba5ef8a4379762",
+        "signature_hash": "0df0c57f238a2bb4"
+      }
+    ],
+    "_DishonestPager": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "class",
+        "line": 35,
+        "end_line": 39,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#class:_DishonestPager:2ed73f713051411d",
+        "signature_hash": "efc77ec982e9fdcf"
+      }
+    ],
+    "_DishonestPager.load_selected": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 39,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:_DishonestPager.load_selected:b63a453aa6055059",
+        "signature_hash": "0df0c57f238a2bb4"
+      }
+    ],
+    "G3AbstentionSafeTransferAdmissionTests": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "class",
+        "line": 42,
+        "end_line": 208,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#class:G3AbstentionSafeTransferAdmissionTests:0ca4f06fabda1d6a",
+        "signature_hash": "d9bc7c3c48cf4d85"
+      }
+    ],
+    "G3AbstentionSafeTransferAdmissionTests._prediction": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 50,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests._prediction:e9bf638d3747be18",
+        "signature_hash": "21d3b063a6e46d4c"
+      }
+    ],
+    "G3AbstentionSafeTransferAdmissionTests._policy": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 66,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests._policy:7231050b728dcf8e",
+        "signature_hash": "ff89860185dcd17e"
+      }
+    ],
+    "G3AbstentionSafeTransferAdmissionTests.test_abstention_commutes_to_exact_zero_transfer_plan": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 89,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_abstention_commutes_to_exact_zero_transfer_plan:28ab351be937e350",
+        "signature_hash": "7f8375cd3beb1281"
+      }
+    ],
+    "G3AbstentionSafeTransferAdmissionTests.test_abstention_requires_empty_forecast_set": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "method",
+        "line": 91,
+        "end_line": 108,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_abstention_requires_empty_forecast_set:5d2d4e526dcc4653",
+        "signature_hash": "0ec00deddb5cc3e1"
+      }
+    ],
+    "G3AbstentionSafeTransferAdmissionTests.test_abstention_still_requires_policy_layer_and_binding_identity": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 124,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_abstention_still_requires_policy_layer_and_binding_identity:987f4c046b3cfdcb",
+        "signature_hash": "acf036b2da85ab04"
+      }
+    ],
+    "G3AbstentionSafeTransferAdmissionTests.test_abstention_skips_speculation_but_demands_exact_native_route": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 155,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_abstention_skips_speculation_but_demands_exact_native_route:63ad96e24bf291be",
+        "signature_hash": "dc1554abc6157612"
+      }
+    ],
+    "G3AbstentionSafeTransferAdmissionTests.test_abstention_does_not_bypass_post_read_source_proof": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 178,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_abstention_does_not_bypass_post_read_source_proof:0f8cb224bc2b9632",
+        "signature_hash": "7ed19649ef3fdecf"
+      }
+    ],
+    "G3AbstentionSafeTransferAdmissionTests.test_nonempty_g2_path_remains_unchanged": [
+      {
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "kind": "method",
+        "line": 180,
+        "end_line": 208,
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_nonempty_g2_path_remains_unchanged:b898cbe5e10b2255",
+        "signature_hash": "cf84346ec6c6e80f"
       }
     ],
     "IOFeasibilityTests": [
@@ -162025,6 +162181,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-glm53-g3-abstention-safe-transfer-admission.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/aura-review-learning.yml",
@@ -162322,6 +162479,7 @@
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
     "python -m unittest": [
+      ".github/workflows/aura-glm53-g3-abstention-safe-transfer-admission.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/awj032-glm53-01a-pager.yml",
@@ -171637,6 +171795,65 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-g3-abstention-safe-transfer-admission.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 7296,
+      "lines": 163,
+      "tokens_est": 1824,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          92
+        ],
+        "python -m unittest": [
+          99,
+          100,
+          104
+        ]
+      },
+      "topology": {},
+      "digest8": "2259efc816ddd485",
+      "vector": [
+        -0.206603,
+        0.216998,
+        -0.183214,
+        0.001299,
+        -0.068868,
+        -0.146831,
+        0.27677,
+        -0.14943,
+        0.196208,
+        0.097454,
+        0.206603,
+        -0.027287,
+        0.08446,
+        0.175418,
+        0.068868,
+        -0.102652,
+        -0.014293,
+        0.227393,
+        0.289764,
+        -0.204004,
+        0.14943,
+        0.081862,
+        0.214399,
+        0.227393,
+        0.198807,
+        -0.123442,
+        -0.003898,
+        -0.045479,
+        -0.268974,
+        0.310554,
+        0.113047,
+        -0.253381
       ]
     },
     {
@@ -239227,6 +239444,194 @@
       ]
     },
     {
+      "path": "docs/arena/AWJ032_G3_ABSTENTION_SAFE_TRANSFER_ADMISSION_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 5059,
+      "lines": 77,
+      "tokens_est": 1265,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2f372fade162896e",
+      "vector": [
+        0.07167,
+        -0.129837,
+        0.109063,
+        0.194237,
+        -0.169308,
+        -0.123605,
+        0.17554,
+        0.248249,
+        -0.121528,
+        0.169308,
+        -0.200469,
+        0.152689,
+        -0.111141,
+        -0.030122,
+        -0.252404,
+        -0.250327,
+        0.121528,
+        -0.196314,
+        0.129837,
+        0.242017,
+        0.179695,
+        0.17554,
+        -0.237862,
+        -0.244094,
+        0.185927,
+        0.158921,
+        -0.260714,
+        0.013503,
+        0.173463,
+        -0.07998,
+        0.264868,
+        0.052974
+      ]
+    },
+    {
+      "path": "docs/arena/AWJ032_G3_COLLISION_SCAN_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 718,
+      "lines": 15,
+      "tokens_est": 180,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c581135fc54b8394",
+      "vector": [
+        0.155028,
+        -0.104407,
+        0.241506,
+        0.131827,
+        -0.262599,
+        0.228851,
+        -0.25838,
+        -0.209868,
+        -0.233069,
+        0.049567,
+        0.152919,
+        0.005273,
+        0.180339,
+        0.060113,
+        -0.036911,
+        0.144482,
+        0.152919,
+        0.146591,
+        0.165574,
+        -0.165574,
+        -0.247834,
+        0.133936,
+        0.207759,
+        -0.220414,
+        0.159247,
+        -0.214086,
+        -0.17823,
+        -0.01371,
+        0.23096,
+        0.064331,
+        0.211977,
+        0.20565
+      ]
+    },
+    {
+      "path": "docs/arena/AWJ032_G3_EXTERNAL_COORDINATE_DELTA_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1731,
+      "lines": 37,
+      "tokens_est": 432,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3015c724f111b23a",
+      "vector": [
+        -0.152318,
+        -0.074388,
+        -0.220802,
+        -0.142872,
+        -0.138149,
+        0.086195,
+        0.067303,
+        -0.168848,
+        0.277478,
+        -0.055496,
+        -0.09328,
+        0.298731,
+        -0.04605,
+        0.272755,
+        -0.291647,
+        -0.225525,
+        -0.204271,
+        -0.003542,
+        0.18774,
+        -0.154679,
+        -0.04605,
+        0.043688,
+        0.041326,
+        0.286924,
+        -0.138149,
+        0.005904,
+        -0.017711,
+        0.268032,
+        0.26567,
+        -0.256224,
+        0.135787,
+        -0.131064
+      ]
+    },
+    {
+      "path": "docs/arena/AWJ032_G3_HOSTED_PROOF_EXPECTATIONS_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1265,
+      "lines": 17,
+      "tokens_est": 317,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "30eabe2bf3dab889",
+      "vector": [
+        -0.131668,
+        0.20912,
+        -0.045365,
+        0.260017,
+        -0.029874,
+        0.125029,
+        -0.007745,
+        -0.151584,
+        -0.005532,
+        -0.248952,
+        0.025448,
+        0.100687,
+        0.058642,
+        -0.215759,
+        -0.19363,
+        0.255591,
+        0.195842,
+        -0.273294,
+        -0.120604,
+        0.189204,
+        -0.136094,
+        -0.169288,
+        0.144946,
+        -0.20912,
+        -0.255591,
+        -0.149371,
+        0.198055,
+        -0.246739,
+        0.122816,
+        0.253378,
+        0.085197,
+        0.233462
+      ]
+    },
+    {
       "path": "docs/aura_substrate_manifest.files.01.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -267944,47 +268349,47 @@
       "path": "tools/awj032/glm53_prefetch_transfer_admission.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 15734,
-      "lines": 374,
-      "tokens_est": 3934,
+      "bytes": 16111,
+      "lines": 383,
+      "tokens_est": 4028,
       "symbol_count": 16,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "191ba21e6a0eb667",
+      "digest8": "c68d98fb38310452",
       "vector": [
-        -0.017189,
-        0.186782,
-        0.241786,
-        -0.127195,
-        -0.273871,
-        -0.127195,
-        -0.108861,
-        0.056149,
-        -0.2097,
-        0.150113,
-        -0.074484,
-        0.113444,
-        0.122612,
-        -0.058441,
-        0.104277,
-        -0.118028,
-        0.134071,
-        0.253245,
-        0.273871,
-        -0.00573,
-        0.273871,
-        0.127195,
-        0.163864,
-        0.269287,
-        0.230327,
-        0.092818,
-        -0.205117,
-        0.269287,
-        0.198241,
-        -0.198241,
-        -0.18449,
-        0.138654
+        -0.205673,
+        0.210168,
+        -0.201177,
+        -0.165212,
+        -0.225903,
+        -0.180947,
+        -0.095531,
+        -0.075301,
+        0.012363,
+        -0.012363,
+        -0.012363,
+        0.082044,
+        0.196681,
+        -0.028097,
+        -0.22815,
+        0.18769,
+        0.194434,
+        0.178699,
+        -0.115761,
+        0.279849,
+        0.275354,
+        0.194434,
+        0.068558,
+        -0.162965,
+        0.273106,
+        -0.171956,
+        0.279849,
+        0.178699,
+        -0.135991,
+        0.212416,
+        -0.162965,
+        -0.048327
       ]
     },
     {
@@ -268126,6 +268531,53 @@
         0.046165,
         -0.170935,
         -0.185908
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8613,
+      "lines": 213,
+      "tokens_est": 2154,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1afb0dd621e35af1",
+      "vector": [
+        0.226902,
+        0.270986,
+        0.141327,
+        0.04538,
+        0.162073,
+        0.055753,
+        0.247647,
+        -0.086871,
+        0.281358,
+        -0.330628,
+        -0.203563,
+        0.050567,
+        0.229495,
+        -0.167259,
+        0.143921,
+        0.146514,
+        -0.283951,
+        0.138734,
+        0.084278,
+        0.128362,
+        -0.133548,
+        -0.188004,
+        0.141327,
+        0.136141,
+        -0.216529,
+        -0.024635,
+        0.081685,
+        -0.079091,
+        -0.206157,
+        -0.047974,
+        -0.268392,
+        -0.084278
       ]
     },
     {
@@ -292409,16 +292861,16 @@
     }
   },
   "summary": {
-    "file_count": 1680,
-    "total_bytes": 26620543,
-    "text_tokens_est": 6645535,
+    "file_count": 1686,
+    "total_bytes": 26645602,
+    "text_tokens_est": 6651801,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 243,
+      "knowledge_artifact": 247,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1024,
-      "schema_or_lexicon": 279,
+      "python_module": 1025,
+      "schema_or_lexicon": 280,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -292567,6 +293019,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-glm53-g3-abstention-safe-transfer-admission.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
@@ -293538,6 +293991,10 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/AWJ032_G3_ABSTENTION_SAFE_TRANSFER_ADMISSION_20260831.md",
+      "docs/arena/AWJ032_G3_COLLISION_SCAN_20260831.md",
+      "docs/arena/AWJ032_G3_EXTERNAL_COORDINATE_DELTA_20260831.md",
+      "docs/arena/AWJ032_G3_HOSTED_PROOF_EXPECTATIONS_20260831.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -294094,6 +294551,7 @@
       "tools/awj032/glm53_router_separated_prefetch.py",
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
+      "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
       "tools/awj032/test_glm53_io_feasibility.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
@@ -453375,7 +453833,7 @@
         "line": 75,
         "end_line": 102,
         "signature_hash": "2ee8667a584f61d7",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#class:ExpertTransferDecision:a02c2a70a74f8a74",
@@ -453385,7 +453843,7 @@
         "line": 160,
         "end_line": 169,
         "signature_hash": "1b8e66524a1feefe",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#class:PrefetchTransferAdmissionReceipt:0d99911460ce180d",
@@ -453395,7 +453853,7 @@
         "line": 173,
         "end_line": 225,
         "signature_hash": "69997fdff16d5494",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#class:PrefetchTransferPolicy:55359bd16a3db088",
@@ -453405,7 +453863,7 @@
         "line": 106,
         "end_line": 156,
         "signature_hash": "55483fc508e9429d",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_canonical:858f6db0e16226a4",
@@ -453415,7 +453873,7 @@
         "line": 42,
         "end_line": 43,
         "signature_hash": "8d5bf5695239b859",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_nonnegative:4122bf1d65e0fc07",
@@ -453425,7 +453883,7 @@
         "line": 57,
         "end_line": 61,
         "signature_hash": "704365746c822d12",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_positive:f72ed10110b8ce84",
@@ -453435,7 +453893,7 @@
         "line": 50,
         "end_line": 54,
         "signature_hash": "6f85663f977a6da9",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_probability:98c8f47bfc825020",
@@ -453445,7 +453903,7 @@
         "line": 64,
         "end_line": 71,
         "signature_hash": "2ffc720c71aa1ef2",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:_sha:b8aa5d8ca3840c90",
@@ -453455,7 +453913,7 @@
         "line": 46,
         "end_line": 47,
         "signature_hash": "e47bc2e8d0ade77b",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#function:admit_prefetch_transfers:8f106534b1e5a1eb",
@@ -453463,9 +453921,9 @@
         "kind": "function",
         "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
         "line": 228,
-        "end_line": 373,
+        "end_line": 382,
         "signature_hash": "a94e8d542a185ce5",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:CalibratedExpertForecast.hit_probability:2478bdd5de97230a",
@@ -453475,7 +453933,7 @@
         "line": 85,
         "end_line": 90,
         "signature_hash": "53371b7c9ffaa707",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:CalibratedExpertForecast.validate:51c2cd71da03bfbc",
@@ -453485,7 +453943,7 @@
         "line": 92,
         "end_line": 102,
         "signature_hash": "99559e6add5bcf3e",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionReceipt.receipt_digest:696b0b3354895843",
@@ -453495,7 +453953,7 @@
         "line": 223,
         "end_line": 225,
         "signature_hash": "1a6a05eb2610184a",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:PrefetchTransferAdmissionReceipt.validate_claim_ceiling:9a074384eb9897fa",
@@ -453505,7 +453963,7 @@
         "line": 203,
         "end_line": 220,
         "signature_hash": "d379bda2928aaff4",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:PrefetchTransferPolicy.minimum_hit_probability:860b538706dc4cbd",
@@ -453515,7 +453973,7 @@
         "line": 121,
         "end_line": 126,
         "signature_hash": "41d1c8641a853069",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_prefetch_transfer_admission.py#method:PrefetchTransferPolicy.validate:6f274d3d13a25650",
@@ -453525,7 +453983,7 @@
         "line": 128,
         "end_line": 156,
         "signature_hash": "99559e6add5bcf3e",
-        "file_digest8": "191ba21e6a0eb667"
+        "file_digest8": "c68d98fb38310452"
       },
       {
         "semantic_id": "tools/awj032/glm53_router_separated_prefetch.py#class:ExpertPageLoader:839b89724a2b5dcb",
@@ -454006,6 +454464,156 @@
         "end_line": 97,
         "signature_hash": "b67b9af0cf1f2b78",
         "file_digest8": "8ea5e0d2c27b515d"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#class:G3AbstentionSafeTransferAdmissionTests:0ca4f06fabda1d6a",
+        "name": "G3AbstentionSafeTransferAdmissionTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 42,
+        "end_line": 208,
+        "signature_hash": "d9bc7c3c48cf4d85",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#class:_DishonestPager:2ed73f713051411d",
+        "name": "_DishonestPager",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 35,
+        "end_line": 39,
+        "signature_hash": "efc77ec982e9fdcf",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#class:_PageResult:0fd0e540420fee24",
+        "name": "_PageResult",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 19,
+        "end_line": 21,
+        "signature_hash": "facfe0dd69b0a0f0",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#class:_Pager:f61a056cdf0756dd",
+        "name": "_Pager",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 24,
+        "end_line": 32,
+        "signature_hash": "eca1480a80751cd6",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests._policy:7231050b728dcf8e",
+        "name": "G3AbstentionSafeTransferAdmissionTests._policy",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 52,
+        "end_line": 66,
+        "signature_hash": "ff89860185dcd17e",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests._prediction:e9bf638d3747be18",
+        "name": "G3AbstentionSafeTransferAdmissionTests._prediction",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 43,
+        "end_line": 50,
+        "signature_hash": "21d3b063a6e46d4c",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_abstention_commutes_to_exact_zero_transfer_plan:28ab351be937e350",
+        "name": "G3AbstentionSafeTransferAdmissionTests.test_abstention_commutes_to_exact_zero_transfer_plan",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 68,
+        "end_line": 89,
+        "signature_hash": "7f8375cd3beb1281",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_abstention_does_not_bypass_post_read_source_proof:0f8cb224bc2b9632",
+        "name": "G3AbstentionSafeTransferAdmissionTests.test_abstention_does_not_bypass_post_read_source_proof",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 157,
+        "end_line": 178,
+        "signature_hash": "7ed19649ef3fdecf",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_abstention_requires_empty_forecast_set:5d2d4e526dcc4653",
+        "name": "G3AbstentionSafeTransferAdmissionTests.test_abstention_requires_empty_forecast_set",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 91,
+        "end_line": 108,
+        "signature_hash": "0ec00deddb5cc3e1",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_abstention_skips_speculation_but_demands_exact_native_route:63ad96e24bf291be",
+        "name": "G3AbstentionSafeTransferAdmissionTests.test_abstention_skips_speculation_but_demands_exact_native_route",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 126,
+        "end_line": 155,
+        "signature_hash": "dc1554abc6157612",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_abstention_still_requires_policy_layer_and_binding_identity:987f4c046b3cfdcb",
+        "name": "G3AbstentionSafeTransferAdmissionTests.test_abstention_still_requires_policy_layer_and_binding_identity",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 110,
+        "end_line": 124,
+        "signature_hash": "acf036b2da85ab04",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:G3AbstentionSafeTransferAdmissionTests.test_nonempty_g2_path_remains_unchanged:b898cbe5e10b2255",
+        "name": "G3AbstentionSafeTransferAdmissionTests.test_nonempty_g2_path_remains_unchanged",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 180,
+        "end_line": 208,
+        "signature_hash": "cf84346ec6c6e80f",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:_DishonestPager.load_selected:b63a453aa6055059",
+        "name": "_DishonestPager.load_selected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 36,
+        "end_line": 39,
+        "signature_hash": "0df0c57f238a2bb4",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:_Pager.__init__:1c1165b63a1a3fdb",
+        "name": "_Pager.__init__",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 25,
+        "end_line": 27,
+        "signature_hash": "50a225aa6b979acb",
+        "file_digest8": "1afb0dd621e35af1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py#method:_Pager.load_selected:24ba5ef8a4379762",
+        "name": "_Pager.load_selected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+        "line": 29,
+        "end_line": 32,
+        "signature_hash": "0df0c57f238a2bb4",
+        "file_digest8": "1afb0dd621e35af1"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#class:IOFeasibilityTests:592a54c05aff6953",
@@ -456428,7 +457036,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "921d93a192c42f1a1478d381964bc9f5",
-    "payload_hash": "f409b5493be5cf0fe59d809dfa38be67"
+    "record_fingerprint": "22ed63297b20a66f3a7ed0e37027f77a",
+    "payload_hash": "9ea5d4e35be4fcb900f1463ab808ee6c"
   }
 }
