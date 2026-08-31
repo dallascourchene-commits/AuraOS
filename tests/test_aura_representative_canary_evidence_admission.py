@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-import copy
 import importlib.util
 from pathlib import Path
+import sys
 
 import pytest
 
@@ -11,6 +11,7 @@ MODULE_PATH = Path(__file__).resolve().parents[1] / "tools" / "quantization" / "
 spec = importlib.util.spec_from_file_location("aura_representative_canary_evidence_admission", MODULE_PATH)
 mod = importlib.util.module_from_spec(spec)
 assert spec and spec.loader
+sys.modules[spec.name] = mod
 spec.loader.exec_module(mod)
 
 RegisteredCanaryScope = mod.RegisteredCanaryScope
