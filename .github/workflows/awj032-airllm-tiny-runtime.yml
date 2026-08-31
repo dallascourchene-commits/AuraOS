@@ -22,24 +22,29 @@ jobs:
       HF_HUB_DISABLE_TELEMETRY: "1"
       TOKENIZERS_PARALLELISM: "false"
     steps:
-      - name: Checkout exact PR head
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-          submodules: false
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          mkdir -p .awj032
+          printf '%s\n' "$TARGET_SHA" > .awj032/aura_head.txt
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
-      - name: Bind exact workflow head
-        shell: bash
-        run: |
-          set -euo pipefail
-          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
-          mkdir -p .awj032
-          printf '%s\n' "$GITHUB_SHA" > .awj032/aura_head.txt
 
       - name: Materialize pinned stock AirLLM v3.3.0
         shell: bash
@@ -55,7 +60,7 @@ jobs:
         run: |
           set -euo pipefail
           set +e
-          python tools/awj032/airllm_source_admission.py airllm-upstream/air_llm --expected-version 3.3.0 > .awj032/stock_source_admission.json
+          python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/stock_source_admission.json
           rc=$?
           set -e
           test "$rc" -eq 2
@@ -95,7 +100,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python tools/awj032/airllm_source_admission.py airllm-upstream/air_llm --expected-version 3.3.0 > .awj032/remediated_source_admission.json
+          python tools/awj032/airllm_source_admission.py airllm-upstream --expected-version 3.3.0 > .awj032/remediated_source_admission.json
           python - <<'PY'
           import json
           from pathlib import Path
@@ -159,6 +164,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: awj032-airllm-tiny-runtime-${{ github.sha }}
+          name: awj032-airllm-tiny-runtime-${{ github.event.pull_request.head.sha || github.sha }}
           path: .awj032/
           if-no-files-found: error
+          include-hidden-files: true
