@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1668
-- **total_bytes**: 26642015
-- **text_tokens_est**: 6650848
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 241, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1008, 'schema_or_lexicon': 278, 'support_file': 56}
+- **file_count**: 1672
+- **total_bytes**: 26697015
+- **text_tokens_est**: 6664597
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 242, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 279, 'support_file': 56}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1668,
+  "repo_file_count": 1672,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -150,6 +150,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/architect-external-llm-session.yml",
     ".github/workflows/architect-real-refactor-hardening.yml",
     ".github/workflows/architect-real-refactor-trial.yml",
+    ".github/workflows/aura-alias-stable-future-read-currentness-preflight.yml",
     ".github/workflows/aura-architecture-harness-export.yml",
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1125,6 +1126,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/arena/.eki2-objective",
     "docs/arena/.eki2-state",
     "docs/arena/.eki2-verifier",
+    "docs/arena/ALIAS_STABLE_FUTURE_READ_CURRENTNESS_PREFLIGHT_V1.md",
     "docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json",
     "docs/arena/EKI4_EXTERNAL_COORDINATE_MAP_V1.json",
     "docs/arena/EXTERNAL_SUBJECT_LINEAGE_BRIDGE_V1.md",
@@ -1378,6 +1380,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_agent_arena_review_learning.py",
     "tests/test_aura_agent_workbench_interface.py",
     "tests/test_aura_ai_router_dynamic.py",
+    "tests/test_aura_alias_stable_future_read_currentness_preflight.py",
     "tests/test_aura_amd_track3_demo.py",
     "tests/test_aura_arch_v2_3_capsule_validator.py",
     "tests/test_aura_architect_benchmark_report_warning.py",
@@ -1673,6 +1676,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/aura_alias_stable_future_read_currentness_preflight.py",
     "tools/aura_external_knowledge_ingress.py",
     "tools/aura_external_knowledge_store_writer.py",
     "tools/aura_external_subject_lineage_bridge.py",
@@ -1767,6 +1771,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_agent_arena_review_learning.py",
     "tests/test_aura_agent_workbench_interface.py",
     "tests/test_aura_ai_router_dynamic.py",
+    "tests/test_aura_alias_stable_future_read_currentness_preflight.py",
     "tests/test_aura_amd_track3_demo.py",
     "tests/test_aura_arch_v2_3_capsule_validator.py",
     "tests/test_aura_architect_benchmark_report_warning.py",
@@ -1793,8 +1798,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_blind_gate10_benchmark.py",
     "tests/test_aura_capability_connectome.py",
     "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py"
+    "tests/test_aura_capability_lane_registry.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1808,16 +1812,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1668,
-  "bytes": 26642015,
-  "tokens_est": 6650848,
+  "files": 1672,
+  "bytes": 26697015,
+  "tokens_est": 6664597,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 241,
+    "knowledge_artifact": 242,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1008,
-    "schema_or_lexicon": 278,
+    "python_module": 1010,
+    "schema_or_lexicon": 279,
     "support_file": 56
   }
 }
