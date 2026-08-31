@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788115863,
+  "generated_at_unix": 1788142909,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1645,
+    "repo_file_count": 1670,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,9 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-k27-astge-splane.yml",
+      ".github/workflows/aura-k27-astge-treesitter-ingest.yml",
+      ".github/workflows/aura-k27-astge-witnessed-context.yml",
       ".github/workflows/aura-review-ghr002.yml",
       ".github/workflows/aura-review-ghr015.yml",
       ".github/workflows/aura-review-learning.yml",
@@ -144,6 +147,8 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/aura-workcapsule-selective-reentry.yml",
+      ".github/workflows/aura-workcapsule-witness-hydration.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -151,6 +156,8 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-astge-current-ingest-convergence.yml",
+      ".github/workflows/k27-astge-immutability-capability.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -929,6 +936,18 @@
       "cognitive_search.rs",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
+      "crates/aura-k27-astge-ingest/Cargo.toml",
+      "crates/aura-k27-astge-ingest/README.md",
+      "crates/aura-k27-astge-ingest/src/lib.rs",
+      "crates/aura-k27-astge-ingest/tests/current_stack_safe_default.rs",
+      "crates/aura-k27-astge-materialize/Cargo.toml",
+      "crates/aura-k27-astge-materialize/src/lib.rs",
+      "crates/aura-k27-astge-materialize/tests/current_witnessed_context.rs",
+      "crates/aura-k27-astge/Cargo.toml",
+      "crates/aura-k27-astge/README.md",
+      "crates/aura-k27-astge/src/lib.rs",
+      "crates/aura-k27-astge/src/v2.rs",
+      "crates/aura-k27-astge/src/v3.rs",
       "dag_executor.py",
       "dag_executor.rs",
       "debug_att.py",
@@ -1225,6 +1244,7 @@
       "scripts/aura_arch_v2_3_capsule_validator.py",
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
+      "scripts/aura_astge_anchor_hydration.py",
       "scripts/aura_benchmark_suite.py",
       "scripts/aura_blind_gate10_benchmark.py",
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -1246,6 +1266,8 @@
       "scripts/aura_spatial_s4b_architect_harness.py",
       "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
       "scripts/aura_verify_construction_demo_assets.py",
+      "scripts/aura_workcapsule_context_binding.py",
+      "scripts/aura_workcapsule_reentry_invalidation.py",
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
@@ -1361,6 +1383,7 @@
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
       "tests/test_aura_arena_wfst_phase_a.py",
+      "tests/test_aura_astge_anchor_hydration.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
@@ -1621,6 +1644,8 @@
       "tests/test_aura_waboose_semantic_rules.py",
       "tests/test_aura_wfst_temporal_adapter.py",
       "tests/test_aura_work_splitter.py",
+      "tests/test_aura_workcapsule_context_binding.py",
+      "tests/test_aura_workcapsule_reentry_invalidation.py",
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
@@ -1679,6 +1704,7 @@
       "scripts/aura_arch_v2_3_capsule_validator.py",
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
+      "scripts/aura_astge_anchor_hydration.py",
       "scripts/aura_benchmark_suite.py",
       "scripts/aura_blind_gate10_benchmark.py",
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -1700,6 +1726,8 @@
       "scripts/aura_spatial_s4b_architect_harness.py",
       "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
       "scripts/aura_verify_construction_demo_assets.py",
+      "scripts/aura_workcapsule_context_binding.py",
+      "scripts/aura_workcapsule_reentry_invalidation.py",
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
@@ -1743,17 +1771,14 @@
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
       "tests/test_aura_arena_wfst_phase_a.py",
+      "tests/test_aura_astge_anchor_hydration.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
       "tests/test_aura_bilateral_live_repair_foundry.py",
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
-      "tests/test_aura_blind_gate10_benchmark.py",
-      "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_blind_gate10_benchmark.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1761,16 +1786,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1645,
-      "bytes": 26479690,
-      "tokens_est": 6610276,
+      "files": 1670,
+      "bytes": 26667883,
+      "tokens_est": 6657329,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
-        "native_accelerator": 12,
+        "knowledge_artifact": 239,
+        "native_accelerator": 19,
         "operator_script": 9,
-        "python_module": 1001,
-        "schema_or_lexicon": 273,
+        "python_module": 1007,
+        "schema_or_lexicon": 283,
         "support_file": 49
       }
     },
@@ -1900,6 +1925,8 @@
         "aura_workspace/inbox/bounties/active/batch2/W8_rust-grpc-44/ALLOCATION.md",
         "aura_workspace/inbox/bounties/active/batch2/W9_BLOCKED_SOURCE_AUTHORITY.md",
         "aura_workspace/inbox/bounties/active/typeorm_3357_POLICY_BLOCK.md",
+        "crates/aura-k27-astge-ingest/README.md",
+        "crates/aura-k27-astge/README.md",
         "defensive-publications/Paper_XI_Predictive_Locality_Recursive_Cardinality_World_Seed_2026-08-12.md",
         "demo_assets/construction_tuwien/ATTRIBUTION.md",
         "demo_assets/construction_tuwien/README.md",
@@ -2043,9 +2070,7 @@
         "docs/AURA_TOKEN_ECONOMY_STACK.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
-        "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-        "docs/BENCHMARKS.md"
+        "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md"
       ]
     },
     {
@@ -3249,6 +3274,14 @@
         "end_line": 2026,
         "semantic_id": "scripts/aura_architecture_harness_core.py#function:main:2fe0d9fc046b2f33",
         "signature_hash": "d5857061120d68cd"
+      },
+      {
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "kind": "function",
+        "line": 290,
+        "end_line": 313,
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:main:de9e57c74822fd5e",
+        "signature_hash": "1107cedc597d81be"
       },
       {
         "file": "scripts/aura_benchmark_suite.py",
@@ -13747,6 +13780,14 @@
         "signature_hash": "8b2fe119650f5918"
       },
       {
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 46,
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_sha256:68a75bedd1216fd4",
+        "signature_hash": "c2ce10985bc24681"
+      },
+      {
         "file": "tests/test_aura_runtime_profile_v2_adapter.py",
         "kind": "function",
         "line": 67,
@@ -14691,6 +14732,14 @@
         "end_line": 83,
         "semantic_id": "scripts/aura_ifc_storey_index.py#function:_text:30118fe325b5eac2",
         "signature_hash": "62e9fc6a9590ec31"
+      },
+      {
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 33,
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_text:18589f2d78ec0db2",
+        "signature_hash": "8d08e5ba02cf231e"
       },
       {
         "file": "tests/test_aura_gate_deployment.py",
@@ -26991,6 +27040,14 @@
         "signature_hash": "c4c9554706512cca"
       },
       {
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_load_json:830934582ecfb84d",
+        "signature_hash": "e16edca9b4e963c1"
+      },
+      {
         "file": "scripts/aura_prepare_construction_demo_assets_core.py",
         "kind": "function",
         "line": 344,
@@ -30757,6 +30814,14 @@
         "end_line": 388,
         "semantic_id": "aura_spatial_projection.py#function:_nonnegative_int:268b62b5575eb7c0",
         "signature_hash": "da3b10c24c5b5036"
+      },
+      {
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 48,
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_nonnegative_int:0171628114aec0ff",
+        "signature_hash": "822f28063b757f2f"
       }
     ],
     "WorkbenchState": [
@@ -79607,6 +79672,22 @@
         "end_line": 48,
         "semantic_id": "aura_substrate_release.py#function:_canonical_bytes:165bc480b5a187a6",
         "signature_hash": "ae498563dfd7e8b1"
+      },
+      {
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 73,
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_canonical_bytes:18086cedf18a6857",
+        "signature_hash": "5ac132afaebe3a2d"
+      },
+      {
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 48,
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:_canonical_bytes:9b1a9cc1935f8f6c",
+        "signature_hash": "5ac132afaebe3a2d"
       }
     ],
     "_bounded_json": [
@@ -84117,6 +84198,14 @@
         "end_line": 368,
         "semantic_id": "aura_spatial_asset_registry.py#function:_validate_relative_path:400116a71e8c1cc2",
         "signature_hash": "676d579f4b899434"
+      },
+      {
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 70,
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_validate_relative_path:9737f097e08dea88",
+        "signature_hash": "546b250b1de59963"
       }
     ],
     "_validate_uri_path": [
@@ -99861,6 +99950,56 @@
         "signature_hash": "cee2a7bb613f105d"
       }
     ],
+    "_hex_sha256": [
+      {
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 41,
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_hex_sha256:c4f256b516970f81",
+        "signature_hash": "d2a6c74ed81a3dcd"
+      }
+    ],
+    "_nonempty_text": [
+      {
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 55,
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_nonempty_text:4a3e05326fa6f40c",
+        "signature_hash": "2b97a95449d8a053"
+      }
+    ],
+    "_read_exact_repo_file": [
+      {
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 92,
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_read_exact_repo_file:0af255b56b5a48c5",
+        "signature_hash": "866fa4cac57e4b15"
+      }
+    ],
+    "_parse_witnesses": [
+      {
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 124,
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_parse_witnesses:c80d40076d71ab35",
+        "signature_hash": "7fd429955c1f1905"
+      }
+    ],
+    "compile_hydration_admission": [
+      {
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "kind": "function",
+        "line": 127,
+        "end_line": 287,
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:compile_hydration_admission:9a2e46ebf1c1cdee",
+        "signature_hash": "ef5a6bdff487da10"
+      }
+    ],
     "now_ns": [
       {
         "file": "scripts/aura_benchmark_suite.py",
@@ -102253,6 +102392,154 @@
         "end_line": 653,
         "semantic_id": "scripts/aura_verify_construction_demo_assets.py#function:atomic_json:95031b5cde027f4b",
         "signature_hash": "f0ebdbb75505044c"
+      }
+    ],
+    "_uint": [
+      {
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 39,
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_uint:ea674bf664b72019",
+        "signature_hash": "27dfa5236ff1d3c9"
+      }
+    ],
+    "_currentness": [
+      {
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 53,
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_currentness:f00e1216f2f916f5",
+        "signature_hash": "5b801ace6b102bf1"
+      }
+    ],
+    "_typed_identity": [
+      {
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 67,
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_typed_identity:ec04df3edad30aa1",
+        "signature_hash": "f5402430986cb10c"
+      }
+    ],
+    "_binding_identity": [
+      {
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 84,
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_binding_identity:211798941e9497f3",
+        "signature_hash": "9c80c0e2d92e7f7f"
+      }
+    ],
+    "compile_workcapsule_context_binding": [
+      {
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 239,
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:compile_workcapsule_context_binding:be899980f508199b",
+        "signature_hash": "6cf883df23af39ec"
+      }
+    ],
+    "verify_workcapsule_context_binding": [
+      {
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "kind": "function",
+        "line": 242,
+        "end_line": 273,
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:verify_workcapsule_context_binding:7cde721591bb6aaf",
+        "signature_hash": "d0e91dd0126c94ca"
+      }
+    ],
+    "roundtrip_binding": [
+      {
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "kind": "function",
+        "line": 276,
+        "end_line": 278,
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:roundtrip_binding:c84f2bccb7dc8361",
+        "signature_hash": "68007ed432887ecc"
+      }
+    ],
+    "_receipt_identity": [
+      {
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 59,
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:_receipt_identity:44e492711b3612d8",
+        "signature_hash": "b880c7d23b0b8d83"
+      }
+    ],
+    "_source_key": [
+      {
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:_source_key:b089aa88afab3b0a",
+        "signature_hash": "a57393c1640c3ae2"
+      }
+    ],
+    "_source_ref": [
+      {
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 76,
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:_source_ref:0e5624bfecdb9a12",
+        "signature_hash": "e76bdaaa3d4d7d65"
+      },
+      {
+        "file": "tests/test_aura_relationship_contracts.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 73,
+        "semantic_id": "tests/test_aura_relationship_contracts.py#function:_source_ref:07fce149eba17bc6",
+        "signature_hash": "023a5c48f2a45a46"
+      }
+    ],
+    "_source_binding_equal": [
+      {
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 83,
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:_source_binding_equal:c2050fe9865cab66",
+        "signature_hash": "6373182c06ee5d29"
+      }
+    ],
+    "_graph_identity_equal": [
+      {
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 90,
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:_graph_identity_equal:266f1fde56e45117",
+        "signature_hash": "4192571d8d2115c4"
+      }
+    ],
+    "compile_reentry_invalidation": [
+      {
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 260,
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:compile_reentry_invalidation:3d401fc26ce0e0e8",
+        "signature_hash": "2b59521b572e87d1"
+      }
+    ],
+    "verify_reentry_invalidation": [
+      {
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "kind": "function",
+        "line": 263,
+        "end_line": 303,
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:verify_reentry_invalidation:4597f5888e640da7",
+        "signature_hash": "4d3089ba323556a3"
       }
     ],
     "marked": [
@@ -117635,6 +117922,196 @@
         "signature_hash": "e32de3db9ab18df2"
       }
     ],
+    "AnchorHydrationTests": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "class",
+        "line": 19,
+        "end_line": 259,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#class:AnchorHydrationTests:10a05281f38002b3",
+        "signature_hash": "ca2b89c1255c61a2"
+      }
+    ],
+    "AnchorHydrationTests.setUp": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 25,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.setUp:ea5cea4aaaef69f6",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "AnchorHydrationTests.tearDown": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.tearDown:f21d1da3aa417166",
+        "signature_hash": "fa419c832f7fc8ab"
+      }
+    ],
+    "AnchorHydrationTests.codemap": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 45,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.codemap:b696fbd293d95321",
+        "signature_hash": "832ce7bfbc26e8a3"
+      }
+    ],
+    "AnchorHydrationTests.anchors": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 62,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.anchors:d934bfb168a6fefd",
+        "signature_hash": "6339493b62c44375"
+      }
+    ],
+    "AnchorHydrationTests.witness": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 78,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.witness:c709dd2418e35143",
+        "signature_hash": "1a47edff13629a14"
+      }
+    ],
+    "AnchorHydrationTests.compile": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 86,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.compile:5838c97fb9ad2d9f",
+        "signature_hash": "41113bf41f243e31"
+      }
+    ],
+    "AnchorHydrationTests.test_exact_body_witness_emits_d9_compatible_locator": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 108,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_exact_body_witness_emits_d9_compatible_locator:3a322f3f7b19aa15",
+        "signature_hash": "a2b4e0dd1a814797"
+      }
+    ],
+    "AnchorHydrationTests.test_missing_witness_is_unknown_and_cannot_hydrate": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 116,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_missing_witness_is_unknown_and_cannot_hydrate:bb3051153d646a8d",
+        "signature_hash": "6733c1a71fd1a075"
+      }
+    ],
+    "AnchorHydrationTests.test_digest_drift_is_stale_even_when_codemap_projection_is_unchanged": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 126,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_digest_drift_is_stale_even_when_codemap_projection_is_unchanged:799f1fa55cd84fda",
+        "signature_hash": "555ca98b6ff43a17"
+      }
+    ],
+    "AnchorHydrationTests.test_length_drift_is_stale_before_digest_can_admit": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 133,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_length_drift_is_stale_before_digest_can_admit:58695a25a5c79efa",
+        "signature_hash": "daf352965f547324"
+      }
+    ],
+    "AnchorHydrationTests.test_line_projection_can_move_without_changing_anchor_or_body_identity": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 140,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_line_projection_can_move_without_changing_anchor_or_body_identity:969d82ef62de9a50",
+        "signature_hash": "d222a10c5d1a10fd"
+      }
+    ],
+    "AnchorHydrationTests.test_semantic_identity_drift_remains_hard_failure_of_existing_anchor_owner": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 147,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_semantic_identity_drift_remains_hard_failure_of_existing_anchor_owner:62e0bb12a2ca5cda",
+        "signature_hash": "4314e3d2f9c449d1"
+      }
+    ],
+    "AnchorHydrationTests.test_unknown_anchor_witness_is_rejected_not_silently_ignored": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 153,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_unknown_anchor_witness_is_rejected_not_silently_ignored:95f27105de930c93",
+        "signature_hash": "14bdd14d6f6765f7"
+      }
+    ],
+    "AnchorHydrationTests.test_same_file_can_host_multiple_anchors_only_with_coherent_file_binding": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 190,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_same_file_can_host_multiple_anchors_only_with_coherent_file_binding:b2c741b611b07e3f",
+        "signature_hash": "c31e8af84c0e43e4"
+      }
+    ],
+    "AnchorHydrationTests.test_one_file_id_cannot_alias_two_paths": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 192,
+        "end_line": 233,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_one_file_id_cannot_alias_two_paths:c61633910f9591bc",
+        "signature_hash": "45617b474f4f9912"
+      }
+    ],
+    "AnchorHydrationTests.test_symlinked_anchor_path_is_rejected_before_body_currentness": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 236,
+        "end_line": 241,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_symlinked_anchor_path_is_rejected_before_body_currentness:3d7cc6c7943e7c27",
+        "signature_hash": "8b9365aa5b7bce79"
+      }
+    ],
+    "AnchorHydrationTests.test_witness_schema_requires_provenance_and_full_body_digest": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 243,
+        "end_line": 251,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_witness_schema_requires_provenance_and_full_body_digest:fc94d6ff7195796e",
+        "signature_hash": "27b194839df010b5"
+      }
+    ],
+    "AnchorHydrationTests.test_json_projection_is_deterministic_for_same_inputs": [
+      {
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "kind": "method",
+        "line": 253,
+        "end_line": 259,
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_json_projection_is_deterministic_for_same_inputs:26bc4354c1e760ce",
+        "signature_hash": "20dfa6ebd82d1de0"
+      }
+    ],
     "test_route_failure_never_raises_on_untrusted_counts": [
       {
         "file": "tests/test_aura_benchmark_four.py",
@@ -118463,6 +118940,22 @@
         "end_line": 29,
         "semantic_id": "tests/test_aura_showcase_live_repair_server.py#function:identity:360f1427b4c79502",
         "signature_hash": "7cfd625189ef942a"
+      },
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#function:identity:02b0819b63d2326a",
+        "signature_hash": "b7f6dc6658a7c6d7"
+      },
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 29,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#function:identity:5d6522c271410592",
+        "signature_hash": "b7f6dc6658a7c6d7"
       }
     ],
     "runtime_proof": [
@@ -148779,16 +149272,6 @@
         "signature_hash": "e6b0d8c09d463659"
       }
     ],
-    "_source_ref": [
-      {
-        "file": "tests/test_aura_relationship_contracts.py",
-        "kind": "function",
-        "line": 63,
-        "end_line": 73,
-        "semantic_id": "tests/test_aura_relationship_contracts.py#function:_source_ref:07fce149eba17bc6",
-        "signature_hash": "023a5c48f2a45a46"
-      }
-    ],
     "_relationship_contract": [
       {
         "file": "tests/test_aura_relationship_contracts.py",
@@ -156615,6 +157098,296 @@
         "signature_hash": "c76baef49d04ad72"
       }
     ],
+    "WorkCapsuleContextBindingTests": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 155,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#class:WorkCapsuleContextBindingTests:450c9ce4f3cf0aee",
+        "signature_hash": "fff41f0db25f5962"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.setUp": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 63,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.setUp:b7b8a81b31360e7b",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.compile": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 70,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.compile:c8ab0d89957aa16d",
+        "signature_hash": "35c0e00469633790"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.test_exact_current_active_context_is_admitted_without_authority": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 79,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_exact_current_active_context_is_admitted_without_authority:ee77f536e299e30a",
+        "signature_hash": "24969b202fa3b88b"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.test_unknown_cold_source_survives_roundtrip_without_blocking_active_context": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_unknown_cold_source_survives_roundtrip_without_blocking_active_context:73529a79c385104b",
+        "signature_hash": "fd01e764e40c5ed6"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.test_stale_active_source_blocks_and_preserves_exact_reopen_reason": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 97,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_stale_active_source_blocks_and_preserves_exact_reopen_reason:95d541b521f9f204",
+        "signature_hash": "d2c252ba25e8cac2"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.test_unknown_active_source_needs_rebind_and_cannot_be_laundered": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 106,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_unknown_active_source_needs_rebind_and_cannot_be_laundered:f7e0fc618b6bbf5d",
+        "signature_hash": "f3c5ad78db64d456"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.test_stale_graph_blocks_even_when_source_is_current": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 115,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_stale_graph_blocks_even_when_source_is_current:ff2ba6ae037078d1",
+        "signature_hash": "5a17ecb6c1616dfd"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.test_no_active_source_witnesses_fail_closed": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 123,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_no_active_source_witnesses_fail_closed:2891b8a0b284a901",
+        "signature_hash": "2a374a02b206e1c9"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.test_roundtrip_preserves_graph_and_source_generations_separately": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 131,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_roundtrip_preserves_graph_and_source_generations_separately:68f0391daf9619eb",
+        "signature_hash": "62697045a6a0d2e5"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.test_tampered_currentness_is_detected_even_if_context_admitted_flag_is_left_true": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 137,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_tampered_currentness_is_detected_even_if_context_admitted_flag_is_left_true:187c36173e872bbf",
+        "signature_hash": "1d2c04ff9f2d9a3d"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.test_tampered_authority_is_detected": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 142,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_tampered_authority_is_detected:520228acb65e6811",
+        "signature_hash": "834cacb051ea24e4"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.test_payload_tamper_breaks_binding_identity": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 144,
+        "end_line": 147,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_payload_tamper_breaks_binding_identity:18c80b772b9206da",
+        "signature_hash": "9916375c0773eb06"
+      }
+    ],
+    "WorkCapsuleContextBindingTests.test_duplicate_source_identity_is_rejected": [
+      {
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 155,
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_duplicate_source_identity_is_rejected:31996d71104227fa",
+        "signature_hash": "f03c0f4a71082844"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "class",
+        "line": 32,
+        "end_line": 215,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#class:WorkCapsuleReentryInvalidationTests:066bb846ee066095",
+        "signature_hash": "c4d9d89bb7ba4b6a"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.setUp": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 33,
+        "end_line": 84,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.setUp:0f0d8c58cdd944fb",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.compile": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 91,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.compile:794fbc075ec7349d",
+        "signature_hash": "35c0e00469633790"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.test_unchanged_current_dependencies_require_no_reentry": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 99,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_unchanged_current_dependencies_require_no_reentry:0aac41e4cea867f9",
+        "signature_hash": "a930605dfce933b8"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.test_one_stale_active_source_rebinds_only_that_source": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 111,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_one_stale_active_source_rebinds_only_that_source:6b6cb7c226c6174a",
+        "signature_hash": "c9a3d0b0f1315095"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.test_unknown_active_source_is_selected_not_promoted_to_current": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 121,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_unknown_active_source_is_selected_not_promoted_to_current:a6e8a9c298ca7dac",
+        "signature_hash": "3ebb2b0662829c4b"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.test_current_new_source_generation_requires_selected_rebind": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 134,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_current_new_source_generation_requires_selected_rebind:31247b70d4b355b4",
+        "signature_hash": "da253fcf8c52f1e3"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.test_missing_active_observation_is_unresolved_selected_rebind": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 143,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_missing_active_observation_is_unresolved_selected_rebind:39ebaebe51fbe9d8",
+        "signature_hash": "4da566a7f2ebedca"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.test_stale_graph_forces_full_graph_rebind": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 154,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_stale_graph_forces_full_graph_rebind:5f1728c459741ac3",
+        "signature_hash": "8f1c28924a2924e4"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.test_graph_generation_change_forces_full_graph_rebind_even_when_current": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 164,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_graph_generation_change_forces_full_graph_rebind_even_when_current:4708f8e18daff073",
+        "signature_hash": "09b5fe7b1bcd0e2d"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.test_cold_source_drift_does_not_invalidate_active_context": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 176,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_cold_source_drift_does_not_invalidate_active_context:0170d9caeb24069b",
+        "signature_hash": "65eca0b57e0ebdef"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.test_new_observed_source_is_recorded_but_not_auto_promoted": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 196,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_new_observed_source_is_recorded_but_not_auto_promoted:50c843d715e1dd79",
+        "signature_hash": "7bcbd524c8e22f64"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.test_previous_binding_tamper_is_rejected_before_comparison": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 198,
+        "end_line": 201,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_previous_binding_tamper_is_rejected_before_comparison:27ea96b590c28445",
+        "signature_hash": "df3d7701032b7fad"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.test_receipt_authority_tamper_is_detected": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 203,
+        "end_line": 208,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_receipt_authority_tamper_is_detected:f04eed907a1f108a",
+        "signature_hash": "33bd41ed6b72645f"
+      }
+    ],
+    "WorkCapsuleReentryInvalidationTests.test_receipt_cannot_promote_unproven_node_cone": [
+      {
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "kind": "method",
+        "line": 210,
+        "end_line": 215,
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_receipt_cannot_promote_unproven_node_cone:4728e11b116e0a17",
+        "signature_hash": "fed514c91e90feb6"
+      }
+    ],
     "authorized_decision": [
       {
         "file": "tests/test_aura_workflow_authority_bridge.py",
@@ -159810,6 +160583,20 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-k27-astge-witnessed-context.yml",
+      ".github/workflows/aura-workcapsule-selective-reentry.yml",
+      ".github/workflows/aura-workcapsule-witness-hydration.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 scripts/aura_source_anchor_map.py --root . --check": [
+      ".github/workflows/aura-k27-astge-witnessed-context.yml"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/aura-k27-astge-witnessed-context.yml",
+      ".github/workflows/aura-workcapsule-selective-reentry.yml",
+      ".github/workflows/aura-workcapsule-witness-hydration.yml"
+    ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
     ],
@@ -160372,9 +161159,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -168965,6 +169749,161 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-k27-astge-splane.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1261,
+      "lines": 39,
+      "tokens_est": 316,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f942772dcadeeebd",
+      "vector": [
+        0.175094,
+        -0.112838,
+        0.232162,
+        -0.141372,
+        -0.110244,
+        0.042801,
+        0.216598,
+        -0.317763,
+        -0.13359,
+        -0.016861,
+        -0.19844,
+        0.201034,
+        -0.112838,
+        0.016861,
+        0.208816,
+        -0.263289,
+        0.099868,
+        0.21141,
+        0.154342,
+        0.190658,
+        0.102462,
+        0.263289,
+        -0.221786,
+        0.216598,
+        -0.024643,
+        -0.001297,
+        0.263289,
+        0.291823,
+        -0.037613,
+        -0.006485,
+        0.221786,
+        0.022049
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-k27-astge-treesitter-ingest.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2015,
+      "lines": 52,
+      "tokens_est": 504,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "df5c119c4530d4d3",
+      "vector": [
+        0.039123,
+        0.269122,
+        0.299947,
+        -0.224071,
+        -0.086546,
+        -0.043866,
+        0.107886,
+        -0.126855,
+        -0.288091,
+        0.048608,
+        0.299947,
+        0.205102,
+        0.169535,
+        -0.086546,
+        -0.065206,
+        -0.188504,
+        0.188504,
+        -0.224071,
+        0.247782,
+        0.055721,
+        -0.141082,
+        0.01067,
+        0.058092,
+        0.174277,
+        -0.245411,
+        -0.148195,
+        0.207473,
+        0.257267,
+        0.015412,
+        -0.05335,
+        0.145824,
+        -0.188504
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-k27-astge-witnessed-context.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3437,
+      "lines": 76,
+      "tokens_est": 860,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 scripts/aura_source_anchor_map.py --root . --check",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          41
+        ],
+        "python3 scripts/aura_source_anchor_map.py --root . --check": [
+          42
+        ],
+        "python3 -m unittest": [
+          43
+        ]
+      },
+      "topology": {},
+      "digest8": "1f760f0880abbdb9",
+      "vector": [
+        -0.196448,
+        -0.072242,
+        -0.105195,
+        -0.145751,
+        -0.290235,
+        0.003802,
+        -0.277561,
+        0.057033,
+        -0.105195,
+        -0.249679,
+        -0.082381,
+        -0.057033,
+        0.077312,
+        -0.173634,
+        -0.204052,
+        -0.095055,
+        -0.031685,
+        -0.188843,
+        -0.10266,
+        0.242074,
+        -0.1711,
+        -0.320653,
+        0.125473,
+        0.1711,
+        0.214191,
+        0.03422,
+        -0.095055,
+        -0.041824,
+        0.107729,
+        0.307979,
+        -0.29277,
+        -0.237004
+      ]
+    },
+    {
       "path": ".github/workflows/aura-review-ghr002.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -169458,6 +170397,124 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-workcapsule-selective-reentry.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2731,
+      "lines": 65,
+      "tokens_est": 683,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          38,
+          43
+        ],
+        "python3 -m unittest": [
+          39,
+          44
+        ]
+      },
+      "topology": {},
+      "digest8": "191cff1492cab435",
+      "vector": [
+        -0.286762,
+        0.282228,
+        -0.257292,
+        0.026069,
+        -0.066873,
+        0.139414,
+        0.06914,
+        0.202887,
+        0.141681,
+        0.019269,
+        -0.041938,
+        -0.112211,
+        -0.250492,
+        0.114478,
+        -0.243691,
+        0.223289,
+        0.282228,
+        -0.035137,
+        0.143948,
+        0.252758,
+        -0.20062,
+        0.06914,
+        -0.211954,
+        -0.141681,
+        -0.255025,
+        -0.252758,
+        -0.107677,
+        0.026069,
+        0.130346,
+        0.046471,
+        -0.051005,
+        0.207421
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-workcapsule-witness-hydration.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2471,
+      "lines": 61,
+      "tokens_est": 618,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          38,
+          43
+        ],
+        "python3 -m unittest": [
+          39,
+          44
+        ]
+      },
+      "topology": {},
+      "digest8": "f08c8e0711c15854",
+      "vector": [
+        0.305735,
+        -0.257672,
+        0.124163,
+        -0.097461,
+        -0.08411,
+        0.268352,
+        -0.001335,
+        0.110812,
+        0.004005,
+        -0.022696,
+        -0.089451,
+        -0.193587,
+        0.086781,
+        -0.046728,
+        -0.327096,
+        -0.102802,
+        -0.030707,
+        -0.268352,
+        0.169556,
+        -0.287044,
+        0.337777,
+        0.017356,
+        -0.161545,
+        -0.161545,
+        -0.041388,
+        -0.188247,
+        0.086781,
+        -0.126833,
+        0.153535,
+        -0.332436,
+        0.07076,
+        -0.004005
+      ]
+    },
+    {
       "path": ".github/workflows/ci.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -169856,6 +170913,100 @@
         0.193092,
         -0.001409,
         -0.102888
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-astge-current-ingest-convergence.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2592,
+      "lines": 61,
+      "tokens_est": 648,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "96e6843c4a2c8f2f",
+      "vector": [
+        -0.168012,
+        0.168012,
+        0.281704,
+        0.120008,
+        0.155379,
+        -0.14022,
+        0.152853,
+        -0.092217,
+        0.05432,
+        0.135167,
+        0.218542,
+        -0.069479,
+        0.251386,
+        -0.271598,
+        0.284231,
+        -0.238754,
+        0.236227,
+        0.001263,
+        -0.145273,
+        0.132641,
+        0.168012,
+        -0.094744,
+        0.180644,
+        0.289283,
+        -0.233701,
+        0.178118,
+        0.1478,
+        0.031581,
+        -0.056846,
+        -0.218542,
+        -0.05432,
+        -0.120008
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-astge-immutability-capability.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1833,
+      "lines": 47,
+      "tokens_est": 459,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a294f5be79c353c7",
+      "vector": [
+        -0.035814,
+        -0.065453,
+        -0.255636,
+        -0.092622,
+        0.075332,
+        0.248226,
+        0.058043,
+        0.077802,
+        -0.179069,
+        -0.13214,
+        -0.213647,
+        0.159309,
+        -0.235877,
+        0.280335,
+        0.253166,
+        -0.085212,
+        0.033344,
+        -0.077802,
+        0.104971,
+        0.221057,
+        0.13214,
+        0.307504,
+        0.070392,
+        -0.095092,
+        0.025934,
+        0.124731,
+        -0.001235,
+        -0.297624,
+        0.302564,
+        0.179069,
+        -0.292685,
+        -0.102501
       ]
     },
     {
@@ -227371,6 +228522,570 @@
       ]
     },
     {
+      "path": "crates/aura-k27-astge-ingest/Cargo.toml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 212,
+      "lines": 11,
+      "tokens_est": 53,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "331240e0dbc69c54",
+      "vector": [
+        -0.183376,
+        -0.022478,
+        0.280387,
+        0.069801,
+        -0.228332,
+        0.050872,
+        0.136053,
+        -0.05797,
+        0.197572,
+        -0.16208,
+        -0.249627,
+        0.114758,
+        -0.001183,
+        0.207037,
+        0.050872,
+        0.050872,
+        0.202305,
+        0.301682,
+        0.256726,
+        -0.256726,
+        -0.067435,
+        0.010648,
+        0.268557,
+        -0.05797,
+        0.055604,
+        0.143151,
+        -0.074533,
+        -0.079266,
+        0.221234,
+        -0.225966,
+        -0.240163,
+        0.282753
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge-ingest/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 1562,
+      "lines": 31,
+      "tokens_est": 391,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3e2879d3be46b948",
+      "vector": [
+        0.256261,
+        -0.208137,
+        0.145576,
+        0.200919,
+        0.063765,
+        0.191294,
+        -0.05414,
+        -0.066171,
+        -0.150388,
+        0.179263,
+        0.155201,
+        0.261074,
+        -0.027671,
+        0.131139,
+        0.140763,
+        -0.119107,
+        0.186481,
+        0.28273,
+        -0.292355,
+        -0.140763,
+        0.285136,
+        -0.147982,
+        -0.232199,
+        0.075796,
+        0.294761,
+        0.008422,
+        -0.05414,
+        -0.277917,
+        0.080608,
+        -0.119107,
+        -0.102264,
+        -0.037296
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge-ingest/src/lib.rs",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 14224,
+      "lines": 429,
+      "tokens_est": 3556,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f223aaec2039fd2c",
+      "vector": [
+        -0.082843,
+        -0.190188,
+        0.117847,
+        0.185521,
+        -0.173853,
+        -0.129515,
+        -0.243861,
+        0.208857,
+        -0.036171,
+        -0.026836,
+        -0.199523,
+        -0.227526,
+        0.008168,
+        -0.150517,
+        -0.045505,
+        0.180854,
+        0.183187,
+        -0.220525,
+        0.194855,
+        0.096844,
+        -0.201856,
+        0.260196,
+        0.176187,
+        -0.089843,
+        -0.115513,
+        0.080509,
+        0.257862,
+        0.257862,
+        -0.271864,
+        -0.222858,
+        0.057173,
+        -0.225192
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge-ingest/tests/current_stack_safe_default.rs",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 4731,
+      "lines": 133,
+      "tokens_est": 1183,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e5e1f84fc37f590e",
+      "vector": [
+        -0.194456,
+        0.281156,
+        0.073076,
+        0.291065,
+        -0.19941,
+        0.087939,
+        0.28611,
+        0.085462,
+        0.068121,
+        0.021056,
+        0.090416,
+        0.21675,
+        0.092893,
+        -0.073076,
+        -0.107756,
+        -0.006193,
+        -0.236567,
+        0.224182,
+        0.135004,
+        -0.296019,
+        -0.065644,
+        0.016101,
+        -0.291065,
+        -0.07803,
+        -0.214273,
+        -0.30345,
+        -0.063167,
+        -0.191979,
+        -0.097847,
+        0.048304,
+        -0.132527,
+        -0.23409
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge-materialize/Cargo.toml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 400,
+      "lines": 19,
+      "tokens_est": 100,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9cde49b491dfacbb",
+      "vector": [
+        0.154795,
+        0.016948,
+        -0.249706,
+        -0.247446,
+        -0.195471,
+        0.265525,
+        -0.195471,
+        0.005649,
+        0.154795,
+        -0.028247,
+        -0.154795,
+        -0.050845,
+        -0.256486,
+        0.00339,
+        0.057625,
+        -0.039546,
+        0.143496,
+        0.014689,
+        0.075703,
+        0.270044,
+        -0.172874,
+        -0.143496,
+        0.125418,
+        0.186432,
+        -0.057625,
+        -0.231628,
+        -0.279083,
+        -0.283603,
+        -0.190952,
+        -0.242927,
+        -0.20903,
+        -0.168354
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge-materialize/src/lib.rs",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 15700,
+      "lines": 480,
+      "tokens_est": 3925,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7311da475787edb4",
+      "vector": [
+        0.211609,
+        -0.260873,
+        0.193695,
+        -0.186977,
+        -0.043665,
+        -0.276547,
+        -0.229523,
+        -0.050383,
+        -0.00112,
+        0.144432,
+        -0.236241,
+        -0.137714,
+        -0.193695,
+        0.061579,
+        0.263112,
+        0.225045,
+        0.019034,
+        -0.05934,
+        -0.00112,
+        -0.160106,
+        -0.048144,
+        0.086211,
+        -0.251916,
+        -0.220566,
+        0.048144,
+        0.101886,
+        0.130996,
+        0.211609,
+        0.247437,
+        -0.03023,
+        0.260873,
+        -0.260873
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge-materialize/tests/current_witnessed_context.rs",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 5900,
+      "lines": 158,
+      "tokens_est": 1475,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "39c50e0619e3e5cb",
+      "vector": [
+        -0.303018,
+        -0.008729,
+        -0.123452,
+        0.28556,
+        -0.210741,
+        0.011223,
+        0.083548,
+        0.210741,
+        0.073572,
+        0.063596,
+        0.088536,
+        0.036163,
+        0.068584,
+        -0.063596,
+        -0.188295,
+        -0.193283,
+        -0.123452,
+        -0.295536,
+        -0.180813,
+        0.3105,
+        -0.150885,
+        -0.148392,
+        -0.041151,
+        -0.051126,
+        0.250644,
+        0.300524,
+        0.208247,
+        0.163355,
+        0.230693,
+        0.046139,
+        0.09103,
+        -0.218223
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge/Cargo.toml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 241,
+      "lines": 13,
+      "tokens_est": 61,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b27ad797048cd288",
+      "vector": [
+        -0.064307,
+        0.011348,
+        0.079438,
+        0.051698,
+        -0.306402,
+        0.235791,
+        -0.258488,
+        -0.296315,
+        -0.008826,
+        0.180311,
+        0.218138,
+        0.235791,
+        -0.253444,
+        -0.225704,
+        -0.203007,
+        -0.187876,
+        -0.04161,
+        -0.213095,
+        -0.04161,
+        -0.13744,
+        -0.003783,
+        -0.134918,
+        0.079438,
+        0.1097,
+        -0.034045,
+        0.16518,
+        0.197964,
+        0.250922,
+        -0.203007,
+        0.029001,
+        -0.023957,
+        0.278662
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 3715,
+      "lines": 67,
+      "tokens_est": 927,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7baa371fcc997451",
+      "vector": [
+        -0.24771,
+        0.306749,
+        -0.291348,
+        0.106528,
+        0.186103,
+        0.039788,
+        0.250277,
+        0.139898,
+        0.119363,
+        0.042355,
+        0.147599,
+        -0.1553,
+        -0.085992,
+        -0.008984,
+        0.12963,
+        -0.075725,
+        -0.293915,
+        0.12963,
+        -0.25541,
+        0.006417,
+        -0.311883,
+        0.047488,
+        0.073158,
+        0.00385,
+        -0.309316,
+        -0.160434,
+        0.088559,
+        0.119363,
+        0.047488,
+        -0.160434,
+        0.124497,
+        -0.278513
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge/src/lib.rs",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 19864,
+      "lines": 553,
+      "tokens_est": 4966,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8ec46eb5d40dddd5",
+      "vector": [
+        0.09584,
+        -0.070437,
+        -0.181288,
+        0.204382,
+        0.269045,
+        -0.229785,
+        0.28752,
+        0.061199,
+        -0.21131,
+        -0.181288,
+        0.185907,
+        0.125862,
+        -0.061199,
+        -0.021939,
+        -0.209001,
+        -0.061199,
+        -0.220548,
+        -0.25057,
+        -0.17205,
+        0.195144,
+        0.121244,
+        0.271355,
+        0.146647,
+        -0.275973,
+        -0.005774,
+        0.264426,
+        0.05889,
+        0.220548,
+        -0.072746,
+        -0.042724,
+        0.086603,
+        0.1351
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge/src/v2.rs",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 18404,
+      "lines": 527,
+      "tokens_est": 4601,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1b042fe87e6cef8f",
+      "vector": [
+        0.208189,
+        0.148377,
+        0.086266,
+        -0.178283,
+        -0.238094,
+        0.210489,
+        -0.242695,
+        0.097768,
+        -0.040257,
+        0.079365,
+        0.05176,
+        0.157579,
+        0.010352,
+        -0.040257,
+        0.208189,
+        0.16448,
+        -0.113871,
+        0.263399,
+        -0.047159,
+        -0.042558,
+        -0.258798,
+        0.291004,
+        -0.238094,
+        -0.014953,
+        -0.100069,
+        0.2726,
+        -0.10927,
+        -0.284103,
+        0.132274,
+        -0.136875,
+        -0.15988,
+        0.291004
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge/src/v3.rs",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 23836,
+      "lines": 639,
+      "tokens_est": 5959,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a48681556f9e5fe7",
+      "vector": [
+        -0.065221,
+        -0.208928,
+        0.08733,
+        -0.257567,
+        -0.26641,
+        -0.184608,
+        -0.250934,
+        -0.127125,
+        -0.21556,
+        0.120493,
+        0.16471,
+        0.219982,
+        0.124914,
+        -0.235458,
+        -0.226615,
+        -0.200084,
+        -0.171343,
+        -0.034269,
+        0.009949,
+        -0.202295,
+        0.005527,
+        0.091751,
+        -0.023214,
+        0.080697,
+        -0.193452,
+        0.279676,
+        -0.166921,
+        0.036479,
+        -0.049745,
+        0.235458,
+        -0.244302,
+        0.213349
+      ]
+    },
+    {
       "path": "dag_executor.py",
       "role": "python_module",
       "binary": false,
@@ -242763,6 +244478,53 @@
       ]
     },
     {
+      "path": "scripts/aura_astge_anchor_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12203,
+      "lines": 318,
+      "tokens_est": 3051,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fe4ee7fd6f7ffc51",
+      "vector": [
+        -0.154338,
+        -0.156731,
+        0.187838,
+        0.118445,
+        0.001196,
+        0.020339,
+        0.187838,
+        -0.142374,
+        -0.185445,
+        0.226123,
+        -0.125624,
+        -0.04666,
+        -0.185445,
+        0.175874,
+        0.20698,
+        -0.053839,
+        0.295515,
+        0.072982,
+        0.300301,
+        -0.161517,
+        -0.013161,
+        0.156731,
+        0.22373,
+        0.051446,
+        -0.068196,
+        -0.226123,
+        -0.278766,
+        -0.285944,
+        -0.082553,
+        0.233302,
+        0.20698,
+        0.161517
+      ]
+    },
+    {
       "path": "scripts/aura_benchmark_suite.py",
       "role": "python_module",
       "binary": false,
@@ -243747,6 +245509,100 @@
         0.185897,
         0.298237,
         0.308936
+      ]
+    },
+    {
+      "path": "scripts/aura_workcapsule_context_binding.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11250,
+      "lines": 279,
+      "tokens_est": 2813,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c926e763936b56b6",
+      "vector": [
+        -0.303027,
+        -0.295897,
+        0.015448,
+        -0.219843,
+        -0.288767,
+        -0.003565,
+        0.177063,
+        -0.055852,
+        -0.295897,
+        -0.181816,
+        -0.015448,
+        0.167556,
+        0.103386,
+        -0.143789,
+        0.131906,
+        0.074866,
+        -0.298274,
+        0.070112,
+        -0.036839,
+        -0.188946,
+        0.241234,
+        0.148543,
+        -0.055852,
+        -0.153296,
+        -0.184193,
+        0.255494,
+        0.051099,
+        0.096256,
+        0.003565,
+        0.286391,
+        0.139036,
+        0.024955
+      ]
+    },
+    {
+      "path": "scripts/aura_workcapsule_reentry_invalidation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 12291,
+      "lines": 304,
+      "tokens_est": 3073,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4515179ebe69ab11",
+      "vector": [
+        0.047059,
+        -0.209029,
+        -0.233106,
+        0.176197,
+        0.095212,
+        0.123666,
+        0.274693,
+        -0.276881,
+        -0.209029,
+        -0.084268,
+        0.184952,
+        0.071136,
+        -0.09959,
+        0.237483,
+        -0.24405,
+        -0.031737,
+        -0.130233,
+        -0.202463,
+        -0.180575,
+        -0.075513,
+        0.156498,
+        -0.202463,
+        -0.04487,
+        -0.26156,
+        0.272504,
+        0.014227,
+        -0.254994,
+        0.1171,
+        0.064569,
+        -0.228728,
+        0.182764,
+        -0.005472
       ]
     },
     {
@@ -251187,6 +253043,53 @@
         0.027208,
         0.256699,
         0.225942
+      ]
+    },
+    {
+      "path": "tests/test_aura_astge_anchor_hydration.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10856,
+      "lines": 264,
+      "tokens_est": 2714,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9a45e4e0c607af92",
+      "vector": [
+        0.112683,
+        -0.077561,
+        -0.212195,
+        -0.282439,
+        -0.215122,
+        0.130244,
+        0.100976,
+        -0.089268,
+        -0.039512,
+        -0.139024,
+        0.071707,
+        0.024878,
+        -0.121463,
+        0.168293,
+        0.112683,
+        -0.007317,
+        0.358537,
+        0.065854,
+        0.06,
+        -0.223903,
+        0.311707,
+        -0.077561,
+        -0.188781,
+        0.218049,
+        -0.159512,
+        0.036585,
+        0.259025,
+        0.185854,
+        0.250244,
+        0.062927,
+        0.346829,
+        0.065854
       ]
     },
     {
@@ -263407,6 +265310,100 @@
         -0.09343,
         -0.037587,
         0.110613
+      ]
+    },
+    {
+      "path": "tests/test_aura_workcapsule_context_binding.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6769,
+      "lines": 160,
+      "tokens_est": 1693,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d9d4e992ea8d217b",
+      "vector": [
+        0.104797,
+        0.089645,
+        0.306814,
+        0.157826,
+        0.02904,
+        -0.165402,
+        -0.246209,
+        0.26136,
+        0.066918,
+        0.071969,
+        0.08712,
+        0.119948,
+        -0.102271,
+        -0.208331,
+        -0.061868,
+        -0.056817,
+        0.08207,
+        0.094696,
+        0.039141,
+        -0.284087,
+        0.157826,
+        0.013889,
+        0.152776,
+        0.266411,
+        -0.276512,
+        0.026515,
+        0.190654,
+        0.089645,
+        -0.08712,
+        0.309339,
+        0.263886,
+        -0.316915
+      ]
+    },
+    {
+      "path": "tests/test_aura_workcapsule_reentry_invalidation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9695,
+      "lines": 220,
+      "tokens_est": 2424,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e2f3656096679de9",
+      "vector": [
+        -0.130334,
+        -0.16444,
+        0.127897,
+        -0.257013,
+        0.269194,
+        -0.010963,
+        0.147387,
+        0.181493,
+        0.113281,
+        0.079175,
+        0.018271,
+        -0.230215,
+        0.018271,
+        -0.096228,
+        0.286247,
+        -0.266758,
+        -0.247268,
+        -0.203418,
+        0.018271,
+        0.103536,
+        -0.052377,
+        -0.16444,
+        0.166876,
+        0.127897,
+        -0.198546,
+        -0.181493,
+        0.269194,
+        -0.183929,
+        0.001218,
+        0.118153,
+        -0.264321,
+        -0.247268
       ]
     },
     {
@@ -288160,16 +290157,16 @@
     }
   },
   "summary": {
-    "file_count": 1645,
-    "total_bytes": 26479690,
-    "text_tokens_est": 6610276,
+    "file_count": 1670,
+    "total_bytes": 26667883,
+    "text_tokens_est": 6657329,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
-      "native_accelerator": 12,
+      "knowledge_artifact": 239,
+      "native_accelerator": 19,
       "operator_script": 9,
-      "python_module": 1001,
-      "schema_or_lexicon": 273,
+      "python_module": 1007,
+      "schema_or_lexicon": 283,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288315,6 +290312,9 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-k27-astge-splane.yml",
+      ".github/workflows/aura-k27-astge-treesitter-ingest.yml",
+      ".github/workflows/aura-k27-astge-witnessed-context.yml",
       ".github/workflows/aura-review-ghr002.yml",
       ".github/workflows/aura-review-ghr015.yml",
       ".github/workflows/aura-review-learning.yml",
@@ -288323,6 +290323,8 @@
       ".github/workflows/aura-spatial-s3-s4a.yml",
       ".github/workflows/aura-spatial-s4.yml",
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
+      ".github/workflows/aura-workcapsule-selective-reentry.yml",
+      ".github/workflows/aura-workcapsule-witness-hydration.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
@@ -288330,6 +290332,8 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-astge-current-ingest-convergence.yml",
+      ".github/workflows/k27-astge-immutability-capability.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -289108,6 +291112,18 @@
       "cognitive_search.rs",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
+      "crates/aura-k27-astge-ingest/Cargo.toml",
+      "crates/aura-k27-astge-ingest/README.md",
+      "crates/aura-k27-astge-ingest/src/lib.rs",
+      "crates/aura-k27-astge-ingest/tests/current_stack_safe_default.rs",
+      "crates/aura-k27-astge-materialize/Cargo.toml",
+      "crates/aura-k27-astge-materialize/src/lib.rs",
+      "crates/aura-k27-astge-materialize/tests/current_witnessed_context.rs",
+      "crates/aura-k27-astge/Cargo.toml",
+      "crates/aura-k27-astge/README.md",
+      "crates/aura-k27-astge/src/lib.rs",
+      "crates/aura-k27-astge/src/v2.rs",
+      "crates/aura-k27-astge/src/v3.rs",
       "dag_executor.py",
       "dag_executor.rs",
       "debug_att.py",
@@ -289404,6 +291420,7 @@
       "scripts/aura_arch_v2_3_capsule_validator.py",
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
+      "scripts/aura_astge_anchor_hydration.py",
       "scripts/aura_benchmark_suite.py",
       "scripts/aura_blind_gate10_benchmark.py",
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -289425,6 +291442,8 @@
       "scripts/aura_spatial_s4b_architect_harness.py",
       "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
       "scripts/aura_verify_construction_demo_assets.py",
+      "scripts/aura_workcapsule_context_binding.py",
+      "scripts/aura_workcapsule_reentry_invalidation.py",
       "scripts/deploy_huggingface_space.py",
       "scripts/finalize_refactor_quality_doc_sync.py",
       "scripts/install_refactor_quality_docs.py",
@@ -289540,6 +291559,7 @@
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
       "tests/test_aura_arena_wfst_phase_a.py",
+      "tests/test_aura_astge_anchor_hydration.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
@@ -289800,6 +291820,8 @@
       "tests/test_aura_waboose_semantic_rules.py",
       "tests/test_aura_wfst_temporal_adapter.py",
       "tests/test_aura_work_splitter.py",
+      "tests/test_aura_workcapsule_context_binding.py",
+      "tests/test_aura_workcapsule_reentry_invalidation.py",
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
@@ -387374,6 +389396,96 @@
         "file_digest8": "13bcaf16442c7fcd"
       },
       {
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_hex_sha256:c4f256b516970f81",
+        "name": "_hex_sha256",
+        "kind": "function",
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "line": 37,
+        "end_line": 41,
+        "signature_hash": "d2a6c74ed81a3dcd",
+        "file_digest8": "fe4ee7fd6f7ffc51"
+      },
+      {
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_load_json:830934582ecfb84d",
+        "name": "_load_json",
+        "kind": "function",
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "e16edca9b4e963c1",
+        "file_digest8": "fe4ee7fd6f7ffc51"
+      },
+      {
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_nonempty_text:4a3e05326fa6f40c",
+        "name": "_nonempty_text",
+        "kind": "function",
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "line": 51,
+        "end_line": 55,
+        "signature_hash": "2b97a95449d8a053",
+        "file_digest8": "fe4ee7fd6f7ffc51"
+      },
+      {
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_nonnegative_int:0171628114aec0ff",
+        "name": "_nonnegative_int",
+        "kind": "function",
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "line": 44,
+        "end_line": 48,
+        "signature_hash": "822f28063b757f2f",
+        "file_digest8": "fe4ee7fd6f7ffc51"
+      },
+      {
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_parse_witnesses:c80d40076d71ab35",
+        "name": "_parse_witnesses",
+        "kind": "function",
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "line": 95,
+        "end_line": 124,
+        "signature_hash": "7fd429955c1f1905",
+        "file_digest8": "fe4ee7fd6f7ffc51"
+      },
+      {
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_read_exact_repo_file:0af255b56b5a48c5",
+        "name": "_read_exact_repo_file",
+        "kind": "function",
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "line": 73,
+        "end_line": 92,
+        "signature_hash": "866fa4cac57e4b15",
+        "file_digest8": "fe4ee7fd6f7ffc51"
+      },
+      {
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:_validate_relative_path:9737f097e08dea88",
+        "name": "_validate_relative_path",
+        "kind": "function",
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "line": 58,
+        "end_line": 70,
+        "signature_hash": "546b250b1de59963",
+        "file_digest8": "fe4ee7fd6f7ffc51"
+      },
+      {
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:compile_hydration_admission:9a2e46ebf1c1cdee",
+        "name": "compile_hydration_admission",
+        "kind": "function",
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "line": 127,
+        "end_line": 287,
+        "signature_hash": "ef5a6bdff487da10",
+        "file_digest8": "fe4ee7fd6f7ffc51"
+      },
+      {
+        "semantic_id": "scripts/aura_astge_anchor_hydration.py#function:main:de9e57c74822fd5e",
+        "name": "main",
+        "kind": "function",
+        "file": "scripts/aura_astge_anchor_hydration.py",
+        "line": 290,
+        "end_line": 313,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "fe4ee7fd6f7ffc51"
+      },
+      {
         "semantic_id": "scripts/aura_benchmark_suite.py#function:_fmt:f89ec2beedf8d5dc",
         "name": "_fmt",
         "kind": "function",
@@ -390482,6 +392594,186 @@
         "end_line": 87,
         "signature_hash": "5c1a69a9659e2089",
         "file_digest8": "2c6a5c58521489ab"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_binding_identity:211798941e9497f3",
+        "name": "_binding_identity",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "line": 76,
+        "end_line": 84,
+        "signature_hash": "9c80c0e2d92e7f7f",
+        "file_digest8": "c926e763936b56b6"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_canonical_bytes:18086cedf18a6857",
+        "name": "_canonical_bytes",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "line": 70,
+        "end_line": 73,
+        "signature_hash": "5ac132afaebe3a2d",
+        "file_digest8": "c926e763936b56b6"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_currentness:f00e1216f2f916f5",
+        "name": "_currentness",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "line": 49,
+        "end_line": 53,
+        "signature_hash": "5b801ace6b102bf1",
+        "file_digest8": "c926e763936b56b6"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_sha256:68a75bedd1216fd4",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "line": 42,
+        "end_line": 46,
+        "signature_hash": "c2ce10985bc24681",
+        "file_digest8": "c926e763936b56b6"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_text:18589f2d78ec0db2",
+        "name": "_text",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "line": 29,
+        "end_line": 33,
+        "signature_hash": "8d08e5ba02cf231e",
+        "file_digest8": "c926e763936b56b6"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_typed_identity:ec04df3edad30aa1",
+        "name": "_typed_identity",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "line": 56,
+        "end_line": 67,
+        "signature_hash": "f5402430986cb10c",
+        "file_digest8": "c926e763936b56b6"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_uint:ea674bf664b72019",
+        "name": "_uint",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "line": 36,
+        "end_line": 39,
+        "signature_hash": "27dfa5236ff1d3c9",
+        "file_digest8": "c926e763936b56b6"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:compile_workcapsule_context_binding:be899980f508199b",
+        "name": "compile_workcapsule_context_binding",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "line": 87,
+        "end_line": 239,
+        "signature_hash": "6cf883df23af39ec",
+        "file_digest8": "c926e763936b56b6"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:roundtrip_binding:c84f2bccb7dc8361",
+        "name": "roundtrip_binding",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "line": 276,
+        "end_line": 278,
+        "signature_hash": "68007ed432887ecc",
+        "file_digest8": "c926e763936b56b6"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:verify_workcapsule_context_binding:7cde721591bb6aaf",
+        "name": "verify_workcapsule_context_binding",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_context_binding.py",
+        "line": 242,
+        "end_line": 273,
+        "signature_hash": "d0e91dd0126c94ca",
+        "file_digest8": "c926e763936b56b6"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:_canonical_bytes:9b1a9cc1935f8f6c",
+        "name": "_canonical_bytes",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "line": 45,
+        "end_line": 48,
+        "signature_hash": "5ac132afaebe3a2d",
+        "file_digest8": "4515179ebe69ab11"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:_graph_identity_equal:266f1fde56e45117",
+        "name": "_graph_identity_equal",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "line": 86,
+        "end_line": 90,
+        "signature_hash": "4192571d8d2115c4",
+        "file_digest8": "4515179ebe69ab11"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:_receipt_identity:44e492711b3612d8",
+        "name": "_receipt_identity",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "line": 51,
+        "end_line": 59,
+        "signature_hash": "b880c7d23b0b8d83",
+        "file_digest8": "4515179ebe69ab11"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:_source_binding_equal:c2050fe9865cab66",
+        "name": "_source_binding_equal",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "line": 79,
+        "end_line": 83,
+        "signature_hash": "6373182c06ee5d29",
+        "file_digest8": "4515179ebe69ab11"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:_source_key:b089aa88afab3b0a",
+        "name": "_source_key",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "line": 62,
+        "end_line": 63,
+        "signature_hash": "a57393c1640c3ae2",
+        "file_digest8": "4515179ebe69ab11"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:_source_ref:0e5624bfecdb9a12",
+        "name": "_source_ref",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "line": 66,
+        "end_line": 76,
+        "signature_hash": "e76bdaaa3d4d7d65",
+        "file_digest8": "4515179ebe69ab11"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:compile_reentry_invalidation:3d401fc26ce0e0e8",
+        "name": "compile_reentry_invalidation",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "line": 93,
+        "end_line": 260,
+        "signature_hash": "2b59521b572e87d1",
+        "file_digest8": "4515179ebe69ab11"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_reentry_invalidation.py#function:verify_reentry_invalidation:4597f5888e640da7",
+        "name": "verify_reentry_invalidation",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_reentry_invalidation.py",
+        "line": 263,
+        "end_line": 303,
+        "signature_hash": "4d3089ba323556a3",
+        "file_digest8": "4515179ebe69ab11"
       },
       {
         "semantic_id": "scripts/deploy_huggingface_space.py#function:_parser:68b194f59cbec7c2",
@@ -406062,6 +408354,196 @@
         "end_line": 174,
         "signature_hash": "e32de3db9ab18df2",
         "file_digest8": "209f276f9a6c5c18"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#class:AnchorHydrationTests:10a05281f38002b3",
+        "name": "AnchorHydrationTests",
+        "kind": "class",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 19,
+        "end_line": 259,
+        "signature_hash": "ca2b89c1255c61a2",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.anchors:d934bfb168a6fefd",
+        "name": "AnchorHydrationTests.anchors",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 47,
+        "end_line": 62,
+        "signature_hash": "6339493b62c44375",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.codemap:b696fbd293d95321",
+        "name": "AnchorHydrationTests.codemap",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 30,
+        "end_line": 45,
+        "signature_hash": "832ce7bfbc26e8a3",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.compile:5838c97fb9ad2d9f",
+        "name": "AnchorHydrationTests.compile",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 80,
+        "end_line": 86,
+        "signature_hash": "41113bf41f243e31",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.setUp:ea5cea4aaaef69f6",
+        "name": "AnchorHydrationTests.setUp",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 20,
+        "end_line": 25,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.tearDown:f21d1da3aa417166",
+        "name": "AnchorHydrationTests.tearDown",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "fa419c832f7fc8ab",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_digest_drift_is_stale_even_when_codemap_projection_is_unchanged:799f1fa55cd84fda",
+        "name": "AnchorHydrationTests.test_digest_drift_is_stale_even_when_codemap_projection_is_unchanged",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 118,
+        "end_line": 126,
+        "signature_hash": "555ca98b6ff43a17",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_exact_body_witness_emits_d9_compatible_locator:3a322f3f7b19aa15",
+        "name": "AnchorHydrationTests.test_exact_body_witness_emits_d9_compatible_locator",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 88,
+        "end_line": 108,
+        "signature_hash": "a2b4e0dd1a814797",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_json_projection_is_deterministic_for_same_inputs:26bc4354c1e760ce",
+        "name": "AnchorHydrationTests.test_json_projection_is_deterministic_for_same_inputs",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 253,
+        "end_line": 259,
+        "signature_hash": "20dfa6ebd82d1de0",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_length_drift_is_stale_before_digest_can_admit:58695a25a5c79efa",
+        "name": "AnchorHydrationTests.test_length_drift_is_stale_before_digest_can_admit",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 128,
+        "end_line": 133,
+        "signature_hash": "daf352965f547324",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_line_projection_can_move_without_changing_anchor_or_body_identity:969d82ef62de9a50",
+        "name": "AnchorHydrationTests.test_line_projection_can_move_without_changing_anchor_or_body_identity",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 135,
+        "end_line": 140,
+        "signature_hash": "d222a10c5d1a10fd",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_missing_witness_is_unknown_and_cannot_hydrate:bb3051153d646a8d",
+        "name": "AnchorHydrationTests.test_missing_witness_is_unknown_and_cannot_hydrate",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 110,
+        "end_line": 116,
+        "signature_hash": "6733c1a71fd1a075",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_one_file_id_cannot_alias_two_paths:c61633910f9591bc",
+        "name": "AnchorHydrationTests.test_one_file_id_cannot_alias_two_paths",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 192,
+        "end_line": 233,
+        "signature_hash": "45617b474f4f9912",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_same_file_can_host_multiple_anchors_only_with_coherent_file_binding:b2c741b611b07e3f",
+        "name": "AnchorHydrationTests.test_same_file_can_host_multiple_anchors_only_with_coherent_file_binding",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 155,
+        "end_line": 190,
+        "signature_hash": "c31e8af84c0e43e4",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_semantic_identity_drift_remains_hard_failure_of_existing_anchor_owner:62e0bb12a2ca5cda",
+        "name": "AnchorHydrationTests.test_semantic_identity_drift_remains_hard_failure_of_existing_anchor_owner",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 142,
+        "end_line": 147,
+        "signature_hash": "4314e3d2f9c449d1",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_symlinked_anchor_path_is_rejected_before_body_currentness:3d7cc6c7943e7c27",
+        "name": "AnchorHydrationTests.test_symlinked_anchor_path_is_rejected_before_body_currentness",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 236,
+        "end_line": 241,
+        "signature_hash": "8b9365aa5b7bce79",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_unknown_anchor_witness_is_rejected_not_silently_ignored:95f27105de930c93",
+        "name": "AnchorHydrationTests.test_unknown_anchor_witness_is_rejected_not_silently_ignored",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 149,
+        "end_line": 153,
+        "signature_hash": "14bdd14d6f6765f7",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.test_witness_schema_requires_provenance_and_full_body_digest:fc94d6ff7195796e",
+        "name": "AnchorHydrationTests.test_witness_schema_requires_provenance_and_full_body_digest",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 243,
+        "end_line": 251,
+        "signature_hash": "27b194839df010b5",
+        "file_digest8": "9a45e4e0c607af92"
+      },
+      {
+        "semantic_id": "tests/test_aura_astge_anchor_hydration.py#method:AnchorHydrationTests.witness:c709dd2418e35143",
+        "name": "AnchorHydrationTests.witness",
+        "kind": "method",
+        "file": "tests/test_aura_astge_anchor_hydration.py",
+        "line": 64,
+        "end_line": 78,
+        "signature_hash": "1a47edff13629a14",
+        "file_digest8": "9a45e4e0c607af92"
       },
       {
         "semantic_id": "tests/test_aura_benchmark_four.py#class:_FakeConnector:49726edfa0a76ca9",
@@ -446464,6 +448946,316 @@
         "file_digest8": "d8b87d550cadf167"
       },
       {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#class:WorkCapsuleContextBindingTests:450c9ce4f3cf0aee",
+        "name": "WorkCapsuleContextBindingTests",
+        "kind": "class",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 27,
+        "end_line": 155,
+        "signature_hash": "fff41f0db25f5962",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#function:identity:02b0819b63d2326a",
+        "name": "identity",
+        "kind": "function",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 16,
+        "end_line": 24,
+        "signature_hash": "b7f6dc6658a7c6d7",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.compile:c8ab0d89957aa16d",
+        "name": "WorkCapsuleContextBindingTests.compile",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 65,
+        "end_line": 70,
+        "signature_hash": "35c0e00469633790",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.setUp:b7b8a81b31360e7b",
+        "name": "WorkCapsuleContextBindingTests.setUp",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 28,
+        "end_line": 63,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_duplicate_source_identity_is_rejected:31996d71104227fa",
+        "name": "WorkCapsuleContextBindingTests.test_duplicate_source_identity_is_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 149,
+        "end_line": 155,
+        "signature_hash": "f03c0f4a71082844",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_exact_current_active_context_is_admitted_without_authority:ee77f536e299e30a",
+        "name": "WorkCapsuleContextBindingTests.test_exact_current_active_context_is_admitted_without_authority",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 72,
+        "end_line": 79,
+        "signature_hash": "24969b202fa3b88b",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_no_active_source_witnesses_fail_closed:2891b8a0b284a901",
+        "name": "WorkCapsuleContextBindingTests.test_no_active_source_witnesses_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 117,
+        "end_line": 123,
+        "signature_hash": "2a374a02b206e1c9",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_payload_tamper_breaks_binding_identity:18c80b772b9206da",
+        "name": "WorkCapsuleContextBindingTests.test_payload_tamper_breaks_binding_identity",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 144,
+        "end_line": 147,
+        "signature_hash": "9916375c0773eb06",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_roundtrip_preserves_graph_and_source_generations_separately:68f0391daf9619eb",
+        "name": "WorkCapsuleContextBindingTests.test_roundtrip_preserves_graph_and_source_generations_separately",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 125,
+        "end_line": 131,
+        "signature_hash": "62697045a6a0d2e5",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_stale_active_source_blocks_and_preserves_exact_reopen_reason:95d541b521f9f204",
+        "name": "WorkCapsuleContextBindingTests.test_stale_active_source_blocks_and_preserves_exact_reopen_reason",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 89,
+        "end_line": 97,
+        "signature_hash": "d2c252ba25e8cac2",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_stale_graph_blocks_even_when_source_is_current:ff2ba6ae037078d1",
+        "name": "WorkCapsuleContextBindingTests.test_stale_graph_blocks_even_when_source_is_current",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 108,
+        "end_line": 115,
+        "signature_hash": "5a17ecb6c1616dfd",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_tampered_authority_is_detected:520228acb65e6811",
+        "name": "WorkCapsuleContextBindingTests.test_tampered_authority_is_detected",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 139,
+        "end_line": 142,
+        "signature_hash": "834cacb051ea24e4",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_tampered_currentness_is_detected_even_if_context_admitted_flag_is_left_true:187c36173e872bbf",
+        "name": "WorkCapsuleContextBindingTests.test_tampered_currentness_is_detected_even_if_context_admitted_flag_is_left_true",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 133,
+        "end_line": 137,
+        "signature_hash": "1d2c04ff9f2d9a3d",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_unknown_active_source_needs_rebind_and_cannot_be_laundered:f7e0fc618b6bbf5d",
+        "name": "WorkCapsuleContextBindingTests.test_unknown_active_source_needs_rebind_and_cannot_be_laundered",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 99,
+        "end_line": 106,
+        "signature_hash": "f3c5ad78db64d456",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_context_binding.py#method:WorkCapsuleContextBindingTests.test_unknown_cold_source_survives_roundtrip_without_blocking_active_context:73529a79c385104b",
+        "name": "WorkCapsuleContextBindingTests.test_unknown_cold_source_survives_roundtrip_without_blocking_active_context",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_context_binding.py",
+        "line": 81,
+        "end_line": 87,
+        "signature_hash": "fd01e764e40c5ed6",
+        "file_digest8": "d9d4e992ea8d217b"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#class:WorkCapsuleReentryInvalidationTests:066bb846ee066095",
+        "name": "WorkCapsuleReentryInvalidationTests",
+        "kind": "class",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 32,
+        "end_line": 215,
+        "signature_hash": "c4d9d89bb7ba4b6a",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#function:identity:5d6522c271410592",
+        "name": "identity",
+        "kind": "function",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 21,
+        "end_line": 29,
+        "signature_hash": "b7f6dc6658a7c6d7",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.compile:794fbc075ec7349d",
+        "name": "WorkCapsuleReentryInvalidationTests.compile",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 86,
+        "end_line": 91,
+        "signature_hash": "35c0e00469633790",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.setUp:0f0d8c58cdd944fb",
+        "name": "WorkCapsuleReentryInvalidationTests.setUp",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 33,
+        "end_line": 84,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_cold_source_drift_does_not_invalidate_active_context:0170d9caeb24069b",
+        "name": "WorkCapsuleReentryInvalidationTests.test_cold_source_drift_does_not_invalidate_active_context",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 166,
+        "end_line": 176,
+        "signature_hash": "65eca0b57e0ebdef",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_current_new_source_generation_requires_selected_rebind:31247b70d4b355b4",
+        "name": "WorkCapsuleReentryInvalidationTests.test_current_new_source_generation_requires_selected_rebind",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 123,
+        "end_line": 134,
+        "signature_hash": "da253fcf8c52f1e3",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_graph_generation_change_forces_full_graph_rebind_even_when_current:4708f8e18daff073",
+        "name": "WorkCapsuleReentryInvalidationTests.test_graph_generation_change_forces_full_graph_rebind_even_when_current",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 156,
+        "end_line": 164,
+        "signature_hash": "09b5fe7b1bcd0e2d",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_missing_active_observation_is_unresolved_selected_rebind:39ebaebe51fbe9d8",
+        "name": "WorkCapsuleReentryInvalidationTests.test_missing_active_observation_is_unresolved_selected_rebind",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 136,
+        "end_line": 143,
+        "signature_hash": "4da566a7f2ebedca",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_new_observed_source_is_recorded_but_not_auto_promoted:50c843d715e1dd79",
+        "name": "WorkCapsuleReentryInvalidationTests.test_new_observed_source_is_recorded_but_not_auto_promoted",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 178,
+        "end_line": 196,
+        "signature_hash": "7bcbd524c8e22f64",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_one_stale_active_source_rebinds_only_that_source:6b6cb7c226c6174a",
+        "name": "WorkCapsuleReentryInvalidationTests.test_one_stale_active_source_rebinds_only_that_source",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 101,
+        "end_line": 111,
+        "signature_hash": "c9a3d0b0f1315095",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_previous_binding_tamper_is_rejected_before_comparison:27ea96b590c28445",
+        "name": "WorkCapsuleReentryInvalidationTests.test_previous_binding_tamper_is_rejected_before_comparison",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 198,
+        "end_line": 201,
+        "signature_hash": "df3d7701032b7fad",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_receipt_authority_tamper_is_detected:f04eed907a1f108a",
+        "name": "WorkCapsuleReentryInvalidationTests.test_receipt_authority_tamper_is_detected",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 203,
+        "end_line": 208,
+        "signature_hash": "33bd41ed6b72645f",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_receipt_cannot_promote_unproven_node_cone:4728e11b116e0a17",
+        "name": "WorkCapsuleReentryInvalidationTests.test_receipt_cannot_promote_unproven_node_cone",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 210,
+        "end_line": 215,
+        "signature_hash": "fed514c91e90feb6",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_stale_graph_forces_full_graph_rebind:5f1728c459741ac3",
+        "name": "WorkCapsuleReentryInvalidationTests.test_stale_graph_forces_full_graph_rebind",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 145,
+        "end_line": 154,
+        "signature_hash": "8f1c28924a2924e4",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_unchanged_current_dependencies_require_no_reentry:0aac41e4cea867f9",
+        "name": "WorkCapsuleReentryInvalidationTests.test_unchanged_current_dependencies_require_no_reentry",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 93,
+        "end_line": 99,
+        "signature_hash": "a930605dfce933b8",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_reentry_invalidation.py#method:WorkCapsuleReentryInvalidationTests.test_unknown_active_source_is_selected_not_promoted_to_current:a6e8a9c298ca7dac",
+        "name": "WorkCapsuleReentryInvalidationTests.test_unknown_active_source_is_selected_not_promoted_to_current",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_reentry_invalidation.py",
+        "line": 113,
+        "end_line": 121,
+        "signature_hash": "3ebb2b0662829c4b",
+        "file_digest8": "e2f3656096679de9"
+      },
+      {
         "semantic_id": "tests/test_aura_workflow_authority_bridge.py#function:authorized_decision:9a5ad4ea05b62755",
         "name": "authorized_decision",
         "kind": "function",
@@ -449644,7 +452436,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "4c2197143abc8b3d1c8ffe4f97ffc975",
-    "payload_hash": "0bb52120998daa48903facd4225d8f12"
+    "record_fingerprint": "da908ef95899e7ff3f011574ef571c4c",
+    "payload_hash": "4a55b9a76edd1ff9d21767403aa228ae"
   }
 }
