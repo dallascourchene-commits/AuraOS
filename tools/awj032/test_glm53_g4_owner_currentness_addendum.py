@@ -24,7 +24,7 @@ def d(ch: str) -> str:
 
 
 class FakeResolver:
-    """Test double only; it deliberately proves protocol shape != authentication."""
+    """Test double only; protocol shape proves neither authentication nor epoch semantics."""
 
     def __init__(
         self,
@@ -118,6 +118,8 @@ class G4OwnerCurrentnessAddendumTests(unittest.TestCase):
         self.assertFalse(receipt.recompute_g3_required)
         self.assertFalse(receipt.owner_resolver_authenticated_by_this_contract)
         self.assertFalse(receipt.owner_currentness_truth_proven_by_this_contract)
+        self.assertTrue(receipt.owner_epoch_change_complete_required)
+        self.assertFalse(receipt.owner_epoch_change_complete_proven_by_this_contract)
         self.assertFalse(receipt.plan_executed_by_this_contract)
 
     def test_owner_resolved_axis_drift_requires_g3_recompute(self) -> None:
@@ -195,6 +197,7 @@ class G4OwnerCurrentnessAddendumTests(unittest.TestCase):
         for field in (
             "owner_resolver_authenticated_by_this_contract",
             "owner_currentness_truth_proven_by_this_contract",
+            "owner_epoch_change_complete_proven_by_this_contract",
             "plan_executed_by_this_contract",
             "transfer_effect_authorized",
             "native_route_mutated",
@@ -206,6 +209,16 @@ class G4OwnerCurrentnessAddendumTests(unittest.TestCase):
         ):
             with self.subTest(field=field), self.assertRaises(ValueError):
                 replace(receipt, **{field: True}).validate_claim_ceiling()
+
+    def test_epoch_change_complete_requirement_cannot_be_disabled(self) -> None:
+        plan = self.plan()
+        receipt = revalidate_g3_plan_owner_resolved(
+            plan=plan, owner_resolver=FakeResolver(plan=plan)
+        )
+        with self.assertRaises(ValueError):
+            replace(
+                receipt, owner_epoch_change_complete_required=False
+            ).validate_claim_ceiling()
 
     def test_hold_cannot_claim_reusable(self) -> None:
         plan = self.plan()
