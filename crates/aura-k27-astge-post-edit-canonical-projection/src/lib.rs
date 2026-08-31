@@ -272,11 +272,17 @@ fn require_owner_ceiling(
             "candidate_current.runtime_name_resolution_proven",
         ),
         (
-            receipt.post_edit_current.candidate_current.call_graph_proven,
+            receipt
+                .post_edit_current
+                .candidate_current
+                .call_graph_proven,
             "candidate_current.call_graph_proven",
         ),
         (
-            receipt.post_edit_current.candidate_current.semantic_k27_derived,
+            receipt
+                .post_edit_current
+                .candidate_current
+                .semantic_k27_derived,
             "candidate_current.semantic_k27_derived",
         ),
         (
