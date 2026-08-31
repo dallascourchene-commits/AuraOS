@@ -104,7 +104,9 @@ pub fn index_python_module_symbols(
     parser
         .set_language(&language)
         .map_err(|error| SymbolIndexError::ParserLanguage(error.to_string()))?;
-    let tree = parser.parse(source, None).ok_or(SymbolIndexError::ParseReturnedNone)?;
+    let tree = parser
+        .parse(source, None)
+        .ok_or(SymbolIndexError::ParseReturnedNone)?;
     let root = tree.root_node();
     if root.has_error() {
         return Err(SymbolIndexError::ParseHasError);
@@ -140,7 +142,8 @@ pub fn index_python_module_symbols(
         let semantic_handle_digest = *semantic_handles
             .get(&node_id)
             .ok_or(SymbolIndexError::MissingSemanticHandle(node_id))?;
-        let ordinal = u32::try_from(symbols.len()).map_err(|_| SymbolIndexError::OrdinalOverflow)?;
+        let ordinal =
+            u32::try_from(symbols.len()).map_err(|_| SymbolIndexError::OrdinalOverflow)?;
         symbols.push(ModuleSymbolV1 {
             ordinal,
             node_id,
@@ -183,13 +186,11 @@ pub fn index_python_module_symbols(
 fn module_definition(top_level: Node<'_>) -> Option<Node<'_>> {
     match top_level.kind() {
         "function_definition" | "class_definition" => Some(top_level),
-        "decorated_definition" => top_level
-            .child_by_field_name("definition")
-            .or_else(|| {
-                (0..top_level.named_child_count())
-                    .filter_map(|index| top_level.named_child(index))
-                    .find(|child| matches!(child.kind(), "function_definition" | "class_definition"))
-            }),
+        "decorated_definition" => top_level.child_by_field_name("definition").or_else(|| {
+            (0..top_level.named_child_count())
+                .filter_map(|index| top_level.named_child(index))
+                .find(|child| matches!(child.kind(), "function_definition" | "class_definition"))
+        }),
         _ => None,
     }
 }
@@ -269,10 +270,13 @@ mod tests {
         let index = index_python_module_symbols(FIXTURE, 21, &supplied).expect("index");
         for symbol in &index.symbols {
             let node = &graph.nodes[symbol.node_id as usize];
-            assert_eq!(node.kind, match symbol.kind {
-                ModuleSymbolKindV1::Function => "function_definition",
-                ModuleSymbolKindV1::Class => "class_definition",
-            });
+            assert_eq!(
+                node.kind,
+                match symbol.kind {
+                    ModuleSymbolKindV1::Function => "function_definition",
+                    ModuleSymbolKindV1::Class => "class_definition",
+                }
+            );
             assert_eq!(symbol.byte_start, node.byte_start);
             assert_eq!(symbol.byte_end, node.byte_end);
             assert_eq!(symbol.semantic_handle_digest, supplied[&symbol.node_id]);
@@ -305,6 +309,13 @@ mod tests {
     fn duplicate_module_names_are_reported_not_resolved() {
         let index = index_python_module_symbols(FIXTURE, 2, &handles(FIXTURE, 2)).expect("index");
         assert_eq!(index.duplicate_names, vec!["alpha"]);
-        assert_eq!(index.symbols.iter().filter(|symbol| symbol.name == "alpha").count(), 2);
+        assert_eq!(
+            index
+                .symbols
+                .iter()
+                .filter(|symbol| symbol.name == "alpha")
+                .count(),
+            2
+        );
     }
 }
