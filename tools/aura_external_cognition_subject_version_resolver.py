@@ -4,9 +4,9 @@
 D0 / HS1 / NONPROMOTING.
 
 This membrane consumes an exact EKI-2 coordinate-memory snapshot and identifies
-one unsuperseded record for a stable semantic subject.  It does not infer
+one unsuperseded record for a stable semantic subject. It does not infer
 chronology, source currentness, semantic truth, or any read/write/effect
-authority.  The selected record remains subject to the independently owned EKI
+authority. The selected record remains subject to the independently owned EKI
 read-currentness membrane before use.
 """
 from __future__ import annotations
@@ -21,6 +21,7 @@ from typing import Any, Mapping
 STORE_SCHEMA_NAME = "aura-coordinate-memory-kv-v1"
 STORE_SCHEMA_VERSION = "1.0.0"
 RESOLVER_SCHEMA = "AURA-EKI-SUBJECT-VERSION-RESOLVER-v1"
+SEMANTIC_VALUE_DOMAIN = "AURA-EKI2-SEMANTIC-VALUE-v1"
 RECORD_PREFIX = "external-cognition://"
 HEX = frozenset("0123456789abcdef")
 
@@ -35,7 +36,13 @@ class SubjectVersionDisposition(str, Enum):
 
 
 def _canonical(value: Any) -> bytes:
-    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False, allow_nan=False).encode("utf-8")
+    return json.dumps(
+        value,
+        sort_keys=True,
+        separators=(",", ":"),
+        ensure_ascii=False,
+        allow_nan=False,
+    ).encode("utf-8")
 
 
 def _sha(value: Any) -> str:
@@ -65,7 +72,11 @@ def _parse_snapshot(snapshot_bytes: bytes) -> tuple[Mapping[str, Any], ...]:
     if not isinstance(body, Mapping):
         raise ValueError("SNAPSHOT_OBJECT_REQUIRED")
     schema = body.get("schema")
-    if not isinstance(schema, Mapping) or schema.get("name") != STORE_SCHEMA_NAME or schema.get("version") != STORE_SCHEMA_VERSION:
+    if (
+        not isinstance(schema, Mapping)
+        or schema.get("name") != STORE_SCHEMA_NAME
+        or schema.get("version") != STORE_SCHEMA_VERSION
+    ):
         raise ValueError("SNAPSHOT_SCHEMA_MISMATCH")
     rows = body.get("rows")
     if not isinstance(rows, list):
@@ -85,6 +96,11 @@ def _parse_snapshot(snapshot_bytes: bytes) -> tuple[Mapping[str, Any], ...]:
             raise ValueError("SNAPSHOT_ROW_VALUE_SCHEMA_INVALID")
         if not isinstance(value.get("standing"), str):
             raise ValueError("SNAPSHOT_STANDING_STRING_REQUIRED")
+        if not isinstance(value.get("cell"), Mapping):
+            raise ValueError("SNAPSHOT_CELL_OBJECT_REQUIRED")
+        if not isinstance(value.get("reopen"), Mapping):
+            raise ValueError("SNAPSHOT_REOPEN_OBJECT_REQUIRED")
+        _sha256(value.get("digest"), "ROW_DIGEST")
         normalized.append({"K": key, "V": dict(value)})
     return tuple(normalized)
 
@@ -146,7 +162,7 @@ def resolve_subject_version(
     """Return one unsuperseded version candidate or a typed HOLD.
 
     The only ordering relation admitted here is an explicit persisted successor
-    edge.  Timestamps, source generation labels, lexical key order, K27 locality,
+    edge. Timestamps, source generation labels, lexical key order, K27 locality,
     and persisted CURRENT labels cannot choose a head.
     """
     semantic_subject_id = _sha256(semantic_subject_id, "SEMANTIC_SUBJECT_ID")
@@ -160,10 +176,25 @@ def resolve_subject_version(
 
     rows = _parse_snapshot(snapshot_bytes)
     prefix = _subject_key_prefix(semantic_subject_id)
-    subject_rows = {row["K"]: row["V"] for row in rows if row["K"].startswith(prefix)}
+    subject_rows = {
+        row["K"]: row["V"] for row in rows if row["K"].startswith(prefix)
+    }
 
-    def receipt(disposition: SubjectVersionDisposition, *, candidate_key: str | None = None, candidate_generation: str | None = None, heads: tuple[str, ...] = (), reason: str) -> SubjectVersionResolutionReceiptV1:
-        historical = tuple(sorted(k for k, v in subject_rows.items() if v.get("successor") not in (None, "")))
+    def receipt(
+        disposition: SubjectVersionDisposition,
+        *,
+        candidate_key: str | None = None,
+        candidate_generation: str | None = None,
+        heads: tuple[str, ...] = (),
+        reason: str,
+    ) -> SubjectVersionResolutionReceiptV1:
+        historical = tuple(
+            sorted(
+                key
+                for key, value in subject_rows.items()
+                if value.get("successor") not in (None, "")
+            )
+        )
         return SubjectVersionResolutionReceiptV1(
             schema=RESOLVER_SCHEMA,
             disposition=disposition,
@@ -179,7 +210,10 @@ def resolve_subject_version(
         )
 
     if not subject_rows:
-        return receipt(SubjectVersionDisposition.HOLD_SUBJECT_NOT_FOUND, reason="SUBJECT_HAS_NO_VERSION_ROWS")
+        return receipt(
+            SubjectVersionDisposition.HOLD_SUBJECT_NOT_FOUND,
+            reason="SUBJECT_HAS_NO_VERSION_ROWS",
+        )
 
     successors: dict[str, str] = {}
     for key, value in subject_rows.items():
@@ -189,6 +223,16 @@ def resolve_subject_version(
             raise ValueError("ROW_STANDING_SUBJECT_MISMATCH")
         if standing.get("record_generation") != generation:
             raise ValueError("ROW_STANDING_RECORD_GENERATION_MISMATCH")
+        expected_value_digest = _sha(
+            {
+                "domain": SEMANTIC_VALUE_DOMAIN,
+                "standing": dict(standing),
+                "reopen": value["reopen"],
+            }
+        )
+        if value["digest"] != expected_value_digest:
+            raise ValueError("ROW_SEMANTIC_VALUE_DIGEST_MISMATCH")
+
         # Persisted currentness remains provenance only; it never participates in head selection.
         successor = value.get("successor")
         if successor in (None, ""):
@@ -196,9 +240,15 @@ def resolve_subject_version(
         if not isinstance(successor, str):
             raise ValueError("ROW_SUCCESSOR_MUST_BE_STRING_OR_NULL")
         if not successor.startswith(prefix):
-            return receipt(SubjectVersionDisposition.HOLD_CROSS_SUBJECT_SUCCESSOR, reason="SUCCESSOR_ESCAPES_STABLE_SUBJECT")
+            return receipt(
+                SubjectVersionDisposition.HOLD_CROSS_SUBJECT_SUCCESSOR,
+                reason="SUCCESSOR_ESCAPES_STABLE_SUBJECT",
+            )
         if successor not in subject_rows:
-            return receipt(SubjectVersionDisposition.HOLD_SUPERSESSION_TARGET_MISSING, reason="SUCCESSOR_TARGET_NOT_PRESENT_IN_EXACT_STORE_GENERATION")
+            return receipt(
+                SubjectVersionDisposition.HOLD_SUPERSESSION_TARGET_MISSING,
+                reason="SUCCESSOR_TARGET_NOT_PRESENT_IN_EXACT_STORE_GENERATION",
+            )
         successors[key] = successor
 
     for start in subject_rows:
@@ -206,13 +256,20 @@ def resolve_subject_version(
         cursor = start
         while cursor in successors:
             if cursor in seen:
-                return receipt(SubjectVersionDisposition.HOLD_SUPERSESSION_CYCLE, reason="EXPLICIT_SUPERSESSION_GRAPH_CONTAINS_CYCLE")
+                return receipt(
+                    SubjectVersionDisposition.HOLD_SUPERSESSION_CYCLE,
+                    reason="EXPLICIT_SUPERSESSION_GRAPH_CONTAINS_CYCLE",
+                )
             seen.add(cursor)
             cursor = successors[cursor]
 
     heads = tuple(sorted(key for key in subject_rows if key not in successors))
     if len(heads) != 1:
-        return receipt(SubjectVersionDisposition.HOLD_AMBIGUOUS_HEAD, heads=heads, reason="EXACTLY_ONE_UNSUPERSEDED_VERSION_REQUIRED")
+        return receipt(
+            SubjectVersionDisposition.HOLD_AMBIGUOUS_HEAD,
+            heads=heads,
+            reason="EXACTLY_ONE_UNSUPERSEDED_VERSION_REQUIRED",
+        )
 
     selected = heads[0]
     selected_generation = _record_generation_from_key(selected, semantic_subject_id)
