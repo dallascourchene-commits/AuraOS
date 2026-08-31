@@ -1,0 +1,166 @@
+name: GLM53 Official Source E8 Materialization Canary
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_official_source_e8_materialization_canary.py"
+      - "tests/test_glm53_official_source_e8_materialization_canary.py"
+      - ".github/workflows/glm53-official-source-e8-materialization-canary.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q14-official-source-e8-canary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact Q14 head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install exact numeric dependency
+        run: python -m pip install --disable-pip-version-check "numpy==2.3.5"
+
+      - name: Prove exact Q13 x A6 two-parent convergence and green generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence='c32fe9d8d97c6e879b3e49baf5b2415d3c846453'
+          q13='eb09b5ffd14577d1676f57bb908e5ddd81125605'
+          a6='8179ffe054abc2ec144757888957c9ca27df991c'
+          parents=subprocess.check_output(['git','rev-list','--parents','-n','1',convergence],text=True).strip().split()
+          assert parents == [convergence,q13,a6], parents
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          for run_id, head in ((33397035043,q13),(33396942368,a6)):
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+              )
+              with urllib.request.urlopen(req,timeout=30) as response: run=json.load(response)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+          print('Q14_EXACT_Q13_A6_PARENTS_GREEN=true')
+          PY
+
+      - name: Pin exact Q13, PR628, and A6 semantic owners
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse eb09b5ffd14577d1676f57bb908e5ddd81125605:tools/quantization/aura_glm53_full_representative_canonical_source_set.py)" = "5d3b365911ecd78bb2698a9423807dbf13f1b5ad"
+          test "$(git rev-parse b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py)" = "5df2cd69a1519b2626cb52c1d8f23a25504425d9"
+          test "$(git rev-parse 8179ffe054abc2ec144757888957c9ca27df991c:tools/aura_execution_aware_hyperscale_admission.py)" = "1ba4a33a05dd643d8be911d8fc103fb110bc3bb0"
+          test "$(git rev-parse 8179ffe054abc2ec144757888957c9ca27df991c:tools/arena_workflow_execution_evidence.py)" = "150aba95dc1aed3e938892a742a6d5f65d75e41d"
+          git show 8179ffe054abc2ec144757888957c9ca27df991c:tools/aura_execution_aware_hyperscale_admission.py | grep -F 'PRE_JOB_ACTION_REQUIRED'
+          git show 8179ffe054abc2ec144757888957c9ca27df991c:tools/aura_execution_aware_hyperscale_admission.py | grep -F 'provider_gate_counts_as_new_sck=False'
+          echo 'Q14_EXACT_OWNER_BLOBS_PINNED=true'
+
+      - name: Compile and run Q14 adversarial contract
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/quantization/aura_glm53_official_source_e8_materialization_canary.py tests/test_glm53_official_source_e8_materialization_canary.py
+          python -m unittest -v tests.test_glm53_official_source_e8_materialization_canary
+
+      - name: Execute minimum live official-source page canary
+        run: |
+          set -euo pipefail
+          python -m tools.quantization.aura_glm53_official_source_e8_materialization_canary | tee /tmp/q14.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q14.json',encoding='utf-8'))
+          assert r['exact_parent_heads']==['eb09b5ffd14577d1676f57bb908e5ddd81125605','8179ffe054abc2ec144757888957c9ca27df991c']
+          assert r['minimum_canary_cone_weights']==128
+          assert r['full_role_weights']==37_748_736
+          assert r['full_role_vector_count']==4_718_592
+          assert r['reference_codebook_size']==58_112
+          assert r['naive_full_role_codeword_scores']==274_206_818_304
+          assert r['two_official_source_bound_tile_pages_materialized'] is True
+          assert [x['tensor_role'] for x in r['role_canaries']]==['down_proj','gate_up_proj']
+          for x in r['role_canaries']:
+              assert x['source_weight_count']==64
+              assert x['actual_e8_page_payload_materialized'] is True
+              assert x['official_source_to_e8_page_derivation_proven_for_tile'] is True
+              assert x['page_materialization_owner_bound_for_tile'] is True
+              assert len(x['page_payload_sha256'])==64
+              assert len(x['page_identity_digest'])==64
+          print('Q14_TWO_OFFICIAL_SOURCE_BOUND_E8_TILE_PAGES_MATERIALIZED=true')
+          print('Q14_CANARY_PAGE_SET_DIGEST='+r['canary_page_set_digest'])
+          print('Q14_SOURCE_SET_DIGEST='+r['inherited_source_set_digest'])
+          PY
+
+      - name: Independently refetch and reproduce both tile pages through exact PR628 owner
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,math,struct,urllib.request
+          import numpy as np
+          from tools.quantization import aura_glm53_e8_indexed_expert_page_reference as page_ref
+          r=json.load(open('/tmp/q14.json',encoding='utf-8'))
+          url='https://huggingface.co/zai-org/GLM-5.3/resolve/7cda81930d6e4cef42f48555de830aa32ecdde28/model-00038-of-00141.safetensors?download=true'
+          base=8+105424
+          roles={
+            'gate_up_proj':(4070207936,993728,'gate_prefix'),
+            'down_proj':(4057625024,990656,'down_prefix'),
+          }
+          by_role={x['tensor_role']:x for x in r['role_canaries']}
+          def fetch(start,length):
+              end=start+length-1
+              req=urllib.request.Request(url,headers={'User-Agent':'AuraOS-Q14-IndependentReplay/1','Range':f'bytes={start}-{end}','Accept-Encoding':'identity'})
+              with urllib.request.urlopen(req,timeout=120) as response:
+                  assert (getattr(response,'status',None) or response.getcode())==206
+                  raw=response.read(length+1)
+                  assert response.headers.get('Content-Range')==f'bytes {start}-{end}/18103224560'
+              assert len(raw)==length
+              return raw
+          h=fetch(0,8); assert struct.unpack('<Q',h)[0]==105424
+          table=np.empty(256,dtype='<f4')
+          for code in range(256):
+              sign=-1.0 if code&0x80 else 1.0; exp=(code>>3)&15; mant=code&7
+              table[code]=np.nan if (exp==15 and mant==7) else sign*(math.ldexp(float(mant),-9) if exp==0 else math.ldexp(1.0+mant/8.0,exp-7))
+          for role,(woff,soff,component) in roles.items():
+              raw=fetch(base+woff,64); sr=fetch(base+soff,4)
+              assert not np.any((np.frombuffer(raw,dtype=np.uint8)==0x7f)|(np.frombuffer(raw,dtype=np.uint8)==0xff))
+              scale=float(np.frombuffer(sr,dtype='<f4')[0]); assert math.isfinite(scale) and scale>0
+              tile=np.asarray(table[np.frombuffer(raw,dtype=np.uint8)]*np.float32(scale),dtype='<f4').reshape(1,64)
+              expected=by_role[role]
+              assert hashlib.sha256(tile.tobytes(order='C')).hexdigest()==expected['canonical_tile_sha256']
+              page=page_ref.pack_expert_page(
+                  tile,model_revision='7cda81930d6e4cef42f48555de830aa32ecdde28',
+                  representation_revision='AURA_Q14_OFFICIAL_TILE_CANARY_R1',layer_id=3,expert_id=0,tensor_role=role,block_size=64,
+              )
+              assert page.identity.digest()==expected['page_identity_digest']
+              assert page.payload_sha256==expected['page_payload_sha256']
+              assert list(page.k27_coordinate)==expected['page_k27_coordinate']
+          print('Q14_INDEPENDENT_TILE_PAGE_REPLAY=true')
+          PY
+
+      - name: Consequence and execution-state ceiling
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q14.json',encoding='utf-8'))
+          assert r['execution_state_must_terminalize_outside_semantic_owner'] is True
+          for key in ('provider_gate_counts_as_materialization_failure','provider_gate_counts_as_materialization_success','full_role_page_payloads_materialized','full_source_set_page_set_materialized','baseline_same_official_source_tensor_set_proven','whole_model_coverage_proven','model_execution_observed','generalized_quality_proven','runtime_performance_proven','physical_io_performance_proven','semantic_k27_authority','native_private_transformer_kv_accessed','gate10_promoted','merge_or_deployment_authorized'):
+              assert r[key] is False,key
+          print('Q14_NONPROMOTION_AND_A6_EXECUTION_CEILING=true')
+          PY
+
+      - name: Preserve Q14 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: q14-official-source-e8-materialization-canary
+          path: /tmp/q14.json
+          if-no-files-found: error
