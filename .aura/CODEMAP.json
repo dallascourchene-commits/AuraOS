@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788198105,
+  "generated_at_unix": 1788198379,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1774,8 +1774,8 @@
     {
       "ring": "repo",
       "files": 1657,
-      "bytes": 26546542,
-      "tokens_est": 6626989,
+      "bytes": 26551159,
+      "tokens_est": 6628144,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
@@ -160264,6 +160264,7 @@
     "python -m unittest": [
       ".github/workflows/aura-eki-subject-identity-bridge.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+      ".github/workflows/ci.yml",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 -m py_compile": [
@@ -170005,77 +170006,82 @@
       "path": ".github/workflows/ci.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 12796,
-      "lines": 348,
-      "tokens_est": 3199,
+      "bytes": 17413,
+      "lines": 424,
+      "tokens_est": 4354,
       "symbol_count": 0,
       "commands": [
         "python -m pip",
         "python -m py_compile",
         "python -m pytest",
+        "python -m unittest",
         "python aura_codebase_navigator.py",
         "python -m aura_codemap_verify"
       ],
       "command_lines": {
         "python -m pip": [
-          39,
           40,
-          187,
+          41,
           188,
-          245,
+          189,
           246,
-          293,
-          294
+          247,
+          291,
+          292
         ],
         "python -m py_compile": [
-          43
+          44
         ],
         "python -m pytest": [
-          136,
-          200
+          137,
+          201
+        ],
+        "python -m unittest": [
+          357,
+          368
         ],
         "python aura_codebase_navigator.py": [
-          335
+          411
         ],
         "python -m aura_codemap_verify": [
-          336
+          412
         ]
       },
       "topology": {},
-      "digest8": "1e5cf15d6657f8db",
+      "digest8": "9c2be65f3b60c4f3",
       "vector": [
-        0.156765,
-        -0.100375,
-        0.26278,
-        0.285336,
-        0.014662,
-        -0.2109,
-        -0.005639,
-        0.091353,
-        -0.077819,
-        -0.28308,
-        0.168044,
-        -0.102631,
-        -0.172555,
-        0.260524,
-        -0.267291,
-        0.22669,
-        0.219923,
-        -0.037218,
-        0.17481,
-        -0.204133,
-        -0.201878,
-        -0.260524,
-        0.113909,
-        0.179322,
-        -0.197367,
-        -0.098119,
-        0.11842,
-        -0.147743,
-        0.136465,
-        -0.100375,
-        -0.003383,
-        0.165788
+        0.074557,
+        -0.167447,
+        -0.013445,
+        -0.050112,
+        -0.138113,
+        0.094113,
+        0.265226,
+        0.111224,
+        -0.182114,
+        0.182114,
+        -0.028112,
+        0.05989,
+        0.204114,
+        0.116113,
+        -0.050112,
+        -0.174781,
+        -0.260338,
+        -0.209003,
+        -0.277449,
+        -0.27256,
+        0.111224,
+        0.213892,
+        0.311672,
+        0.20167,
+        -0.160114,
+        -0.162558,
+        -0.25056,
+        -0.111224,
+        0.006111,
+        -0.150336,
+        0.077001,
+        -0.282338
       ]
     },
     {
@@ -289222,8 +289228,8 @@
   },
   "summary": {
     "file_count": 1657,
-    "total_bytes": 26546542,
-    "text_tokens_est": 6626989,
+    "total_bytes": 26551159,
+    "text_tokens_est": 6628144,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
@@ -451158,6 +451164,6 @@
       }
     ],
     "record_fingerprint": "8ee6c65c6f5b4089f3710f7ebe9f7dd4",
-    "payload_hash": "196bc2c4a63edb6baa5bd3f4c3dcb10d"
+    "payload_hash": "5c0864485f2fd5aa00ab0b1bc6cf6076"
   }
 }
