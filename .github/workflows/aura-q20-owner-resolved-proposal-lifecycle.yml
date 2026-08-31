@@ -50,17 +50,41 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$CONVERGENCE_COMMIT" "$O63_SEMANTIC_HEAD" "$O62_TEST_HEAD"
-          parents="$(git show -s --format='%P' "$CONVERGENCE_COMMIT")"
-          test "$parents" = "$O63_SEMANTIC_HEAD $O62_TEST_HEAD"
-          test "$(git rev-parse "$CONVERGENCE_COMMIT:tools/aura_bounded_proposal_capsule.py")" = "$O63_SOURCE_BLOB"
-          test "$(git rev-parse "$CONVERGENCE_COMMIT:tests/test_aura_bounded_proposal_capsule.py")" = "$O63_TEST_BLOB"
-          test "$(git rev-parse "$CONVERGENCE_COMMIT:tools/aura_closed_world_result_lifecycle_gate.py")" = "$O62_SOURCE_BLOB"
-          test "$(git rev-parse "$CONVERGENCE_COMMIT:tests/test_aura_closed_world_result_lifecycle_gate.py")" = "$O62_TEST_BLOB"
-          test "$(git rev-parse HEAD:tools/aura_bounded_proposal_capsule.py)" = "$O63_SOURCE_BLOB"
-          test "$(git rev-parse HEAD:tools/aura_closed_world_result_lifecycle_gate.py)" = "$O62_SOURCE_BLOB"
-          echo Q20_TRUE_TWO_PARENT_CONVERGENCE=true
+          python3 - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          token=os.environ['GH_TOKEN']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json'}
+          def get(path):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/{path}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  return json.load(r)
+          convergence=os.environ['CONVERGENCE_COMMIT']
+          commit=get(f'commits/{convergence}')
+          parents=[p['sha'] for p in commit['parents']]
+          expected=[os.environ['O63_SEMANTIC_HEAD'],os.environ['O62_TEST_HEAD']]
+          assert parents == expected,(parents,expected)
+          paths={
+              'tools/aura_bounded_proposal_capsule.py':os.environ['O63_SOURCE_BLOB'],
+              'tests/test_aura_bounded_proposal_capsule.py':os.environ['O63_TEST_BLOB'],
+              'tools/aura_closed_world_result_lifecycle_gate.py':os.environ['O62_SOURCE_BLOB'],
+              'tests/test_aura_closed_world_result_lifecycle_gate.py':os.environ['O62_TEST_BLOB'],
+          }
+          for path,blob in paths.items():
+              encoded=urllib.parse.quote(path,safe='/')
+              obj=get(f'contents/{encoded}?ref={convergence}')
+              assert obj['sha']==blob,(path,obj['sha'],blob)
+          head=os.environ.get('GITHUB_SHA')
+          for path,blob in (
+              ('tools/aura_bounded_proposal_capsule.py',os.environ['O63_SOURCE_BLOB']),
+              ('tools/aura_closed_world_result_lifecycle_gate.py',os.environ['O62_SOURCE_BLOB']),
+          ):
+              encoded=urllib.parse.quote(path,safe='/')
+              obj=get(f'contents/{encoded}?ref={head}')
+              assert obj['sha']==blob,(path,obj['sha'],blob)
+          print('Q20_TRUE_TWO_PARENT_CONVERGENCE=true')
+          print('Q20_PROOF_PLUMBING_API_BOUND=true')
+          PY
 
       - name: Revalidate exact O63 and O62 hosted proofs
         env:
