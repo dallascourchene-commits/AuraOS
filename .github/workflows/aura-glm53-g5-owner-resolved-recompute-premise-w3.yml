@@ -36,7 +36,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          python3 - <<'PY'
+          python3 -I - <<'PY'
           import json
           import os
           import urllib.request
