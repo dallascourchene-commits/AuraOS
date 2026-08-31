@@ -198,6 +198,13 @@ class TemporalHostObservationAdmissionTests(unittest.TestCase):
                     host_observations=supplied
                 )
 
+    def test_falsey_non_mapping_observations_are_rejected(self):
+        with local_owner():
+            with self.assertRaisesRegex(ValueError, "HOST_OBSERVATIONS_NOT_MAPPING"):
+                target.admit_temporal_host_observation_admission(
+                    host_observations=[]  # type: ignore[arg-type]
+                )
+
     def test_temporal_owner_failure_propagates(self):
         with local_owner(violations=["POST_NOT_CLOSED"]):
             with self.assertRaisesRegex(ValueError, "TEMPORAL_POST_NOT_CLOSED"):
