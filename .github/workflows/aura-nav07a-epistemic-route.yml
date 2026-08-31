@@ -1,0 +1,72 @@
+name: Aura NAV-07A Epistemic Route Classifier
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_nav_epistemic_route.py"
+      - "tests/test_aura_nav_epistemic_route.py"
+      - ".github/workflows/aura-nav07a-epistemic-route.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-epistemic-route-proof:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify exact source head
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="${{ github.event.pull_request.head.sha || github.sha }}"
+          actual="$(git rev-parse HEAD)"
+          test "$actual" = "$expected"
+
+      - name: Verify convergence parents remain in history
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor e253c57dfa95f7655fbb4f9c560102413c183d4e HEAD
+          git merge-base --is-ancestor b13ba81aa671693828e4fd97bd5b222db5d49d94 HEAD
+          git merge-base --is-ancestor 55ae020ae1c06501935a45f3ade45eeff532d905 HEAD
+
+      - name: Compile NAV-07A surface
+        run: python -m py_compile tools/aura_nav_epistemic_route.py tests/test_aura_nav_epistemic_route.py
+
+      - name: Run epistemic classifier adversarials
+        run: python -m unittest -v tests/test_aura_nav_epistemic_route.py
+
+      - name: Prove full finite state space and blocking-debt ordering
+        shell: bash
+        run: |
+          python - <<'PY'
+          from tools.aura_nav_epistemic_route import (
+              CurrentnessStatus, EpistemicState, ExternalRouteEvidence,
+              LocalityStatus, VersionStatus, exhaustive_projection_space,
+              prove_classifier_different_j,
+          )
+          count = 0
+          for evidence in exhaustive_projection_space():
+              prove_classifier_different_j(evidence)
+              count += 1
+          assert count == 8000
+          stale_underhydrated = ExternalRouteEvidence(
+              owner_ref="owner",
+              map_present=True,
+              locality=LocalityStatus.DISTINGUISHED,
+              version=VersionStatus.SELECTED_VERSION_CANDIDATE,
+              currentness=CurrentnessStatus.STALE,
+              available_hydration_level=0,
+              required_hydration_level=4,
+          )
+          receipt = prove_classifier_different_j(stale_underhydrated)
+          assert receipt.state is EpistemicState.STALE
+          print("NAV07A_EXHAUSTIVE_STATE_SPACE_OK", count)
+          print("NAV07A_STALE_BEFORE_HYDRATION_OK")
+          PY
