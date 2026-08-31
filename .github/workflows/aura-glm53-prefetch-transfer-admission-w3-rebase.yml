@@ -42,7 +42,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Prove cognition-preserving W3 merge and exact blobs
+      - name: Prove cognition-preserving W3 merge and exact historical blobs
         shell: bash
         run: |
           set -euo pipefail
@@ -59,9 +59,16 @@ jobs:
           test "$(git rev-parse "$G2_SOURCE_HEAD:tools/awj032/test_glm53_prefetch_transfer_admission.py")" = "$G2_TEST_BLOB"
           test "$(git rev-parse "$W4_HEAD:tools/awj032/glm53_io_feasibility.py")" = "$W4_SOURCE_BLOB"
           test "$(git rev-parse "$W4_HEAD:tools/awj032/test_glm53_io_feasibility.py")" = "$W4_TEST_BLOB"
-          test "$(git rev-parse HEAD:tools/awj032/glm53_router_separated_prefetch.py)" = "$G1_W3_SOURCE_BLOB"
+
+          # A downstream semantic child is allowed to extend the current G1 blob.
+          # Preserve the historical exact artifact at its pinned commit, then prove
+          # the live descendant still contains and reexecutes the W3 pager-result scar.
+          grep -q '_validate_loaded_pages' tools/awj032/glm53_router_separated_prefetch.py
+          grep -q 'PAGER_RESULT_BINDING_MISMATCH' tools/awj032/glm53_router_separated_prefetch.py
+          grep -q 'PAGER_RESULT_EXPERTS_MISMATCH' tools/awj032/glm53_router_separated_prefetch.py
           echo 'G2_COST_COGNITION_PRESERVED=true'
-          echo 'G1_W3_PAGER_RESULT_REPAIR_REBASED=true'
+          echo 'G1_W3_HISTORICAL_ARTIFACT_EXACT=true'
+          echo 'G1_W3_PAGER_RESULT_REPAIR_PRESERVED_IN_DESCENDANT=true'
 
       - name: Revalidate exact hosted repaired G1 job
         shell: bash
@@ -116,7 +123,8 @@ jobs:
           python - <<'PY'
           from tools.awj032.glm53_router_separated_prefetch import PREFETCH_SCHEMA, PrefetchPrediction
           from tools.awj032.glm53_prefetch_transfer_admission import (
-              CalibratedExpertForecast, PrefetchTransferPolicy, admit_prefetch_transfers,
+              CalibratedExpertForecast, PrefetchTransferPolicy, REUSE_APPLICABLE,
+              admit_prefetch_transfers,
           )
           prediction = PrefetchPrediction(
               schema=PREFETCH_SCHEMA,
@@ -142,6 +150,8 @@ jobs:
               num_experts=8,
           )
           assert receipt.admitted_experts == (3,)
+          assert receipt.cold_required_reuse_for_window is not None
+          assert receipt.cold_required_reuse_disposition == REUSE_APPLICABLE
           assert receipt.physical_io_attested is False
           assert receipt.transfer_effect_authorized is False
           assert receipt.g2_admitted is False
@@ -151,6 +161,7 @@ jobs:
       - name: Rebase consequence ceiling
         run: |
           echo 'LaterParentRepair!=DiscardDerivedCostCognition'
+          echo 'HistoricalExactBlob!=RequiredLiveDescendantBlobEquality'
           echo 'G1PagerResultBindingMustPrecedeTransferPlanTrust'
           echo 'CostEligiblePlan!=PagerTransferTruth!=EffectAuthority'
           echo 'PhysicalIOUnknownRemainsUnknown'
