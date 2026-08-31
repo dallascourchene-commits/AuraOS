@@ -1,0 +1,109 @@
+name: Aura O65-R Exact Conformance Reproof
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_authority_materialization_proposal_conformance.py'
+      - 'tests/test_aura_authority_materialization_proposal_conformance.py'
+      - '.github/workflows/aura-o65-r-exact-reproof.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  o65-r-exact-reproof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      REPO: dallascourchene-commits/AuraOS
+      SEMANTIC_HEAD: fff1e38f78c54c387c1131543ce332d115ad7f5c
+      SEMANTIC_SOURCE_BLOB: bdaa9b0338cdab05c48dc0337ab46522b40ac42f
+      SEMANTIC_TEST_BLOB: d71563cbfa3e0a29b86056fbd5ac27916e039624
+      Q20_HEAD: 8122131047477c65030af8a3dce97a7881a42c28
+      Q20_RUN: '33408333739'
+      Q20_JOB: '99541395341'
+      Q20_SOURCE_BLOB: 0aa60aadcc73522aa124e8a36628ff1bbbbbb0ac
+      Q20_TEST_BLOB: 8501a3e31704c2425527368915d10ee7f17eccdd
+      O64_HEAD: 860b6cb41774e31c1f1ba1942d2f5c91914af0c3
+      O64_RUN: '33408498622'
+      O64_JOB: '99541935417'
+      O64_SOURCE_BLOB: f4874e53b80987da8d3248778d64e419d676309e
+      O64_TEST_BLOB: b0e57c12c10c02d5fe40cc7275261c10694a4e31
+      PR_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+
+    steps:
+      - name: Fetch exact proof world in one non-shallow transaction
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir repo
+          cd repo
+          git init -q
+          git remote add origin "https://github.com/${REPO}.git"
+          git fetch -q --no-tags origin \
+            "${PR_HEAD}" "${SEMANTIC_HEAD}" "${Q20_HEAD}" "${O64_HEAD}"
+          git checkout -q --detach "${PR_HEAD}"
+          test "$(git rev-parse HEAD)" = "${PR_HEAD}"
+          test ! -f .git/shallow
+
+      - name: Authenticate immutable semantic and parent blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd repo
+          test "$(git rev-parse "${SEMANTIC_HEAD}:tools/aura_authority_materialization_proposal_conformance.py")" = "${SEMANTIC_SOURCE_BLOB}"
+          test "$(git rev-parse "${SEMANTIC_HEAD}:tests/test_aura_authority_materialization_proposal_conformance.py")" = "${SEMANTIC_TEST_BLOB}"
+          test "$(git rev-parse HEAD:tools/aura_authority_materialization_proposal_conformance.py)" = "${SEMANTIC_SOURCE_BLOB}"
+          test "$(git rev-parse HEAD:tests/test_aura_authority_materialization_proposal_conformance.py)" = "${SEMANTIC_TEST_BLOB}"
+          test "$(git rev-parse "${Q20_HEAD}:tools/quantization/aura_glm53_q20_materialization_bound_proposal.py")" = "${Q20_SOURCE_BLOB}"
+          test "$(git rev-parse "${Q20_HEAD}:tests/test_aura_glm53_q20_materialization_bound_proposal.py")" = "${Q20_TEST_BLOB}"
+          test "$(git rev-parse "${O64_HEAD}:tools/aura_authority_scoped_evidence_admission.py")" = "${O64_SOURCE_BLOB}"
+          test "$(git rev-parse "${O64_HEAD}:tests/test_aura_authority_scoped_evidence_admission.py")" = "${O64_TEST_BLOB}"
+
+      - name: Revalidate exact hosted parent runs and jobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['REPO']
+          headers={'Accept':'application/vnd.github+json','User-Agent':'AuraOS-O65R-reproof'}
+          expected=[
+              (os.environ['Q20_RUN'],os.environ['Q20_JOB'],os.environ['Q20_HEAD']),
+              (os.environ['O64_RUN'],os.environ['O64_JOB'],os.environ['O64_HEAD']),
+          ]
+          def get(url):
+              req=urllib.request.Request(url,headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: return json.load(r)
+          for run_id,job_id,head in expected:
+              run=get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}')
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['status']=='completed' and run['conclusion']=='success',run
+              jobs=get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs?per_page=100')['jobs']
+              job=next(j for j in jobs if str(j['id'])==job_id)
+              assert job['status']=='completed' and job['conclusion']=='success',job
+              print(f'parent_exact_green run={run_id} job={job_id} head={head}')
+          PY
+
+      - name: Run unchanged O65-R semantic surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd repo
+          python3 -m py_compile \
+            tools/aura_authority_materialization_proposal_conformance.py \
+            tests/test_aura_authority_materialization_proposal_conformance.py
+          python3 -m unittest discover -s tests -p 'test_aura_authority_materialization_proposal_conformance.py' -v
+          python3 tools/aura_authority_materialization_proposal_conformance.py > /tmp/o65-r-cli.json
+          python3 - <<'PY'
+          import json
+          body=json.load(open('/tmp/o65-r-cli.json',encoding='utf-8'))
+          assert body['schema']=='AURA-AUTHORITY-MATERIALIZATION-PROPOSAL-CONFORMANCE-v2'
+          claim=body['claim_ceiling']
+          assert claim['live_proposal_currentness_resolved'] is False
+          for key in ('execution_authorized','provider_effect_authorized','semantic_k27_authority','native_private_transformer_kv_accessed','gate10_promoted','merge_or_deployment_authorized'):
+              assert claim[key] is False,key
+          print('O65_R_EXACT_REPROOF_SEMANTICS_GREEN=true')
+          PY

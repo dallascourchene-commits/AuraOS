@@ -1,0 +1,179 @@
+name: Aura Q22 Immutable Head Reproof
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_materialization_support_lifecycle_lineage.py"
+      - "tools/aura_q22_materialization_support_lifecycle.py"
+      - "tools/aura_authority_materialization_proposal_conformance.py"
+      - "tools/aura_pre_attempt_lifecycle_lineage.py"
+      - "tests/test_aura_materialization_support_lifecycle_lineage.py"
+      - "tests/test_aura_q22_materialization_support_lifecycle.py"
+      - "tests/test_aura_authority_materialization_proposal_conformance.py"
+      - "tests/test_aura_pre_attempt_lifecycle_lineage.py"
+      - ".github/workflows/aura-q22-immutable-head-reproof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  immutable-head-reproof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact immutable event head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            EXPECTED="${{ github.event.pull_request.head.sha }}"
+          else
+            EXPECTED="${GITHUB_SHA}"
+          fi
+          git fetch --no-tags --depth=1 origin "${EXPECTED}"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${EXPECTED}"
+          echo "Q22_HEAD=${EXPECTED}" >> "$GITHUB_ENV"
+          echo "Q22_IMMUTABLE_HEAD_CHECKOUT=PASS"
+
+      - name: Prove true two-parent convergence remains in ancestry
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          head = os.environ["Q22_HEAD"]
+          convergence = "4646bb01fc0b13fccc433b31ac775c5131d0c727"
+          expected_parents = [
+              "361b01579ab2debc34f4b836c3ea605de635a8c3",
+              "e83d18126cae4e95abf679f74ee585e6a4025831",
+          ]
+
+          def get(path):
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/{path}",
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  return json.load(response)
+
+          commit = get(f"commits/{convergence}")
+          parents = [item["sha"] for item in commit["parents"]]
+          assert parents == expected_parents, (parents, expected_parents)
+          comp = get(f"compare/{convergence}...{head}")
+          assert comp["status"] in ("ahead", "identical"), comp["status"]
+          print("Q22_TRUE_TWO_PARENT_ANCESTRY=PASS")
+          PY
+
+      - name: Authenticate inherited semantic blobs
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/aura_authority_materialization_proposal_conformance.py)" = "bdaa9b0338cdab05c48dc0337ab46522b40ac42f"
+          test "$(git hash-object tests/test_aura_authority_materialization_proposal_conformance.py)" = "d71563cbfa3e0a29b86056fbd5ac27916e039624"
+          test "$(git hash-object tools/aura_pre_attempt_lifecycle_lineage.py)" = "9557192fc857a1fa05ef45803bddf863b44ddbe1"
+          test "$(git hash-object tests/test_aura_pre_attempt_lifecycle_lineage.py)" = "1eb25d6c4c57ec8722941fb9e984eb75d97c894f"
+
+      - name: Revalidate exact parent SUCCESS and live semantic blobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          proofs = (
+              (33411109838, 99550608648, "361b01579ab2debc34f4b836c3ea605de635a8c3"),
+              (33410723482, 99549322339, "e83d18126cae4e95abf679f74ee585e6a4025831"),
+          )
+          live_blobs = (
+              (708, "tools/aura_authority_materialization_proposal_conformance.py", "bdaa9b0338cdab05c48dc0337ab46522b40ac42f"),
+              (709, "tools/aura_pre_attempt_lifecycle_lineage.py", "9557192fc857a1fa05ef45803bddf863b44ddbe1"),
+          )
+
+          def get(path):
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/{path}",
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  return json.load(response)
+
+          for run_id, job_id, head in proofs:
+              run = get(f"actions/runs/{run_id}")
+              assert run["head_sha"] == head
+              assert run["status"] == "completed" and run["conclusion"] == "success"
+              jobs = get(f"actions/runs/{run_id}/jobs?per_page=100")["jobs"]
+              match = [job for job in jobs if job["id"] == job_id]
+              assert len(match) == 1
+              assert match[0]["status"] == "completed" and match[0]["conclusion"] == "success"
+
+          for pr, path, blob in live_blobs:
+              live = get(f"pulls/{pr}")["head"]["sha"]
+              encoded = urllib.parse.quote(path, safe="/")
+              meta = get(f"contents/{encoded}?ref={live}")
+              assert meta["sha"] == blob, (pr, live, meta["sha"], blob)
+              print(f"Q22_LIVE_PARENT_SEMANTIC_BLOB_STABLE pr={pr} live={live}")
+          print("Q22_PARENT_PROOFS_AND_LIVE_SEMANTICS=PASS")
+          PY
+
+      - name: Run complete parent and Q22 adversarial surfaces
+        run: |
+          set -euo pipefail
+          python3 -m unittest \
+            tests.test_aura_authority_materialization_proposal_conformance \
+            tests.test_aura_pre_attempt_lifecycle_lineage \
+            tests.test_aura_materialization_support_lifecycle_lineage \
+            tests.test_aura_q22_materialization_support_lifecycle
+
+      - name: Compile and enforce Q22 nonpromotion receipt
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_authority_materialization_proposal_conformance.py \
+            tools/aura_pre_attempt_lifecycle_lineage.py \
+            tools/aura_materialization_support_lifecycle_lineage.py \
+            tools/aura_q22_materialization_support_lifecycle.py
+          python3 -m tools.aura_q22_materialization_support_lifecycle > /tmp/q22.json
+          python3 - <<'PY'
+          import json, os
+          with open("/tmp/q22.json", "r", encoding="utf-8") as f:
+              receipt = json.load(f)
+          assert receipt["schema"] == "AURA-MATERIALIZATION-SUPPORT-LIFECYCLE-LINEAGE-v1"
+          assert receipt["bounded_support_associated_with_lineage"] is True
+          for key in (
+              "support_live_currentness_revalidated_for_lineage",
+              "support_fresh_at_pre_attempt_proven",
+              "support_fresh_at_effect_boundary_proven",
+              "support_caused_execution",
+              "execution_authorized",
+              "execution_lease_minted",
+              "provider_effect_authorized",
+              "semantic_k27_authority",
+              "native_private_transformer_kv_accessed",
+              "gate10_promoted",
+              "merge_deploy_spend_public_financial_human_effect_authorized",
+          ):
+              assert receipt[key] is False, (key, receipt[key])
+          assert receipt["base_proposal_basis_digest"] != receipt["materialization_bound_proposal_basis_digest"]
+          print("Q22_IMMUTABLE_REPROOF=PASS")
+          print("Q22_HEAD=" + os.environ["Q22_HEAD"])
+          print("Q22_RECEIPT_DIGEST=" + receipt["receipt_digest"])
+          PY
