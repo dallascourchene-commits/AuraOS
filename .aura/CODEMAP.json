@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788207460,
+  "generated_at_unix": 1788208185,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1643,
+    "repo_file_count": 1646,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -137,6 +137,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-retrieval-progress-guard.yml",
+      ".github/workflows/aura-retrieval-progress-k27-alias-guard.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1545,6 +1546,7 @@
       "tests/test_aura_relationship_contracts.py",
       "tests/test_aura_research_cockpit_adapter.py",
       "tests/test_aura_retrieval_progress_guard.py",
+      "tests/test_aura_retrieval_progress_k27_alias_guard.py",
       "tests/test_aura_review_arena.py",
       "tests/test_aura_review_arena_mcp.py",
       "tests/test_aura_review_learning_mcp_codex.py",
@@ -1635,6 +1637,7 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/aura_retrieval_progress_guard.py",
+      "tools/aura_retrieval_progress_k27_alias_guard.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1759,16 +1762,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1643,
-      "bytes": 26434113,
-      "tokens_est": 6598880,
+      "files": 1646,
+      "bytes": 26476968,
+      "tokens_est": 6609595,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 999,
-        "schema_or_lexicon": 272,
+        "python_module": 1001,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -3899,6 +3902,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 57,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_canonical:6813525dae8fd835",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -4341,6 +4352,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 74,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_digest:65eb8c52c526aeb9",
+        "signature_hash": "5880d7b3614e1b56"
       }
     ],
     "_token_proxy": [
@@ -14657,6 +14676,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 67,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_text:ebe6db08f9c2870c",
+        "signature_hash": "0f196e838c2631a3"
       }
     ],
     "_bounded": [
@@ -15787,6 +15814,14 @@
         "end_line": 162,
         "semantic_id": "aura_arena_state_packet.py#function:_hash:a45b3759164d8cd0",
         "signature_hash": "96a25c63c8c0337f"
+      },
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 61,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_hash:9ca3528143544fd0",
+        "signature_hash": "81bd5095c20ff612"
       }
     ],
     "ArenaExperienceLedger": [
@@ -46657,6 +46692,14 @@
         "end_line": 301,
         "semantic_id": "tests/test_aura_unified_memory_continuity.py#function:_receipt:d3ae73715f72c220",
         "signature_hash": "e3dc9e7f8b7c4d5c"
+      },
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 305,
+        "end_line": 377,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_receipt:cbbf18b041ce7f3e",
+        "signature_hash": "5b026f0eedde8ece"
       }
     ],
     "prepare_spatial_action_certificate_v2": [
@@ -149107,6 +149150,226 @@
         "signature_hash": "96b6fb9dce7307b0"
       }
     ],
+    "d": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#function:d:5d236f801a0c5a23",
+        "signature_hash": "07dd712cf2093d2a"
+      }
+    ],
+    "view": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 47,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#function:view:d7192c44aeb553c0",
+        "signature_hash": "43d0c42cfecb0325"
+      }
+    ],
+    "session_view": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 57,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#function:session_view:869f494de173b5c7",
+        "signature_hash": "1af32a61ef08d993"
+      }
+    ],
+    "fp": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 68,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#function:fp:2bb50466bdf17fac",
+        "signature_hash": "80ae6346361480e9"
+      }
+    ],
+    "obs": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 71,
+        "end_line": 83,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#function:obs:166557bc4110ebdd",
+        "signature_hash": "ba53bd4e60e7b4a7"
+      }
+    ],
+    "alias": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 86,
+        "end_line": 97,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#function:alias:5ce72c93ebb0281f",
+        "signature_hash": "8796622b0596e808"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "class",
+        "line": 100,
+        "end_line": 307,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#class:RetrievalProgressK27AliasGuardTests:e07575ca83d0efbb",
+        "signature_hash": "992e1ee9ea50958a"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_initial_semantic_source_retrieval_allowed_nonpromoting": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 116,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_initial_semantic_source_retrieval_allowed_nonpromoting:3bd70cc5353a76d6",
+        "signature_hash": "67bd22360736daef"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_identical_view_preserves_base_no_progress_law": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 131,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_identical_view_preserves_base_no_progress_law:c89ee707d2bbca8b",
+        "signature_hash": "4314792baa7bafb3"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_scheme_change_same_sid_without_owner_alias_holds": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 144,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_scheme_change_same_sid_without_owner_alias_holds:1034a1d2c19d2427",
+        "signature_hash": "a1af3abdaa656b14"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_verified_alias_quotients_false_changed_axis": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 156,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_verified_alias_quotients_false_changed_axis:6af254172221a49b",
+        "signature_hash": "e81597fdd6c6ebe3"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_two_scheme_ping_pong_cannot_reset_no_progress_debt": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 170,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_two_scheme_ping_pong_cannot_reset_no_progress_debt:d646102e3b53005a",
+        "signature_hash": "3395cd710bd114d9"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_provider_or_evidence_change_is_real_state_transition_across_alias": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 172,
+        "end_line": 182,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_provider_or_evidence_change_is_real_state_transition_across_alias:8423a68b63fc1bee",
+        "signature_hash": "5afc498bffd3f663"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_real_tool_or_query_change_remains_changed_axis_across_alias": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 184,
+        "end_line": 193,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_real_tool_or_query_change_remains_changed_axis_across_alias:0adf459aefaac60e",
+        "signature_hash": "b8ef80db2e2f5c89"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_different_sid_is_semantic_resource_change_without_alias": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 195,
+        "end_line": 208,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_different_sid_is_semantic_resource_change_without_alias:cd717e42dbcd9f7e",
+        "signature_hash": "5f3dfc071db05ee1"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_normalization_change_same_sid_is_route_recompute_not_progress": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 210,
+        "end_line": 218,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_normalization_change_same_sid_is_route_recompute_not_progress:c06a7146978f9c60",
+        "signature_hash": "35ea3b3906744c55"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_same_xyz_different_full_digest_never_merges_sources": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 220,
+        "end_line": 234,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_same_xyz_different_full_digest_never_merges_sources:8f53d8bc77fce09f",
+        "signature_hash": "df8d5001915a973c"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_alias_view_or_sid_forgery_rejected": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 236,
+        "end_line": 249,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_alias_view_or_sid_forgery_rejected:60b2322cba861037",
+        "signature_hash": "bb996d1106114e43"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_stale_alias_projection_rejected": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 251,
+        "end_line": 257,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_stale_alias_projection_rejected:0a15cf44c402d85d",
+        "signature_hash": "285c0a19eaa4ccb4"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_route_resource_must_bind_exact_view_digest": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 259,
+        "end_line": 269,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_route_resource_must_bind_exact_view_digest:bec5df33b9372292",
+        "signature_hash": "a858a04144927923"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_view_and_alias_authority_widening_rejected": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 271,
+        "end_line": 295,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_view_and_alias_authority_widening_rejected:26a67a6f6e435a2e",
+        "signature_hash": "144dbffb27e84195"
+      }
+    ],
+    "RetrievalProgressK27AliasGuardTests.test_receipt_identity_deterministic_and_alias_bearing": [
+      {
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 297,
+        "end_line": 307,
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_receipt_identity_deterministic_and_alias_bearing:df552052e474debe",
+        "signature_hash": "abaf96dedfb6c283"
+      }
+    ],
     "_commit": [
       {
         "file": "tests/test_aura_review_arena.py",
@@ -150051,6 +150314,14 @@
         "end_line": 27,
         "semantic_id": "tests/test_aura_shadow_tool_observability.py#function:_decision:54ec1730b687141b",
         "signature_hash": "5a7f6afd4061ff16"
+      },
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 278,
+        "end_line": 279,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_decision:5a83972293340e51",
+        "signature_hash": "e4c7474b727e0654"
       }
     ],
     "test_wrapper_forwards_only_original_tool_arguments": [
@@ -157465,6 +157736,156 @@
         "signature_hash": "545054efddc8fb30"
       }
     ],
+    "AliasAwareDecision": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "class",
+        "line": 41,
+        "end_line": 47,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#class:AliasAwareDecision:fc36111cbe015f8f",
+        "signature_hash": "de75dfabf1c62f63"
+      }
+    ],
+    "_xyz": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 82,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_xyz:64ab8dac03bafa3e",
+        "signature_hash": "3a7bed0bb6f4803c"
+      }
+    ],
+    "SchemeBoundCoordinateViewProjection": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "class",
+        "line": 86,
+        "end_line": 151,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#class:SchemeBoundCoordinateViewProjection:d8fb18fadf4929ec",
+        "signature_hash": "d9bac5e326af4473"
+      }
+    ],
+    "SchemeBoundCoordinateViewProjection.validate": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 142,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#method:SchemeBoundCoordinateViewProjection.validate:5f20f992587a8b3e",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SchemeBoundCoordinateViewProjection.view_digest": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 147,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#method:SchemeBoundCoordinateViewProjection.view_digest:c7f2b194f1319ca4",
+        "signature_hash": "231ebb34713f1823"
+      }
+    ],
+    "SchemeBoundCoordinateViewProjection.resource_token": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 151,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#method:SchemeBoundCoordinateViewProjection.resource_token:06816041c8e195c5",
+        "signature_hash": "fda731fa50f283ec"
+      }
+    ],
+    "ProjectionAliasOwnerProjection": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "class",
+        "line": 155,
+        "end_line": 213,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#class:ProjectionAliasOwnerProjection:66df226a1a3cfe9e",
+        "signature_hash": "d68f82c831c0e978"
+      }
+    ],
+    "ProjectionAliasOwnerProjection.validate": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 208,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#method:ProjectionAliasOwnerProjection.validate:6afb3468537875ba",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ProjectionAliasOwnerProjection.projection_digest": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 211,
+        "end_line": 213,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#method:ProjectionAliasOwnerProjection.projection_digest:b63839cb9fbec2da",
+        "signature_hash": "adbbf6f578ff20ea"
+      }
+    ],
+    "AliasAwareRetrievalProgressReceipt": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "class",
+        "line": 217,
+        "end_line": 268,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#class:AliasAwareRetrievalProgressReceipt:891d3530c60732f6",
+        "signature_hash": "1278bb8230584265"
+      }
+    ],
+    "AliasAwareRetrievalProgressReceipt.validate_claim_ceiling": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "method",
+        "line": 243,
+        "end_line": 268,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#method:AliasAwareRetrievalProgressReceipt.validate_claim_ceiling:718400a15e8b1ad5",
+        "signature_hash": "d379bda2928aaff4"
+      }
+    ],
+    "_semantic_fingerprint": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 271,
+        "end_line": 275,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_semantic_fingerprint:27fb5f51e7ce3078",
+        "signature_hash": "37561f7f10284f8c"
+      }
+    ],
+    "_validate_route_binding": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 282,
+        "end_line": 289,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_validate_route_binding:98e0a9b1bc8dc3f0",
+        "signature_hash": "0c4a29667bcb7f7f"
+      }
+    ],
+    "_alias_matches": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 292,
+        "end_line": 302,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_alias_matches:aa36377cfa5be829",
+        "signature_hash": "8c526b99209314cf"
+      }
+    ],
+    "assess_k27_alias_aware_retrieval_progress": [
+      {
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "kind": "function",
+        "line": 380,
+        "end_line": 483,
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:assess_k27_alias_aware_retrieval_progress:bb68eb3774aecda1",
+        "signature_hash": "093e80803c585600"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158869,6 +159290,13 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-retrieval-progress-k27-alias-guard.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/aura-retrieval-progress-k27-alias-guard.yml"
+    ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
     ],
@@ -159431,9 +159859,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -168068,6 +168493,63 @@
         0.087919,
         0.014434,
         -0.087919
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-retrieval-progress-k27-alias-guard.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 9478,
+      "lines": 199,
+      "tokens_est": 2370,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          83
+        ],
+        "python3 -m unittest": [
+          88
+        ]
+      },
+      "topology": {},
+      "digest8": "8ccb6637f4a7cd74",
+      "vector": [
+        -0.191485,
+        0.00122,
+        0.059763,
+        0.079277,
+        -0.025613,
+        0.237832,
+        -0.267103,
+        0.184167,
+        0.096352,
+        -0.071959,
+        0.169531,
+        -0.193924,
+        0.220757,
+        0.298814,
+        -0.13782,
+        -0.228075,
+        -0.308571,
+        0.084156,
+        -0.10367,
+        -0.159774,
+        0.184167,
+        -0.215878,
+        0.006098,
+        -0.176849,
+        0.059763,
+        -0.301254,
+        0.2793,
+        0.108549,
+        -0.020734,
+        -0.235392,
+        -0.101231,
+        0.023173
       ]
     },
     {
@@ -258890,6 +259372,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13371,
+      "lines": 312,
+      "tokens_est": 3343,
+      "symbol_count": 22,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8998b6ae4e849d12",
+      "vector": [
+        -0.103172,
+        -0.022778,
+        0.092453,
+        -0.062975,
+        -0.116571,
+        0.167488,
+        -0.317556,
+        0.207685,
+        -0.234483,
+        -0.258601,
+        0.242522,
+        -0.009379,
+        -0.239842,
+        0.186246,
+        -0.036177,
+        -0.231803,
+        0.26664,
+        -0.103172,
+        -0.188926,
+        -0.036177,
+        0.036177,
+        -0.022778,
+        0.079054,
+        -0.26396,
+        -0.044217,
+        0.239842,
+        0.285399,
+        0.041537,
+        0.089773,
+        0.280039,
+        0.079054,
+        -0.175527
+      ]
+    },
+    {
       "path": "tests/test_aura_review_arena.py",
       "role": "python_module",
       "binary": false,
@@ -263117,6 +263646,53 @@
         0.085575,
         0.044596,
         -0.044596
+      ]
+    },
+    {
+      "path": "tools/aura_retrieval_progress_k27_alias_guard.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 20006,
+      "lines": 499,
+      "tokens_est": 5002,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "02dc9421afdc9e19",
+      "vector": [
+        -0.118127,
+        0.129823,
+        0.008187,
+        0.164911,
+        -0.122806,
+        -0.211694,
+        0.232746,
+        0.029239,
+        0.047953,
+        0.008187,
+        0.00117,
+        0.00117,
+        -0.104092,
+        -0.160232,
+        0.291225,
+        -0.13918,
+        -0.214033,
+        0.188302,
+        -0.281868,
+        -0.115788,
+        -0.286547,
+        -0.087718,
+        0.122806,
+        0.036257,
+        -0.005848,
+        -0.13918,
+        -0.263155,
+        -0.281868,
+        -0.298243,
+        -0.267834,
+        0.22339,
+        0.157893
       ]
     },
     {
@@ -287118,16 +287694,16 @@
     }
   },
   "summary": {
-    "file_count": 1643,
-    "total_bytes": 26434113,
-    "text_tokens_est": 6598880,
+    "file_count": 1646,
+    "total_bytes": 26476968,
+    "text_tokens_est": 6609595,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 999,
-      "schema_or_lexicon": 272,
+      "python_module": 1001,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -287274,6 +287850,7 @@
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-retrieval-progress-guard.yml",
+      ".github/workflows/aura-retrieval-progress-k27-alias-guard.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -288682,6 +289259,7 @@
       "tests/test_aura_relationship_contracts.py",
       "tests/test_aura_research_cockpit_adapter.py",
       "tests/test_aura_retrieval_progress_guard.py",
+      "tests/test_aura_retrieval_progress_k27_alias_guard.py",
       "tests/test_aura_review_arena.py",
       "tests/test_aura_review_arena_mcp.py",
       "tests/test_aura_review_learning_mcp_codex.py",
@@ -288772,6 +289350,7 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/aura_retrieval_progress_guard.py",
+      "tools/aura_retrieval_progress_k27_alias_guard.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -437320,6 +437899,226 @@
         "file_digest8": "a35105d16a5ddc77"
       },
       {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#class:RetrievalProgressK27AliasGuardTests:e07575ca83d0efbb",
+        "name": "RetrievalProgressK27AliasGuardTests",
+        "kind": "class",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 100,
+        "end_line": 307,
+        "signature_hash": "992e1ee9ea50958a",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#function:alias:5ce72c93ebb0281f",
+        "name": "alias",
+        "kind": "function",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 86,
+        "end_line": 97,
+        "signature_hash": "8796622b0596e808",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#function:d:5d236f801a0c5a23",
+        "name": "d",
+        "kind": "function",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "07dd712cf2093d2a",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#function:fp:2bb50466bdf17fac",
+        "name": "fp",
+        "kind": "function",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 60,
+        "end_line": 68,
+        "signature_hash": "80ae6346361480e9",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#function:obs:166557bc4110ebdd",
+        "name": "obs",
+        "kind": "function",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 71,
+        "end_line": 83,
+        "signature_hash": "ba53bd4e60e7b4a7",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#function:session_view:869f494de173b5c7",
+        "name": "session_view",
+        "kind": "function",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 50,
+        "end_line": 57,
+        "signature_hash": "1af32a61ef08d993",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#function:view:d7192c44aeb553c0",
+        "name": "view",
+        "kind": "function",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 25,
+        "end_line": 47,
+        "signature_hash": "43d0c42cfecb0325",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_alias_view_or_sid_forgery_rejected:60b2322cba861037",
+        "name": "RetrievalProgressK27AliasGuardTests.test_alias_view_or_sid_forgery_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 236,
+        "end_line": 249,
+        "signature_hash": "bb996d1106114e43",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_different_sid_is_semantic_resource_change_without_alias:cd717e42dbcd9f7e",
+        "name": "RetrievalProgressK27AliasGuardTests.test_different_sid_is_semantic_resource_change_without_alias",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 195,
+        "end_line": 208,
+        "signature_hash": "5f3dfc071db05ee1",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_identical_view_preserves_base_no_progress_law:c89ee707d2bbca8b",
+        "name": "RetrievalProgressK27AliasGuardTests.test_identical_view_preserves_base_no_progress_law",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 118,
+        "end_line": 131,
+        "signature_hash": "4314792baa7bafb3",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_initial_semantic_source_retrieval_allowed_nonpromoting:3bd70cc5353a76d6",
+        "name": "RetrievalProgressK27AliasGuardTests.test_initial_semantic_source_retrieval_allowed_nonpromoting",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 101,
+        "end_line": 116,
+        "signature_hash": "67bd22360736daef",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_normalization_change_same_sid_is_route_recompute_not_progress:c06a7146978f9c60",
+        "name": "RetrievalProgressK27AliasGuardTests.test_normalization_change_same_sid_is_route_recompute_not_progress",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 210,
+        "end_line": 218,
+        "signature_hash": "35ea3b3906744c55",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_provider_or_evidence_change_is_real_state_transition_across_alias:8423a68b63fc1bee",
+        "name": "RetrievalProgressK27AliasGuardTests.test_provider_or_evidence_change_is_real_state_transition_across_alias",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 172,
+        "end_line": 182,
+        "signature_hash": "5afc498bffd3f663",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_real_tool_or_query_change_remains_changed_axis_across_alias:0adf459aefaac60e",
+        "name": "RetrievalProgressK27AliasGuardTests.test_real_tool_or_query_change_remains_changed_axis_across_alias",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 184,
+        "end_line": 193,
+        "signature_hash": "b8ef80db2e2f5c89",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_receipt_identity_deterministic_and_alias_bearing:df552052e474debe",
+        "name": "RetrievalProgressK27AliasGuardTests.test_receipt_identity_deterministic_and_alias_bearing",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 297,
+        "end_line": 307,
+        "signature_hash": "abaf96dedfb6c283",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_route_resource_must_bind_exact_view_digest:bec5df33b9372292",
+        "name": "RetrievalProgressK27AliasGuardTests.test_route_resource_must_bind_exact_view_digest",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 259,
+        "end_line": 269,
+        "signature_hash": "a858a04144927923",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_same_xyz_different_full_digest_never_merges_sources:8f53d8bc77fce09f",
+        "name": "RetrievalProgressK27AliasGuardTests.test_same_xyz_different_full_digest_never_merges_sources",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 220,
+        "end_line": 234,
+        "signature_hash": "df8d5001915a973c",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_scheme_change_same_sid_without_owner_alias_holds:1034a1d2c19d2427",
+        "name": "RetrievalProgressK27AliasGuardTests.test_scheme_change_same_sid_without_owner_alias_holds",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 133,
+        "end_line": 144,
+        "signature_hash": "a1af3abdaa656b14",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_stale_alias_projection_rejected:0a15cf44c402d85d",
+        "name": "RetrievalProgressK27AliasGuardTests.test_stale_alias_projection_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 251,
+        "end_line": 257,
+        "signature_hash": "285c0a19eaa4ccb4",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_two_scheme_ping_pong_cannot_reset_no_progress_debt:d646102e3b53005a",
+        "name": "RetrievalProgressK27AliasGuardTests.test_two_scheme_ping_pong_cannot_reset_no_progress_debt",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 158,
+        "end_line": 170,
+        "signature_hash": "3395cd710bd114d9",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_verified_alias_quotients_false_changed_axis:6af254172221a49b",
+        "name": "RetrievalProgressK27AliasGuardTests.test_verified_alias_quotients_false_changed_axis",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 146,
+        "end_line": 156,
+        "signature_hash": "e81597fdd6c6ebe3",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
+        "semantic_id": "tests/test_aura_retrieval_progress_k27_alias_guard.py#method:RetrievalProgressK27AliasGuardTests.test_view_and_alias_authority_widening_rejected:26a67a6f6e435a2e",
+        "name": "RetrievalProgressK27AliasGuardTests.test_view_and_alias_authority_widening_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_retrieval_progress_k27_alias_guard.py",
+        "line": 271,
+        "end_line": 295,
+        "signature_hash": "144dbffb27e84195",
+        "file_digest8": "8998b6ae4e849d12"
+      },
+      {
         "semantic_id": "tests/test_aura_review_arena.py#function:_commit:eaf51295dfeaa12c",
         "name": "_commit",
         "kind": "function",
@@ -446390,6 +447189,216 @@
         "file_digest8": "f847ef311f2bcc69"
       },
       {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#class:AliasAwareDecision:fc36111cbe015f8f",
+        "name": "AliasAwareDecision",
+        "kind": "class",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 41,
+        "end_line": 47,
+        "signature_hash": "de75dfabf1c62f63",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#class:AliasAwareRetrievalProgressReceipt:891d3530c60732f6",
+        "name": "AliasAwareRetrievalProgressReceipt",
+        "kind": "class",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 217,
+        "end_line": 268,
+        "signature_hash": "1278bb8230584265",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#class:ProjectionAliasOwnerProjection:66df226a1a3cfe9e",
+        "name": "ProjectionAliasOwnerProjection",
+        "kind": "class",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 155,
+        "end_line": 213,
+        "signature_hash": "d68f82c831c0e978",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#class:SchemeBoundCoordinateViewProjection:d8fb18fadf4929ec",
+        "name": "SchemeBoundCoordinateViewProjection",
+        "kind": "class",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 86,
+        "end_line": 151,
+        "signature_hash": "d9bac5e326af4473",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_alias_matches:aa36377cfa5be829",
+        "name": "_alias_matches",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 292,
+        "end_line": 302,
+        "signature_hash": "8c526b99209314cf",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_canonical:6813525dae8fd835",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 50,
+        "end_line": 57,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_decision:5a83972293340e51",
+        "name": "_decision",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 278,
+        "end_line": 279,
+        "signature_hash": "e4c7474b727e0654",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_digest:65eb8c52c526aeb9",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 70,
+        "end_line": 74,
+        "signature_hash": "5880d7b3614e1b56",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_hash:9ca3528143544fd0",
+        "name": "_hash",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 60,
+        "end_line": 61,
+        "signature_hash": "81bd5095c20ff612",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_receipt:cbbf18b041ce7f3e",
+        "name": "_receipt",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 305,
+        "end_line": 377,
+        "signature_hash": "5b026f0eedde8ece",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_semantic_fingerprint:27fb5f51e7ce3078",
+        "name": "_semantic_fingerprint",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 271,
+        "end_line": 275,
+        "signature_hash": "37561f7f10284f8c",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_text:ebe6db08f9c2870c",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 64,
+        "end_line": 67,
+        "signature_hash": "0f196e838c2631a3",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_validate_route_binding:98e0a9b1bc8dc3f0",
+        "name": "_validate_route_binding",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 282,
+        "end_line": 289,
+        "signature_hash": "0c4a29667bcb7f7f",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:_xyz:64ab8dac03bafa3e",
+        "name": "_xyz",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 77,
+        "end_line": 82,
+        "signature_hash": "3a7bed0bb6f4803c",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#function:assess_k27_alias_aware_retrieval_progress:bb68eb3774aecda1",
+        "name": "assess_k27_alias_aware_retrieval_progress",
+        "kind": "function",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 380,
+        "end_line": 483,
+        "signature_hash": "093e80803c585600",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#method:AliasAwareRetrievalProgressReceipt.validate_claim_ceiling:718400a15e8b1ad5",
+        "name": "AliasAwareRetrievalProgressReceipt.validate_claim_ceiling",
+        "kind": "method",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 243,
+        "end_line": 268,
+        "signature_hash": "d379bda2928aaff4",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#method:ProjectionAliasOwnerProjection.projection_digest:b63839cb9fbec2da",
+        "name": "ProjectionAliasOwnerProjection.projection_digest",
+        "kind": "method",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 211,
+        "end_line": 213,
+        "signature_hash": "adbbf6f578ff20ea",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#method:ProjectionAliasOwnerProjection.validate:6afb3468537875ba",
+        "name": "ProjectionAliasOwnerProjection.validate",
+        "kind": "method",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 178,
+        "end_line": 208,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#method:SchemeBoundCoordinateViewProjection.resource_token:06816041c8e195c5",
+        "name": "SchemeBoundCoordinateViewProjection.resource_token",
+        "kind": "method",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 150,
+        "end_line": 151,
+        "signature_hash": "fda731fa50f283ec",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#method:SchemeBoundCoordinateViewProjection.validate:5f20f992587a8b3e",
+        "name": "SchemeBoundCoordinateViewProjection.validate",
+        "kind": "method",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 112,
+        "end_line": 142,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
+        "semantic_id": "tools/aura_retrieval_progress_k27_alias_guard.py#method:SchemeBoundCoordinateViewProjection.view_digest:c7f2b194f1319ca4",
+        "name": "SchemeBoundCoordinateViewProjection.view_digest",
+        "kind": "method",
+        "file": "tools/aura_retrieval_progress_k27_alias_guard.py",
+        "line": 145,
+        "end_line": 147,
+        "signature_hash": "231ebb34713f1823",
+        "file_digest8": "02dc9421afdc9e19"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -447640,7 +448649,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "5406d8e4fae156cc3b875637949b6e1a",
-    "payload_hash": "bee5220405b9f397800a0494457cc2ef"
+    "record_fingerprint": "3c52b7a04fd97d5ad5a192f0de7da0f2",
+    "payload_hash": "80ff24abc936c8ff507a24c51aa5ef63"
   }
 }
