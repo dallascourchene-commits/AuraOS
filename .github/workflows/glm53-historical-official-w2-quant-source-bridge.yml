@@ -1,0 +1,122 @@
+name: GLM53 Historical Official W2 Quant Source Bridge
+
+on:
+  pull_request:
+    paths:
+      - tools/quantization/aura_glm53_historical_official_w2_bridge.py
+      - tests/test_aura_glm53_historical_official_w2_bridge.py
+      - .github/workflows/glm53-historical-official-w2-quant-source-bridge.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q6-historical-official-w2-bridge:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact child head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact PR639 x PR398 convergence and green parent executions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence='aad6d73426d8a8b3c5c8e875177ee83508c723b9'
+          q5='730426b82235b0ff4e75fef1cff00707877a84ad'
+          w2='131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8'
+          parents=subprocess.check_output(['git','rev-list','--parents','-n','1',convergence], text=True).strip().split()
+          assert parents == [convergence, q5, w2], parents
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          for run_id, head in ((33369967425,q5),(33336508527,w2)):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}', headers=headers)
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  run=json.load(response)
+              assert run['head_sha']==head, (run_id,run['head_sha'],head)
+              assert run['conclusion']=='success', (run_id,run['conclusion'])
+          req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/33336508527/jobs', headers=headers)
+          with urllib.request.urlopen(req, timeout=30) as response:
+              jobs=json.load(response)['jobs']
+          exact=[j for j in jobs if j['id']==99324255699]
+          assert len(exact)==1 and exact[0]['conclusion']=='success', exact
+          steps={s['name']:s['conclusion'] for s in exact[0]['steps']}
+          assert steps['Observe official GLM-5.3 header evidence without payload']=='success', steps
+          print('Q6_EXACT_TWO_PARENT_GREEN=true')
+          print('PR398_OFFICIAL_ZERO_PAYLOAD_OBSERVATION_STEP_SUCCESS=true')
+          PY
+
+      - name: Compile and re-run PR639 plus Q6 adversarial suites
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_official_source_admission.py \
+            tools/quantization/aura_glm53_historical_official_w2_bridge.py \
+            tests/test_aura_glm53_official_source_admission.py \
+            tests/test_aura_glm53_historical_official_w2_bridge.py
+          python3 -m unittest -v \
+            tests.test_aura_glm53_official_source_admission \
+            tests.test_aura_glm53_historical_official_w2_bridge
+
+      - name: Emit bridge receipt and enforce historical-vs-current boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 tools/quantization/aura_glm53_historical_official_w2_bridge.py > /tmp/q6.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q6.json'))
+          assert r['parent_heads']==[
+            '730426b82235b0ff4e75fef1cff00707877a84ad',
+            '131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8']
+          assert r['parent_runs']==[33369967425,33336508527]
+          assert r['producer_job']==99324255699
+          assert r['producer_receipt_digest']=='736f0a117eb02c486736e7224c4e0f5363ae60b9'
+          assert r['producer_header_sha256']=='8607b1b281f5ca8c7b166376e8f6d7eb9ca07f79200f6095f0f55ca35149ba56'
+          assert r['historical_raw_index_verification_observed'] is True
+          assert r['historical_weight_map_relation_observed'] is True
+          assert r['historical_representative_headers_observed'] is True
+          assert r['historical_fp8_companions_bound'] is True
+          assert r['historical_payload_bytes_read']==0
+          assert r['current_pr639_schema_header_geometry_conforms'] is True
+          assert r['representative_per_expert_serialization_proven'] is True
+          for key in (
+            'all_layers_experts_uniformity_proven',
+            'current_consumer_raw_index_bytes_materialized',
+            'current_consumer_raw_header_prefixes_materialized',
+            'current_pr639_raw_byte_header_trial_eligible',
+            'source_tensor_payload_bound',
+            'real_tensor_quantization_eligible',
+            'semantic_k27_authority',
+            'native_transformer_kv_accessed',
+            'gate10_promoted'):
+              assert r[key] is False, key
+          print('Q6_HISTORICAL_OFFICIAL_W2_EVIDENCE_BOUND=true')
+          print('Q6_CURRENT_RAW_BYTE_ADMISSION_STILL_HOLD=true')
+          PY
+
+      - name: Consequence ceiling
+        run: |
+          cat <<'EOF'
+          PR398_HISTORICAL_OFFICIAL_HEADER_OBSERVATION_BOUND=true
+          PR639_CURRENT_RAW_BYTE_ADMISSION_STILL_HOLD=true
+          REPRESENTATIVE_LAYER3_EXPERT0_PER_EXPERT_SERIALIZATION_PROVEN=true
+          ALL_LAYERS_EXPERTS_UNIFORMITY_PROVEN=false
+          CURRENT_CONSUMER_RAW_BYTES_MATERIALIZED=false
+          SOURCE_TENSOR_PAYLOAD_BOUND=false
+          REAL_TENSOR_QUANTIZATION_ELIGIBLE=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTED=false
+          EOF
