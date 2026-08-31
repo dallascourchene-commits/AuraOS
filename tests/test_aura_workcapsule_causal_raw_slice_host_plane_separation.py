@@ -63,6 +63,7 @@ class CausalRawSliceHostPlaneSeparationTests(unittest.TestCase):
         self.assertTrue(out["causal_temporal_owner_reproved"])
         self.assertTrue(out["pre_reentry_receipt_reused_for_post_o10"])
         self.assertFalse(out["fresh_post_reentry_receipt_substituted"])
+        self.assertTrue(out["raw_slice_span_within_full_source"])
         self.assertEqual(set(out["host_gate_states"].values()), {"UNKNOWN"})
         self.assertEqual(out["host_disposition"], "HOST_OBSERVATION_REQUIRED")
         self.assertFalse(out["raw_slice_promoted_to_host_rank"])
@@ -115,6 +116,17 @@ class CausalRawSliceHostPlaneSeparationTests(unittest.TestCase):
                 raw_slice_receipt=raw_slice(producer_authenticated=True)
             ),
         )
+
+    def test_transported_span_cannot_exceed_full_source(self):
+        violations = target.verify_causal_raw_slice_host_plane_separation(
+            raw_slice_receipt=raw_slice(
+                full_source_byte_len=12,
+                target_byte_start=7,
+                target_byte_end=13,
+                target_slice_byte_len=6,
+            )
+        )
+        self.assertEqual(["RAW_SLICE_SPAN_EXCEEDS_FULL_SOURCE"], violations)
 
     def test_public_boundary_has_no_rank_or_lifecycle_intermediate_escape_hatch(self):
         params = inspect.signature(target.admit_causal_raw_slice_host_plane_separation).parameters
