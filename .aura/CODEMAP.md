@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1655
-- **total_bytes**: 26528010
-- **text_tokens_est**: 6622356
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 273, 'support_file': 56}
+- **file_count**: 1657
+- **total_bytes**: 26542848
+- **text_tokens_est**: 6626066
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 274, 'support_file': 56}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1655,
+  "repo_file_count": 1657,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -154,6 +154,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-dimensional-history-directory.yml",
     ".github/workflows/aura-external-knowledge-ingress.yml",
     ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
     ".github/workflows/aura-review-learning.yml",
@@ -1471,6 +1472,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_continuity_packet_merge_gate.py",
     "tests/test_aura_crucible_phase_b.py",
     "tests/test_aura_dikwp_router_pipeline.py",
+    "tests/test_aura_dimensional_history_directory.py",
     "tests/test_aura_efficiency_benchmark.py",
     "tests/test_aura_emergent_agent_bridge.py",
     "tests/test_aura_emergent_agent_bridge_mcp.py",
@@ -1795,16 +1797,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1655,
-  "bytes": 26528010,
-  "tokens_est": 6622356,
+  "files": 1657,
+  "bytes": 26542848,
+  "tokens_est": 6626066,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1003,
-    "schema_or_lexicon": 273,
+    "python_module": 1004,
+    "schema_or_lexicon": 274,
     "support_file": 56
   }
 }

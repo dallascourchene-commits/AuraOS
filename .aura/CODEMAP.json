@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788198124,
+  "generated_at_unix": 1788198232,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1655,
+    "repo_file_count": 1657,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-dimensional-history-directory.yml",
       ".github/workflows/aura-external-knowledge-ingress.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-review-learning.yml",
@@ -1453,6 +1454,7 @@
       "tests/test_aura_continuity_packet_merge_gate.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
+      "tests/test_aura_dimensional_history_directory.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_agent_bridge.py",
       "tests/test_aura_emergent_agent_bridge_mcp.py",
@@ -1771,16 +1773,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1655,
-      "bytes": 26528010,
-      "tokens_est": 6622356,
+      "files": 1657,
+      "bytes": 26542848,
+      "tokens_est": 6626066,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1003,
-        "schema_or_lexicon": 273,
+        "python_module": 1004,
+        "schema_or_lexicon": 274,
         "support_file": 56
       }
     },
@@ -116791,6 +116793,14 @@
         "end_line": 35,
         "semantic_id": "tests/test_aura_architecture_harness_git_tree_routing.py#function:binding:7d52be074af4d521",
         "signature_hash": "97c87ea61d7fe441"
+      },
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 79,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#function:binding:64bf9eedb65c06bc",
+        "signature_hash": "4897afaabba010f3"
       }
     ],
     "blob": [
@@ -130005,6 +130015,156 @@
         "end_line": 98,
         "semantic_id": "tests/test_aura_dikwp_router_pipeline.py#function:test_future_parent_and_non_proposal_wisdom_are_rejected:90a50235f2910564",
         "signature_hash": "94a018118917474f"
+      }
+    ],
+    "h": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#function:h:b637dabd68d33466",
+        "signature_hash": "ad123cb640a00f07"
+      }
+    ],
+    "row": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 67,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#function:row:ff57c8e561d64830",
+        "signature_hash": "a074d0244bc3fbdc"
+      }
+    ],
+    "entry": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 104,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#function:entry:dc8a19970249c357",
+        "signature_hash": "d1a1232f08d8e07b"
+      }
+    ],
+    "DimensionalHistoryDirectoryTests": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "class",
+        "line": 107,
+        "end_line": 290,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#class:DimensionalHistoryDirectoryTests:1a5c46f57c7b6ef4",
+        "signature_hash": "6b00ccdba0a349ae"
+      }
+    ],
+    "DimensionalHistoryDirectoryTests.test_two_clocks_reconstruct_what_was_available_without_rewriting_history": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 141,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_two_clocks_reconstruct_what_was_available_without_rewriting_history:d03fe044802567ef",
+        "signature_hash": "ea5a649cd4f4e17a"
+      }
+    ],
+    "DimensionalHistoryDirectoryTests.test_time_order_without_explicit_supersession_does_not_choose_a_winner": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 153,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_time_order_without_explicit_supersession_does_not_choose_a_winner:f08bb3422b3f3ffb",
+        "signature_hash": "8cbc29711ca39ddc"
+      }
+    ],
+    "DimensionalHistoryDirectoryTests.test_hydration_z_axis_returns_only_requested_cone": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 166,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_hydration_z_axis_returns_only_requested_cone:0163f6559e401279",
+        "signature_hash": "e1a3a81c04ff6502"
+      }
+    ],
+    "DimensionalHistoryDirectoryTests.test_l4_may_expose_archive_handle_without_truth_or_kv_promotion": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "method",
+        "line": 168,
+        "end_line": 191,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_l4_may_expose_archive_handle_without_truth_or_kv_promotion:e384f84307f368d9",
+        "signature_hash": "a9d2a5cdbb71a5a2"
+      }
+    ],
+    "DimensionalHistoryDirectoryTests.test_cross_domain_x_edges_are_links_not_authority_bleed": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 214,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_cross_domain_x_edges_are_links_not_authority_bleed:6012ce628668c872",
+        "signature_hash": "4be9ecf6a1560eac"
+      }
+    ],
+    "DimensionalHistoryDirectoryTests.test_same_k27_placement_cannot_merge_distinct_stable_subjects": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "method",
+        "line": 216,
+        "end_line": 233,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_same_k27_placement_cannot_merge_distinct_stable_subjects:c5e16005d0ec2b9d",
+        "signature_hash": "6d9e34de96ff17c2"
+      }
+    ],
+    "DimensionalHistoryDirectoryTests.test_subject_record_relation_cannot_be_inferred_from_time_similarity_or_k27": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "method",
+        "line": 235,
+        "end_line": 241,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_subject_record_relation_cannot_be_inferred_from_time_similarity_or_k27:53222b80cc0d59b1",
+        "signature_hash": "30bc91f7ade76edd"
+      }
+    ],
+    "DimensionalHistoryDirectoryTests.test_binding_record_identity_cross_cast_rejects": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "method",
+        "line": 243,
+        "end_line": 253,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_binding_record_identity_cross_cast_rejects:95fabd876c26fec1",
+        "signature_hash": "3198c67ba62dcfbe"
+      }
+    ],
+    "DimensionalHistoryDirectoryTests.test_persisted_current_label_never_becomes_timeline_truth": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "method",
+        "line": 255,
+        "end_line": 265,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_persisted_current_label_never_becomes_timeline_truth:d2b585d4b7d5c192",
+        "signature_hash": "26ba5d0bfa0e95c7"
+      }
+    ],
+    "DimensionalHistoryDirectoryTests.test_scale_is_independent_metadata_not_record_identity": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "method",
+        "line": 267,
+        "end_line": 278,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_scale_is_independent_metadata_not_record_identity:03d7edddfaf5b6a3",
+        "signature_hash": "b5ee3a4663197bbc"
+      }
+    ],
+    "DimensionalHistoryDirectoryTests.test_supersession_cannot_cross_stable_subject": [
+      {
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "kind": "method",
+        "line": 280,
+        "end_line": 290,
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_supersession_cannot_cross_stable_subject:53df2ae5151b3720",
+        "signature_hash": "d9c78d7f50105d32"
       }
     ],
     "test_default_suite_loads": [
@@ -159914,6 +160074,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-dimensional-history-directory.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -160208,6 +160369,11 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python -m unittest": [
+      ".github/workflows/aura-dimensional-history-directory.yml",
+      ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
     "python3 -m py_compile": [
       ".github/workflows/aura-external-knowledge-ingress.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
@@ -160217,10 +160383,6 @@
     ],
     "python3 -m tools.aura_external_knowledge_ingress": [
       ".github/workflows/aura-external-knowledge-ingress.yml"
-    ],
-    "python -m unittest": [
-      ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
@@ -169368,6 +169530,65 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-dimensional-history-directory.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3206,
+      "lines": 70,
+      "tokens_est": 802,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          38,
+          50
+        ],
+        "python -m unittest": [
+          39,
+          51
+        ]
+      },
+      "topology": {},
+      "digest8": "a21aaec071f3131f",
+      "vector": [
+        -0.14298,
+        0.126706,
+        -0.068584,
+        -0.196452,
+        0.075559,
+        -0.140655,
+        0.131356,
+        0.049985,
+        -0.040685,
+        0.068584,
+        0.084858,
+        -0.249924,
+        0.268523,
+        -0.045335,
+        -0.261549,
+        -0.091833,
+        0.224351,
+        -0.287122,
+        0.040685,
+        -0.191802,
+        -0.161579,
+        0.296422,
+        -0.04301,
+        -0.14298,
+        -0.294097,
+        -0.263874,
+        0.166229,
+        -0.04766,
+        0.191802,
+        0.194127,
+        0.280148,
+        -0.03836
       ]
     },
     {
@@ -255937,6 +256158,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_dimensional_history_directory.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11632,
+      "lines": 295,
+      "tokens_est": 2908,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "79df1339918fffc0",
+      "vector": [
+        0.166474,
+        0.168802,
+        0.189757,
+        -0.040745,
+        0.287545,
+        -0.084983,
+        0.292202,
+        -0.126893,
+        -0.168802,
+        -0.182772,
+        0.043074,
+        0.252621,
+        -0.08964,
+        -0.161817,
+        0.275904,
+        -0.224681,
+        -0.15716,
+        0.098953,
+        0.140862,
+        0.19907,
+        0.068685,
+        -0.166474,
+        0.168802,
+        -0.022119,
+        0.115251,
+        -0.108266,
+        -0.296859,
+        0.252621,
+        -0.136206,
+        0.124564,
+        -0.238651,
+        -0.054715
+      ]
+    },
+    {
       "path": "tests/test_aura_efficiency_benchmark.py",
       "role": "python_module",
       "binary": false,
@@ -289053,16 +289321,16 @@
     }
   },
   "summary": {
-    "file_count": 1655,
-    "total_bytes": 26528010,
-    "text_tokens_est": 6622356,
+    "file_count": 1657,
+    "total_bytes": 26542848,
+    "text_tokens_est": 6626066,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1003,
-      "schema_or_lexicon": 273,
+      "python_module": 1004,
+      "schema_or_lexicon": 274,
       "support_file": 56
     },
     "topology_nodes": 11478,
@@ -289208,6 +289476,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-dimensional-history-directory.yml",
       ".github/workflows/aura-external-knowledge-ingress.yml",
       ".github/workflows/aura-external-knowledge-store-writer-v1.yml",
       ".github/workflows/aura-review-learning.yml",
@@ -290525,6 +290794,7 @@
       "tests/test_aura_continuity_packet_merge_gate.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
+      "tests/test_aura_dimensional_history_directory.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_agent_bridge.py",
       "tests/test_aura_emergent_agent_bridge_mcp.py",
@@ -419447,6 +419717,166 @@
         "file_digest8": "9555cd63aedd6df1"
       },
       {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#class:DimensionalHistoryDirectoryTests:1a5c46f57c7b6ef4",
+        "name": "DimensionalHistoryDirectoryTests",
+        "kind": "class",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 107,
+        "end_line": 290,
+        "signature_hash": "6b00ccdba0a349ae",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#function:binding:64bf9eedb65c06bc",
+        "name": "binding",
+        "kind": "function",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 70,
+        "end_line": 79,
+        "signature_hash": "4897afaabba010f3",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#function:entry:dc8a19970249c357",
+        "name": "entry",
+        "kind": "function",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 82,
+        "end_line": 104,
+        "signature_hash": "d1a1232f08d8e07b",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#function:h:b637dabd68d33466",
+        "name": "h",
+        "kind": "function",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "ad123cb640a00f07",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#function:row:ff57c8e561d64830",
+        "name": "row",
+        "kind": "function",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 26,
+        "end_line": 67,
+        "signature_hash": "a074d0244bc3fbdc",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_binding_record_identity_cross_cast_rejects:95fabd876c26fec1",
+        "name": "DimensionalHistoryDirectoryTests.test_binding_record_identity_cross_cast_rejects",
+        "kind": "method",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 243,
+        "end_line": 253,
+        "signature_hash": "3198c67ba62dcfbe",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_cross_domain_x_edges_are_links_not_authority_bleed:6012ce628668c872",
+        "name": "DimensionalHistoryDirectoryTests.test_cross_domain_x_edges_are_links_not_authority_bleed",
+        "kind": "method",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 193,
+        "end_line": 214,
+        "signature_hash": "4be9ecf6a1560eac",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_hydration_z_axis_returns_only_requested_cone:0163f6559e401279",
+        "name": "DimensionalHistoryDirectoryTests.test_hydration_z_axis_returns_only_requested_cone",
+        "kind": "method",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 155,
+        "end_line": 166,
+        "signature_hash": "e1a3a81c04ff6502",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_l4_may_expose_archive_handle_without_truth_or_kv_promotion:e384f84307f368d9",
+        "name": "DimensionalHistoryDirectoryTests.test_l4_may_expose_archive_handle_without_truth_or_kv_promotion",
+        "kind": "method",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 168,
+        "end_line": 191,
+        "signature_hash": "a9d2a5cdbb71a5a2",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_persisted_current_label_never_becomes_timeline_truth:d2b585d4b7d5c192",
+        "name": "DimensionalHistoryDirectoryTests.test_persisted_current_label_never_becomes_timeline_truth",
+        "kind": "method",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 255,
+        "end_line": 265,
+        "signature_hash": "26ba5d0bfa0e95c7",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_same_k27_placement_cannot_merge_distinct_stable_subjects:c5e16005d0ec2b9d",
+        "name": "DimensionalHistoryDirectoryTests.test_same_k27_placement_cannot_merge_distinct_stable_subjects",
+        "kind": "method",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 216,
+        "end_line": 233,
+        "signature_hash": "6d9e34de96ff17c2",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_scale_is_independent_metadata_not_record_identity:03d7edddfaf5b6a3",
+        "name": "DimensionalHistoryDirectoryTests.test_scale_is_independent_metadata_not_record_identity",
+        "kind": "method",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 267,
+        "end_line": 278,
+        "signature_hash": "b5ee3a4663197bbc",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_subject_record_relation_cannot_be_inferred_from_time_similarity_or_k27:53222b80cc0d59b1",
+        "name": "DimensionalHistoryDirectoryTests.test_subject_record_relation_cannot_be_inferred_from_time_similarity_or_k27",
+        "kind": "method",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 235,
+        "end_line": 241,
+        "signature_hash": "30bc91f7ade76edd",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_supersession_cannot_cross_stable_subject:53df2ae5151b3720",
+        "name": "DimensionalHistoryDirectoryTests.test_supersession_cannot_cross_stable_subject",
+        "kind": "method",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 280,
+        "end_line": 290,
+        "signature_hash": "d9c78d7f50105d32",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_time_order_without_explicit_supersession_does_not_choose_a_winner:f08bb3422b3f3ffb",
+        "name": "DimensionalHistoryDirectoryTests.test_time_order_without_explicit_supersession_does_not_choose_a_winner",
+        "kind": "method",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 143,
+        "end_line": 153,
+        "signature_hash": "8cbc29711ca39ddc",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
+        "semantic_id": "tests/test_aura_dimensional_history_directory.py#method:DimensionalHistoryDirectoryTests.test_two_clocks_reconstruct_what_was_available_without_rewriting_history:d03fe044802567ef",
+        "name": "DimensionalHistoryDirectoryTests.test_two_clocks_reconstruct_what_was_available_without_rewriting_history",
+        "kind": "method",
+        "file": "tests/test_aura_dimensional_history_directory.py",
+        "line": 108,
+        "end_line": 141,
+        "signature_hash": "ea5a649cd4f4e17a",
+        "file_digest8": "79df1339918fffc0"
+      },
+      {
         "semantic_id": "tests/test_aura_efficiency_benchmark.py#function:test_aura_full_mode_includes_grounding_metadata:36ad280e7568cec0",
         "name": "test_aura_full_mode_includes_grounding_metadata",
         "kind": "function",
@@ -450937,7 +451367,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "138fb4bdc9487fadf3b21b211191a947",
-    "payload_hash": "e859e2de12876e4cf2fd0858c034da6f"
+    "record_fingerprint": "789fbe66f2251f6e60a07c46e1566eeb",
+    "payload_hash": "1ba532d7545a86bd71d410f88254f3a8"
   }
 }
