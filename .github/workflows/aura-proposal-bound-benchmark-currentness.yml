@@ -1,0 +1,133 @@
+name: Aura Proposal-Bound Benchmark Currentness
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_proposal_bound_benchmark_currentness.py"
+      - "tests/test_aura_proposal_bound_benchmark_currentness.py"
+      - "tools/aura_bounded_proposal_capsule.py"
+      - "tests/test_aura_bounded_proposal_capsule.py"
+      - "tools/benchmarks/aura_benchmark_score_admission.py"
+      - "tests/test_aura_benchmark_score_admission.py"
+      - ".github/workflows/aura-proposal-bound-benchmark-currentness.yml"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: aura-proposal-bound-benchmark-currentness-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+  SCORE_OWNER_MODULE_BLOB: "0ad4ddb154644c1b177622f6147069618a4539f2"
+  SCORE_OWNER_TEST_BLOB: "d2e8bb518464970ad7054d9a681500c333bbbe72"
+  SCORE_OWNER_PROOF_RUN: "33410040172"
+  O63_MODULE_BLOB: "11ac9fd37aede4902b3c1029eddcbad96a828f45"
+  O63_TEST_BLOB: "fb349a904ddb7f99d9e215a3f9d4210881a7a397"
+  O63_PROOF_RUN: "33407842585"
+  W3_SOURCE_BLOB: "b556cf635cbc064702c1f7c273c9d29eb599f46c"
+  W3_TEST_BLOB: "6ecf4393f975814ef2959b4fccc79c3d8baea2f1"
+
+jobs:
+  proposal-bound-benchmark-currentness:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Exact authenticated checkout without mutable actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags origin "$TARGET_SHA"
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Authenticate exact owner and W3 surfaces
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/benchmarks/aura_benchmark_score_admission.py)" = "$SCORE_OWNER_MODULE_BLOB"
+          test "$(git hash-object tests/test_aura_benchmark_score_admission.py)" = "$SCORE_OWNER_TEST_BLOB"
+          test "$(git hash-object tools/aura_bounded_proposal_capsule.py)" = "$O63_MODULE_BLOB"
+          test "$(git hash-object tests/test_aura_bounded_proposal_capsule.py)" = "$O63_TEST_BLOB"
+          test "$(git hash-object tools/aura_proposal_bound_benchmark_currentness.py)" = "$W3_SOURCE_BLOB"
+          test "$(git hash-object tests/test_aura_proposal_bound_benchmark_currentness.py)" = "$W3_TEST_BLOB"
+
+      - name: Revalidate exact upstream hosted proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'}
+          for run_id in (int(os.environ['SCORE_OWNER_PROOF_RUN']), int(os.environ['O63_PROOF_RUN'])):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: run=json.load(r)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+          print('PROPOSAL_BOUND_BENCHMARK_PARENT_PROOFS_GREEN=true')
+          PY
+
+      - name: Install focused dependency
+        run: python3 -m pip install "pytest>=8,<9"
+
+      - name: Compile and run owner plus relation adversarial suites
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/benchmarks/aura_benchmark_score_admission.py \
+            tools/aura_bounded_proposal_capsule.py \
+            tools/aura_proposal_bound_benchmark_currentness.py \
+            tests/test_aura_benchmark_score_admission.py \
+            tests/test_aura_bounded_proposal_capsule.py \
+            tests/test_aura_proposal_bound_benchmark_currentness.py
+          python3 -m pytest -q \
+            tests/test_aura_benchmark_score_admission.py \
+            tests/test_aura_bounded_proposal_capsule.py \
+            tests/test_aura_proposal_bound_benchmark_currentness.py
+
+      - name: Independently prove trusted relevance and historical immutability
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from tests.test_aura_proposal_bound_benchmark_currentness import benchmark_policy, benchmark_receipt, capsule_and_resolver
+          from tools.aura_proposal_bound_benchmark_currentness import evaluate_proposal_bound_benchmark_currentness
+          policy=benchmark_policy()
+          bound=benchmark_receipt()
+          capsule,resolver=capsule_and_resolver(receipt=bound,policy=policy)
+          current=evaluate_proposal_bound_benchmark_currentness(
+              benchmark_receipt=bound,benchmark_policy=policy,proposal_capsule=capsule,proposal_owner_resolver=resolver,
+              retrieval_k27_coordinate=(12,17,22))
+          unrelated=benchmark_receipt(task_id='unrelated-task',task_input_digest='6'*64)
+          rejected=evaluate_proposal_bound_benchmark_currentness(
+              benchmark_receipt=unrelated,benchmark_policy=policy,proposal_capsule=capsule,proposal_owner_resolver=resolver,
+              retrieval_k27_coordinate=(3,19,7))
+          assert current.current_use_admissible is True
+          assert current.benchmark_use_binding_matches is True
+          assert rejected.historical_score_admitted is True
+          assert rejected.benchmark_score_identity == unrelated.score_identity
+          assert rejected.current_use_admissible is False
+          assert rejected.benchmark_use_binding_matches is False
+          assert current.score_credit_delta == rejected.score_credit_delta == 0
+          assert current.execution_authorized is rejected.execution_authorized is False
+          assert current.provider_effect_authorized is rejected.provider_effect_authorized is False
+          assert current.semantic_k27_authority is rejected.semantic_k27_authority is False
+          print('TRUSTED_BENCHMARK_USE_BINDING_REQUIRED=true')
+          print('UNRELATED_SCORE_CURRENT_USE_DENIED=true')
+          print('HISTORICAL_SCORE_REWRITTEN=false')
+          PY
+
+      - name: Consequence ceiling
+        run: |
+          echo 'HistoricalBenchmarkEvidence != CurrentUseAdmissibility'
+          echo 'AdmittedHistoricalScore + CurrentProposal != ProposalRelevantCurrentEvidenceUntil TrustedUseBinding'
+          echo 'UseBindingInvalidationDoesNotRewriteHistoricalScore'
+          echo 'K27Coordinate != BenchmarkUseBinding != ProposalCurrentness != Authority'
+          echo 'No provider/model execution, native/private KV access, Gate-10, merge/deploy/spend/public/human effect is granted.'
