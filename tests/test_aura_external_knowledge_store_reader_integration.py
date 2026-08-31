@@ -4,6 +4,7 @@ from dataclasses import replace
 import importlib.util
 import os
 from pathlib import Path
+import sys
 import unittest
 
 from tools import aura_external_knowledge_ingress as eki1
@@ -21,7 +22,15 @@ def _load_pr728_reader():
     if spec is None or spec.loader is None:
         raise AssertionError("unable to load exact PR728 reader module")
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    # Python 3.12 dataclasses resolves annotation/module state through sys.modules
+    # while the class decorator runs. Register the exact foreign module before
+    # exec_module, matching normal import semantics without modifying PR728 code.
+    sys.modules[spec.name] = module
+    try:
+        spec.loader.exec_module(module)
+    except Exception:
+        sys.modules.pop(spec.name, None)
+        raise
     return module
 
 
