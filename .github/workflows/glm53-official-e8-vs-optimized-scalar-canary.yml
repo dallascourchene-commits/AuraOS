@@ -51,8 +51,7 @@ jobs:
           print('Q14_EXACT_HOSTED_GREEN=true')
           PY
           AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$Q14_SHA"
-          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$Q6_SEMANTIC_SHA"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$Q14_SHA" "$Q6_SEMANTIC_SHA"
           test "$(git ls-tree "$Q14_SHA" tools/quantization/aura_glm53_official_source_e8_materialization_canary.py | awk '{print $3}')" = "$Q14_SOURCE_BLOB"
           test "$(git ls-tree "$Q6_SEMANTIC_SHA" tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py | awk '{print $3}')" = "$Q6_SOURCE_BLOB"
           test "$(git hash-object tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py)" = "$Q6_SOURCE_BLOB"
