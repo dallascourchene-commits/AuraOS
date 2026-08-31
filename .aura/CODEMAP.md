@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1648
-- **total_bytes**: 26478256
-- **text_tokens_est**: 6609918
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1659
+- **total_bytes**: 26577096
+- **text_tokens_est**: 6634634
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1012, 'schema_or_lexicon': 276, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1648,
+  "repo_file_count": 1659,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -155,6 +155,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
     ".github/workflows/aura-dual-key-evidence-generation.yml",
+    ".github/workflows/aura-execution-qualified-portable-evidence-admission.yml",
+    ".github/workflows/aura-fresh-portable-semantic-evidence-admission.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-semantic-generation-freshness.yml",
     ".github/workflows/aura-semantic-sibling-admission.yml",
@@ -1487,11 +1489,14 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_event_contracts.py",
     "tests/test_aura_event_privacy_hardening.py",
     "tests/test_aura_exact_head_transport.py",
+    "tests/test_aura_execution_aware_hyperscale_admission.py",
+    "tests/test_aura_execution_qualified_portable_evidence_admission.py",
     "tests/test_aura_external_llm_session.py",
     "tests/test_aura_fetch_construction_demo_source.py",
     "tests/test_aura_financial_contracts.py",
     "tests/test_aura_financial_contracts_regressions.py",
     "tests/test_aura_forge.py",
+    "tests/test_aura_fresh_portable_semantic_evidence_admission.py",
     "tests/test_aura_fst_provenance.py",
     "tests/test_aura_gate.py",
     "tests/test_aura_gate_adapters.py",
@@ -1655,7 +1660,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/arena_portable_semantic_evidence_transfer.py",
+    "tools/arena_workflow_execution_evidence.py",
     "tools/aura_dual_key_evidence_generation.py",
+    "tools/aura_execution_aware_hyperscale_admission.py",
+    "tools/aura_execution_qualified_portable_evidence_admission.py",
+    "tools/aura_fresh_portable_semantic_evidence_admission.py",
+    "tools/aura_hyperscale_work_admission.py",
     "tools/aura_semantic_generation_freshness.py",
     "tools/aura_semantic_sibling_admission.py",
     "tools/construction_demo_assets/README.md",
@@ -1788,16 +1799,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1648,
-  "bytes": 26478256,
-  "tokens_est": 6609918,
+  "files": 1659,
+  "bytes": 26577096,
+  "tokens_est": 6634634,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1003,
-    "schema_or_lexicon": 274,
+    "python_module": 1012,
+    "schema_or_lexicon": 276,
     "support_file": 49
   }
 }
