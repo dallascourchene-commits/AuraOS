@@ -1,0 +1,112 @@
+name: K27 ASTGE Post-Edit Canonical Definition Target
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - "crates/aura-k27-astge-ingest/**"
+      - "crates/aura-k27-astge-materialize/**"
+      - "crates/aura-k27-astge-scope/**"
+      - "crates/aura-k27-astge-source-review/**"
+      - "crates/aura-k27-astge-scopes/**"
+      - "crates/aura-k27-astge-scope-review/**"
+      - "crates/aura-k27-astge-generation-domain/**"
+      - "crates/aura-k27-astge-typed-source-review/**"
+      - "crates/aura-k27-astge-typed-nested-scope-review/**"
+      - "crates/aura-k27-astge-canonical-scope-review/**"
+      - "crates/aura-k27-astge-profiled-scopes/**"
+      - "crates/aura-k27-astge-current-profiled-scopes/**"
+      - "crates/aura-k27-astge-post-edit-profiled-scope/**"
+      - "crates/aura-k27-astge-post-edit-canonical-scope/**"
+      - "tools/k27_astge_python_scope_oracle.py"
+      - ".github/workflows/k27-astge-post-edit-canonical-definition-target.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  post-edit-canonical-definition-target:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR508 canonical owner-target relation
+        run: |
+          cargo fmt --check --manifest-path crates/aura-k27-astge-canonical-scope-review/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-canonical-scope-review/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-canonical-scope-review/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-canonical-scope-review/Cargo.toml --all-targets -- -D warnings
+          python3 tools/k27_astge_python_scope_oracle.py
+
+      - name: Re-prove PR515 post-edit currentness
+        run: |
+          cargo fmt --check --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-post-edit-profiled-scope/Cargo.toml --all-targets -- -D warnings
+          python3 tools/k27_astge_python_scope_oracle.py
+
+      - name: Verify post-edit canonical definition-target composition
+        run: |
+          cargo fmt --check --manifest-path crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-post-edit-canonical-scope/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify public consequence boundary
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('crates/aura-k27-astge-post-edit-canonical-scope/src/lib.rs').read_text()
+          assert 'binding.target_scope_id == selected.scope_id' in text
+          assert 'binding.owner_scope_id != selected_parent_scope_id' in text
+          assert 'scope == selected' in text
+          assert 'local_scope_id_is_semantic_identity: false' in text
+          print('POST_EDIT_CURRENT_SCOPE_IS_CANONICAL_DEFINITION_TARGET=true')
+          print('BINDING_OWNER_IS_SELECTED_PARENT=true')
+          print('LOCAL_SCOPE_ID_IS_SEMANTIC_IDENTITY=false')
+          PY
+
+      - name: Safe-path unsafe scan
+        run: |
+          if grep -R --line-number -E 'unsafe\s*\{' \
+            crates/aura-k27-astge-canonical-scope-review/src \
+            crates/aura-k27-astge-post-edit-profiled-scope/src \
+            crates/aura-k27-astge-post-edit-canonical-scope/src; then
+            echo 'unsafe block found in post-edit canonical scope safe path' >&2
+            exit 1
+          fi
+
+      - name: Emit claim ceiling
+        run: |
+          echo 'POST_EDIT_PROFILED_SCOPE_CURRENT=true'
+          echo 'POST_EDIT_CANONICAL_DEFINITION_TARGET_CURRENT=true'
+          echo 'SELECTED_CURRENT_SCOPE_IS_BINDING_TARGET=true'
+          echo 'BINDING_OWNER_IS_SELECTED_PARENT=true'
+          echo 'LOCAL_SCOPE_ID_IS_SEMANTIC_IDENTITY=false'
+          echo 'SOURCE_GENERATION_TYPED=true'
+          echo 'INCREMENTAL_PARSER_REUSE_USED=false'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'SEMANTIC_PATCH_CORRECTNESS_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
+          echo 'EXTERNAL_EFFECT=false'
