@@ -2,7 +2,7 @@ use aura_k27_astge::{NodeIndexRecordV1, PageRow, PhysicalPageV1, BLOCK_SIZE};
 use aura_k27_astge_mmap::{publish_generation, MappedGenerationV1};
 use std::fs;
 use std::io::ErrorKind;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 fn temp_root(label: &str) -> PathBuf {
@@ -16,6 +16,21 @@ fn temp_root(label: &str) -> PathBuf {
     ));
     fs::create_dir(&path).unwrap();
     path
+}
+
+#[cfg(unix)]
+fn make_owner_writable(path: &Path) {
+    use std::os::unix::fs::PermissionsExt;
+    let mut permissions = fs::metadata(path).unwrap().permissions();
+    permissions.set_mode(0o600);
+    fs::set_permissions(path, permissions).unwrap();
+}
+
+#[cfg(not(unix))]
+fn make_owner_writable(path: &Path) {
+    let mut permissions = fs::metadata(path).unwrap().permissions();
+    permissions.set_readonly(false);
+    fs::set_permissions(path, permissions).unwrap();
 }
 
 fn digest(byte: u8) -> [u8; 32] {
@@ -139,9 +154,7 @@ fn tampered_generation_is_rejected_before_mapping() {
     let pages_path = root.join("gen-00000000000000000003/pages.bin");
     let mut bytes = fs::read(&pages_path).unwrap();
     bytes[100] ^= 0x5A;
-    let mut permissions = fs::metadata(&pages_path).unwrap().permissions();
-    permissions.set_readonly(false);
-    fs::set_permissions(&pages_path, permissions).unwrap();
+    make_owner_writable(&pages_path);
     fs::write(&pages_path, bytes).unwrap();
     let error = MappedGenerationV1::open_current(&root).err().unwrap();
     assert_eq!(ErrorKind::InvalidData, error.kind());
