@@ -56,6 +56,14 @@ jobs:
           test "$(git show "$Q5:tools/quantization/aura_glm53_official_source_admission.py" | git hash-object --stdin)" = "$BLOB"
           echo "Q5_EXACT_PRODUCER_MATERIALIZED=true"
 
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          check-latest: false
+
+      - name: Install exact Q6 numeric dependency
+        run: python3 -m pip install --disable-pip-version-check numpy==2.3.5
+
       - name: Compile and run Q6 plus Q7 adversarial suites
         shell: bash
         run: |
