@@ -1,0 +1,53 @@
+name: AWJ032 GLM53 Owner Host C2 Handoff
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  handoff-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Prove exact checked-out head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${GITHUB_SHA}"
+          python3 -m py_compile tools/awj032/glm53_owner_host_c2_handoff.py
+          python3 -m unittest -v tools.awj032.test_glm53_owner_host_c2_handoff
+      - name: Assert nonpromotion ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from tools.awj032.glm53_owner_host_c2_handoff import (
+              OwnerHostC2CanaryRequest,
+              OwnerHostC2CanaryReceipt,
+              OwnerHostC2JoinReceipt,
+              join_owner_host_c2_attempt,
+          )
+          assert OwnerHostC2CanaryRequest.__dataclass_fields__["execution_authorized_by_this_contract"].default is False
+          assert OwnerHostC2CanaryRequest.__dataclass_fields__["g2_admitted"].default is False
+          assert OwnerHostC2CanaryReceipt.__dataclass_fields__["producer_authenticated_by_this_contract"].default is False
+          assert OwnerHostC2CanaryReceipt.__dataclass_fields__["effect_authority_proven"].default is False
+          assert OwnerHostC2CanaryReceipt.__dataclass_fields__["g2_admitted"].default is False
+          assert OwnerHostC2JoinReceipt.__dataclass_fields__["producer_authentication_required"].default is True
+          assert OwnerHostC2JoinReceipt.__dataclass_fields__["lifecycle_registry_required"].default is True
+          assert OwnerHostC2JoinReceipt.__dataclass_fields__["full_model_runtime_proven"].default is False
+          assert OwnerHostC2JoinReceipt.__dataclass_fields__["g2_admitted"].default is False
+          params = set(inspect.signature(join_owner_host_c2_attempt).parameters)
+          assert params == {"request", "receipt"}
+          print("OWNER_HOST_C2_HANDOFF_CONTRACT_PROVEN=true")
+          print("OWNER_HOST_EFFECT_EXECUTED=false")
+          print("PRODUCER_AUTHENTICATED=false")
+          print("FULL_MODEL_RUNTIME_PROVEN=false")
+          print("G2_ADMITTED=false")
+          PY
