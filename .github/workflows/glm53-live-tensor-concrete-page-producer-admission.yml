@@ -95,10 +95,13 @@ jobs:
           import json
 
           r = json.load(open("/tmp/q9.json", encoding="utf-8"))
+          assert r["schema"] == "AURA_GLM53_LIVE_TENSOR_CONCRETE_PAGE_PRODUCER_ADMISSION_V2"
           assert r["disposition"] == "HOLD_LIVE_OFFICIAL_TENSOR_TO_CONCRETE_PAGE_PRODUCER"
           assert r["historical_representative_header_schema_qualified"] is True
           assert r["historical_representative_header_provenance_bound"] is True
           assert r["historical_fp8_companion_geometry_bound"] is True
+          assert r["historical_evidence_revision_matches_pinned_frontier_revision"] is True
+          assert r["ambient_repository_head_observed_by_q9_process"] is False
           assert r["historical_evidence_reduces_header_schema_uncertainty"] is True
           assert r["historical_header_evidence_sufficient_for_live_producer"] is False
           assert r["current_consumer_raw_index_bytes_materialized"] is False
@@ -111,6 +114,7 @@ jobs:
           assert r["currentness_revalidation_required_at_use"] is True
           assert r["representative_scope_only"] is True
           assert len(r["required_live_evidence"]) == 4
+          assert "PinnedFrontierRevisionMatch != AmbientRepositoryHeadCurrentness" in r["law"]
           for key in (
               "real_tensor_quantization_eligible",
               "model_execution_eligible",
@@ -123,5 +127,5 @@ jobs:
           ):
               assert r[key] is False, key
 
-          print("Q9_FAIL_CLOSED_TEMPORAL_PRODUCER_ADMISSION=true")
+          print("Q9_V2_FAIL_CLOSED_PINNED_VS_AMBIENT_CURRENTNESS=true")
           PY
