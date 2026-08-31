@@ -1,0 +1,121 @@
+name: GLM53 Domain Product Gate Conformance
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_noncompensatory_evidence_product_gate.py"
+      - "tools/quantization/aura_glm53_domain_product_gate_conformance.py"
+      - "tests/test_aura_glm53_domain_product_gate_conformance.py"
+      - ".github/workflows/glm53-domain-product-gate-conformance.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  domain-product-gate-conformance:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Q17
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Revalidate exact Q8 and N1 generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          Q8=0db00cd19e98117f5f21e41afb218517f2d40dca
+          N1=9c0c548235397ab0cd774038468c8fe4c770d9fe
+          test "$(git rev-parse "$Q8:tools/quantization/aura_canary_result_source_c2_work_admission.py")" = "9a6e5d0d6855ab74e24d581e1bdbc7a2105c9144"
+          test "$(git rev-parse "$N1:tools/aura_noncompensatory_evidence_product_gate.py")" = "c80bc8ae59468aad3dea020ac76f32c967444818"
+          test "$(git hash-object tools/aura_noncompensatory_evidence_product_gate.py)" = "c80bc8ae59468aad3dea020ac76f32c967444818"
+          python3 - <<'PY'
+          import json, os, urllib.request
+          headers={
+              'Authorization':f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept':'application/vnd.github+json',
+              'X-GitHub-Api-Version':'2022-11-28',
+          }
+          repo=os.environ['GH_REPO']
+          expected=[
+              (33402413489,'0db00cd19e98117f5f21e41afb218517f2d40dca','Aura Canary Result Source C2 Work Admission',99521697092,'canary-result-source-c2-work-admission'),
+              (33402556317,'9c0c548235397ab0cd774038468c8fe4c770d9fe','Aura Non-Compensatory Evidence Product Gate',99522161582,'noncompensatory-product-gate'),
+          ]
+          for run_id,head,name,job_id,job_name in expected:
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: run=json.load(r)
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['name']==name,(run_id,run['name'],name)
+              assert run['status']=='completed' and run['conclusion']=='success',run
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: jobs=json.load(r)['jobs']
+              exact=[j for j in jobs if j['id']==job_id]
+              assert len(exact)==1,(run_id,job_id,len(exact))
+              assert exact[0]['name']==job_name,exact[0]
+              assert exact[0]['status']=='completed' and exact[0]['conclusion']=='success',exact[0]
+          print('Q17_EXACT_Q8_N1_GENERATIONS=true')
+          PY
+
+      - name: Run Q17 adversarial conformance suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/aura_noncompensatory_evidence_product_gate.py tools/quantization/aura_glm53_domain_product_gate_conformance.py tests/test_aura_glm53_domain_product_gate_conformance.py
+          PYTHONPATH=. python3 -m unittest -v tests.test_aura_glm53_domain_product_gate_conformance
+
+      - name: Replay exact Q8 router generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/q8 0db00cd19e98117f5f21e41afb218517f2d40dca
+          (cd /tmp/q8 && PYTHONPATH=. python3 -m tools.quantization.aura_canary_result_source_c2_work_admission) > /tmp/q8-live.json
+          python3 - <<'PY'
+          import json
+          q=json.load(open('/tmp/q8-live.json',encoding='utf-8'))
+          assert q['receipt_digest']=='f6a4125c5d4769423c046c33ac17750531c3ed7e9ed53b20aed9e49b0cbb0a46',q['receipt_digest']
+          assert q['representative_outcome']=='E8_WIN'
+          assert q['disposition']=='SOURCE_ADMISSION_HOLD'
+          assert q['c2_request_proposal_eligible'] is False
+          print('Q17_Q8_LIVE_RECEIPT_EXACT=true')
+          PY
+
+      - name: Prove current GLM router refines generic product gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 - <<'PY'
+          from dataclasses import asdict
+          import json
+          from tools.quantization import aura_glm53_domain_product_gate_conformance as q17
+          q8=json.load(open('/tmp/q8-live.json',encoding='utf-8'))
+          r=q17.prove_conformance(q8,require_exact_current=True)
+          assert r.domain_router_refines_generic_product_gate is True,r
+          assert r.q8_disposition=='SOURCE_ADMISSION_HOLD',r
+          assert r.n1_disposition=='HOLD_HARD_GATE',r
+          assert r.q8_proposal_eligible is False and r.n1_proposal_eligible is False,r
+          assert r.blocker_mapping_exact is True,r
+          for key in (
+              'favorable_evidence_can_bypass_failed_source_gate',
+              'domain_policy_can_compensate_hard_gate',
+              'generic_policy_can_compensate_hard_gate',
+              'semantic_truth_minted','effect_authority_granted',
+              'native_private_transformer_kv_accessed','semantic_k27_authority_minted',
+              'gate10_promoted','merge_or_deployment_authorized',
+          ):
+              assert getattr(r,key) is False,key
+          body=asdict(r); body['receipt_digest']=r.receipt_digest
+          with open('/tmp/q17-domain-product-gate-conformance.json','w',encoding='utf-8') as f:
+              json.dump(body,f,sort_keys=True,indent=2); f.write('\n')
+          print(json.dumps(body,sort_keys=True,indent=2))
+          PY
+
+      - name: Preserve Q17 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: q17-domain-product-gate-conformance
+          path: /tmp/q17-domain-product-gate-conformance.json
+          if-no-files-found: error
