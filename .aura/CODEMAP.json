@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788158172,
+  "generated_at_unix": 1788163134,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1696,
+    "repo_file_count": 1712,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -157,6 +157,7 @@
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
+      ".github/workflows/creator-studio-neutral-timeline.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -196,6 +197,9 @@
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
       ".github/workflows/source-anchor-verify.yml",
+      ".github/workflows/spatial-calibration-temporal-scope.yml",
+      ".github/workflows/spatial-eye-calibration-contract.yml",
+      ".github/workflows/spatial-optical-invariant-witness.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
@@ -1650,9 +1654,14 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_creator_studio_neutral_timeline_contract.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_spatial_calibration_temporal_scope.py",
+      "tests/test_spatial_eye_calibration_contract.py",
+      "tests/test_spatial_optical_invariant_witness.py",
+      "tests/test_temporal_evidence_scope_coordinate.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -1689,7 +1698,14 @@
       "tools/awj032/thinkpad_bounded_storage_probe.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/creator_studio/neutral_timeline_contract.py",
+      "tools/creator_studio/requirements-timeline.txt",
       "tools/k27/thinkpad_portable_simd_dispatch.cpp",
+      "tools/spatial/calibration_temporal_scope.py",
+      "tools/spatial/eye_calibration_contract.py",
+      "tools/spatial/optical_invariant_witness.py",
+      "tools/spatial/requirements-optical.txt",
+      "tools/temporal_evidence_scope_coordinate.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1812,17 +1828,17 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1696,
-      "bytes": 26724714,
-      "tokens_est": 6671584,
+      "files": 1712,
+      "bytes": 26822436,
+      "tokens_est": 6696019,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 243,
         "native_accelerator": 13,
         "operator_script": 9,
-        "python_module": 1035,
-        "schema_or_lexicon": 283,
-        "support_file": 49
+        "python_module": 1045,
+        "schema_or_lexicon": 287,
+        "support_file": 51
       }
     },
     {
@@ -3542,6 +3558,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 442,
+        "end_line": 448,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:main:7641055b638a62fa",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -4064,6 +4088,22 @@
         "end_line": 43,
         "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_canonical:7dcbd184e4d64999",
         "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:_canonical:76cd40f19f7f9e95",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 43,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_canonical:6b25ede425721fdb",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4577,6 +4617,30 @@
         "line": 46,
         "end_line": 47,
         "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_digest:82498f16d9704b93",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 31,
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:_digest:083d24bb6c734280",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 68,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_digest:9d2632692e999104",
+        "signature_hash": "d4a8cba568e54ac5"
+      },
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_digest:7426ed05a57735ff",
         "signature_hash": "514f786724465716"
       }
     ],
@@ -26672,6 +26736,22 @@
         "end_line": 65,
         "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_positive_int:fafb868208f620d6",
         "signature_hash": "9fa9d0d235d67d55"
+      },
+      {
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 44,
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:_positive_int:c6b46287bfc43ae5",
+        "signature_hash": "3b7bd9eb822e7406"
+      },
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 54,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_positive_int:81616a0283a57021",
+        "signature_hash": "56c466b6c84908fb"
       }
     ],
     "_span_line_bounds": [
@@ -31056,6 +31136,14 @@
         "end_line": 59,
         "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_nonnegative_int:2ff1a48a7b1f89a9",
         "signature_hash": "b8739218d7c73d0c"
+      },
+      {
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 37,
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:_nonnegative_int:eaa3e79c56eb21a7",
+        "signature_hash": "af41151bb978c8ca"
       }
     ],
     "WorkbenchState": [
@@ -51842,6 +51930,22 @@
         "end_line": 39,
         "semantic_id": "aura_gate_comparison.py#function:_clean_id:b2fdc01bf9516221",
         "signature_hash": "7acb2bc41b83aca5"
+      },
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 48,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:_clean_id:3fbac5caa037019e",
+        "signature_hash": "139ad905ad33246f"
+      },
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 63,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_clean_id:4e16a9ff5bbb8498",
+        "signature_hash": "0e17f8e6f01a50cf"
       }
     ],
     "_counter_value": [
@@ -74102,6 +74206,14 @@
         "end_line": 533,
         "semantic_id": "aura_st3gg_compatibility.py#function:_number:226779a479bb2757",
         "signature_hash": "ea564a98ecf72370"
+      },
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 48,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_number:e51e0941b0ecf6c7",
+        "signature_hash": "2581552b6e70d714"
       }
     ],
     "_grammar_manifest_digest": [
@@ -137632,6 +137744,14 @@
         "end_line": 184,
         "semantic_id": "tests/test_aura_gate.py#function:policy:6c4234b7f9aaa5a3",
         "signature_hash": "96c8d2d81ca0f6b2"
+      },
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "function",
+        "line": 15,
+        "end_line": 22,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#function:policy:c95ad1e94a76268d",
+        "signature_hash": "1490428864694da8"
       }
     ],
     "test_policy_round_trip_and_strict_contract": [
@@ -157974,6 +158094,106 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "asset": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 20,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#function:asset:e2f445f105edf775",
+        "signature_hash": "0d6e361401db0346"
+      }
+    ],
+    "CreatorTimelineContractTests": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 90,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#class:CreatorTimelineContractTests:3ecf52e0c36b1f9b",
+        "signature_hash": "f3e72f836370b434"
+      }
+    ],
+    "CreatorTimelineContractTests.test_tag_identity_is_permutation_duplicate_case_whitespace_invariant": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 30,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_tag_identity_is_permutation_duplicate_case_whitespace_invariant:6307f4614fa05bb3",
+        "signature_hash": "336fc4d6ced1d0ab"
+      }
+    ],
+    "CreatorTimelineContractTests.test_length_prefix_prevents_concatenation_ambiguity": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 36,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_length_prefix_prevents_concatenation_ambiguity:d9b7781a29c0574c",
+        "signature_hash": "2b120cf4980ddadb"
+      }
+    ],
+    "CreatorTimelineContractTests.test_composition_identity_excludes_uri_evidence_and_tag_metadata": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 49,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_composition_identity_excludes_uri_evidence_and_tag_metadata:e02bc130be9201ea",
+        "signature_hash": "f1ca9db16f78d404"
+      }
+    ],
+    "CreatorTimelineContractTests.test_clip_sequence_changes_composition_identity": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 56,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_clip_sequence_changes_composition_identity:de5cc976086e3c65",
+        "signature_hash": "22adf5d0dc0d6109"
+      }
+    ],
+    "CreatorTimelineContractTests.test_invalid_timing_fails_closed": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 62,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_invalid_timing_fails_closed:3f46b986e7c41e50",
+        "signature_hash": "a09c1011d0dbc39a"
+      }
+    ],
+    "CreatorTimelineContractTests.test_duplicate_clip_ids_fail_closed": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 68,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_duplicate_clip_ids_fail_closed:4d5fd2e4e8f7c378",
+        "signature_hash": "bbc114478832f838"
+      }
+    ],
+    "CreatorTimelineContractTests.test_otio_roundtrip_preserves_order_timing_asset_and_digests": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 70,
+        "end_line": 84,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_otio_roundtrip_preserves_order_timing_asset_and_digests:56144ae6d4082f1a",
+        "signature_hash": "320954bd462a186d"
+      }
+    ],
+    "CreatorTimelineContractTests.test_media_type_and_empty_tags_are_bounded": [
+      {
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 90,
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_media_type_and_empty_tags_are_bounded:7b6bf247d02bccd7",
+        "signature_hash": "f4acb2e9ca874cf2"
+      }
+    ],
     "test_space_app_card_declares_public_docker_runtime": [
       {
         "file": "tests/test_huggingface_space_deployment.py",
@@ -158272,6 +158492,486 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "calibrated_pair": [
+      {
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 59,
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#function:calibrated_pair:27db1eb6ad106727",
+        "signature_hash": "8dfe32f6e473c928"
+      }
+    ],
+    "temporal": [
+      {
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 66,
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#function:temporal:138daeb96918bce5",
+        "signature_hash": "87dc9e55c34f528f"
+      }
+    ],
+    "rehash": [
+      {
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "kind": "function",
+        "line": 69,
+        "end_line": 74,
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#function:rehash:364fdf73ed41de40",
+        "signature_hash": "964449cf6564ab00"
+      }
+    ],
+    "TestCalibrationTemporalScopeV2": [
+      {
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "kind": "class",
+        "line": 77,
+        "end_line": 202,
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#class:TestCalibrationTemporalScopeV2:e5e74e49132691e8",
+        "signature_hash": "9fa9cd0de9c57599"
+      }
+    ],
+    "TestCalibrationTemporalScopeV2.test_current_portable_temporal_parent_preserves_hold": [
+      {
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 95,
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_current_portable_temporal_parent_preserves_hold:4dde613e6a512923",
+        "signature_hash": "dec382264c55603d"
+      }
+    ],
+    "TestCalibrationTemporalScopeV2.test_sensor_and_generation_identity_are_derived_from_parent_evidence": [
+      {
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 112,
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_sensor_and_generation_identity_are_derived_from_parent_evidence:625fc87d430c40ac",
+        "signature_hash": "d877a97bfd662c2b"
+      }
+    ],
+    "TestCalibrationTemporalScopeV2.test_freshly_rehashed_positive_temporal_parent_is_rejected": [
+      {
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 130,
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_freshly_rehashed_positive_temporal_parent_is_rejected:ad1dc93e8b236ab1",
+        "signature_hash": "bfb5bd8477b4df8b"
+      }
+    ],
+    "TestCalibrationTemporalScopeV2.test_forged_camera_result_fields_fail_parent_producer_replay": [
+      {
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 144,
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_forged_camera_result_fields_fail_parent_producer_replay:348104dff7f1a484",
+        "signature_hash": "86931e075427cf79"
+      }
+    ],
+    "TestCalibrationTemporalScopeV2.test_declared_calibration_time_is_not_authenticated": [
+      {
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 158,
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_declared_calibration_time_is_not_authenticated:e2b04e45c45c3cd4",
+        "signature_hash": "8457e6557e6ad421"
+      }
+    ],
+    "TestCalibrationTemporalScopeV2.test_future_and_expired_declared_scope_fail_closed": [
+      {
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 173,
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_future_and_expired_declared_scope_fail_closed:19e903d9b9079404",
+        "signature_hash": "ba93a35029609141"
+      }
+    ],
+    "TestCalibrationTemporalScopeV2.test_public_boundary_has_no_caller_sensor_or_generation_override": [
+      {
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 186,
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_public_boundary_has_no_caller_sensor_or_generation_override:02367830417c45b0",
+        "signature_hash": "d70ea91ead1bd611"
+      }
+    ],
+    "TestCalibrationTemporalScopeV2.test_portable_receipt_is_deterministic_and_exact_parent_bound": [
+      {
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 202,
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_portable_receipt_is_deterministic_and_exact_parent_bound:cbfa3a7d05a837a2",
+        "signature_hash": "02ee830f3170c94f"
+      }
+    ],
+    "camera_dataset": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 40,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#function:camera_dataset:c3e95b832f2e46d0",
+        "signature_hash": "fa9b6a0a9c5c2ed0"
+      }
+    ],
+    "ipd_dataset": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 51,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#function:ipd_dataset:00f737fbae21767b",
+        "signature_hash": "275424e44de0216e"
+      }
+    ],
+    "EyeCalibrationProducerTraversalTests": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "class",
+        "line": 54,
+        "end_line": 143,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#class:EyeCalibrationProducerTraversalTests:96ae6354d7a57f9a",
+        "signature_hash": "a2cc924baab34e88"
+      }
+    ],
+    "EyeCalibrationProducerTraversalTests.test_arbitrary_refs_or_enums_no_longer_exist_as_metric_admission_surface": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "method",
+        "line": 55,
+        "end_line": 59,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_arbitrary_refs_or_enums_no_longer_exist_as_metric_admission_surface:20eda441708ada3d",
+        "signature_hash": "05a1b11ff1519ef5"
+      }
+    ],
+    "EyeCalibrationProducerTraversalTests.test_camera_producer_recomputes_anisotropic_intrinsics": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 72,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_camera_producer_recomputes_anisotropic_intrinsics:b7a5415aeb01fc09",
+        "signature_hash": "3b06a09e14f1ea9a"
+      }
+    ],
+    "EyeCalibrationProducerTraversalTests.test_camera_result_field_forgery_fails_recompute": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 79,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_camera_result_field_forgery_fails_recompute:cb2b06f306927697",
+        "signature_hash": "c59125bd8c2f5111"
+      }
+    ],
+    "EyeCalibrationProducerTraversalTests.test_raw_distorted_coordinate_space_is_rejected_by_pinhole_producer": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 84,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_raw_distorted_coordinate_space_is_rejected_by_pinhole_producer:a632e30e236b2083",
+        "signature_hash": "753c8c84b4a2df1e"
+      }
+    ],
+    "EyeCalibrationProducerTraversalTests.test_quality_policy_is_separate_from_observed_rms": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 95,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_quality_policy_is_separate_from_observed_rms:7fd0c9df41621b13",
+        "signature_hash": "f859141ac7a7a256"
+      }
+    ],
+    "EyeCalibrationProducerTraversalTests.test_ipd_producer_recomputes_measurement_and_uncertainty": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 105,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_ipd_producer_recomputes_measurement_and_uncertainty:9b7c58d165dbc6fd",
+        "signature_hash": "64ca7b91e23364d5"
+      }
+    ],
+    "EyeCalibrationProducerTraversalTests.test_ipd_result_field_forgery_fails_recompute": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 111,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_ipd_result_field_forgery_fails_recompute:dfd661306ebf87e5",
+        "signature_hash": "415e3705ba6e3629"
+      }
+    ],
+    "EyeCalibrationProducerTraversalTests.test_population_ipd_and_nominal_fov_remain_nonmetric": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 117,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_population_ipd_and_nominal_fov_remain_nonmetric:386f5c93e4908b79",
+        "signature_hash": "07d12eccf529b1b2"
+      }
+    ],
+    "EyeCalibrationProducerTraversalTests.test_bool_int_substitutions_fail_closed": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 123,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_bool_int_substitutions_fail_closed:5a8e5000247d11b9",
+        "signature_hash": "0d1b4b43d5309113"
+      }
+    ],
+    "EyeCalibrationProducerTraversalTests.test_receipt_preserves_physical_and_authority_ceiling": [
+      {
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 143,
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_receipt_preserves_physical_and_authority_ceiling:55f75c8603c34f48",
+        "signature_hash": "de36d1bb491ab3ff"
+      }
+    ],
+    "OpticalInvariantWitnessTests": [
+      {
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 64,
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#class:OpticalInvariantWitnessTests:2a08a66e96e023b8",
+        "signature_hash": "0fb193abf3570f4c"
+      }
+    ],
+    "OpticalInvariantWitnessTests.setUp": [
+      {
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 18,
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.setUp:b717eb29c16dc9d9",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "OpticalInvariantWitnessTests.test_full_complex_field_roundtrip_and_power_are_measured": [
+      {
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 26,
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_full_complex_field_roundtrip_and_power_are_measured:b0435b5c921d1763",
+        "signature_hash": "950c1335ddf01463"
+      }
+    ],
+    "OpticalInvariantWitnessTests.test_phase_only_can_match_power_without_preserving_field": [
+      {
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "kind": "method",
+        "line": 28,
+        "end_line": 34,
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_phase_only_can_match_power_without_preserving_field:eef941aaa151b740",
+        "signature_hash": "146be7179de33597"
+      }
+    ],
+    "OpticalInvariantWitnessTests.test_propagator_is_named_as_angular_spectrum_not_rayleigh_sommerfeld": [
+      {
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 39,
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_propagator_is_named_as_angular_spectrum_not_rayleigh_sommerfeld:9b03080085a306c3",
+        "signature_hash": "bdc266b8460829df"
+      }
+    ],
+    "OpticalInvariantWitnessTests.test_metadata_string_cannot_mint_physical_display_fidelity": [
+      {
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 46,
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_metadata_string_cannot_mint_physical_display_fidelity:dd2d3d019b572f62",
+        "signature_hash": "b51ffd014208bb71"
+      }
+    ],
+    "OpticalInvariantWitnessTests.test_codec_extension_mismatch_is_rejected": [
+      {
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 52,
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_codec_extension_mismatch_is_rejected:d8abb15e6459b513",
+        "signature_hash": "0d37303439a321b0"
+      }
+    ],
+    "OpticalInvariantWitnessTests.test_invalid_sampling_fails_closed": [
+      {
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 58,
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_invalid_sampling_fails_closed:5c97151be7f13ba2",
+        "signature_hash": "2d96b4d67f67821e"
+      }
+    ],
+    "OpticalInvariantWitnessTests.test_phase_only_projection_has_uniform_amplitude": [
+      {
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 64,
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_phase_only_projection_has_uniform_amplitude:3ea6abfee40d5b2b",
+        "signature_hash": "d84fa17c1b948856"
+      }
+    ],
+    "calibration": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 27,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:calibration:6f235f10011e4cb1",
+        "signature_hash": "80d0c39e9f5d65ed"
+      }
+    ],
+    "eye_receipt": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 48,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:eye_receipt:3fc4c9d3e6a0f91a",
+        "signature_hash": "7258159eb082020b"
+      }
+    ],
+    "series": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 51,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:series:6abfab6e4795e1d7",
+        "signature_hash": "e3a95641818231ec"
+      }
+    ],
+    "rehash_temporal": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 58,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:rehash_temporal:fd7c96f252a4e07c",
+        "signature_hash": "650dcfe33105dbd3"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "class",
+        "line": 60,
+        "end_line": 130,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeCoordinateTests:e24a09e66f248d98",
+        "signature_hash": "230c0e4416bb511a"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_repaired_point_holds_unknown_until_temporal_authentication": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 69,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_repaired_point_holds_unknown_until_temporal_authentication:1d2cc3dc1b7b0535",
+        "signature_hash": "5390bae90b8bdaaa"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_stale_point_is_unknown_before_time_relation": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 76,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_stale_point_is_unknown_before_time_relation:e306f21f49b83ccb",
+        "signature_hash": "96dc5bf4614e85fd"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_caller_cannot_flip_temporal_admission_with_fresh_eye_hash": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 83,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_caller_cannot_flip_temporal_admission_with_fresh_eye_hash:e8a3d6171f359c18",
+        "signature_hash": "97ddc65640a2ee66"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_forged_gate_result_is_rejected_before_temporal_use": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 91,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_forged_gate_result_is_rejected_before_temporal_use:3c2873bf5c2caa77",
+        "signature_hash": "b798a7467572a4ab"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_still_fails": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 97,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_still_fails:c052e93d40176ffc",
+        "signature_hash": "78789c2f9e5b6bde"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_portable_unknown_coordinate_is_tamper_evident_and_nonauthorizing": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 107,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_portable_unknown_coordinate_is_tamper_evident_and_nonauthorizing:82d2222e3e0555ae",
+        "signature_hash": "a74dfd5b76949181"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_freshly_rehashed_positive_portable_coordinate_is_rejected": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 117,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_freshly_rehashed_positive_portable_coordinate_is_rejected:3cabdddec9f4ab16",
+        "signature_hash": "ee0e12a7a5f4c461"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_freshly_rehashed_portable_producer_traversal_claim_is_rejected": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 124,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_freshly_rehashed_portable_producer_traversal_claim_is_rejected:f95a474f1249cce6",
+        "signature_hash": "3c2145f49f767840"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinateTests.test_coordinate_identity_is_deterministic": [
+      {
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 130,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_coordinate_identity_is_deterministic:0f80fde6dde5635a",
+        "signature_hash": "da6cbc800ca8f7c8"
       }
     ],
     "Finding": [
@@ -162562,6 +163262,834 @@
         "signature_hash": "63009562ddb386e4"
       }
     ],
+    "TimelineContractError": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "class",
+        "line": 26,
+        "end_line": 27,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:TimelineContractError:663ba818c45d6c53",
+        "signature_hash": "f6528f2d01d5e8a2"
+      }
+    ],
+    "_clean_text": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 41,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:_clean_text:1a80323bb51fbcf7",
+        "signature_hash": "0b584b1815d83212"
+      }
+    ],
+    "canonical_tag_set": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 63,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:canonical_tag_set:1ecb4b1139795ae9",
+        "signature_hash": "72e4d2ae8632688e"
+      }
+    ],
+    "tag_set_fingerprint": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 75,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:tag_set_fingerprint:330fb0d50470249f",
+        "signature_hash": "188030f1634ee672"
+      }
+    ],
+    "AdmittedAssetRefV1": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "class",
+        "line": 79,
+        "end_line": 105,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:AdmittedAssetRefV1:728675d4c4dab2a9",
+        "signature_hash": "577387c81e5d84f8"
+      }
+    ],
+    "AdmittedAssetRefV1.__post_init__": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 101,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:AdmittedAssetRefV1.__post_init__:ac68603abb307beb",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "AdmittedAssetRefV1.tag_fingerprint": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 105,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:AdmittedAssetRefV1.tag_fingerprint:ea3ed360afa04afc",
+        "signature_hash": "752d280e8993dc67"
+      }
+    ],
+    "TimelineClipV1": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "class",
+        "line": 109,
+        "end_line": 120,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:TimelineClipV1:4cea21488ec9cab3",
+        "signature_hash": "3bdb22ccb2d2761d"
+      }
+    ],
+    "TimelineClipV1.__post_init__": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 120,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:TimelineClipV1.__post_init__:f5a2bbf733224d46",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CreatorTimelineV1": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "class",
+        "line": 124,
+        "end_line": 224,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:CreatorTimelineV1:bf4077e7dea8a548",
+        "signature_hash": "5a575473a0f9873c"
+      }
+    ],
+    "CreatorTimelineV1.__post_init__": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 130,
+        "end_line": 142,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.__post_init__:b9a5920f10d10709",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CreatorTimelineV1.rate": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 146,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.rate:8e8606aa3f78f197",
+        "signature_hash": "58d305fd864a7904"
+      }
+    ],
+    "CreatorTimelineV1._composition_record": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 162,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1._composition_record:2d46c65decb75fa8",
+        "signature_hash": "e6ca383f2900af01"
+      }
+    ],
+    "CreatorTimelineV1._evidence_record": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 177,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1._evidence_record:c2ddc308ee326327",
+        "signature_hash": "aabfc04017843b14"
+      }
+    ],
+    "CreatorTimelineV1.composition_digest": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 180,
+        "end_line": 182,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.composition_digest:4a02fa275b57e582",
+        "signature_hash": "e43ef37db9133a24"
+      }
+    ],
+    "CreatorTimelineV1.evidence_binding_digest": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 185,
+        "end_line": 187,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.evidence_binding_digest:d5fb4fc56e1e3571",
+        "signature_hash": "59b7b1a5f1b315c4"
+      }
+    ],
+    "CreatorTimelineV1.to_otio": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 189,
+        "end_line": 221,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.to_otio:dbdaf6ebe92cb38f",
+        "signature_hash": "f6d7ada9a37ee67d"
+      }
+    ],
+    "CreatorTimelineV1.to_otio_json": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "method",
+        "line": 223,
+        "end_line": 224,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.to_otio_json:d6a4d2fc42659ce2",
+        "signature_hash": "6bf3347e8249a303"
+      }
+    ],
+    "validate_otio_roundtrip": [
+      {
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "kind": "function",
+        "line": 227,
+        "end_line": 265,
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:validate_otio_roundtrip:4a00ee07a77ef5cd",
+        "signature_hash": "8cc5394d1bae6638"
+      }
+    ],
+    "_parents": [
+      {
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 53,
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:_parents:174d82604cb2e070",
+        "signature_hash": "9bb8e5ba9e061add"
+      }
+    ],
+    "CalibrationTemporalScopeReceipt": [
+      {
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "kind": "class",
+        "line": 57,
+        "end_line": 106,
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#class:CalibrationTemporalScopeReceipt:040edc889189eacb",
+        "signature_hash": "47fa4a0ddfaf1ebd"
+      }
+    ],
+    "CalibrationTemporalScopeReceipt.to_dict": [
+      {
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 102,
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#method:CalibrationTemporalScopeReceipt.to_dict:6046f33ce32c167a",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "CalibrationTemporalScopeReceipt.receipt_digest": [
+      {
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 106,
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#method:CalibrationTemporalScopeReceipt.receipt_digest:bb6598bf9cfe44a9",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "bind_calibration_temporal_scope": [
+      {
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 189,
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:bind_calibration_temporal_scope:e6f9f0bccce0e9c0",
+        "signature_hash": "8a99eed2c5b9114f"
+      }
+    ],
+    "portable_calibration_temporal_scope_receipt": [
+      {
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "kind": "function",
+        "line": 192,
+        "end_line": 199,
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:portable_calibration_temporal_scope_receipt:7b94072a3d21157d",
+        "signature_hash": "11d821610207e379"
+      }
+    ],
+    "public_inputs": [
+      {
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "kind": "function",
+        "line": 202,
+        "end_line": 203,
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:public_inputs:7b32bd8eed6a09de",
+        "signature_hash": "5e4ecdd2ab5e340c"
+      }
+    ],
+    "CalibrationContractError": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CalibrationContractError:a5bb61c9bfd3ec93",
+        "signature_hash": "46666748c69a2f08"
+      }
+    ],
+    "CoordinateSpace": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 35,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CoordinateSpace:3fbc5ed18c847a03",
+        "signature_hash": "689c130dd76dd319"
+      }
+    ],
+    "CalibrationQualityPolicyV1": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "class",
+        "line": 72,
+        "end_line": 100,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CalibrationQualityPolicyV1:eda555ecd1ff3fbd",
+        "signature_hash": "76bd05c64a14199c"
+      }
+    ],
+    "CalibrationQualityPolicyV1.__post_init__": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 96,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CalibrationQualityPolicyV1.__post_init__:962c826354a46a7d",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CalibrationQualityPolicyV1.digest": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 100,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CalibrationQualityPolicyV1.digest:0febb89fe1e4bc28",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "CameraCalibrationSampleV1": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "class",
+        "line": 104,
+        "end_line": 112,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CameraCalibrationSampleV1:6e0468f324b02c11",
+        "signature_hash": "44678ece649353f1"
+      }
+    ],
+    "CameraCalibrationSampleV1.__post_init__": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 112,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CameraCalibrationSampleV1.__post_init__:b404b9e428886c89",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CameraCalibrationDatasetV1": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "class",
+        "line": 116,
+        "end_line": 140,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CameraCalibrationDatasetV1:c9eff7bbb3f19f43",
+        "signature_hash": "229560ba18b90f55"
+      }
+    ],
+    "CameraCalibrationDatasetV1.__post_init__": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 136,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CameraCalibrationDatasetV1.__post_init__:22d7aa40a22d7255",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CameraCalibrationDatasetV1.digest": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 140,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CameraCalibrationDatasetV1.digest:a1858e29bcd9c3d7",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "CameraCalibrationEvidenceV1": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "class",
+        "line": 144,
+        "end_line": 154,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CameraCalibrationEvidenceV1:0b3c2e70c21e6467",
+        "signature_hash": "4f7074d5d4bca1b7"
+      }
+    ],
+    "_fit_axis": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 157,
+        "end_line": 167,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_fit_axis:d4855d75c98d269f",
+        "signature_hash": "c85570fee589d8df"
+      }
+    ],
+    "_camera_evidence_payload": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 170,
+        "end_line": 187,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_camera_evidence_payload:e72c14fabfa7ad61",
+        "signature_hash": "c2e4c0dd3ab7c49c"
+      }
+    ],
+    "produce_camera_calibration_evidence": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 190,
+        "end_line": 218,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:produce_camera_calibration_evidence:389c38c1a482008a",
+        "signature_hash": "3153330b8ce4c823"
+      }
+    ],
+    "verify_camera_calibration_evidence": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 221,
+        "end_line": 228,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:verify_camera_calibration_evidence:778d990931871322",
+        "signature_hash": "8c45489255f356b0"
+      }
+    ],
+    "CameraIntrinsicsV2": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "class",
+        "line": 232,
+        "end_line": 248,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CameraIntrinsicsV2:5d55fd40afe4077f",
+        "signature_hash": "2315953c56034ee4"
+      }
+    ],
+    "CameraIntrinsicsV2.metric_ray_eligible": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "method",
+        "line": 236,
+        "end_line": 237,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CameraIntrinsicsV2.metric_ray_eligible:9aa152ef35f66c78",
+        "signature_hash": "ce965b130cfca66f"
+      }
+    ],
+    "CameraIntrinsicsV2.unit_ray_from_undistorted_pixel": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "method",
+        "line": 239,
+        "end_line": 248,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CameraIntrinsicsV2.unit_ray_from_undistorted_pixel:c6938b27b8f89b38",
+        "signature_hash": "c046b5dc8ae5bc56"
+      }
+    ],
+    "IpdMeasurementDatasetV1": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "class",
+        "line": 252,
+        "end_line": 274,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:IpdMeasurementDatasetV1:c75aa194c5b6721b",
+        "signature_hash": "37d0c34f900eb6ce"
+      }
+    ],
+    "IpdMeasurementDatasetV1.__post_init__": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "method",
+        "line": 260,
+        "end_line": 270,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:IpdMeasurementDatasetV1.__post_init__:8472dbd7216204fc",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "IpdMeasurementDatasetV1.digest": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "method",
+        "line": 273,
+        "end_line": 274,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:IpdMeasurementDatasetV1.digest:b0d476be8427302c",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "IpdCalibrationEvidenceV1": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "class",
+        "line": 278,
+        "end_line": 287,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:IpdCalibrationEvidenceV1:fbdb809a9ac56a90",
+        "signature_hash": "1c3391d9c27748a1"
+      }
+    ],
+    "_ipd_payload": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 290,
+        "end_line": 309,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_ipd_payload:04709bf78003a091",
+        "signature_hash": "7a79851400847c7b"
+      }
+    ],
+    "produce_ipd_calibration_evidence": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 312,
+        "end_line": 335,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:produce_ipd_calibration_evidence:cbc435bfd959edb7",
+        "signature_hash": "8cc2b5e755c9933d"
+      }
+    ],
+    "verify_ipd_calibration_evidence": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 338,
+        "end_line": 345,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:verify_ipd_calibration_evidence:e8f7e9f2fdc4c6b5",
+        "signature_hash": "30dea0f15a6ca93e"
+      }
+    ],
+    "BinocularCalibrationV2": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "class",
+        "line": 349,
+        "end_line": 367,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:BinocularCalibrationV2:7fd1fb482b7106d6",
+        "signature_hash": "e2d0e9c70a5319bf"
+      }
+    ],
+    "BinocularCalibrationV2.metric_eye_origin_eligible": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "method",
+        "line": 353,
+        "end_line": 354,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:BinocularCalibrationV2.metric_eye_origin_eligible:9f9c11e89b7973d3",
+        "signature_hash": "379bcc4aac0f290a"
+      }
+    ],
+    "BinocularCalibrationV2.eye_origin_sigma_m": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "method",
+        "line": 357,
+        "end_line": 361,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:BinocularCalibrationV2.eye_origin_sigma_m:c4485159b2cabd5c",
+        "signature_hash": "0618d3997924cd74"
+      }
+    ],
+    "BinocularCalibrationV2.eye_origins_about_midpoint": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "method",
+        "line": 363,
+        "end_line": 367,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:BinocularCalibrationV2.eye_origins_about_midpoint:2869504e3b308051",
+        "signature_hash": "c14923954812e706"
+      }
+    ],
+    "nominal_intrinsics_from_horizontal_fov": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 370,
+        "end_line": 383,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:nominal_intrinsics_from_horizontal_fov:f4f9d8e184a9eb1e",
+        "signature_hash": "b2a094fb7a362db1"
+      }
+    ],
+    "assumed_population_ipd": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 386,
+        "end_line": 392,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:assumed_population_ipd:0e697bd6facaf782",
+        "signature_hash": "939e35420ab613d7"
+      }
+    ],
+    "eligibility_receipt": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 395,
+        "end_line": 426,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:eligibility_receipt:c2053ced168eada3",
+        "signature_hash": "2e90c5ae758dd94f"
+      }
+    ],
+    "_demo_camera_dataset": [
+      {
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "kind": "function",
+        "line": 429,
+        "end_line": 439,
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_demo_camera_dataset:1934455afd484269",
+        "signature_hash": "4aaf120ae638deaf"
+      }
+    ],
+    "OpticalContractError": [
+      {
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 23,
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#class:OpticalContractError:59a69f42c2572a87",
+        "signature_hash": "80c978b5511b5195"
+      }
+    ],
+    "optical_power": [
+      {
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 30,
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:optical_power:5e2165851e862fbd",
+        "signature_hash": "bcae479377f1845f"
+      }
+    ],
+    "normalized_field_error": [
+      {
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 41,
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:normalized_field_error:587f8e1e0739ed25",
+        "signature_hash": "ceed0505c71add03"
+      }
+    ],
+    "speckle_contrast": [
+      {
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 49,
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:speckle_contrast:67efc572c219ff98",
+        "signature_hash": "2092f2a792719bfa"
+      }
+    ],
+    "angular_spectrum_propagate": [
+      {
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 88,
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:angular_spectrum_propagate:2137075f250073f5",
+        "signature_hash": "44b50d1887c454dc"
+      }
+    ],
+    "propagating_spectral_power_fraction": [
+      {
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 109,
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:propagating_spectral_power_fraction:96a87efddeecbd32",
+        "signature_hash": "4f722b0b14ac42a4"
+      }
+    ],
+    "phase_only_projection": [
+      {
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "kind": "function",
+        "line": 112,
+        "end_line": 119,
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:phase_only_projection:73c3d0538edbd01a",
+        "signature_hash": "6c534f5d45727010"
+      }
+    ],
+    "validate_codec_filename": [
+      {
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 130,
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:validate_codec_filename:08d95b74e540e078",
+        "signature_hash": "eed2534077e427df"
+      }
+    ],
+    "OpticalInvariantReceiptV1": [
+      {
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "kind": "class",
+        "line": 134,
+        "end_line": 157,
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#class:OpticalInvariantReceiptV1:065197cf7f2639c6",
+        "signature_hash": "381d0a9f4d280384"
+      }
+    ],
+    "measure_invariants": [
+      {
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "kind": "function",
+        "line": 160,
+        "end_line": 236,
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:measure_invariants:8730ea8f177ecdc9",
+        "signature_hash": "8846e6ac91ffa213"
+      }
+    ],
+    "deterministic_fixture": [
+      {
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "kind": "function",
+        "line": 239,
+        "end_line": 249,
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:deterministic_fixture:68b31d8e8207503d",
+        "signature_hash": "9ce33dca7467a21e"
+      }
+    ],
+    "TemporalEvidenceScopeError": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 37,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeError:b6e0061efe702f05",
+        "signature_hash": "2340462d0127e911"
+      }
+    ],
+    "TemporalEvidenceScopeError.__init__": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 37,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeError.__init__:b0b3ea5930e70609",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_parse_time": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 57,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_parse_time:207a51d90fb9ee59",
+        "signature_hash": "0e7d03ca78676525"
+      },
+      {
+        "file": "travel_price_verifier.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 37,
+        "semantic_id": "travel_price_verifier.py#function:_parse_time:68e48e7f74100996",
+        "signature_hash": "92dd7ff707cc8d43"
+      }
+    ],
+    "_datetime_ns": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 62,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_datetime_ns:7649bd7747019780",
+        "signature_hash": "261c131fb889d031"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinate": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 107,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeCoordinate:a76dc6e6a47590f2",
+        "signature_hash": "cc261fd5e3e2c4b8"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinate.to_dict": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 98,
+        "end_line": 99,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.to_dict:bb7bab207d496b24",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinate.coordinate_digest": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 103,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.coordinate_digest:94ea7ec41dce2315",
+        "signature_hash": "ab3c3df3e11c71cd"
+      }
+    ],
+    "TemporalEvidenceScopeCoordinate.evidence_ref": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 107,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.evidence_ref:6ea642c1d63d8a6f",
+        "signature_hash": "c27cb8129b449d59"
+      }
+    ],
+    "_validate_series": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 139,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_validate_series:0c613437359ada51",
+        "signature_hash": "715b2019ba747fb5"
+      }
+    ],
+    "bind_temporal_evidence_scope": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 142,
+        "end_line": 196,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:bind_temporal_evidence_scope:6a5978ea886832fb",
+        "signature_hash": "19027a376992efa4"
+      }
+    ],
+    "verify_temporal_evidence_scope_coordinate": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 220,
+        "end_line": 280,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:verify_temporal_evidence_scope_coordinate:11674854ba2b738c",
+        "signature_hash": "97a71849ccb4be37"
+      }
+    ],
+    "portable_temporal_evidence_scope_receipt": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 283,
+        "end_line": 295,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:portable_temporal_evidence_scope_receipt:fc8dea3355f5f7e9",
+        "signature_hash": "d7df1893885c8c2e"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -163058,16 +164586,6 @@
         "end_line": 716,
         "semantic_id": "travel_price_sidecar.py#method:TravelPriceSidecar.query_prices:8988baf067830c1f",
         "signature_hash": "b4c46a087d4d5110"
-      }
-    ],
-    "_parse_time": [
-      {
-        "file": "travel_price_verifier.py",
-        "kind": "function",
-        "line": 25,
-        "end_line": 37,
-        "semantic_id": "travel_price_verifier.py#function:_parse_time:68e48e7f74100996",
-        "signature_hash": "92dd7ff707cc8d43"
       }
     ],
     "TravelPriceVerification": [
@@ -163996,6 +165514,7 @@
     "python -m unittest": [
       ".github/workflows/awj032-glm53-01a-pager.yml",
       ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
+      ".github/workflows/spatial-calibration-temporal-scope.yml",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md",
       "tools/awj032/README.md"
     ],
@@ -174351,6 +175870,53 @@
       ]
     },
     {
+      "path": ".github/workflows/creator-studio-neutral-timeline.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2028,
+      "lines": 52,
+      "tokens_est": 507,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "eabe8cce7198a797",
+      "vector": [
+        -0.110359,
+        -0.134092,
+        -0.205291,
+        0.288357,
+        -0.162572,
+        0.172065,
+        0.098492,
+        0.098492,
+        0.276491,
+        0.252757,
+        0.062893,
+        0.193425,
+        -0.141212,
+        0.150705,
+        0.067639,
+        0.143585,
+        -0.288357,
+        0.150705,
+        -0.250384,
+        -0.088999,
+        0.084252,
+        -0.164945,
+        -0.255131,
+        -0.020173,
+        0.077133,
+        -0.207665,
+        0.143585,
+        -0.274117,
+        -0.065266,
+        -0.115106,
+        0.022546,
+        0.28361
+      ]
+    },
+    {
       "path": ".github/workflows/f1-financial-exact-contracts.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -174531,47 +176097,47 @@
       "path": ".github/workflows/k27-thinkpad-portable-simd-dispatch.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 2970,
-      "lines": 66,
-      "tokens_est": 743,
+      "bytes": 3359,
+      "lines": 75,
+      "tokens_est": 840,
       "symbol_count": 0,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2acc4640b1c5f64c",
+      "digest8": "9e1931fe973465ea",
       "vector": [
-        0.25577,
-        -0.01491,
-        -0.115842,
-        0.17319,
-        0.175484,
-        -0.198423,
-        0.150251,
-        0.186953,
-        -0.092903,
-        -0.260358,
-        -0.074552,
-        0.209892,
-        -0.193835,
-        0.230537,
-        0.221362,
-        -0.198423,
-        0.164014,
-        0.22595,
-        0.189247,
-        -0.028674,
-        -0.207598,
-        0.024086,
-        -0.182365,
-        -0.003441,
-        -0.191541,
-        0.209892,
-        0.271828,
-        0.264946,
-        0.030968,
-        0.198423,
-        0.030968,
-        -0.021792
+        -0.129089,
+        0.138563,
+        0.292523,
+        0.148038,
+        0.268837,
+        0.261731,
+        -0.200147,
+        0.050925,
+        -0.095928,
+        0.015396,
+        -0.138563,
+        -0.256994,
+        0.301997,
+        0.28068,
+        -0.015396,
+        -0.261731,
+        -0.079348,
+        -0.214359,
+        0.091191,
+        -0.043819,
+        -0.285417,
+        -0.121983,
+        -0.193041,
+        0.043819,
+        -0.22857,
+        -0.081717,
+        0.036713,
+        0.013027,
+        0.072242,
+        0.140932,
+        -0.119615,
+        -0.204884
       ]
     },
     {
@@ -176837,6 +178403,155 @@
         -0.153707,
         -0.229964,
         0.294306
+      ]
+    },
+    {
+      "path": ".github/workflows/spatial-calibration-temporal-scope.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2843,
+      "lines": 62,
+      "tokens_est": 711,
+      "symbol_count": 0,
+      "commands": [
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m unittest": [
+          29,
+          30,
+          31
+        ]
+      },
+      "topology": {},
+      "digest8": "d563d6c3c31f98c0",
+      "vector": [
+        -0.291342,
+        -0.028274,
+        0.020898,
+        0.175789,
+        0.102031,
+        0.018439,
+        -0.296259,
+        -0.308552,
+        0.220043,
+        -0.065152,
+        0.106948,
+        -0.057777,
+        0.249546,
+        -0.170872,
+        -0.038108,
+        -0.030732,
+        -0.097114,
+        0.274132,
+        0.158579,
+        0.011064,
+        0.276591,
+        0.143827,
+        -0.215126,
+        -0.079904,
+        0.030732,
+        -0.288884,
+        -0.102031,
+        0.10449,
+        -0.15612,
+        0.200375,
+        0.308552,
+        -0.05286
+      ]
+    },
+    {
+      "path": ".github/workflows/spatial-eye-calibration-contract.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2100,
+      "lines": 54,
+      "tokens_est": 525,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d42f4ee0fd24185a",
+      "vector": [
+        0.00381,
+        0.232425,
+        -0.105417,
+        -0.252747,
+        0.039373,
+        -0.168921,
+        -0.295929,
+        -0.260367,
+        0.207024,
+        0.034292,
+        -0.135899,
+        0.227345,
+        0.204483,
+        -0.250206,
+        0.207024,
+        0.273068,
+        0.085096,
+        0.110497,
+        -0.252747,
+        -0.247666,
+        -0.224805,
+        0.118118,
+        -0.113037,
+        0.095256,
+        -0.087636,
+        0.095256,
+        0.128278,
+        0.176542,
+        -0.041913,
+        0.120658,
+        0.031752,
+        -0.191783
+      ]
+    },
+    {
+      "path": ".github/workflows/spatial-optical-invariant-witness.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2297,
+      "lines": 59,
+      "tokens_est": 575,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b02bcee5eddca826",
+      "vector": [
+        0.001252,
+        -0.291715,
+        0.211587,
+        0.121444,
+        0.296723,
+        -0.108924,
+        0.111428,
+        -0.286707,
+        0.18154,
+        0.239131,
+        -0.18154,
+        0.001252,
+        0.221603,
+        -0.214091,
+        -0.161508,
+        0.13146,
+        0.264171,
+        -0.041316,
+        0.236627,
+        0.171524,
+        0.224107,
+        0.016276,
+        -0.224107,
+        -0.148988,
+        0.083884,
+        -0.159004,
+        0.10642,
+        0.0313,
+        -0.151492,
+        -0.041316,
+        0.011268,
+        0.224107
       ]
     },
     {
@@ -269041,6 +270756,53 @@
       ]
     },
     {
+      "path": "tests/test_creator_studio_neutral_timeline_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4340,
+      "lines": 95,
+      "tokens_est": 1085,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "518b28dc17188e37",
+      "vector": [
+        0.252121,
+        0.105568,
+        0.269509,
+        -0.070793,
+        -0.222314,
+        0.108052,
+        -0.212378,
+        0.110536,
+        -0.045953,
+        -0.043469,
+        0.157731,
+        0.117988,
+        -0.304284,
+        -0.142827,
+        -0.021114,
+        -0.224798,
+        0.083212,
+        -0.31422,
+        -0.040985,
+        0.172635,
+        0.20741,
+        -0.247153,
+        0.237217,
+        -0.080728,
+        0.299316,
+        -0.237217,
+        -0.098116,
+        0.175119,
+        0.157731,
+        -0.083212,
+        -0.021114,
+        -0.003726
+      ]
+    },
+    {
       "path": "tests/test_huggingface_space_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -269179,6 +270941,194 @@
         0.12901,
         0.168527,
         0.187123
+      ]
+    },
+    {
+      "path": "tests/test_spatial_calibration_temporal_scope.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8263,
+      "lines": 206,
+      "tokens_est": 2066,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "901a3f2b52d635b0",
+      "vector": [
+        -0.088146,
+        0.051768,
+        -0.124523,
+        0.14691,
+        -0.14691,
+        -0.012592,
+        -0.051768,
+        0.272832,
+        -0.04897,
+        0.088146,
+        -0.158103,
+        -0.132918,
+        0.295218,
+        -0.180489,
+        -0.076953,
+        0.19448,
+        0.046172,
+        0.205673,
+        0.169296,
+        0.22806,
+        0.068558,
+        0.043373,
+        -0.342789,
+        0.068558,
+        -0.267236,
+        -0.177691,
+        0.320403,
+        0.29242,
+        -0.093742,
+        0.14691,
+        0.208472,
+        -0.135717
+      ]
+    },
+    {
+      "path": "tests/test_spatial_eye_calibration_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6680,
+      "lines": 148,
+      "tokens_est": 1670,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "22bb54d169619356",
+      "vector": [
+        -0.102392,
+        -0.017654,
+        0.293052,
+        -0.102392,
+        -0.238914,
+        -0.102392,
+        0.043546,
+        0.231853,
+        0.050607,
+        -0.151822,
+        -0.194191,
+        0.285991,
+        0.241268,
+        0.029423,
+        0.283637,
+        -0.055315,
+        0.109453,
+        -0.128284,
+        -0.293052,
+        0.135345,
+        -0.29776,
+        0.001177,
+        -0.149468,
+        -0.052961,
+        0.293052,
+        0.290699,
+        -0.012946,
+        -0.21773,
+        -0.104746,
+        0.055315,
+        -0.012946,
+        -0.057669
+      ]
+    },
+    {
+      "path": "tests/test_spatial_optical_invariant_witness.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3062,
+      "lines": 69,
+      "tokens_est": 766,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ed8cf276f2fe4a8c",
+      "vector": [
+        0.119873,
+        0.231096,
+        -0.070441,
+        0.142118,
+        0.008651,
+        0.013594,
+        0.295358,
+        0.095157,
+        -0.109987,
+        -0.001236,
+        0.218738,
+        -0.20638,
+        0.080328,
+        0.243454,
+        -0.295358,
+        0.231096,
+        0.300301,
+        0.033367,
+        -0.149533,
+        0.302773,
+        -0.040782,
+        0.077856,
+        0.102572,
+        0.260755,
+        -0.176721,
+        -0.045725,
+        -0.016066,
+        -0.164362,
+        0.228624,
+        0.1001,
+        -0.05314,
+        -0.290415
+      ]
+    },
+    {
+      "path": "tests/test_temporal_evidence_scope_coordinate.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6907,
+      "lines": 134,
+      "tokens_est": 1727,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ff48504ce8a871e3",
+      "vector": [
+        0.020496,
+        -0.256806,
+        0.090425,
+        0.1917,
+        -0.001206,
+        -0.155531,
+        0.013262,
+        0.239927,
+        -0.030142,
+        -0.165176,
+        0.141063,
+        -0.085602,
+        0.056666,
+        0.167587,
+        0.034964,
+        -0.305033,
+        -0.155531,
+        -0.116949,
+        0.080779,
+        -0.302621,
+        -0.006028,
+        -0.165176,
+        -0.189289,
+        -0.292976,
+        -0.283331,
+        0.22787,
+        -0.295387,
+        -0.271274,
+        0.162765,
+        -0.047021,
+        -0.073545,
+        -0.116949
       ]
     },
     {
@@ -270884,6 +272834,100 @@
       ]
     },
     {
+      "path": "tools/creator_studio/neutral_timeline_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10782,
+      "lines": 266,
+      "tokens_est": 2696,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "568c0c377a2de379",
+      "vector": [
+        0.008908,
+        -0.075082,
+        0.052176,
+        0.237971,
+        -0.090353,
+        -0.245607,
+        -0.075082,
+        -0.059811,
+        0.271058,
+        0.016543,
+        0.197249,
+        0.237971,
+        0.108169,
+        -0.311781,
+        -0.062356,
+        0.230336,
+        -0.115804,
+        0.276148,
+        0.115804,
+        -0.278694,
+        -0.166707,
+        0.034359,
+        -0.003818,
+        0.156527,
+        0.115804,
+        -0.151436,
+        -0.304145,
+        -0.072537,
+        -0.146346,
+        0.011453,
+        -0.187068,
+        0.311781
+      ]
+    },
+    {
+      "path": "tools/creator_studio/requirements-timeline.txt",
+      "role": "support_file",
+      "binary": false,
+      "bytes": 23,
+      "lines": 2,
+      "tokens_est": 6,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7675c0170ebdb617",
+      "vector": [
+        0.305897,
+        0.201018,
+        0.310891,
+        0.021225,
+        0.093642,
+        0.225989,
+        -0.178544,
+        0.193526,
+        0.118613,
+        -0.018728,
+        0.021225,
+        -0.225989,
+        -0.096139,
+        0.018728,
+        -0.248463,
+        -0.176047,
+        0.186035,
+        0.153573,
+        -0.240972,
+        -0.001249,
+        0.041202,
+        0.198521,
+        0.203515,
+        -0.118613,
+        -0.275931,
+        -0.171052,
+        0.061179,
+        -0.176047,
+        -0.275931,
+        -0.101133,
+        -0.033711,
+        -0.176047
+      ]
+    },
+    {
       "path": "tools/k27/thinkpad_portable_simd_dispatch.cpp",
       "role": "native_accelerator",
       "binary": false,
@@ -270928,6 +272972,241 @@
         -0.127064,
         0.107326,
         0.030841
+      ]
+    },
+    {
+      "path": "tools/spatial/calibration_temporal_scope.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8479,
+      "lines": 204,
+      "tokens_est": 2120,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1f214c9e9047a743",
+      "vector": [
+        -0.250376,
+        -0.228698,
+        0.222195,
+        0.200517,
+        -0.163665,
+        0.185343,
+        0.196182,
+        -0.176672,
+        0.161498,
+        0.066117,
+        0.081291,
+        0.207021,
+        -0.044439,
+        -0.202685,
+        0.031432,
+        -0.126814,
+        0.063949,
+        -0.050942,
+        0.22653,
+        0.15933,
+        -0.007587,
+        0.250376,
+        -0.274221,
+        0.035768,
+        -0.22653,
+        0.085626,
+        0.213524,
+        0.022761,
+        0.276389,
+        0.235201,
+        -0.089962,
+        0.239537
+      ]
+    },
+    {
+      "path": "tools/spatial/eye_calibration_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 18222,
+      "lines": 453,
+      "tokens_est": 4556,
+      "symbol_count": 38,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "553dfb4d35eac6c0",
+      "vector": [
+        0.259215,
+        0.202401,
+        -0.195299,
+        0.005918,
+        -0.01302,
+        0.152688,
+        0.259215,
+        -0.010653,
+        0.173994,
+        -0.218972,
+        -0.150321,
+        0.10771,
+        0.01302,
+        0.197666,
+        0.150321,
+        0.114812,
+        -0.242645,
+        0.15979,
+        0.074569,
+        0.202401,
+        0.062732,
+        0.112445,
+        -0.247379,
+        -0.228441,
+        0.292357,
+        0.254481,
+        0.067467,
+        0.166892,
+        -0.152688,
+        0.112445,
+        0.223706,
+        -0.214237
+      ]
+    },
+    {
+      "path": "tools/spatial/optical_invariant_witness.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9315,
+      "lines": 261,
+      "tokens_est": 2329,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5c3361d1a88eb75b",
+      "vector": [
+        0.088356,
+        0.019507,
+        -0.242118,
+        -0.069996,
+        0.249003,
+        0.1136,
+        -0.269657,
+        -0.267362,
+        -0.1136,
+        -0.157204,
+        0.196219,
+        0.056226,
+        0.258182,
+        -0.255887,
+        0.216873,
+        0.001147,
+        0.049342,
+        -0.161794,
+        -0.14573,
+        -0.237528,
+        -0.228348,
+        -0.138845,
+        -0.10442,
+        0.035572,
+        0.246708,
+        -0.042457,
+        0.251298,
+        -0.161794,
+        -0.15032,
+        -0.246708,
+        -0.120485,
+        0.10442
+      ]
+    },
+    {
+      "path": "tools/spatial/requirements-optical.txt",
+      "role": "support_file",
+      "binary": false,
+      "bytes": 13,
+      "lines": 2,
+      "tokens_est": 4,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8dc0c74de089d2db",
+      "vector": [
+        -0.21056,
+        -0.183471,
+        0.262277,
+        0.067724,
+        -0.242576,
+        0.163769,
+        0.10959,
+        -0.193322,
+        0.104665,
+        -0.148993,
+        -0.254889,
+        0.011082,
+        0.048023,
+        -0.257352,
+        -0.272128,
+        -0.107127,
+        -0.048023,
+        -0.249964,
+        -0.104665,
+        0.274591,
+        0.227799,
+        0.153918,
+        0.050485,
+        -0.134217,
+        0.23765,
+        0.20071,
+        0.10959,
+        0.17362,
+        0.055411,
+        0.205635,
+        -0.166232,
+        -0.04556
+      ]
+    },
+    {
+      "path": "tools/temporal_evidence_scope_coordinate.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11979,
+      "lines": 296,
+      "tokens_est": 2995,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ed57453c6d68dacf",
+      "vector": [
+        0.206733,
+        -0.057074,
+        0.006342,
+        0.008878,
+        -0.06722,
+        -0.034244,
+        0.323417,
+        0.011415,
+        -0.046927,
+        0.181367,
+        0.166147,
+        0.135708,
+        -0.252392,
+        -0.199123,
+        -0.021561,
+        0.046927,
+        0.112879,
+        -0.318343,
+        -0.30566,
+        -0.021561,
+        0.249855,
+        -0.026634,
+        0.252392,
+        0.20927,
+        -0.024098,
+        -0.107806,
+        0.20927,
+        0.049464,
+        0.087513,
+        -0.298051,
+        0.275221,
+        -0.216879
       ]
     },
     {
@@ -294835,17 +297114,17 @@
     }
   },
   "summary": {
-    "file_count": 1696,
-    "total_bytes": 26724714,
-    "text_tokens_est": 6671584,
+    "file_count": 1712,
+    "total_bytes": 26822436,
+    "text_tokens_est": 6696019,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 243,
       "native_accelerator": 13,
       "operator_script": 9,
-      "python_module": 1035,
-      "schema_or_lexicon": 283,
-      "support_file": 49
+      "python_module": 1045,
+      "schema_or_lexicon": 287,
+      "support_file": 51
     },
     "topology_nodes": 11478,
     "topology_edges": 28068,
@@ -295011,6 +297290,7 @@
       ".github/workflows/coderabbit-waboose-learning-persist.yml",
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
+      ".github/workflows/creator-studio-neutral-timeline.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -295050,6 +297330,9 @@
       ".github/workflows/sco-phase3-advisory-runtime.yml",
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
       ".github/workflows/source-anchor-verify.yml",
+      ".github/workflows/spatial-calibration-temporal-scope.yml",
+      ".github/workflows/spatial-eye-calibration-contract.yml",
+      ".github/workflows/spatial-optical-invariant-witness.yml",
       ".github/workflows/sync-analysis-codemap.yml",
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
@@ -296504,9 +298787,14 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_creator_studio_neutral_timeline_contract.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
+      "tests/test_spatial_calibration_temporal_scope.py",
+      "tests/test_spatial_eye_calibration_contract.py",
+      "tests/test_spatial_optical_invariant_witness.py",
+      "tests/test_temporal_evidence_scope_coordinate.py",
       "third_party/pascal/LICENSE",
       "third_party/pascal/package-metadata/core.package.json",
       "third_party/pascal/package-metadata/editor.package.json",
@@ -296543,7 +298831,14 @@
       "tools/awj032/thinkpad_bounded_storage_probe.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/creator_studio/neutral_timeline_contract.py",
+      "tools/creator_studio/requirements-timeline.txt",
       "tools/k27/thinkpad_portable_simd_dispatch.cpp",
+      "tools/spatial/calibration_temporal_scope.py",
+      "tools/spatial/eye_calibration_contract.py",
+      "tools/spatial/optical_invariant_witness.py",
+      "tools/spatial/requirements-optical.txt",
+      "tools/temporal_evidence_scope_coordinate.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -454310,6 +456605,106 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#class:CreatorTimelineContractTests:3ecf52e0c36b1f9b",
+        "name": "CreatorTimelineContractTests",
+        "kind": "class",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 23,
+        "end_line": 90,
+        "signature_hash": "f3e72f836370b434",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#function:asset:e2f445f105edf775",
+        "name": "asset",
+        "kind": "function",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 13,
+        "end_line": 20,
+        "signature_hash": "0d6e361401db0346",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_clip_sequence_changes_composition_identity:de5cc976086e3c65",
+        "name": "CreatorTimelineContractTests.test_clip_sequence_changes_composition_identity",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 51,
+        "end_line": 56,
+        "signature_hash": "22adf5d0dc0d6109",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_composition_identity_excludes_uri_evidence_and_tag_metadata:e02bc130be9201ea",
+        "name": "CreatorTimelineContractTests.test_composition_identity_excludes_uri_evidence_and_tag_metadata",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 38,
+        "end_line": 49,
+        "signature_hash": "f1ca9db16f78d404",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_duplicate_clip_ids_fail_closed:4d5fd2e4e8f7c378",
+        "name": "CreatorTimelineContractTests.test_duplicate_clip_ids_fail_closed",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 64,
+        "end_line": 68,
+        "signature_hash": "bbc114478832f838",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_invalid_timing_fails_closed:3f46b986e7c41e50",
+        "name": "CreatorTimelineContractTests.test_invalid_timing_fails_closed",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 58,
+        "end_line": 62,
+        "signature_hash": "a09c1011d0dbc39a",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_length_prefix_prevents_concatenation_ambiguity:d9b7781a29c0574c",
+        "name": "CreatorTimelineContractTests.test_length_prefix_prevents_concatenation_ambiguity",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 32,
+        "end_line": 36,
+        "signature_hash": "2b120cf4980ddadb",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_media_type_and_empty_tags_are_bounded:7b6bf247d02bccd7",
+        "name": "CreatorTimelineContractTests.test_media_type_and_empty_tags_are_bounded",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 86,
+        "end_line": 90,
+        "signature_hash": "f4acb2e9ca874cf2",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_otio_roundtrip_preserves_order_timing_asset_and_digests:56144ae6d4082f1a",
+        "name": "CreatorTimelineContractTests.test_otio_roundtrip_preserves_order_timing_asset_and_digests",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 70,
+        "end_line": 84,
+        "signature_hash": "320954bd462a186d",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
+        "semantic_id": "tests/test_creator_studio_neutral_timeline_contract.py#method:CreatorTimelineContractTests.test_tag_identity_is_permutation_duplicate_case_whitespace_invariant:6307f4614fa05bb3",
+        "name": "CreatorTimelineContractTests.test_tag_identity_is_permutation_duplicate_case_whitespace_invariant",
+        "kind": "method",
+        "file": "tests/test_creator_studio_neutral_timeline_contract.py",
+        "line": 24,
+        "end_line": 30,
+        "signature_hash": "336fc4d6ced1d0ab",
+        "file_digest8": "518b28dc17188e37"
+      },
+      {
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "name": "test_deployment_docs_have_submission_field_and_no_localhost_url_claim",
         "kind": "function",
@@ -454628,6 +457023,496 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#class:TestCalibrationTemporalScopeV2:e5e74e49132691e8",
+        "name": "TestCalibrationTemporalScopeV2",
+        "kind": "class",
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "line": 77,
+        "end_line": 202,
+        "signature_hash": "9fa9cd0de9c57599",
+        "file_digest8": "901a3f2b52d635b0"
+      },
+      {
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#function:calibrated_pair:27db1eb6ad106727",
+        "name": "calibrated_pair",
+        "kind": "function",
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "line": 29,
+        "end_line": 59,
+        "signature_hash": "8dfe32f6e473c928",
+        "file_digest8": "901a3f2b52d635b0"
+      },
+      {
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#function:rehash:364fdf73ed41de40",
+        "name": "rehash",
+        "kind": "function",
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "line": 69,
+        "end_line": 74,
+        "signature_hash": "964449cf6564ab00",
+        "file_digest8": "901a3f2b52d635b0"
+      },
+      {
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#function:temporal:138daeb96918bce5",
+        "name": "temporal",
+        "kind": "function",
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "line": 62,
+        "end_line": 66,
+        "signature_hash": "87dc9e55c34f528f",
+        "file_digest8": "901a3f2b52d635b0"
+      },
+      {
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_current_portable_temporal_parent_preserves_hold:4dde613e6a512923",
+        "name": "TestCalibrationTemporalScopeV2.test_current_portable_temporal_parent_preserves_hold",
+        "kind": "method",
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "line": 78,
+        "end_line": 95,
+        "signature_hash": "dec382264c55603d",
+        "file_digest8": "901a3f2b52d635b0"
+      },
+      {
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_declared_calibration_time_is_not_authenticated:e2b04e45c45c3cd4",
+        "name": "TestCalibrationTemporalScopeV2.test_declared_calibration_time_is_not_authenticated",
+        "kind": "method",
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "line": 146,
+        "end_line": 158,
+        "signature_hash": "8457e6557e6ad421",
+        "file_digest8": "901a3f2b52d635b0"
+      },
+      {
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_forged_camera_result_fields_fail_parent_producer_replay:348104dff7f1a484",
+        "name": "TestCalibrationTemporalScopeV2.test_forged_camera_result_fields_fail_parent_producer_replay",
+        "kind": "method",
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "line": 132,
+        "end_line": 144,
+        "signature_hash": "86931e075427cf79",
+        "file_digest8": "901a3f2b52d635b0"
+      },
+      {
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_freshly_rehashed_positive_temporal_parent_is_rejected:ad1dc93e8b236ab1",
+        "name": "TestCalibrationTemporalScopeV2.test_freshly_rehashed_positive_temporal_parent_is_rejected",
+        "kind": "method",
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "line": 114,
+        "end_line": 130,
+        "signature_hash": "bfb5bd8477b4df8b",
+        "file_digest8": "901a3f2b52d635b0"
+      },
+      {
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_future_and_expired_declared_scope_fail_closed:19e903d9b9079404",
+        "name": "TestCalibrationTemporalScopeV2.test_future_and_expired_declared_scope_fail_closed",
+        "kind": "method",
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "line": 160,
+        "end_line": 173,
+        "signature_hash": "ba93a35029609141",
+        "file_digest8": "901a3f2b52d635b0"
+      },
+      {
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_portable_receipt_is_deterministic_and_exact_parent_bound:cbfa3a7d05a837a2",
+        "name": "TestCalibrationTemporalScopeV2.test_portable_receipt_is_deterministic_and_exact_parent_bound",
+        "kind": "method",
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "line": 188,
+        "end_line": 202,
+        "signature_hash": "02ee830f3170c94f",
+        "file_digest8": "901a3f2b52d635b0"
+      },
+      {
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_public_boundary_has_no_caller_sensor_or_generation_override:02367830417c45b0",
+        "name": "TestCalibrationTemporalScopeV2.test_public_boundary_has_no_caller_sensor_or_generation_override",
+        "kind": "method",
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "line": 175,
+        "end_line": 186,
+        "signature_hash": "d70ea91ead1bd611",
+        "file_digest8": "901a3f2b52d635b0"
+      },
+      {
+        "semantic_id": "tests/test_spatial_calibration_temporal_scope.py#method:TestCalibrationTemporalScopeV2.test_sensor_and_generation_identity_are_derived_from_parent_evidence:625fc87d430c40ac",
+        "name": "TestCalibrationTemporalScopeV2.test_sensor_and_generation_identity_are_derived_from_parent_evidence",
+        "kind": "method",
+        "file": "tests/test_spatial_calibration_temporal_scope.py",
+        "line": 97,
+        "end_line": 112,
+        "signature_hash": "d877a97bfd662c2b",
+        "file_digest8": "901a3f2b52d635b0"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#class:EyeCalibrationProducerTraversalTests:96ae6354d7a57f9a",
+        "name": "EyeCalibrationProducerTraversalTests",
+        "kind": "class",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 54,
+        "end_line": 143,
+        "signature_hash": "a2cc924baab34e88",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#function:camera_dataset:c3e95b832f2e46d0",
+        "name": "camera_dataset",
+        "kind": "function",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 25,
+        "end_line": 40,
+        "signature_hash": "fa9b6a0a9c5c2ed0",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#function:ipd_dataset:00f737fbae21767b",
+        "name": "ipd_dataset",
+        "kind": "function",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 43,
+        "end_line": 51,
+        "signature_hash": "275424e44de0216e",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#function:policy:c95ad1e94a76268d",
+        "name": "policy",
+        "kind": "function",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 15,
+        "end_line": 22,
+        "signature_hash": "1490428864694da8",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_arbitrary_refs_or_enums_no_longer_exist_as_metric_admission_surface:20eda441708ada3d",
+        "name": "EyeCalibrationProducerTraversalTests.test_arbitrary_refs_or_enums_no_longer_exist_as_metric_admission_surface",
+        "kind": "method",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 55,
+        "end_line": 59,
+        "signature_hash": "05a1b11ff1519ef5",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_bool_int_substitutions_fail_closed:5a8e5000247d11b9",
+        "name": "EyeCalibrationProducerTraversalTests.test_bool_int_substitutions_fail_closed",
+        "kind": "method",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 119,
+        "end_line": 123,
+        "signature_hash": "0d1b4b43d5309113",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_camera_producer_recomputes_anisotropic_intrinsics:b7a5415aeb01fc09",
+        "name": "EyeCalibrationProducerTraversalTests.test_camera_producer_recomputes_anisotropic_intrinsics",
+        "kind": "method",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 61,
+        "end_line": 72,
+        "signature_hash": "3b06a09e14f1ea9a",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_camera_result_field_forgery_fails_recompute:cb2b06f306927697",
+        "name": "EyeCalibrationProducerTraversalTests.test_camera_result_field_forgery_fails_recompute",
+        "kind": "method",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 74,
+        "end_line": 79,
+        "signature_hash": "c59125bd8c2f5111",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_ipd_producer_recomputes_measurement_and_uncertainty:9b7c58d165dbc6fd",
+        "name": "EyeCalibrationProducerTraversalTests.test_ipd_producer_recomputes_measurement_and_uncertainty",
+        "kind": "method",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 97,
+        "end_line": 105,
+        "signature_hash": "64ca7b91e23364d5",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_ipd_result_field_forgery_fails_recompute:dfd661306ebf87e5",
+        "name": "EyeCalibrationProducerTraversalTests.test_ipd_result_field_forgery_fails_recompute",
+        "kind": "method",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 107,
+        "end_line": 111,
+        "signature_hash": "415e3705ba6e3629",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_population_ipd_and_nominal_fov_remain_nonmetric:386f5c93e4908b79",
+        "name": "EyeCalibrationProducerTraversalTests.test_population_ipd_and_nominal_fov_remain_nonmetric",
+        "kind": "method",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 113,
+        "end_line": 117,
+        "signature_hash": "07d12eccf529b1b2",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_quality_policy_is_separate_from_observed_rms:7fd0c9df41621b13",
+        "name": "EyeCalibrationProducerTraversalTests.test_quality_policy_is_separate_from_observed_rms",
+        "kind": "method",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 86,
+        "end_line": 95,
+        "signature_hash": "f859141ac7a7a256",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_raw_distorted_coordinate_space_is_rejected_by_pinhole_producer:a632e30e236b2083",
+        "name": "EyeCalibrationProducerTraversalTests.test_raw_distorted_coordinate_space_is_rejected_by_pinhole_producer",
+        "kind": "method",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 81,
+        "end_line": 84,
+        "signature_hash": "753c8c84b4a2df1e",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_eye_calibration_contract.py#method:EyeCalibrationProducerTraversalTests.test_receipt_preserves_physical_and_authority_ceiling:55f75c8603c34f48",
+        "name": "EyeCalibrationProducerTraversalTests.test_receipt_preserves_physical_and_authority_ceiling",
+        "kind": "method",
+        "file": "tests/test_spatial_eye_calibration_contract.py",
+        "line": 125,
+        "end_line": 143,
+        "signature_hash": "de36d1bb491ab3ff",
+        "file_digest8": "22bb54d169619356"
+      },
+      {
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#class:OpticalInvariantWitnessTests:2a08a66e96e023b8",
+        "name": "OpticalInvariantWitnessTests",
+        "kind": "class",
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "line": 15,
+        "end_line": 64,
+        "signature_hash": "0fb193abf3570f4c",
+        "file_digest8": "ed8cf276f2fe4a8c"
+      },
+      {
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.setUp:b717eb29c16dc9d9",
+        "name": "OpticalInvariantWitnessTests.setUp",
+        "kind": "method",
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "line": 16,
+        "end_line": 18,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "ed8cf276f2fe4a8c"
+      },
+      {
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_codec_extension_mismatch_is_rejected:d8abb15e6459b513",
+        "name": "OpticalInvariantWitnessTests.test_codec_extension_mismatch_is_rejected",
+        "kind": "method",
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "line": 48,
+        "end_line": 52,
+        "signature_hash": "0d37303439a321b0",
+        "file_digest8": "ed8cf276f2fe4a8c"
+      },
+      {
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_full_complex_field_roundtrip_and_power_are_measured:b0435b5c921d1763",
+        "name": "OpticalInvariantWitnessTests.test_full_complex_field_roundtrip_and_power_are_measured",
+        "kind": "method",
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "line": 20,
+        "end_line": 26,
+        "signature_hash": "950c1335ddf01463",
+        "file_digest8": "ed8cf276f2fe4a8c"
+      },
+      {
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_invalid_sampling_fails_closed:5c97151be7f13ba2",
+        "name": "OpticalInvariantWitnessTests.test_invalid_sampling_fails_closed",
+        "kind": "method",
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "line": 54,
+        "end_line": 58,
+        "signature_hash": "2d96b4d67f67821e",
+        "file_digest8": "ed8cf276f2fe4a8c"
+      },
+      {
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_metadata_string_cannot_mint_physical_display_fidelity:dd2d3d019b572f62",
+        "name": "OpticalInvariantWitnessTests.test_metadata_string_cannot_mint_physical_display_fidelity",
+        "kind": "method",
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "line": 41,
+        "end_line": 46,
+        "signature_hash": "b51ffd014208bb71",
+        "file_digest8": "ed8cf276f2fe4a8c"
+      },
+      {
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_phase_only_can_match_power_without_preserving_field:eef941aaa151b740",
+        "name": "OpticalInvariantWitnessTests.test_phase_only_can_match_power_without_preserving_field",
+        "kind": "method",
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "line": 28,
+        "end_line": 34,
+        "signature_hash": "146be7179de33597",
+        "file_digest8": "ed8cf276f2fe4a8c"
+      },
+      {
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_phase_only_projection_has_uniform_amplitude:3ea6abfee40d5b2b",
+        "name": "OpticalInvariantWitnessTests.test_phase_only_projection_has_uniform_amplitude",
+        "kind": "method",
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "line": 60,
+        "end_line": 64,
+        "signature_hash": "d84fa17c1b948856",
+        "file_digest8": "ed8cf276f2fe4a8c"
+      },
+      {
+        "semantic_id": "tests/test_spatial_optical_invariant_witness.py#method:OpticalInvariantWitnessTests.test_propagator_is_named_as_angular_spectrum_not_rayleigh_sommerfeld:9b03080085a306c3",
+        "name": "OpticalInvariantWitnessTests.test_propagator_is_named_as_angular_spectrum_not_rayleigh_sommerfeld",
+        "kind": "method",
+        "file": "tests/test_spatial_optical_invariant_witness.py",
+        "line": 36,
+        "end_line": 39,
+        "signature_hash": "bdc266b8460829df",
+        "file_digest8": "ed8cf276f2fe4a8c"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeCoordinateTests:e24a09e66f248d98",
+        "name": "TemporalEvidenceScopeCoordinateTests",
+        "kind": "class",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 60,
+        "end_line": 130,
+        "signature_hash": "230c0e4416bb511a",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:calibration:6f235f10011e4cb1",
+        "name": "calibration",
+        "kind": "function",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 20,
+        "end_line": 27,
+        "signature_hash": "80d0c39e9f5d65ed",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:eye_receipt:3fc4c9d3e6a0f91a",
+        "name": "eye_receipt",
+        "kind": "function",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 29,
+        "end_line": 48,
+        "signature_hash": "7258159eb082020b",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:rehash_temporal:fd7c96f252a4e07c",
+        "name": "rehash_temporal",
+        "kind": "function",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 53,
+        "end_line": 58,
+        "signature_hash": "650dcfe33105dbd3",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:series:6abfab6e4795e1d7",
+        "name": "series",
+        "kind": "function",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 50,
+        "end_line": 51,
+        "signature_hash": "e3a95641818231ec",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_caller_cannot_flip_temporal_admission_with_fresh_eye_hash:e8a3d6171f359c18",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_caller_cannot_flip_temporal_admission_with_fresh_eye_hash",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 78,
+        "end_line": 83,
+        "signature_hash": "97ddc65640a2ee66",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_coordinate_identity_is_deterministic:0f80fde6dde5635a",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_coordinate_identity_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 126,
+        "end_line": 130,
+        "signature_hash": "da6cbc800ca8f7c8",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_forged_gate_result_is_rejected_before_temporal_use:3c2873bf5c2caa77",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_forged_gate_result_is_rejected_before_temporal_use",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 85,
+        "end_line": 91,
+        "signature_hash": "b798a7467572a4ab",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_freshly_rehashed_portable_producer_traversal_claim_is_rejected:f95a474f1249cce6",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_freshly_rehashed_portable_producer_traversal_claim_is_rejected",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 119,
+        "end_line": 124,
+        "signature_hash": "3c2145f49f767840",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_freshly_rehashed_positive_portable_coordinate_is_rejected:3cabdddec9f4ab16",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_freshly_rehashed_positive_portable_coordinate_is_rejected",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 109,
+        "end_line": 117,
+        "signature_hash": "ee0e12a7a5f4c461",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_still_fails:c052e93d40176ffc",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_still_fails",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 93,
+        "end_line": 97,
+        "signature_hash": "78789c2f9e5b6bde",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_portable_unknown_coordinate_is_tamper_evident_and_nonauthorizing:82d2222e3e0555ae",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_portable_unknown_coordinate_is_tamper_evident_and_nonauthorizing",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 99,
+        "end_line": 107,
+        "signature_hash": "a74dfd5b76949181",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_repaired_point_holds_unknown_until_temporal_authentication:1d2cc3dc1b7b0535",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_repaired_point_holds_unknown_until_temporal_authentication",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 61,
+        "end_line": 69,
+        "signature_hash": "5390bae90b8bdaaa",
+        "file_digest8": "ff48504ce8a871e3"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_stale_point_is_unknown_before_time_relation:e306f21f49b83ccb",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_stale_point_is_unknown_before_time_relation",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 71,
+        "end_line": 76,
+        "signature_hash": "96dc5bf4614e85fd",
+        "file_digest8": "ff48504ce8a871e3"
       },
       {
         "semantic_id": "tools/awj032/airllm_source_admission.py#class:Finding:bf46a0e466c67b5f",
@@ -459300,6 +462185,946 @@
         "file_digest8": "323452d323e79bce"
       },
       {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:AdmittedAssetRefV1:728675d4c4dab2a9",
+        "name": "AdmittedAssetRefV1",
+        "kind": "class",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 79,
+        "end_line": 105,
+        "signature_hash": "577387c81e5d84f8",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:CreatorTimelineV1:bf4077e7dea8a548",
+        "name": "CreatorTimelineV1",
+        "kind": "class",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 124,
+        "end_line": 224,
+        "signature_hash": "5a575473a0f9873c",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:TimelineClipV1:4cea21488ec9cab3",
+        "name": "TimelineClipV1",
+        "kind": "class",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 109,
+        "end_line": 120,
+        "signature_hash": "3bdb22ccb2d2761d",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#class:TimelineContractError:663ba818c45d6c53",
+        "name": "TimelineContractError",
+        "kind": "class",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "f6528f2d01d5e8a2",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:_clean_id:3fbac5caa037019e",
+        "name": "_clean_id",
+        "kind": "function",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 44,
+        "end_line": 48,
+        "signature_hash": "139ad905ad33246f",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:_clean_text:1a80323bb51fbcf7",
+        "name": "_clean_text",
+        "kind": "function",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 30,
+        "end_line": 41,
+        "signature_hash": "0b584b1815d83212",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:canonical_tag_set:1ecb4b1139795ae9",
+        "name": "canonical_tag_set",
+        "kind": "function",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 51,
+        "end_line": 63,
+        "signature_hash": "72e4d2ae8632688e",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:tag_set_fingerprint:330fb0d50470249f",
+        "name": "tag_set_fingerprint",
+        "kind": "function",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 66,
+        "end_line": 75,
+        "signature_hash": "188030f1634ee672",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#function:validate_otio_roundtrip:4a00ee07a77ef5cd",
+        "name": "validate_otio_roundtrip",
+        "kind": "function",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 227,
+        "end_line": 265,
+        "signature_hash": "8cc5394d1bae6638",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:AdmittedAssetRefV1.__post_init__:ac68603abb307beb",
+        "name": "AdmittedAssetRefV1.__post_init__",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 93,
+        "end_line": 101,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:AdmittedAssetRefV1.tag_fingerprint:ea3ed360afa04afc",
+        "name": "AdmittedAssetRefV1.tag_fingerprint",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 104,
+        "end_line": 105,
+        "signature_hash": "752d280e8993dc67",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.__post_init__:b9a5920f10d10709",
+        "name": "CreatorTimelineV1.__post_init__",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 130,
+        "end_line": 142,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1._composition_record:2d46c65decb75fa8",
+        "name": "CreatorTimelineV1._composition_record",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 148,
+        "end_line": 162,
+        "signature_hash": "e6ca383f2900af01",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1._evidence_record:c2ddc308ee326327",
+        "name": "CreatorTimelineV1._evidence_record",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 164,
+        "end_line": 177,
+        "signature_hash": "aabfc04017843b14",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.composition_digest:4a02fa275b57e582",
+        "name": "CreatorTimelineV1.composition_digest",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 180,
+        "end_line": 182,
+        "signature_hash": "e43ef37db9133a24",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.evidence_binding_digest:d5fb4fc56e1e3571",
+        "name": "CreatorTimelineV1.evidence_binding_digest",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 185,
+        "end_line": 187,
+        "signature_hash": "59b7b1a5f1b315c4",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.rate:8e8606aa3f78f197",
+        "name": "CreatorTimelineV1.rate",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 145,
+        "end_line": 146,
+        "signature_hash": "58d305fd864a7904",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.to_otio:dbdaf6ebe92cb38f",
+        "name": "CreatorTimelineV1.to_otio",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 189,
+        "end_line": 221,
+        "signature_hash": "f6d7ada9a37ee67d",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:CreatorTimelineV1.to_otio_json:d6a4d2fc42659ce2",
+        "name": "CreatorTimelineV1.to_otio_json",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 223,
+        "end_line": 224,
+        "signature_hash": "6bf3347e8249a303",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/creator_studio/neutral_timeline_contract.py#method:TimelineClipV1.__post_init__:f5a2bbf733224d46",
+        "name": "TimelineClipV1.__post_init__",
+        "kind": "method",
+        "file": "tools/creator_studio/neutral_timeline_contract.py",
+        "line": 115,
+        "end_line": 120,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "568c0c377a2de379"
+      },
+      {
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#class:CalibrationTemporalScopeReceipt:040edc889189eacb",
+        "name": "CalibrationTemporalScopeReceipt",
+        "kind": "class",
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "line": 57,
+        "end_line": 106,
+        "signature_hash": "47fa4a0ddfaf1ebd",
+        "file_digest8": "1f214c9e9047a743"
+      },
+      {
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:_canonical:76cd40f19f7f9e95",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "line": 26,
+        "end_line": 27,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "1f214c9e9047a743"
+      },
+      {
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:_digest:083d24bb6c734280",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "line": 30,
+        "end_line": 31,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "1f214c9e9047a743"
+      },
+      {
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:_nonnegative_int:eaa3e79c56eb21a7",
+        "name": "_nonnegative_int",
+        "kind": "function",
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "line": 34,
+        "end_line": 37,
+        "signature_hash": "af41151bb978c8ca",
+        "file_digest8": "1f214c9e9047a743"
+      },
+      {
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:_parents:174d82604cb2e070",
+        "name": "_parents",
+        "kind": "function",
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "line": 47,
+        "end_line": 53,
+        "signature_hash": "9bb8e5ba9e061add",
+        "file_digest8": "1f214c9e9047a743"
+      },
+      {
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:_positive_int:c6b46287bfc43ae5",
+        "name": "_positive_int",
+        "kind": "function",
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "line": 40,
+        "end_line": 44,
+        "signature_hash": "3b7bd9eb822e7406",
+        "file_digest8": "1f214c9e9047a743"
+      },
+      {
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:bind_calibration_temporal_scope:e6f9f0bccce0e9c0",
+        "name": "bind_calibration_temporal_scope",
+        "kind": "function",
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "line": 109,
+        "end_line": 189,
+        "signature_hash": "8a99eed2c5b9114f",
+        "file_digest8": "1f214c9e9047a743"
+      },
+      {
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:portable_calibration_temporal_scope_receipt:7b94072a3d21157d",
+        "name": "portable_calibration_temporal_scope_receipt",
+        "kind": "function",
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "line": 192,
+        "end_line": 199,
+        "signature_hash": "11d821610207e379",
+        "file_digest8": "1f214c9e9047a743"
+      },
+      {
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#function:public_inputs:7b32bd8eed6a09de",
+        "name": "public_inputs",
+        "kind": "function",
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "line": 202,
+        "end_line": 203,
+        "signature_hash": "5e4ecdd2ab5e340c",
+        "file_digest8": "1f214c9e9047a743"
+      },
+      {
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#method:CalibrationTemporalScopeReceipt.receipt_digest:bb6598bf9cfe44a9",
+        "name": "CalibrationTemporalScopeReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "line": 105,
+        "end_line": 106,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "1f214c9e9047a743"
+      },
+      {
+        "semantic_id": "tools/spatial/calibration_temporal_scope.py#method:CalibrationTemporalScopeReceipt.to_dict:6046f33ce32c167a",
+        "name": "CalibrationTemporalScopeReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/spatial/calibration_temporal_scope.py",
+        "line": 101,
+        "end_line": 102,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "1f214c9e9047a743"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:BinocularCalibrationV2:7fd1fb482b7106d6",
+        "name": "BinocularCalibrationV2",
+        "kind": "class",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 349,
+        "end_line": 367,
+        "signature_hash": "e2d0e9c70a5319bf",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CalibrationContractError:a5bb61c9bfd3ec93",
+        "name": "CalibrationContractError",
+        "kind": "class",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "46666748c69a2f08",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CalibrationQualityPolicyV1:eda555ecd1ff3fbd",
+        "name": "CalibrationQualityPolicyV1",
+        "kind": "class",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 72,
+        "end_line": 100,
+        "signature_hash": "76bd05c64a14199c",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CameraCalibrationDatasetV1:c9eff7bbb3f19f43",
+        "name": "CameraCalibrationDatasetV1",
+        "kind": "class",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 116,
+        "end_line": 140,
+        "signature_hash": "229560ba18b90f55",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CameraCalibrationEvidenceV1:0b3c2e70c21e6467",
+        "name": "CameraCalibrationEvidenceV1",
+        "kind": "class",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 144,
+        "end_line": 154,
+        "signature_hash": "4f7074d5d4bca1b7",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CameraCalibrationSampleV1:6e0468f324b02c11",
+        "name": "CameraCalibrationSampleV1",
+        "kind": "class",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 104,
+        "end_line": 112,
+        "signature_hash": "44678ece649353f1",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CameraIntrinsicsV2:5d55fd40afe4077f",
+        "name": "CameraIntrinsicsV2",
+        "kind": "class",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 232,
+        "end_line": 248,
+        "signature_hash": "2315953c56034ee4",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:CoordinateSpace:3fbc5ed18c847a03",
+        "name": "CoordinateSpace",
+        "kind": "class",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 33,
+        "end_line": 35,
+        "signature_hash": "689c130dd76dd319",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:IpdCalibrationEvidenceV1:fbdb809a9ac56a90",
+        "name": "IpdCalibrationEvidenceV1",
+        "kind": "class",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 278,
+        "end_line": 287,
+        "signature_hash": "1c3391d9c27748a1",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#class:IpdMeasurementDatasetV1:c75aa194c5b6721b",
+        "name": "IpdMeasurementDatasetV1",
+        "kind": "class",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 252,
+        "end_line": 274,
+        "signature_hash": "37d0c34f900eb6ce",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_camera_evidence_payload:e72c14fabfa7ad61",
+        "name": "_camera_evidence_payload",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 170,
+        "end_line": 187,
+        "signature_hash": "c2e4c0dd3ab7c49c",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_clean_id:4e16a9ff5bbb8498",
+        "name": "_clean_id",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 57,
+        "end_line": 63,
+        "signature_hash": "0e17f8e6f01a50cf",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_demo_camera_dataset:1934455afd484269",
+        "name": "_demo_camera_dataset",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 429,
+        "end_line": 439,
+        "signature_hash": "4aaf120ae638deaf",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_digest:9d2632692e999104",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 66,
+        "end_line": 68,
+        "signature_hash": "d4a8cba568e54ac5",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_fit_axis:d4855d75c98d269f",
+        "name": "_fit_axis",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 157,
+        "end_line": 167,
+        "signature_hash": "c85570fee589d8df",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_ipd_payload:04709bf78003a091",
+        "name": "_ipd_payload",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 290,
+        "end_line": 309,
+        "signature_hash": "7a79851400847c7b",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_number:e51e0941b0ecf6c7",
+        "name": "_number",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 38,
+        "end_line": 48,
+        "signature_hash": "2581552b6e70d714",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:_positive_int:81616a0283a57021",
+        "name": "_positive_int",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 51,
+        "end_line": 54,
+        "signature_hash": "56c466b6c84908fb",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:assumed_population_ipd:0e697bd6facaf782",
+        "name": "assumed_population_ipd",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 386,
+        "end_line": 392,
+        "signature_hash": "939e35420ab613d7",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:eligibility_receipt:c2053ced168eada3",
+        "name": "eligibility_receipt",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 395,
+        "end_line": 426,
+        "signature_hash": "2e90c5ae758dd94f",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:main:7641055b638a62fa",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 442,
+        "end_line": 448,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:nominal_intrinsics_from_horizontal_fov:f4f9d8e184a9eb1e",
+        "name": "nominal_intrinsics_from_horizontal_fov",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 370,
+        "end_line": 383,
+        "signature_hash": "b2a094fb7a362db1",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:produce_camera_calibration_evidence:389c38c1a482008a",
+        "name": "produce_camera_calibration_evidence",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 190,
+        "end_line": 218,
+        "signature_hash": "3153330b8ce4c823",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:produce_ipd_calibration_evidence:cbc435bfd959edb7",
+        "name": "produce_ipd_calibration_evidence",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 312,
+        "end_line": 335,
+        "signature_hash": "8cc2b5e755c9933d",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:verify_camera_calibration_evidence:778d990931871322",
+        "name": "verify_camera_calibration_evidence",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 221,
+        "end_line": 228,
+        "signature_hash": "8c45489255f356b0",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#function:verify_ipd_calibration_evidence:e8f7e9f2fdc4c6b5",
+        "name": "verify_ipd_calibration_evidence",
+        "kind": "function",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 338,
+        "end_line": 345,
+        "signature_hash": "30dea0f15a6ca93e",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:BinocularCalibrationV2.eye_origin_sigma_m:c4485159b2cabd5c",
+        "name": "BinocularCalibrationV2.eye_origin_sigma_m",
+        "kind": "method",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 357,
+        "end_line": 361,
+        "signature_hash": "0618d3997924cd74",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:BinocularCalibrationV2.eye_origins_about_midpoint:2869504e3b308051",
+        "name": "BinocularCalibrationV2.eye_origins_about_midpoint",
+        "kind": "method",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 363,
+        "end_line": 367,
+        "signature_hash": "c14923954812e706",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:BinocularCalibrationV2.metric_eye_origin_eligible:9f9c11e89b7973d3",
+        "name": "BinocularCalibrationV2.metric_eye_origin_eligible",
+        "kind": "method",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 353,
+        "end_line": 354,
+        "signature_hash": "379bcc4aac0f290a",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CalibrationQualityPolicyV1.__post_init__:962c826354a46a7d",
+        "name": "CalibrationQualityPolicyV1.__post_init__",
+        "kind": "method",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 81,
+        "end_line": 96,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CalibrationQualityPolicyV1.digest:0febb89fe1e4bc28",
+        "name": "CalibrationQualityPolicyV1.digest",
+        "kind": "method",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 99,
+        "end_line": 100,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CameraCalibrationDatasetV1.__post_init__:22d7aa40a22d7255",
+        "name": "CameraCalibrationDatasetV1.__post_init__",
+        "kind": "method",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 125,
+        "end_line": 136,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CameraCalibrationDatasetV1.digest:a1858e29bcd9c3d7",
+        "name": "CameraCalibrationDatasetV1.digest",
+        "kind": "method",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 139,
+        "end_line": 140,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CameraCalibrationSampleV1.__post_init__:b404b9e428886c89",
+        "name": "CameraCalibrationSampleV1.__post_init__",
+        "kind": "method",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 110,
+        "end_line": 112,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CameraIntrinsicsV2.metric_ray_eligible:9aa152ef35f66c78",
+        "name": "CameraIntrinsicsV2.metric_ray_eligible",
+        "kind": "method",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 236,
+        "end_line": 237,
+        "signature_hash": "ce965b130cfca66f",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:CameraIntrinsicsV2.unit_ray_from_undistorted_pixel:c6938b27b8f89b38",
+        "name": "CameraIntrinsicsV2.unit_ray_from_undistorted_pixel",
+        "kind": "method",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 239,
+        "end_line": 248,
+        "signature_hash": "c046b5dc8ae5bc56",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:IpdMeasurementDatasetV1.__post_init__:8472dbd7216204fc",
+        "name": "IpdMeasurementDatasetV1.__post_init__",
+        "kind": "method",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 260,
+        "end_line": 270,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/eye_calibration_contract.py#method:IpdMeasurementDatasetV1.digest:b0d476be8427302c",
+        "name": "IpdMeasurementDatasetV1.digest",
+        "kind": "method",
+        "file": "tools/spatial/eye_calibration_contract.py",
+        "line": 273,
+        "end_line": 274,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "553dfb4d35eac6c0"
+      },
+      {
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#class:OpticalContractError:59a69f42c2572a87",
+        "name": "OpticalContractError",
+        "kind": "class",
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "line": 22,
+        "end_line": 23,
+        "signature_hash": "80c978b5511b5195",
+        "file_digest8": "5c3361d1a88eb75b"
+      },
+      {
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#class:OpticalInvariantReceiptV1:065197cf7f2639c6",
+        "name": "OpticalInvariantReceiptV1",
+        "kind": "class",
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "line": 134,
+        "end_line": 157,
+        "signature_hash": "381d0a9f4d280384",
+        "file_digest8": "5c3361d1a88eb75b"
+      },
+      {
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:angular_spectrum_propagate:2137075f250073f5",
+        "name": "angular_spectrum_propagate",
+        "kind": "function",
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "line": 52,
+        "end_line": 88,
+        "signature_hash": "44b50d1887c454dc",
+        "file_digest8": "5c3361d1a88eb75b"
+      },
+      {
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:deterministic_fixture:68b31d8e8207503d",
+        "name": "deterministic_fixture",
+        "kind": "function",
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "line": 239,
+        "end_line": 249,
+        "signature_hash": "9ce33dca7467a21e",
+        "file_digest8": "5c3361d1a88eb75b"
+      },
+      {
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:measure_invariants:8730ea8f177ecdc9",
+        "name": "measure_invariants",
+        "kind": "function",
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "line": 160,
+        "end_line": 236,
+        "signature_hash": "8846e6ac91ffa213",
+        "file_digest8": "5c3361d1a88eb75b"
+      },
+      {
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:normalized_field_error:587f8e1e0739ed25",
+        "name": "normalized_field_error",
+        "kind": "function",
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "line": 33,
+        "end_line": 41,
+        "signature_hash": "ceed0505c71add03",
+        "file_digest8": "5c3361d1a88eb75b"
+      },
+      {
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:optical_power:5e2165851e862fbd",
+        "name": "optical_power",
+        "kind": "function",
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "line": 26,
+        "end_line": 30,
+        "signature_hash": "bcae479377f1845f",
+        "file_digest8": "5c3361d1a88eb75b"
+      },
+      {
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:phase_only_projection:73c3d0538edbd01a",
+        "name": "phase_only_projection",
+        "kind": "function",
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "line": 112,
+        "end_line": 119,
+        "signature_hash": "6c534f5d45727010",
+        "file_digest8": "5c3361d1a88eb75b"
+      },
+      {
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:propagating_spectral_power_fraction:96a87efddeecbd32",
+        "name": "propagating_spectral_power_fraction",
+        "kind": "function",
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "line": 91,
+        "end_line": 109,
+        "signature_hash": "4f722b0b14ac42a4",
+        "file_digest8": "5c3361d1a88eb75b"
+      },
+      {
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:speckle_contrast:67efc572c219ff98",
+        "name": "speckle_contrast",
+        "kind": "function",
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "line": 44,
+        "end_line": 49,
+        "signature_hash": "2092f2a792719bfa",
+        "file_digest8": "5c3361d1a88eb75b"
+      },
+      {
+        "semantic_id": "tools/spatial/optical_invariant_witness.py#function:validate_codec_filename:08d95b74e540e078",
+        "name": "validate_codec_filename",
+        "kind": "function",
+        "file": "tools/spatial/optical_invariant_witness.py",
+        "line": 122,
+        "end_line": 130,
+        "signature_hash": "eed2534077e427df",
+        "file_digest8": "5c3361d1a88eb75b"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeCoordinate:a76dc6e6a47590f2",
+        "name": "TemporalEvidenceScopeCoordinate",
+        "kind": "class",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 66,
+        "end_line": 107,
+        "signature_hash": "cc261fd5e3e2c4b8",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeError:b6e0061efe702f05",
+        "name": "TemporalEvidenceScopeError",
+        "kind": "class",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 33,
+        "end_line": 37,
+        "signature_hash": "2340462d0127e911",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_canonical:6b25ede425721fdb",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 40,
+        "end_line": 43,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_datetime_ns:7649bd7747019780",
+        "name": "_datetime_ns",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 60,
+        "end_line": 62,
+        "signature_hash": "261c131fb889d031",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_digest:7426ed05a57735ff",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_parse_time:207a51d90fb9ee59",
+        "name": "_parse_time",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 50,
+        "end_line": 57,
+        "signature_hash": "0e7d03ca78676525",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_validate_series:0c613437359ada51",
+        "name": "_validate_series",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 110,
+        "end_line": 139,
+        "signature_hash": "715b2019ba747fb5",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:bind_temporal_evidence_scope:6a5978ea886832fb",
+        "name": "bind_temporal_evidence_scope",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 142,
+        "end_line": 196,
+        "signature_hash": "19027a376992efa4",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:portable_temporal_evidence_scope_receipt:fc8dea3355f5f7e9",
+        "name": "portable_temporal_evidence_scope_receipt",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 283,
+        "end_line": 295,
+        "signature_hash": "d7df1893885c8c2e",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:verify_temporal_evidence_scope_coordinate:11674854ba2b738c",
+        "name": "verify_temporal_evidence_scope_coordinate",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 220,
+        "end_line": 280,
+        "signature_hash": "97a71849ccb4be37",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.coordinate_digest:94ea7ec41dce2315",
+        "name": "TemporalEvidenceScopeCoordinate.coordinate_digest",
+        "kind": "method",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 102,
+        "end_line": 103,
+        "signature_hash": "ab3c3df3e11c71cd",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.evidence_ref:6ea642c1d63d8a6f",
+        "name": "TemporalEvidenceScopeCoordinate.evidence_ref",
+        "kind": "method",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 106,
+        "end_line": 107,
+        "signature_hash": "c27cb8129b449d59",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.to_dict:bb7bab207d496b24",
+        "name": "TemporalEvidenceScopeCoordinate.to_dict",
+        "kind": "method",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 98,
+        "end_line": 99,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeError.__init__:b0b3ea5930e70609",
+        "name": "TemporalEvidenceScopeError.__init__",
+        "kind": "method",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 34,
+        "end_line": 37,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "ed57453c6d68dacf"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -460550,7 +464375,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "7c8ded7186b07ae29b43995224aa7aff",
-    "payload_hash": "da554dd6ac05a843ea2a4bd4a9c77bcc"
+    "record_fingerprint": "db6b6fedbae7de24971a5a0c2d79a998",
+    "payload_hash": "fb73b849d72112cbab842aa110ed2879"
   }
 }
