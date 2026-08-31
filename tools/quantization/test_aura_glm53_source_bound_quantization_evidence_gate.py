@@ -4,6 +4,8 @@ import inspect
 import unittest
 
 from tools.quantization.aura_glm53_source_bound_quantization_evidence_gate import (
+    HISTORICAL_BRIDGE_OWNER_BLOB_SHA,
+    HISTORICAL_BRIDGE_VERSION,
     HISTORICAL_W2_DRIVE_OBSERVATION,
     HISTORICAL_W2_HEADER_SHA256,
     HISTORICAL_W2_JOB,
@@ -19,6 +21,7 @@ from tools.quantization.aura_glm53_source_bound_quantization_evidence_gate impor
     Q6_EXACT_HEAD,
     Q6_EXACT_RUN,
     SYNTHETIC_DISTORTION_SCOPE,
+    _current_historical_bridge,
     _current_q5_snapshot,
     _evaluate,
     current_source_bound_evidence_gate,
@@ -28,6 +31,7 @@ from tools.quantization.aura_glm53_source_bound_quantization_evidence_gate impor
 class SourceBoundEvidenceGateTests(unittest.TestCase):
     def test_current_gate_separates_historical_source_proof_from_current_holds(self):
         out = current_source_bound_evidence_gate()
+        bridge = _current_historical_bridge()
         self.assertEqual(out.q5_source_head, Q5_EXACT_HEAD)
         self.assertEqual(out.q5_source_run, Q5_EXACT_RUN)
         self.assertEqual(out.q6_evidence_head, Q6_EXACT_HEAD)
@@ -39,6 +43,9 @@ class SourceBoundEvidenceGateTests(unittest.TestCase):
         self.assertFalse(out.current_source_index_bytes_verified)
         self.assertFalse(out.current_source_headers_observed)
         self.assertFalse(out.current_source_header_trial_eligible)
+        self.assertEqual(out.historical_bridge_version, HISTORICAL_BRIDGE_VERSION)
+        self.assertEqual(out.historical_bridge_owner_blob, HISTORICAL_BRIDGE_OWNER_BLOB_SHA)
+        self.assertEqual(out.historical_bridge_digest, bridge.digest)
         self.assertTrue(out.historical_official_index_relation_observed)
         self.assertTrue(out.historical_official_headers_observed)
         self.assertTrue(out.historical_official_fp8_companions_bound)
@@ -62,6 +69,7 @@ class SourceBoundEvidenceGateTests(unittest.TestCase):
 
     def test_public_current_gate_has_no_override_surface(self):
         self.assertEqual(tuple(inspect.signature(current_source_bound_evidence_gate).parameters), ())
+        self.assertEqual(tuple(inspect.signature(_current_historical_bridge).parameters), ())
 
     def test_index_object_identity_cannot_self_mint_current_index_bytes(self):
         source = _current_q5_snapshot()
@@ -131,10 +139,11 @@ class SourceBoundEvidenceGateTests(unittest.TestCase):
         self.assertFalse(out.native_transformer_kv_accessed)
         self.assertFalse(out.gate10_promoted)
 
-    def test_gate_is_deterministic(self):
+    def test_gate_and_bridge_are_deterministic(self):
         a = current_source_bound_evidence_gate()
         b = current_source_bound_evidence_gate()
         self.assertEqual(a.gate_digest, b.gate_digest)
+        self.assertEqual(_current_historical_bridge().digest, _current_historical_bridge().digest)
 
 
 if __name__ == "__main__":
