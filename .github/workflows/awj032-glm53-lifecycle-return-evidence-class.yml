@@ -1,0 +1,84 @@
+name: AWJ032 GLM53 Lifecycle Return Evidence Class
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  evidence-class-boundary:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Fetch exact pull-request head without submodule traversal
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Prove parent return packet and evidence-class boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          python3 -m py_compile \
+            tools/awj032/glm53_owner_host_c2_handoff.py \
+            tools/awj032/glm53_owner_host_lifecycle_return_packet.py \
+            tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py
+          python3 -m unittest -v \
+            tools.awj032.test_glm53_owner_host_c2_handoff \
+            tools.awj032.test_glm53_owner_host_lifecycle_return_packet \
+            tools.awj032.test_glm53_lifecycle_return_evidence_class_boundary
+
+      - name: Assert class preservation and nonpromotion ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from tools.awj032.glm53_lifecycle_return_evidence_class_boundary import (
+              INPUT_EVIDENCE_CLASS,
+              TARGET_EVIDENCE_CLASS,
+              LifecycleReturnEvidenceClassReceipt,
+              preserve_lifecycle_return_evidence_class,
+          )
+
+          assert set(inspect.signature(preserve_lifecycle_return_evidence_class).parameters) == {"packet"}
+          fields = LifecycleReturnEvidenceClassReceipt.__dataclass_fields__
+          assert fields["input_evidence_class"].default == INPUT_EVIDENCE_CLASS
+          assert fields["output_evidence_class"].default == INPUT_EVIDENCE_CLASS
+          assert fields["target_evidence_class"].default == TARGET_EVIDENCE_CLASS
+          assert INPUT_EVIDENCE_CLASS != TARGET_EVIDENCE_CLASS
+          assert fields["same_lifecycle_reference_is_type_conversion"].default is False
+          assert fields["attempt_counters_are_lifecycle_metrics"].default is False
+          assert fields["corroboration_can_upgrade_evidence_class"].default is False
+          assert fields["digest_preservation_can_upgrade_evidence_class"].default is False
+          assert fields["cross_cast_to_lifecycle_measurement_receipt_permitted"].default is False
+          assert fields["independent_lifecycle_producer_receipt_required"].default is True
+          assert fields["independent_registry_verification_required"].default is True
+          assert fields["producer_authenticated"].default is False
+          assert fields["lifecycle_registry_verified"].default is False
+          assert fields["real_w4_policy_winner_proven"].default is False
+          assert fields["full_model_runtime_proven"].default is False
+          assert fields["quality_proven"].default is False
+          assert fields["g2_admitted"].default is False
+          assert fields["effect_authority_proven"].default is False
+          print("RETURN_EVIDENCE_CLASS_PRESERVED=true")
+          print("RETURN_PACKET_IS_W4_LIFECYCLE_RECEIPT=false")
+          print("PRODUCER_AUTHENTICATED=false")
+          print("LIFECYCLE_REGISTRY_VERIFIED=false")
+          print("G2_ADMITTED=false")
+          PY
