@@ -11,11 +11,11 @@ pub const EDGE_ENTRY_SIZE: usize = 9;
 pub const MAX_EDGES_PER_BLOCK: usize = 384;
 pub const EDGE_DATA_OFFSET: usize = EDGE_HEADER_SIZE + ROW_OFFSETS_SIZE;
 pub const EDGE_USED_BYTES: usize = EDGE_DATA_OFFSET + MAX_EDGES_PER_BLOCK * EDGE_ENTRY_SIZE;
-pub const EDGE_PADDING_BYTES: usize = BLOCK_SIZE - EDGE_USED_BYTES;
 pub const EDGE_MAGIC: &[u8; 8] = b"AUK27E01";
 pub const K27_MODULUS: u128 = 7_625_597_484_987; // 3^27
 
 const _: () = assert!(EDGE_USED_BYTES <= BLOCK_SIZE);
+const _: () = assert!(BLOCK_SIZE - EDGE_USED_BYTES == 94);
 const _: () = assert!(NODE_RECORD_SIZE == 64);
 const _: () = assert!(MAX_ROWS_PER_BLOCK <= u16::MAX as usize);
 const _: () = assert!(MAX_EDGES_PER_BLOCK <= u16::MAX as usize);
