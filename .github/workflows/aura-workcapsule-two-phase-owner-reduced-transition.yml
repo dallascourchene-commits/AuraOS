@@ -1,0 +1,101 @@
+name: Aura WorkCapsule Two-Phase Owner-Reduced Transition
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_stale_exact_observation_owner_reduction.py'
+      - 'tests/test_aura_workcapsule_stale_exact_observation_owner_reduction.py'
+      - 'scripts/aura_workcapsule_two_phase_source_bound_closure.py'
+      - 'tests/test_aura_workcapsule_two_phase_source_bound_closure.py'
+      - 'scripts/aura_workcapsule_two_phase_owner_reduced_transition.py'
+      - 'tests/test_aura_workcapsule_two_phase_owner_reduced_transition.py'
+      - '.github/workflows/aura-workcapsule-two-phase-owner-reduced-transition.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hold-to-closed-owner-reduced-transition:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR524 owner-reduced rejected-currentness HOLD
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_stale_exact_reentry.py
+          python3 -m py_compile scripts/aura_workcapsule_stale_exact_observation_owner_reduction.py
+          python3 -m unittest -v tests.test_aura_workcapsule_stale_exact_reentry
+          python3 -m unittest -v tests.test_aura_workcapsule_stale_exact_observation_owner_reduction
+
+      - name: Re-prove PR518 distinct two-phase lifecycle
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_source_bound_exact_reentry.py
+          python3 -m py_compile scripts/aura_workcapsule_two_phase_source_bound_closure.py
+          python3 -m unittest -v tests.test_aura_workcapsule_source_bound_exact_reentry
+          python3 -m unittest -v tests.test_aura_workcapsule_two_phase_source_bound_closure
+
+      - name: Prove exact HOLD to distinct CLOSED transition
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_two_phase_owner_reduced_transition.py
+          python3 -m unittest -v tests.test_aura_workcapsule_two_phase_owner_reduced_transition
+
+      - name: Assert child consumes owners without raw replay reimplementation
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          source = Path('scripts/aura_workcapsule_two_phase_owner_reduced_transition.py').read_text()
+          forbidden = [
+              'compile_source_reentry_observations',
+              'compile_expected_source_bound_reentry',
+              'compile_observation_bound_reentry_closure',
+              'derive_post_reentry_candidate',
+              'compile_reentry_closure',
+          ]
+          for name in forbidden:
+              assert name not in source, name
+          assert 'verify_stale_exact_observation_owner_reduction' in source
+          assert 'verify_two_phase_source_bound_exact_closure' in source
+          print('RAW_REPLAY_REIMPLEMENTED_BY_CHILD=false')
+          print('PR524_OWNER_CONSUMED=true')
+          print('PR518_OWNER_CONSUMED=true')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'PRE_REPAIR_REJECTED_CURRENTNESS_HOLD_PROVEN=true'
+          echo 'POST_REPAIR_DISTINCT_PHASE_CLOSED_PROVEN=true'
+          echo 'SAME_PRE_SOURCE_OBSERVATION_WITNESSED_BY_BOTH_PARENTS=true'
+          echo 'PRE_POST_EVIDENCE_COLLAPSE_ALLOWED=false'
+          echo 'POST_HOLD_PROMOTED_TO_CLOSED=false'
+          echo 'RAW_REPLAY_REIMPLEMENTED_BY_CHILD=false'
+          echo 'SOURCE_CURRENTNESS_MINTED=false'
+          echo 'PRODUCER_IDENTITY_AUTHENTICATED=false'
+          echo 'PRE_GRAPH_PRODUCER_AUTHENTICATED=false'
+          echo 'POST_GRAPH_PRODUCER_AUTHENTICATED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_INVALIDATION_CONE_PROVEN=false'
+          echo 'SEMANTIC_TRUTH_MINTED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
