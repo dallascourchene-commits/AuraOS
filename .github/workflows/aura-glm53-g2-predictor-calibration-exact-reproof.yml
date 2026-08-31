@@ -1,0 +1,102 @@
+name: Aura GLM53 G2 Predictor Calibration Exact Reproof
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_g2_predictor_calibration_binding.py"
+      - "tools/awj032/test_glm53_g2_predictor_calibration_binding.py"
+      - ".github/workflows/aura-glm53-g2-predictor-calibration-binding-w3.yml"
+      - ".github/workflows/aura-glm53-g2-predictor-calibration-exact-reproof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-reproof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      SEMANTIC_BLOB: "9ecba5cd71a2fe6096e9fde08a139a5feace3f53"
+      TEST_BLOB: "c084d71182519d49463072fd3d3a1da155e3ce05"
+      G2_PARENT_HEAD: "44831fd5454d08a97bd0b172337cf4c48a339dfe"
+      G2_PARENT_RUN_1: "33414707814"
+      G2_PARENT_RUN_2: "33414707855"
+    steps:
+      - name: Exact authenticated checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Authenticate semantic and repaired test blobs
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/awj032/glm53_g2_predictor_calibration_binding.py)" = "$SEMANTIC_BLOB"
+          test "$(git hash-object tools/awj032/test_glm53_g2_predictor_calibration_binding.py)" = "$TEST_BLOB"
+          echo "SEMANTIC_IMPLEMENTATION_UNCHANGED=true"
+          echo "TEST_HARNESS_REPAIRED=true"
+
+      - name: Revalidate exact-green G2 parent proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          token=os.environ['GH_TOKEN']
+          expected_head=os.environ['G2_PARENT_HEAD']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          for run_id in (int(os.environ['G2_PARENT_RUN_1']), int(os.environ['G2_PARENT_RUN_2'])):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: run=json.load(r)
+              assert run['head_sha']==expected_head,(run_id,run['head_sha'],expected_head)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+          print('G2_PARENT_EXACT_GREEN=true')
+          PY
+
+      - name: Prove unittest runner contract and compile
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import ast
+          from pathlib import Path
+          p=Path('tools/awj032/test_glm53_g2_predictor_calibration_binding.py')
+          tree=ast.parse(p.read_text(encoding='utf-8'),filename=str(p))
+          cls=next(n for n in tree.body if isinstance(n,ast.ClassDef) and n.name=='G2PredictorCalibrationBindingTests')
+          names={n.name for n in cls.body if isinstance(n,(ast.FunctionDef,ast.AsyncFunctionDef))}
+          assert 'run' not in names, 'TESTCASE_RUNNER_SHADOWED'
+          assert 'exercise' in names, 'TEST_HELPER_MISSING'
+          print('UNITTEST_RUNNER_INTEGRITY=true')
+          PY
+          python3 -m py_compile \
+            tools/awj032/glm53_prefetch_transfer_admission.py \
+            tools/awj032/glm53_g2_predictor_calibration_binding.py \
+            tools/awj032/test_glm53_g2_predictor_calibration_binding.py
+
+      - name: Run G2 and predictor-calibration adversarial suites
+        run: |
+          set -euo pipefail
+          python3 -m unittest -v \
+            tools.awj032.test_glm53_prefetch_transfer_admission \
+            tools.awj032.test_glm53_g2_predictor_calibration_binding
+
+      - name: Enforce identity and nonpromotion laws
+        run: |
+          set -euo pipefail
+          grep -q 'CalibrationGeneration!=PredictorGeneration' tools/awj032/glm53_g2_predictor_calibration_binding.py
+          grep -q 'PredictionGeneration+CalibrationGeneration+PolicyGenerationMustCommute' tools/awj032/glm53_g2_predictor_calibration_binding.py
+          grep -q 'PredictorCalibrationBinding!=TransferAuthority' tools/awj032/glm53_g2_predictor_calibration_binding.py
+          echo "G2_PREDICTOR_CALIBRATION_EXACT_REPROOF=PASS"
+          echo "MODEL_PROVIDER_EXECUTION=false"
+          echo "PHYSICAL_IO_OBSERVED=false"
+          echo "G2_PROMOTED=false"
+          echo "SEMANTIC_K27_AUTHORITY=false"
