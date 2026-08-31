@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788209982,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1643,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -188,6 +188,7 @@
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+      ".github/workflows/universal-loop-safety-guard.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
@@ -1093,6 +1094,7 @@
       "docs/PR_KIT.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
       "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
+      "docs/UNIVERSAL_LOOP_SAFETY_PREFLIGHT.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
@@ -1465,6 +1467,7 @@
       "tests/test_aura_event_contracts.py",
       "tests/test_aura_event_privacy_hardening.py",
       "tests/test_aura_exact_head_transport.py",
+      "tests/test_aura_execution_loop_guard.py",
       "tests/test_aura_external_llm_session.py",
       "tests/test_aura_fetch_construction_demo_source.py",
       "tests/test_aura_financial_contracts.py",
@@ -1631,6 +1634,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_execution_loop_guard.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1759,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1643,
+      "bytes": 26432311,
+      "tokens_est": 6598430,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -135367,6 +135371,136 @@
         "signature_hash": "4f651f8817bf26f1"
       }
     ],
+    "ExecutionLoopGuardTests": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "class",
+        "line": 5,
+        "end_line": 104,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#class:ExecutionLoopGuardTests:be1f0db73eec864c",
+        "signature_hash": "464f67c13b6c64a6"
+      }
+    ],
+    "ExecutionLoopGuardTests.setUp": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 6,
+        "end_line": 15,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.setUp:8b6dba96b58cfb53",
+        "signature_hash": "706017b0e7dd7cef"
+      }
+    ],
+    "ExecutionLoopGuardTests.test_version_and_authority_negative_snapshot": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 21,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_version_and_authority_negative_snapshot:9f8402d169d5e8ab",
+        "signature_hash": "2a1aaeffaac19cff"
+      }
+    ],
+    "ExecutionLoopGuardTests.test_first_read_is_admitted": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_first_read_is_admitted:bb8f42fa5aebed87",
+        "signature_hash": "1dfce63bb8adc2ed"
+      }
+    ],
+    "ExecutionLoopGuardTests.test_identical_read_without_state_transition_is_blocked": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 30,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_identical_read_without_state_transition_is_blocked:45884a7fba49ee2c",
+        "signature_hash": "52ab8777d4d5a83e"
+      }
+    ],
+    "ExecutionLoopGuardTests.test_same_read_after_new_provider_state_is_admitted": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 32,
+        "end_line": 34,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_same_read_after_new_provider_state_is_admitted:6f13795b879eab4c",
+        "signature_hash": "4db861b872b68466"
+      }
+    ],
+    "ExecutionLoopGuardTests.test_exact_write_intent_is_admitted": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 39,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_exact_write_intent_is_admitted:4b388de0fc767531",
+        "signature_hash": "ab75c59a1b69bf7d"
+      }
+    ],
+    "ExecutionLoopGuardTests.test_wrong_action_class_freezes_primitive": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 51,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_wrong_action_class_freezes_primitive:730b2e9a299d30e1",
+        "signature_hash": "dfd72c6d44c9175b"
+      }
+    ],
+    "ExecutionLoopGuardTests.test_wrong_target_or_fields_are_blocked": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 60,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_wrong_target_or_fields_are_blocked:56ae8a15e16fddbd",
+        "signature_hash": "1d7a9cfe5093ac1a"
+      }
+    ],
+    "ExecutionLoopGuardTests.test_noop_content_identity_blocks_repeated_write": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 73,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_noop_content_identity_blocks_repeated_write:ee549c2b4492d138",
+        "signature_hash": "89aeae6f95293a43"
+      }
+    ],
+    "ExecutionLoopGuardTests.test_unintended_semantic_mutation_freezes_all_writes": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 84,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_unintended_semantic_mutation_freezes_all_writes:e569905450bfff3d",
+        "signature_hash": "1e12603cc6a3b657"
+      }
+    ],
+    "ExecutionLoopGuardTests.test_repeated_terminal_poll_is_blocked": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 93,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_repeated_terminal_poll_is_blocked:e071d0cbbc4cdad0",
+        "signature_hash": "2b4e010fa4c9d980"
+      }
+    ],
+    "ExecutionLoopGuardTests.test_nonterminal_poll_can_progress_then_terminal_repeat_blocks": [
+      {
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 104,
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_nonterminal_poll_can_progress_then_terminal_repeat_blocks:9e2a7854fc8e0c37",
+        "signature_hash": "11bcdef6cd1afbb1"
+      }
+    ],
     "FakeBridge.aura_get_micro_context": [
       {
         "file": "tests/test_aura_external_llm_session.py",
@@ -157181,6 +157315,116 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "RetrievalFingerprint": [
+      {
+        "file": "tools/aura_execution_loop_guard.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 15,
+        "semantic_id": "tools/aura_execution_loop_guard.py#class:RetrievalFingerprint:0c8e7cbfb09a798c",
+        "signature_hash": "e010b4068639a302"
+      }
+    ],
+    "MutationIntent": [
+      {
+        "file": "tools/aura_execution_loop_guard.py",
+        "kind": "class",
+        "line": 18,
+        "end_line": 30,
+        "semantic_id": "tools/aura_execution_loop_guard.py#class:MutationIntent:68ab0e3e54552264",
+        "signature_hash": "7348983d9c8de9d5"
+      }
+    ],
+    "MutationIntent.build": [
+      {
+        "file": "tools/aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 30,
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:MutationIntent.build:ea0abe82b6affa0c",
+        "signature_hash": "cdcfbb0523f43b4c"
+      }
+    ],
+    "GuardDecision": [
+      {
+        "file": "tools/aura_execution_loop_guard.py",
+        "kind": "class",
+        "line": 33,
+        "end_line": 36,
+        "semantic_id": "tools/aura_execution_loop_guard.py#class:GuardDecision:a9617fe197d693d0",
+        "signature_hash": "a2b38bf3662d3fcc"
+      }
+    ],
+    "ExecutionLoopGuard": [
+      {
+        "file": "tools/aura_execution_loop_guard.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 150,
+        "semantic_id": "tools/aura_execution_loop_guard.py#class:ExecutionLoopGuard:995533a7a12ba4d0",
+        "signature_hash": "095905d279c3fef1"
+      }
+    ],
+    "ExecutionLoopGuard.__init__": [
+      {
+        "file": "tools/aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 51,
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:ExecutionLoopGuard.__init__:da38a16081238bb4",
+        "signature_hash": "befcc16b08b93975"
+      }
+    ],
+    "ExecutionLoopGuard.admit_read": [
+      {
+        "file": "tools/aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 61,
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:ExecutionLoopGuard.admit_read:9caf7a0aecbbec30",
+        "signature_hash": "b2b943af40d3e844"
+      }
+    ],
+    "ExecutionLoopGuard.admit_poll": [
+      {
+        "file": "tools/aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 74,
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:ExecutionLoopGuard.admit_poll:35a5a570f0984d23",
+        "signature_hash": "91b3df71926b5c16"
+      }
+    ],
+    "ExecutionLoopGuard.admit_write": [
+      {
+        "file": "tools/aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 108,
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:ExecutionLoopGuard.admit_write:9984c4b940d17903",
+        "signature_hash": "0c4526a4e3adcf64"
+      }
+    ],
+    "ExecutionLoopGuard.record_write_result": [
+      {
+        "file": "tools/aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 131,
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:ExecutionLoopGuard.record_write_result:b52518e2526e2a87",
+        "signature_hash": "8e2ada400d63d109"
+      }
+    ],
+    "ExecutionLoopGuard.snapshot": [
+      {
+        "file": "tools/aura_execution_loop_guard.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 150,
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:ExecutionLoopGuard.snapshot:dabcd9d3d9d1fa80",
+        "signature_hash": "6d0c0b0a811ae770"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158334,6 +158578,7 @@
       ".github/workflows/sco-temporal-persistence-e9-e12.yml",
       ".github/workflows/source-anchor-verify.yml",
       ".github/workflows/triad2-codemap-repair.yml",
+      ".github/workflows/universal-loop-safety-guard.yml",
       ".github/workflows/wo-phase3-codemap-compat-audit.yml",
       ".github/workflows/wo-phase3-local-gate-bundle-001.yml",
       ".github/workflows/wo-phase4-ephemeral-commit-proof-v16.yml",
@@ -171042,6 +171287,60 @@
         -0.190812,
         0.164493,
         -0.088168
+      ]
+    },
+    {
+      "path": ".github/workflows/universal-loop-safety-guard.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1176,
+      "lines": 39,
+      "tokens_est": 294,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          34,
+          35
+        ]
+      },
+      "topology": {},
+      "digest8": "a2fd8f85d062726a",
+      "vector": [
+        -0.144281,
+        -0.020271,
+        -0.163359,
+        0.127587,
+        0.163359,
+        -0.201516,
+        0.239673,
+        -0.268291,
+        -0.163359,
+        -0.21821,
+        -0.082276,
+        -0.261137,
+        0.301678,
+        -0.208671,
+        0.072737,
+        0.196747,
+        0.187207,
+        0.001192,
+        0.022656,
+        -0.139511,
+        0.256367,
+        -0.215825,
+        -0.003577,
+        0.21344,
+        -0.084661,
+        -0.184823,
+        -0.194362,
+        0.039349,
+        0.280215,
+        0.053658,
+        0.132357,
+        0.137126
       ]
     },
     {
@@ -234632,6 +234931,53 @@
       ]
     },
     {
+      "path": "docs/UNIVERSAL_LOOP_SAFETY_PREFLIGHT.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 2253,
+      "lines": 53,
+      "tokens_est": 564,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f87316bddc4c8185",
+      "vector": [
+        0.017557,
+        -0.139105,
+        0.298468,
+        0.341685,
+        0.068877,
+        -0.082383,
+        -0.074279,
+        0.087785,
+        0.193126,
+        0.036464,
+        -0.179621,
+        -0.004052,
+        0.225539,
+        -0.085084,
+        -0.020258,
+        -0.090486,
+        -0.341685,
+        -0.131002,
+        0.031062,
+        -0.103991,
+        0.309272,
+        0.341685,
+        0.198528,
+        -0.128301,
+        0.085084,
+        -0.17692,
+        0.041867,
+        0.052671,
+        0.063475,
+        -0.301169,
+        0.155311,
+        -0.190425
+      ]
+    },
+    {
       "path": "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -254846,6 +255192,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_execution_loop_guard.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6351,
+      "lines": 108,
+      "tokens_est": 1588,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "dbf1011fc8066de7",
+      "vector": [
+        0.046875,
+        0.28925,
+        -0.005716,
+        0.15663,
+        0.124618,
+        -0.273244,
+        0.218367,
+        0.028582,
+        -0.250379,
+        0.172636,
+        -0.28925,
+        0.101752,
+        -0.129191,
+        0.218367,
+        0.220653,
+        0.15663,
+        -0.264098,
+        0.232086,
+        0.090319,
+        -0.017149,
+        0.101752,
+        -0.078886,
+        -0.161203,
+        -0.062881,
+        0.129191,
+        0.053734,
+        -0.277818,
+        -0.094892,
+        -0.021722,
+        -0.268671,
+        -0.049161,
+        -0.259525
+      ]
+    },
+    {
       "path": "tests/test_aura_external_llm_session.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +263038,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_execution_loop_guard.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7483,
+      "lines": 151,
+      "tokens_est": 1871,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "79238bd58fb0257d",
+      "vector": [
+        -0.191541,
+        0.18403,
+        -0.028794,
+        -0.036305,
+        0.133954,
+        0.276671,
+        -0.314228,
+        0.063847,
+        0.053832,
+        0.201556,
+        -0.301709,
+        0.231602,
+        0.07887,
+        -0.163999,
+        -0.209068,
+        0.096397,
+        0.216579,
+        0.041313,
+        -0.118931,
+        0.271663,
+        0.04632,
+        -0.108916,
+        -0.28919,
+        0.111419,
+        0.156488,
+        0.271663,
+        -0.071358,
+        -0.108916,
+        0.189037,
+        0.13145,
+        0.201556,
+        -0.013771
       ]
     },
     {
@@ -286646,16 +287086,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1643,
+    "total_bytes": 26432311,
+    "text_tokens_est": 6598430,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286853,6 +287293,7 @@
       ".github/workflows/triad2-codemap-repair.yml",
       ".github/workflows/triad2-full-codemap-repair-v2.yml",
       ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+      ".github/workflows/universal-loop-safety-guard.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
       ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
       ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
@@ -287758,6 +288199,7 @@
       "docs/PR_KIT.md",
       "docs/README_PRE_ARCHITECT_BENCHMARK.md",
       "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
+      "docs/UNIVERSAL_LOOP_SAFETY_PREFLIGHT.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
@@ -288130,6 +288572,7 @@
       "tests/test_aura_event_contracts.py",
       "tests/test_aura_event_privacy_hardening.py",
       "tests/test_aura_exact_head_transport.py",
+      "tests/test_aura_execution_loop_guard.py",
       "tests/test_aura_external_llm_session.py",
       "tests/test_aura_fetch_construction_demo_source.py",
       "tests/test_aura_financial_contracts.py",
@@ -288296,6 +288739,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_execution_loop_guard.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -422474,6 +422918,136 @@
         "file_digest8": "84ce96843c918333"
       },
       {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#class:ExecutionLoopGuardTests:be1f0db73eec864c",
+        "name": "ExecutionLoopGuardTests",
+        "kind": "class",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 5,
+        "end_line": 104,
+        "signature_hash": "464f67c13b6c64a6",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.setUp:8b6dba96b58cfb53",
+        "name": "ExecutionLoopGuardTests.setUp",
+        "kind": "method",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 6,
+        "end_line": 15,
+        "signature_hash": "706017b0e7dd7cef",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_exact_write_intent_is_admitted:4b388de0fc767531",
+        "name": "ExecutionLoopGuardTests.test_exact_write_intent_is_admitted",
+        "kind": "method",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 36,
+        "end_line": 39,
+        "signature_hash": "ab75c59a1b69bf7d",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_first_read_is_admitted:bb8f42fa5aebed87",
+        "name": "ExecutionLoopGuardTests.test_first_read_is_admitted",
+        "kind": "method",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 23,
+        "end_line": 24,
+        "signature_hash": "1dfce63bb8adc2ed",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_identical_read_without_state_transition_is_blocked:45884a7fba49ee2c",
+        "name": "ExecutionLoopGuardTests.test_identical_read_without_state_transition_is_blocked",
+        "kind": "method",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 26,
+        "end_line": 30,
+        "signature_hash": "52ab8777d4d5a83e",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_nonterminal_poll_can_progress_then_terminal_repeat_blocks:9e2a7854fc8e0c37",
+        "name": "ExecutionLoopGuardTests.test_nonterminal_poll_can_progress_then_terminal_repeat_blocks",
+        "kind": "method",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 95,
+        "end_line": 104,
+        "signature_hash": "11bcdef6cd1afbb1",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_noop_content_identity_blocks_repeated_write:ee549c2b4492d138",
+        "name": "ExecutionLoopGuardTests.test_noop_content_identity_blocks_repeated_write",
+        "kind": "method",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 62,
+        "end_line": 73,
+        "signature_hash": "89aeae6f95293a43",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_repeated_terminal_poll_is_blocked:e071d0cbbc4cdad0",
+        "name": "ExecutionLoopGuardTests.test_repeated_terminal_poll_is_blocked",
+        "kind": "method",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 86,
+        "end_line": 93,
+        "signature_hash": "2b4e010fa4c9d980",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_same_read_after_new_provider_state_is_admitted:6f13795b879eab4c",
+        "name": "ExecutionLoopGuardTests.test_same_read_after_new_provider_state_is_admitted",
+        "kind": "method",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 32,
+        "end_line": 34,
+        "signature_hash": "4db861b872b68466",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_unintended_semantic_mutation_freezes_all_writes:e569905450bfff3d",
+        "name": "ExecutionLoopGuardTests.test_unintended_semantic_mutation_freezes_all_writes",
+        "kind": "method",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 75,
+        "end_line": 84,
+        "signature_hash": "1e12603cc6a3b657",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_version_and_authority_negative_snapshot:9f8402d169d5e8ab",
+        "name": "ExecutionLoopGuardTests.test_version_and_authority_negative_snapshot",
+        "kind": "method",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 17,
+        "end_line": 21,
+        "signature_hash": "2a1aaeffaac19cff",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_wrong_action_class_freezes_primitive:730b2e9a299d30e1",
+        "name": "ExecutionLoopGuardTests.test_wrong_action_class_freezes_primitive",
+        "kind": "method",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 41,
+        "end_line": 51,
+        "signature_hash": "dfd72c6d44c9175b",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
+        "semantic_id": "tests/test_aura_execution_loop_guard.py#method:ExecutionLoopGuardTests.test_wrong_target_or_fields_are_blocked:56ae8a15e16fddbd",
+        "name": "ExecutionLoopGuardTests.test_wrong_target_or_fields_are_blocked",
+        "kind": "method",
+        "file": "tests/test_aura_execution_loop_guard.py",
+        "line": 53,
+        "end_line": 60,
+        "signature_hash": "1d7a9cfe5093ac1a",
+        "file_digest8": "dbf1011fc8066de7"
+      },
+      {
         "semantic_id": "tests/test_aura_external_llm_session.py#class:FakeBridge:40165af0c5492060",
         "name": "FakeBridge",
         "kind": "class",
@@ -445634,6 +446208,116 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_execution_loop_guard.py#class:ExecutionLoopGuard:995533a7a12ba4d0",
+        "name": "ExecutionLoopGuard",
+        "kind": "class",
+        "file": "tools/aura_execution_loop_guard.py",
+        "line": 38,
+        "end_line": 150,
+        "signature_hash": "095905d279c3fef1",
+        "file_digest8": "79238bd58fb0257d"
+      },
+      {
+        "semantic_id": "tools/aura_execution_loop_guard.py#class:GuardDecision:a9617fe197d693d0",
+        "name": "GuardDecision",
+        "kind": "class",
+        "file": "tools/aura_execution_loop_guard.py",
+        "line": 33,
+        "end_line": 36,
+        "signature_hash": "a2b38bf3662d3fcc",
+        "file_digest8": "79238bd58fb0257d"
+      },
+      {
+        "semantic_id": "tools/aura_execution_loop_guard.py#class:MutationIntent:68ab0e3e54552264",
+        "name": "MutationIntent",
+        "kind": "class",
+        "file": "tools/aura_execution_loop_guard.py",
+        "line": 18,
+        "end_line": 30,
+        "signature_hash": "7348983d9c8de9d5",
+        "file_digest8": "79238bd58fb0257d"
+      },
+      {
+        "semantic_id": "tools/aura_execution_loop_guard.py#class:RetrievalFingerprint:0c8e7cbfb09a798c",
+        "name": "RetrievalFingerprint",
+        "kind": "class",
+        "file": "tools/aura_execution_loop_guard.py",
+        "line": 10,
+        "end_line": 15,
+        "signature_hash": "e010b4068639a302",
+        "file_digest8": "79238bd58fb0257d"
+      },
+      {
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:ExecutionLoopGuard.__init__:da38a16081238bb4",
+        "name": "ExecutionLoopGuard.__init__",
+        "kind": "method",
+        "file": "tools/aura_execution_loop_guard.py",
+        "line": 39,
+        "end_line": 51,
+        "signature_hash": "befcc16b08b93975",
+        "file_digest8": "79238bd58fb0257d"
+      },
+      {
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:ExecutionLoopGuard.admit_poll:35a5a570f0984d23",
+        "name": "ExecutionLoopGuard.admit_poll",
+        "kind": "method",
+        "file": "tools/aura_execution_loop_guard.py",
+        "line": 63,
+        "end_line": 74,
+        "signature_hash": "91b3df71926b5c16",
+        "file_digest8": "79238bd58fb0257d"
+      },
+      {
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:ExecutionLoopGuard.admit_read:9caf7a0aecbbec30",
+        "name": "ExecutionLoopGuard.admit_read",
+        "kind": "method",
+        "file": "tools/aura_execution_loop_guard.py",
+        "line": 53,
+        "end_line": 61,
+        "signature_hash": "b2b943af40d3e844",
+        "file_digest8": "79238bd58fb0257d"
+      },
+      {
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:ExecutionLoopGuard.admit_write:9984c4b940d17903",
+        "name": "ExecutionLoopGuard.admit_write",
+        "kind": "method",
+        "file": "tools/aura_execution_loop_guard.py",
+        "line": 76,
+        "end_line": 108,
+        "signature_hash": "0c4526a4e3adcf64",
+        "file_digest8": "79238bd58fb0257d"
+      },
+      {
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:ExecutionLoopGuard.record_write_result:b52518e2526e2a87",
+        "name": "ExecutionLoopGuard.record_write_result",
+        "kind": "method",
+        "file": "tools/aura_execution_loop_guard.py",
+        "line": 110,
+        "end_line": 131,
+        "signature_hash": "8e2ada400d63d109",
+        "file_digest8": "79238bd58fb0257d"
+      },
+      {
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:ExecutionLoopGuard.snapshot:dabcd9d3d9d1fa80",
+        "name": "ExecutionLoopGuard.snapshot",
+        "kind": "method",
+        "file": "tools/aura_execution_loop_guard.py",
+        "line": 133,
+        "end_line": 150,
+        "signature_hash": "6d0c0b0a811ae770",
+        "file_digest8": "79238bd58fb0257d"
+      },
+      {
+        "semantic_id": "tools/aura_execution_loop_guard.py#method:MutationIntent.build:ea0abe82b6affa0c",
+        "name": "MutationIntent.build",
+        "kind": "method",
+        "file": "tools/aura_execution_loop_guard.py",
+        "line": 26,
+        "end_line": 30,
+        "signature_hash": "cdcfbb0523f43b4c",
+        "file_digest8": "79238bd58fb0257d"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447568,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "ab44e436f4888f9863923400a698ca57",
+    "payload_hash": "25d994612511f5af7ddfed9d270ff0f3"
   }
 }

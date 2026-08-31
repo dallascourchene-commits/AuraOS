@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1639
-- **total_bytes**: 26415048
-- **text_tokens_est**: 6594113
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1643
+- **total_bytes**: 26432311
+- **text_tokens_est**: 6598430
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1639,
+  "repo_file_count": 1643,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -206,6 +206,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/triad2-codemap-repair.yml",
     ".github/workflows/triad2-full-codemap-repair-v2.yml",
     ".github/workflows/unified-memory-continuity-deep-v2-target.yml",
+    ".github/workflows/universal-loop-safety-guard.yml",
     ".github/workflows/wo-fleet-trigger-ci-repair-runner-v15.yml",
     ".github/workflows/wo-fleet-trigger-ci-repair-runner.yml",
     ".github/workflows/wo-phase3-codemap-active-branch-audit.yml",
@@ -1111,6 +1112,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/PR_KIT.md",
     "docs/README_PRE_ARCHITECT_BENCHMARK.md",
     "docs/SECURITY_AND_ACCURACY_SCORECARD.md",
+    "docs/UNIVERSAL_LOOP_SAFETY_PREFLIGHT.md",
     "docs/architecture_harness/ARCH_V2_3/AURA_PR_CONTINUITY_CAPSULE_TEMPLATE_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
@@ -1483,6 +1485,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_event_contracts.py",
     "tests/test_aura_event_privacy_hardening.py",
     "tests/test_aura_exact_head_transport.py",
+    "tests/test_aura_execution_loop_guard.py",
     "tests/test_aura_external_llm_session.py",
     "tests/test_aura_fetch_construction_demo_source.py",
     "tests/test_aura_financial_contracts.py",
@@ -1649,6 +1652,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/aura_execution_loop_guard.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1779,16 +1783,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1639,
-  "bytes": 26415048,
-  "tokens_est": 6594113,
+  "files": 1643,
+  "bytes": 26432311,
+  "tokens_est": 6598430,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 237,
+    "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 997,
-    "schema_or_lexicon": 271,
+    "python_module": 999,
+    "schema_or_lexicon": 272,
     "support_file": 49
   }
 }
