@@ -1,0 +1,134 @@
+name: Aura External Knowledge Store Writer V1
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_external_knowledge_ingress.py'
+      - 'tools/aura_external_knowledge_store_writer.py'
+      - 'tools/powershell/Invoke-AuraExternalKnowledgeIngress.ps1'
+      - 'tests/test_aura_external_knowledge_store_writer.py'
+      - 'tests/test_aura_external_knowledge_store_reader_integration.py'
+      - '.github/workflows/aura-external-knowledge-store-writer-v1.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PR728_READER_HEAD: 9865c42f3ada2520141bd2fe30a439ce160ce2f8
+  PR728_READER_BLOB: 53de9d551c81a0eb495eb180294c0aba5eb359d0
+
+jobs:
+  exact-head-writer-reader:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Verify exact source head
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Materialize exact independent PR728 reader
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p .arena/external-owners
+          curl -fsSL \
+            "https://raw.githubusercontent.com/dallascourchene-commits/AuraOS/${PR728_READER_HEAD}/tools/aura_external_cognition_resolve_adapter.py" \
+            -o .arena/external-owners/aura_external_cognition_resolve_adapter.py
+          python - <<'PY'
+          import hashlib
+          import os
+          from pathlib import Path
+          p = Path('.arena/external-owners/aura_external_cognition_resolve_adapter.py')
+          b = p.read_bytes()
+          observed = hashlib.sha1(f'blob {len(b)}\0'.encode() + b).hexdigest()
+          expected = os.environ['PR728_READER_BLOB']
+          assert observed == expected, (observed, expected)
+          print(f'PR728_READER_BLOB_OK={observed}')
+          PY
+
+      - name: Compile EKI source surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/aura_external_knowledge_ingress.py \
+            tools/aura_external_knowledge_store_writer.py \
+            tests/test_aura_external_knowledge_store_writer.py \
+            tests/test_aura_external_knowledge_store_reader_integration.py
+
+      - name: Run writer and cross-owner adversarials
+        shell: bash
+        env:
+          AURA_PR728_READER_FILE: ${{ github.workspace }}/.arena/external-owners/aura_external_cognition_resolve_adapter.py
+        run: |
+          set -euo pipefail
+          python -m unittest -v \
+            tests.test_aura_external_knowledge_store_writer \
+            tests.test_aura_external_knowledge_store_reader_integration
+
+      - name: Assert claim ceiling constants
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'native_private_transformer_kv_accessed: bool = False' tools/aura_external_knowledge_store_writer.py
+          grep -F 'semantic_k27_authority: bool = False' tools/aura_external_knowledge_store_writer.py
+          grep -F 'tool_execution_authority: bool = False' tools/aura_external_knowledge_store_writer.py
+          grep -F 'provider_effect_authority: bool = False' tools/aura_external_knowledge_store_writer.py
+
+  windows-provider-ingress:
+    runs-on: windows-2025
+    steps:
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Verify exact source head
+        shell: pwsh
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          $actual = (git rev-parse HEAD).Trim()
+          if ($actual -ne $env:EXPECTED_HEAD) { throw "exact head mismatch: $actual != $env:EXPECTED_HEAD" }
+
+      - name: Parse PowerShell ingress fail-closed
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          $path = (Resolve-Path 'tools/powershell/Invoke-AuraExternalKnowledgeIngress.ps1').Path
+          [System.Management.Automation.Language.Parser]::ParseFile($path, [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -ne 0) {
+            $errors | ForEach-Object { Write-Error $_.Message }
+            throw "PowerShell parser reported $($errors.Count) error(s)."
+          }
+          "POWERSHELL_PARSE_OK=$path"
+
+      - name: Prove pointer-only providers remain advisory
+        shell: pwsh
+        run: |
+          $json = & ./tools/powershell/Invoke-AuraExternalKnowledgeIngress.ps1 `
+            -Provider web `
+            -Id 'eki2-windows-fixture' `
+            -Uri 'https://example.org/eki2-fixture' `
+            -Title 'EKI-2 Windows fixture' `
+            -Thesis 'Pointer-only fixture for deterministic Windows-hosted proof.' `
+            -EnvelopeOnly
+          $envelope = $json | ConvertFrom-Json
+          if ($envelope.currentness -ne 'UNKNOWN') { throw 'pointer-only currentness must remain UNKNOWN' }
+          if ($envelope.advisory_only -ne $true) { throw 'pointer-only provider must remain advisory_only' }
+          if ($null -ne $envelope.generation) { throw 'pointer-only provider must not invent source generation' }
+          if ($envelope.rights.state -ne 'UNKNOWN') { throw 'pointer-only rights must remain UNKNOWN' }
+          if ($envelope.security.state -ne 'UNKNOWN') { throw 'pointer-only security must remain UNKNOWN' }
+          'POINTER_ONLY_ADVISORY_OK=true'
