@@ -20,6 +20,7 @@ D = "d" * 64
 def gate(gate_id: str, passed: bool, generation: str, receipt: str, **overrides):
     base = GateEvidenceState(
         gate_id=gate_id,
+        owner_ref=f"owner:{gate_id}:v1",
         gate_scope_digest=A if gate_id == "source" else B,
         evidence_generation=generation,
         receipt_digest=receipt,
@@ -113,6 +114,15 @@ class HardGateTransitionAdmissionTests(unittest.TestCase):
         self.assertEqual(result.disposition, "REVIEW")
         self.assertEqual(result.reason_code, "GATE_SCOPE_CHANGED_REQUIRES_NEW_GATE")
 
+    def test_owner_change_requires_rebind_not_transition(self):
+        after = (
+            gate("source", True, "source-gen-2", "3" * 64, owner_ref="owner:source:v2"),
+            gate("authority", True, "authority-gen-1", "2" * 64),
+        )
+        result = evaluate_hard_gate_transition(request(after_gates=after))
+        self.assertEqual(result.disposition, "REVIEW")
+        self.assertEqual(result.reason_code, "GATE_OWNER_CHANGED_REQUIRES_REBIND")
+
     def test_other_gate_change_is_not_single_gate_transition(self):
         after = (
             gate("source", True, "source-gen-2", "3" * 64),
@@ -147,6 +157,17 @@ class HardGateTransitionAdmissionTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "PASSED_GATE_REQUIRES_EXACT_GREEN"):
             evaluate_hard_gate_transition(request(after_gates=bad_after))
+
+    def test_exact_green_cannot_be_failed_gate(self):
+        bad_before = (
+            gate(
+                "source", False, "source-gen-1", "1" * 64,
+                verification_state="EXACT_GREEN"
+            ),
+            gate("authority", True, "authority-gen-1", "2" * 64),
+        )
+        with self.assertRaisesRegex(ValueError, "EXACT_GREEN_GATE_MUST_BE_PASSED"):
+            evaluate_hard_gate_transition(request(before_gates=bad_before))
 
     def test_fail_to_fail_and_pass_to_pass_are_not_closure(self):
         fail_after = (
