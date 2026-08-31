@@ -45,6 +45,24 @@ def validate_handshake(payload: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _validate_telemetry(telemetry: dict[str, Any]) -> dict[str, Any]:
+    provenance = telemetry.get("provenance", "UNKNOWN")
+    if provenance not in _TELEMETRY_PROVENANCE:
+        raise ValueError("INVALID_TELEMETRY_PROVENANCE")
+    metric_keys = ("input_tokens", "output_tokens", "cost_usd", "peak_rss_mb")
+    if provenance == "UNKNOWN" and any(telemetry.get(key) is not None for key in metric_keys):
+        raise ValueError("UNKNOWN_TELEMETRY_CANNOT_CARRY_VALUES")
+    for key in ("input_tokens", "output_tokens"):
+        value = telemetry.get(key)
+        if value is not None and (not isinstance(value, int) or isinstance(value, bool) or value < 0):
+            raise ValueError(f"INVALID_{key.upper()}")
+    for key in ("cost_usd", "peak_rss_mb"):
+        value = telemetry.get(key)
+        if value is not None and (not isinstance(value, (int, float)) or isinstance(value, bool) or value < 0):
+            raise ValueError(f"INVALID_{key.upper()}")
+    return telemetry
+
+
 def validate_turn_response(
     payload: dict[str, Any],
     *,
@@ -65,12 +83,7 @@ def validate_turn_response(
     telemetry = payload.get("telemetry", {"provenance": "UNKNOWN"})
     if not isinstance(telemetry, dict):
         raise ValueError("INVALID_TELEMETRY")
-    provenance = telemetry.get("provenance", "UNKNOWN")
-    if provenance not in _TELEMETRY_PROVENANCE:
-        raise ValueError("INVALID_TELEMETRY_PROVENANCE")
-    metric_keys = ("input_tokens", "output_tokens", "cost_usd", "peak_rss_mb")
-    if provenance == "UNKNOWN" and any(telemetry.get(key) is not None for key in metric_keys):
-        raise ValueError("UNKNOWN_TELEMETRY_CANNOT_CARRY_VALUES")
+    telemetry = _validate_telemetry(telemetry)
     return {
         "type": "turn_result",
         "turn": expected_turn,
