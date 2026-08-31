@@ -1,0 +1,153 @@
+name: Aura EKI Coordinate Memory Candidate
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_external_knowledge_ingress.py'
+      - 'tests/test_aura_external_knowledge_ingress.py'
+      - 'tools/aura_external_cognition_resolve_adapter.py'
+      - 'tests/test_aura_external_cognition_resolve_adapter.py'
+      - 'tools/aura_external_knowledge_coordinate_memory_candidate.py'
+      - 'tests/test_aura_external_knowledge_coordinate_memory_candidate.py'
+      - '.github/workflows/aura-eki-coordinate-memory-candidate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  CONVERGENCE_COMMIT: ab47b25b59e32e56770b9103851feb78e4acad93
+  OLD_CANDIDATE_HEAD: a0f5e75a2af03653276fab5cbacd184dd5ac60e9
+  EKI_HEAD: 18c9193ca029eb06b8696c2625d82cf8ee97e4f7
+  WP03_HEAD: 9865c42f3ada2520141bd2fe30a439ce160ce2f8
+  EKI_SOURCE_BLOB: 457cd08eafdf06820d257e1c79c3be51baf009a5
+  EKI_TEST_BLOB: 715170e67c172c4789cbaa1ba17a96a988b694e6
+  WP03_SOURCE_BLOB: 53de9d551c81a0eb495eb180294c0aba5eb359d0
+  WP03_TEST_BLOB: 577b96492b090a6c7fb19b0c92add007e594d57c
+  CANDIDATE_SOURCE_BLOB: fed7003630487af41586ce07a00b83b8fbf66835
+  CANDIDATE_TEST_BLOB: dd25d52385c147d97242a43efb3487e2f3cdec38
+  EKI_RUN_ID: '33417095599'
+  EKI_JOB_ID: '99570267034'
+  WP03_RUN_ID: '33416056653'
+  WP03_JOB_ID: '99566849919'
+
+jobs:
+  eki-coordinate-memory-candidate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout current collision-rebased descendant
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate current two-parent Diamond and preserved old cognition
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$CONVERGENCE_COMMIT" HEAD
+          git merge-base --is-ancestor "$OLD_CANDIDATE_HEAD" HEAD
+          parents="$(git show -s --format=%P "$CONVERGENCE_COMMIT")"
+          test "$parents" = "$EKI_HEAD $WP03_HEAD"
+          git fetch -q --no-tags origin "$EKI_HEAD" "$WP03_HEAD"
+          test "$(git rev-parse "$EKI_HEAD:tools/aura_external_knowledge_ingress.py")" = "$EKI_SOURCE_BLOB"
+          test "$(git rev-parse "$EKI_HEAD:tests/test_aura_external_knowledge_ingress.py")" = "$EKI_TEST_BLOB"
+          test "$(git rev-parse "$WP03_HEAD:tools/aura_external_cognition_resolve_adapter.py")" = "$WP03_SOURCE_BLOB"
+          test "$(git rev-parse "$WP03_HEAD:tests/test_aura_external_cognition_resolve_adapter.py")" = "$WP03_TEST_BLOB"
+          test "$(git rev-parse HEAD:tools/aura_external_knowledge_coordinate_memory_candidate.py)" = "$CANDIDATE_SOURCE_BLOB"
+          test "$(git rev-parse HEAD:tests/test_aura_external_knowledge_coordinate_memory_candidate.py)" = "$CANDIDATE_TEST_BLOB"
+          echo 'CURRENT_EKI_WP03_DIAMOND=true'
+          echo 'PREVIOUS_CANDIDATE_COGNITION_PRESERVED=true'
+
+      - name: Revalidate exact hosted current parent producers
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          pairs = [
+              (os.environ['EKI_RUN_ID'], os.environ['EKI_HEAD'], 'EKI_CURRENT_OWNER'),
+              (os.environ['WP03_RUN_ID'], os.environ['WP03_HEAD'], 'WP03'),
+          ]
+          for run_id, expected_head, label in pairs:
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={
+                      'Authorization': f'Bearer {token}',
+                      'Accept': 'application/vnd.github+json',
+                      'X-GitHub-Api-Version': '2022-11-28',
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=20) as resp:
+                  data = json.load(resp)
+              assert data['head_sha'] == expected_head, (label, data['head_sha'], expected_head)
+              assert data['status'] == 'completed', (label, data['status'])
+              assert data['conclusion'] == 'success', (label, data['conclusion'])
+              print(f'{label}_HOSTED_PRODUCER_SUCCESS=true')
+          PY
+
+      - name: Reexecute exact parent adversarial contracts
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/aura_external_knowledge_ingress.py \
+            tools/aura_external_cognition_resolve_adapter.py
+          python -m unittest tests.test_aura_external_knowledge_ingress -v
+          python -m unittest tests.test_aura_external_cognition_resolve_adapter -v
+
+      - name: Run current-owner ingress-to-coordinate-memory contract
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/aura_external_knowledge_coordinate_memory_candidate.py \
+            tests/test_aura_external_knowledge_coordinate_memory_candidate.py
+          python -m unittest tests.test_aura_external_knowledge_coordinate_memory_candidate -v
+
+      - name: Independently prove stable subject generation split and non-writing boundary
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from tests.test_aura_external_knowledge_coordinate_memory_candidate import current_node
+          from tools.aura_external_knowledge_coordinate_memory_candidate import (
+              READY,
+              project_external_knowledge_candidate,
+          )
+
+          node = current_node()
+          decision = project_external_knowledge_candidate(node=node)
+          assert decision.disposition == READY
+          candidate = decision.candidate
+          assert candidate is not None
+          assert candidate.semantic_key == node.subject_key
+          assert candidate.evidence_generation_key == node.evidence_generation_key
+          assert candidate.wp03_placement_hint == node.coordinate.k27_xyz
+          assert candidate.proposed_row['K'] == node.subject_key
+          assert candidate.store_mutated is False
+          assert candidate.writer_admission_required is True
+          assert candidate.source_currentness_revalidation_at_write_required is True
+          assert candidate.existing_generation_check_at_write_required is True
+          assert candidate.supersession_resolution_at_write_required is True
+          assert candidate.write_authority is False
+          assert candidate.effect_authority is False
+          assert candidate.semantic_k27_authority is False
+          print('CURRENT_EKI_TO_COORDINATE_MEMORY_CANDIDATE_PROVEN=true')
+          PY
+
+      - name: Collision-rebase and consequence ceiling
+        run: |
+          echo 'CollisionRebasePreservesCandidateCognition=true'
+          echo 'StableSubjectKey!=EvidenceGenerationKey'
+          echo 'K27XYZMayRouteWP03PlacementButNeverSemanticIdentity'
+          echo 'CurrentReferenceAtProjection!=CurrentAtWrite'
+          echo 'CoordinateMemoryCandidate!=PersistentStoreMutation'
+          echo 'ExistingGenerationCheck+SupersessionResolutionRequiredAtWrite'
+          echo 'CandidateRowCompatibility!=WriterAdmission'
+          echo 'ExternalStanding!=InstructionAuthority'
+          echo 'CoordinateMemory!=MODEL_PREFIX_KV'
+          echo 'K27Routing!=EvidenceTruth!=WriteAuthority'
