@@ -63,7 +63,8 @@ def binding(**updates):
 
 
 class G2PredictorCalibrationBindingTests(unittest.TestCase):
-    def run(self, *, p=None, fs=None, pol=None, b=None):
+    def exercise(self, *, p=None, fs=None, pol=None, b=None):
+        """Invoke the guarded admission helper without shadowing unittest.TestCase.run."""
         return admit_prefetch_transfers_predictor_bound(
             prediction=p or prediction(),
             forecasts=fs or [forecast(0), forecast(1)],
@@ -72,8 +73,11 @@ class G2PredictorCalibrationBindingTests(unittest.TestCase):
             num_experts=8,
         )
 
+    def test_testcase_runner_contract_is_not_shadowed(self):
+        self.assertIs(G2PredictorCalibrationBindingTests.run, unittest.TestCase.run)
+
     def test_exact_binding_preserves_g2_nonpromoting_admission(self):
-        receipt = self.run()
+        receipt = self.exercise()
         self.assertEqual((0, 1), receipt.admitted_experts)
         self.assertFalse(receipt.transfer_effect_authorized)
         self.assertFalse(receipt.g2_admitted)
@@ -81,31 +85,31 @@ class G2PredictorCalibrationBindingTests(unittest.TestCase):
 
     def test_different_predictor_cannot_reuse_calibration(self):
         with self.assertRaisesRegex(ValueError, "G2_PREDICTION_PREDICTOR_GENERATION_NOT_CALIBRATION_BOUND"):
-            self.run(p=prediction(predictor="predictor:g2:v2"))
+            self.exercise(p=prediction(predictor="predictor:g2:v2"))
 
     def test_policy_calibration_or_policy_generation_cross_cast_rejected(self):
         with self.assertRaisesRegex(ValueError, "G2_POLICY_CALIBRATION_GENERATION_NOT_BINDING"):
-            self.run(pol=policy(predictor_calibration_generation="calibration:other"))
+            self.exercise(pol=policy(predictor_calibration_generation="calibration:other"))
         with self.assertRaisesRegex(ValueError, "G2_POLICY_GENERATION_NOT_CALIBRATION_BOUND"):
-            self.run(pol=policy(policy_generation="policy:g2:v2"))
+            self.exercise(pol=policy(policy_generation="policy:g2:v2"))
 
     def test_layer_and_source_relation_must_commute(self):
         with self.assertRaisesRegex(ValueError, "G2_CALIBRATION_BINDING_LAYER_MISMATCH"):
-            self.run(b=binding(layer_id="layer:08"))
+            self.exercise(b=binding(layer_id="layer:08"))
         with self.assertRaisesRegex(ValueError, "G2_CALIBRATION_BINDING_SOURCE_MISMATCH"):
-            self.run(b=binding(source_binding_digest="binding:other"))
+            self.exercise(b=binding(source_binding_digest="binding:other"))
 
     def test_forecast_calibration_must_equal_binding(self):
         with self.assertRaisesRegex(ValueError, "G2_FORECAST_CALIBRATION_NOT_EXACT_BINDING"):
-            self.run(fs=[forecast(0), forecast(1, calibration="calibration:other")])
+            self.exercise(fs=[forecast(0), forecast(1, calibration="calibration:other")])
 
     def test_stale_or_authority_widened_binding_fails_closed(self):
         with self.assertRaisesRegex(ValueError, "G2_CALIBRATION_BINDING_MUST_BE_CURRENT"):
-            self.run(b=binding(current=False))
+            self.exercise(b=binding(current=False))
         for field in ("execution_authorized", "transfer_effect_authorized", "semantic_k27_authority"):
             with self.subTest(field=field):
                 with self.assertRaisesRegex(ValueError, "G2_CALIBRATION_BINDING_CANNOT_AUTHORIZE_EFFECTS"):
-                    self.run(b=binding(**{field: True}))
+                    self.exercise(b=binding(**{field: True}))
 
 
 if __name__ == "__main__":
