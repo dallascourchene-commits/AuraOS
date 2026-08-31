@@ -1,0 +1,172 @@
+name: Aura Execution-Qualified Portable Evidence Admission
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_execution_qualified_portable_evidence_admission.py"
+      - "tools/aura_execution_aware_hyperscale_admission.py"
+      - "tools/aura_fresh_portable_semantic_evidence_admission.py"
+      - "tools/arena_workflow_execution_evidence.py"
+      - "tools/arena_portable_semantic_evidence_transfer.py"
+      - "tests/test_aura_execution_qualified_portable_evidence_admission.py"
+      - ".github/workflows/aura-execution-qualified-portable-evidence-admission.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  execution-qualified-portable-evidence:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact A7 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact PR664 x PR661 convergence and owner blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          CONVERGENCE=2e1f2c06acb98d183a2f79129a6b4bdcdd3d9512
+          PR664=fa428111f83a0f69319c10c1b28bde910544b776
+          PR661=8179ffe054abc2ec144757888957c9ca27df991c
+          test "$(git show -s --format=%P "$CONVERGENCE")" = "$PR664 $PR661"
+          git merge-base --is-ancestor "$CONVERGENCE" HEAD
+          test "$(git rev-parse "$PR661:tools/arena_workflow_execution_evidence.py")" = "150aba95dc1aed3e938892a742a6d5f65d75e41d"
+          test "$(git rev-parse HEAD:tools/arena_workflow_execution_evidence.py)" = "150aba95dc1aed3e938892a742a6d5f65d75e41d"
+          test "$(git rev-parse "$PR661:tools/aura_execution_aware_hyperscale_admission.py")" = "1ba4a33a05dd643d8be911d8fc103fb110bc3bb0"
+          test "$(git rev-parse HEAD:tools/aura_execution_aware_hyperscale_admission.py)" = "1ba4a33a05dd643d8be911d8fc103fb110bc3bb0"
+          test "$(git rev-parse "$PR661:tools/aura_hyperscale_work_admission.py")" = "0b6a53612d4d2d9993da49180cfc74d5f4996548"
+          test "$(git rev-parse HEAD:tools/aura_hyperscale_work_admission.py)" = "0b6a53612d4d2d9993da49180cfc74d5f4996548"
+          test "$(git rev-parse "$PR661:tests/test_aura_execution_aware_hyperscale_admission.py")" = "462fb545af0232d537db4a047857a4546490c69e"
+          test "$(git rev-parse HEAD:tests/test_aura_execution_aware_hyperscale_admission.py)" = "462fb545af0232d537db4a047857a4546490c69e"
+          test "$(git rev-parse "$PR664:tools/aura_fresh_portable_semantic_evidence_admission.py")" = "5f237cdc3dca10281078346ce4457e65e292acf4"
+          test "$(git rev-parse HEAD:tools/aura_fresh_portable_semantic_evidence_admission.py)" = "5f237cdc3dca10281078346ce4457e65e292acf4"
+          test "$(git rev-parse "$PR664:tools/arena_portable_semantic_evidence_transfer.py")" = "6ce2458a29ed665a375a6f0c41f02d6eb33267c7"
+          test "$(git rev-parse HEAD:tools/arena_portable_semantic_evidence_transfer.py)" = "6ce2458a29ed665a375a6f0c41f02d6eb33267c7"
+          echo A7_TRUE_TWO_PARENT_CONVERGENCE_AND_EXACT_OWNERS=true
+
+      - name: Revalidate exact parent hosted proof generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          expected=[
+              (33396942368,'8179ffe054abc2ec144757888957c9ca27df991c','Aura Execution-Aware HyperScale Admission'),
+              (33397763034,'fa428111f83a0f69319c10c1b28bde910544b776','Aura Fresh Portable Semantic Evidence Admission'),
+          ]
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          for run_id,head,name in expected:
+              req=urllib.request.Request(f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}",headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: run=json.load(r)
+              assert run['status']=='completed' and run['conclusion']=='success',run
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['name']==name,(run_id,run['name'],name)
+          print('A7_PARENT_PROOF_GENERATIONS_EXACT_GREEN=true')
+          PY
+
+      - name: Reprove parent contracts and A7 adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/arena_workflow_execution_evidence.py \
+            tools/aura_hyperscale_work_admission.py \
+            tools/aura_execution_aware_hyperscale_admission.py \
+            tools/arena_portable_semantic_evidence_transfer.py \
+            tools/aura_fresh_portable_semantic_evidence_admission.py \
+            tools/aura_execution_qualified_portable_evidence_admission.py \
+            tests/test_aura_execution_aware_hyperscale_admission.py \
+            tests/test_aura_execution_qualified_portable_evidence_admission.py
+          PYTHONPATH=. python3 -m unittest -v \
+            tests.test_aura_execution_aware_hyperscale_admission \
+            tests.test_aura_fresh_portable_semantic_evidence_admission \
+            tests.test_aura_execution_qualified_portable_evidence_admission
+
+      - name: Bind exact historical Q6 portable evidence to provider-observed execution
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          from dataclasses import asdict
+          from tools import arena_portable_semantic_evidence_transfer as o61
+          from tools import aura_execution_qualified_portable_evidence_admission as a7
+          from tools import aura_fresh_portable_semantic_evidence_admission as fresh
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
+          def get(path):
+              req=urllib.request.Request(f"https://api.github.com/repos/{os.environ['GH_REPO']}/{path}",headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: return json.load(r)
+          e=o61.q6_descriptor()
+          raw_run=get(f'actions/runs/{e.producer_run}')
+          raw_jobs=get(f'actions/runs/{e.producer_run}/jobs')['jobs']
+          run={k:raw_run[k] for k in ('id','name','head_sha','status','conclusion')}
+          jobs=[{k:j.get(k) for k in ('id','status','conclusion')} for j in raw_jobs]
+          r=a7.classify_execution_qualified_portable_evidence(
+              evidence=e,
+              consumer=o61.native_expectation(e),
+              producer_semantic_generated_at=fresh.Q6_SEMANTIC_GENERATED_AT,
+              transfer_observed_at='2026-08-31T13:40:00Z',
+              terminal_at='2026-08-31T13:40:01Z',
+              cut=fresh.CURRENT_CUT,
+              artifact_id='provider:q6:execution-qualified-history',
+              run=run,
+              jobs=jobs,
+          )
+          assert r.execution_classification=='EXECUTED_JOB_SUCCESS_OBSERVED'
+          assert r.portable_semantic_evidence_admitted is True
+          assert r.portable_evidence_reuse_allowed is True
+          assert r.exact_producer_job_completed_success is True
+          assert r.execution_qualified_portable_semantic_evidence is True
+          assert r.historical_exact_execution_reuse is True
+          assert r.semantic_sibling_credit is False
+          assert r.execution_qualification_resets_semantic_clock is False
+          assert r.execution_qualification_grants_semantic_truth is False
+          payload=asdict(r); payload['receipt_digest']=r.receipt_digest
+          open('/tmp/a7-q6.json','w',encoding='utf-8').write(json.dumps(payload,sort_keys=True,indent=2))
+          print('A7_PROVIDER_OBSERVED_Q6_EXECUTION_QUALIFIED_HISTORY=true')
+          print('A7_RECEIPT_DIGEST='+r.receipt_digest)
+          PY
+
+      - name: Prove provider gate and failed execution cannot qualify portable semantic support
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 tools/aura_execution_qualified_portable_evidence_admission.py | tee /tmp/a7-fixture.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/a7-fixture.json',encoding='utf-8'))
+          assert r['execution_qualified_portable_semantic_evidence'] is True
+          assert r['historical_exact_execution_reuse'] is True
+          assert r['semantic_sibling_credit'] is False
+          for key in ('provider_gate_counts_as_execution_qualified_evidence','executed_failure_counts_as_semantic_support','execution_qualification_resets_semantic_clock','execution_qualification_grants_semantic_truth','producer_authenticated','broader_claims_inherited','effect_authority_granted','semantic_k27_authority_minted','native_private_transformer_kv_accessed','gate10_promoted','merge_or_deployment_authorized'):
+              assert r[key] is False,key
+          print('A7_NONPROMOTION_CEILING=true')
+          PY
+
+      - name: Preserve A7 receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: a7-execution-qualified-portable-evidence-receipts
+          path: |
+            /tmp/a7-q6.json
+            /tmp/a7-fixture.json
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Consequence ceiling
+        run: |
+          echo 'PortableEvidenceReusable != ExecutionQualified != FreshSemanticSibling.'
+          echo 'Historical exact-green execution may remain reusable without semantic-clock reset.'
+          echo 'Provider gate != executed producer evidence; executed failure != semantic support.'
+          echo 'No semantic truth, producer authentication, effect authority, semantic K27 authority, private/native KV, Gate-10, merge or deployment authority.'
