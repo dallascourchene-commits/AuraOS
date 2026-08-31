@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1696
-- **total_bytes**: 26725103
-- **text_tokens_est**: 6671681
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 13, 'operator_script': 9, 'python_module': 1035, 'schema_or_lexicon': 283, 'support_file': 49}
+- **file_count**: 1701
+- **total_bytes**: 26746184
+- **text_tokens_est**: 6676953
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 14, 'operator_script': 9, 'python_module': 1037, 'schema_or_lexicon': 285, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1696,
+  "repo_file_count": 1701,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -178,6 +178,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
+    ".github/workflows/k27-hdv1024-cross-isa-corpus.yml",
     ".github/workflows/k27-thinkpad-portable-simd-dispatch.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
     ".github/workflows/model-cognome-governed-routing.yml",
@@ -1370,7 +1371,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/fixtures/amd_track3/demo_one.py",
     "tests/fixtures/amd_track3/demo_three.py",
     "tests/fixtures/amd_track3/demo_two.py",
+    "tests/fixtures/k27_hdv1024_consequence_vectors_v1.json",
     "tests/fixtures/relationship_atlas/relational_index_fixture.json",
+    "tests/k27_hdv1024_pr608_replay.cpp",
     "tests/pascal_spatial_presentation_test_contracts.py",
     "tests/pascal_spatial_presentation_test_lifecycle.py",
     "tests/pascal_spatial_presentation_test_support.py",
@@ -1669,6 +1672,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
     "tests/test_huggingface_space_deployment.py",
+    "tests/test_k27_hdv1024_consequence_corpus.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
     "third_party/pascal/LICENSE",
@@ -1708,6 +1712,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/k27/thinkpad_portable_simd_dispatch.cpp",
+    "tools/k27_hdv1024_consequence_corpus.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1836,16 +1841,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1696,
-  "bytes": 26725103,
-  "tokens_est": 6671681,
+  "files": 1701,
+  "bytes": 26746184,
+  "tokens_est": 6676953,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
-    "native_accelerator": 13,
+    "native_accelerator": 14,
     "operator_script": 9,
-    "python_module": 1035,
-    "schema_or_lexicon": 283,
+    "python_module": 1037,
+    "schema_or_lexicon": 285,
     "support_file": 49
   }
 }
