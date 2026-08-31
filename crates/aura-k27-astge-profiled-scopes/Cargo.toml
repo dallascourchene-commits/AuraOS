@@ -1,0 +1,16 @@
+[package]
+name = "aura-k27-astge-profiled-scopes"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+aura-k27-astge-ingest = { path = "../aura-k27-astge-ingest" }
+aura-k27-astge-scopes = { path = "../aura-k27-astge-scopes" }
+aura-k27-astge-syntax-profile = { path = "../aura-k27-astge-syntax-profile" }
+sha2 = "=0.10.9"
+tree-sitter = "=0.25.10"
+tree-sitter-python = "=0.25.0"
