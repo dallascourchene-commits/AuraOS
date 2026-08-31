@@ -1,0 +1,260 @@
+name: Aura WorkCapsule Live Causal Raw Slice Host
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_causal_temporal_host_observation_admission.py'
+      - 'scripts/aura_workcapsule_raw_owner_derived_post_closure_transition.py'
+      - 'scripts/aura_k27_astge_portable_raw_slice_causal_handoff.py'
+      - 'scripts/aura_workcapsule_live_causal_raw_slice_host.py'
+      - 'tests/test_aura_workcapsule_live_causal_raw_slice_host.py'
+      - 'integration/o38_live_causal_raw_slice_probe.rs'
+      - '.github/workflows/aura-workcapsule-live-causal-raw-slice-host.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR567_SHA: 4f107f06fcb8bf82a9c8adf188278f57f9443714
+  PR563_SHA: 53370ed9570d14cd90b43b815d10b887bd73ef57
+  PR556_SHA: 5fae4070f82a9b5882ae0f63877359bf6e5a9a2b
+  CONVERGENCE_SHA: bdde6a31f8685e1d898d67f434fef719eb4cc9c7
+  PR563_CONSUMER_BLOB: d2f06ac046b0ec114a74372cb40153b9dfd2e21b
+
+jobs:
+  exact-live-causal-raw-slice:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact child and prove PR567 plus PR563 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=220 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR567_SHA" "$PR563_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR567_SHA $PR563_SHA"
+          git merge-base --is-ancestor "$PR567_SHA" HEAD
+          git merge-base --is-ancestor "$PR563_SHA" HEAD
+          test "$(git hash-object scripts/aura_k27_astge_portable_raw_slice_causal_handoff.py)" = "$PR563_CONSUMER_BLOB"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+          echo 'EXACT_PR563_CONSUMER_BLOB_MATERIALIZED=true'
+
+      - name: Re-prove PR567 causal host owner on child head
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_causal_temporal_host_observation_admission.py
+          python3 -m unittest -v tests.test_aura_workcapsule_causal_temporal_host_observation_admission
+
+      - name: Fetch and re-prove exact PR563 cross-runtime raw-slice owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr563 && mkdir -p /tmp/pr563
+          git -C /tmp/pr563 init .
+          git -C /tmp/pr563 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr563 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR563_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr563 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr563 rev-parse HEAD)" = "$PR563_SHA"
+          test -z "$(git -C /tmp/pr563 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr563
+          cargo test --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml --all-targets -- -D warnings
+          PYTHONPATH=. python3 -m unittest -v tests.test_aura_k27_astge_portable_raw_slice_causal_handoff
+
+      - name: Fetch and re-prove exact PR556 causal POST owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr556 && mkdir -p /tmp/pr556
+          git -C /tmp/pr556 init .
+          git -C /tmp/pr556 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr556 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR556_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr556 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr556 rev-parse HEAD)" = "$PR556_SHA"
+          test -z "$(git -C /tmp/pr556 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr556
+          PYTHONPATH=. python3 -m unittest -v tests.test_aura_workcapsule_raw_owner_derived_post_closure_transition
+
+      - name: Pass O38 boundary and adversarial tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          python3 -m py_compile scripts/aura_workcapsule_live_causal_raw_slice_host.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_causal_raw_slice_host
+
+      - name: Build exact-owner live materialization probe
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/o38probe
+          mkdir -p /tmp/o38probe/src
+          cp integration/o38_live_causal_raw_slice_probe.rs /tmp/o38probe/src/main.rs
+          cat >/tmp/o38probe/Cargo.toml <<'EOF'
+          [package]
+          name = "o38-live-causal-raw-slice-probe"
+          version = "0.1.0"
+          edition = "2021"
+          publish = false
+
+          [dependencies]
+          aura-k27-astge-materialize = { path = "/tmp/pr563/crates/aura-k27-astge-materialize" }
+          aura-k27-astge-post-edit-canonical-projection = { path = "/tmp/pr563/crates/aura-k27-astge-post-edit-canonical-projection" }
+          aura-k27-astge-portable-target-raw-slice = { path = "/tmp/pr563/crates/aura-k27-astge-portable-target-raw-slice" }
+          aura-k27-astge-portable-target-raw-slice-projection = { path = "/tmp/pr563/crates/aura-k27-astge-portable-target-raw-slice-projection" }
+          sha2 = "0.10"
+          serde_json = "1"
+          EOF
+          cargo check --manifest-path /tmp/o38probe/Cargo.toml
+
+      - name: Prove live PR560 materialization belongs to exact PR556 causal POST source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$GITHUB_WORKSPACE"
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import subprocess
+          import sys
+
+          from scripts.aura_workcapsule_live_causal_raw_slice_host import (
+              admit_live_causal_raw_slice_host,
+          )
+          from scripts.aura_workcapsule_raw_owner_derived_post_closure_transition import (
+              _derive_transition_inputs,
+          )
+
+          # Import the exact PR556 fixture only after child owners are loaded.
+          sys.path.insert(0, "/tmp/pr556")
+          from tests.test_aura_workcapsule_raw_owner_derived_post_closure_transition import (
+              WorkCapsuleRawOwnerDerivedPostClosureTransitionTests,
+          )
+
+          case = WorkCapsuleRawOwnerDerivedPostClosureTransitionTests(
+              'test_raw_pre_and_raw_post_derive_exact_transition_without_caller_closure'
+          )
+          case.setUp()
+          try:
+              kwargs = dict(
+                  pre_root=case.pre_root,
+                  pre_codemap=case.codemap,
+                  pre_anchor_manifest=case.anchors,
+                  pre_witness_manifest=case.pre_witness,
+                  previous_binding=case.previous,
+                  pre_graph_witness=case.graph,
+                  post_root=case.post_root,
+                  post_codemap=case.codemap,
+                  post_anchor_manifest=case.anchors,
+                  post_witness_manifest=case.post_witness,
+                  post_graph_witness=case.graph,
+              )
+              _pre, post_projection, _candidate, _closure = _derive_transition_inputs(**kwargs)
+              rows = [row for row in post_projection['o7_source_witnesses'] if row['currentness'] == 'CURRENT']
+              assert rows
+              source = rows[0]
+
+              raw_json = subprocess.check_output(
+                  [
+                      'cargo', 'run', '--quiet', '--manifest-path', '/tmp/o38probe/Cargo.toml', '--',
+                      str(case.post_root), str(source['file_id']), source['relative_path'],
+                      str(source['source_generation']), 'ab' * 32,
+                  ],
+                  text=True,
+              )
+              raw_projection = json.loads(raw_json)
+
+              # Independent host-side byte check: the PR560 receipt must hash bytes actually
+              # present under the exact causal POST root at the admitted span.
+              source_bytes = (case.post_root / source['relative_path']).read_bytes()
+              payload = raw_projection['payload']
+              start, end = payload['target_byte_start'], payload['target_byte_end']
+              assert payload['full_source_sha256_hex'] == hashlib.sha256(source_bytes).hexdigest()
+              assert payload['target_slice_sha256_hex'] == hashlib.sha256(source_bytes[start:end]).hexdigest()
+              assert payload['source_generation'] == source['source_generation']
+              assert payload['full_source_sha256_hex'] == source['source_sha256']
+              assert payload['full_source_byte_len'] == source['source_byte_len']
+
+              out = admit_live_causal_raw_slice_host(
+                  raw_slice_projection=raw_projection,
+                  host_observations={},
+                  **kwargs,
+              )
+              assert out['live_pr560_to_pr556_causal_slice_join_proven'] is True
+              assert out['live_post_source_coordinate_match_proven'] is True
+              assert out['causal_post_owner_reproved_by_child'] is True
+              assert out['causal_pre_closure_status'] == 'HOLD'
+              assert out['causal_post_closure_status'] == 'CLOSED'
+              assert out['pre_reentry_receipt_reused_for_post_o10'] is True
+              assert out['fresh_post_reentry_receipt_substituted'] is False
+              assert set(out['host_gate_states'].values()) == {'UNKNOWN'}
+              assert out['host_disposition'] == 'HOST_OBSERVATION_REQUIRED'
+              assert out['raw_slice_promoted_to_host_rank'] is False
+              assert out['semantic_handle_derived_from_raw_slice'] is False
+              assert out['semantic_identity_proven_by_raw_slice'] is False
+              assert out['producer_authenticated'] is False
+              assert out['host_effect_ready'] is False
+              assert not any(out['authority'].values())
+              print('LIVE_PR560_TO_PR556_CAUSAL_SLICE_JOIN_PROVEN=true')
+              print('PR560_REVALIDATED_EXACT_PR556_POST_BYTES=true')
+              print('LIVE_CAUSAL_POST_SOURCE_COORDINATE_MATCH=true')
+              print('HOST_RANK_REMAINS_RESOLVER_OWNED=true')
+          finally:
+              case.tearDown()
+          PY
+
+      - name: Assert reduced public boundary and consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_live_causal_raw_slice_host import admit_live_causal_raw_slice_host
+          params = set(inspect.signature(admit_live_causal_raw_slice_host).parameters)
+          for forbidden in (
+              'post_source_witness', 'post_projection', 'candidate_binding', 'post_closure_receipt',
+              'live_join_proven', 'host_effect_ready', 'execution_authorized',
+          ):
+              assert forbidden not in params
+          print('CALLER_POST_SOURCE_WITNESS_ACCEPTED=false')
+          print('CALLER_CAUSAL_INTERMEDIATE_ACCEPTED=false')
+          PY
+          cat <<'EOF'
+          PR563_SYNTHETIC_COMPATIBILITY_CEILING_SUPERSEDED_FOR_THIS_LIVE_VECTOR=true
+          LIVE_PR560_TO_PR556_CAUSAL_SLICE_JOIN_PROVEN=true
+          RAW_SLICE_PRODUCER_AUTHENTICATED=false
+          SEMANTIC_HANDLE_DERIVED_FROM_RAW_SLICE=false
+          SEMANTIC_IDENTITY_PROVEN_BY_RAW_SLICE=false
+          SEMANTIC_REPAIR_CORRECTNESS_PROVEN=false
+          SOURCE_CURRENTNESS_MINTED=false
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          RESOLVER_TRUST_PROVEN=false
+          HOST_EFFECT_READY=false
+          REVIEW_EXECUTION_COMMIT_MERGE_PROMOTION_PROVIDER_PUBLIC_HUMAN_AUTHORITY=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF
