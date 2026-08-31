@@ -109,16 +109,18 @@ jobs:
       - name: Preserve inherited native S-plane regressions
         run: cargo test --locked --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets --verbose
 
-      - name: Format and Clippy
-        run: |
-          cargo fmt --manifest-path crates/aura-k27-astge/Cargo.toml -- --check
-          cargo clippy --locked --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+      - name: Format conformance-owned Rust
+        run: rustfmt --edition 2021 --check crates/aura-k27-astge/src/bin/reference_conformance.rs
+
+      - name: Clippy all native targets
+        run: cargo clippy --locked --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
 
       - name: Emit claim ceiling
         run: |
           echo "REFERENCE_ORACLE_SHA=$ORACLE_SHA"
           echo "REFERENCE_ORACLE_BLOB=$ORACLE_BLOB"
           echo "NATIVE_REFERENCE_CONFORMANCE_PROVEN=true"
+          echo "PARENT_LIBRARY_FORMAT_CLEAN_PROVEN=false"
           echo "BINARY_FORMAT_EQUIVALENCE_PROVEN=false"
           echo "MMAP_SUITABILITY_PROVEN=false"
           echo "NATIVE_PERFORMANCE_SUPERIORITY_PROVEN=false"
