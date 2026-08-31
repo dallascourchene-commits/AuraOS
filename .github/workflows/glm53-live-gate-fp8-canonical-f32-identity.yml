@@ -1,0 +1,178 @@
+name: GLM53 Live Gate FP8 Canonical F32 Identity
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py"
+      - "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py"
+      - ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q12-live-gate-canonical-f32:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Q12 head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install exact numeric dependency
+        run: python -m pip install --disable-pip-version-check "numpy==2.3.5"
+
+      - name: Prove exact PR650 x PR641 convergence and green parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence='e5a981234bd8c1a48bfc8711faa5458929c217fa'
+          pr650='e8e0eecb5fce9f95bf1b71e97b528776ecd8b51c'
+          pr641='a8d4605a36e04d64cf03f43f457be4bde553e602'
+          parents=subprocess.check_output(['git','rev-list','--parents','-n','1',convergence],text=True).strip().split()
+          assert parents == [convergence,pr650,pr641], parents
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          for run_id, head in ((33374008643,pr650),(33370700852,pr641)):
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+              )
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  run=json.load(response)
+              assert run['conclusion']=='success', (run_id,run['conclusion'])
+              assert run['head_sha']==head, (run_id,run['head_sha'],head)
+          print('Q12_EXACT_PARENT_RUNS_GREEN=true')
+          PY
+
+      - name: Revalidate exact PR650 live job and immutable page-source semantics
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          req=urllib.request.Request(
+              f'https://api.github.com/repos/{repo}/actions/jobs/99431263469',
+              headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+          )
+          with urllib.request.urlopen(req,timeout=30) as response:
+              job=json.load(response)
+          assert job['run_id']==33374008643
+          assert job['head_sha']=='e8e0eecb5fce9f95bf1b71e97b528776ecd8b51c'
+          assert job['conclusion']=='success'
+          steps={s['name']:s for s in job['steps']}
+          assert steps['Observe bounded live official FP8 weight and scale payload']['conclusion']=='success'
+          assert steps['Independently refetch and reproduce payload hashes']['conclusion']=='success'
+          print('Q12_PR650_LIVE_AND_REPLAY_STEPS_GREEN=true')
+          PY
+          test "$(git rev-parse a8d4605a36e04d64cf03f43f457be4bde553e602:tools/quantization/aura_glm53_e8_concrete_page_trial_binding.py)" = "157afcb2e457c630d03a8c72aef09f0a6ba04a4d"
+          test "$(git rev-parse b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py)" = "5df2cd69a1519b2626cb52c1d8f23a25504425d9"
+          git show b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py | grep -F 'src = np.asarray(w, dtype="<f4").tobytes(order="C")'
+          echo 'Q12_PR628_CANONICAL_F32_BYTE_DOMAIN_PINNED=true'
+
+      - name: Compile and run Q12 adversarial contract
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py tests/test_glm53_live_gate_fp8_canonical_f32_identity.py
+          python -m unittest -v tests.test_glm53_live_gate_fp8_canonical_f32_identity
+
+      - name: Reobserve live gate pair and derive canonical float32 identity
+        run: |
+          set -euo pipefail
+          python -m tools.quantization.aura_glm53_live_gate_fp8_canonical_f32_identity | tee /tmp/q12.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q12.json',encoding='utf-8'))
+          assert r['weight_payload_sha256']=='2d4e5f36478b598043431b3691ce6a48639e01b6f804b1db62ca4af4d14063e8'
+          assert r['scale_payload_sha256']=='671dd3b32b3f4cc651b93f3420ae47957ae09c1f745d278c0795d56e5d511c55'
+          assert r['weight_payload_bytes']==12_582_912
+          assert r['scale_payload_bytes']==3_072
+          assert r['canonical_float32_bytes']==50_331_648
+          assert len(r['canonical_float32_sha256'])==64
+          for key in ('live_gate_pair_reobserved','exact_pr650_payload_generation_reproduced','fp8_dequantization_semantics_bound','official_gate_canonical_float32_source_identity_bound','pr628_source_hash_byte_domain_matched'):
+              assert r[key] is True,key
+          print('Q12_LIVE_GATE_CANONICAL_F32_IDENTITY_BOUND=true')
+          print('Q12_CANONICAL_F32_SHA256='+r['canonical_float32_sha256'])
+          PY
+
+      - name: Independently refetch and reproduce canonical float32 hash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json, math, struct, urllib.request
+          import numpy as np
+          r=json.load(open('/tmp/q12.json',encoding='utf-8'))
+          url='https://huggingface.co/zai-org/GLM-5.3/resolve/7cda81930d6e4cef42f48555de830aa32ecdde28/model-00038-of-00141.safetensors?download=true'
+          def fetch(start,length):
+              end=start+length-1
+              req=urllib.request.Request(url,headers={'User-Agent':'AuraOS-Q12-IndependentCanonicalReplay/1','Range':f'bytes={start}-{end}','Accept-Encoding':'identity'})
+              with urllib.request.urlopen(req,timeout=120) as response:
+                  status=getattr(response,'status',None) or response.getcode()
+                  assert status==206,status
+                  cr=str(response.headers.get('Content-Range',''))
+                  assert cr.startswith(f'bytes {start}-{end}/'),cr
+                  raw=response.read(length+1)
+              assert len(raw)==length,(len(raw),length)
+              return raw
+          prefix=fetch(0,8)
+          header_len=struct.unpack('<Q',prefix)[0]
+          assert header_len==r['live_header_length_bytes']
+          data_base=8+header_len
+          weight=fetch(data_base+4_070_207_936,12_582_912)
+          scale=fetch(data_base+993_728,3_072)
+          assert hashlib.sha256(weight).hexdigest()==r['weight_payload_sha256']
+          assert hashlib.sha256(scale).hexdigest()==r['scale_payload_sha256']
+          table=np.empty(256,dtype='<f4')
+          for code in range(256):
+              sign=-1.0 if code & 0x80 else 1.0
+              exp=(code>>3)&0x0f; mant=code&0x07
+              if exp==15 and mant==7:
+                  table[code]=np.nan
+              elif exp==0:
+                  table[code]=sign*math.ldexp(float(mant),-9)
+              else:
+                  table[code]=sign*math.ldexp(1.0+mant/8.0,exp-7)
+          codes=np.frombuffer(weight,dtype=np.uint8)
+          assert not np.any((codes==0x7f)|(codes==0xff))
+          q=table[codes].reshape(2048,6144)
+          s=np.frombuffer(scale,dtype='<f4').reshape(16,48)
+          assert np.all(np.isfinite(s)) and np.all(s>0.0)
+          out=(q.reshape(16,128,48,128)*s[:,None,:,None]).reshape(2048,6144)
+          canonical=np.asarray(out,dtype='<f4',order='C').tobytes(order='C')
+          assert len(canonical)==50_331_648
+          digest=hashlib.sha256(canonical).hexdigest()
+          assert digest==r['canonical_float32_sha256'],(digest,r['canonical_float32_sha256'])
+          print('Q12_INDEPENDENT_CANONICAL_F32_HASH_REPLAY=true')
+          PY
+
+      - name: Consequence ceiling
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q12.json',encoding='utf-8'))
+          for key in (
+              'up_payload_observed','down_payload_observed','full_expert_payload_observed',
+              'gate_up_composition_bound','official_tensor_to_pr641_page_set_relation_proven',
+              'candidate_page_materialization_owner_bound','baseline_same_official_source_tensor_set_proven',
+              'real_e8_page_materialized','model_execution_observed','generalized_quality_proven',
+              'runtime_performance_proven','semantic_k27_authority','native_private_transformer_kv_accessed',
+              'gate10_promoted','deployment_authorized'):
+              assert r[key] is False,key
+          print('Q12_NONPROMOTION_CEILING=true')
+          PY
