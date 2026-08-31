@@ -1,0 +1,169 @@
+name: GLM53 Minimum Live Payload Cover Verification
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q12-minimum-live-payload-cover:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact Q12 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Revalidate exact PR653 and PR654 parent proof generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          parents = (
+              (33375061325, 'b2da1ada1568b6e7c3629001b4ecca3c1ba4fe76'),
+              (33375530171, '26e377fe543b8c1906832b8c1e968dfe63480005'),
+          )
+          headers = {
+              'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          for run_id, head in parents:
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  run = json.load(response)
+              assert run['status'] == 'completed', (run_id, run['status'])
+              assert run['conclusion'] == 'success', (run_id, run['conclusion'])
+              assert run['head_sha'] == head, (run_id, run['head_sha'], head)
+          print('Q12_EXACT_PARENT_PROOF_GENERATIONS_GREEN=true')
+          PY
+
+      - name: Prove exact parent source owners and execute A4 admission in isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          PR653=b2da1ada1568b6e7c3629001b4ecca3c1ba4fe76
+          PR654=26e377fe543b8c1906832b8c1e968dfe63480005
+          git fetch --no-tags origin "$PR653" "$PR654"
+          test "$(git rev-parse "$PR653:tools/quantization/aura_glm53_live_payload_coverage_delta.py")" = "314ab1bb75278b18d8d5a3335ffeede1a0f2b57b"
+          test "$(git rev-parse "$PR654:tools/aura_hyperscale_work_admission.py")" = "0b6a53612d4d2d9993da49180cfc74d5f4996548"
+          git show "$PR654:tools/aura_hyperscale_work_admission.py" > /tmp/a4_parent.py
+          python3 /tmp/a4_parent.py > /tmp/a4.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/a4.json',encoding='utf-8'))
+          assert r['semantic_disposition']=='SUPPORT_MERGE'
+          assert r['mode']=='VERIFICATION'
+          assert r['admitted'] is True
+          assert r['selected_observation_ids']==['down-pair','up-pair']
+          assert r['selected_byte_cost']==25_171_968
+          assert r['minimum_cover_complete'] is True
+          assert r['eligible_to_add_new_egk'] is True
+          assert r['eligible_to_seek_new_sck'] is False
+          assert r['counts_as_terminal_semantic_sibling_now'] is False
+          print('Q12_A4_MINIMUM_COVER_ADMISSION_REPROVED=true')
+          PY
+
+      - name: Compile and run Q11 plus Q12 adversarial contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_live_official_tensor_payload_canary.py \
+            tools/quantization/aura_glm53_live_payload_coverage_delta.py \
+            tools/quantization/aura_glm53_minimum_live_payload_cover_verification.py \
+            tests/test_aura_glm53_live_payload_coverage_delta.py \
+            tests/test_aura_glm53_minimum_live_payload_cover_verification.py
+          python3 -m unittest -v \
+            tools.quantization.test_aura_glm53_live_official_tensor_payload_canary \
+            tests.test_aura_glm53_live_payload_coverage_delta \
+            tests.test_aura_glm53_minimum_live_payload_cover_verification
+
+      - name: Execute exact minimum live verification cone
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 -m tools.quantization.aura_glm53_minimum_live_payload_cover_verification | tee /tmp/q12-a.json
+
+      - name: Independently refetch the same four slices
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 -m tools.quantization.aura_glm53_minimum_live_payload_cover_verification | tee /tmp/q12-b.json
+
+      - name: Require exact reproduction, full representative raw coverage, and nonpromotion
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          a=json.load(open('/tmp/q12-a.json',encoding='utf-8'))
+          b=json.load(open('/tmp/q12-b.json',encoding='utf-8'))
+          assert a['schema']=='AURA_GLM53_MINIMUM_LIVE_PAYLOAD_COVER_VERIFICATION_V1'
+          assert a['exact_parent_heads']==[
+              'b2da1ada1568b6e7c3629001b4ecca3c1ba4fe76',
+              '26e377fe543b8c1906832b8c1e968dfe63480005',
+          ]
+          assert a['admitted_observation_ids']==['down-pair','up-pair']
+          assert a['admitted_new_byte_cost']==25_171_968
+          assert a['live_header_length_bytes']==105_424
+          assert (a['prior_observed_slice_count'],a['newly_observed_slice_count'],a['total_observed_slice_count'],a['remaining_slice_count'])==(2,4,6,0)
+          assert a['prior_observed_payload_bytes']==12_585_984
+          assert a['newly_observed_payload_bytes']==25_171_968
+          assert a['total_observed_payload_bytes']==37_757_952
+          assert a['full_representative_raw_payload_coverage_observed'] is True
+          assert a['representative_scope_only'] is True
+          assert a['previous_consequence']=='PARTIAL_LIVE_PAYLOAD_COVERAGE_REMAINING_UP_DOWN'
+          assert a['result_consequence']=='FULL_REPRESENTATIVE_RAW_PAYLOAD_COVERAGE_OBSERVED'
+          assert a['consequence_state_changed'] is True
+          assert a['result_new_sck_candidate'] is True
+          assert a['admission_itself_counts_as_terminal_semantic_sibling'] is False
+          assert a['terminal_sibling_requires_exact_hosted_proof'] is True
+          assert len(a['new_observations'])==4
+          assert {x['projection'] for x in a['new_observations']}=={'up','down'}
+          assert sum(x['payload_bytes'] for x in a['new_observations'])==25_171_968
+          ah={x['tensor_key']:x['payload_sha256'] for x in a['new_observations']}
+          bh={x['tensor_key']:x['payload_sha256'] for x in b['new_observations']}
+          assert ah==bh
+          assert a['receipt_digest']==b['receipt_digest']
+          for digest in ah.values():
+              assert len(digest)==64 and all(c in '0123456789abcdef' for c in digest)
+          for key in (
+              'block_fp8_dequantization_semantics_bound',
+              'gate_up_source_layout_relation_bound',
+              'raw_fp8_payload_is_canonical_float32_source_identity',
+              'exact_official_tensor_to_concrete_source_tensor_set_relation',
+              'candidate_page_materialization_owner_bound',
+              'baseline_same_official_source_tensor_set_proven',
+              'all_layers_experts_uniformity_proven',
+              'real_tensor_quantization_eligible','model_execution_observed','generalized_quality_proven',
+              'runtime_performance_proven','semantic_k27_authority','native_private_transformer_kv_accessed',
+              'gate10_promoted','merge_or_deployment_authorized'):
+              assert a[key] is False,key
+          print('Q12_MINIMUM_LIVE_COVER_REPRODUCED=true')
+          print('Q12_RESULT_RECEIPT_DIGEST='+a['receipt_digest'])
+          for key,value in sorted(ah.items()):
+              print('Q12_PAYLOAD_SHA256',key,value)
+          PY
+
+      - name: Preserve exact live receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: q12-minimum-live-payload-cover-receipts
+          path: |
+            /tmp/q12-a.json
+            /tmp/q12-b.json
+          if-no-files-found: error
+          retention-days: 30

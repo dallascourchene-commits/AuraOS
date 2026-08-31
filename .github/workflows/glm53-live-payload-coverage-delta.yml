@@ -1,0 +1,138 @@
+name: GLM53 Live Payload Coverage Delta
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q11-live-payload-delta:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Q11 head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact PR650 x PR649 convergence and green parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence='2943d00059247b86696df1899d5d7878be81008f'
+          pr650='e8e0eecb5fce9f95bf1b71e97b528776ecd8b51c'
+          pr649='aa004558af8c46bb9bedeedad3cbd2e4e212ab17'
+          parents=subprocess.check_output(['git','rev-list','--parents','-n','1',convergence],text=True).strip().split()
+          assert parents == [convergence,pr650,pr649], parents
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          for run_id, head in ((33374008643,pr650),(33373165058,pr649)):
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+              )
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  run=json.load(response)
+              assert run['status']=='completed',(run_id,run['status'])
+              assert run['conclusion']=='success',(run_id,run['conclusion'])
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+          print('Q11_EXACT_PARENT_RUNS_GREEN=true')
+          PY
+
+      - name: Revalidate exact PR650 job and PR649 admission source
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse aa004558af8c46bb9bedeedad3cbd2e4e212ab17:tools/quantization/aura_glm53_live_tensor_concrete_page_producer_admission.py)" = "6821f652939137c55babea7cb37b07e34223a5cc"
+          python3 - <<'PY'
+          import json, os, urllib.request
+          req=urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/jobs/99431263469",
+              headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+          )
+          with urllib.request.urlopen(req,timeout=30) as response:
+              job=json.load(response)
+          assert job['run_id']==33374008643
+          assert job['head_sha']=='e8e0eecb5fce9f95bf1b71e97b528776ecd8b51c'
+          assert job['conclusion']=='success'
+          steps={s['name']:s for s in job['steps']}
+          assert steps['Observe bounded live official FP8 weight and scale payload']['conclusion']=='success'
+          assert steps['Independently refetch and reproduce payload hashes']['conclusion']=='success'
+          print('Q11_PR650_LIVE_JOB_REVALIDATED=true')
+          PY
+
+      - name: Compile and run exact partial-coverage contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/quantization/aura_glm53_live_official_tensor_payload_canary.py \
+            tools/quantization/aura_glm53_live_payload_coverage_delta.py \
+            tests/test_aura_glm53_live_payload_coverage_delta.py
+          python3 -m unittest -v \
+            tools.quantization.test_aura_glm53_live_official_tensor_payload_canary \
+            tests.test_aura_glm53_live_payload_coverage_delta
+          PYTHONPATH=. python3 -m tools.quantization.aura_glm53_live_payload_coverage_delta | tee /tmp/q11.json
+
+      - name: Reobserve gate pair and require exact live hash identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 -m tools.quantization.aura_glm53_live_official_tensor_payload_canary > /tmp/q11-live.json
+          python3 - <<'PY'
+          import json
+          delta=json.load(open('/tmp/q11.json',encoding='utf-8'))
+          live=json.load(open('/tmp/q11-live.json',encoding='utf-8'))
+          assert live['live_representative_tensor_payload_pair_observed'] is True
+          assert live['live_header_length_bytes']==delta['live_header_length_bytes']==105424
+          assert live['weight_payload_sha256']==delta['live_gate_weight_sha256']=='2d4e5f36478b598043431b3691ce6a48639e01b6f804b1db62ca4af4d14063e8'
+          assert live['scale_payload_sha256']==delta['live_gate_scale_sha256']=='671dd3b32b3f4cc651b93f3420ae47957ae09c1f745d278c0795d56e5d511c55'
+          print('Q11_LIVE_GATE_PAIR_CURRENTNESS_REPROVED=true')
+          PY
+
+      - name: Assert evidence delta and nonpromotion ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q11.json',encoding='utf-8'))
+          assert r['disposition']=='PARTIAL_LIVE_PAYLOAD_COVERAGE_REMAINING_UP_DOWN'
+          assert (r['observed_slice_count'],r['remaining_slice_count'],r['total_slice_count'])==(2,4,6)
+          assert r['observed_payload_bytes']==12585984
+          assert r['remaining_payload_bytes']==25171968
+          assert r['total_representative_payload_bytes']==37757952
+          assert r['observed_payload_bytes']+r['remaining_payload_bytes']==r['total_representative_payload_bytes']
+          assert r['partial_representative_payload_observed'] is True
+          assert r['full_representative_expert_payload_observed'] is False
+          assert r['remaining_up_pair_observation_required'] is True
+          assert r['remaining_down_pair_observation_required'] is True
+          assert r['payload_coverage_complete'] is False
+          observed=[s for s in r['slices'] if s['observed_live']]
+          remaining=[s for s in r['slices'] if not s['observed_live']]
+          assert {s['projection'] for s in observed}=={'gate'}
+          assert {s['projection'] for s in remaining}=={'up','down'}
+          for key in (
+              'raw_fp8_payload_is_canonical_float32_source_identity',
+              'block_fp8_dequantization_semantics_bound',
+              'gate_up_source_layout_relation_bound',
+              'exact_official_tensor_to_concrete_source_tensor_set_relation',
+              'candidate_page_materialization_owner_bound',
+              'baseline_same_official_source_tensor_set_proven',
+              'real_tensor_quantization_eligible','model_execution_observed','generalized_quality_proven',
+              'runtime_performance_proven','semantic_k27_authority','native_private_transformer_kv_accessed',
+              'gate10_promoted','deployment_authorized'):
+              assert r[key] is False,key
+          print('Q11_PARTIAL_COVERAGE_DELTA_FAIL_CLOSED=true')
+          PY

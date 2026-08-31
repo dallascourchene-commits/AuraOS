@@ -1,0 +1,178 @@
+name: GLM53 Q13 Transformers Composition Owner
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_full_representative_canonical_source_set.py"
+      - ".github/workflows/glm53-q13-transformers-composition-owner.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  q13-transformers-composition-owner:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      TRANSFORMERS_COMMIT: e2b35502af756b9ad0f50ff667ffcccfac2d6293
+      TRANSFORMERS_MODELING_BLOB: 5d7ba1a8f3df219e6104f550c7cd58efecd722f9
+      TRANSFORMERS_CONVERSION_BLOB: 3c79fe2a37d2f120e2c64097975415d1caf014b0
+      TRANSFORMERS_FP8_BLOB: 910a8bd82ac2b396cfc6312cb901985501083add
+      SAFETENSORS_COMMIT: 6eb4dc9a28ebce297606e0f4836bbf28839cacef
+      SAFETENSORS_TORCH_BLOB: 29be7bd99fdddd5512d41a21d5e829bf9d5c166e
+    steps:
+      - name: Checkout exact Q13 head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Fetch exact Transformers GLM-MoE-DSA owner generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/transformers-q13
+          git init /tmp/transformers-q13
+          git -C /tmp/transformers-q13 remote add origin https://github.com/huggingface/transformers.git
+          git -C /tmp/transformers-q13 fetch --no-tags --depth=1 origin "$TRANSFORMERS_COMMIT"
+          git -C /tmp/transformers-q13 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/transformers-q13 rev-parse HEAD)" = "$TRANSFORMERS_COMMIT"
+          test "$(git -C /tmp/transformers-q13 rev-parse HEAD:src/transformers/models/glm_moe_dsa/modeling_glm_moe_dsa.py)" = "$TRANSFORMERS_MODELING_BLOB"
+          test "$(git -C /tmp/transformers-q13 rev-parse HEAD:src/transformers/conversion_mapping.py)" = "$TRANSFORMERS_CONVERSION_BLOB"
+          test "$(git -C /tmp/transformers-q13 rev-parse HEAD:src/transformers/integrations/finegrained_fp8.py)" = "$TRANSFORMERS_FP8_BLOB"
+          echo 'Q13_TRANSFORMERS_OWNER_GENERATION_EXACT=true'
+
+      - name: Fetch exact SafeTensors FP8 dtype owner generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/safetensors-q13
+          git init /tmp/safetensors-q13
+          git -C /tmp/safetensors-q13 remote add origin https://github.com/safetensors/safetensors.git
+          git -C /tmp/safetensors-q13 fetch --no-tags --depth=1 origin "$SAFETENSORS_COMMIT"
+          git -C /tmp/safetensors-q13 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/safetensors-q13 rev-parse HEAD)" = "$SAFETENSORS_COMMIT"
+          test "$(git -C /tmp/safetensors-q13 rev-parse HEAD:bindings/python/py_src/safetensors/torch.py)" = "$SAFETENSORS_TORCH_BLOB"
+          python3 - <<'PY'
+          from pathlib import Path
+          src = Path('/tmp/safetensors-q13/bindings/python/py_src/safetensors/torch.py').read_text(encoding='utf-8')
+          assert '_float8_e4m3fn = getattr(torch, "float8_e4m3fn", None)' in src
+          assert '"F8_E4M3": _float8_e4m3fn' in src
+          print('Q13_SAFETENSORS_F8_E4M3_TO_TORCH_E4M3FN_EXACT=true')
+          PY
+
+      - name: Prove exact per-block weight_scale_inv dequantization owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          src = Path('/tmp/transformers-q13/src/transformers/integrations/finegrained_fp8.py').read_text(encoding='utf-8')
+          required = (
+              'Dequantize FP8 weights using their per-block ``weight_scale_inv``.',
+              'scale_rows, scale_cols = scales.shape[-2:]',
+              'block_m = rows // scale_rows',
+              'block_n = cols // scale_cols',
+              's_fp32 = scales.to(torch.float32)',
+              'return (q * s).to(output_dtype).reshape(original_shape)',
+          )
+          for item in required:
+              assert item in src, item
+          first = src.index('class Fp8Dequantize')
+          for item in required:
+              assert src.index(item, first) >= first
+          print('Q13_TRANSFORMERS_WEIGHT_SCALE_INV_DEQUANT_OWNER_EXACT=true')
+          print('Q13_BLOCK_GEOMETRY_DERIVED_FROM_SCALE_GRID=true')
+          PY
+
+      - name: Prove checkpoint gate-up order and stacked concat dimension
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          root = Path('/tmp/transformers-q13')
+          mapping = (root / 'src/transformers/conversion_mapping.py').read_text(encoding='utf-8')
+          assert '"glm_moe_dsa": "qwen2_moe"' in mapping
+
+          start = mapping.index('"qwen2_moe": [')
+          window = mapping[start:start + 1800]
+          gate = '"mlp.experts.*.gate_proj.weight"'
+          up = '"mlp.experts.*.up_proj.weight"'
+          target = 'target_patterns="mlp.experts.gate_up_proj"'
+          operation = 'operations=[MergeModulelist(dim=0), Concatenate(dim=1)]'
+          for required in (gate, up, target, operation):
+              assert required in window, required
+          assert window.index(gate) < window.index(up)
+          print('Q13_TRANSFORMERS_CHECKPOINT_ORDER=gate_then_up')
+          print('Q13_TRANSFORMERS_STACKED_EXPERT_CONCAT_DIM=1')
+          PY
+
+      - name: Prove runtime gate-up shape and gate-first chunk semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          src = Path('/tmp/transformers-q13/src/transformers/models/glm_moe_dsa/modeling_glm_moe_dsa.py').read_text(encoding='utf-8')
+          assert 'self.gate_up_proj = nn.Parameter(torch.empty(self.num_experts, 2 * self.intermediate_dim, self.hidden_dim))' in src
+          assert 'gate, up = nn.functional.linear(current_state, self.gate_up_proj[expert_idx]).chunk(2, dim=-1)' in src
+          print('Q13_TRANSFORMERS_RUNTIME_GATE_UP_SHAPE=[experts,2*intermediate,hidden]')
+          print('Q13_TRANSFORMERS_RUNTIME_CHUNK_ORDER=gate_then_up')
+          PY
+
+      - name: Prove stacked dim1 equals single-expert row concat axis0
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          # For G,U shaped [E,I,H], Transformers concatenates on dim=1.
+          # Selecting one expert yields [I,H] slices, so the same operation is
+          # row concatenation on axis=0 of that expert's 2-D matrices.
+          E, I, H = 2, 3, 4
+          gate = [[[('g', e, i, h) for h in range(H)] for i in range(I)] for e in range(E)]
+          up = [[[('u', e, i, h) for h in range(H)] for i in range(I)] for e in range(E)]
+          stacked = [gate[e] + up[e] for e in range(E)]
+          for e in range(E):
+              single_expert_axis0 = gate[e] + up[e]
+              assert stacked[e] == single_expert_axis0
+              assert len(single_expert_axis0) == 2 * I
+              assert all(len(row) == H for row in single_expert_axis0)
+          print('Q13_SINGLE_EXPERT_AXIS0_EQUIVALENCE=true')
+          PY
+
+      - name: Bind Q13 implementation to independent semantic owners
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          src = Path('tools/quantization/aura_glm53_full_representative_canonical_source_set.py').read_text(encoding='utf-8')
+          gate_update = 'gate_up_hasher.update(gate)'
+          up_update = 'gate_up_hasher.update(up)'
+          assert gate_update in src and up_update in src
+          assert src.index(gate_update) < src.index(up_update)
+          assert 'gate_up_source_shape=(4096, 6144)' in src
+          assert '"tensor_role": "gate_up_proj"' in src
+          assert 'q.reshape(sr, br, sc, bc) * scales[:, None, :, None]' in src
+          assert 'if (br, bc) != BLOCK_SHAPE:' in src
+          print('Q13_IMPLEMENTATION_MATCHES_TRANSFORMERS_DEQUANT_OWNER=true')
+          print('Q13_IMPLEMENTATION_MATCHES_TRANSFORMERS_COMPOSITION_OWNER=true')
+          PY
+
+      - name: Emit provenance consequence ceiling
+        run: |
+          echo 'F8_E4M3_DTYPE_INDEPENDENTLY_SOURCE_BOUND=true'
+          echo 'WEIGHT_SCALE_INV_DEQUANTIZATION_INDEPENDENTLY_SOURCE_BOUND=true'
+          echo 'GATE_UP_COMPOSITION_INDEPENDENTLY_SOURCE_BOUND=true'
+          echo 'DUPLICATE_DECODER_AGREEMENT_NE_SEMANTIC_OWNER=true'
+          echo 'TRANSFORMERS_MODEL_EXECUTION_OBSERVED_BY_THIS_WORKFLOW=false'
+          echo 'E8_PAGE_MATERIALIZED_BY_THIS_WORKFLOW=false'
+          echo 'WHOLE_MODEL_COVERAGE_PROVEN=false'
+          echo 'SEMANTIC_K27_AUTHORITY=false'
+          echo 'GATE10_PROMOTED=false'
+          echo 'MERGE_OR_DEPLOYMENT_AUTHORIZED=false'
