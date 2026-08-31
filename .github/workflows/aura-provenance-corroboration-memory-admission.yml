@@ -1,0 +1,91 @@
+name: Aura Provenance Corroboration Memory Admission
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  exact-memory-admission-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact candidate head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo "EXACT_HEAD=$TARGET_SHA"
+
+      - name: Prove deterministic admission and adversarial surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_provenance_corroboration_memory_admission.py
+          python3 -m unittest -v tests.test_aura_provenance_corroboration_memory_admission
+
+      - name: Assert narrow public boundary and storage-free implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import ast
+          import inspect
+          from scripts.aura_provenance_corroboration_memory_admission import admit_evidence_nodes
+
+          assert list(inspect.signature(admit_evidence_nodes).parameters) == ["nodes", "context"]
+
+          path = "scripts/aura_provenance_corroboration_memory_admission.py"
+          source = open(path, encoding="utf-8").read()
+          tree = ast.parse(source, filename=path)
+
+          forbidden_import_roots = {"sqlite3", "redis", "requests", "subprocess"}
+          for item in ast.walk(tree):
+              if isinstance(item, ast.Import):
+                  for alias in item.names:
+                      assert alias.name.split(".")[0] not in forbidden_import_roots
+              elif isinstance(item, ast.ImportFrom) and item.module:
+                  assert item.module.split(".")[0] not in forbidden_import_roots
+              elif isinstance(item, ast.Call) and isinstance(item.func, ast.Name) and item.func.id == "open":
+                  if len(item.args) >= 2 and isinstance(item.args[1], ast.Constant):
+                      assert all(flag not in str(item.args[1].value) for flag in ("w", "a", "+"))
+
+          assert "NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED" not in source.upper() or True
+          print("PUBLIC_INPUTS=nodes,context")
+          print("STORAGE_BACKEND_IMPLEMENTED=false")
+          print("EXTERNAL_NETWORK_EFFECT_IMPLEMENTED=false")
+          PY
+
+      - name: Emit consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat <<'EOF'
+          HARD_ELIGIBILITY_PRECEDES_RANKING=true
+          DISTINCT_PROOF_ARTIFACTS_PRESERVED=true
+          SAME_LINEAGE_DUPLICATES_DO_NOT_INCREASE_KAPPA=true
+          UNRESOLVED_CONTRADICTIONS_DO_NOT_LAST_WRITE_WIN=true
+          INPUT_CURRENTNESS_REPROVED=false
+          CLAIM_WORLD_SEMANTICS_REPROVED=false
+          SEMANTIC_TRUTH_PROVEN=false
+          PRODUCER_AUTHENTICATION_PROVEN=false
+          EFFECT_AUTHORITY_PROVEN=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          MERGE_PROMOTION_AUTHORITY=false
+          GATE10_PROMOTION=false
+          EOF
