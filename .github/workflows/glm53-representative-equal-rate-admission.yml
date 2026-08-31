@@ -1,0 +1,126 @@
+name: GLM53 Representative Equal Rate Admission
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_representative_canary_evidence_admission.py"
+      - "tools/quantization/aura_glm53_representative_equal_rate_admission.py"
+      - "tests/test_aura_glm53_representative_equal_rate_admission.py"
+      - ".github/workflows/glm53-representative-equal-rate-admission.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  representative-equal-rate-admission:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout Q16
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install exact numeric dependency
+        run: python -m pip install --disable-pip-version-check 'numpy==2.3.5'
+
+      - name: Revalidate exact Q5 and Q6 artifact generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          Q5=eb5887a1f2a26d763dd312b1c84af9ea7f961fe3
+          Q6=6906337dd6e75f49a70a84652bfd9ab70d967eef
+          test "$(git rev-parse "$Q5:tools/quantization/aura_glm53_official_equal_rate_e8_canary.py")" = "5b39ce1132f8ef520529487411628be04e51f32a"
+          test "$(git rev-parse "$Q6:tools/quantization/aura_representative_canary_evidence_admission.py")" = "400a28e12b2c8ac37b59c36ef7386bcb443b1923"
+          test "$(git hash-object tools/quantization/aura_representative_canary_evidence_admission.py)" = "400a28e12b2c8ac37b59c36ef7386bcb443b1923"
+          python3 - <<'PY'
+          import json, os, urllib.request
+          headers={
+              'Authorization':f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept':'application/vnd.github+json',
+              'X-GitHub-Api-Version':'2022-11-28',
+          }
+          repo=os.environ['GH_REPO']
+          expected=[
+              (33401474768,'eb5887a1f2a26d763dd312b1c84af9ea7f961fe3','GLM53 Official Equal Rate E8 Canary',99518559654,'q5-official-equal-rate'),
+              (33401482324,'6906337dd6e75f49a70a84652bfd9ab70d967eef','Aura Representative Canary Evidence Admission',99518584784,'representative-canary-evidence-admission'),
+          ]
+          for run_id,head,name,job_id,job_name in expected:
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: run=json.load(r)
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['name']==name,(run_id,run['name'],name)
+              assert run['status']=='completed' and run['conclusion']=='success',run
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: jobs=json.load(r)['jobs']
+              exact=[j for j in jobs if j['id']==job_id]
+              assert len(exact)==1,(run_id,job_id,len(exact))
+              assert exact[0]['name']==job_name,exact[0]
+              assert exact[0]['status']=='completed' and exact[0]['conclusion']=='success',exact[0]
+          print('Q16_EXACT_Q5_Q6_GENERATIONS=true')
+          PY
+
+      - name: Run Q16 adversarial contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/quantization/aura_glm53_representative_equal_rate_admission.py tests/test_aura_glm53_representative_equal_rate_admission.py
+          PYTHONPATH=. python -m unittest -v tests.test_aura_glm53_representative_equal_rate_admission
+
+      - name: Independently replay exact Q5 live producer
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/q5 eb5887a1f2a26d763dd312b1c84af9ea7f961fe3
+          (cd /tmp/q5 && PYTHONPATH=. python -m tools.quantization.aura_glm53_official_equal_rate_e8_canary) > /tmp/q5-live.json
+          python3 - <<'PY'
+          import json
+          q=json.load(open('/tmp/q5-live.json',encoding='utf-8'))
+          assert q['receipt_digest']=='00bae035570665f19c40405c8d04002f894f6a7c05c75155ce9e63d8dcf9f01a',q['receipt_digest']
+          assert q['aggregate_outcome']=='E8_WIN'
+          assert q['total_official_weights_observed']==512
+          assert all(t['outcome']=='E8_WIN' for t in q['tiles'])
+          print('Q16_Q5_LIVE_RECEIPT_EXACT=true')
+          PY
+
+      - name: Admit exact Q5 into representative scope membrane
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 - <<'PY'
+          import json
+          from tools.quantization import aura_glm53_representative_equal_rate_admission as q16
+          q5=json.load(open('/tmp/q5-live.json',encoding='utf-8'))
+          r=q16.admit_exact_q5_representative_evidence(q5)
+          assert r['representative_scope_complete'] is True,r
+          assert r['outcome_counts']=={'CONTROL_WIN':0,'E8_WIN':8,'TIE':0},r
+          assert r['minimum_missing_evidence_cone']==[],r
+          assert r['next_work_mode']=='STOP_OR_REGISTER_HIGHER_SCOPE',r
+          assert r['aggregate_e8_over_control']==0.6220981458103897,r
+          for key in (
+              'geometry_superiority_proven','full_tensor_superiority_proven',
+              'full_model_superiority_proven','quality_superiority_proven',
+              'runtime_superiority_proven','model_execution_observed','effect_authority',
+              'native_private_transformer_kv_accessed','semantic_k27_authority',
+              'gate10_promoted','merge_or_deployment_authorized',
+          ):
+              assert r[key] is False,key
+          with open('/tmp/q16-representative-equal-rate-admission.json','w',encoding='utf-8') as f:
+              json.dump(r,f,sort_keys=True,indent=2); f.write('\n')
+          print(json.dumps(r,sort_keys=True,indent=2))
+          PY
+
+      - name: Preserve Q16 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: q16-representative-equal-rate-admission
+          path: /tmp/q16-representative-equal-rate-admission.json
+          if-no-files-found: error
