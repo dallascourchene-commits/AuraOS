@@ -1,0 +1,140 @@
+name: Aura Q22 Materialization Support Lifecycle Lineage
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_materialization_support_lifecycle_lineage.py"
+      - "tools/aura_authority_materialization_proposal_conformance.py"
+      - "tests/test_aura_materialization_support_lifecycle_lineage.py"
+      - "tests/test_aura_authority_materialization_proposal_conformance.py"
+      - ".github/workflows/aura-q22-materialization-support-lifecycle-lineage.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q22-materialization-support-lifecycle-lineage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Exact authenticated checkout without mutable checkout action
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            REF="refs/pull/${{ github.event.pull_request.number }}/head"
+            EXPECTED="${{ github.event.pull_request.head.sha }}"
+          else
+            REF="${GITHUB_REF_NAME}"
+            EXPECTED="${GITHUB_SHA}"
+          fi
+          git fetch --no-tags --depth=1 origin "${REF}"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${EXPECTED}"
+          echo "Q22_HEAD=${EXPECTED}" >> "$GITHUB_ENV"
+
+      - name: Authenticate exact PR708 inherited semantic blobs
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/aura_authority_materialization_proposal_conformance.py)" = "bdaa9b0338cdab05c48dc0337ab46522b40ac42f"
+          test "$(git hash-object tests/test_aura_authority_materialization_proposal_conformance.py)" = "d71563cbfa3e0a29b86056fbd5ac27916e039624"
+
+      - name: Revalidate exact hosted parent runs and jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          parents = (
+              (33411109838, 99550608648, "361b01579ab2debc34f4b836c3ea605de635a8c3"),
+              (33410723482, 99549322339, "e83d18126cae4e95abf679f74ee585e6a4025831"),
+          )
+
+          def get(url):
+              request = urllib.request.Request(
+                  url,
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  },
+              )
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  return json.load(response)
+
+          for run_id, job_id, head in parents:
+              run = get(f"https://api.github.com/repos/{repo}/actions/runs/{run_id}")
+              assert run["head_sha"] == head, (run_id, run["head_sha"], head)
+              assert run["status"] == "completed", (run_id, run["status"])
+              assert run["conclusion"] == "success", (run_id, run["conclusion"])
+              jobs = get(f"https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs?per_page=100")
+              matches = [job for job in jobs["jobs"] if job["id"] == job_id]
+              assert len(matches) == 1, (run_id, job_id)
+              assert matches[0]["status"] == "completed", matches[0]["status"]
+              assert matches[0]["conclusion"] == "success", matches[0]["conclusion"]
+          print("Q22_PARENT_EXACT_HOSTED_PROOFS=PASS")
+          PY
+
+      - name: Replay exact PR709 lineage parent source and adversarial tests
+        run: |
+          set -euo pipefail
+          ROOT="/tmp/q22-q21-parent"
+          mkdir -p "$ROOT/tools" "$ROOT/tests"
+          touch "$ROOT/tools/__init__.py" "$ROOT/tests/__init__.py"
+          curl -fsSL "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/e83d18126cae4e95abf679f74ee585e6a4025831/tools/aura_pre_attempt_lifecycle_lineage.py" > "$ROOT/tools/aura_pre_attempt_lifecycle_lineage.py"
+          curl -fsSL "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/e83d18126cae4e95abf679f74ee585e6a4025831/tests/test_aura_pre_attempt_lifecycle_lineage.py" > "$ROOT/tests/test_aura_pre_attempt_lifecycle_lineage.py"
+          test "$(git hash-object "$ROOT/tools/aura_pre_attempt_lifecycle_lineage.py")" = "9557192fc857a1fa05ef45803bddf863b44ddbe1"
+          test "$(git hash-object "$ROOT/tests/test_aura_pre_attempt_lifecycle_lineage.py")" = "1eb25d6c4c57ec8722941fb9e984eb75d97c894f"
+          PYTHONPATH="$ROOT" python3 -m unittest tests.test_aura_pre_attempt_lifecycle_lineage
+
+      - name: Run inherited PR708 and Q22 adversarial suites
+        run: |
+          set -euo pipefail
+          python3 -m unittest \
+            tests.test_aura_authority_materialization_proposal_conformance \
+            tests.test_aura_materialization_support_lifecycle_lineage
+
+      - name: Compile and enforce Q22 nonpromotion receipt
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_authority_materialization_proposal_conformance.py \
+            tools/aura_materialization_support_lifecycle_lineage.py
+          python3 -m tools.aura_materialization_support_lifecycle_lineage > /tmp/q22.json
+          python3 - <<'PY'
+          import json
+          with open("/tmp/q22.json", "r", encoding="utf-8") as f:
+              receipt = json.load(f)
+          assert receipt["schema"] == "AURA-MATERIALIZATION-SUPPORT-LIFECYCLE-LINEAGE-v1"
+          assert receipt["bounded_support_associated_with_lineage"] is True
+          for key in (
+              "support_live_currentness_revalidated_for_lineage",
+              "support_fresh_at_pre_attempt_proven",
+              "support_fresh_at_effect_boundary_proven",
+              "support_caused_execution",
+              "execution_authorized",
+              "execution_lease_minted",
+              "provider_effect_authorized",
+              "semantic_k27_authority",
+              "native_private_transformer_kv_accessed",
+              "gate10_promoted",
+              "merge_deploy_spend_public_financial_human_effect_authorized",
+          ):
+              assert receipt[key] is False, (key, receipt[key])
+          assert receipt["base_proposal_basis_digest"] != receipt["materialization_bound_proposal_basis_digest"]
+          assert len(receipt["base_to_materialization_relation_digest"]) == 64
+          assert len(receipt["supported_lineage_digest"]) == 64
+          assert len(receipt["receipt_digest"]) == 64
+          print("Q22_NONPROMOTION=PASS")
+          print("Q22_HEAD=" + __import__("os").environ["Q22_HEAD"])
+          print("Q22_RECEIPT_DIGEST=" + receipt["receipt_digest"])
+          PY
