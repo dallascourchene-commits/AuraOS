@@ -1,5 +1,6 @@
 name: Aura WorkCapsule Portable-Derived Scoped Rebind
 
+# W3 exact-head transport: fetch only the current branch; do not invoke legacy submodule cleanup.
 on:
   pull_request:
     paths:
@@ -13,37 +14,49 @@ permissions:
 
 env:
   PYTHONPATH: ${{ github.workspace }}
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  TARGET_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
 jobs:
   exact-head-proof:
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
-      - name: Checkout exact event head
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          fetch-depth: 0
-          persist-credentials: false
-
-      - name: Assert exact head and true-parent convergence
+      - name: Fetch exact event head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          expected='${{ github.event.pull_request.head.sha || github.sha }}'
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=128 origin \
+            "+refs/heads/${TARGET_REF}:refs/remotes/origin/${TARGET_REF}"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Assert exact head and consequence ancestry
+        shell: bash
+        run: |
+          set -euo pipefail
           actual="$(git rev-parse HEAD)"
-          echo "EXPECTED_HEAD=$expected"
+          echo "EXPECTED_HEAD=$TARGET_SHA"
           echo "ACTUAL_HEAD=$actual"
-          test "$actual" = "$expected"
+          test "$actual" = "$TARGET_SHA"
           git merge-base --is-ancestor 4e2733b2b6600f74457850aaa45bfe399d7e8502 HEAD
           git merge-base --is-ancestor 4cb7e5caa9aeb7c9049d9ec17ea521a7820f49af HEAD
           git merge-base --is-ancestor 3233ca5720711e133a602e4c52d2740e18e45fc0 HEAD
+          git merge-base --is-ancestor 1bed60027d29ac20b00c35a28cb937a5b07687f4 HEAD
           parents="$(git cat-file -p 5b99729664caf91d613f230f4c50c203c9c1b9ec | grep '^parent ' || true)"
           echo "$parents" | grep '4e2733b2b6600f74457850aaa45bfe399d7e8502'
           echo "$parents" | grep '4cb7e5caa9aeb7c9049d9ec17ea521a7820f49af'
-          w3parents="$(git cat-file -p b96dcc4e16c57ff78e40302d4a6e890655a4f4dd | grep '^parent ' || true)"
-          echo "$w3parents" | grep 'f74bced35f8b2afac6a9ac29ffe43bcd8f45124a'
-          echo "$w3parents" | grep '3233ca5720711e133a602e4c52d2740e18e45fc0'
+          w3parents="$(git cat-file -p 8e5df89903dbe690c9ca8fb7bcae7c6c3f9a7ad5 | grep '^parent ' || true)"
+          echo "$w3parents" | grep 'a7b45de90636ea7365a6165cb0170b8349aa854c'
+          echo "$w3parents" | grep '1bed60027d29ac20b00c35a28cb937a5b07687f4'
 
       - name: Compile parent and child membranes
         run: |
