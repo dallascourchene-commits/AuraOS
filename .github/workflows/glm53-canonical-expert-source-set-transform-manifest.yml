@@ -1,0 +1,114 @@
+name: GLM53 Canonical Expert Source Set Transform Manifest
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py"
+      - "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py"
+      - ".github/workflows/glm53-canonical-expert-source-set-transform-manifest.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q13-canonical-source-set:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact Q13 head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove true PR657 x PR652 convergence and exact hosted parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence='ad6b8f7541d6556ff724f6ced24896a5fa1b0868'
+          pr657='7922fbfadb3adab4e5f9b935d1e997693cd7c7a6'
+          pr652='73491807ab2f1f977e2f2b491607893de0ccec23'
+          parents=subprocess.check_output(['git','rev-list','--parents','-n','1',convergence],text=True).strip().split()
+          assert parents == [convergence,pr657,pr652], parents
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          for run_id, head in ((33395690612,pr657),(33374060046,pr652)):
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+              )
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  run=json.load(response)
+              assert run['status']=='completed', (run_id,run['status'])
+              assert run['conclusion']=='success', (run_id,run['conclusion'])
+              assert run['head_sha']==head, (run_id,run['head_sha'],head)
+          print('Q13_EXACT_PARENT_RUNS_GREEN=true')
+          PY
+
+      - name: Revalidate parent consequence ceilings and source contracts
+        run: |
+          set -euo pipefail
+          git show 73491807ab2f1f977e2f2b491607893de0ccec23:tools/quantization/aura_glm53_bounded_official_payload_range_manifest.py > /tmp/pr652.py
+          grep -F 'source_to_target_layout_relation_bound=False' /tmp/pr652.py
+          grep -F 'block_fp8_dequantization_semantics_bound=False' /tmp/pr652.py
+          grep -F 'live_payload_observation_executed=False' /tmp/pr652.py
+          grep -F 'EXPECTED_TOTAL_PAYLOAD_BYTES = 37_757_952' /tmp/pr652.py
+          git show 7922fbfadb3adab4e5f9b935d1e997693cd7c7a6:tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py > /tmp/pr657.py
+          grep -F 'gate_up_composition_bound=False' /tmp/pr657.py
+          grep -F 'up_payload_observed=False' /tmp/pr657.py
+          grep -F 'down_payload_observed=False' /tmp/pr657.py
+          echo 'Q13_PARENT_CEILINGS_REVALIDATED=true'
+
+      - name: Compile and run Q13 adversarial contract
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py \
+            tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py
+          python -m unittest -v tests.test_aura_glm53_canonical_expert_source_set_transform_manifest
+
+      - name: Emit deterministic Q13 manifest
+        run: |
+          set -euo pipefail
+          python -m tools.quantization.aura_glm53_canonical_expert_source_set_transform_manifest | tee /tmp/q13.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q13.json',encoding='utf-8'))
+          assert r['exact_parent_heads']==[
+              '7922fbfadb3adab4e5f9b935d1e997693cd7c7a6',
+              '73491807ab2f1f977e2f2b491607893de0ccec23',
+          ]
+          assert r['source_slice_count']==6
+          assert r['source_manifest_total_bytes']==37_757_952
+          assert r['gate_canonical_sha256']=='0db00dc5a76ce5b91273dd7be7e12b5d47121154b5c1f440131c399ce245a43e'
+          assert r['gate_canonical_bytes']==50_331_648
+          assert r['gate_up_independent_source_set_bytes']==100_663_296
+          assert r['full_independent_projection_source_set_bytes']==150_994_944
+          assert r['disposition']=='GATE_CANONICALIZED__UP_DOWN_RAW_UNOBSERVED__GATE_UP_LAYOUT_UNBOUND'
+          by_name={p['projection']:p for p in r['projections']}
+          assert by_name['gate']['canonical_identity_earned'] is True
+          assert by_name['up']['canonical_sha256'] is None
+          assert by_name['down']['canonical_sha256'] is None
+          print('Q13_CANONICAL_SOURCE_SET_MANIFEST_BOUND=true')
+          PY
+
+      - name: Prove fixed nonpromotion ceiling
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q13.json',encoding='utf-8'))
+          for key in (
+              'gate_up_concatenation_order_bound','gate_up_concatenation_axis_bound','gate_up_tensor_layout_bound',
+              'up_payload_observed','down_payload_observed','up_canonical_identity_earned','down_canonical_identity_earned',
+              'full_expert_canonical_source_set_materialized','source_to_e8_page_materialization_bound','real_e8_page_materialized',
+              'model_quality_proven','runtime_performance_proven','semantic_k27_authority',
+              'native_private_transformer_kv_accessed','gate10_promoted','deployment_authorized'):
+              assert r[key] is False,key
+          print('Q13_NONPROMOTION_CEILING=true')
+          PY
