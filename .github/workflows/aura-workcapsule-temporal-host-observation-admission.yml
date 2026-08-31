@@ -1,0 +1,74 @@
+name: Aura WorkCapsule Temporal Host Observation Admission
+
+on:
+  pull_request:
+    paths:
+      - scripts/aura_workcapsule_temporal_host_observation_admission.py
+      - scripts/aura_workcapsule_preplan_post_observation_transition.py
+      - tests/test_aura_workcapsule_temporal_host_observation_admission.py
+      - tests/test_aura_workcapsule_preplan_post_observation_transition.py
+      - .github/workflows/aura-workcapsule-temporal-host-observation-admission.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  temporal-host-observation-admission:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch exact child head without persisted credentials
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Assert exact pull-request head
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          if git config --get remote.origin.url | grep -Eq 'x-access-token|oauth|@github.com'; then
+            echo 'persisted credential material detected in origin URL' >&2
+            exit 1
+          fi
+
+      - name: Re-prove O32 temporal owner
+        run: |
+          python -m py_compile scripts/aura_workcapsule_preplan_post_observation_transition.py
+          python -m unittest discover -s tests -p 'test_aura_workcapsule_preplan_post_observation_transition.py' -v
+
+      - name: Prove O25 host-observation admission and adversarials
+        run: |
+          python -m py_compile scripts/aura_workcapsule_temporal_host_observation_admission.py
+          python -m unittest discover -s tests -p 'test_aura_workcapsule_temporal_host_observation_admission.py' -v
+
+      - name: Assert O25 does not duplicate active O24 scoped-rebind owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          src=scripts/aura_workcapsule_temporal_host_observation_admission.py
+          grep -q 'aura_workcapsule_preplan_post_observation_transition' "$src"
+          ! grep -Eq 'portable_derived_scoped_rebind|aura_workcapsule_portable_derived_scoped_rebind|PR549' "$src"
+          ! grep -Eq 'host_effect_ready[[:space:]]*=[[:space:]]*True|provider_effect_authorized[[:space:]]*:[[:space:]]*True|execution_authorized[[:space:]]*:[[:space:]]*True' "$src"
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'LOCAL_TEMPORAL_CLOSURE_CAN_RAISE_HOST_EVIDENCE_RANK=false'
+          echo 'MISSING_HOST_OBSERVATION_IS_UNKNOWN=true'
+          echo 'POINTER_KEY_CACHE_COORDINATE_PRESENCE_CAN_BE_PASS=false'
+          echo 'MINIMUM_COVER_WITHOUT_MEASURED_COSTS_COMPUTED=false'
+          echo 'RESOLVER_TRUST_PROVEN_BY_THIS_MODULE=false'
+          echo 'HOST_OBSERVATION_AUTHORITY_PROVEN_BY_THIS_MODULE=false'
+          echo 'HOST_EFFECT_READY=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_MINTED=false'
+          echo 'NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false'
