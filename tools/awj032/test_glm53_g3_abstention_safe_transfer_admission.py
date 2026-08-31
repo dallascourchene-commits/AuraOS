@@ -1,5 +1,5 @@
 import unittest
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 from tools.awj032.glm53_router_separated_prefetch import (
     NATIVE_ROUTE_SCHEMA,
@@ -11,6 +11,8 @@ from tools.awj032.glm53_router_separated_prefetch import (
 from tools.awj032.glm53_prefetch_transfer_admission import (
     CalibratedExpertForecast,
     PrefetchTransferPolicy,
+    REUSE_APPLICABLE,
+    REUSE_NOT_APPLICABLE,
     admit_prefetch_transfers,
 )
 
@@ -76,7 +78,8 @@ class G3AbstentionSafeTransferAdmissionTests(unittest.TestCase):
         self.assertEqual(receipt.admitted_experts, ())
         self.assertEqual(receipt.candidate_decisions, ())
         self.assertEqual(receipt.cold_predicted_logical_bytes, 0)
-        self.assertEqual(receipt.cold_required_reuse_for_window, 0.0)
+        self.assertIsNone(receipt.cold_required_reuse_for_window)
+        self.assertEqual(receipt.cold_required_reuse_disposition, REUSE_NOT_APPLICABLE)
         self.assertEqual(receipt.admitted_logical_bytes, 0)
         self.assertEqual(receipt.admitted_logical_transfer_seconds, 0.0)
         self.assertEqual(receipt.admitted_expected_latency_margin_seconds, 0)
@@ -87,6 +90,14 @@ class G3AbstentionSafeTransferAdmissionTests(unittest.TestCase):
         self.assertIs(receipt.g2_admitted, False)
         self.assertIs(receipt.native_route_mutated, False)
         self.assertIs(receipt.model_output_semantics_changed, False)
+
+    def test_numerical_zero_cannot_impersonate_not_applicable_reuse(self):
+        receipt = admit_prefetch_transfers(
+            prediction=self._prediction(), forecasts=(), policy=self._policy(), num_experts=256
+        )
+        forged = replace(receipt, cold_required_reuse_for_window=0.0)
+        with self.assertRaisesRegex(ValueError, "ZERO_BYTE_REUSE_MUST_BE_NOT_APPLICABLE"):
+            forged.validate_claim_ceiling()
 
     def test_abstention_requires_empty_forecast_set(self):
         with self.assertRaisesRegex(ValueError, "FORECAST_SET_MUST_EQUAL_PREDICTED_EXPERT_SET"):
@@ -110,17 +121,11 @@ class G3AbstentionSafeTransferAdmissionTests(unittest.TestCase):
     def test_abstention_still_requires_policy_layer_and_binding_identity(self):
         with self.assertRaisesRegex(ValueError, "PREDICTION_POLICY_LAYER_MISMATCH"):
             admit_prefetch_transfers(
-                prediction=self._prediction(),
-                forecasts=(),
-                policy=self._policy(layer_id="layer:18"),
-                num_experts=256,
+                prediction=self._prediction(), forecasts=(), policy=self._policy(layer_id="layer:18"), num_experts=256
             )
         with self.assertRaisesRegex(ValueError, "PREDICTION_POLICY_BINDING_MISMATCH"):
             admit_prefetch_transfers(
-                prediction=self._prediction(),
-                forecasts=(),
-                policy=self._policy(binding_digest="binding:other"),
-                num_experts=256,
+                prediction=self._prediction(), forecasts=(), policy=self._policy(binding_digest="binding:other"), num_experts=256
             )
 
     def test_abstention_skips_speculation_but_demands_exact_native_route(self):
@@ -203,7 +208,9 @@ class G3AbstentionSafeTransferAdmissionTests(unittest.TestCase):
         )
         self.assertEqual(receipt.admitted_experts, (5,))
         self.assertGreater(receipt.cold_predicted_logical_bytes, 0)
+        self.assertIsNotNone(receipt.cold_required_reuse_for_window)
         self.assertGreaterEqual(receipt.cold_required_reuse_for_window, 0.0)
+        self.assertEqual(receipt.cold_required_reuse_disposition, REUSE_APPLICABLE)
         self.assertIs(receipt.transfer_effect_authorized, False)
         self.assertIs(receipt.g2_admitted, False)
 
