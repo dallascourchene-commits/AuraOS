@@ -4,6 +4,12 @@ import inspect
 import unittest
 
 from tools.quantization.aura_glm53_source_bound_quantization_evidence_gate import (
+    HISTORICAL_W2_DRIVE_OBSERVATION,
+    HISTORICAL_W2_HEADER_SHA256,
+    HISTORICAL_W2_JOB,
+    HISTORICAL_W2_PRODUCER_HEAD,
+    HISTORICAL_W2_RECEIPT_DIGEST,
+    HISTORICAL_W2_RUN,
     OFFICIAL_INDEX_SHA256,
     OFFICIAL_INDEX_SIZE,
     OFFICIAL_INDEX_XET_HASH,
@@ -20,7 +26,7 @@ from tools.quantization.aura_glm53_source_bound_quantization_evidence_gate impor
 
 
 class SourceBoundEvidenceGateTests(unittest.TestCase):
-    def test_current_gate_has_two_independent_holds(self):
+    def test_current_gate_separates_historical_source_proof_from_current_holds(self):
         out = current_source_bound_evidence_gate()
         self.assertEqual(out.q5_source_head, Q5_EXACT_HEAD)
         self.assertEqual(out.q5_source_run, Q5_EXACT_RUN)
@@ -30,26 +36,40 @@ class SourceBoundEvidenceGateTests(unittest.TestCase):
         self.assertEqual(out.official_index_sha256, OFFICIAL_INDEX_SHA256)
         self.assertEqual(out.official_index_size, OFFICIAL_INDEX_SIZE)
         self.assertEqual(out.official_index_xet_hash, OFFICIAL_INDEX_XET_HASH)
-        self.assertFalse(out.source_index_bytes_verified)
-        self.assertFalse(out.source_headers_observed)
-        self.assertFalse(out.source_header_trial_eligible)
+        self.assertFalse(out.current_source_index_bytes_verified)
+        self.assertFalse(out.current_source_headers_observed)
+        self.assertFalse(out.current_source_header_trial_eligible)
+        self.assertTrue(out.historical_official_index_relation_observed)
+        self.assertTrue(out.historical_official_headers_observed)
+        self.assertTrue(out.historical_official_fp8_companions_bound)
+        self.assertTrue(out.historical_observation_representative_only)
+        self.assertEqual(out.historical_producer_head, HISTORICAL_W2_PRODUCER_HEAD)
+        self.assertEqual(out.historical_producer_run, HISTORICAL_W2_RUN)
+        self.assertEqual(out.historical_producer_job, HISTORICAL_W2_JOB)
+        self.assertEqual(out.historical_drive_observation, HISTORICAL_W2_DRIVE_OBSERVATION)
+        self.assertEqual(out.historical_receipt_digest, HISTORICAL_W2_RECEIPT_DIGEST)
+        self.assertEqual(out.historical_header_sha256, HISTORICAL_W2_HEADER_SHA256)
+        self.assertEqual(out.historical_entry_count, 6)
+        self.assertEqual(out.historical_payload_bytes_read, 0)
+        self.assertFalse(out.historical_evidence_implies_current_raw_bytes)
+        self.assertFalse(out.historical_evidence_implies_global_layout_uniformity)
         self.assertFalse(out.exact_representation_identity_match)
         self.assertTrue(out.geometry_family_label_match)
-        self.assertTrue(out.independent_source_transport_residual)
+        self.assertTrue(out.independent_current_source_transport_residual)
         self.assertTrue(out.independent_representation_evidence_residual)
         self.assertFalse(out.source_bound_evidence_admitted)
-        self.assertEqual(out.disposition, "HOLD_SOURCE_TRANSPORT_AND_REPRESENTATION_EVIDENCE")
+        self.assertEqual(out.disposition, "HOLD_CURRENT_SOURCE_TRANSPORT_AND_REPRESENTATION_EVIDENCE")
 
     def test_public_current_gate_has_no_override_surface(self):
         self.assertEqual(tuple(inspect.signature(current_source_bound_evidence_gate).parameters), ())
 
-    def test_index_object_identity_cannot_self_mint_index_bytes(self):
+    def test_index_object_identity_cannot_self_mint_current_index_bytes(self):
         source = _current_q5_snapshot()
         forged = replace(source, representative_key_to_shard_bound=True)
         with self.assertRaisesRegex(ValueError, "Q5_SOURCE_EVIDENCE_ORDER_VIOLATION"):
             _evaluate(forged)
 
-    def test_header_trial_requires_all_source_preconditions(self):
+    def test_header_trial_requires_all_current_source_preconditions(self):
         source = _current_q5_snapshot()
         forged = replace(source, index_bytes_verified=True, header_trial_eligible=True)
         with self.assertRaisesRegex(ValueError, "Q5_HEADER_TRIAL_PRECONDITIONS_MISSING"):
@@ -75,7 +95,14 @@ class SourceBoundEvidenceGateTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "Q5_AUTHORITY_CEILING_WIDENED"):
                 _evaluate(source)
 
-    def test_even_hypothetical_header_green_does_not_transfer_q4_evidence_to_q5(self):
+    def test_historical_headers_do_not_self_mint_current_header_trial(self):
+        out = current_source_bound_evidence_gate()
+        self.assertTrue(out.historical_official_headers_observed)
+        self.assertFalse(out.current_source_header_trial_eligible)
+        self.assertTrue(out.independent_current_source_transport_residual)
+        self.assertFalse(out.source_bound_evidence_admitted)
+
+    def test_even_hypothetical_current_header_green_does_not_transfer_q4_evidence_to_q5(self):
         source = replace(
             _current_q5_snapshot(),
             index_bytes_verified=True,
@@ -86,7 +113,7 @@ class SourceBoundEvidenceGateTests(unittest.TestCase):
             blocker="NONE_AT_HEADER_LEVEL",
         )
         out = _evaluate(source)
-        self.assertFalse(out.independent_source_transport_residual)
+        self.assertFalse(out.independent_current_source_transport_residual)
         self.assertTrue(out.independent_representation_evidence_residual)
         self.assertFalse(out.source_bound_evidence_admitted)
         self.assertEqual(out.disposition, "HOLD_REPRESENTATION_EXACT_EVIDENCE")
