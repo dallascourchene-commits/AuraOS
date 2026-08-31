@@ -197,6 +197,39 @@ def _logical_bytes(experts: Sequence[int], logical_bytes_by_expert: Mapping[int,
     return total
 
 
+def _validate_loaded_pages(
+    result: Any,
+    *,
+    requested_experts: Sequence[int],
+    expected_binding_digest: str,
+    num_experts: int,
+    phase: str,
+) -> None:
+    """Require the pager result to prove the exact requested source-bound pages.
+
+    Passing a model revision/index digest *into* a pager is insufficient relation proof:
+    the returned page object must itself carry the same immutable binding used by the
+    prediction/native-route relation and the exact canonical expert set requested for
+    this transfer phase.
+    """
+    observed_binding = getattr(result, "binding_digest", None)
+    if not isinstance(observed_binding, str) or not observed_binding.strip():
+        raise ValueError(f"{phase}_PAGER_RESULT_BINDING_REQUIRED")
+    if observed_binding != expected_binding_digest:
+        raise ValueError(f"{phase}_PAGER_RESULT_BINDING_MISMATCH")
+
+    observed_experts = getattr(result, "expert_ids", None)
+    if observed_experts is None:
+        raise ValueError(f"{phase}_PAGER_RESULT_EXPERTS_REQUIRED")
+    expected_experts = canonical_expert_ids(requested_experts, num_experts)
+    try:
+        observed_tuple = tuple(observed_experts)
+    except TypeError as exc:
+        raise ValueError(f"{phase}_PAGER_RESULT_EXPERTS_INVALID") from exc
+    if observed_tuple != expected_experts:
+        raise ValueError(f"{phase}_PAGER_RESULT_EXPERTS_MISMATCH")
+
+
 def build_prefetch_trace(
     *,
     prediction: PrefetchPrediction,
@@ -291,7 +324,10 @@ def stage_then_demand_load(
     """Exercise the transfer order while preserving native execution semantics.
 
     Prediction pages are staged first. Any missed native experts are then demand-loaded.
-    This function never calls a model forward and returns only a bounded trace.
+    This function never calls a model forward and returns only a bounded trace. Each
+    successful pager response must itself prove the exact source binding and expert set
+    used by the prediction/native-route relation; caller-supplied source labels alone
+    cannot establish that relation.
     """
     trace = build_prefetch_trace(
         prediction=prediction,
@@ -300,9 +336,31 @@ def stage_then_demand_load(
         logical_bytes_by_expert=logical_bytes_by_expert,
     )
     if prediction.predicted_experts:
-        pager.load_selected(prediction.predicted_experts, model_revision=model_revision, index_digest=index_digest)
+        staged = pager.load_selected(
+            prediction.predicted_experts,
+            model_revision=model_revision,
+            index_digest=index_digest,
+        )
+        _validate_loaded_pages(
+            staged,
+            requested_experts=prediction.predicted_experts,
+            expected_binding_digest=trace.binding_digest,
+            num_experts=num_experts,
+            phase="PREFETCH",
+        )
     if trace.demand_misses:
-        pager.load_selected(trace.demand_misses, model_revision=model_revision, index_digest=index_digest)
+        demanded = pager.load_selected(
+            trace.demand_misses,
+            model_revision=model_revision,
+            index_digest=index_digest,
+        )
+        _validate_loaded_pages(
+            demanded,
+            requested_experts=trace.demand_misses,
+            expected_binding_digest=trace.binding_digest,
+            num_experts=num_experts,
+            phase="DEMAND",
+        )
     return trace
 
 
@@ -310,6 +368,7 @@ LAWS = (
     "PrefetchPrediction!=NativeExecutionRoute",
     "PredictionMiss=>DemandLoadExactNativeExpertsNotRouteMutation",
     "PredictionWasteMayIncreaseIOWithoutChangingExecutedExperts",
+    "PagerResultMustBindExactRequestedExpertsAndSource",
     "LogicalPrefetchBytes!=PhysicalNVMeBytesAbsentAttestation",
     "FullShardLoad!=SelectivePrefetch",
     "CoordinateMemory!=TransformerKVCache",
