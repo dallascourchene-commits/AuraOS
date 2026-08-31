@@ -42,7 +42,7 @@ from tools.awj032.glm53_g5_recompute_admission import (
 )
 
 SCHEMA = "AURA-GLM53-G5-OWNER-RESOLVED-RECOMPUTE-PREMISE-v1"
-G5_V2_OWNER_HEAD_AT_CUT = "82f942b55cf02f3305ac2d148a41671496fbd73a"
+G5_V2_OWNER_HEAD_AT_CUT = "5c18883358d041846d7451bdcfa3a5739af675b1"
 
 O65_SEMANTIC_PROOF_HEAD = "7efca33d95f6dc39c4e159250d45373b260060ed"
 O65_PROOF_RUN = 33410032496
@@ -294,8 +294,6 @@ def assess_owner_resolved_recompute_premise(
     if base_receipt.disposition != ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT:
         return _receipt(g4=g4, base_receipt=base_receipt, disposition=BASE_G5_HOLD)
 
-    # The only positive base path is structural drift. A raw/caller projection is
-    # deliberately insufficient here.
     if g4.disposition != G4_HOLD_RECOMPUTE or not g4.changed_axes:
         raise AssertionError("G5_OWNER_PREMISE_BASE_ADMISSION_WITHOUT_G4_DRIFT")
     if resolver is None:
