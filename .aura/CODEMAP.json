@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788202797,
+  "generated_at_unix": 1788202873,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1650,
+    "repo_file_count": 1651,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -137,6 +137,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-nav13-lawfield-boundary.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1766,16 +1767,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1650,
-      "bytes": 26502222,
-      "tokens_est": 6615910,
+      "files": 1651,
+      "bytes": 26508942,
+      "tokens_est": 6617590,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1005,
-        "schema_or_lexicon": 272,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -159806,6 +159807,10 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-nav13-lawfield-boundary.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
     ],
@@ -160368,9 +160373,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -169005,6 +169007,59 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-nav13-lawfield-boundary.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6720,
+      "lines": 165,
+      "tokens_est": 1680,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          92
+        ]
+      },
+      "topology": {},
+      "digest8": "c16b9e68fff05166",
+      "vector": [
+        0.241939,
+        -0.138986,
+        -0.159577,
+        0.138986,
+        -0.26047,
+        0.223407,
+        -0.248116,
+        0.167813,
+        0.211053,
+        -0.147222,
+        0.15134,
+        0.215171,
+        0.17399,
+        -0.182226,
+        -0.159577,
+        -0.178108,
+        0.221348,
+        0.223407,
+        0.095746,
+        0.06486,
+        0.04427,
+        0.161636,
+        0.050447,
+        -0.178108,
+        -0.15134,
+        0.046329,
+        -0.221348,
+        0.211053,
+        0.15134,
+        0.211053,
+        0.071037,
+        0.219289
       ]
     },
     {
@@ -288384,16 +288439,16 @@
     }
   },
   "summary": {
-    "file_count": 1650,
-    "total_bytes": 26502222,
-    "text_tokens_est": 6615910,
+    "file_count": 1651,
+    "total_bytes": 26508942,
+    "text_tokens_est": 6617590,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1005,
-      "schema_or_lexicon": 272,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288540,6 +288595,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-nav13-lawfield-boundary.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -449854,6 +449910,6 @@
       }
     ],
     "record_fingerprint": "52ba3ce6868e4b909ed30b69654d73f8",
-    "payload_hash": "43b82037114cffe544d75dd5f11edb53"
+    "payload_hash": "25f64b84d4a8d1bbbd722546221fbde2"
   }
 }
