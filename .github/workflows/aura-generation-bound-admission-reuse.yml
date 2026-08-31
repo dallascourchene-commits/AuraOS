@@ -1,0 +1,139 @@
+name: Aura Generation Bound Admission Reuse Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_generation_bound_admission_reuse.py"
+      - "tests/test_aura_generation_bound_admission_reuse.py"
+      - ".github/workflows/aura-generation-bound-admission-reuse.yml"
+      - "docs/arena/GENERATION_BOUND_ADMISSION_REUSE_V1.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-admission-reuse-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head and full convergence history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          submodules: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Authenticate true two-parent convergence and semantic blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          CONVERGENCE=ea3a61a20b410fd02ed0520d0e4488fcd6987329
+          Q18=aed81432db8b84d2f43b8a85d06d4b72e16f6a50
+          PR758=8c30df774ad55507aa57bbfd49444991c1a2b379
+          test "$(git rev-parse "$CONVERGENCE^1")" = "$Q18"
+          test "$(git rev-parse "$CONVERGENCE^2")" = "$PR758"
+          test "$(git rev-parse "$Q18:tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py")" = "4cee26edaf0759fc80d31889ab9e4e268f9a4fbe"
+          test "$(git rev-parse "$PR758:tools/aura_scheme_serializable_hydration_transaction.py")" = "97211589682a7ed67c8c63530dac744b9c186e57"
+          git merge-base --is-ancestor "$CONVERGENCE" HEAD
+          echo "TRUE_TWO_PARENT_CONVERGENCE_EXACT=true"
+
+      - name: Revalidate exact hosted parent proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+
+          headers={
+              'Authorization':f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept':'application/vnd.github+json',
+              'X-GitHub-Api-Version':'2022-11-28',
+          }
+          repo=os.environ['GH_REPO']
+          expected=(
+              {
+                  'head':'8c30df774ad55507aa57bbfd49444991c1a2b379',
+                  'run':33436051562,
+                  'job':99632632584,
+                  'workflow':'Aura Scheme Serializable Hydration Transaction',
+              },
+              {
+                  'head':'aed81432db8b84d2f43b8a85d06d4b72e16f6a50',
+                  'run':33436580962,
+                  'job':99634379758,
+                  'workflow':'GLM53 Current Generation Bounded C2 Proposal',
+              },
+          )
+          for item in expected:
+              req=urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{item['run']}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  run=json.load(response)
+              assert run['head_sha']==item['head'], run
+              assert run['name']==item['workflow'], run
+              assert run['status']=='completed' and run['conclusion']=='success', run
+
+              req=urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/jobs/{item['job']}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  job=json.load(response)
+              assert job['head_sha']==item['head'], job
+              assert job['status']=='completed' and job['conclusion']=='success', job
+          print('PARENT_HOSTED_PROOFS_EXACT_GREEN=true')
+          PY
+
+      - name: Compile and run adversarial contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/aura_generation_bound_admission_reuse.py \
+            tests/test_aura_generation_bound_admission_reuse.py
+          PYTHONPATH=. python -m unittest -v \
+            tests.test_aura_generation_bound_admission_reuse
+
+      - name: Exhaust 128-state Different-J reuse lattice
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 - <<'PY'
+          from tools.aura_generation_bound_admission_reuse import prove_different_j
+          checked=prove_different_j()
+          assert checked==128, checked
+          print(f'GENERATION_BOUND_ADMISSION_REUSE_DIFFERENT_J_STATES={checked}')
+          PY
+
+      - name: Enforce nonpromotion laws
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 - <<'PY'
+          from tools.aura_generation_bound_admission_reuse import AdmissionFamily, fixture, revalidate_admission_reuse
+          for family in AdmissionFamily:
+              admission,current=fixture(family)
+              receipt=revalidate_admission_reuse(admission=admission,current=current)
+              assert receipt.reusable_candidate is True
+              assert receipt.candidate_only is True
+              assert receipt.admission_reused_as_authority is False
+              assert receipt.execution_authorized is False
+              assert receipt.effect_authorized is False
+              assert receipt.source_currentness_proven is False
+              assert receipt.semantic_truth_proven is False
+              assert receipt.semantic_k27_authority is False
+              assert receipt.native_private_transformer_kv_accessed is False
+          print('ADMISSION_REUSE_NONPROMOTION_CEILING=true')
+          PY
