@@ -126,7 +126,7 @@ jobs:
       - name: Prove Q20 nonpromotion and coordinate separation
         run: |
           set -euo pipefail
-          python3 tools/aura_owner_resolved_proposal_lifecycle_bridge.py > /tmp/q20.json
+          python3 -m tools.aura_owner_resolved_proposal_lifecycle_bridge > /tmp/q20.json
           python3 - <<'PY'
           import json
           d=json.load(open('/tmp/q20.json',encoding='utf-8'))
