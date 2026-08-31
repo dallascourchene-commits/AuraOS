@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788153192,
+  "generated_at_unix": 1788155440,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1729,
+    "repo_file_count": 1730,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1684,6 +1684,7 @@
       "tests/test_aura_wfst_temporal_adapter.py",
       "tests/test_aura_work_splitter.py",
       "tests/test_aura_workcapsule_artifact_qualified_host_observation.py",
+      "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
       "tests/test_aura_workcapsule_canonical_temporal_lifecycle_equivalence.py",
       "tests/test_aura_workcapsule_context_binding.py",
       "tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py",
@@ -1845,15 +1846,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1729,
-      "bytes": 27159225,
-      "tokens_est": 6780186,
+      "files": 1730,
+      "bytes": 27162715,
+      "tokens_est": 6781059,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 19,
         "operator_script": 9,
-        "python_module": 1047,
+        "python_module": 1048,
         "schema_or_lexicon": 302,
         "support_file": 49
       }
@@ -102653,12 +102654,22 @@
         "signature_hash": "f0ebdbb75505044c"
       }
     ],
-    "artifact_target_ref": [
+    "_is_state": [
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
         "line": 140,
         "end_line": 142,
+        "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_is_state:79c80413bb7b8f32",
+        "signature_hash": "afc627b3954bb8fb"
+      }
+    ],
+    "artifact_target_ref": [
+      {
+        "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
+        "kind": "function",
+        "line": 145,
+        "end_line": 147,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:artifact_target_ref:024d5b325747c2a1",
         "signature_hash": "f1b36da7f1eefde1"
       }
@@ -102667,8 +102678,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 145,
-        "end_line": 158,
+        "line": 150,
+        "end_line": 163,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_temporal_violations:72882a4c94af681d",
         "signature_hash": "0b4b5b9cea3dcdb2"
       }
@@ -102677,8 +102688,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 161,
-        "end_line": 173,
+        "line": 166,
+        "end_line": 178,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_gate_maps:9e6c3878a29f14b3",
         "signature_hash": "24f1f3ae92e8a056"
       }
@@ -102687,8 +102698,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 176,
-        "end_line": 178,
+        "line": 181,
+        "end_line": 183,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_resolution_digest:a593dc87b8d733cb",
         "signature_hash": "e536f114ea4a643f"
       }
@@ -102697,8 +102708,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 181,
-        "end_line": 221,
+        "line": 186,
+        "end_line": 226,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_resolution_integrity_violations:adbe484ee2e1c198",
         "signature_hash": "6e8ac22e350fcc72"
       }
@@ -102707,8 +102718,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 224,
-        "end_line": 246,
+        "line": 229,
+        "end_line": 258,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_gate_shape_violations:0eee61f08c27dc4d",
         "signature_hash": "5925a8be642a3c6c"
       }
@@ -102717,8 +102728,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 249,
-        "end_line": 277,
+        "line": 261,
+        "end_line": 291,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_derived_host_state:bdb0729b59ef5111",
         "signature_hash": "fd13ef241ecad9d6"
       }
@@ -102727,8 +102738,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 280,
-        "end_line": 311,
+        "line": 294,
+        "end_line": 325,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_derived_host_state_violations:8009165092d7b799",
         "signature_hash": "998fd29bf8c00f5f"
       }
@@ -102737,8 +102748,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 314,
-        "end_line": 323,
+        "line": 328,
+        "end_line": 337,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_ceiling_violations:1fb02f60cb5ee7e7",
         "signature_hash": "a7c92d26c06f61ac"
       }
@@ -102747,8 +102758,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 326,
-        "end_line": 342,
+        "line": 340,
+        "end_line": 356,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_identity_violations:ee8e3e5a109d8976",
         "signature_hash": "5d3eb6eb88fa753b"
       }
@@ -102757,8 +102768,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 345,
-        "end_line": 355,
+        "line": 359,
+        "end_line": 369,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:verify_host_admission_envelope:920088f2f232ae9e",
         "signature_hash": "5e9ea6fc3be2c96a"
       }
@@ -102767,8 +102778,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 358,
-        "end_line": 371,
+        "line": 372,
+        "end_line": 385,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_local_violations:6eb7887eda0e9760",
         "signature_hash": "c59fa0650881d621"
       }
@@ -102777,8 +102788,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 374,
-        "end_line": 384,
+        "line": 388,
+        "end_line": 398,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_admit_local:348f78e1d1a6e3bb",
         "signature_hash": "9dfa6bba0cdf7934"
       }
@@ -102787,8 +102798,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 387,
-        "end_line": 401,
+        "line": 401,
+        "end_line": 415,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_target_binding_violations:cc6016d68b8ab79c",
         "signature_hash": "10d2c4d492c4d9a3"
       }
@@ -102797,8 +102808,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 404,
-        "end_line": 431,
+        "line": 418,
+        "end_line": 445,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:verify_artifact_qualified_host_observation:bda86d64a153a0d4",
         "signature_hash": "e1e042d034a47788"
       }
@@ -102807,8 +102818,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 434,
-        "end_line": 437,
+        "line": 448,
+        "end_line": 451,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_host_gate_partition:4250fbfb3f496401",
         "signature_hash": "f4943fe1119f8469"
       }
@@ -102817,8 +102828,8 @@
       {
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
         "kind": "function",
-        "line": 440,
-        "end_line": 496,
+        "line": 454,
+        "end_line": 510,
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:admit_artifact_qualified_host_observation:b2395265486e0dd6",
         "signature_hash": "ed7fe04bfe7e1a90"
       }
@@ -148151,6 +148162,14 @@
         "end_line": 46,
         "semantic_id": "tests/test_aura_refactor_output_quality.py#function:_fixture:9101c24f9fc5abe0",
         "signature_hash": "e62dcb25d3bb3b81"
+      },
+      {
+        "file": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py#function:_fixture:ccf769721c143297",
+        "signature_hash": "6b4ae2d9a25078b7"
       }
     ],
     "_spec": [
@@ -158501,6 +158520,56 @@
         "end_line": 369,
         "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation.py#method:WorkCapsuleArtifactQualifiedHostObservationTests.test_public_boundary_has_no_resolver_or_effect_override:2ff6307b48185788",
         "signature_hash": "42e6e15b4e344455"
+      }
+    ],
+    "_structured_unknown_resolution": [
+      {
+        "file": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+        "kind": "function",
+        "line": 26,
+        "end_line": 43,
+        "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py#function:_structured_unknown_resolution:bcc068920eed0942",
+        "signature_hash": "74bca62d5be06479"
+      }
+    ],
+    "ArtifactQualifiedHostObservationHardeningTests": [
+      {
+        "file": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+        "kind": "class",
+        "line": 46,
+        "end_line": 81,
+        "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py#class:ArtifactQualifiedHostObservationHardeningTests:489324b8005df22d",
+        "signature_hash": "a5bd9f9d99d64630"
+      }
+    ],
+    "ArtifactQualifiedHostObservationHardeningTests.test_valid_structured_unknown_resolution_preserves_unknown": [
+      {
+        "file": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 60,
+        "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py#method:ArtifactQualifiedHostObservationHardeningTests.test_valid_structured_unknown_resolution_preserves_unknown:59f127bdf4b13fc9",
+        "signature_hash": "a655247f20277636"
+      }
+    ],
+    "ArtifactQualifiedHostObservationHardeningTests.test_unhashable_host_gate_state_fails_closed": [
+      {
+        "file": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 69,
+        "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py#method:ArtifactQualifiedHostObservationHardeningTests.test_unhashable_host_gate_state_fails_closed:33efc8c6ebe168ee",
+        "signature_hash": "0fd16749ffb7520e"
+      }
+    ],
+    "ArtifactQualifiedHostObservationHardeningTests.test_unhashable_nested_resolution_state_fails_closed": [
+      {
+        "file": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 81,
+        "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py#method:ArtifactQualifiedHostObservationHardeningTests.test_unhashable_nested_resolution_state_fails_closed:4ae3b5f9e071c330",
+        "signature_hash": "8f5667936573eacf"
       }
     ],
     "WorkCapsuleCanonicalTemporalLifecycleEquivalenceTests": [
@@ -174121,9 +174190,9 @@
       "path": ".github/workflows/aura-workcapsule-artifact-qualified-host-observation.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 4602,
-      "lines": 102,
-      "tokens_est": 1151,
+      "bytes": 4842,
+      "lines": 106,
+      "tokens_est": 1211,
       "symbol_count": 0,
       "commands": [
         "python3 -m py_compile",
@@ -174141,40 +174210,40 @@
         ]
       },
       "topology": {},
-      "digest8": "1e8f88d1077d7cf0",
+      "digest8": "bbfba6264576c9ae",
       "vector": [
-        -0.1327,
-        -0.116284,
-        -0.05609,
-        -0.173741,
-        -0.064298,
-        0.004104,
-        0.086187,
-        0.346115,
-        -0.034201,
-        -0.14638,
-        0.233935,
-        0.1327,
-        -0.316018,
-        0.239407,
-        -0.157325,
-        -0.250352,
-        0.214783,
-        -0.310545,
-        0.11902,
-        0.1327,
-        0.064298,
-        -0.094395,
-        -0.064298,
-        -0.212046,
-        -0.129964,
-        -0.253088,
-        0.077978,
-        -0.075242,
-        -0.135436,
-        -0.329698,
-        0.001368,
-        -0.091659
+        0.131387,
+        -0.149245,
+        -0.085465,
+        -0.172206,
+        -0.17986,
+        0.26405,
+        -0.131387,
+        -0.195167,
+        -0.090568,
+        0.049748,
+        -0.281908,
+        -0.228333,
+        0.184962,
+        -0.190065,
+        0.162001,
+        -0.258947,
+        -0.11608,
+        -0.108426,
+        0.320176,
+        -0.281908,
+        0.062504,
+        0.128836,
+        -0.014032,
+        0.006378,
+        -0.269152,
+        0.187513,
+        -0.001276,
+        -0.174757,
+        0.098221,
+        -0.22323,
+        -0.019134,
+        -0.184962
       ]
     },
     {
@@ -250350,47 +250419,47 @@
       "path": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 18451,
-      "lines": 497,
-      "tokens_est": 4613,
-      "symbol_count": 20,
+      "bytes": 18822,
+      "lines": 510,
+      "tokens_est": 4706,
+      "symbol_count": 21,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "5b0cf93cb61df115",
+      "digest8": "03a715c66a910f14",
       "vector": [
-        -0.1291,
-        -0.257115,
-        -0.155137,
-        -0.050989,
-        -0.139948,
-        -0.218059,
-        -0.161646,
-        0.274473,
-        0.170325,
-        -0.04014,
-        0.168155,
-        0.046649,
-        -0.248436,
-        -0.157306,
-        0.070517,
-        -0.098723,
-        0.179004,
-        -0.231078,
-        0.235417,
-        -0.1291,
-        0.003255,
-        0.257115,
-        -0.074856,
-        0.168155,
-        -0.018443,
-        -0.239757,
-        0.276642,
-        -0.105233,
-        -0.118251,
-        0.144288,
-        -0.215889,
-        0.274473
+        -0.098234,
+        0.117686,
+        -0.088508,
+        -0.139083,
+        0.041822,
+        0.23829,
+        0.189659,
+        0.139083,
+        -0.236345,
+        -0.02237,
+        -0.246071,
+        -0.230509,
+        0.106015,
+        -0.024315,
+        0.240235,
+        0.162426,
+        0.218838,
+        -0.236345,
+        -0.1527,
+        -0.234399,
+        0.191605,
+        0.150755,
+        0.166317,
+        -0.203276,
+        0.119631,
+        -0.230509,
+        0.216892,
+        0.158536,
+        -0.209112,
+        -0.144919,
+        -0.082672,
+        0.218838
       ]
     },
     {
@@ -271179,6 +271248,53 @@
         0.276506,
         0.026039,
         -0.169871
+      ]
+    },
+    {
+      "path": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2879,
+      "lines": 86,
+      "tokens_est": 720,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6ac8d880932e4669",
+      "vector": [
+        0.009302,
+        -0.152815,
+        -0.011959,
+        0.251149,
+        -0.065113,
+        0.078401,
+        0.211284,
+        0.243176,
+        -0.06777,
+        0.224572,
+        -0.269752,
+        0.136869,
+        0.314932,
+        0.168761,
+        0.126239,
+        0.208626,
+        -0.128896,
+        -0.203311,
+        0.195338,
+        0.003986,
+        0.097005,
+        0.264437,
+        -0.163446,
+        -0.043851,
+        0.197995,
+        0.187365,
+        0.025248,
+        0.338851,
+        0.10232,
+        0.035878,
+        0.027905,
+        0.243176
       ]
     },
     {
@@ -296919,15 +297035,15 @@
     }
   },
   "summary": {
-    "file_count": 1729,
-    "total_bytes": 27159225,
-    "text_tokens_est": 6780186,
+    "file_count": 1730,
+    "total_bytes": 27162715,
+    "text_tokens_est": 6781059,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 19,
       "operator_script": 9,
-      "python_module": 1047,
+      "python_module": 1048,
       "schema_or_lexicon": 302,
       "support_file": 49
     },
@@ -298622,6 +298738,7 @@
       "tests/test_aura_wfst_temporal_adapter.py",
       "tests/test_aura_work_splitter.py",
       "tests/test_aura_workcapsule_artifact_qualified_host_observation.py",
+      "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
       "tests/test_aura_workcapsule_canonical_temporal_lifecycle_equivalence.py",
       "tests/test_aura_workcapsule_context_binding.py",
       "tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py",
@@ -399421,10 +399538,10 @@
         "name": "_admit_local",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 374,
-        "end_line": 384,
+        "line": 388,
+        "end_line": 398,
         "signature_hash": "9dfa6bba0cdf7934",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_canonical_bytes:dbd4278bef69f9d0",
@@ -399434,77 +399551,77 @@
         "line": 119,
         "end_line": 125,
         "signature_hash": "5ac132afaebe3a2d",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_ceiling_violations:1fb02f60cb5ee7e7",
         "name": "_ceiling_violations",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 314,
-        "end_line": 323,
+        "line": 328,
+        "end_line": 337,
         "signature_hash": "a7c92d26c06f61ac",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_derived_host_state:bdb0729b59ef5111",
         "name": "_derived_host_state",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 249,
-        "end_line": 277,
+        "line": 261,
+        "end_line": 291,
         "signature_hash": "fd13ef241ecad9d6",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_derived_host_state_violations:8009165092d7b799",
         "name": "_derived_host_state_violations",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 280,
-        "end_line": 311,
+        "line": 294,
+        "end_line": 325,
         "signature_hash": "998fd29bf8c00f5f",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_gate_maps:9e6c3878a29f14b3",
         "name": "_gate_maps",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 161,
-        "end_line": 173,
+        "line": 166,
+        "end_line": 178,
         "signature_hash": "24f1f3ae92e8a056",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_gate_shape_violations:0eee61f08c27dc4d",
         "name": "_gate_shape_violations",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 224,
-        "end_line": 246,
+        "line": 229,
+        "end_line": 258,
         "signature_hash": "5925a8be642a3c6c",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_host_gate_partition:4250fbfb3f496401",
         "name": "_host_gate_partition",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 434,
-        "end_line": 437,
+        "line": 448,
+        "end_line": 451,
         "signature_hash": "f4943fe1119f8469",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_identity_violations:ee8e3e5a109d8976",
         "name": "_identity_violations",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 326,
-        "end_line": 342,
+        "line": 340,
+        "end_line": 356,
         "signature_hash": "5d3eb6eb88fa753b",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_is_sha256:c96a53ade1f641ab",
@@ -399514,37 +399631,47 @@
         "line": 132,
         "end_line": 137,
         "signature_hash": "cd43b7b42a81a6f4",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_is_state:79c80413bb7b8f32",
+        "name": "_is_state",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
+        "line": 140,
+        "end_line": 142,
+        "signature_hash": "afc627b3954bb8fb",
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_local_violations:6eb7887eda0e9760",
         "name": "_local_violations",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 358,
-        "end_line": 371,
+        "line": 372,
+        "end_line": 385,
         "signature_hash": "c59fa0650881d621",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_resolution_digest:a593dc87b8d733cb",
         "name": "_resolution_digest",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 176,
-        "end_line": 178,
+        "line": 181,
+        "end_line": 183,
         "signature_hash": "e536f114ea4a643f",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_resolution_integrity_violations:adbe484ee2e1c198",
         "name": "_resolution_integrity_violations",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 181,
-        "end_line": 221,
+        "line": 186,
+        "end_line": 226,
         "signature_hash": "6e8ac22e350fcc72",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_sha256:93dec976741a384e",
@@ -399554,67 +399681,67 @@
         "line": 128,
         "end_line": 129,
         "signature_hash": "45f4748fe62799e1",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_target_binding_violations:cc6016d68b8ab79c",
         "name": "_target_binding_violations",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 387,
-        "end_line": 401,
+        "line": 401,
+        "end_line": 415,
         "signature_hash": "10d2c4d492c4d9a3",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:_temporal_violations:72882a4c94af681d",
         "name": "_temporal_violations",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 145,
-        "end_line": 158,
+        "line": 150,
+        "end_line": 163,
         "signature_hash": "0b4b5b9cea3dcdb2",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:admit_artifact_qualified_host_observation:b2395265486e0dd6",
         "name": "admit_artifact_qualified_host_observation",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 440,
-        "end_line": 496,
+        "line": 454,
+        "end_line": 510,
         "signature_hash": "ed7fe04bfe7e1a90",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:artifact_target_ref:024d5b325747c2a1",
         "name": "artifact_target_ref",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 140,
-        "end_line": 142,
+        "line": 145,
+        "end_line": 147,
         "signature_hash": "f1b36da7f1eefde1",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:verify_artifact_qualified_host_observation:bda86d64a153a0d4",
         "name": "verify_artifact_qualified_host_observation",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 404,
-        "end_line": 431,
+        "line": 418,
+        "end_line": 445,
         "signature_hash": "e1e042d034a47788",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_artifact_qualified_host_observation.py#function:verify_host_admission_envelope:920088f2f232ae9e",
         "name": "verify_host_admission_envelope",
         "kind": "function",
         "file": "scripts/aura_workcapsule_artifact_qualified_host_observation.py",
-        "line": 345,
-        "end_line": 355,
+        "line": 359,
+        "end_line": 369,
         "signature_hash": "5e9ea6fc3be2c96a",
-        "file_digest8": "5b0cf93cb61df115"
+        "file_digest8": "03a715c66a910f14"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_canonical_temporal_lifecycle_equivalence.py#function:admit_canonical_temporal_lifecycle_equivalence:bb7144b784fd93e8",
@@ -457087,6 +457214,66 @@
         "file_digest8": "70eaf1f8b0f34f7c"
       },
       {
+        "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py#class:ArtifactQualifiedHostObservationHardeningTests:489324b8005df22d",
+        "name": "ArtifactQualifiedHostObservationHardeningTests",
+        "kind": "class",
+        "file": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+        "line": 46,
+        "end_line": 81,
+        "signature_hash": "a5bd9f9d99d64630",
+        "file_digest8": "6ac8d880932e4669"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py#function:_fixture:ccf769721c143297",
+        "name": "_fixture",
+        "kind": "function",
+        "file": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+        "line": 18,
+        "end_line": 23,
+        "signature_hash": "6b4ae2d9a25078b7",
+        "file_digest8": "6ac8d880932e4669"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py#function:_structured_unknown_resolution:bcc068920eed0942",
+        "name": "_structured_unknown_resolution",
+        "kind": "function",
+        "file": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+        "line": 26,
+        "end_line": 43,
+        "signature_hash": "74bca62d5be06479",
+        "file_digest8": "6ac8d880932e4669"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py#method:ArtifactQualifiedHostObservationHardeningTests.test_unhashable_host_gate_state_fails_closed:33efc8c6ebe168ee",
+        "name": "ArtifactQualifiedHostObservationHardeningTests.test_unhashable_host_gate_state_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+        "line": 62,
+        "end_line": 69,
+        "signature_hash": "0fd16749ffb7520e",
+        "file_digest8": "6ac8d880932e4669"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py#method:ArtifactQualifiedHostObservationHardeningTests.test_unhashable_nested_resolution_state_fails_closed:4ae3b5f9e071c330",
+        "name": "ArtifactQualifiedHostObservationHardeningTests.test_unhashable_nested_resolution_state_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+        "line": 71,
+        "end_line": 81,
+        "signature_hash": "8f5667936573eacf",
+        "file_digest8": "6ac8d880932e4669"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py#method:ArtifactQualifiedHostObservationHardeningTests.test_valid_structured_unknown_resolution_preserves_unknown:59f127bdf4b13fc9",
+        "name": "ArtifactQualifiedHostObservationHardeningTests.test_valid_structured_unknown_resolution_preserves_unknown",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
+        "line": 47,
+        "end_line": 60,
+        "signature_hash": "a655247f20277636",
+        "file_digest8": "6ac8d880932e4669"
+      },
+      {
         "semantic_id": "tests/test_aura_workcapsule_canonical_temporal_lifecycle_equivalence.py#class:WorkCapsuleCanonicalTemporalLifecycleEquivalenceTests:0611cf2cddd4768b",
         "name": "WorkCapsuleCanonicalTemporalLifecycleEquivalenceTests",
         "kind": "class",
@@ -462957,7 +463144,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "07803595b9c99f1e398bd400e158f3bd",
-    "payload_hash": "c62b737dbd7c9ba73db4c728ef4024ac"
+    "record_fingerprint": "f88f587a06bd2787dc8e3a9652d8c292",
+    "payload_hash": "e8e75f12eeff23cfe637ce792b8fda52"
   }
 }

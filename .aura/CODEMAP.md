@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1729
-- **total_bytes**: 27159225
-- **text_tokens_est**: 6780186
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 19, 'operator_script': 9, 'python_module': 1047, 'schema_or_lexicon': 302, 'support_file': 49}
+- **file_count**: 1730
+- **total_bytes**: 27162715
+- **text_tokens_est**: 6781059
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 19, 'operator_script': 9, 'python_module': 1048, 'schema_or_lexicon': 302, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1729,
+  "repo_file_count": 1730,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1702,6 +1702,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_wfst_temporal_adapter.py",
     "tests/test_aura_work_splitter.py",
     "tests/test_aura_workcapsule_artifact_qualified_host_observation.py",
+    "tests/test_aura_workcapsule_artifact_qualified_host_observation_hardening.py",
     "tests/test_aura_workcapsule_canonical_temporal_lifecycle_equivalence.py",
     "tests/test_aura_workcapsule_context_binding.py",
     "tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py",
@@ -1869,15 +1870,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1729,
-  "bytes": 27159225,
-  "tokens_est": 6780186,
+  "files": 1730,
+  "bytes": 27162715,
+  "tokens_est": 6781059,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 19,
     "operator_script": 9,
-    "python_module": 1047,
+    "python_module": 1048,
     "schema_or_lexicon": 302,
     "support_file": 49
   }
