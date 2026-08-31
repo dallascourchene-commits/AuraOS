@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1677
-- **total_bytes**: 26581759
-- **text_tokens_est**: 6635837
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1022, 'schema_or_lexicon': 278, 'support_file': 49}
+- **file_count**: 1678
+- **total_bytes**: 26587418
+- **text_tokens_est**: 6637253
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1022, 'schema_or_lexicon': 279, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1677,
+  "repo_file_count": 1678,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -157,6 +157,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-glm53-g1-physical-io-quarantine-w3.yml",
     ".github/workflows/aura-glm53-router-separated-prefetch.yml",
     ".github/workflows/aura-glm53-source-bound-prefetch-w3.yml",
     ".github/workflows/aura-review-learning.yml",
@@ -1817,16 +1818,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1677,
-  "bytes": 26581759,
-  "tokens_est": 6635837,
+  "files": 1678,
+  "bytes": 26587418,
+  "tokens_est": 6637253,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1022,
-    "schema_or_lexicon": 278,
+    "schema_or_lexicon": 279,
     "support_file": 49
   }
 }
