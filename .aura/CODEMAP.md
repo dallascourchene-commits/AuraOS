@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1657
-- **total_bytes**: 26581155
-- **text_tokens_est**: 6635646
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 275, 'support_file': 49}
+- **file_count**: 1658
+- **total_bytes**: 26587224
+- **text_tokens_est**: 6637164
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1010, 'schema_or_lexicon': 276, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1657,
+  "repo_file_count": 1658,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -155,6 +155,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
     ".github/workflows/aura-eki-coordinate-memory-candidate.yml",
+    ".github/workflows/aura-eki-read-currentness-proof-mirror.yml",
     ".github/workflows/aura-eki-wp03-read-currentness-obligation.yml",
     ".github/workflows/aura-external-cognition-resolve-adapter.yml",
     ".github/workflows/aura-external-knowledge-ingress.yml",
@@ -1797,16 +1798,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1657,
-  "bytes": 26581155,
-  "tokens_est": 6635646,
+  "files": 1658,
+  "bytes": 26587224,
+  "tokens_est": 6637164,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
     "python_module": 1010,
-    "schema_or_lexicon": 275,
+    "schema_or_lexicon": 276,
     "support_file": 49
   }
 }
