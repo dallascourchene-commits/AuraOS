@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1644
-- **total_bytes**: 26436841
-- **text_tokens_est**: 6599563
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1648
+- **total_bytes**: 26470889
+- **text_tokens_est**: 6608076
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1003, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1644,
+  "repo_file_count": 1648,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1492,6 +1492,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_financial_contracts.py",
     "tests/test_aura_financial_contracts_regressions.py",
     "tests/test_aura_forge.py",
+    "tests/test_aura_fractal_k27.py",
     "tests/test_aura_fst_provenance.py",
     "tests/test_aura_gate.py",
     "tests/test_aura_gate_adapters.py",
@@ -1526,6 +1527,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_model_connectome_bridge.py",
     "tests/test_aura_music_mitosis_adapter.py",
     "tests/test_aura_native_cockpit_contract.py",
+    "tests/test_aura_navigator_k27_collision_router.py",
     "tests/test_aura_node_inspector.py",
     "tests/test_aura_pascal_spatial_presentation.py",
     "tests/test_aura_persistence_integrations.py",
@@ -1654,6 +1656,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
     "tools/aura_collision_safe_rebase.py",
+    "tools/aura_fractal_k27.py",
+    "tools/aura_navigator_k27_collision_router.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1784,15 +1788,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1644,
-  "bytes": 26436841,
-  "tokens_est": 6599563,
+  "files": 1648,
+  "bytes": 26470889,
+  "tokens_est": 6608076,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 999,
+    "python_module": 1003,
     "schema_or_lexicon": 272,
     "support_file": 49
   }
