@@ -1,0 +1,35 @@
+name: Aura Benchmark Campaign Contracts
+
+on:
+  pull_request:
+    paths:
+      - "tools/benchmarks/**"
+      - "tests/test_aura_benchmark_score_admission.py"
+      - ".github/workflows/aura-benchmark-campaign-contracts.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-benchmark-contracts-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHONHASHSEED: "0"
+
+jobs:
+  benchmark-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install focused test dependency
+        run: python -m pip install "pytest>=8,<9"
+      - name: Compile benchmark membrane
+        run: python -m py_compile tools/benchmarks/aura_benchmark_score_admission.py tests/test_aura_benchmark_score_admission.py
+      - name: Run focused adversarial suite
+        run: python -m pytest -q tests/test_aura_benchmark_score_admission.py
