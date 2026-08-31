@@ -1,0 +1,107 @@
+name: Aura Proposal-Bound Benchmark Use Binding W3
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_proposal_bound_benchmark_currentness.py"
+      - "tests/test_aura_proposal_bound_benchmark_currentness.py"
+      - ".github/workflows/aura-proposal-bound-benchmark-use-binding-w3.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  benchmark-use-binding-w3:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      W3_SEMANTIC_HEAD: "0bff4ebab48af7ecd44fefc7f7a5bd2656405f43"
+      W3_SOURCE_BLOB: "b556cf635cbc064702c1f7c273c9d29eb599f46c"
+      W3_TEST_BLOB: "6ecf4393f975814ef2959b4fccc79c3d8baea2f1"
+      PRE_W3_HEAD: "315a4128ac86da849ec643a1df21fa449e714ada"
+      PRE_W3_SOURCE_BLOB: "040016b70fb74d964312297c9d2f56b8c237e0ac"
+      PRE_W3_TEST_BLOB: "c77b6661c8ec60a86ae2af8f1ed4ad0499830855"
+      SCORE_OWNER_PROOF_RUN: "33410040172"
+      O63_PROOF_RUN: "33407842585"
+    steps:
+      - name: Exact authenticated checkout without mutable actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags origin "$TARGET_SHA" "$W3_SEMANTIC_HEAD" "$PRE_W3_HEAD"
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git rev-parse "$W3_SEMANTIC_HEAD:tools/aura_proposal_bound_benchmark_currentness.py")" = "$W3_SOURCE_BLOB"
+          test "$(git rev-parse "$W3_SEMANTIC_HEAD:tests/test_aura_proposal_bound_benchmark_currentness.py")" = "$W3_TEST_BLOB"
+          test "$(git rev-parse HEAD:tools/aura_proposal_bound_benchmark_currentness.py)" = "$W3_SOURCE_BLOB"
+          test "$(git rev-parse HEAD:tests/test_aura_proposal_bound_benchmark_currentness.py)" = "$W3_TEST_BLOB"
+          test "$(git rev-parse "$PRE_W3_HEAD:tools/aura_proposal_bound_benchmark_currentness.py")" = "$PRE_W3_SOURCE_BLOB"
+          test "$(git rev-parse "$PRE_W3_HEAD:tests/test_aura_proposal_bound_benchmark_currentness.py")" = "$PRE_W3_TEST_BLOB"
+
+      - name: Revalidate exact upstream owner proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'}
+          for run_id in (int(os.environ['SCORE_OWNER_PROOF_RUN']), int(os.environ['O63_PROOF_RUN'])):
+              with urllib.request.urlopen(urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers),timeout=30) as r:
+                  run=json.load(r)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+          print('W3_PARENT_PROOFS_GREEN=true')
+          PY
+
+      - name: Install focused test dependency
+        run: python3 -m pip install "pytest>=8,<9"
+
+      - name: Compile and run W3 adversarial contract
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_proposal_bound_benchmark_currentness.py \
+            tests/test_aura_proposal_bound_benchmark_currentness.py
+          python3 -m pytest -q tests/test_aura_proposal_bound_benchmark_currentness.py
+
+      - name: Independently prove unrelated score cannot gain proposal relevance
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from tests.test_aura_proposal_bound_benchmark_currentness import benchmark_policy, benchmark_receipt, capsule_and_resolver
+          from tools.aura_proposal_bound_benchmark_currentness import evaluate_proposal_bound_benchmark_currentness
+          policy=benchmark_policy()
+          bound=benchmark_receipt()
+          capsule,resolver=capsule_and_resolver(receipt=bound,policy=policy)
+          unrelated=benchmark_receipt(task_id='unrelated-task',task_input_digest='6'*64)
+          current=evaluate_proposal_bound_benchmark_currentness(
+              benchmark_receipt=bound,benchmark_policy=policy,proposal_capsule=capsule,proposal_owner_resolver=resolver)
+          rejected=evaluate_proposal_bound_benchmark_currentness(
+              benchmark_receipt=unrelated,benchmark_policy=policy,proposal_capsule=capsule,proposal_owner_resolver=resolver)
+          assert current.current_use_admissible is True
+          assert current.benchmark_use_binding_matches is True
+          assert rejected.historical_score_admitted is True
+          assert rejected.current_use_admissible is False
+          assert rejected.benchmark_use_binding_matches is False
+          assert rejected.score_credit_delta == 0
+          assert rejected.execution_authorized is False
+          assert rejected.provider_effect_authorized is False
+          assert rejected.semantic_k27_authority is False
+          print('UNRELATED_SCORE_CURRENT_USE_DENIED=true')
+          print('HISTORICAL_SCORE_REWRITTEN=false')
+          PY
+
+      - name: Prove nonpromotion laws
+        run: |
+          echo 'AdmittedHistoricalScore + CurrentProposal != ProposalRelevantCurrentEvidenceUntil TrustedUseBinding'
+          echo 'UseBindingInvalidationDoesNotRewriteHistoricalScore'
+          echo 'K27Coordinate != BenchmarkUseBinding != ProposalCurrentness != Authority'
+          echo 'W3Repair != SuccessorSiblingCredit'
