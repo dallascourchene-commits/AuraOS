@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1694
-- **total_bytes**: 26716092
-- **text_tokens_est**: 6669428
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1035, 'schema_or_lexicon': 282, 'support_file': 49}
+- **file_count**: 1697
+- **total_bytes**: 26732792
+- **text_tokens_est**: 6673604
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1037, 'schema_or_lexicon': 283, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1694,
+  "repo_file_count": 1697,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -166,6 +166,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/awj032-glm53-01a-pager.yml",
     ".github/workflows/awj032-glm53-g1-probe.yml",
     ".github/workflows/awj032-glm53-layout-bind-bridge.yml",
+    ".github/workflows/awj032-glm53-lifecycle-return-evidence-class.yml",
     ".github/workflows/awj032-glm53-owner-host-c2-handoff.yml",
     ".github/workflows/awj032-glm53-owner-host-lifecycle-return-packet.yml",
     ".github/workflows/awj032-glm53-w3-canonical-owner-composite.yml",
@@ -1680,6 +1681,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/airllm_source_admission.py",
     "tools/awj032/glm53_compatibility_probe.py",
     "tools/awj032/glm53_layout_binding_bridge.py",
+    "tools/awj032/glm53_lifecycle_return_evidence_class_boundary.py",
     "tools/awj032/glm53_official_w2_observation.py",
     "tools/awj032/glm53_official_w2_plan_binding.py",
     "tools/awj032/glm53_owner_host_c2_handoff.py",
@@ -1694,6 +1696,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/test_airllm_source_admission.py",
     "tools/awj032/test_glm53_compatibility_probe.py",
     "tools/awj032/test_glm53_layout_binding_bridge.py",
+    "tools/awj032/test_glm53_lifecycle_return_evidence_class_boundary.py",
     "tools/awj032/test_glm53_official_w2_plan_binding.py",
     "tools/awj032/test_glm53_owner_host_c2_handoff.py",
     "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
@@ -1834,16 +1837,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1694,
-  "bytes": 26716092,
-  "tokens_est": 6669428,
+  "files": 1697,
+  "bytes": 26732792,
+  "tokens_est": 6673604,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1035,
-    "schema_or_lexicon": 282,
+    "python_module": 1037,
+    "schema_or_lexicon": 283,
     "support_file": 49
   }
 }
