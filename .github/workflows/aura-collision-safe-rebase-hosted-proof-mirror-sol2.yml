@@ -1,0 +1,60 @@
+name: Aura Collision Safe Rebase Hosted Proof Mirror Sol2
+
+on:
+  push:
+    branches:
+      - 'feature/arena-collision-safe-rebase-hosted-proof-20260831-sol2'
+
+permissions:
+  contents: read
+
+jobs:
+  collision-safe-rebase-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact mirror head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Authenticate other-Agent collision surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/aura_collision_safe_rebase.py)" = "f0939ff7d9b000f0bfcbe167028450067592c16c"
+          test "$(git hash-object tests/test_aura_collision_safe_rebase.py)" = "1b829e7e8ebe389e905adfd78f35436fdd3f0f0b"
+      - name: Compile and replay collision adversarials
+        run: |
+          python -m py_compile tools/aura_collision_safe_rebase.py tests/test_aura_collision_safe_rebase.py
+          python -m unittest -v tests.test_aura_collision_safe_rebase
+      - name: Independently prove collision quotient and ceilings
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          from tools.aura_collision_safe_rebase import OwnerState, CandidateContribution, CollisionDisposition, assess_collision
+          h=lambda s: hashlib.sha256(s.encode()).hexdigest()
+          owner=OwnerState('owner','g1',h('owner'),True)
+          dup=CandidateContribution('dup',h('owner'),('shared',),('e',),('i',))
+          r=assess_collision(owner,dup,overlapping_claims=('shared',),unique_residual_claims=())
+          assert r.disposition is CollisionDisposition.DUPLICATE_RETAINED_AS_LINEAGE
+          assert r.preserve_as_reusable_cognition and r.duplicate_semantic_mass
+          assert not r.sibling_credit_earned and not r.semantic_authority_granted and not r.effect_authority_granted
+          add=CandidateContribution('add',h('add'),('shared','residual'),('e',),('i',))
+          r=assess_collision(owner,add,overlapping_claims=('shared',),unique_residual_claims=('residual',))
+          assert r.disposition is CollisionDisposition.ADDENDUM_CANDIDATE
+          assert r.requires_rebase and r.requires_revalidation and not r.sibling_credit_earned
+          stale=OwnerState('owner','g1',h('owner'),False)
+          r=assess_collision(stale,add,overlapping_claims=('shared',),unique_residual_claims=('residual',))
+          assert r.disposition is CollisionDisposition.HOLD_OWNER_CURRENTNESS_REQUIRED
+          assert r.requires_revalidation and not r.requires_rebase
+          orth=CandidateContribution('orth',h('orth'),('new',),('e',),('i',))
+          r=assess_collision(owner,orth,overlapping_claims=(),unique_residual_claims=('new',))
+          assert r.disposition is CollisionDisposition.ORTHOGONAL_OWNER_CANDIDATE
+          assert not r.semantic_authority_granted and not r.effect_authority_granted and not r.sibling_credit_earned
+          print('COLLISION_SAFE_REBASE_EXACT_OTHER_AGENT_PROOF=true')
+          print('COLLISION_NE_DISCARD=true')
+          print('DUPLICATE_SEMANTIC_MASS_NE_SIBLING_CREDIT=true')
+          print('REBASE_ADDENDUM_NE_AUTHORITY=true')
+          PY
