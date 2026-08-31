@@ -113,7 +113,7 @@ jobs:
             tools/quantization/aura_glm53_quantization_evidence_transfer.py \
             tools/quantization/test_aura_glm53_quantization_evidence_transfer.py
           python3 -m unittest -v tools.quantization.test_aura_glm53_quantization_evidence_transfer
-          python3 tools/quantization/aura_glm53_quantization_evidence_transfer.py | tee /tmp/q6.json
+          python3 -m tools.quantization.aura_glm53_quantization_evidence_transfer | tee /tmp/q6.json
           python3 - <<'PY'
           import json
           r = json.load(open('/tmp/q6.json', encoding='utf-8'))
