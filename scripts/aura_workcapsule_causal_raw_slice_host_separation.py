@@ -44,7 +44,7 @@ def verify_causal_raw_slice_host_separation(
     """Verify local raw-slice evidence and causal host evidence on separate planes."""
     raw_violations = verify_raw_slice_receipt(raw_slice_receipt)
     if raw_violations:
-        return ["RAW_SLICE_" + item for item in raw_violations]
+        return list(raw_violations)
     causal_violations = verify_causal_temporal_host_observation_admission(
         host_observations=host_observations,
         host_observation_resolver=host_observation_resolver,
