@@ -1,0 +1,64 @@
+name: Aura WorkCapsule Selective Re-entry
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_context_binding.py'
+      - 'tests/test_aura_workcapsule_context_binding.py'
+      - 'scripts/aura_workcapsule_reentry_invalidation.py'
+      - 'tests/test_aura_workcapsule_reentry_invalidation.py'
+      - '.github/workflows/aura-workcapsule-selective-reentry.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  minimum-reentry-invalidation:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove WorkCapsule witness hydration owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_context_binding.py
+          python3 -m unittest -v tests.test_aura_workcapsule_context_binding
+
+      - name: Prove minimum re-entry invalidation membrane
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_reentry_invalidation.py
+          python3 -m unittest -v tests.test_aura_workcapsule_reentry_invalidation
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'MINIMUM_REENTRY_SCOPE_CLASSES=NONE,SELECTED_SOURCES,FULL_GRAPH'
+          echo 'UNCHANGED_CURRENT_ACTIVE_SOURCE_REUSABLE=true'
+          echo 'STALE_UNKNOWN_OR_CHANGED_ACTIVE_SOURCE_SELECTED_FOR_REBIND=true'
+          echo 'GRAPH_IDENTITY_OR_CURRENTNESS_CHANGE_FORCES_FULL_GRAPH=true'
+          echo 'COLD_FRONTIER_CHANGE_INVALIDATES_ACTIVE_CONTEXT=false'
+          echo 'NEW_OBSERVATION_AUTO_PROMOTED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_INVALIDATION_CONE_PROVEN=false'
+          echo 'SEMANTIC_TRUTH_MINTED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
