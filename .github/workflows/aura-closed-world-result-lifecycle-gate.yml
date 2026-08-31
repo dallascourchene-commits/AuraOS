@@ -1,0 +1,53 @@
+name: Aura Closed World Result Lifecycle Gate
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_closed_world_result_lifecycle_gate.py"
+      - "tests/test_aura_closed_world_result_lifecycle_gate.py"
+      - ".github/workflows/aura-closed-world-result-lifecycle-gate.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  closed-world-result-lifecycle:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact PR head without mutable actions
+        shell: bash
+        env:
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          git fetch --no-tags --depth=1 origin "$HEAD_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+
+      - name: Compile lifecycle membrane
+        run: python -m py_compile tools/aura_closed_world_result_lifecycle_gate.py tests/test_aura_closed_world_result_lifecycle_gate.py
+
+      - name: Run focused adversarial lifecycle suite
+        run: python -m unittest -v tests.test_aura_closed_world_result_lifecycle_gate
+
+      - name: Prove claim ceiling remains nonpromoting
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/aura_closed_world_result_lifecycle_gate.py > /tmp/o62.json
+          python - <<'PY'
+          import json
+          data = json.load(open('/tmp/o62.json', encoding='utf-8'))
+          ceiling = data['claim_ceiling']
+          assert ceiling
+          assert all(value is False for value in ceiling.values()), ceiling
+          laws = set(data['laws'])
+          required = {
+              'HostDerivedEvidenceRequiresAttemptAndOutputBinding',
+              'IndependentReviewRequiresTypedDistinctReviewerReceipt',
+              'K27Coordinate!=EvidenceTruth!=Authority!=PhysicalPlacement',
+          }
+          assert required <= laws, (required - laws)
+          PY
