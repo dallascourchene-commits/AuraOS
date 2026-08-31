@@ -14,6 +14,7 @@ from tools.awj032.glm53_g5_recompute_admission import (
 )
 from tools.awj032.glm53_g5_owner_resolved_recompute_premise import (
     BASE_G5_HOLD,
+    G5_V2_OWNER_HEAD_AT_CUT,
     HOLD_G4_OWNER_EPOCH_CHANGED,
     HOLD_G4_OWNER_OBSERVATION_MISMATCH,
     HOLD_G4_OWNER_RESOLVED_DRIFT_REQUIRED,
@@ -102,6 +103,11 @@ class DriftingResolver(StableResolver):
 
 
 class G5OwnerResolvedRecomputePremiseTests(unittest.TestCase):
+    def test_receipt_binds_exact_hardened_g5_owner_generation(self) -> None:
+        self.assertEqual(G5_V2_OWNER_HEAD_AT_CUT, "5c18883358d041846d7451bdcfa3a5739af675b1")
+        gated = assess_owner_resolved_recompute_premise(g4=g4_runtime_drift(), progress=progress())
+        self.assertEqual(gated.g5_v2_owner_head_at_cut, G5_V2_OWNER_HEAD_AT_CUT)
+
     def test_reproduces_raw_projection_admission_seam(self) -> None:
         raw = assess_g3_recompute_admission(g4=g4_runtime_drift(), progress=progress())
         self.assertEqual(raw.disposition, ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT)
