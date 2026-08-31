@@ -127,7 +127,14 @@ class SourceBoundC2Disposition:
             raise ValueError("Q7_OFFICIAL_SOURCE_MISMATCH")
         if not self.request_source_matches:
             raise ValueError("Q7_C2_REQUEST_SOURCE_MISMATCH")
-        if any((self.execution_authorized, self.owner_host_execution_observed, self.physical_io_attested, self.g2_admitted)):
+        if any((
+            self.source_tensor_payload_bound,
+            self.real_tensor_quantization_eligible,
+            self.execution_authorized,
+            self.owner_host_execution_observed,
+            self.physical_io_attested,
+            self.g2_admitted,
+        )):
             raise ValueError("Q7_AUTHORITY_OR_EFFECT_WIDENING")
         if self.source_bound_c2_request_admissible and not self.source_header_trial_eligible:
             raise ValueError("Q7_REQUEST_ADMISSION_WITHOUT_HEADER_ELIGIBILITY")
