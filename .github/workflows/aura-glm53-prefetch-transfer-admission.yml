@@ -1,0 +1,181 @@
+name: Aura GLM53 Prefetch Transfer Admission
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_prefetch_transfer_admission.py'
+      - 'tools/awj032/test_glm53_prefetch_transfer_admission.py'
+      - 'tools/awj032/glm53_io_feasibility.py'
+      - 'tools/awj032/test_glm53_io_feasibility.py'
+      - '.github/workflows/aura-glm53-prefetch-transfer-admission.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  CONVERGENCE_HEAD: 7c50fe3ff712333aa49d1bb5c8374c9d766fd8ec
+  G1_HEAD: 0696fb43e44fdec421b0bd74abd5f7d21914df3a
+  G1_SOURCE_BLOB: 53bf896a6e3a792acfb830f0f64a2a2fcbfcb8e2
+  G1_RUN: '33413280009'
+  G1_JOB: '99557792264'
+  G1_WORKFLOW: Aura GLM53 Router Separated Expert Prefetch
+  W4_HEAD: 9a1ddd1ccf0376ce8a944fde72241314b9ee7e13
+  W4_SOURCE_BLOB: 50c460fb8034d0e70f6189960674fae83a199129
+  W4_TEST_BLOB: 26f585888e5ddfabec366991a612d4f17854531f
+  SEMANTIC_HEAD: 17c276209a8ac3d4af7cca8c9c582b4b89465e49
+  SOURCE_BLOB: eba980416b47fb3b4c2391a915ebe3d9db9bebb4
+  TEST_BLOB: ba07d409c9407edce03688c4a703f70abc501878
+  GH_TOKEN: ${{ github.token }}
+  REPO: ${{ github.repository }}
+
+jobs:
+  prefetch-transfer-admission:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact proof world
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate true two-history convergence and immutable blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$SEMANTIC_HEAD" HEAD
+          git fetch -q --no-tags origin "$G1_HEAD" "$W4_HEAD" "$CONVERGENCE_HEAD"
+          parents="$(git rev-list --parents -n 1 "$CONVERGENCE_HEAD")"
+          case "$parents" in
+            "$CONVERGENCE_HEAD $G1_HEAD $W4_HEAD"|"$CONVERGENCE_HEAD $W4_HEAD $G1_HEAD") ;;
+            *) echo "unexpected convergence parents: $parents"; exit 1 ;;
+          esac
+          test "$(git rev-parse "$G1_HEAD:tools/awj032/glm53_router_separated_prefetch.py")" = "$G1_SOURCE_BLOB"
+          test "$(git rev-parse "$W4_HEAD:tools/awj032/glm53_io_feasibility.py")" = "$W4_SOURCE_BLOB"
+          test "$(git rev-parse "$W4_HEAD:tools/awj032/test_glm53_io_feasibility.py")" = "$W4_TEST_BLOB"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tools/awj032/glm53_prefetch_transfer_admission.py")" = "$SOURCE_BLOB"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tools/awj032/test_glm53_prefetch_transfer_admission.py")" = "$TEST_BLOB"
+          echo 'TRUE_G1_W4_CONVERGENCE=true'
+
+      - name: Revalidate exact hosted G1 producer job
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['REPO']
+          token = os.environ['GH_TOKEN']
+          run_id = int(os.environ['G1_RUN'])
+          job_id = int(os.environ['G1_JOB'])
+          headers = {
+              'Authorization': f'Bearer {token}',
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          def get(url):
+              req = urllib.request.Request(url, headers=headers)
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  return json.load(response)
+          run = get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}')
+          assert run['head_sha'] == os.environ['G1_HEAD']
+          assert run['name'] == os.environ['G1_WORKFLOW']
+          assert run['status'] == 'completed' and run['conclusion'] == 'success'
+          jobs = get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs?per_page=100')['jobs']
+          job = next(j for j in jobs if j['id'] == job_id)
+          assert job['head_sha'] == os.environ['G1_HEAD']
+          assert job['status'] == 'completed' and job['conclusion'] == 'success'
+          print('G1_EXACT_HOSTED_SUCCESS=true')
+          PY
+
+      - name: Reexecute W4 source-controlled storage algebra
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd tools/awj032
+          python -m py_compile glm53_io_feasibility.py test_glm53_io_feasibility.py
+          python -m unittest test_glm53_io_feasibility -v
+          echo 'W4_SOURCE_REEXECUTED=true'
+          echo 'W4_HOSTED_PARENT_SUCCESS_NOT_CLAIMED=true'
+
+      - name: Compile and run G2 adversarial contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/awj032/glm53_prefetch_transfer_admission.py \
+            tools/awj032/test_glm53_prefetch_transfer_admission.py
+          python -m unittest tools.awj032.test_glm53_prefetch_transfer_admission -v
+
+      - name: Independently prove typed expected-value admission
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from dataclasses import replace
+          from tools.awj032.glm53_router_separated_prefetch import PREFETCH_SCHEMA, PrefetchPrediction
+          from tools.awj032.glm53_prefetch_transfer_admission import (
+              CalibratedExpertForecast, PrefetchTransferPolicy, admit_prefetch_transfers,
+              ELIGIBLE, SKIP_ENERGY,
+          )
+
+          prediction = PrefetchPrediction(
+              schema=PREFETCH_SCHEMA,
+              predictor_generation='predictor:proof:v1',
+              layer_id='layer:proof',
+              binding_digest='binding:proof',
+              predicted_experts=(0, 1),
+          )
+          forecasts = [
+              CalibratedExpertForecast(0, 'calibration:proof:v1', 9, 10, 0.020, 10_000_000, 0.5),
+              CalibratedExpertForecast(1, 'calibration:proof:v1', 9, 10, 0.030, 10_000_000, 0.5),
+          ]
+          policy = PrefetchTransferPolicy(
+              policy_generation='policy:proof:v1',
+              predictor_calibration_generation='calibration:proof:v1',
+              layer_id='layer:proof',
+              binding_digest='binding:proof',
+              effective_storage_bandwidth_bytes_per_second=1_000_000_000,
+              prefetch_window_seconds=0.010,
+              minimum_hit_probability_numerator=1,
+              minimum_hit_probability_denominator=2,
+              max_estimated_transfer_energy_joules=1.0,
+          )
+          result = admit_prefetch_transfers(
+              prediction=prediction, forecasts=forecasts, policy=policy, num_experts=8
+          )
+          assert result.admitted_experts == (1,)
+          assert result.candidate_decisions[0].disposition != ELIGIBLE
+          assert result.candidate_decisions[1].disposition == ELIGIBLE
+          assert abs(result.cold_required_reuse_for_window - 0.5) < 1e-12
+          assert result.physical_io_attested is False
+          assert result.physical_storage_budget_proven is False
+          assert result.transfer_effect_authorized is False
+          assert result.g2_admitted is False
+
+          energy_blocked = admit_prefetch_transfers(
+              prediction=PrefetchPrediction(
+                  schema=PREFETCH_SCHEMA,
+                  predictor_generation='predictor:proof:v1',
+                  layer_id='layer:proof',
+                  binding_digest='binding:proof',
+                  predicted_experts=(0,),
+              ),
+              forecasts=[CalibratedExpertForecast(0, 'calibration:proof:v1', 1, 1, 1.0, 1_000_000, 2.0)],
+              policy=replace(policy, prefetch_window_seconds=1.0, max_estimated_transfer_energy_joules=1.0),
+              num_experts=8,
+          )
+          assert energy_blocked.candidate_decisions[0].disposition == SKIP_ENERGY
+          assert energy_blocked.admitted_experts == ()
+          print('G2_TYPED_PREFETCH_TRANSFER_ADMISSION_PROVEN=true')
+          PY
+
+      - name: Consequence ceiling
+        run: |
+          echo 'Prediction!=NativeExecutionRoute'
+          echo 'ExpectedLatencyValue=P_hit*MissStallSeconds'
+          echo 'LatencyMargin!=EnergyBudget'
+          echo 'LogicalTransferPlan!=PhysicalNVMeObservation'
+          echo 'UnattestedPhysicalIO=>UNKNOWN'
+          echo 'TransferPlanEligibility!=TransferEffectAuthority!=G2Admission'
+          echo 'K27Coordinate!=TransformerKVCache!=RoutingAuthority'
