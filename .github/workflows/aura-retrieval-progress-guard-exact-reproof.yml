@@ -1,0 +1,60 @@
+name: Aura Retrieval Progress Guard Exact Reproof
+
+on:
+  push:
+    branches:
+      - "arena/retrieval-progress-guard-exact-reproof-v1-20260831-sol"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-reproof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      OWNER_HEAD: "412e683b8a3d28bd57e4dc39059283cc823e2fb3"
+      SOURCE_BLOB: "5e20a51af1bbafa17c56b3a80125bcf003cc6b62"
+      TEST_BLOB: "fd70a6a2ba38220f633c7becf421fbe472bd6b6b"
+    steps:
+      - name: Exact authenticated checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "$GITHUB_SHA" "$OWNER_HEAD"
+          git checkout --detach "$GITHUB_SHA"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Authenticate owner semantic surface
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$OWNER_HEAD:tools/aura_retrieval_progress_guard.py")" = "$SOURCE_BLOB"
+          test "$(git rev-parse "$OWNER_HEAD:tests/test_aura_retrieval_progress_guard.py")" = "$TEST_BLOB"
+          test "$(git hash-object tools/aura_retrieval_progress_guard.py)" = "$SOURCE_BLOB"
+          test "$(git hash-object tests/test_aura_retrieval_progress_guard.py)" = "$TEST_BLOB"
+          echo "OWNER_SEMANTIC_SURFACE_EXACT=true"
+      - name: Compile and execute adversarial contract
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/aura_retrieval_progress_guard.py tests/test_aura_retrieval_progress_guard.py
+          python3 -m unittest -v tests.test_aura_retrieval_progress_guard
+      - name: Reprove independent finite matrix
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from tools.aura_retrieval_progress_guard import prove_different_j
+          assert prove_different_j() == 24
+          print("RETRIEVAL_PROGRESS_DIFFERENT_J=24")
+          PY
+      - name: Enforce proof-only nonpromotion
+        run: |
+          set -euo pipefail
+          grep -q 'source_currentness_proven: bool = False' tools/aura_retrieval_progress_guard.py
+          grep -q 'semantic_truth_proven: bool = False' tools/aura_retrieval_progress_guard.py
+          grep -q 'authority_granted: bool = False' tools/aura_retrieval_progress_guard.py
+          grep -q 'effect_authority_granted: bool = False' tools/aura_retrieval_progress_guard.py
+          grep -q 'native_private_transformer_kv_accessed: bool = False' tools/aura_retrieval_progress_guard.py
+          echo "PROOF_ONLY=true"
+          echo "SEMANTIC_SIBLING_CREDIT=false"
