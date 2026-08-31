@@ -35,23 +35,8 @@ jobs:
           python -m py_compile tools/aura_external_cognition_subject_version_resolver.py
           python -m py_compile tests/test_aura_external_cognition_subject_version_resolver.py
 
-      - name: Run exact resolver contract
+      - name: Run exact resolver contract and claim boundary
         run: |
           set -euo pipefail
           python -m unittest tests.test_aura_external_cognition_subject_version_resolver -v
-
-      - name: Preserve claim ceiling
-        shell: bash
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          from pathlib import Path
-          text = Path('tools/aura_external_cognition_subject_version_resolver.py').read_text(encoding='utf-8')
-          required = [
-              'StableSubject',
-              'Version',
-          ]
-          for token in required:
-              assert token.lower() in text.lower(), token
-          print({'proof_only': True, 'semantic_owner': 'PR744', 'effect_authority': False})
-          PY
+          echo "PR744_RESOLVER_CONTRACT_OK proof_only=true effect_authority=false"
