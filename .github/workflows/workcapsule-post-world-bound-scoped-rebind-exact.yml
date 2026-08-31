@@ -4,14 +4,10 @@ on:
   workflow_dispatch:
   pull_request:
     paths:
-      - 'scripts/aura_workcapsule_post_world_bound_scoped_rebind.py'
-      - 'scripts/aura_workcapsule_scoped_post_repair_rebind.py'
-      - 'scripts/aura_workcapsule_two_phase_observation_bound_exact.py'
-      - 'scripts/aura_workcapsule_two_phase_source_bound_closure.py'
-      - 'tests/test_aura_workcapsule_post_world_bound_scoped_rebind.py'
-      - 'tests/test_aura_workcapsule_scoped_post_repair_rebind.py'
-      - 'tests/test_aura_workcapsule_two_phase_observation_bound_exact.py'
-      - 'tests/test_aura_workcapsule_two_phase_source_bound_closure.py'
+      - 'scripts/aura_workcapsule_*.py'
+      - 'scripts/aura_astge_anchor_hydration.py'
+      - 'tests/test_aura_workcapsule_*.py'
+      - 'tests/test_aura_astge_anchor_hydration.py'
       - '.github/workflows/workcapsule-post-world-bound-scoped-rebind-exact.yml'
 
 permissions:
@@ -29,6 +25,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Assert exact event head
         shell: bash
