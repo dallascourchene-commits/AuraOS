@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788188925,
+  "generated_at_unix": 1788190892,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1646,
+    "repo_file_count": 1648,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1627,6 +1627,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_long_horizon_state_benchmark.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "tests/test_select_swe_verified_smoke.py",
@@ -1637,6 +1638,7 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/benchmarks/aura_benchmark_score_admission.py",
+      "tools/benchmarks/long_horizon_state_benchmark.py",
       "tools/benchmarks/select_swe_verified_smoke.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -1762,15 +1764,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1646,
-      "bytes": 26438630,
-      "tokens_est": 6600011,
+      "files": 1648,
+      "bytes": 26455649,
+      "tokens_est": 6604267,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1001,
+        "python_module": 1003,
         "schema_or_lexicon": 274,
         "support_file": 49
       }
@@ -3468,6 +3470,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 151,
+        "end_line": 169,
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:main:aff2274cb5a57719",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "tools/benchmarks/select_swe_verified_smoke.py",
         "kind": "function",
         "line": 62,
@@ -4356,10 +4366,18 @@
       {
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 18,
-        "end_line": 19,
+        "line": 21,
+        "end_line": 22,
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:_digest:37f03a5ff42df73a",
         "signature_hash": "e3dbc3c92109621f"
+      },
+      {
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 13,
+        "end_line": 15,
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:_digest:0fc53bcf06ff9226",
+        "signature_hash": "6db9016a3f6bed4c"
       }
     ],
     "_token_proxy": [
@@ -8084,8 +8102,8 @@
       {
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 14,
-        "end_line": 15,
+        "line": 15,
+        "end_line": 18,
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:_canonical_json:b53b2f3ce67e8903",
         "signature_hash": "a5c16b842176e713"
       }
@@ -15796,6 +15814,14 @@
         "end_line": 81,
         "semantic_id": "aura_unified_memory_continuity_toolchain.py#function:_required:fd9913556df96604",
         "signature_hash": "8b28cfce6f68b96b"
+      },
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 27,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:_required:65930e0555164866",
+        "signature_hash": "24cabde161aeb9da"
       }
     ],
     "_hash": [
@@ -113304,8 +113330,8 @@
       {
         "file": "tests/test_aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 10,
-        "end_line": 34,
+        "line": 27,
+        "end_line": 54,
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:fixture:31bdb489dbb99df9",
         "signature_hash": "879fb97b430d30c7"
       },
@@ -118000,12 +118026,30 @@
         "signature_hash": "92237d6ca00456a9"
       }
     ],
+    "policy": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 14,
+        "end_line": 24,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:policy:551e4a27ed4e5f16",
+        "signature_hash": "934f05f4cd97dc8e"
+      },
+      {
+        "file": "tests/test_aura_gate.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 184,
+        "semantic_id": "tests/test_aura_gate.py#function:policy:6c4234b7f9aaa5a3",
+        "signature_hash": "96c8d2d81ca0f6b2"
+      }
+    ],
     "test_duplicate_attempt_does_not_inflate_score": [
       {
         "file": "tests/test_aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 37,
-        "end_line": 43,
+        "line": 57,
+        "end_line": 63,
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_duplicate_attempt_does_not_inflate_score:b61f37cc2ab5b31f",
         "signature_hash": "ba1c0c9f8b6364a5"
       }
@@ -118014,8 +118058,8 @@
       {
         "file": "tests/test_aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 46,
-        "end_line": 48,
+        "line": 66,
+        "end_line": 71,
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_changed_agent_generation_is_distinct_parent_state:99b732c02c64794e",
         "signature_hash": "852838b385478f60"
       }
@@ -118024,8 +118068,8 @@
       {
         "file": "tests/test_aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 51,
-        "end_line": 53,
+        "line": 74,
+        "end_line": 79,
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_changed_dataset_generation_is_distinct_parent_state:b24c54f643e15858",
         "signature_hash": "2827c0b522e3ca90"
       }
@@ -118034,38 +118078,88 @@
       {
         "file": "tests/test_aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 56,
-        "end_line": 58,
+        "line": 82,
+        "end_line": 87,
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_contradictory_duplicate_result_fails_closed:c42c76deb08994e9",
         "signature_hash": "3901707bceee8cc3"
       }
     ],
-    "test_pass_requires_source_verification": [
+    "test_scoring_result_requires_source_verification_for_pass_and_fail": [
       {
         "file": "tests/test_aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 61,
-        "end_line": 63,
-        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_pass_requires_source_verification:d537c105b107e3a7",
-        "signature_hash": "4869384106da89e9"
+        "line": 90,
+        "end_line": 93,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_scoring_result_requires_source_verification_for_pass_and_fail:d8435f19f35587e5",
+        "signature_hash": "84081f410a82a424"
       }
     ],
-    "test_pass_requires_observed_execution": [
+    "test_scoring_result_requires_observed_execution": [
       {
         "file": "tests/test_aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 66,
-        "end_line": 68,
-        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_pass_requires_observed_execution:f811a6007828b636",
-        "signature_hash": "9e4f3fe1e9888ec7"
+        "line": 96,
+        "end_line": 98,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_scoring_result_requires_observed_execution:5f3e47c37ddd938b",
+        "signature_hash": "5160518f1b7839fb"
+      }
+    ],
+    "test_receipt_booleans_cannot_self_mint_execution_authority": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 106,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_booleans_cannot_self_mint_execution_authority:4c6adfc589f400f0",
+        "signature_hash": "3ce30efdeab1ab27"
+      }
+    ],
+    "test_receipt_route_must_match_trusted_policy": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 114,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_route_must_match_trusted_policy:313cd25ef6463444",
+        "signature_hash": "ee129637911bb9e3"
+      }
+    ],
+    "test_receipt_observer_must_match_trusted_policy": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 122,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_observer_must_match_trusted_policy:ae7da3f80a855263",
+        "signature_hash": "4cc0bc385fbf6a01"
+      }
+    ],
+    "test_source_verifier_must_be_authorized_and_match_trusted_policy": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 125,
+        "end_line": 135,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_source_verifier_must_be_authorized_and_match_trusted_policy:8a49850b943dbe71",
+        "signature_hash": "1951d6edb6d8fa72"
+      }
+    ],
+    "test_authority_scope_must_match_policy": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 138,
+        "end_line": 143,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_authority_scope_must_match_policy:2754efea33b58173",
+        "signature_hash": "56369d592f6f1d80"
       }
     ],
     "test_unknown_measurement_cannot_launder_zero_or_estimates": [
       {
         "file": "tests/test_aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 71,
-        "end_line": 73,
+        "line": 146,
+        "end_line": 148,
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_unknown_measurement_cannot_launder_zero_or_estimates:5ddcee441aef0de2",
         "signature_hash": "6274b69b265d7904"
       }
@@ -118074,8 +118168,8 @@
       {
         "file": "tests/test_aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 76,
-        "end_line": 85,
+        "line": 151,
+        "end_line": 168,
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_unknown_measurement_with_no_values_is_valid:f35de23fca4be3ee",
         "signature_hash": "8b877b6410c11bd2"
       }
@@ -118084,8 +118178,8 @@
       {
         "file": "tests/test_aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 88,
-        "end_line": 90,
+        "line": 171,
+        "end_line": 173,
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_estimated_measurement_remains_explicitly_estimated:00a3a1877a5b0db1",
         "signature_hash": "2f16a9de1c2adf1e"
       }
@@ -118094,18 +118188,28 @@
       {
         "file": "tests/test_aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 93,
-        "end_line": 98,
+        "line": 176,
+        "end_line": 181,
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_score_identity_excludes_retry_identity_but_binds_model:b2f496964c1eea02",
         "signature_hash": "3e8d35ef8f0f1c67"
+      }
+    ],
+    "test_policy_generation_changes_evidence_generation_not_score_identity": [
+      {
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "kind": "function",
+        "line": 184,
+        "end_line": 189,
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_policy_generation_changes_evidence_generation_not_score_identity:2270da309905ea99",
+        "signature_hash": "45936c10cad1e989"
       }
     ],
     "test_receipt_is_deterministic": [
       {
         "file": "tests/test_aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 101,
-        "end_line": 102,
+        "line": 192,
+        "end_line": 193,
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_is_deterministic:94c317548259ede6",
         "signature_hash": "834891cb2aea3ac1"
       }
@@ -136788,16 +136892,6 @@
         "end_line": 130,
         "semantic_id": "tests/test_aura_gate.py#method:FailingStartAudit.export_siem:7735373c6cd24eef",
         "signature_hash": "49f2fd618649a7d1"
-      }
-    ],
-    "policy": [
-      {
-        "file": "tests/test_aura_gate.py",
-        "kind": "function",
-        "line": 152,
-        "end_line": 184,
-        "semantic_id": "tests/test_aura_gate.py#function:policy:6c4234b7f9aaa5a3",
-        "signature_hash": "96c8d2d81ca0f6b2"
       }
     ],
     "test_policy_round_trip_and_strict_contract": [
@@ -157070,6 +157164,56 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "write_adapter": [
+      {
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 39,
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:write_adapter:53fec97f056df1b6",
+        "signature_hash": "464ce5a428c99af1"
+      }
+    ],
+    "test_workload_is_deterministic_and_contains_rollback": [
+      {
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 46,
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:test_workload_is_deterministic_and_contains_rollback:9d2a81a7edc760be",
+        "signature_hash": "427a7fd4bf0a4d71"
+      }
+    ],
+    "test_neutral_adapter_can_pass_same_state_workload": [
+      {
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 55,
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:test_neutral_adapter_can_pass_same_state_workload:72caab672d65f216",
+        "signature_hash": "4926371b4b624d95"
+      }
+    ],
+    "test_wrong_digest_is_state_drift_not_success": [
+      {
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 58,
+        "end_line": 65,
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:test_wrong_digest_is_state_drift_not_success:9c782bb03a94d5f5",
+        "signature_hash": "688d52ec14fbaf82"
+      }
+    ],
+    "test_unknown_telemetry_cannot_carry_fake_zero": [
+      {
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 75,
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:test_unknown_telemetry_cannot_carry_fake_zero:e7b3d5b6416d2749",
+        "signature_hash": "ba62d263f86fb24b"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -157400,12 +157544,42 @@
         "signature_hash": "00f96a9158515b26"
       }
     ],
+    "BenchmarkAdmissionPolicy": [
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "class",
+        "line": 31,
+        "end_line": 74,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#class:BenchmarkAdmissionPolicy:447ed156ed44fcaa",
+        "signature_hash": "ef5d9a695466db4f"
+      }
+    ],
+    "BenchmarkAdmissionPolicy.validate": [
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 59,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkAdmissionPolicy.validate:42c96566bd720cd5",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "BenchmarkAdmissionPolicy.validate_receipt": [
+      {
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 74,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkAdmissionPolicy.validate_receipt:8ba846bb707e33f6",
+        "signature_hash": "20caa3e8d201d843"
+      }
+    ],
     "BenchmarkTaskReceipt": [
       {
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
         "kind": "class",
-        "line": 23,
-        "end_line": 129,
+        "line": 78,
+        "end_line": 210,
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#class:BenchmarkTaskReceipt:f3b51ef4ca94faa4",
         "signature_hash": "1ce69d153abe8aa6"
       }
@@ -157414,8 +157588,8 @@
       {
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
         "kind": "method",
-        "line": 47,
-        "end_line": 75,
+        "line": 105,
+        "end_line": 153,
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.validate:eb88403220ae5ddc",
         "signature_hash": "99559e6add5bcf3e"
       }
@@ -157424,8 +157598,8 @@
       {
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
         "kind": "method",
-        "line": 78,
-        "end_line": 93,
+        "line": 156,
+        "end_line": 171,
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.score_identity:ce3250c0e831210e",
         "signature_hash": "2b78a67bca4cde6d"
       }
@@ -157434,8 +157608,8 @@
       {
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
         "kind": "method",
-        "line": 96,
-        "end_line": 98,
+        "line": 174,
+        "end_line": 176,
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.receipt_digest:9f94e1fe49cbf639",
         "signature_hash": "1a6a05eb2610184a"
       }
@@ -157444,8 +157618,8 @@
       {
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
         "kind": "method",
-        "line": 100,
-        "end_line": 129,
+        "line": 178,
+        "end_line": 210,
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.to_dict:22eaff9db72bbd98",
         "signature_hash": "c9885ae795ae11e7"
       }
@@ -157454,10 +157628,50 @@
       {
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
         "kind": "function",
-        "line": 132,
-        "end_line": 161,
-        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:admit_score:a10494733250acdf",
-        "signature_hash": "f8eb4710d7a2f3af"
+        "line": 213,
+        "end_line": 254,
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:admit_score:c0102ef0fa43b713",
+        "signature_hash": "e5de6c318529836a"
+      }
+    ],
+    "build_workload": [
+      {
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 47,
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:build_workload:7f9f36594ec815d3",
+        "signature_hash": "201dfe0430e98fcb"
+      }
+    ],
+    "TurnResult": [
+      {
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "kind": "class",
+        "line": 51,
+        "end_line": 59,
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#class:TurnResult:5a77a9d466f001f9",
+        "signature_hash": "e4518cabaebecf58"
+      }
+    ],
+    "_validate_telemetry": [
+      {
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 80,
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:_validate_telemetry:57d78c68b2f2b16f",
+        "signature_hash": "f7fdf3e1a62bb704"
+      }
+    ],
+    "run_adapter": [
+      {
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 148,
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:run_adapter:a8b39ec7d97bcfb6",
+        "signature_hash": "a7e8f4eb1c5e4d00"
       }
     ],
     "select_instance_ids": [
@@ -167879,9 +168093,9 @@
       "path": ".github/workflows/aura-benchmark-campaign-contracts.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 1472,
-      "lines": 48,
-      "tokens_est": 368,
+      "bytes": 1702,
+      "lines": 52,
+      "tokens_est": 426,
       "symbol_count": 0,
       "commands": [
         "python -m py_compile",
@@ -167889,47 +168103,47 @@
       ],
       "command_lines": {
         "python -m py_compile": [
-          36
+          37
         ],
         "python -m pytest": [
-          45
+          48
         ]
       },
       "topology": {},
-      "digest8": "bb9e356e55732314",
+      "digest8": "726d7a795ee6448b",
       "vector": [
-        0.174367,
-        -0.153582,
-        0.095844,
-        -0.232105,
-        0.282914,
-        -0.112011,
-        -0.275985,
-        -0.008083,
-        -0.146653,
-        -0.139725,
-        0.195153,
-        0.169748,
-        0.211319,
-        0.128177,
-        -0.107392,
-        -0.20901,
-        0.202081,
-        0.222867,
-        -0.243652,
-        -0.105082,
-        -0.151272,
-        -0.088916,
-        0.222867,
-        -0.169748,
-        -0.278295,
-        -0.232105,
-        0.015012,
-        0.038107,
-        0.220557,
-        -0.142034,
-        0.118939,
-        -0.061202
+        0.279322,
+        0.034437,
+        -0.309933,
+        -0.192592,
+        -0.15943,
+        0.144125,
+        0.031886,
+        -0.190041,
+        -0.241059,
+        0.021683,
+        0.110964,
+        0.04209,
+        0.248712,
+        0.065048,
+        -0.276771,
+        0.18749,
+        0.192592,
+        -0.116065,
+        0.322687,
+        -0.070149,
+        0.207897,
+        0.167083,
+        0.24361,
+        0.146676,
+        0.123718,
+        0.021683,
+        0.024233,
+        -0.080353,
+        -0.192592,
+        0.118616,
+        0.034437,
+        -0.258915
       ]
     },
     {
@@ -250447,47 +250661,47 @@
       "path": "tests/test_aura_benchmark_score_admission.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 3409,
-      "lines": 103,
-      "tokens_est": 853,
-      "symbol_count": 12,
+      "bytes": 6670,
+      "lines": 194,
+      "tokens_est": 1668,
+      "symbol_count": 19,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "3228cbbf103ad77d",
+      "digest8": "2c8131ed44e088a6",
       "vector": [
-        0.041495,
-        0.139573,
-        -0.18987,
-        0.149633,
-        0.064128,
-        -0.292978,
-        -0.006287,
-        -0.061613,
-        0.006287,
-        0.260285,
-        0.303038,
-        0.129514,
-        -0.18987,
-        -0.142088,
-        0.232622,
-        0.235137,
-        0.204959,
-        -0.250226,
-        -0.182325,
-        0.021376,
-        -0.119455,
-        -0.240167,
-        0.209989,
-        0.227592,
-        -0.121969,
-        -0.132029,
-        0.202444,
-        0.054069,
-        -0.235137,
-        -0.013832,
-        0.03898,
-        0.212503
+        -0.033668,
+        0.216127,
+        0.255225,
+        0.261741,
+        0.253053,
+        0.27043,
+        0.250881,
+        0.094488,
+        0.03584,
+        -0.122725,
+        0.127069,
+        0.101004,
+        0.10752,
+        -0.203094,
+        0.120553,
+        -0.242192,
+        0.118381,
+        -0.153135,
+        0.007602,
+        0.220471,
+        -0.142274,
+        -0.081455,
+        0.127069,
+        0.274774,
+        0.224815,
+        0.014119,
+        0.059734,
+        -0.163996,
+        0.103176,
+        -0.229159,
+        -0.276946,
+        0.122725
       ]
     },
     {
@@ -262805,6 +263019,53 @@
       ]
     },
     {
+      "path": "tests/test_long_horizon_state_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2808,
+      "lines": 76,
+      "tokens_est": 702,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "769eba6daa897264",
+      "vector": [
+        -0.018394,
+        -0.182717,
+        -0.067446,
+        -0.096877,
+        -0.03311,
+        0.006131,
+        -0.141023,
+        0.30044,
+        -0.209695,
+        -0.168001,
+        -0.177811,
+        0.006131,
+        -0.302893,
+        0.221958,
+        0.05273,
+        -0.030657,
+        0.040467,
+        0.040467,
+        0.172906,
+        -0.133665,
+        0.221958,
+        -0.038015,
+        -0.231768,
+        -0.229315,
+        0.072351,
+        -0.239126,
+        0.253841,
+        0.268557,
+        0.234221,
+        0.148381,
+        0.234221,
+        -0.231768
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -263231,47 +263492,94 @@
       "path": "tools/benchmarks/aura_benchmark_score_admission.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 6576,
-      "lines": 162,
-      "tokens_est": 1644,
-      "symbol_count": 8,
+      "bytes": 10593,
+      "lines": 255,
+      "tokens_est": 2649,
+      "symbol_count": 12,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "25ba064bfc7139ac",
+      "digest8": "502f3993ced4d3a1",
       "vector": [
-        -0.182735,
-        0.091998,
-        -0.270952,
-        0.172653,
-        -0.016383,
-        -0.044108,
-        0.278513,
-        -0.117202,
-        -0.129805,
-        -0.228104,
-        0.245747,
-        -0.023945,
-        -0.094518,
-        0.031506,
-        0.099559,
-        0.097039,
-        -0.235665,
-        -0.273472,
-        -0.094518,
-        0.212981,
-        0.117202,
-        0.026465,
-        -0.223063,
-        -0.1046,
-        -0.177694,
-        0.162571,
-        -0.281034,
-        -0.223063,
-        0.321362,
-        -0.15753,
-        -0.021424,
-        0.165092
+        0.087348,
+        0.051903,
+        -0.011393,
+        -0.274704,
+        0.122794,
+        -0.284831,
+        0.29749,
+        0.168367,
+        0.264576,
+        -0.122794,
+        -0.049371,
+        -0.127858,
+        0.051903,
+        0.026584,
+        0.122794,
+        0.143049,
+        0.003798,
+        0.046839,
+        -0.216472,
+        -0.259513,
+        -0.024052,
+        0.170899,
+        0.044307,
+        -0.08988,
+        0.279767,
+        -0.317745,
+        -0.024052,
+        0.069625,
+        0.294958,
+        -0.229131,
+        0.175962,
+        0.216472
+      ]
+    },
+    {
+      "path": "tools/benchmarks/long_horizon_state_benchmark.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6703,
+      "lines": 174,
+      "tokens_est": 1676,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9ba5d5ede96cd84e",
+      "vector": [
+        0.1682,
+        0.137243,
+        0.001032,
+        -0.186775,
+        -0.176456,
+        0.256944,
+        0.069138,
+        0.221859,
+        -0.106286,
+        0.100095,
+        0.110414,
+        -0.236306,
+        0.256944,
+        -0.259008,
+        -0.228051,
+        -0.046436,
+        -0.172328,
+        0.203285,
+        0.02167,
+        0.118669,
+        -0.083584,
+        -0.217732,
+        0.112478,
+        0.145499,
+        0.126924,
+        -0.190902,
+        -0.153754,
+        -0.219796,
+        0.246625,
+        0.219796,
+        -0.19503,
+        -0.21154
       ]
     },
     {
@@ -287320,15 +287628,15 @@
     }
   },
   "summary": {
-    "file_count": 1646,
-    "total_bytes": 26438630,
-    "text_tokens_est": 6600011,
+    "file_count": 1648,
+    "total_bytes": 26455649,
+    "text_tokens_est": 6604267,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1001,
+      "python_module": 1003,
       "schema_or_lexicon": 274,
       "support_file": 49
     },
@@ -288966,6 +289274,7 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_long_horizon_state_benchmark.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "tests/test_select_swe_verified_smoke.py",
@@ -288976,6 +289285,7 @@
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
       "tools/benchmarks/aura_benchmark_score_admission.py",
+      "tools/benchmarks/long_horizon_state_benchmark.py",
       "tools/benchmarks/select_swe_verified_smoke.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -405619,120 +405929,190 @@
         "name": "fixture",
         "kind": "function",
         "file": "tests/test_aura_benchmark_score_admission.py",
-        "line": 10,
-        "end_line": 34,
+        "line": 27,
+        "end_line": 54,
         "signature_hash": "879fb97b430d30c7",
-        "file_digest8": "3228cbbf103ad77d"
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:policy:551e4a27ed4e5f16",
+        "name": "policy",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 14,
+        "end_line": 24,
+        "signature_hash": "934f05f4cd97dc8e",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_authority_scope_must_match_policy:2754efea33b58173",
+        "name": "test_authority_scope_must_match_policy",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 138,
+        "end_line": 143,
+        "signature_hash": "56369d592f6f1d80",
+        "file_digest8": "2c8131ed44e088a6"
       },
       {
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_changed_agent_generation_is_distinct_parent_state:99b732c02c64794e",
         "name": "test_changed_agent_generation_is_distinct_parent_state",
         "kind": "function",
         "file": "tests/test_aura_benchmark_score_admission.py",
-        "line": 46,
-        "end_line": 48,
+        "line": 66,
+        "end_line": 71,
         "signature_hash": "852838b385478f60",
-        "file_digest8": "3228cbbf103ad77d"
+        "file_digest8": "2c8131ed44e088a6"
       },
       {
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_changed_dataset_generation_is_distinct_parent_state:b24c54f643e15858",
         "name": "test_changed_dataset_generation_is_distinct_parent_state",
         "kind": "function",
         "file": "tests/test_aura_benchmark_score_admission.py",
-        "line": 51,
-        "end_line": 53,
+        "line": 74,
+        "end_line": 79,
         "signature_hash": "2827c0b522e3ca90",
-        "file_digest8": "3228cbbf103ad77d"
+        "file_digest8": "2c8131ed44e088a6"
       },
       {
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_contradictory_duplicate_result_fails_closed:c42c76deb08994e9",
         "name": "test_contradictory_duplicate_result_fails_closed",
         "kind": "function",
         "file": "tests/test_aura_benchmark_score_admission.py",
-        "line": 56,
-        "end_line": 58,
+        "line": 82,
+        "end_line": 87,
         "signature_hash": "3901707bceee8cc3",
-        "file_digest8": "3228cbbf103ad77d"
+        "file_digest8": "2c8131ed44e088a6"
       },
       {
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_duplicate_attempt_does_not_inflate_score:b61f37cc2ab5b31f",
         "name": "test_duplicate_attempt_does_not_inflate_score",
         "kind": "function",
         "file": "tests/test_aura_benchmark_score_admission.py",
-        "line": 37,
-        "end_line": 43,
+        "line": 57,
+        "end_line": 63,
         "signature_hash": "ba1c0c9f8b6364a5",
-        "file_digest8": "3228cbbf103ad77d"
+        "file_digest8": "2c8131ed44e088a6"
       },
       {
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_estimated_measurement_remains_explicitly_estimated:00a3a1877a5b0db1",
         "name": "test_estimated_measurement_remains_explicitly_estimated",
         "kind": "function",
         "file": "tests/test_aura_benchmark_score_admission.py",
-        "line": 88,
-        "end_line": 90,
+        "line": 171,
+        "end_line": 173,
         "signature_hash": "2f16a9de1c2adf1e",
-        "file_digest8": "3228cbbf103ad77d"
+        "file_digest8": "2c8131ed44e088a6"
       },
       {
-        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_pass_requires_observed_execution:f811a6007828b636",
-        "name": "test_pass_requires_observed_execution",
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_policy_generation_changes_evidence_generation_not_score_identity:2270da309905ea99",
+        "name": "test_policy_generation_changes_evidence_generation_not_score_identity",
         "kind": "function",
         "file": "tests/test_aura_benchmark_score_admission.py",
-        "line": 66,
-        "end_line": 68,
-        "signature_hash": "9e4f3fe1e9888ec7",
-        "file_digest8": "3228cbbf103ad77d"
+        "line": 184,
+        "end_line": 189,
+        "signature_hash": "45936c10cad1e989",
+        "file_digest8": "2c8131ed44e088a6"
       },
       {
-        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_pass_requires_source_verification:d537c105b107e3a7",
-        "name": "test_pass_requires_source_verification",
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_booleans_cannot_self_mint_execution_authority:4c6adfc589f400f0",
+        "name": "test_receipt_booleans_cannot_self_mint_execution_authority",
         "kind": "function",
         "file": "tests/test_aura_benchmark_score_admission.py",
-        "line": 61,
-        "end_line": 63,
-        "signature_hash": "4869384106da89e9",
-        "file_digest8": "3228cbbf103ad77d"
+        "line": 101,
+        "end_line": 106,
+        "signature_hash": "3ce30efdeab1ab27",
+        "file_digest8": "2c8131ed44e088a6"
       },
       {
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_is_deterministic:94c317548259ede6",
         "name": "test_receipt_is_deterministic",
         "kind": "function",
         "file": "tests/test_aura_benchmark_score_admission.py",
-        "line": 101,
-        "end_line": 102,
+        "line": 192,
+        "end_line": 193,
         "signature_hash": "834891cb2aea3ac1",
-        "file_digest8": "3228cbbf103ad77d"
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_observer_must_match_trusted_policy:ae7da3f80a855263",
+        "name": "test_receipt_observer_must_match_trusted_policy",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 117,
+        "end_line": 122,
+        "signature_hash": "4cc0bc385fbf6a01",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_receipt_route_must_match_trusted_policy:313cd25ef6463444",
+        "name": "test_receipt_route_must_match_trusted_policy",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 109,
+        "end_line": 114,
+        "signature_hash": "ee129637911bb9e3",
+        "file_digest8": "2c8131ed44e088a6"
       },
       {
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_score_identity_excludes_retry_identity_but_binds_model:b2f496964c1eea02",
         "name": "test_score_identity_excludes_retry_identity_but_binds_model",
         "kind": "function",
         "file": "tests/test_aura_benchmark_score_admission.py",
-        "line": 93,
-        "end_line": 98,
+        "line": 176,
+        "end_line": 181,
         "signature_hash": "3e8d35ef8f0f1c67",
-        "file_digest8": "3228cbbf103ad77d"
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_scoring_result_requires_observed_execution:5f3e47c37ddd938b",
+        "name": "test_scoring_result_requires_observed_execution",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 96,
+        "end_line": 98,
+        "signature_hash": "5160518f1b7839fb",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_scoring_result_requires_source_verification_for_pass_and_fail:d8435f19f35587e5",
+        "name": "test_scoring_result_requires_source_verification_for_pass_and_fail",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 90,
+        "end_line": 93,
+        "signature_hash": "84081f410a82a424",
+        "file_digest8": "2c8131ed44e088a6"
+      },
+      {
+        "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_source_verifier_must_be_authorized_and_match_trusted_policy:8a49850b943dbe71",
+        "name": "test_source_verifier_must_be_authorized_and_match_trusted_policy",
+        "kind": "function",
+        "file": "tests/test_aura_benchmark_score_admission.py",
+        "line": 125,
+        "end_line": 135,
+        "signature_hash": "1951d6edb6d8fa72",
+        "file_digest8": "2c8131ed44e088a6"
       },
       {
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_unknown_measurement_cannot_launder_zero_or_estimates:5ddcee441aef0de2",
         "name": "test_unknown_measurement_cannot_launder_zero_or_estimates",
         "kind": "function",
         "file": "tests/test_aura_benchmark_score_admission.py",
-        "line": 71,
-        "end_line": 73,
+        "line": 146,
+        "end_line": 148,
         "signature_hash": "6274b69b265d7904",
-        "file_digest8": "3228cbbf103ad77d"
+        "file_digest8": "2c8131ed44e088a6"
       },
       {
         "semantic_id": "tests/test_aura_benchmark_score_admission.py#function:test_unknown_measurement_with_no_values_is_valid:f35de23fca4be3ee",
         "name": "test_unknown_measurement_with_no_values_is_valid",
         "kind": "function",
         "file": "tests/test_aura_benchmark_score_admission.py",
-        "line": 76,
-        "end_line": 85,
+        "line": 151,
+        "end_line": 168,
         "signature_hash": "8b877b6410c11bd2",
-        "file_digest8": "3228cbbf103ad77d"
+        "file_digest8": "2c8131ed44e088a6"
       },
       {
         "semantic_id": "tests/test_aura_bilateral_gate_dialogue.py#function:test_affordance_map_declares_current_review_learning_extension:a941916efef5400e",
@@ -446155,6 +446535,56 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:test_neutral_adapter_can_pass_same_state_workload:72caab672d65f216",
+        "name": "test_neutral_adapter_can_pass_same_state_workload",
+        "kind": "function",
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "line": 49,
+        "end_line": 55,
+        "signature_hash": "4926371b4b624d95",
+        "file_digest8": "769eba6daa897264"
+      },
+      {
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:test_unknown_telemetry_cannot_carry_fake_zero:e7b3d5b6416d2749",
+        "name": "test_unknown_telemetry_cannot_carry_fake_zero",
+        "kind": "function",
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "line": 68,
+        "end_line": 75,
+        "signature_hash": "ba62d263f86fb24b",
+        "file_digest8": "769eba6daa897264"
+      },
+      {
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:test_workload_is_deterministic_and_contains_rollback:9d2a81a7edc760be",
+        "name": "test_workload_is_deterministic_and_contains_rollback",
+        "kind": "function",
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "line": 42,
+        "end_line": 46,
+        "signature_hash": "427a7fd4bf0a4d71",
+        "file_digest8": "769eba6daa897264"
+      },
+      {
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:test_wrong_digest_is_state_drift_not_success:9c782bb03a94d5f5",
+        "name": "test_wrong_digest_is_state_drift_not_success",
+        "kind": "function",
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "line": 58,
+        "end_line": 65,
+        "signature_hash": "688d52ec14fbaf82",
+        "file_digest8": "769eba6daa897264"
+      },
+      {
+        "semantic_id": "tests/test_long_horizon_state_benchmark.py#function:write_adapter:53fec97f056df1b6",
+        "name": "write_adapter",
+        "kind": "function",
+        "file": "tests/test_long_horizon_state_benchmark.py",
+        "line": 36,
+        "end_line": 39,
+        "signature_hash": "464ce5a428c99af1",
+        "file_digest8": "769eba6daa897264"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -446505,84 +446935,184 @@
         "file_digest8": "25b208097e68da85"
       },
       {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#class:BenchmarkAdmissionPolicy:447ed156ed44fcaa",
+        "name": "BenchmarkAdmissionPolicy",
+        "kind": "class",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 31,
+        "end_line": 74,
+        "signature_hash": "ef5d9a695466db4f",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#class:BenchmarkTaskReceipt:f3b51ef4ca94faa4",
         "name": "BenchmarkTaskReceipt",
         "kind": "class",
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
-        "line": 23,
-        "end_line": 129,
+        "line": 78,
+        "end_line": 210,
         "signature_hash": "1ce69d153abe8aa6",
-        "file_digest8": "25ba064bfc7139ac"
+        "file_digest8": "502f3993ced4d3a1"
       },
       {
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:_canonical_json:b53b2f3ce67e8903",
         "name": "_canonical_json",
         "kind": "function",
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
-        "line": 14,
-        "end_line": 15,
+        "line": 15,
+        "end_line": 18,
         "signature_hash": "a5c16b842176e713",
-        "file_digest8": "25ba064bfc7139ac"
+        "file_digest8": "502f3993ced4d3a1"
       },
       {
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:_digest:37f03a5ff42df73a",
         "name": "_digest",
         "kind": "function",
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
-        "line": 18,
-        "end_line": 19,
+        "line": 21,
+        "end_line": 22,
         "signature_hash": "e3dbc3c92109621f",
-        "file_digest8": "25ba064bfc7139ac"
+        "file_digest8": "502f3993ced4d3a1"
       },
       {
-        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:admit_score:a10494733250acdf",
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:_required:65930e0555164866",
+        "name": "_required",
+        "kind": "function",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 25,
+        "end_line": 27,
+        "signature_hash": "24cabde161aeb9da",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#function:admit_score:c0102ef0fa43b713",
         "name": "admit_score",
         "kind": "function",
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
-        "line": 132,
-        "end_line": 161,
-        "signature_hash": "f8eb4710d7a2f3af",
-        "file_digest8": "25ba064bfc7139ac"
+        "line": 213,
+        "end_line": 254,
+        "signature_hash": "e5de6c318529836a",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkAdmissionPolicy.validate:42c96566bd720cd5",
+        "name": "BenchmarkAdmissionPolicy.validate",
+        "kind": "method",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 47,
+        "end_line": 59,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkAdmissionPolicy.validate_receipt:8ba846bb707e33f6",
+        "name": "BenchmarkAdmissionPolicy.validate_receipt",
+        "kind": "method",
+        "file": "tools/benchmarks/aura_benchmark_score_admission.py",
+        "line": 61,
+        "end_line": 74,
+        "signature_hash": "20caa3e8d201d843",
+        "file_digest8": "502f3993ced4d3a1"
       },
       {
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.receipt_digest:9f94e1fe49cbf639",
         "name": "BenchmarkTaskReceipt.receipt_digest",
         "kind": "method",
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
-        "line": 96,
-        "end_line": 98,
+        "line": 174,
+        "end_line": 176,
         "signature_hash": "1a6a05eb2610184a",
-        "file_digest8": "25ba064bfc7139ac"
+        "file_digest8": "502f3993ced4d3a1"
       },
       {
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.score_identity:ce3250c0e831210e",
         "name": "BenchmarkTaskReceipt.score_identity",
         "kind": "method",
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
-        "line": 78,
-        "end_line": 93,
+        "line": 156,
+        "end_line": 171,
         "signature_hash": "2b78a67bca4cde6d",
-        "file_digest8": "25ba064bfc7139ac"
+        "file_digest8": "502f3993ced4d3a1"
       },
       {
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.to_dict:22eaff9db72bbd98",
         "name": "BenchmarkTaskReceipt.to_dict",
         "kind": "method",
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
-        "line": 100,
-        "end_line": 129,
+        "line": 178,
+        "end_line": 210,
         "signature_hash": "c9885ae795ae11e7",
-        "file_digest8": "25ba064bfc7139ac"
+        "file_digest8": "502f3993ced4d3a1"
       },
       {
         "semantic_id": "tools/benchmarks/aura_benchmark_score_admission.py#method:BenchmarkTaskReceipt.validate:eb88403220ae5ddc",
         "name": "BenchmarkTaskReceipt.validate",
         "kind": "method",
         "file": "tools/benchmarks/aura_benchmark_score_admission.py",
-        "line": 47,
-        "end_line": 75,
+        "line": 105,
+        "end_line": 153,
         "signature_hash": "99559e6add5bcf3e",
-        "file_digest8": "25ba064bfc7139ac"
+        "file_digest8": "502f3993ced4d3a1"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#class:TurnResult:5a77a9d466f001f9",
+        "name": "TurnResult",
+        "kind": "class",
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "line": 51,
+        "end_line": 59,
+        "signature_hash": "e4518cabaebecf58",
+        "file_digest8": "9ba5d5ede96cd84e"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:_digest:0fc53bcf06ff9226",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "line": 13,
+        "end_line": 15,
+        "signature_hash": "6db9016a3f6bed4c",
+        "file_digest8": "9ba5d5ede96cd84e"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:_validate_telemetry:57d78c68b2f2b16f",
+        "name": "_validate_telemetry",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "line": 62,
+        "end_line": 80,
+        "signature_hash": "f7fdf3e1a62bb704",
+        "file_digest8": "9ba5d5ede96cd84e"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:build_workload:7f9f36594ec815d3",
+        "name": "build_workload",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "line": 18,
+        "end_line": 47,
+        "signature_hash": "201dfe0430e98fcb",
+        "file_digest8": "9ba5d5ede96cd84e"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:main:aff2274cb5a57719",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "line": 151,
+        "end_line": 169,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "9ba5d5ede96cd84e"
+      },
+      {
+        "semantic_id": "tools/benchmarks/long_horizon_state_benchmark.py#function:run_adapter:a8b39ec7d97bcfb6",
+        "name": "run_adapter",
+        "kind": "function",
+        "file": "tools/benchmarks/long_horizon_state_benchmark.py",
+        "line": 83,
+        "end_line": 148,
+        "signature_hash": "a7e8f4eb1c5e4d00",
+        "file_digest8": "9ba5d5ede96cd84e"
       },
       {
         "semantic_id": "tools/benchmarks/select_swe_verified_smoke.py#function:build_manifest:e7297dbd73e8c390",
@@ -447885,7 +448415,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "d526a8708d3e1015a7a10497b6ed4cb8",
-    "payload_hash": "0783034298046cf60b6ac95b93c8cc22"
+    "record_fingerprint": "65529d678407a6156c573b2d95c664d5",
+    "payload_hash": "ad2eb7271e4ebaf26155d517bb832253"
   }
 }
