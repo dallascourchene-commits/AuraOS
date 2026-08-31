@@ -3,21 +3,13 @@
 
 D0 / HS1 / NONPROMOTING.
 
-This generic membrane joins two independently earned laws without taking over their
-owners:
-- PR #666: execution-qualified evidence is not semantic truth, producer auth,
-  freshness, or effect authority.
-- PR #677: positive evidence cannot compensate for a failed orthogonal hard gate.
+This membrane is fail-closed across model result, independent review, host
+observation, validation/currentness, authority, and hard-gate state. Narrative
+text and K27/external coordinates are non-authoritative context only.
 
-It also makes the Drive-side result contract executable: model self-report ->
-validation/currentness/authority -> host observation when required -> deterministic
-reducer -> optional exact-once semantic commit. Narrative text and K27/external
-coordinates are non-authoritative retrieval/context surfaces.
-
-Host execution receipts are not self-authenticating. When execution is required,
-host authority must arrive through the trusted policy/control-plane input and bind
-the expected route and observer identity before receipt fields can satisfy the
-execution gate.
+Host execution receipts are not self-authenticating. Whenever host-derived evidence
+can change terminal success (execution or physical fanout), trusted policy input must
+bind receipt authority, route, observer, attempt, and output identity.
 """
 from __future__ import annotations
 
@@ -26,9 +18,10 @@ import hashlib
 import json
 from typing import Any
 
-VERSION = "AURA_CLOSED_WORLD_RESULT_LIFECYCLE_GATE_V1"
+VERSION = "AURA_CLOSED_WORLD_RESULT_LIFECYCLE_GATE_V2"
 MODEL_SCHEMA = "AURA-MODEL-RESULT-v1"
 HOST_SCHEMA = "AURA-HOST-EXEC-v1"
+REVIEW_SCHEMA = "AURA-INDEPENDENT-REVIEW-v1"
 REDUCER_SCHEMA = "AURA-REDUCER-DECISION-v1"
 PR666_HEAD = "49cc2947c04c1914e343d816a53d2576917523c8"
 PR677_HEAD = "7ce2296763a3bfd6d13f87be6a1b3e7d89f108a7"
@@ -36,6 +29,7 @@ PR677_HEAD = "7ce2296763a3bfd6d13f87be6a1b3e7d89f108a7"
 MODEL_DISPOSITIONS = frozenset(
     {"COMPLETED", "PARTIAL", "BLOCKED", "REFUSED", "ERROR", "UNKNOWN", "REVIEW_REQUIRED"}
 )
+REVIEW_DISPOSITIONS = frozenset({"APPROVE", "REJECT", "REVIEW_REQUIRED"})
 TRANSPORT_STATES = frozenset({"NOT_STARTED", "SENT", "RETURNED", "FAILED", "UNKNOWN"})
 REUSE_STATES = frozenset(
     {
@@ -164,6 +158,33 @@ class HostExecutionReceipt:
 
 
 @dataclass(frozen=True)
+class IndependentReviewReceipt:
+    schema_version: str
+    objective_id: str
+    reviewer_id: str
+    source_generation_ref: str
+    authority_scope: str
+    validation_fingerprint: str
+    disposition: str
+    receipt_digest: str
+
+    def validate(self) -> None:
+        if self.schema_version != REVIEW_SCHEMA:
+            raise ValueError("REVIEW_SCHEMA_MISMATCH")
+        for value, name in (
+            (self.objective_id, "REVIEW_OBJECTIVE_ID"),
+            (self.reviewer_id, "REVIEWER_ID"),
+            (self.source_generation_ref, "REVIEW_SOURCE_GENERATION_REF"),
+            (self.authority_scope, "REVIEW_AUTHORITY_SCOPE"),
+        ):
+            _required(value, name)
+        _sha256(self.validation_fingerprint, "REVIEW_VALIDATION_FINGERPRINT")
+        if self.disposition not in REVIEW_DISPOSITIONS:
+            raise ValueError("UNKNOWN_REVIEW_DISPOSITION")
+        _sha256(self.receipt_digest, "REVIEW_RECEIPT_DIGEST")
+
+
+@dataclass(frozen=True)
 class HardGate:
     gate_id: str
     passed: bool
@@ -192,7 +213,6 @@ class LifecyclePolicy:
     parent_validation_passed: bool
     contradiction_present: bool
     independent_review_required: bool
-    distinct_reviewer_receipt_present: bool
     hard_gates: tuple[HardGate, ...]
     expected_route_fingerprint: str | None = None
     expected_observer_identity: str | None = None
@@ -215,11 +235,10 @@ class LifecyclePolicy:
             raise ValueError("CONTRADICTION_PRESENT_MUST_BE_BOOL")
         if type(self.independent_review_required) is not bool:
             raise ValueError("INDEPENDENT_REVIEW_REQUIRED_MUST_BE_BOOL")
-        if type(self.distinct_reviewer_receipt_present) is not bool:
-            raise ValueError("DISTINCT_REVIEWER_RECEIPT_PRESENT_MUST_BE_BOOL")
         if type(self.host_receipt_authority_verified) is not bool:
             raise ValueError("HOST_RECEIPT_AUTHORITY_VERIFIED_MUST_BE_BOOL")
-        if self.execution_required:
+        host_evidence_required = self.execution_required or self.physical_fanout_required is not None
+        if host_evidence_required:
             if self.expected_route_fingerprint is None:
                 raise ValueError("EXPECTED_ROUTE_FINGERPRINT_REQUIRED")
             if self.expected_observer_identity is None:
@@ -297,26 +316,51 @@ def _decision(
     )
 
 
+def _review_gate(
+    *,
+    model: ModelResultEnvelope,
+    policy: LifecyclePolicy,
+    reviewer: IndependentReviewReceipt | None,
+) -> str | None:
+    if not policy.independent_review_required:
+        return None
+    if reviewer is None:
+        return "DISTINCT_REVIEW_REQUIRED"
+    if reviewer.reviewer_id == model.worker_id:
+        return "REVIEWER_NOT_DISTINCT"
+    if reviewer.objective_id != model.objective_id:
+        return "REVIEW_OBJECTIVE_MISMATCH"
+    if reviewer.source_generation_ref != policy.current_source_generation_ref:
+        return "REVIEW_SOURCE_GENERATION_MISMATCH"
+    if reviewer.validation_fingerprint != policy.validation_fingerprint:
+        return "REVIEW_VALIDATION_FINGERPRINT_MISMATCH"
+    if reviewer.authority_scope != policy.authority_scope:
+        return "REVIEW_AUTHORITY_SCOPE_MISMATCH"
+    if reviewer.disposition != "APPROVE":
+        return "INDEPENDENT_REVIEW_NOT_APPROVED"
+    return None
+
+
 def reduce_result_lifecycle(
     *,
     model: ModelResultEnvelope,
     policy: LifecyclePolicy,
     host: HostExecutionReceipt | None = None,
+    reviewer: IndependentReviewReceipt | None = None,
 ) -> ReducerDecision:
     """Reduce typed evidence to a bounded lifecycle decision.
 
-    Ordering is fail-closed and non-compensatory. A model's narrative is never read by
-    this reducer. Coordinates/cache labels are deliberately absent from admission
-    inputs so they cannot satisfy source, validation, authority, review, or host gates.
-
-    Host receipt fields cannot self-mint host authority: a trusted policy/control-plane
-    input must independently verify receipt authority and bind the expected route and
-    observer identity.
+    Any host-derived observation that can change terminal success is bound to the
+    same attempt and output digest, as well as trusted policy route/observer identity.
+    Independent review is proven by a typed receipt, never a Boolean asserted by the
+    policy under review.
     """
     model.validate()
     policy.validate()
     if host is not None:
         host.validate()
+    if reviewer is not None:
+        reviewer.validate()
 
     failed = tuple(sorted(gate.gate_id for gate in policy.hard_gates if not gate.passed))
     if failed:
@@ -344,9 +388,11 @@ def reduce_result_lifecycle(
         return _decision(
             model=model, policy=policy, terminal_state="REVIEW", reason_code="CONTRADICTION_PRESENT"
         )
-    if policy.independent_review_required and not policy.distinct_reviewer_receipt_present:
+
+    review_reason = _review_gate(model=model, policy=policy, reviewer=reviewer)
+    if review_reason is not None:
         return _decision(
-            model=model, policy=policy, terminal_state="REVIEW", reason_code="DISTINCT_REVIEW_REQUIRED"
+            model=model, policy=policy, terminal_state="REVIEW", reason_code=review_reason
         )
 
     if not set(policy.required_artifact_refs).issubset(model.artifact_refs):
@@ -358,11 +404,15 @@ def reduce_result_lifecycle(
             model=model, policy=policy, terminal_state="HOLD", reason_code="REQUIRED_TYPED_CLAIMS_MISSING"
         )
 
-    if policy.execution_required:
+    host_evidence_required = policy.execution_required or policy.physical_fanout_required is not None
+    if host_evidence_required:
         if host is None:
-            return _decision(
-                model=model, policy=policy, terminal_state="HOLD", reason_code="HOST_EXECUTION_RECEIPT_REQUIRED"
+            reason = (
+                "HOST_EXECUTION_RECEIPT_REQUIRED"
+                if policy.execution_required
+                else "PHYSICAL_FANOUT_OBSERVATION_REQUIRED"
             )
+            return _decision(model=model, policy=policy, terminal_state="HOLD", reason_code=reason)
         if not policy.host_receipt_authority_verified:
             return _decision(
                 model=model, policy=policy, terminal_state="HOLD",
@@ -386,6 +436,9 @@ def reduce_result_lifecycle(
             return _decision(
                 model=model, policy=policy, terminal_state="HOLD", reason_code="HOST_OUTPUT_DIGEST_MISMATCH"
             )
+
+    if policy.execution_required:
+        assert host is not None
         if not host.provider_effect_started or host.provider_effect_completed is not True:
             return _decision(
                 model=model, policy=policy, terminal_state="HOLD", reason_code="HOST_EFFECT_NOT_COMPLETED"
@@ -396,7 +449,8 @@ def reduce_result_lifecycle(
             )
 
     if policy.physical_fanout_required is not None:
-        if host is None or host.physical_fanout_observed is None:
+        assert host is not None
+        if host.physical_fanout_observed is None:
             return _decision(
                 model=model, policy=policy, terminal_state="HOLD",
                 reason_code="PHYSICAL_FANOUT_OBSERVATION_REQUIRED"
@@ -460,6 +514,8 @@ def main() -> None:
                     "ExecutionQualified!=SemanticTruth!=EffectAuthority",
                     "HostReceiptFields!=HostAuthority",
                     "HostAuthorityRequiresPolicyBoundRouteAndObserver",
+                    "HostDerivedEvidenceRequiresAttemptAndOutputBinding",
+                    "IndependentReviewRequiresTypedDistinctReviewerReceipt",
                     "ConsequenceCommitOccursAfterValidationCurrentnessAndAuthority",
                     "K27Coordinate!=EvidenceTruth!=Authority!=PhysicalPlacement",
                     "CacheStateDoesNotPromoteWithoutExplicitWitness",
