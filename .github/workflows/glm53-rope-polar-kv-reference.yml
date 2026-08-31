@@ -1,0 +1,47 @@
+name: AWJ032 GLM53 RoPE Polar KV Reference
+
+on:
+  pull_request:
+    paths:
+      - 'tools/quantization/aura_rope_polar_kv_reference.py'
+      - 'tools/quantization/test_aura_rope_polar_kv_reference.py'
+      - '.github/workflows/glm53-rope-polar-kv-reference.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reference:
+    runs-on: ubuntu-latest
+    env:
+      PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Verify exact head
+        if: github.event_name == 'pull_request'
+        run: test "$(git rev-parse HEAD)" = "$PR_HEAD_SHA"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install --disable-pip-version-check numpy==2.3.5
+      - run: python tools/quantization/test_aura_rope_polar_kv_reference.py
+      - run: python tools/quantization/aura_rope_polar_kv_reference.py > /tmp/rope-polar-kv-receipt.json
+      - name: Enforce claim ceiling and matched-rate accounting
+        run: |
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/rope-polar-kv-receipt.json'))
+          assert r['schema']=='AURA_ROPE_POLAR_KEY_CACHE_REFERENCE_V1'
+          assert r['polar_bits_per_dimension_including_fp16_key_scale']==4.25
+          assert r['cartesian_bits_per_dimension_including_fp16_key_scale']==4.25
+          assert r['polar_beats_phase_only_on_fixture'] is True
+          assert r['claim_ceiling']['fixture_is_glm53_distribution'] is False
+          assert r['claim_ceiling']['glm53_attention_quality_preserved'] is False
+          assert r['claim_ceiling']['polar_quantization_generally_superior'] is False
+          assert r['claim_ceiling']['native_transformer_kv_accessed'] is False
+          assert r['claim_ceiling']['gate10_promoted'] is False
+          PY
