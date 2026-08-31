@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import replace
 import unittest
 
+import tools.aura_generation_bound_admission_reuse as parent769
 import tools.awj032.glm53_g6_gate10_owner_host_evidence_request as g6
 import tools.awj032.glm53_g6_admission_identity_binding_addendum as a
 
@@ -109,6 +110,41 @@ class G6AdmissionIdentityBindingTests(unittest.TestCase):
         self.assertFalse(receipt.source_currentness_proven_by_this_contract)
         self.assertFalse(receipt.execution_authorized)
         self.assertFalse(receipt.gate10_promoted)
+
+    def test_parent769_emission_matches_reproduced_reuse_digest(self) -> None:
+        projected = identity()
+        family = parent769.AdmissionFamily.GLM53_BOUNDED_C2_PROPOSAL
+        admission = parent769.AdmissionReceiptProjectionV1(
+            family=family,
+            producer_head=parent769.EXPECTED_HEAD[family],
+            receipt_digest=projected.admission_receipt_digest,
+            admission_disposition=parent769.EXPECTED_POSITIVE_DISPOSITION[family],
+            subject_identity=projected.subject_identity,
+            source_generation_key=projected.source_generation_key,
+            evidence_generation_key=projected.evidence_generation_key,
+            owner_context_key=projected.owner_context_key,
+            decision_context_key=projected.decision_context_key,
+            bounded_admission_positive=True,
+        )
+        current = parent769.CurrentAdmissionUseContextV1(
+            producer_head=admission.producer_head,
+            subject_identity=admission.subject_identity,
+            source_generation_key=admission.source_generation_key,
+            evidence_generation_key=admission.evidence_generation_key,
+            owner_context_key=admission.owner_context_key,
+            decision_context_key=admission.decision_context_key,
+        )
+        parent_receipt = parent769.revalidate_admission_reuse(
+            admission=admission, current=current
+        )
+        self.assertEqual(
+            parent_receipt.disposition, parent769.ReuseDisposition.REUSE_CANDIDATE
+        )
+        self.assertEqual(parent_receipt.admission_receipt_digest, a.Q18_RECEIPT_DIGEST)
+        self.assertEqual(parent_receipt.reuse_digest, projected.reuse_digest)
+        self.assertEqual(
+            parent_receipt.reuse_digest, a.expected_pr769_reuse_digest(projected)
+        )
 
     def test_generic_bounded_c2_family_cannot_cross_cast_as_glm53(self) -> None:
         for wrong in ("BOUNDED_C2_PROPOSAL", "HYDRATION_TRANSACTION", "OTHER"):
