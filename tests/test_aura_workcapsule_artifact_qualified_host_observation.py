@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import copy
 import hashlib
 import inspect
 import json
@@ -22,75 +21,104 @@ from tests.test_aura_workcapsule_current_recursive_target_raw_slice_binding impo
 
 
 def _sha(value) -> str:
-    raw = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    raw = json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode(
+        "utf-8"
+    )
     return hashlib.sha256(raw).hexdigest()
+
+
+def _default_states() -> dict[str, str]:
+    return {
+        "U_HEAD": "PASS",
+        "U_ROUTE": "UNKNOWN",
+        "U_F2": "UNKNOWN",
+        "U_CUSTODY": "UNKNOWN",
+        "U_CANARY": "UNKNOWN",
+    }
+
+
+def _fixture_resolution(gate: str, state: str, target_ref: str) -> dict | None:
+    if state == "UNKNOWN":
+        return None
+    return {
+        "schema": "AURA_HOST_OBSERVATION_RESOLUTION_V1",
+        "version": 1,
+        "gate": gate,
+        "state": state,
+        "observation_ref": f"obs://{gate}",
+        "producer_ref": "host://producer",
+        "producer_generation": "7",
+        "currentness_ref": "current://7",
+        "authority_ref": "authority://bounded",
+        "target_ref": target_ref,
+        "resolver_ref": "resolver://fixture",
+        "resolver_generation": "3",
+        "revoked": False,
+        "resolution_digest": "ab" * 32,
+    }
+
+
+def _gate_reason(state: str) -> str:
+    return "OBSERVATION_OR_RESOLVER_REQUIRED" if state == "UNKNOWN" else "RESOLVED"
+
+
+def _mask(states: dict[str, str], wanted: str) -> int:
+    return sum(1 << index for index, gate in enumerate(GATES) if states[gate] == wanted)
+
+
+def _disposition(fail_mask: int, unknown_mask: int) -> str:
+    if fail_mask:
+        return "FAIL_CLOSED"
+    if unknown_mask:
+        return "HOST_OBSERVATION_REQUIRED"
+    return "HOST_OBSERVATIONS_COMPLETE_NONAUTHORIZING"
+
+
+def _seal(receipt: dict) -> dict:
+    receipt["receipt_identity"] = {
+        "kind": "DIGEST",
+        "algorithm_or_provider": "sha256",
+        "canonicalization_profile": "JSON_SORT_KEYS_COMPACT_UTF8_V1",
+        "scope_profile": "AURA_WORKCAPSULE_TEMPORAL_HOST_OBSERVATION_ADMISSION_V1",
+        "value": _sha(receipt),
+        "schema_version": "DigestOrImmutableIdentityV1-compatible",
+    }
+    return receipt
 
 
 class WorkCapsuleArtifactQualifiedHostObservationTests(
     WorkCapsuleCurrentRecursiveTargetRawSliceBindingTests
 ):
     def local_receipt(self, raw=None) -> dict:
-        return admit_current_recursive_target_raw_slice_binding(
-            **self.join_kwargs(raw=raw if raw is not None else self.raw_receipt())
-        )
+        chosen_raw = raw if raw is not None else self.raw_receipt()
+        return admit_current_recursive_target_raw_slice_binding(**self.join_kwargs(raw=chosen_raw))
 
-    def host_receipt(self, *, states=None, target_ref=None, reseal=True, **overrides) -> dict:
-        local = self.local_receipt()
-        expected_ref = target_ref or artifact_target_ref(local)
-        states = states or {
-            "U_HEAD": "PASS",
-            "U_ROUTE": "UNKNOWN",
-            "U_F2": "UNKNOWN",
-            "U_CUSTODY": "UNKNOWN",
-            "U_CANARY": "UNKNOWN",
+    def host_receipt(self, *, states=None, target_ref=None, **overrides) -> dict:
+        gate_states = dict(states or _default_states())
+        exact_target_ref = target_ref or artifact_target_ref(self.local_receipt())
+        resolutions = {
+            gate: _fixture_resolution(gate, gate_states[gate], exact_target_ref) for gate in GATES
         }
-        resolutions = {}
-        reasons = {}
-        for gate in GATES:
-            if states[gate] == "UNKNOWN":
-                resolutions[gate] = None
-                reasons[gate] = "OBSERVATION_OR_RESOLVER_REQUIRED"
-            else:
-                resolutions[gate] = {
-                    "schema": "AURA_HOST_OBSERVATION_RESOLUTION_V1",
-                    "version": 1,
-                    "gate": gate,
-                    "state": states[gate],
-                    "observation_ref": f"obs://{gate}",
-                    "producer_ref": "host://producer",
-                    "producer_generation": "7",
-                    "currentness_ref": "current://7",
-                    "authority_ref": "authority://bounded",
-                    "target_ref": expected_ref,
-                    "resolver_ref": "resolver://fixture",
-                    "resolver_generation": "3",
-                    "revoked": False,
-                    "resolution_digest": "ab" * 32,
-                }
-                reasons[gate] = "RESOLVED"
-        fail_mask = sum(1 << i for i, gate in enumerate(GATES) if states[gate] == "FAIL")
-        unknown_mask = sum(1 << i for i, gate in enumerate(GATES) if states[gate] == "UNKNOWN")
-        if fail_mask:
-            disposition = "FAIL_CLOSED"
-        elif unknown_mask:
-            disposition = "HOST_OBSERVATION_REQUIRED"
-        else:
-            disposition = "HOST_OBSERVATIONS_COMPLETE_NONAUTHORIZING"
+        reasons = {gate: _gate_reason(gate_states[gate]) for gate in GATES}
+        fail_mask = _mask(gate_states, "FAIL")
+        unknown_mask = _mask(gate_states, "UNKNOWN")
         receipt = {
             "version": "AURA_WORKCAPSULE_TEMPORAL_HOST_OBSERVATION_ADMISSION_V1",
-            "disposition": disposition,
+            "disposition": _disposition(fail_mask, unknown_mask),
             "local_temporal_closure_proven": True,
             "pre_closure_status": "HOLD",
             "post_closure_status": "CLOSED",
             "exact_hold_to_closed_transition": True,
             "pre_reentry_receipt_identity": {"kind": "DIGEST", "value": "11" * 32},
             "post_closure_receipt_identity": {"kind": "DIGEST", "value": "22" * 32},
-            "host_gate_states": states,
+            "host_gate_states": gate_states,
             "host_gate_resolutions": resolutions,
             "host_gate_reasons": reasons,
             "fail_mask": fail_mask,
             "unknown_mask": unknown_mask,
-            "candidate_probes_by_unknown_gate": {gate: [] for gate in GATES if states[gate] == "UNKNOWN"},
+            "candidate_probes_by_unknown_gate": {
+                gate: [] for gate in GATES if gate_states[gate] == "UNKNOWN"
+            },
             "ordered_required_probes": [],
             "minimum_cover_computed": False,
             "minimum_cover_reason": "PROBE_COSTS_AND_WORLD_PAIR_SEPARATION_NOT_MEASURED",
@@ -117,19 +145,11 @@ class WorkCapsuleArtifactQualifiedHostObservationTests(
             },
         }
         receipt.update(overrides)
-        if reseal or "receipt_identity" not in receipt:
-            receipt["receipt_identity"] = {
-                "kind": "DIGEST",
-                "algorithm_or_provider": "sha256",
-                "canonicalization_profile": "JSON_SORT_KEYS_COMPACT_UTF8_V1",
-                "scope_profile": "AURA_WORKCAPSULE_TEMPORAL_HOST_OBSERVATION_ADMISSION_V1",
-                "value": _sha(receipt),
-                "schema_version": "DigestOrImmutableIdentityV1-compatible",
-            }
-        return receipt
+        return _seal(receipt)
 
     def child_kwargs(self, *, host=None, raw=None) -> dict:
-        parent = self.join_kwargs(raw=raw if raw is not None else self.raw_receipt())
+        chosen_raw = raw if raw is not None else self.raw_receipt()
+        parent = self.join_kwargs(raw=chosen_raw)
         return {
             **parent,
             "host_admission_receipt": host if host is not None else self.host_receipt(),
@@ -158,8 +178,7 @@ class WorkCapsuleArtifactQualifiedHostObservationTests(
         self.assertIn(HOST_PREFIX + "HOST_RECEIPT_IDENTITY_MISMATCH", violations)
 
     def test_unknown_gates_need_no_target_binding_and_remain_unknown(self) -> None:
-        states = {gate: "UNKNOWN" for gate in GATES}
-        host = self.host_receipt(states=states)
+        host = self.host_receipt(states={gate: "UNKNOWN" for gate in GATES})
         receipt = admit_artifact_qualified_host_observation(**self.child_kwargs(host=host))
         self.assertEqual(list(GATES), receipt["unknown_host_gates"])
         self.assertEqual(0, receipt["resolved_host_gate_count"])
@@ -167,8 +186,7 @@ class WorkCapsuleArtifactQualifiedHostObservationTests(
         self.assertFalse(receipt["host_effect_ready"])
 
     def test_all_pass_for_exact_artifact_remains_nonauthorizing(self) -> None:
-        states = {gate: "PASS" for gate in GATES}
-        host = self.host_receipt(states=states)
+        host = self.host_receipt(states={gate: "PASS" for gate in GATES})
         receipt = admit_artifact_qualified_host_observation(**self.child_kwargs(host=host))
         self.assertTrue(receipt["all_host_gates_pass_for_exact_artifact"])
         self.assertTrue(receipt["host_observation_set_complete"])
@@ -197,13 +215,25 @@ class WorkCapsuleArtifactQualifiedHostObservationTests(
     def test_public_boundary_has_no_resolver_or_effect_override(self) -> None:
         params = inspect.signature(verify_artifact_qualified_host_observation).parameters
         self.assertEqual(
-            {"scoped_target_inputs", "higher_owner_projection", "raw_slice_receipt", "host_admission_receipt"},
+            {
+                "scoped_target_inputs",
+                "higher_owner_projection",
+                "raw_slice_receipt",
+                "host_admission_receipt",
+            },
             set(params),
         )
-        for forbidden in ("host_resolver", "effect_ready", "producer_trusted", "raw_bytes", "source_catalog"):
+        for forbidden in (
+            "host_resolver",
+            "effect_ready",
+            "producer_trusted",
+            "raw_bytes",
+            "source_catalog",
+        ):
             self.assertNotIn(forbidden, params)
 
 
 if __name__ == "__main__":
     import unittest
+
     unittest.main()
