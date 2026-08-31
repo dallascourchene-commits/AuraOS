@@ -1,0 +1,59 @@
+name: Aura NAV-03B Version-Safe Fractal K27
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_version_safe_fractal_k27_navigation.py"
+      - "tests/test_aura_version_safe_fractal_k27_navigation.py"
+      - "tools/aura_external_cognition_subject_version_resolver.py"
+      - "tools/aura_fractal_k27.py"
+      - ".github/workflows/aura-nav03b-version-safe-fractal-k27.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-nav03b-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Exact checkout and parent ancestry
+        shell: bash
+        env:
+          REPO: ${{ github.repository }}
+          SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          VERSION_PARENT: a84fb06a89671bd987168f3e708725d7265919b8
+          K27_PARENT: d97012ce7d3dd221adac0f750db4b77ddf6a7ab9
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${REPO}.git"
+          git fetch --depth=100 origin "${SHA}" "${VERSION_PARENT}" "${K27_PARENT}"
+          git checkout --detach "${SHA}"
+          test "$(git rev-parse HEAD)" = "${SHA}"
+          git merge-base --is-ancestor "${VERSION_PARENT}" HEAD
+          git merge-base --is-ancestor "${K27_PARENT}" HEAD
+
+      - name: Compile exact parent and adapter surfaces
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/aura_external_cognition_subject_version_resolver.py
+          python -m py_compile tools/aura_fractal_k27.py
+          python -m py_compile tools/aura_version_safe_fractal_k27_navigation.py
+          python -m py_compile tests/test_aura_external_cognition_subject_version_resolver.py
+          python -m py_compile tests/test_aura_version_safe_fractal_k27_navigation.py
+
+      - name: Reprove version resolver contract
+        run: python -m unittest tests.test_aura_external_cognition_subject_version_resolver -v
+
+      - name: Prove NAV-03B adversarial contract
+        run: python -m unittest tests.test_aura_version_safe_fractal_k27_navigation -v
+
+      - name: Prove legacy K27 compatibility witness
+        run: |
+          python - <<'PY'
+          from tools.aura_fractal_k27 import K27Segment, legacy_segment_micro_equivalence
+          assert legacy_segment_micro_equivalence(K27Segment(11,17,15)) == ((1,1,1),(0,2,2),(2,2,0))
+          print({"nav03b": "proof", "k27_authority": False, "currentness_minted": False, "effect_authority": False})
+          PY
