@@ -1,0 +1,209 @@
+name: Aura Execution-Qualified Portable Semantic Evidence
+
+on:
+  pull_request:
+    paths:
+      - tools/arena_portable_semantic_evidence_transfer.py
+      - tools/arena_workflow_execution_evidence.py
+      - tools/aura_execution_aware_hyperscale_admission.py
+      - tools/aura_execution_qualified_portable_semantic_evidence.py
+      - tests/test_aura_execution_qualified_portable_semantic_evidence.py
+      - .github/workflows/aura-execution-qualified-portable-semantic-evidence.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  execution-qualified-portable-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact A7 head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact PR661 x PR659 convergence and parent proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence = 'beaf95b19d222e8970de2c4aadfe220614a8d5bd'
+          pr661 = '8179ffe054abc2ec144757888957c9ca27df991c'
+          pr659 = '1e37cf78cb1aee0a6605f7b8fc99ec3632279b11'
+          parents = subprocess.check_output(
+              ['git','rev-list','--parents','-n','1',convergence], text=True
+          ).strip().split()
+          assert parents == [convergence, pr661, pr659], parents
+          assert subprocess.run(['git','merge-base','--is-ancestor',convergence,'HEAD']).returncode == 0
+          headers = {
+              'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          expected = (
+              (33396942368, pr661, 'Aura Execution-Aware HyperScale Admission'),
+              (33396234209, pr659, 'Aura Arena Portable Semantic Evidence Transfer'),
+          )
+          for run_id, head, name in expected:
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  run = json.load(response)
+              assert run['head_sha'] == head, (run_id, run['head_sha'], head)
+              assert run['name'] == name, (run_id, run['name'], name)
+              assert run['status'] == 'completed', (run_id, run['status'])
+              assert run['conclusion'] == 'success', (run_id, run['conclusion'])
+          print('A7_EXACT_TWO_PARENT_PROOFS_GREEN=true')
+          PY
+
+      - name: Prove exact parent owner blobs retained
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD:tools/arena_portable_semantic_evidence_transfer.py)" = "6ce2458a29ed665a375a6f0c41f02d6eb33267c7"
+          test "$(git rev-parse HEAD:tools/aura_execution_aware_hyperscale_admission.py)" = "1ba4a33a05dd643d8be911d8fc103fb110bc3bb0"
+          test "$(git rev-parse HEAD:tools/arena_workflow_execution_evidence.py)" = "150aba95dc1aed3e938892a742a6d5f65d75e41d"
+          echo 'A7_PARENT_OWNER_BLOBS_RETAINED=true'
+
+      - name: Run parent execution firewall and A7 adversarial suites
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/arena_portable_semantic_evidence_transfer.py \
+            tools/arena_workflow_execution_evidence.py \
+            tools/aura_execution_aware_hyperscale_admission.py \
+            tools/aura_execution_qualified_portable_semantic_evidence.py \
+            tests/test_aura_execution_aware_hyperscale_admission.py \
+            tests/test_aura_execution_qualified_portable_semantic_evidence.py
+          python3 -m unittest -v \
+            tests.test_aura_execution_aware_hyperscale_admission \
+            tests.test_aura_execution_qualified_portable_semantic_evidence
+
+      - name: Reobserve exact Q6 producer run and producer job
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 - <<'PY'
+          import json, os, urllib.request
+          from tools.arena_portable_semantic_evidence_transfer import q6_descriptor, native_expectation
+          from tools.aura_execution_qualified_portable_semantic_evidence import classify_execution_qualified_transfer
+
+          headers = {
+              'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          run_id = 33370305329
+          base = f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}"
+          with urllib.request.urlopen(urllib.request.Request(base, headers=headers), timeout=30) as response:
+              run = json.load(response)
+          with urllib.request.urlopen(urllib.request.Request(base + '/jobs', headers=headers), timeout=30) as response:
+              jobs = json.load(response)['jobs']
+          evidence = q6_descriptor()
+          receipt = classify_execution_qualified_transfer(
+              run=run,
+              jobs=jobs,
+              evidence=evidence,
+              consumer=native_expectation(evidence),
+          )
+          assert receipt.execution_qualified_portable_evidence_admitted is True, receipt
+          assert receipt.producer_run_exact is True
+          assert receipt.producer_head_exact is True
+          assert receipt.producer_workflow_exact is True
+          assert receipt.exact_producer_job_success is True
+          print('A7_Q6_EXACT_EXECUTION_QUALIFIED_PORTABLE_EVIDENCE=true')
+          print('A7_Q6_RECEIPT_DIGEST=' + receipt.receipt_digest)
+          PY
+
+      - name: Reobserve provider-gated zero-job lane and prove pre-transfer hold
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 - <<'PY'
+          import json, os, urllib.request
+          from tools.arena_portable_semantic_evidence_transfer import q6_descriptor, native_expectation
+          from tools.aura_execution_qualified_portable_semantic_evidence import classify_execution_qualified_transfer
+
+          headers = {
+              'Authorization': f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+          }
+          run_id = 33372603380
+          base = f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}"
+          with urllib.request.urlopen(urllib.request.Request(base, headers=headers), timeout=30) as response:
+              run = json.load(response)
+          with urllib.request.urlopen(urllib.request.Request(base + '/jobs', headers=headers), timeout=30) as response:
+              jobs = json.load(response)['jobs']
+          evidence = q6_descriptor()
+          receipt = classify_execution_qualified_transfer(
+              run=run,
+              jobs=jobs,
+              evidence=evidence,
+              consumer=native_expectation(evidence),
+          )
+          assert run['conclusion'] == 'action_required'
+          assert jobs == []
+          assert receipt.execution_classification == 'PRE_JOB_ACTION_REQUIRED'
+          assert receipt.execution_qualified_portable_evidence_admitted is False
+          assert receipt.portable_transfer_evaluated is False
+          assert receipt.disposition == 'HOLD_PROVIDER_ELIGIBILITY'
+          print('A7_PROVIDER_GATE_PRE_TRANSFER_HOLD=true')
+          PY
+
+      - name: Emit deterministic A7 receipt and assert ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 -m tools.aura_execution_qualified_portable_semantic_evidence > /tmp/a7.json
+          python3 - <<'PY'
+          import json
+          r = json.load(open('/tmp/a7.json', encoding='utf-8'))
+          assert r['schema'] == 'AURA_EXECUTION_QUALIFIED_PORTABLE_SEMANTIC_EVIDENCE_V1'
+          assert r['execution_qualified_portable_evidence_admitted'] is True
+          assert r['disposition'] == 'ADMIT_EXECUTION_QUALIFIED_PORTABLE_SEMANTIC_EVIDENCE'
+          for key in (
+              'producer_authenticated',
+              'semantic_truth_proven',
+              'broader_claims_inherited',
+              'effect_authority_granted',
+              'semantic_k27_authority_minted',
+              'native_private_transformer_kv_accessed',
+              'gate10_promoted',
+              'merge_or_deployment_authorized',
+          ):
+              assert r[key] is False, key
+          print('A7_NONPROMOTION_CEILING=true')
+          print('A7_RECEIPT_DIGEST=' + r['receipt_digest'])
+          PY
+
+      - name: Consequence ceiling
+        run: |
+          cat <<'EOF'
+          PORTABLE_SEMANTIC_EVIDENCE_REQUIRES_EXACT_EXECUTED_PRODUCER_JOB=true
+          EXECUTED_JOB_SUCCESS_PROVES_SEMANTIC_TRUTH=false
+          SOME_SUCCESSFUL_JOB_EQUALS_PRODUCER_JOB=false
+          PROVIDER_GATE_COUNTS_AS_EXECUTION=false
+          EFFECT_AUTHORITY=false
+          K27_SEMANTIC_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTED=false
+          MERGE_OR_DEPLOYMENT_AUTHORIZED=false
+          EOF
