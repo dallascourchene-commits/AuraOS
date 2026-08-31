@@ -77,6 +77,36 @@ def test_unknown_telemetry_still_cannot_carry_zero():
         validate_turn_response(payload, expected_turn=0, adapter_generation="aura-wrapper-v1")
 
 
+def test_observed_or_estimated_metric_values_must_be_well_typed():
+    base = {
+        "type": "turn_result",
+        "turn": 0,
+        "adapter_generation": "aura-wrapper-v1",
+        "state_digest": D,
+    }
+    bad_tokens = dict(base, telemetry={"provenance": "OBSERVED", "input_tokens": 1.5})
+    with pytest.raises(ValueError, match="INVALID_INPUT_TOKENS"):
+        validate_turn_response(bad_tokens, expected_turn=0, adapter_generation="aura-wrapper-v1")
+
+    bad_cost = dict(base, telemetry={"provenance": "ESTIMATED", "cost_usd": -0.01})
+    with pytest.raises(ValueError, match="INVALID_COST_USD"):
+        validate_turn_response(bad_cost, expected_turn=0, adapter_generation="aura-wrapper-v1")
+
+    good = dict(
+        base,
+        telemetry={
+            "provenance": "OBSERVED",
+            "input_tokens": 10,
+            "output_tokens": 4,
+            "cost_usd": 0.02,
+            "peak_rss_mb": 32.5,
+        },
+    )
+    normalized = validate_turn_response(good, expected_turn=0, adapter_generation="aura-wrapper-v1")
+    assert normalized["telemetry"]["input_tokens"] == 10
+    assert normalized["telemetry"]["peak_rss_mb"] == 32.5
+
+
 def test_turn_request_does_not_include_expected_state_digest():
     request = make_turn_request(
         {
