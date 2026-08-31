@@ -1,0 +1,68 @@
+name: AWJ032 ThinkPad NVMe Residency Plan
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  exact-thinkpad-residency-plan:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact target head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Compile and run focused planner adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/awj032/thinkpad_nvme_residency_plan.py
+          python3 -m unittest -v tools.awj032.test_thinkpad_nvme_residency_plan
+
+      - name: Assert narrow API and non-execution ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from tools.awj032.thinkpad_nvme_residency_plan import (
+              ThinkPadResidencyPlan,
+              build_thinkpad_residency_plan,
+          )
+
+          assert set(inspect.signature(build_thinkpad_residency_plan).parameters) == {
+              'host_profile', 'tensors', 'policy'
+          }
+          fields = ThinkPadResidencyPlan.__dataclass_fields__
+          for forbidden in (
+              'execution_authorized', 'effect_authority', 'g2', 'actual_read_bytes',
+              'observed_tokens_per_second', 'measured_latency_seconds'
+          ):
+              assert forbidden not in fields
+          print('STORAGE_PLAN_ONLY=true')
+          print('PHYSICAL_IO_OBSERVED=false')
+          print('MODEL_EXECUTION_OBSERVED=false')
+          print('PRODUCER_AUTHENTICATED=false')
+          print('PERFORMANCE_CLAIMED=false')
+          print('EFFECT_AUTHORITY_PROVEN=false')
+          print('G2_ADMITTED=false')
+          PY
