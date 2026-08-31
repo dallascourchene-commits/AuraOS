@@ -30,8 +30,7 @@ jobs:
           git init .
           git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=100 origin "$TARGET_SHA"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=100 origin "$TARGET_SHA"
           unset AUTH_HEADER GH_TOKEN
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
@@ -54,8 +53,7 @@ jobs:
           git -C /tmp/pr523 init .
           git -C /tmp/pr523 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
           AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -C /tmp/pr523 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
-            fetch --no-tags --depth=1 origin "$PR523_SEMANTIC_SHA"
+          git -C /tmp/pr523 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=1 origin "$PR523_SEMANTIC_SHA"
           unset AUTH_HEADER GH_TOKEN
           git -C /tmp/pr523 checkout --detach FETCH_HEAD
           test "$(git -C /tmp/pr523 rev-parse HEAD)" = "$PR523_SEMANTIC_SHA"
@@ -74,10 +72,22 @@ jobs:
           test "$owner_blob" = '9328a20c55b751d256f0a6374db88b61a8890b9b'
           echo 'PR523_OWNER_SOURCE_BLOB_EXACT=true'
 
-      - name: Prove fully raw-owner temporal transition
+      - name: O31 syntax and positive roundtrip
         run: |
           python3 -m py_compile scripts/aura_workcapsule_fully_raw_owner_hold_to_closed_transition.py
-          python3 -m unittest -v tests.test_aura_workcapsule_fully_raw_owner_hold_to_closed_transition
+          python3 -m unittest -v tests.test_aura_workcapsule_fully_raw_owner_hold_to_closed_transition.WorkCapsuleFullyRawOwnerHoldToClosedTransitionTests.test_o31_raw_pre_and_raw_post_derive_entire_hold_to_closed_transition
+
+      - name: O31 public boundary
+        run: python3 -m unittest -v tests.test_aura_workcapsule_fully_raw_owner_hold_to_closed_transition.WorkCapsuleFullyRawOwnerHoldToClosedTransitionTests.test_o31_public_boundary_has_no_lifecycle_intermediate_escape_hatch
+
+      - name: O31 post source drift
+        run: python3 -m unittest -v tests.test_aura_workcapsule_fully_raw_owner_hold_to_closed_transition.WorkCapsuleFullyRawOwnerHoldToClosedTransitionTests.test_o31_post_source_drift_invalidates_derived_closure_before_transition
+
+      - name: O31 distinct temporal roots
+        run: python3 -m unittest -v tests.test_aura_workcapsule_fully_raw_owner_hold_to_closed_transition.WorkCapsuleFullyRawOwnerHoldToClosedTransitionTests.test_o31_one_live_root_cannot_impersonate_both_temporal_phases
+
+      - name: O31 rejected PRE currentness
+        run: python3 -m unittest -v tests.test_aura_workcapsule_fully_raw_owner_hold_to_closed_transition.WorkCapsuleFullyRawOwnerHoldToClosedTransitionTests.test_o31_current_only_pre_evidence_still_cannot_enter_hold_transition
 
       - name: Assert no caller lifecycle-intermediate escape hatch
         run: |
@@ -86,10 +96,7 @@ jobs:
           from pathlib import Path
           from scripts.aura_workcapsule_fully_raw_owner_hold_to_closed_transition import verify_fully_raw_owner_hold_to_closed_transition
           params = inspect.signature(verify_fully_raw_owner_hold_to_closed_transition).parameters
-          for forbidden in (
-              'post_closure_receipt', 'reentry_receipt', 'pre_observation_closure_receipt',
-              'source_observation_receipt', 'observed_source_witnesses', 'candidate_binding'
-          ):
+          for forbidden in ('post_closure_receipt', 'reentry_receipt', 'pre_observation_closure_receipt', 'source_observation_receipt', 'observed_source_witnesses', 'candidate_binding'):
               assert forbidden not in params, forbidden
           source = Path('scripts/aura_workcapsule_fully_raw_owner_hold_to_closed_transition.py').read_text()
           assert 'compile_owner_bound_reentry_closure' in source
