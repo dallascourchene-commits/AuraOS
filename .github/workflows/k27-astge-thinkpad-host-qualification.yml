@@ -1,0 +1,53 @@
+name: K27 ASTGE ThinkPad Host Qualification Contract
+
+on:
+  pull_request:
+    paths:
+      - "tools/k27_astge_thinkpad_host_probe.py"
+      - "tests/test_k27_astge_thinkpad_host_probe.py"
+      - ".github/workflows/k27-astge-thinkpad-host-qualification.yml"
+  workflow_dispatch:
+
+jobs:
+  exact-host-qualification-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Assert exact head
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+          fi
+      - name: Run host qualification contract tests
+        run: python -m unittest -v tests.test_k27_astge_thinkpad_host_probe
+      - name: Run bounded synthetic probe
+        run: |
+          python tools/k27_astge_thinkpad_host_probe.py \
+            --benchmark-dir "${RUNNER_TEMP}" \
+            --size-mib 4 \
+            --samples 128 \
+            --output "${RUNNER_TEMP}/k27-thinkpad-host-probe.json"
+      - name: Assert nonpromoting claim ceiling
+        shell: python
+        run: |
+          import json, os
+          from pathlib import Path
+          receipt = json.loads(Path(os.environ["RUNNER_TEMP"], "k27-thinkpad-host-probe.json").read_text())
+          assert receipt["benchmark"]["same_byte_consequence"] is True
+          assert receipt["production_mmap_promotion_authorized"] is False
+          assert receipt["io_uring_direct_path_proven"] is False
+          assert receipt["native_transformer_kv_accessed"] is False
+          assert receipt["semantic_k27_authority"] is False
+          print("THINKPAD_HOST_QUALIFICATION_CONTRACT_EXECUTED=true")
+          print("SYNTHETIC_GITHUB_HOST_IS_THINKPAD_PROOF=false")
+          print("SAME_BYTE_READSEEK_MMAP_MICROBENCH=true")
+          print("PRODUCTION_MMAP_PROMOTION_AUTHORIZED=false")
+          print("IO_URING_DIRECT_PATH_PROVEN=false")
+          print("NATIVE_TRANSFORMER_KV_ACCESSED=false")
+          print("SEMANTIC_K27_AUTHORITY=false")
