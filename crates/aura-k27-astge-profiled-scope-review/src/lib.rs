@@ -12,7 +12,9 @@ use aura_k27_astge_profiled_scopes::{
     ProfiledPythonScopesV1, ProfiledScopeError, build_profiled_python_scopes,
 };
 use aura_k27_astge_scope::{AuthorizedSpanV1, ReplacementV1};
-use aura_k27_astge_source_review::{SourceReviewAdmissionV1, SourceReviewError, admit_source_review};
+use aura_k27_astge_source_review::{
+    SourceReviewAdmissionV1, SourceReviewError, admit_source_review,
+};
 use std::collections::HashMap;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
@@ -61,10 +63,7 @@ pub enum ProfiledScopeReviewError {
     ScopeSyntaxAnchorMissing(u64),
     ScopeSemanticHandleMissing(u64),
     PersistedNodeMismatch(&'static str),
-    ExplicitAuthorizedSpanDoesNotCoverSelectedScope {
-        scope_start: u64,
-        scope_end: u64,
-    },
+    ExplicitAuthorizedSpanDoesNotCoverSelectedScope { scope_start: u64, scope_end: u64 },
     SourceGenerationRefMismatch,
     ParentClaimCeilingViolated,
 }
@@ -113,9 +112,12 @@ pub fn admit_profiled_scope_review(
 ) -> Result<ProfiledScopeReviewAdmissionV1, ProfiledScopeReviewError> {
     let source = std::str::from_utf8(original_source)
         .map_err(|_| ProfiledScopeReviewError::OriginalSourceNotUtf8)?;
-    let locator = catalog
-        .locator(record.file_id)
-        .ok_or(ProfiledScopeReviewError::UnknownCatalogFileId(record.file_id))?;
+    let locator =
+        catalog
+            .locator(record.file_id)
+            .ok_or(ProfiledScopeReviewError::UnknownCatalogFileId(
+                record.file_id,
+            ))?;
     let source_generation_ref = canonical_source_generation_ref(locator.source_generation);
     let source_owner_ref = source_owner_ref.into();
 
@@ -136,21 +138,21 @@ pub fn admit_profiled_scope_review(
     let parent_scope_id = selected
         .parent_scope_id
         .ok_or(ProfiledScopeReviewError::ScopeNotNested(selected_scope_id))?;
-    let syntax_ordinal = selected
-        .syntax_ordinal
-        .ok_or(ProfiledScopeReviewError::ScopeSyntaxAnchorMissing(
-            selected_scope_id,
-        ))?;
-    let ast_local_node_id = selected
-        .ast_local_node_id
-        .ok_or(ProfiledScopeReviewError::ScopeSyntaxAnchorMissing(
-            selected_scope_id,
-        ))?;
-    let semantic_handle_digest = selected
-        .semantic_handle_digest
-        .ok_or(ProfiledScopeReviewError::ScopeSemanticHandleMissing(
-            selected_scope_id,
-        ))?;
+    let syntax_ordinal =
+        selected
+            .syntax_ordinal
+            .ok_or(ProfiledScopeReviewError::ScopeSyntaxAnchorMissing(
+                selected_scope_id,
+            ))?;
+    let ast_local_node_id =
+        selected
+            .ast_local_node_id
+            .ok_or(ProfiledScopeReviewError::ScopeSyntaxAnchorMissing(
+                selected_scope_id,
+            ))?;
+    let semantic_handle_digest = selected.semantic_handle_digest.ok_or(
+        ProfiledScopeReviewError::ScopeSemanticHandleMissing(selected_scope_id),
+    )?;
 
     require_record_matches_selected_scope(
         record,
@@ -540,7 +542,11 @@ mod tests {
     #[test]
     fn source_drift_after_catalog_admission_fails_closed() {
         let state = setup("drift");
-        fs::write(state.root.join("src/module.py"), b"changed after admission\n").unwrap();
+        fs::write(
+            state.root.join("src/module.py"),
+            b"changed after admission\n",
+        )
+        .unwrap();
         let err = admit_profiled_scope_review(
             &state.catalog,
             &state.inner_record,
@@ -595,7 +601,10 @@ mod tests {
             &[],
         )
         .unwrap_err();
-        assert_eq!(err, ProfiledScopeReviewError::ScopeNotNested(module.scope_id));
+        assert_eq!(
+            err,
+            ProfiledScopeReviewError::ScopeNotNested(module.scope_id)
+        );
         fs::remove_dir_all(state.root).unwrap();
     }
 }
