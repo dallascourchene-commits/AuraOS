@@ -1,0 +1,214 @@
+name: Aura WorkCapsule Corroboration Below Host Rank
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR569_SHA: 535c37b852a38410aa2b27bcd29bb0143b54eb71
+  PR577_SHA: 1dd21e248d0925297d52a8067f1ded35fbba9cbf
+  CONVERGENCE_SHA: 51a772a2c6a80540f3c628920fa482aefe4a7dcf
+  PR569_RUN: '33356696904'
+  PR577_RUN: '33358365017'
+  PR569_OWNER_BLOB: dca098ccf4de87e2fb441beb4a6a31242203168e
+  PR569_TEST_BLOB: 5a2780b31225bd50808b374e03fd9788bb9d7993
+  PR577_OWNER_BLOB: ea56321ab6ebd06a74a22d8ee4736d362a561b16
+  PR577_TEST_BLOB: e28d017a1706419e7203d5c4e7056a732fa9fb1c
+
+jobs:
+  exact-corroboration-host-rank-separation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact child and prove PR569 x PR577 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=320 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR569_SHA" "$PR577_SHA"
+          unset AUTH_HEADER
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR569_SHA $PR577_SHA"
+          git merge-base --is-ancestor "$PR569_SHA" HEAD
+          git merge-base --is-ancestor "$PR577_SHA" HEAD
+          test "$(git hash-object scripts/aura_workcapsule_portable_raw_slice_host_plane_separation.py)" = "$PR569_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_workcapsule_portable_raw_slice_host_plane_separation.py)" = "$PR569_TEST_BLOB"
+          test "$(git hash-object scripts/aura_workcapsule_live_causal_corroboration.py)" = "$PR577_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_workcapsule_live_causal_corroboration.py)" = "$PR577_TEST_BLOB"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+          echo 'EXACT_PARENT_OWNER_BLOBS=true'
+
+      - name: Pin exact successful parent hosted runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          expected = {
+              os.environ['PR569_RUN']: os.environ['PR569_SHA'],
+              os.environ['PR577_RUN']: os.environ['PR577_SHA'],
+          }
+          for run_id, sha in expected.items():
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json'},
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  data = json.load(response)
+              assert data['head_sha'] == sha, (run_id, data['head_sha'], sha)
+              assert data['status'] == 'completed', (run_id, data['status'])
+              assert data['conclusion'] == 'success', (run_id, data['conclusion'])
+              print(f'PINNED_PARENT_RUN={run_id}@{sha}=SUCCESS')
+          PY
+
+      - name: Re-prove exact PR569 portable host-plane owner on child tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_portable_raw_slice_host_plane_separation.py
+          python3 -m unittest -v tests.test_aura_workcapsule_portable_raw_slice_host_plane_separation
+
+      - name: Re-prove exact PR577 corroboration owner on child tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_live_causal_corroboration.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_causal_corroboration
+
+      - name: Prove O44 quorum-rank adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_corroboration_below_host_rank.py
+          python3 -m unittest -v tests.test_aura_workcapsule_corroboration_below_host_rank
+
+      - name: Prove real portable evidence remains UNKNOWN after corroboration without resolver
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts import aura_workcapsule_portable_raw_slice_host_plane_separation as pr569
+          from scripts.aura_workcapsule_corroboration_below_host_rank import admit_corroboration_below_host_rank
+          from tests.test_aura_workcapsule_portable_raw_slice_host_plane_separation import portable_projection, local_temporal_owner
+          from tests.test_aura_workcapsule_live_causal_corroboration import pr568_receipt, pr572_receipt
+          from scripts import aura_workcapsule_temporal_host_observation_admission as host_parent
+
+          projection = portable_projection()
+          supplied = {gate: projection for gate in host_parent.GATES}
+          with local_temporal_owner():
+              portable = pr569.admit_portable_raw_slice_host_plane_separation(
+                  raw_slice_projection=projection,
+                  host_observations=supplied,
+              )
+          a = pr568_receipt()
+          b = pr572_receipt(raw_slice_projection_payload_sha256=projection['payload_sha256'])
+          out = admit_corroboration_below_host_rank(
+              portable_host_receipt=portable,
+              pr568_receipt=a,
+              pr572_receipt=b,
+          )
+          assert set(out['host_gate_states_before_corroboration'].values()) == {'UNKNOWN'}
+          assert out['host_gate_states_before_corroboration'] == out['host_gate_states_after_corroboration']
+          assert out['independent_corroborating_proof_count'] == 2
+          assert out['corroboration_added_without_host_rank_change'] is True
+          assert out['corroboration_used_as_host_observation'] is False
+          assert out['corroboration_used_as_host_resolution'] is False
+          assert out['portable_evidence_promoted_to_host_rank'] is False
+          assert out['explicit_host_resolution_still_required_for_rank_change'] is True
+          assert out['host_observation_authority_proven'] is False
+          assert out['effect_authority_proven'] is False
+          assert not any(out['authority'].values())
+          print('TWO_EXACT_CORROBORATING_PROOFS_LEAVE_HOST_GATES_UNKNOWN=true')
+          PY
+
+      - name: Prove explicit resolver state is preserved and not attributed to corroboration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts import aura_workcapsule_portable_raw_slice_host_plane_separation as pr569
+          from scripts.aura_workcapsule_corroboration_below_host_rank import admit_corroboration_below_host_rank
+          from tests.test_aura_workcapsule_portable_raw_slice_host_plane_separation import portable_projection, local_temporal_owner, Resolver, resolution
+          from tests.test_aura_workcapsule_live_causal_corroboration import pr568_receipt, pr572_receipt
+          from scripts import aura_workcapsule_temporal_host_observation_admission as host_parent
+
+          projection = portable_projection()
+          supplied = {gate: {'probe': gate} for gate in host_parent.GATES}
+          resolver = Resolver({gate: resolution(gate) for gate in host_parent.GATES})
+          with local_temporal_owner():
+              portable = pr569.admit_portable_raw_slice_host_plane_separation(
+                  raw_slice_projection=projection,
+                  host_observations=supplied,
+                  host_observation_resolver=resolver,
+              )
+          a = pr568_receipt()
+          b = pr572_receipt(raw_slice_projection_payload_sha256=projection['payload_sha256'])
+          out = admit_corroboration_below_host_rank(
+              portable_host_receipt=portable,
+              pr568_receipt=a,
+              pr572_receipt=b,
+          )
+          assert set(out['host_gate_states_before_corroboration'].values()) == {'PASS'}
+          assert out['host_gate_states_before_corroboration'] == out['host_gate_states_after_corroboration']
+          assert out['host_observation_set_complete_after_corroboration'] is True
+          assert out['corroboration_used_as_host_resolution'] is False
+          assert out['host_observation_authority_proven'] is False
+          assert out['effect_authority_proven'] is False
+          print('EXPLICIT_RESOLVER_RANK_PRESERVED_NOT_ATTRIBUTED_TO_CORROBORATION=true')
+          PY
+
+      - name: Assert owner reuse and complete consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_workcapsule_corroboration_below_host_rank.py
+          grep -q 'verify_live_causal_corroboration' "$child"
+          grep -q 'admit_live_causal_corroboration' "$child"
+          if grep -q '^def _resolve_host_gates' "$child"; then
+            echo 'child duplicated host resolver owner' >&2
+            exit 1
+          fi
+          if grep -q '^def verify_live_causal_corroboration' "$child"; then
+            echo 'child duplicated corroboration owner' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_corroboration_below_host_rank import verify_corroboration_below_host_rank
+          params = set(inspect.signature(verify_corroboration_below_host_rank).parameters)
+          assert params == {'portable_host_receipt','pr568_receipt','pr572_receipt'}
+          PY
+          cat <<'EOF'
+          PR569_PORTABLE_HOST_BOUNDARY_CONSUMED=true
+          PR577_CORROBORATION_OWNER_REUSED=true
+          SAME_PORTABLE_PROJECTION_AS_PR572_REQUIRED=true
+          TWO_INDEPENDENT_CORROBORATING_PROOFS_CAN_MANUFACTURE_HOST_RANK=false
+          CORROBORATION_USED_AS_HOST_OBSERVATION=false
+          CORROBORATION_USED_AS_HOST_RESOLUTION=false
+          EXPLICIT_HOST_RESOLUTION_STILL_REQUIRED_FOR_RANK_CHANGE=true
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          PRODUCER_AUTHENTICATION_PROVEN=false
+          SEMANTIC_EQUIVALENCE_PROVEN=false
+          SEMANTIC_TRUTH_PROVEN=false
+          TRUSTED_CONTINUATION_READY=false
+          EFFECT_AUTHORITY_PROVEN=false
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_PROVIDER_PUBLIC_HUMAN_AUTHORITY=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF
