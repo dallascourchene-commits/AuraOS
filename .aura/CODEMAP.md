@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1645
-- **total_bytes**: 26479690
-- **text_tokens_est**: 6610276
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1001, 'schema_or_lexicon': 273, 'support_file': 49}
+- **file_count**: 1679
+- **total_bytes**: 26732966
+- **text_tokens_est**: 6673604
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 19, 'operator_script': 9, 'python_module': 1013, 'schema_or_lexicon': 286, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1645,
+  "repo_file_count": 1679,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -154,6 +154,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-k27-astge-splane.yml",
+    ".github/workflows/aura-k27-astge-treesitter-ingest.yml",
+    ".github/workflows/aura-k27-astge-witnessed-context.yml",
     ".github/workflows/aura-review-ghr002.yml",
     ".github/workflows/aura-review-ghr015.yml",
     ".github/workflows/aura-review-learning.yml",
@@ -162,6 +165,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-spatial-s3-s4a.yml",
     ".github/workflows/aura-spatial-s4.yml",
     ".github/workflows/aura-spatial-s5-s6-construction.yml",
+    ".github/workflows/aura-workcapsule-reentry-exact-verifier.yml",
+    ".github/workflows/aura-workcapsule-selective-reentry.yml",
+    ".github/workflows/aura-workcapsule-source-reentry-observation.yml",
+    ".github/workflows/aura-workcapsule-stale-exact-reentry.yml",
+    ".github/workflows/aura-workcapsule-witness-hydration.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -169,6 +177,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
+    ".github/workflows/k27-astge-current-ingest-convergence.yml",
+    ".github/workflows/k27-astge-immutability-capability.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
     ".github/workflows/model-cognome-governed-routing.yml",
     ".github/workflows/model-cognome-replay-probes.yml",
@@ -947,6 +957,18 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "cognitive_search.rs",
     "core/aura_task_dispatcher.py",
     "core/aura_worker_daemon.py",
+    "crates/aura-k27-astge-ingest/Cargo.toml",
+    "crates/aura-k27-astge-ingest/README.md",
+    "crates/aura-k27-astge-ingest/src/lib.rs",
+    "crates/aura-k27-astge-ingest/tests/current_stack_safe_default.rs",
+    "crates/aura-k27-astge-materialize/Cargo.toml",
+    "crates/aura-k27-astge-materialize/src/lib.rs",
+    "crates/aura-k27-astge-materialize/tests/current_witnessed_context.rs",
+    "crates/aura-k27-astge/Cargo.toml",
+    "crates/aura-k27-astge/README.md",
+    "crates/aura-k27-astge/src/lib.rs",
+    "crates/aura-k27-astge/src/v2.rs",
+    "crates/aura-k27-astge/src/v3.rs",
     "dag_executor.py",
     "dag_executor.rs",
     "debug_att.py",
@@ -1243,6 +1265,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_arch_v2_3_capsule_validator.py",
     "scripts/aura_architecture_harness.py",
     "scripts/aura_architecture_harness_core.py",
+    "scripts/aura_astge_anchor_hydration.py",
     "scripts/aura_benchmark_suite.py",
     "scripts/aura_blind_gate10_benchmark.py",
     "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -1264,6 +1287,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_spatial_s4b_architect_harness.py",
     "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
     "scripts/aura_verify_construction_demo_assets.py",
+    "scripts/aura_workcapsule_context_binding.py",
+    "scripts/aura_workcapsule_reentry_exact_verifier.py",
+    "scripts/aura_workcapsule_reentry_invalidation.py",
+    "scripts/aura_workcapsule_source_reentry_observation.py",
+    "scripts/aura_workcapsule_stale_exact_reentry.py",
     "scripts/deploy_huggingface_space.py",
     "scripts/finalize_refactor_quality_doc_sync.py",
     "scripts/install_refactor_quality_docs.py",
@@ -1379,6 +1407,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_st3gg_shadow.py",
     "tests/test_aura_arena_st3gg_shadow_hardening.py",
     "tests/test_aura_arena_wfst_phase_a.py",
+    "tests/test_aura_astge_anchor_hydration.py",
     "tests/test_aura_benchmark_four.py",
     "tests/test_aura_benchmark_four_hardening.py",
     "tests/test_aura_bilateral_gate_dialogue.py",
@@ -1639,6 +1668,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_waboose_semantic_rules.py",
     "tests/test_aura_wfst_temporal_adapter.py",
     "tests/test_aura_work_splitter.py",
+    "tests/test_aura_workcapsule_context_binding.py",
+    "tests/test_aura_workcapsule_reentry_exact_verifier.py",
+    "tests/test_aura_workcapsule_reentry_invalidation.py",
+    "tests/test_aura_workcapsule_source_reentry_observation.py",
+    "tests/test_aura_workcapsule_stale_exact_reentry.py",
     "tests/test_aura_workflow_authority_bridge.py",
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
@@ -1697,6 +1731,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_arch_v2_3_capsule_validator.py",
     "scripts/aura_architecture_harness.py",
     "scripts/aura_architecture_harness_core.py",
+    "scripts/aura_astge_anchor_hydration.py",
     "scripts/aura_benchmark_suite.py",
     "scripts/aura_blind_gate10_benchmark.py",
     "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -1718,6 +1753,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_spatial_s4b_architect_harness.py",
     "scripts/aura_spatial_s5_s6_construction_architect_harness.py",
     "scripts/aura_verify_construction_demo_assets.py",
+    "scripts/aura_workcapsule_context_binding.py",
+    "scripts/aura_workcapsule_reentry_exact_verifier.py",
+    "scripts/aura_workcapsule_reentry_invalidation.py",
+    "scripts/aura_workcapsule_source_reentry_observation.py",
+    "scripts/aura_workcapsule_stale_exact_reentry.py",
     "scripts/deploy_huggingface_space.py",
     "scripts/finalize_refactor_quality_doc_sync.py",
     "scripts/install_refactor_quality_docs.py",
@@ -1761,17 +1801,11 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_arena_st3gg_shadow.py",
     "tests/test_aura_arena_st3gg_shadow_hardening.py",
     "tests/test_aura_arena_wfst_phase_a.py",
+    "tests/test_aura_astge_anchor_hydration.py",
     "tests/test_aura_benchmark_four.py",
     "tests/test_aura_benchmark_four_hardening.py",
     "tests/test_aura_bilateral_gate_dialogue.py",
-    "tests/test_aura_bilateral_live_repair_foundry.py",
-    "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
-    "tests/test_aura_bilateral_planning_enforcement.py",
-    "tests/test_aura_blind_gate10_benchmark.py",
-    "tests/test_aura_capability_connectome.py",
-    "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py"
+    "tests/test_aura_bilateral_live_repair_foundry.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1785,16 +1819,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1645,
-  "bytes": 26479690,
-  "tokens_est": 6610276,
+  "files": 1679,
+  "bytes": 26732966,
+  "tokens_est": 6673604,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 237,
-    "native_accelerator": 12,
+    "knowledge_artifact": 239,
+    "native_accelerator": 19,
     "operator_script": 9,
-    "python_module": 1001,
-    "schema_or_lexicon": 273,
+    "python_module": 1013,
+    "schema_or_lexicon": 286,
     "support_file": 49
   }
 }
@@ -1934,6 +1968,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "aura_workspace/inbox/bounties/active/batch2/W8_rust-grpc-44/ALLOCATION.md",
     "aura_workspace/inbox/bounties/active/batch2/W9_BLOCKED_SOURCE_AUTHORITY.md",
     "aura_workspace/inbox/bounties/active/typeorm_3357_POLICY_BLOCK.md",
+    "crates/aura-k27-astge-ingest/README.md",
+    "crates/aura-k27-astge/README.md",
     "defensive-publications/Paper_XI_Predictive_Locality_Recursive_Cardinality_World_Seed_2026-08-12.md",
     "demo_assets/construction_tuwien/ATTRIBUTION.md",
     "demo_assets/construction_tuwien/README.md",
@@ -2077,9 +2113,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_TOKEN_ECONOMY_STACK.md",
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
-    "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md"
+    "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md"
   ]
 }
 ```
