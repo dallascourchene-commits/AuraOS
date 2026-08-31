@@ -65,12 +65,17 @@ jobs:
           cargo test --manifest-path crates/aura-k27-astge-source-review/Cargo.toml --all-targets
           cargo clippy --manifest-path crates/aura-k27-astge-source-review/Cargo.toml --all-targets -- -D warnings
 
-      - name: Verify profiled nested-scope source-review bridge
+      - name: Check profiled scope review formatting
         shell: bash
-        run: |
-          cargo fmt --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml -- --check
-          cargo test --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml --all-targets
-          cargo clippy --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml --all-targets -- -D warnings
+        run: cargo fmt --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml -- --check
+
+      - name: Test profiled scope review bridge
+        shell: bash
+        run: cargo test --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml --all-targets
+
+      - name: Lint profiled scope review bridge
+        shell: bash
+        run: cargo clippy --manifest-path crates/aura-k27-astge-profiled-scope-review/Cargo.toml --all-targets -- -D warnings
 
       - name: Safe-path unsafe scan
         shell: bash
