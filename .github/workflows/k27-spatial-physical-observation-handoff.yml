@@ -1,0 +1,42 @@
+name: K27 spatial physical-observation handoff
+
+on:
+  pull_request:
+    paths:
+      - 'tools/k27_spatial_physical_observation_handoff.py'
+      - 'tests/test_k27_spatial_physical_observation_handoff.py'
+      - '.github/workflows/k27-spatial-physical-observation-handoff.yml'
+  workflow_dispatch:
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile contract
+        run: python -m py_compile tools/k27_spatial_physical_observation_handoff.py
+      - name: Run focused adversarial suite
+        run: python -m unittest -v tests.test_k27_spatial_physical_observation_handoff
+      - name: Enforce exact parents and nonpromotion ceiling
+        run: |
+          python - <<'PY'
+          from tools.k27_spatial_physical_observation_handoff import EXACT_PARENT_IDS
+          assert EXACT_PARENT_IDS == (
+              'PR622:ccc932fc02caf59686e08c3d77ef6154c0cb2b67',
+              'PR582:24a5404ee3b987dee12192917e40b35d3a43e81c',
+          )
+          text = open('tools/k27_spatial_physical_observation_handoff.py', encoding='utf-8').read()
+          for needle in (
+              '"producer_authenticated": False',
+              '"physical_measurement_attested": False',
+              '"optical_truth_proven": False',
+              '"optical_safety_proven": False',
+              '"effect_authority_proven": False',
+              '"native_transformer_kv_accessed": False',
+          ):
+              assert needle in text, needle
+          print('O57_NONPROMOTION_CEILING=true')
+          PY
