@@ -9,7 +9,7 @@ permissions:
 
 jobs:
   exact-plan-bound-storage-probe:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout exact pull-request head
         uses: actions/checkout@v4
@@ -30,18 +30,31 @@ jobs:
           test "$(git hash-object tools/awj032/test_thinkpad_nvme_residency_plan.py)" = "3b14faf2d220391218dfc3445e947f59c3e0d3da"
 
       - name: Re-prove exact PR603 bounded logical-read owner
-        run: python tools/awj032/test_thinkpad_bounded_storage_probe.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/awj032/thinkpad_bounded_storage_probe.py
+          python3 -m unittest -v tools.awj032.test_thinkpad_bounded_storage_probe
 
       - name: Re-prove exact PR599 deterministic residency planner
-        run: python tools/awj032/test_thinkpad_nvme_residency_plan.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/awj032/thinkpad_nvme_residency_plan.py
+          python3 -m unittest -v tools.awj032.test_thinkpad_nvme_residency_plan
 
       - name: Prove O51 plan-bound observation adversarials
-        run: python tools/awj032/test_thinkpad_plan_bound_storage_probe.py
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/awj032/thinkpad_plan_bound_storage_probe.py
+          python3 -m unittest -v tools.awj032.test_thinkpad_plan_bound_storage_probe
 
       - name: Prove fixed public boundary
         shell: bash
         run: |
-          python - <<'PY'
+          set -euo pipefail
+          python3 - <<'PY'
           import inspect
           from tools.awj032.thinkpad_plan_bound_storage_probe import run_plan_bound_storage_probe
           got = tuple(inspect.signature(run_plan_bound_storage_probe).parameters)
