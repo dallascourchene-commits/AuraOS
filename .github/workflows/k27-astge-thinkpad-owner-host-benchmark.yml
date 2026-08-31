@@ -38,13 +38,18 @@ jobs:
           git worktree add --detach /tmp/pr459 "$PR459_SHA"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
 
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          check-latest: false
+
       - name: Pin exact successful reference and safe-stack runs
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
+          python - <<'PY'
           import json
           import os
           import urllib.request
@@ -76,8 +81,9 @@ jobs:
         run: |
           set -euo pipefail
           cd /tmp/pr459
-          python3 -m py_compile tools/k27_astge_reference.py tests/test_k27_astge_reference.py
-          python3 -m unittest -v tests.test_k27_astge_reference
+          python -m py_compile tools/k27_astge_reference.py tests/test_k27_astge_reference.py
+          PYTHONPATH=tools python -m unittest -v tests/test_k27_astge_reference.py
+          PYTHONPATH=tools python tools/k27_astge_reference.py self-test
 
       - name: Re-prove exact current safe ASTGE stack
         shell: bash
@@ -98,17 +104,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m py_compile \
+          python -m py_compile \
             tools/k27_astge_thinkpad_owner_host_benchmark.py \
             tests/test_k27_astge_thinkpad_owner_host_benchmark.py
-          python3 -m unittest -v tests.test_k27_astge_thinkpad_owner_host_benchmark
+          python -m unittest -v tests.test_k27_astge_thinkpad_owner_host_benchmark
 
       - name: Assert evidence layers and claim ceiling
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import dataclasses
+          python - <<'PY'
           import inspect
           from tools.k27_astge_thinkpad_owner_host_benchmark import (
               ThinkPadASTGEBenchmarkReceipt,
