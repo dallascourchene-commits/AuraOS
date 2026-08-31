@@ -40,10 +40,14 @@ class DiscoveryIngressBridgeTests(unittest.TestCase):
         current = promote_if_same_current_generation(
             node,
             record,
-            observed_at="2026-08-31T16:45:00Z",
+            observed_at="2026-08-31T16:46:00Z",
         )
         self.assertEqual(current.knowledge_state, KnowledgeState.CURRENT_REFERENCE)
         self.assertTrue(current.read_only_reference_admissible)
+        self.assertEqual(node.subject_key, current.subject_key)
+        self.assertNotEqual(node.evidence_generation_key, current.evidence_generation_key)
+        self.assertEqual(node.observation.provider_revision, current.observation.provider_revision)
+        self.assertEqual(node.observation.content_digest, current.observation.content_digest)
         self.assertFalse(current.code_execution_authorized)
         self.assertFalse(current.provider_effect_authorized)
 
