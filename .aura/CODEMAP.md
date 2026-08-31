@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1639
-- **total_bytes**: 26415048
-- **text_tokens_est**: 6594113
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1644
+- **total_bytes**: 26462342
+- **text_tokens_est**: 6605937
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 273, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1639,
+  "repo_file_count": 1644,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -154,6 +154,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-github-review-triad-bootstrap-tests.yml",
+    ".github/workflows/aura-github-review-triad-gate.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1034,6 +1036,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_FORGE.md",
     "docs/AURA_FST_PROVENANCE_AND_SECURITY.md",
     "docs/AURA_GATE.md",
+    "docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md",
     "docs/AURA_HERMES_ARENA_MODE.md",
     "docs/AURA_HUMAN_AGENT_ARENA.md",
     "docs/AURA_HUMAN_AGENT_ARENA_WORKFLOW_V2.md",
@@ -1246,6 +1249,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
     "scripts/aura_exact_head_transport.py",
     "scripts/aura_fetch_construction_demo_source.py",
+    "scripts/aura_github_review_triad_gate.py",
     "scripts/aura_global_benchmark_daemon.py",
     "scripts/aura_ifc_storey_index.py",
     "scripts/aura_industry_benchmark_validation.py",
@@ -1498,6 +1502,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_gate_egress.py",
     "tests/test_aura_gate_oidc.py",
     "tests/test_aura_gate_server.py",
+    "tests/test_aura_github_review_triad_gate.py",
     "tests/test_aura_harness_issue_capsules.py",
     "tests/test_aura_hermes_arena_mode.py",
     "tests/test_aura_human_agent_arena.py",
@@ -1696,6 +1701,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
     "scripts/aura_exact_head_transport.py",
     "scripts/aura_fetch_construction_demo_source.py",
+    "scripts/aura_github_review_triad_gate.py",
     "scripts/aura_global_benchmark_daemon.py",
     "scripts/aura_ifc_storey_index.py",
     "scripts/aura_industry_benchmark_validation.py",
@@ -1764,8 +1770,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_blind_gate10_benchmark.py",
     "tests/test_aura_capability_connectome.py",
     "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py"
+    "tests/test_aura_capability_lane_registry.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1779,16 +1784,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1639,
-  "bytes": 26415048,
-  "tokens_est": 6594113,
+  "files": 1644,
+  "bytes": 26462342,
+  "tokens_est": 6605937,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 237,
+    "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 997,
-    "schema_or_lexicon": 271,
+    "python_module": 999,
+    "schema_or_lexicon": 273,
     "support_file": 49
   }
 }
@@ -2004,6 +2009,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_FORGE.md",
     "docs/AURA_FST_PROVENANCE_AND_SECURITY.md",
     "docs/AURA_GATE.md",
+    "docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md",
     "docs/AURA_HERMES_ARENA_MODE.md",
     "docs/AURA_HUMAN_AGENT_ARENA.md",
     "docs/AURA_HUMAN_AGENT_ARENA_WORKFLOW_V2.md",
@@ -2072,8 +2078,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
     "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
     "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-    "docs/BENCHMARKS.md"
+    "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
   ]
 }
 ```

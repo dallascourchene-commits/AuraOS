@@ -1,0 +1,54 @@
+name: Aura GitHub Review Triad Bootstrap Tests
+
+# NONAUTHORITY: this workflow runs the pull request's proposed gate code only so
+# the installing/change PR can test its contract. Its success MUST NOT be used as
+# review-triad admission. Admission is owned exclusively by the trusted default-
+# branch `Aura GitHub Review Triad Gate` status after that workflow is installed.
+on:
+  pull_request:
+    paths:
+      - 'docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md'
+      - 'scripts/aura_github_review_triad_gate.py'
+      - 'tests/test_aura_github_review_triad_gate.py'
+      - '.github/workflows/aura-github-review-triad-gate.yml'
+      - '.github/workflows/aura-github-review-triad-bootstrap-tests.yml'
+      - '.coderabbit.yaml'
+
+permissions:
+  contents: read
+
+jobs:
+  bootstrap-contract-only:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch exact proposed head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$HEAD_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$HEAD_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Compile proposed verifier
+        run: python3 -m py_compile scripts/aura_github_review_triad_gate.py tests/test_aura_github_review_triad_gate.py
+
+      - name: Run proposed adversarial contract tests
+        run: python3 -m unittest -v tests.test_aura_github_review_triad_gate
+
+      - name: Assert nonauthority and trusted-boundary policy
+        run: |
+          grep -F 'UntrustedPRVerifier != AdmissionAuthority' docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md
+          grep -F 'ProviderReviewOccurred != ProviderPassed' docs/AURA_GITHUB_REVIEW_TRIAD_POLICY.md
+          grep -F 'pull_request_target:' .github/workflows/aura-github-review-triad-gate.yml
+          grep -F 'statuses: write' .github/workflows/aura-github-review-triad-gate.yml
+          echo 'BOOTSTRAP_CONTRACT_TEST_ONLY=true'
+          echo 'REVIEW_TRIAD_ADMISSION=false'
+          echo 'MERGE_AUTHORITY=false'
