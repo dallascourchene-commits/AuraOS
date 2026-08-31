@@ -1,0 +1,151 @@
+name: Aura GLM53 Source-Bound Prefetch W3
+
+on:
+  pull_request:
+    paths:
+      - "tools/awj032/glm53_router_separated_prefetch_source_guard.py"
+      - "tools/awj032/test_glm53_router_separated_prefetch_source_guard.py"
+      - ".github/workflows/aura-glm53-source-bound-prefetch-w3.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source-bound-prefetch-w3:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Exact authenticated checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            REF="refs/pull/${{ github.event.pull_request.number }}/head"
+            EXPECTED="${{ github.event.pull_request.head.sha }}"
+          else
+            REF="${GITHUB_REF_NAME}"
+            EXPECTED="${GITHUB_SHA}"
+          fi
+          git fetch --no-tags --depth=1 origin "${REF}"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${EXPECTED}"
+          echo "W3_HEAD=${EXPECTED}" >> "$GITHUB_ENV"
+
+      - name: Authenticate exact inherited G1 and PR338 pager surfaces
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/awj032/glm53_router_separated_prefetch.py)" = "53bf896a6e3a792acfb830f0f64a2a2fcbfcb8e2"
+          test "$(git hash-object tools/awj032/test_glm53_router_separated_prefetch.py)" = "57fa39807a02985bc69e991ef6a6b422075d4ba3"
+          test "$(git hash-object tools/awj032/glm53_packed_expert_pager.py)" = "2b9b50e23b8ed963be4c1981598d30adb04dc1fe"
+
+      - name: Revalidate exact green G1 parent run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          run_id = 33413280009
+          expected_head = "0696fb43e44fdec421b0bd74abd5f7d21914df3a"
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/actions/runs/{run_id}",
+              headers={
+                  "Authorization": f"Bearer {token}",
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+              },
+          )
+          with urllib.request.urlopen(req, timeout=30) as response:
+              run = json.load(response)
+          assert run["head_sha"] == expected_head, (run["head_sha"], expected_head)
+          assert run["status"] == "completed", run["status"]
+          assert run["conclusion"] == "success", run["conclusion"]
+          print("G1_EXACT_GREEN_PARENT=PASS")
+          PY
+
+      - name: Compile and run original plus W3 adversarial suites
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/awj032/glm53_router_separated_prefetch.py \
+            tools/awj032/glm53_router_separated_prefetch_source_guard.py
+          python3 -m unittest \
+            tools.awj032.test_glm53_router_separated_prefetch \
+            tools.awj032.test_glm53_router_separated_prefetch_source_guard
+
+      - name: Prove source mismatch fails before pager read
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from dataclasses import dataclass
+          from tools.awj032.glm53_router_separated_prefetch import (
+              NATIVE_ROUTE_SCHEMA, PREFETCH_SCHEMA, NativeRoute, PrefetchPrediction,
+          )
+          from tools.awj032.glm53_router_separated_prefetch_source_guard import (
+              stage_then_demand_load_source_bound,
+          )
+
+          @dataclass(frozen=True)
+          class Binding:
+              digest: str = "WRONG"
+              layer_id: str = "layer-7"
+              num_experts: int = 16
+              model_revision: str = "glm53-rev"
+              index_digest: str = "index-digest"
+
+          class Pager:
+              def __init__(self):
+                  self.binding = Binding()
+                  self.calls = 0
+              def load_selected(self, expert_ids, *, model_revision, index_digest):
+                  self.calls += 1
+                  raise AssertionError("read should never occur")
+
+          prediction = PrefetchPrediction(
+              schema=PREFETCH_SCHEMA,
+              predictor_generation="p1",
+              layer_id="layer-7",
+              binding_digest="EXPECTED",
+              predicted_experts=(1, 3),
+          )
+          route = NativeRoute(
+              schema=NATIVE_ROUTE_SCHEMA,
+              router_generation="r1",
+              layer_id="layer-7",
+              binding_digest="EXPECTED",
+              top_k=2,
+              selected_experts=(1, 5),
+          )
+          pager = Pager()
+          try:
+              stage_then_demand_load_source_bound(
+                  pager=pager,
+                  prediction=prediction,
+                  native_route=route,
+                  num_experts=16,
+                  logical_bytes_by_expert={i: 100 for i in range(16)},
+                  model_revision="glm53-rev",
+                  index_digest="index-digest",
+              )
+          except ValueError as exc:
+              assert "PAGER_BINDING_DIGEST_MISMATCH" in str(exc), exc
+          else:
+              raise AssertionError("source mismatch did not fail closed")
+          assert pager.calls == 0, pager.calls
+          print("W3_WRONG_SOURCE_PRE_EFFECT_HOLD=PASS")
+          PY
+
+      - name: Enforce nonpromotion laws
+        run: |
+          set -euo pipefail
+          grep -q 'SourceBoundTransfer!=ExecutionAuthorization' tools/awj032/glm53_router_separated_prefetch_source_guard.py
+          grep -q 'K27Coordinate!=PagerBinding!=RoutingAuthority!=ExecutionAuthority' tools/awj032/glm53_router_separated_prefetch_source_guard.py
+          echo "W3_HEAD=${W3_HEAD}"
+          echo "G1_SOURCE_BOUND_PREFETCH_W3=PASS"
