@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788166035,
+  "generated_at_unix": 1788182767,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1660,
+    "repo_file_count": 1663,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -132,6 +132,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/arena-portable-semantic-evidence-transfer.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1337,6 +1338,7 @@
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
+      "tests/test_arena_portable_semantic_evidence_transfer.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -1639,6 +1641,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena_portable_semantic_evidence_transfer.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/k27_hdv1024_consequence_corpus.py",
@@ -1729,6 +1732,7 @@
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
+      "tests/test_arena_portable_semantic_evidence_transfer.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -1767,8 +1771,7 @@
       "tests/test_aura_blind_gate10_benchmark.py",
       "tests/test_aura_capability_connectome.py",
       "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_lane_registry.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1776,16 +1779,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1660,
-      "bytes": 26555904,
-      "tokens_est": 6629334,
+      "files": 1663,
+      "bytes": 26577745,
+      "tokens_est": 6634796,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1011,
-        "schema_or_lexicon": 277,
+        "python_module": 1013,
+        "schema_or_lexicon": 278,
         "support_file": 49
       }
     },
@@ -3482,6 +3485,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 301,
+        "end_line": 302,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:main:f9b0b4a3073e3ab8",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "tools/k27_hdv1024_consequence_corpus.py",
         "kind": "function",
         "line": 149,
@@ -3964,6 +3975,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 63,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_canonical:4ca8af6c47a0d938",
+        "signature_hash": "8d5bf5695239b859"
       },
       {
         "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
@@ -8176,6 +8195,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_sha:9aa320fe026efdd0",
+        "signature_hash": "e47bc2e8d0ade77b"
       },
       {
         "file": "tools/k27_hdv1024_riscv_corpus_replay.py",
@@ -113540,6 +113567,136 @@
         "signature_hash": "901e6f55c33cb73f"
       }
     ],
+    "PortableSemanticEvidenceTransferTests": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 127,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#class:PortableSemanticEvidenceTransferTests:4856fa02edca8452",
+        "signature_hash": "80cfb8b7e8ae75b3"
+      }
+    ],
+    "PortableSemanticEvidenceTransferTests.test_q6_native_transfer_is_exact_but_nonpromoting": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 18,
+        "end_line": 33,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_q6_native_transfer_is_exact_but_nonpromoting:767249bbc6cd6361",
+        "signature_hash": "f6515453cc4f9187"
+      }
+    ],
+    "PortableSemanticEvidenceTransferTests.test_r3_native_transfer_uses_provider_observed_run": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 42,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_r3_native_transfer_uses_provider_observed_run:7a9076d2d3a7df13",
+        "signature_hash": "19d40122ab3072b7"
+      }
+    ],
+    "PortableSemanticEvidenceTransferTests.test_cross_domain_green_artifacts_do_not_transfer_semantics": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 44,
+        "end_line": 51,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_cross_domain_green_artifacts_do_not_transfer_semantics:6a6dd4f22ad95097",
+        "signature_hash": "ecb7ca0dc4c41c74"
+      }
+    ],
+    "PortableSemanticEvidenceTransferTests.test_head_drift_reopens_generation_cone": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 58,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_head_drift_reopens_generation_cone:99a07894a3affeee",
+        "signature_hash": "44a4bddf41ae9ee1"
+      }
+    ],
+    "PortableSemanticEvidenceTransferTests.test_run_drift_reopens_generation_cone": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 60,
+        "end_line": 65,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_run_drift_reopens_generation_cone:bd6e6787a0d72ca7",
+        "signature_hash": "63205609adef79d3"
+      }
+    ],
+    "PortableSemanticEvidenceTransferTests.test_job_substitution_is_independent_failure": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 74,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_job_substitution_is_independent_failure:6e6e206cd92a40b4",
+        "signature_hash": "05b1e5acfed4c98d"
+      }
+    ],
+    "PortableSemanticEvidenceTransferTests.test_scope_substitution_fails_closed": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 83,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_scope_substitution_fails_closed:2e85bcabc42ca8b4",
+        "signature_hash": "52278bd45411367c"
+      }
+    ],
+    "PortableSemanticEvidenceTransferTests.test_consequence_digest_substitution_fails_closed": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 92,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_consequence_digest_substitution_fails_closed:5c7d57012cce94d0",
+        "signature_hash": "cc5fb85e474d6fa1"
+      }
+    ],
+    "PortableSemanticEvidenceTransferTests.test_consumer_substitution_fails_closed": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 102,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_consumer_substitution_fails_closed:fe9a1a316ec9cd16",
+        "signature_hash": "86c7106d3d34a03f"
+      }
+    ],
+    "PortableSemanticEvidenceTransferTests.test_stale_pr_prose_run_cannot_impersonate_provider_run": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 111,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_stale_pr_prose_run_cannot_impersonate_provider_run:fc8dc77b42894e92",
+        "signature_hash": "5f75fbc3ccd13355"
+      }
+    ],
+    "PortableSemanticEvidenceTransferTests.test_current_receipt_contains_native_admits_and_cross_domain_hold": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 120,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_current_receipt_contains_native_admits_and_cross_domain_hold:5c347311f1c35ddc",
+        "signature_hash": "e93c0c8caa0dfed7"
+      }
+    ],
+    "PortableSemanticEvidenceTransferTests.test_invalid_subject_digest_fails_closed": [
+      {
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 127,
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_invalid_subject_digest_fails_closed:2ef4216852555e17",
+        "signature_hash": "667d7df2cfe40a41"
+      }
+    ],
     "Store": [
       {
         "file": "tests/test_aura_adaptive_execution.py",
@@ -157482,6 +157639,146 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "_sha256_field": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 76,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_sha256_field:f6bb817065b38a91",
+        "signature_hash": "d31a90b28f5491df"
+      }
+    ],
+    "_head_field": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 85,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_head_field:8b80a71dbd085098",
+        "signature_hash": "8a8012a1dabf00ee"
+      }
+    ],
+    "SemanticEvidenceDescriptor": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "class",
+        "line": 89,
+        "end_line": 120,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#class:SemanticEvidenceDescriptor:14c34809ba0f8344",
+        "signature_hash": "fad6b4ae49d5c1a5"
+      }
+    ],
+    "SemanticEvidenceDescriptor.validate": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 115,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:SemanticEvidenceDescriptor.validate:678611bf1ca25703",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SemanticEvidenceDescriptor.descriptor_digest": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 120,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:SemanticEvidenceDescriptor.descriptor_digest:f63f188d1aa4cad4",
+        "signature_hash": "56ca270aa04c61dd"
+      }
+    ],
+    "ConsumerExpectation": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "class",
+        "line": 124,
+        "end_line": 144,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#class:ConsumerExpectation:69bd1ab7ca3cf7c5",
+        "signature_hash": "e79be931b2abf18e"
+      }
+    ],
+    "ConsumerExpectation.validate": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 144,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:ConsumerExpectation.validate:fd405d9d54e7a17f",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "EvidenceTransferReceipt": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "class",
+        "line": 148,
+        "end_line": 170,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#class:EvidenceTransferReceipt:bef6a191fbb87e70",
+        "signature_hash": "97462359b29ee9f4"
+      }
+    ],
+    "EvidenceTransferReceipt.receipt_digest": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 170,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:EvidenceTransferReceipt.receipt_digest:09e606aac98fd023",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "q6_descriptor": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 173,
+        "end_line": 191,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:q6_descriptor:89063cda370347a1",
+        "signature_hash": "266215226f239281"
+      }
+    ],
+    "r3_descriptor": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 194,
+        "end_line": 214,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:r3_descriptor:c1d60403485b1f89",
+        "signature_hash": "12bff2769760fdfd"
+      }
+    ],
+    "native_expectation": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 217,
+        "end_line": 227,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:native_expectation:28df57a6caf41e91",
+        "signature_hash": "88f0f2e0429fabfd"
+      }
+    ],
+    "classify_transfer": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 230,
+        "end_line": 274,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:classify_transfer:77e71b0d4ac6b84f",
+        "signature_hash": "a2d3bf06fb4ca04e"
+      }
+    ],
+    "portable_current_receipt": [
+      {
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "kind": "function",
+        "line": 277,
+        "end_line": 298,
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:portable_current_receipt:5e4e0857ee5ad1e8",
+        "signature_hash": "700fca9d450e4055"
+      }
+    ],
     "CorpusError": [
       {
         "file": "tools/k27_hdv1024_consequence_corpus.py",
@@ -160414,6 +160711,14 @@
     "python aura_agent_arena_mcp_architect.py --list-tools > architect-mcp-tools.json": [
       ".github/workflows/architect-real-refactor-trial.yml"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/arena-portable-semantic-evidence-transfer.yml",
+      ".github/workflows/glm53-e8-page-plan-projection.yml",
+      ".github/workflows/glm53-lattice-quantization-feasibility.yml",
+      ".github/workflows/glm53-quantization-evidence-transfer.yml",
+      ".github/workflows/k27-hdv1024-riscv-corpus-replay.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
     "python aura_spatial_cli.py --repo-root . construction-video-demo \\": [
       ".github/workflows/aura-construction-demo-g7-g8.yml"
     ],
@@ -160466,13 +160771,6 @@
     ],
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
-    ],
-    "python3 -m py_compile": [
-      ".github/workflows/glm53-e8-page-plan-projection.yml",
-      ".github/workflows/glm53-lattice-quantization-feasibility.yml",
-      ".github/workflows/glm53-quantization-evidence-transfer.yml",
-      ".github/workflows/k27-hdv1024-riscv-corpus-replay.yml",
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
       ".github/workflows/glm53-e8-page-plan-projection.yml",
@@ -169349,6 +169647,59 @@
         0.180531,
         0.255844,
         0.26249
+      ]
+    },
+    {
+      "path": ".github/workflows/arena-portable-semantic-evidence-transfer.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5366,
+      "lines": 126,
+      "tokens_est": 1342,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          94
+        ]
+      },
+      "topology": {},
+      "digest8": "2b0287824449c2eb",
+      "vector": [
+        -0.220932,
+        -0.090009,
+        -0.059617,
+        -0.216256,
+        -0.075982,
+        0.190539,
+        -0.026886,
+        0.21158,
+        0.015196,
+        -0.220932,
+        -0.274704,
+        -0.202229,
+        -0.017534,
+        -0.010521,
+        -0.274704,
+        -0.270028,
+        -0.012858,
+        0.090009,
+        0.293407,
+        -0.199891,
+        0.012858,
+        -0.132092,
+        -0.185863,
+        -0.234959,
+        0.099361,
+        0.026886,
+        0.293407,
+        0.07832,
+        0.281717,
+        0.101699,
+        0.02221,
+        -0.237297
       ]
     },
     {
@@ -250729,6 +251080,53 @@
       ]
     },
     {
+      "path": "tests/test_arena_portable_semantic_evidence_transfer.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5870,
+      "lines": 132,
+      "tokens_est": 1468,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a7b00e153a0ec16e",
+      "vector": [
+        0.289,
+        -0.141317,
+        0.169326,
+        0.138771,
+        0.250806,
+        0.095484,
+        0.006366,
+        -0.136225,
+        0.235528,
+        0.036921,
+        -0.174418,
+        -0.194788,
+        0.255898,
+        0.215158,
+        -0.311916,
+        -0.306823,
+        0.133678,
+        -0.070022,
+        -0.026736,
+        -0.087846,
+        0.263537,
+        -0.052198,
+        -0.306823,
+        0.202427,
+        0.148956,
+        0.011458,
+        -0.154048,
+        -0.075114,
+        0.047106,
+        0.034374,
+        0.159141,
+        0.103123
+      ]
+    },
+    {
       "path": "tests/test_aura_adaptive_execution.py",
       "role": "python_module",
       "binary": false,
@@ -264920,6 +265318,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/arena_portable_semantic_evidence_transfer.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10605,
+      "lines": 307,
+      "tokens_est": 2652,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4f7eb662a3ebfac4",
+      "vector": [
+        -0.064365,
+        -0.080174,
+        0.163737,
+        0.150186,
+        0.089208,
+        0.152444,
+        0.082433,
+        -0.220197,
+        -0.236007,
+        -0.197613,
+        0.001129,
+        0.24504,
+        -0.007905,
+        0.199872,
+        0.283434,
+        -0.041781,
+        -0.2744,
+        -0.023714,
+        -0.281175,
+        -0.095984,
+        0.032747,
+        -0.062107,
+        -0.213422,
+        -0.278917,
+        -0.003388,
+        -0.193096,
+        -0.247299,
+        -0.240523,
+        0.181804,
+        -0.147928,
+        -0.24504,
+        0.114051
       ]
     },
     {
@@ -289532,16 +289977,16 @@
     }
   },
   "summary": {
-    "file_count": 1660,
-    "total_bytes": 26555904,
-    "text_tokens_est": 6629334,
+    "file_count": 1663,
+    "total_bytes": 26577745,
+    "text_tokens_est": 6634796,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1011,
-      "schema_or_lexicon": 277,
+      "python_module": 1013,
+      "schema_or_lexicon": 278,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -289683,6 +290128,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/arena-portable-semantic-evidence-transfer.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -290888,6 +291334,7 @@
       "tests/pascal_spatial_presentation_test_contracts.py",
       "tests/pascal_spatial_presentation_test_lifecycle.py",
       "tests/pascal_spatial_presentation_test_support.py",
+      "tests/test_arena_portable_semantic_evidence_transfer.py",
       "tests/test_aura_adaptive_execution.py",
       "tests/test_aura_adaptive_fusion_schema.py",
       "tests/test_aura_adaptive_planner.py",
@@ -291190,6 +291637,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/arena_portable_semantic_evidence_transfer.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/k27_hdv1024_consequence_corpus.py",
@@ -403161,6 +403609,136 @@
         "file_digest8": "6688cbcc0e635cdf"
       },
       {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#class:PortableSemanticEvidenceTransferTests:4856fa02edca8452",
+        "name": "PortableSemanticEvidenceTransferTests",
+        "kind": "class",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 17,
+        "end_line": 127,
+        "signature_hash": "80cfb8b7e8ae75b3",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_consequence_digest_substitution_fails_closed:5c7d57012cce94d0",
+        "name": "PortableSemanticEvidenceTransferTests.test_consequence_digest_substitution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 85,
+        "end_line": 92,
+        "signature_hash": "cc5fb85e474d6fa1",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_consumer_substitution_fails_closed:fe9a1a316ec9cd16",
+        "name": "PortableSemanticEvidenceTransferTests.test_consumer_substitution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 94,
+        "end_line": 102,
+        "signature_hash": "86c7106d3d34a03f",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_cross_domain_green_artifacts_do_not_transfer_semantics:6a6dd4f22ad95097",
+        "name": "PortableSemanticEvidenceTransferTests.test_cross_domain_green_artifacts_do_not_transfer_semantics",
+        "kind": "method",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 44,
+        "end_line": 51,
+        "signature_hash": "ecb7ca0dc4c41c74",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_current_receipt_contains_native_admits_and_cross_domain_hold:5c347311f1c35ddc",
+        "name": "PortableSemanticEvidenceTransferTests.test_current_receipt_contains_native_admits_and_cross_domain_hold",
+        "kind": "method",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 113,
+        "end_line": 120,
+        "signature_hash": "e93c0c8caa0dfed7",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_head_drift_reopens_generation_cone:99a07894a3affeee",
+        "name": "PortableSemanticEvidenceTransferTests.test_head_drift_reopens_generation_cone",
+        "kind": "method",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 53,
+        "end_line": 58,
+        "signature_hash": "44a4bddf41ae9ee1",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_invalid_subject_digest_fails_closed:2ef4216852555e17",
+        "name": "PortableSemanticEvidenceTransferTests.test_invalid_subject_digest_fails_closed",
+        "kind": "method",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 122,
+        "end_line": 127,
+        "signature_hash": "667d7df2cfe40a41",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_job_substitution_is_independent_failure:6e6e206cd92a40b4",
+        "name": "PortableSemanticEvidenceTransferTests.test_job_substitution_is_independent_failure",
+        "kind": "method",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 67,
+        "end_line": 74,
+        "signature_hash": "05b1e5acfed4c98d",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_q6_native_transfer_is_exact_but_nonpromoting:767249bbc6cd6361",
+        "name": "PortableSemanticEvidenceTransferTests.test_q6_native_transfer_is_exact_but_nonpromoting",
+        "kind": "method",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 18,
+        "end_line": 33,
+        "signature_hash": "f6515453cc4f9187",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_r3_native_transfer_uses_provider_observed_run:7a9076d2d3a7df13",
+        "name": "PortableSemanticEvidenceTransferTests.test_r3_native_transfer_uses_provider_observed_run",
+        "kind": "method",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 35,
+        "end_line": 42,
+        "signature_hash": "19d40122ab3072b7",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_run_drift_reopens_generation_cone:bd6e6787a0d72ca7",
+        "name": "PortableSemanticEvidenceTransferTests.test_run_drift_reopens_generation_cone",
+        "kind": "method",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 60,
+        "end_line": 65,
+        "signature_hash": "63205609adef79d3",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_scope_substitution_fails_closed:2e85bcabc42ca8b4",
+        "name": "PortableSemanticEvidenceTransferTests.test_scope_substitution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 76,
+        "end_line": 83,
+        "signature_hash": "52278bd45411367c",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
+        "semantic_id": "tests/test_arena_portable_semantic_evidence_transfer.py#method:PortableSemanticEvidenceTransferTests.test_stale_pr_prose_run_cannot_impersonate_provider_run:fc8dc77b42894e92",
+        "name": "PortableSemanticEvidenceTransferTests.test_stale_pr_prose_run_cannot_impersonate_provider_run",
+        "kind": "method",
+        "file": "tests/test_arena_portable_semantic_evidence_transfer.py",
+        "line": 104,
+        "end_line": 111,
+        "signature_hash": "5f75fbc3ccd13355",
+        "file_digest8": "a7b00e153a0ec16e"
+      },
+      {
         "semantic_id": "tests/test_aura_adaptive_execution.py#class:Egress.__call__.Endpoint:698212a0a7fff320",
         "name": "Egress.__call__.Endpoint",
         "kind": "class",
@@ -448621,6 +449199,176 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#class:ConsumerExpectation:69bd1ab7ca3cf7c5",
+        "name": "ConsumerExpectation",
+        "kind": "class",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 124,
+        "end_line": 144,
+        "signature_hash": "e79be931b2abf18e",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#class:EvidenceTransferReceipt:bef6a191fbb87e70",
+        "name": "EvidenceTransferReceipt",
+        "kind": "class",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 148,
+        "end_line": 170,
+        "signature_hash": "97462359b29ee9f4",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#class:SemanticEvidenceDescriptor:14c34809ba0f8344",
+        "name": "SemanticEvidenceDescriptor",
+        "kind": "class",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 89,
+        "end_line": 120,
+        "signature_hash": "fad6b4ae49d5c1a5",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_canonical:4ca8af6c47a0d938",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 56,
+        "end_line": 63,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_head_field:8b80a71dbd085098",
+        "name": "_head_field",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 79,
+        "end_line": 85,
+        "signature_hash": "8a8012a1dabf00ee",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_sha256_field:f6bb817065b38a91",
+        "name": "_sha256_field",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 70,
+        "end_line": 76,
+        "signature_hash": "d31a90b28f5491df",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:_sha:9aa320fe026efdd0",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 66,
+        "end_line": 67,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:classify_transfer:77e71b0d4ac6b84f",
+        "name": "classify_transfer",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 230,
+        "end_line": 274,
+        "signature_hash": "a2d3bf06fb4ca04e",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:main:f9b0b4a3073e3ab8",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 301,
+        "end_line": 302,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:native_expectation:28df57a6caf41e91",
+        "name": "native_expectation",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 217,
+        "end_line": 227,
+        "signature_hash": "88f0f2e0429fabfd",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:portable_current_receipt:5e4e0857ee5ad1e8",
+        "name": "portable_current_receipt",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 277,
+        "end_line": 298,
+        "signature_hash": "700fca9d450e4055",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:q6_descriptor:89063cda370347a1",
+        "name": "q6_descriptor",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 173,
+        "end_line": 191,
+        "signature_hash": "266215226f239281",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#function:r3_descriptor:c1d60403485b1f89",
+        "name": "r3_descriptor",
+        "kind": "function",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 194,
+        "end_line": 214,
+        "signature_hash": "12bff2769760fdfd",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:ConsumerExpectation.validate:fd405d9d54e7a17f",
+        "name": "ConsumerExpectation.validate",
+        "kind": "method",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 133,
+        "end_line": 144,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:EvidenceTransferReceipt.receipt_digest:09e606aac98fd023",
+        "name": "EvidenceTransferReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 169,
+        "end_line": 170,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:SemanticEvidenceDescriptor.descriptor_digest:f63f188d1aa4cad4",
+        "name": "SemanticEvidenceDescriptor.descriptor_digest",
+        "kind": "method",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 118,
+        "end_line": 120,
+        "signature_hash": "56ca270aa04c61dd",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
+        "semantic_id": "tools/arena_portable_semantic_evidence_transfer.py#method:SemanticEvidenceDescriptor.validate:678611bf1ca25703",
+        "name": "SemanticEvidenceDescriptor.validate",
+        "kind": "method",
+        "file": "tools/arena_portable_semantic_evidence_transfer.py",
+        "line": 100,
+        "end_line": 115,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "4f7eb662a3ebfac4"
+      },
+      {
         "semantic_id": "tools/k27_hdv1024_consequence_corpus.py#class:CorpusError:39ba7fb91362f8da",
         "name": "CorpusError",
         "kind": "class",
@@ -451661,7 +452409,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "b01fd02d80b376cce7440a9c1f342fb9",
-    "payload_hash": "46c431c8646f20cb6b0911ea98dbf45f"
+    "record_fingerprint": "3be9e91c595e922940dfb69b8b39bb8e",
+    "payload_hash": "3cc35f4601258168e59c3109056ee9c3"
   }
 }

@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1660
-- **total_bytes**: 26555904
-- **text_tokens_est**: 6629334
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1011, 'schema_or_lexicon': 277, 'support_file': 49}
+- **file_count**: 1663
+- **total_bytes**: 26577745
+- **text_tokens_est**: 6634796
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1013, 'schema_or_lexicon': 278, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1660,
+  "repo_file_count": 1663,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -150,6 +150,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/architect-external-llm-session.yml",
     ".github/workflows/architect-real-refactor-hardening.yml",
     ".github/workflows/architect-real-refactor-trial.yml",
+    ".github/workflows/arena-portable-semantic-evidence-transfer.yml",
     ".github/workflows/aura-architecture-harness-export.yml",
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1355,6 +1356,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/pascal_spatial_presentation_test_contracts.py",
     "tests/pascal_spatial_presentation_test_lifecycle.py",
     "tests/pascal_spatial_presentation_test_support.py",
+    "tests/test_arena_portable_semantic_evidence_transfer.py",
     "tests/test_aura_adaptive_execution.py",
     "tests/test_aura_adaptive_fusion_schema.py",
     "tests/test_aura_adaptive_planner.py",
@@ -1657,6 +1659,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/arena_portable_semantic_evidence_transfer.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "tools/k27_hdv1024_consequence_corpus.py",
@@ -1747,6 +1750,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/pascal_spatial_presentation_test_contracts.py",
     "tests/pascal_spatial_presentation_test_lifecycle.py",
     "tests/pascal_spatial_presentation_test_support.py",
+    "tests/test_arena_portable_semantic_evidence_transfer.py",
     "tests/test_aura_adaptive_execution.py",
     "tests/test_aura_adaptive_fusion_schema.py",
     "tests/test_aura_adaptive_planner.py",
@@ -1785,8 +1789,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_blind_gate10_benchmark.py",
     "tests/test_aura_capability_connectome.py",
     "tests/test_aura_capability_connectome_v2.py",
-    "tests/test_aura_capability_lane_registry.py",
-    "tests/test_aura_capability_resolver.py"
+    "tests/test_aura_capability_lane_registry.py"
   ],
   "topology_paths_without_source_cards": [],
   "coverage_complete_for_repo_scan": true
@@ -1800,16 +1803,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1660,
-  "bytes": 26555904,
-  "tokens_est": 6629334,
+  "files": 1663,
+  "bytes": 26577745,
+  "tokens_est": 6634796,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1011,
-    "schema_or_lexicon": 277,
+    "python_module": 1013,
+    "schema_or_lexicon": 278,
     "support_file": 49
   }
 }
