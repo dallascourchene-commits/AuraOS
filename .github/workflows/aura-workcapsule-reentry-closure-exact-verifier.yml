@@ -1,0 +1,81 @@
+name: Aura WorkCapsule Exact Re-entry Closure Verifier
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_context_binding.py'
+      - 'scripts/aura_workcapsule_reentry_invalidation.py'
+      - 'scripts/aura_workcapsule_reentry_exact_verifier.py'
+      - 'scripts/aura_workcapsule_reentry_closure.py'
+      - 'scripts/aura_workcapsule_reentry_closure_exact_verifier.py'
+      - 'tests/test_aura_workcapsule_context_binding.py'
+      - 'tests/test_aura_workcapsule_reentry_invalidation.py'
+      - 'tests/test_aura_workcapsule_reentry_exact_verifier.py'
+      - 'tests/test_aura_workcapsule_reentry_closure.py'
+      - 'tests/test_aura_workcapsule_reentry_closure_exact_verifier.py'
+      - '.github/workflows/aura-workcapsule-reentry-closure-exact-verifier.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-closure-input-reproduction:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove WorkCapsule context and selective re-entry owners
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_context_binding.py scripts/aura_workcapsule_reentry_invalidation.py
+          python3 -m unittest -v tests.test_aura_workcapsule_context_binding tests.test_aura_workcapsule_reentry_invalidation
+
+      - name: Re-prove exact re-entry input verifier
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_reentry_exact_verifier.py
+          python3 -m unittest -v tests.test_aura_workcapsule_reentry_exact_verifier
+
+      - name: Re-prove selective re-entry closure owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_reentry_closure.py
+          python3 -m unittest -v tests.test_aura_workcapsule_reentry_closure
+
+      - name: Prove exact closure input reproduction
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_reentry_closure_exact_verifier.py
+          python3 -m unittest -v tests.test_aura_workcapsule_reentry_closure_exact_verifier
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'O10_SELF_DIGEST_ONLY_IS_INPUT_AUTHENTICATION=false'
+          echo 'EXACT_CLOSURE_INPUT_REPRODUCTION_REQUIRED=true'
+          echo 'PREVIOUS_BINDING_IDENTITY_PINNED=true'
+          echo 'REENTRY_RECEIPT_IDENTITY_PINNED=true'
+          echo 'CANDIDATE_BINDING_IDENTITY_PINNED=true'
+          echo 'SELF_CONSISTENT_CLOSURE_SUBSTITUTION_ACCEPTED=false'
+          echo 'PRODUCER_IDENTITY_AUTHENTICATED=false'
+          echo 'SEMANTIC_TRUTH_MINTED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
