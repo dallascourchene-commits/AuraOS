@@ -321,9 +321,7 @@ mod tests {
         .unwrap_err();
         assert!(matches!(
             error,
-            TypedScopeAwareReviewErrorV1::Owner(
-                ScopeAwareReviewError::OwnerScopeMismatch { .. }
-            )
+            TypedScopeAwareReviewErrorV1::Owner(ScopeAwareReviewError::OwnerScopeMismatch { .. })
         ));
         fs::remove_dir_all(state.root).unwrap();
     }
