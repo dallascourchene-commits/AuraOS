@@ -1,0 +1,223 @@
+name: Aura External Subject Lineage Bridge V1
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_external_subject_lineage_bridge.py"
+      - "tests/test_aura_external_subject_lineage_bridge.py"
+      - "docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json"
+      - "docs/arena/EXTERNAL_SUBJECT_LINEAGE_BRIDGE_V1.md"
+      - ".github/workflows/aura-external-subject-lineage-bridge-v1.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-subject-lineage:
+    runs-on: ubuntu-24.04
+    env:
+      PR728_HEAD: "9865c42f3ada2520141bd2fe30a439ce160ce2f8"
+      PR728_BLOB: "53de9d551c81a0eb495eb180294c0aba5eb359d0"
+      PR735_HEAD: "89a66cdb972d3eab19c9408356b7061d1529947d"
+      PR735_BLOB: "fed7003630487af41586ce07a00b83b8fbf66835"
+    steps:
+      - name: Checkout exact source head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - name: Verify exact source head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+
+      - name: Materialize exact independent parent artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL "https://raw.githubusercontent.com/dallascourchene-commits/AuraOS/${PR728_HEAD}/tools/aura_external_cognition_resolve_adapter.py" -o /tmp/pr728_reader.py
+          curl -fsSL "https://raw.githubusercontent.com/dallascourchene-commits/AuraOS/${PR735_HEAD}/tools/aura_external_knowledge_coordinate_memory_candidate.py" -o /tmp/pr735_candidate.py
+          test "$(git hash-object /tmp/pr728_reader.py)" = "${PR728_BLOB}"
+          test "$(git hash-object /tmp/pr735_candidate.py)" = "${PR735_BLOB}"
+
+      - name: Compile and run EKI-3 adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/aura_external_subject_lineage_bridge.py
+          python -m pytest -q tests/test_aura_external_subject_lineage_bridge.py
+
+      - name: Validate bounded external coordinate map
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          body = json.loads(Path("docs/arena/EKI3_EXTERNAL_COORDINATE_MAP_V1.json").read_text())
+          assert body["schema"] == "AURA-EKI3-EXTERNAL-SOURCE-COORDINATE-MAP-v1"
+          assert body["entries"]
+          for entry in body["entries"]:
+              assert len(entry["projection_13d"]) == 13
+              assert set(entry["projection_13d"]) <= {"0", "1", "2"}
+              assert len(entry["k27_xyz"]) == 3
+              assert all(type(v) is int and 0 <= v < 27 for v in entry["k27_xyz"])
+          for claim in (
+              "semantic_authority",
+              "currentness_witness",
+              "truth_authority",
+              "instruction_authority",
+              "write_authority",
+              "effect_authority",
+              "native_private_transformer_kv_accessed",
+          ):
+              assert body[claim] is False
+          PY
+
+      - name: Prove EKI-3 terminal key composes with exact PR728 reader
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import importlib.util
+          import json
+          import sys
+
+          from tools.aura_external_subject_lineage_bridge import (
+              CurrentSubjectDescriptorV1,
+              CurrentnessStatus,
+              ExternalSubjectLineageBridgeV1,
+              LineageDisposition,
+              SubjectLineageRequestV1,
+              SubjectLineageValidationContextV1,
+              current_subject_key,
+              legacy_semantic_id,
+          )
+
+          canonical_id = "2606.26511"
+          canonical_uri = "https://arxiv.org/abs/2606.26511"
+          legacy_id = legacy_semantic_id(legacy_source_kind="ARXIV", canonical_id=canonical_id)
+          subject_key = current_subject_key(provider="ARXIV", source_kind="PAPER", canonical_id=canonical_id)
+          r1 = "f" * 64
+          r2 = "0" * 64
+          k1 = f"external-cognition://{legacy_id}/record/{r1}"
+          k2 = f"external-cognition://{legacy_id}/record/{r2}"
+
+          def row(record_generation, successor):
+              standing = {
+                  "semantic_id": legacy_id,
+                  "record_generation": record_generation,
+                  "source_kind": "ARXIV",
+                  "canonical_id": canonical_id,
+                  "canonical_uri": canonical_uri,
+              }
+              return {
+                  "K": f"external-cognition://{legacy_id}/record/{record_generation}",
+                  "V": {
+                      "cell": {"semantic_identity": False, "authority": False},
+                      "digest": hashlib.sha256(record_generation.encode()).hexdigest(),
+                      "standing": json.dumps(standing, sort_keys=True, separators=(",", ":")),
+                      "reopen": {"canonical_uri": canonical_uri},
+                      "successor": successor,
+                  },
+              }
+
+          snapshot = json.dumps(
+              {
+                  "schema": {"name": "aura-coordinate-memory-kv-v1", "version": "1.0.0"},
+                  "rows": [row(r1, k2), row(r2, None)],
+              },
+              sort_keys=True,
+              separators=(",", ":"),
+          ).encode()
+          store_sha = hashlib.sha256(snapshot).hexdigest()
+          store_ref = "memory://eki3-cross-owner"
+          store_generation = "EKI3::STORE::cross-owner"
+
+          bridge = ExternalSubjectLineageBridgeV1(
+              snapshot_bytes=snapshot,
+              store_ref=store_ref,
+              store_generation=store_generation,
+          )
+          bridge_receipt = bridge.resolve(
+              SubjectLineageRequestV1(
+                  store_ref=store_ref,
+                  expected_store_generation=store_generation,
+                  expected_store_sha256=store_sha,
+                  legacy_source_kind="ARXIV",
+                  subject=CurrentSubjectDescriptorV1(
+                      provider="ARXIV",
+                      source_kind="PAPER",
+                      canonical_id=canonical_id,
+                      canonical_uri=canonical_uri,
+                      claimed_subject_key=subject_key,
+                  ),
+              ),
+              SubjectLineageValidationContextV1(
+                  record_currentness={k2: CurrentnessStatus.RESOLVED_CURRENT},
+                  source_resolver_refs=("eki3-external-currentness-fixture",),
+              ),
+          )
+          assert bridge_receipt.disposition is LineageDisposition.RESOLVED_CURRENT_RECORD_CANDIDATE
+          assert bridge_receipt.terminal_record_key == k2
+          assert bridge_receipt.historical_record_keys == (k1,)
+          assert bridge_receipt.write_authority is False
+          assert bridge_receipt.native_private_transformer_kv_accessed is False
+
+          spec = importlib.util.spec_from_file_location("pr728_reader", "/tmp/pr728_reader.py")
+          assert spec is not None and spec.loader is not None
+          pr728 = importlib.util.module_from_spec(spec)
+          sys.modules[spec.name] = pr728
+          spec.loader.exec_module(pr728)
+
+          reader = pr728.ExternalCognitionResolveAdapterV1(
+              snapshot_bytes=snapshot,
+              store_ref=store_ref,
+              store_generation=store_generation,
+          )
+          validation = pr728.ReadValidationContextV1(
+              currentness={
+                  "SOURCE_GENERATION_CURRENT": pr728.CurrentnessStatus.RESOLVED_CURRENT,
+                  "SOURCE_BODY_CURRENT": pr728.CurrentnessStatus.RESOLVED_CURRENT,
+              },
+              allowed_evidence_domains=frozenset({"external-research"}),
+              allowed_principals=frozenset({"eki3-proof"}),
+              source_resolver_refs=("eki3-external-currentness-fixture",),
+          )
+
+          def read(key):
+              return reader.resolve(
+                  pr728.ExternalCognitionReadRequestV1(
+                      store_ref=store_ref,
+                      expected_store_generation=store_generation,
+                      expected_store_sha256=store_sha,
+                      semantic_key=key,
+                      consumer_ref="eki3-cross-owner-proof",
+                      consumer_generation="1",
+                      evidence_domain="external-research",
+                      principal="eki3-proof",
+                      required_currentness_axes=("SOURCE_GENERATION_CURRENT", "SOURCE_BODY_CURRENT"),
+                  ),
+                  validation,
+              )
+
+          terminal = read(bridge_receipt.terminal_record_key)
+          historical = read(k1)
+          assert terminal.disposition is pr728.ResolveDisposition.FOUND_VERIFIED
+          assert historical.disposition is pr728.ResolveDisposition.SUPERSEDED_HISTORY_ONLY
+          assert terminal.candidate_only is True
+          assert terminal.write_authority is False
+          assert terminal.effect_authority is False
+          PY
+
+      - name: Assert claim ceiling constants
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'native_private_transformer_kv_accessed: bool = False' tools/aura_external_subject_lineage_bridge.py
+          grep -q 'chronological_order_inferred: bool = False' tools/aura_external_subject_lineage_bridge.py
+          grep -q 'k27_semantic_authority: bool = False' tools/aura_external_subject_lineage_bridge.py
