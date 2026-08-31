@@ -32,7 +32,7 @@ jobs:
       PR_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
       GH_TOKEN: ${{ github.token }}
     steps:
-      - name: Checkout exact pull-request proof generation
+      - name: Fetch exact proof world in one non-shallow transaction
         shell: bash
         run: |
           set -euo pipefail
@@ -40,18 +40,17 @@ jobs:
           cd repo
           git init -q
           git remote add origin "https://github.com/${REPO}.git"
-          git fetch -q --no-tags --depth=1 origin "${PR_HEAD}"
-          git checkout -q --detach FETCH_HEAD
+          git fetch -q --no-tags origin \
+            "${PR_HEAD}" "${SEMANTIC_HEAD}" "${Q20_HEAD}" "${O64_HEAD}"
+          git checkout -q --detach "${PR_HEAD}"
           test "$(git rev-parse HEAD)" = "${PR_HEAD}"
+          test ! -f .git/shallow
 
       - name: Authenticate immutable O65 semantic blobs and exact parent blobs
         shell: bash
         run: |
           set -euo pipefail
           cd repo
-          for sha in "${SEMANTIC_HEAD}" "${Q20_HEAD}" "${O64_HEAD}"; do
-            git fetch -q --no-tags --depth=1 origin "${sha}"
-          done
           test "$(git rev-parse "${SEMANTIC_HEAD}:tools/aura_authority_materialization_proposal_conformance.py")" = "${SEMANTIC_SOURCE_BLOB}"
           test "$(git rev-parse "${SEMANTIC_HEAD}:tests/test_aura_authority_materialization_proposal_conformance.py")" = "${SEMANTIC_TEST_BLOB}"
           test "$(git rev-parse HEAD:tools/aura_authority_materialization_proposal_conformance.py)" = "${SEMANTIC_SOURCE_BLOB}"
@@ -122,7 +121,6 @@ jobs:
           cd repo
           python - <<'PY'
           import hashlib, importlib.util, json
-          from dataclasses import asdict
           from tools import aura_authority_materialization_proposal_conformance as o65
 
           def load(name, path):
@@ -137,14 +135,12 @@ jobs:
           q20 = load('q20_parent', '/tmp/q20_parent.py')
           o64 = load('o64_parent', '/tmp/o64_parent.py')
 
-          # Execute Q20's exact fixture and prove O65 independently reconstructs its lineage.
           q20_receipt = q20.exact_terminal_fixture()
           assert q20_receipt.materialization_relation_digest == o65.q20_materialization_relation_digest()
           assert q20_receipt.materialization_bound_proposal_basis_digest == o65.q20_materialization_bound_basis_digest()
           assert q20_receipt.execution_authority_granted is False
           assert q20_receipt.effect_authority_granted is False
 
-          # Execute PR #702's real admission API against the exact Q20-derived representation projection.
           rep = o64.RepresentationIdentity(
               schema_version=o64.REPRESENTATION_SCHEMA,
               representation_family=o65.Q20_REPRESENTATION_FAMILY,
