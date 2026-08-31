@@ -1,0 +1,198 @@
+name: Aura NAV-15 Alias-Stable Hydration Transaction Proof
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_nav15_alias_stable_hydration_transaction.py'
+      - 'tests/test_aura_nav15_alias_stable_hydration_transaction.py'
+      - 'docs/arena/NAV15_ALIAS_STABLE_HYDRATION_TRANSACTION_V1.md'
+      - '.github/workflows/aura-nav15-alias-stable-hydration-transaction.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-head-alias-stable-hydration:
+    runs-on: ubuntu-24.04
+    env:
+      REPO: dallascourchene-commits/AuraOS
+      TRANSACTION_HEAD: 8c30df774ad55507aa57bbfd49444991c1a2b379
+      TRANSACTION_BLOB: 97211589682a7ed67c8c63530dac744b9c186e57
+      TRANSACTION_RUN: '33436051562'
+      TRANSACTION_JOB: '99632632584'
+      ALIAS_HEAD: 658b3bc651ee39454f6b94039d26ff76d48f73d8
+      ALIAS_BLOB: 1abd821beb2a8a9a96b5ac2f0956195b20a321c7
+      ALIAS_TEST_BLOB: ddc88a73f49d6a09d67b388cf5c4958317e10ae2
+      ALIAS_PROOF_HEAD: cf6b07e5c498d7c429e6679a8ba5cec5e1e46ca6
+      ALIAS_RUN: '33436588718'
+      ALIAS_JOB: '99634405807'
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout exact pull-request head
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEAD='${{ github.event.pull_request.head.sha }}'
+          git init .
+          git remote add origin "https://github.com/${REPO}.git"
+          git fetch --no-tags --depth=1 origin "$HEAD"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$HEAD"
+
+      - name: Authenticate exact parent semantic surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          # Fetch advertised branch histories rather than relying on raw historical-SHA
+          # shallow wants. The exact semantic/proof commits are then authenticated by
+          # commit identity and immutable blob identity below.
+          git fetch --no-tags --depth=8 origin \
+            '+refs/heads/arena/scheme-serializable-hydration-transaction-v1-20260831-sol:refs/remotes/origin/nav15-pr758'
+          git fetch --no-tags --depth=8 origin \
+            '+refs/heads/arena/retrieval-progress-k27-alias-guard-v1-20260831-sol:refs/remotes/origin/nav15-pr759'
+          git fetch --no-tags --depth=8 origin \
+            '+refs/heads/arena/proof-pr759-k27-alias-progress-20260831-sol:refs/remotes/origin/nav15-pr759-proof'
+          git cat-file -e "$TRANSACTION_HEAD^{commit}"
+          git cat-file -e "$ALIAS_HEAD^{commit}"
+          git cat-file -e "$ALIAS_PROOF_HEAD^{commit}"
+          test "$(git rev-parse "$TRANSACTION_HEAD:tools/aura_scheme_serializable_hydration_transaction.py")" = "$TRANSACTION_BLOB"
+          test "$(git rev-parse "$ALIAS_HEAD:tools/aura_retrieval_progress_k27_alias_guard.py")" = "$ALIAS_BLOB"
+          test "$(git rev-parse "$ALIAS_HEAD:tests/test_aura_retrieval_progress_k27_alias_guard.py")" = "$ALIAS_TEST_BLOB"
+          test "$(git rev-parse "$ALIAS_PROOF_HEAD:tools/aura_retrieval_progress_k27_alias_guard.py")" = "$ALIAS_BLOB"
+          test "$(git rev-parse "$ALIAS_PROOF_HEAD:tests/test_aura_retrieval_progress_k27_alias_guard.py")" = "$ALIAS_TEST_BLOB"
+
+      - name: Revalidate exact hosted parent proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          auth=(-H "Authorization: Bearer $GITHUB_TOKEN" -H 'Accept: application/vnd.github+json')
+          curl -fsSL "${auth[@]}" "https://api.github.com/repos/${REPO}/actions/runs/${TRANSACTION_RUN}" > /tmp/transaction-run.json
+          curl -fsSL "${auth[@]}" "https://api.github.com/repos/${REPO}/actions/jobs/${TRANSACTION_JOB}" > /tmp/transaction-job.json
+          curl -fsSL "${auth[@]}" "https://api.github.com/repos/${REPO}/actions/runs/${ALIAS_RUN}" > /tmp/alias-run.json
+          curl -fsSL "${auth[@]}" "https://api.github.com/repos/${REPO}/actions/jobs/${ALIAS_JOB}" > /tmp/alias-job.json
+          python - <<'PY'
+          import json, os
+          txr = json.load(open('/tmp/transaction-run.json', encoding='utf-8'))
+          txj = json.load(open('/tmp/transaction-job.json', encoding='utf-8'))
+          alr = json.load(open('/tmp/alias-run.json', encoding='utf-8'))
+          alj = json.load(open('/tmp/alias-job.json', encoding='utf-8'))
+          assert txr['conclusion'] == 'success'
+          assert txr['head_sha'] == os.environ['TRANSACTION_HEAD']
+          assert txj['conclusion'] == 'success'
+          assert str(txj['run_id']) == os.environ['TRANSACTION_RUN']
+          assert alr['conclusion'] == 'success'
+          assert alr['head_sha'] == os.environ['ALIAS_PROOF_HEAD']
+          assert alj['conclusion'] == 'success'
+          assert str(alj['run_id']) == os.environ['ALIAS_RUN']
+          PY
+
+      - name: Reexecute exact PR758 transaction owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/pr758 "$TRANSACTION_HEAD"
+          (
+            cd /tmp/pr758
+            python -m py_compile tools/aura_scheme_serializable_hydration_transaction.py tests/test_aura_scheme_serializable_hydration_transaction.py
+            python -m unittest discover -s tests -p 'test_aura_scheme_serializable_hydration_transaction.py'
+          )
+
+      - name: Reexecute exact PR759 alias-progress owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/pr759 "$ALIAS_HEAD"
+          (
+            cd /tmp/pr759
+            python -m py_compile tools/aura_retrieval_progress_guard.py tools/aura_retrieval_progress_k27_alias_guard.py tests/test_aura_retrieval_progress_k27_alias_guard.py
+            python -m unittest discover -s tests -p 'test_aura_retrieval_progress_k27_alias_guard.py'
+          )
+
+      - name: Cross-prove NAV15 reconstructs a real PR758 receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=/tmp/pr758 python - <<'PY' > /tmp/pr758-positive.json
+          from dataclasses import asdict
+          import hashlib, json
+          import tools.aura_scheme_serializable_hydration_transaction as p
+          d = lambda s: hashlib.sha256(s.encode()).hexdigest()
+          route = p.SchemeBoundRouteProjection(
+              schema=p.ROUTE_SCHEMA,
+              source_identity='sid:source',
+              scheme_id='URL-SHA256-MOD27-v1',
+              normalization_version='v1',
+              canonical_key='https://example.test/source',
+              full_digest=d('canonical'),
+              coordinate_view_digest=d('view'),
+              k27_path='K27/1/2/3',
+              route_generation='route:g1',
+              owner_epoch='owner:e1',
+              route_current=True,
+          )
+          retrieval = p.RetrievalProgressProjection(
+              schema=p.RETRIEVAL_SCHEMA,
+              disposition=p.RetrievalProgressDisposition.ALLOW_INITIAL,
+              fingerprint_digest=d('fingerprint'),
+              provider_state_generation='provider:g1',
+              evidence_digest=d('evidence'),
+              next_no_progress_count=0,
+          )
+          intent = p.HydrationIntentProjection(
+              semantic_plan_digest=d('plan'),
+              evidence_generation_key='eg:g1',
+              target_level=4,
+              new_hydration_required=True,
+              exact_reopen_handle='https://example.test/source',
+          )
+          receipt = p.admit_scheme_serializable_hydration_transaction(
+              pre_route=route, post_route=route, retrieval=retrieval, intent=intent
+          )
+          body = asdict(receipt)
+          body['disposition'] = receipt.disposition.value
+          print(json.dumps(body, sort_keys=True))
+          PY
+          python - <<'PY'
+          import json
+          import tools.aura_nav15_alias_stable_hydration_transaction as m
+          body = json.load(open('/tmp/pr758-positive.json', encoding='utf-8'))
+          projection = m.SchemeSerializableTransactionProjectionV1(
+              parent_head=m.TRANSACTION_HEAD,
+              **body,
+          )
+          projection.validate()
+          assert projection.disposition == 'ADMIT_BOUNDED_TRANSACTION'
+          assert projection.bounded_transaction_admitted
+          PY
+
+      - name: Compile and run NAV15 adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/aura_nav15_alias_stable_hydration_transaction.py tests/test_aura_nav15_alias_stable_hydration_transaction.py
+          python -m unittest discover -s tests -p 'test_aura_nav15_alias_stable_hydration_transaction.py'
+
+      - name: Exhaust complete 192-state Different-J relation matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import tools.aura_nav15_alias_stable_hydration_transaction as m
+          assert m.prove_different_j() == 192
+          required = {
+              'ValidParentReceipts!=SameRetrievalObservation',
+              'SchemeRotationCannotResetNoProgressDebt',
+              'AliasAwareProgressMustOwnNoveltyForAliasStableTransaction',
+              'CoordinateMemory!=MODEL_PREFIX_KV',
+          }
+          assert required.issubset(set(m.LAWS))
+          PY
+
+      - name: Assert external coordinate and nonpromotion ceilings
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'SCHOLAR_DIRECT_GAP:NAV15:alias-stable-hydration-transaction' docs/arena/NAV15_ALIAS_STABLE_HYDRATION_TRANSACTION_V1.md
+          grep -F 'CoordinateMemory != MODEL_PREFIX_KV' docs/arena/NAV15_ALIAS_STABLE_HYDRATION_TRANSACTION_V1.md
+          grep -F 'No native/private transformer KV state is exposed or mutated.' docs/arena/NAV15_ALIAS_STABLE_HYDRATION_TRANSACTION_V1.md
