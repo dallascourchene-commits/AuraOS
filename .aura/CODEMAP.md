@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1639
-- **total_bytes**: 26415048
-- **text_tokens_est**: 6594113
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 997, 'schema_or_lexicon': 271, 'support_file': 49}
+- **file_count**: 1644
+- **total_bytes**: 26436841
+- **text_tokens_est**: 6599563
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1639,
+  "repo_file_count": 1644,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -151,6 +151,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/architect-real-refactor-hardening.yml",
     ".github/workflows/architect-real-refactor-trial.yml",
     ".github/workflows/aura-architecture-harness-export.yml",
+    ".github/workflows/aura-collision-safe-rebase-addendum.yml",
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -1115,6 +1116,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
     "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
     "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+    "docs/arena/COLLISION_SAFE_REBASE_ADDENDUM_SOP_V1.md",
+    "docs/arena/COLLISION_SAFE_REBASE_ADDENDUM_SOP_V1__PR717_REBASE_ADDENDUM.md",
     "docs/aura_substrate_manifest.files.01.json",
     "docs/aura_substrate_manifest.files.02.json",
     "docs/aura_substrate_manifest.files.03.json",
@@ -1430,6 +1433,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_coding_workbench_actions.py",
     "tests/test_aura_coding_workbench_sequence.py",
     "tests/test_aura_coding_workbench_wfst_equivalence.py",
+    "tests/test_aura_collision_safe_rebase.py",
     "tests/test_aura_command_risk_gate.py",
     "tests/test_aura_construction_adapter.py",
     "tests/test_aura_construction_adapter_hardening.py",
@@ -1649,6 +1653,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/package-metadata/nodes.package.json",
     "third_party/pascal/package-metadata/viewer.package.json",
     "third_party/pascal/pascal-lock.json",
+    "tools/aura_collision_safe_rebase.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1779,16 +1784,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1639,
-  "bytes": 26415048,
-  "tokens_est": 6594113,
+  "files": 1644,
+  "bytes": 26436841,
+  "tokens_est": 6599563,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 237,
+    "knowledge_artifact": 239,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 997,
-    "schema_or_lexicon": 271,
+    "python_module": 999,
+    "schema_or_lexicon": 272,
     "support_file": 49
   }
 }

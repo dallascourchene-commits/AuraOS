@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788194434,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1644,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -133,6 +133,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-collision-safe-rebase-addendum.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -1097,6 +1098,8 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/COLLISION_SAFE_REBASE_ADDENDUM_SOP_V1.md",
+      "docs/arena/COLLISION_SAFE_REBASE_ADDENDUM_SOP_V1__PR717_REBASE_ADDENDUM.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -1412,6 +1415,7 @@
       "tests/test_aura_coding_workbench_actions.py",
       "tests/test_aura_coding_workbench_sequence.py",
       "tests/test_aura_coding_workbench_wfst_equivalence.py",
+      "tests/test_aura_collision_safe_rebase.py",
       "tests/test_aura_command_risk_gate.py",
       "tests/test_aura_construction_adapter.py",
       "tests/test_aura_construction_adapter_hardening.py",
@@ -1631,6 +1635,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_collision_safe_rebase.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1760,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1644,
+      "bytes": 26436841,
+      "tokens_est": 6599563,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
+        "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -4337,6 +4342,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/aura_collision_safe_rebase.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 74,
+        "semantic_id": "tools/aura_collision_safe_rebase.py#function:_digest:841a1a470941a37f",
+        "signature_hash": "ea79c5a561431792"
       }
     ],
     "_token_proxy": [
@@ -124351,6 +124364,116 @@
         "signature_hash": "3b6bb36cf7de7836"
       }
     ],
+    "h": [
+      {
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "kind": "function",
+        "line": 12,
+        "end_line": 13,
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#function:h:e36165a8504e83f6",
+        "signature_hash": "ad123cb640a00f07"
+      }
+    ],
+    "CollisionSafeRebaseTests": [
+      {
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "kind": "class",
+        "line": 16,
+        "end_line": 121,
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#class:CollisionSafeRebaseTests:ea70abdd4d241a00",
+        "signature_hash": "edcea60e62e2cfe6"
+      }
+    ],
+    "CollisionSafeRebaseTests.owner": [
+      {
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "kind": "method",
+        "line": 17,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.owner:8c27e054b1b22195",
+        "signature_hash": "458ff024d3b2152b"
+      }
+    ],
+    "CollisionSafeRebaseTests.candidate": [
+      {
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 32,
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.candidate:9214ec4ed3aa065f",
+        "signature_hash": "6e495d790b64aaa6"
+      }
+    ],
+    "CollisionSafeRebaseTests.test_duplicate_semantics_are_retained_but_get_zero_sibling_credit": [
+      {
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "kind": "method",
+        "line": 34,
+        "end_line": 47,
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_duplicate_semantics_are_retained_but_get_zero_sibling_credit:420b79967cce8ca2",
+        "signature_hash": "a303cf329c1d3df3"
+      }
+    ],
+    "CollisionSafeRebaseTests.test_overlap_plus_unique_residual_becomes_addendum_candidate": [
+      {
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 59,
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_overlap_plus_unique_residual_becomes_addendum_candidate:e45cdf6b17b75e65",
+        "signature_hash": "ec0d3f75b3afb38c"
+      }
+    ],
+    "CollisionSafeRebaseTests.test_stale_owner_forces_hold_before_rebase": [
+      {
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 70,
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_stale_owner_forces_hold_before_rebase:674edbcbc5cbc546",
+        "signature_hash": "c6a698c9fe6bc4f8"
+      }
+    ],
+    "CollisionSafeRebaseTests.test_no_overlap_is_orthogonal_owner_candidate_not_automatic_authority": [
+      {
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 83,
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_no_overlap_is_orthogonal_owner_candidate_not_automatic_authority:883a64b1dda2a003",
+        "signature_hash": "6098ebff9ed19d0d"
+      }
+    ],
+    "CollisionSafeRebaseTests.test_overlap_and_residual_must_be_disjoint": [
+      {
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 92,
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_overlap_and_residual_must_be_disjoint:7b1def87802ecbe1",
+        "signature_hash": "60a1ed7c32f13754"
+      }
+    ],
+    "CollisionSafeRebaseTests.test_claim_sets_must_come_from_candidate": [
+      {
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 101,
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_claim_sets_must_come_from_candidate:3a9637f4eef5d9d0",
+        "signature_hash": "6b8456f83fe231ac"
+      }
+    ],
+    "CollisionSafeRebaseTests.test_assessment_digest_is_deterministic_under_ordering_noise": [
+      {
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 121,
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_assessment_digest_is_deterministic_under_ordering_noise:1a1b93c5a19f2962",
+        "signature_hash": "ecea1b8434ea4a99"
+      }
+    ],
     "TestRiskGate": [
       {
         "file": "tests/test_aura_command_risk_gate.py",
@@ -157181,6 +157304,76 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "CollisionDisposition": [
+      {
+        "file": "tools/aura_collision_safe_rebase.py",
+        "kind": "class",
+        "line": 22,
+        "end_line": 26,
+        "semantic_id": "tools/aura_collision_safe_rebase.py#class:CollisionDisposition:6db2cfe838083187",
+        "signature_hash": "5758675f48175d69"
+      }
+    ],
+    "OwnerState": [
+      {
+        "file": "tools/aura_collision_safe_rebase.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tools/aura_collision_safe_rebase.py#class:OwnerState:9053a9e149d0f416",
+        "signature_hash": "6bb6689769499b42"
+      }
+    ],
+    "CandidateContribution": [
+      {
+        "file": "tools/aura_collision_safe_rebase.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 43,
+        "semantic_id": "tools/aura_collision_safe_rebase.py#class:CandidateContribution:6a880c27174c1253",
+        "signature_hash": "8d0ccf9d03d59c95"
+      }
+    ],
+    "CollisionAssessment": [
+      {
+        "file": "tools/aura_collision_safe_rebase.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 60,
+        "semantic_id": "tools/aura_collision_safe_rebase.py#class:CollisionAssessment:4e80b5f410af2389",
+        "signature_hash": "ec43dd8c6000d86a"
+      }
+    ],
+    "_canonical_tuple": [
+      {
+        "file": "tools/aura_collision_safe_rebase.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 64,
+        "semantic_id": "tools/aura_collision_safe_rebase.py#function:_canonical_tuple:a2c9da5c20ee90b6",
+        "signature_hash": "60cbac922dd34e15"
+      }
+    ],
+    "_require_digest": [
+      {
+        "file": "tools/aura_collision_safe_rebase.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 69,
+        "semantic_id": "tools/aura_collision_safe_rebase.py#function:_require_digest:10cf0f8b2a7c565e",
+        "signature_hash": "361edb4ad3534165"
+      }
+    ],
+    "assess_collision": [
+      {
+        "file": "tools/aura_collision_safe_rebase.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 188,
+        "semantic_id": "tools/aura_collision_safe_rebase.py#function:assess_collision:30d74de06a199451",
+        "signature_hash": "fbaaa998b8268789"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -167548,6 +167741,53 @@
         0.083353,
         0.128562,
         -0.241583
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-collision-safe-rebase-addendum.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2117,
+      "lines": 55,
+      "tokens_est": 530,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d6c09c568c9ef881",
+      "vector": [
+        -0.149408,
+        -0.132333,
+        0.25186,
+        -0.231939,
+        -0.007115,
+        0.015652,
+        -0.192097,
+        0.311623,
+        -0.115258,
+        0.266089,
+        0.303086,
+        -0.086799,
+        0.109566,
+        -0.266089,
+        -0.240476,
+        -0.260398,
+        0.086799,
+        0.25186,
+        0.25186,
+        -0.075416,
+        -0.066878,
+        0.038419,
+        -0.092491,
+        -0.038419,
+        -0.004269,
+        0.02419,
+        -0.015652,
+        -0.186405,
+        0.126641,
+        0.083953,
+        0.035573,
+        -0.317315
       ]
     },
     {
@@ -234820,6 +235060,100 @@
       ]
     },
     {
+      "path": "docs/arena/COLLISION_SAFE_REBASE_ADDENDUM_SOP_V1.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 5562,
+      "lines": 78,
+      "tokens_est": 1391,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f87b902e3c7eb231",
+      "vector": [
+        -0.313856,
+        -0.18933,
+        -0.07497,
+        -0.260488,
+        0.20712,
+        -0.049556,
+        -0.217285,
+        -0.072428,
+        0.128338,
+        0.080052,
+        -0.263029,
+        0.021601,
+        0.047015,
+        0.20712,
+        -0.01906,
+        0.227451,
+        0.108007,
+        -0.191872,
+        0.049556,
+        -0.227451,
+        0.184248,
+        0.263029,
+        0.280819,
+        -0.174082,
+        -0.115631,
+        0.067346,
+        0.196954,
+        0.006353,
+        0.186789,
+        0.110549,
+        -0.204578,
+        -0.209661
+      ]
+    },
+    {
+      "path": "docs/arena/COLLISION_SAFE_REBASE_ADDENDUM_SOP_V1__PR717_REBASE_ADDENDUM.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 2503,
+      "lines": 50,
+      "tokens_est": 626,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9677ea4f28137f30",
+      "vector": [
+        0.160216,
+        0.187803,
+        -0.115653,
+        -0.200535,
+        0.043502,
+        -0.213268,
+        0.232366,
+        -0.249343,
+        0.090188,
+        0.079577,
+        0.141117,
+        -0.026526,
+        0.266319,
+        0.198413,
+        0.189925,
+        0.223878,
+        0.151728,
+        -0.03077,
+        -0.209024,
+        -0.21539,
+        0.259953,
+        0.03077,
+        0.264197,
+        -0.068967,
+        0.058357,
+        0.117775,
+        -0.228122,
+        -0.259953,
+        0.134751,
+        0.155972,
+        -0.100798,
+        -0.209024
+      ]
+    },
+    {
       "path": "docs/aura_substrate_manifest.files.01.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -252355,6 +252689,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_collision_safe_rebase.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4864,
+      "lines": 126,
+      "tokens_est": 1216,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9bd345c7099c779a",
+      "vector": [
+        -0.244092,
+        -0.296132,
+        0.261438,
+        -0.023542,
+        0.169749,
+        0.122665,
+        -0.085494,
+        0.308522,
+        -0.117709,
+        0.177183,
+        -0.102841,
+        0.070626,
+        0.110275,
+        0.286219,
+        -0.147446,
+        0.087972,
+        -0.068147,
+        -0.249048,
+        0.1301,
+        0.003717,
+        -0.112753,
+        -0.19453,
+        -0.239136,
+        0.075582,
+        0.263916,
+        0.028498,
+        -0.291175,
+        -0.187096,
+        0.1301,
+        0.030976,
+        0.07806,
+        0.204442
+      ]
+    },
+    {
       "path": "tests/test_aura_command_risk_gate.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +263026,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_collision_safe_rebase.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6747,
+      "lines": 189,
+      "tokens_est": 1687,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "05c5ca6b3ecebd15",
+      "vector": [
+        0.199087,
+        0.196812,
+        -0.215014,
+        -0.253694,
+        -0.267345,
+        0.001138,
+        -0.028441,
+        -0.02389,
+        0.028441,
+        0.196812,
+        0.044368,
+        0.210463,
+        0.137654,
+        -0.155857,
+        0.217289,
+        0.1058,
+        -0.080772,
+        0.158132,
+        -0.169508,
+        0.14448,
+        -0.267345,
+        -0.003413,
+        -0.164958,
+        -0.164958,
+        -0.001138,
+        0.158132,
+        -0.269621,
+        0.180885,
+        0.010239,
+        0.269621,
+        0.240042,
+        0.287823
       ]
     },
     {
@@ -286646,16 +287074,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1644,
+    "total_bytes": 26436841,
+    "text_tokens_est": 6599563,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
+      "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286798,6 +287226,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-collision-safe-rebase-addendum.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -287762,6 +288191,8 @@
       "docs/architecture_harness/ARCH_V2_3/AURA_UNIVERSAL_REFACTOR_CONVERGENCE_HARNESS_V2_3.md",
       "docs/architecture_harness/ARCH_V2_3/aura_arch_v2_3_default_policy.json",
       "docs/architecture_harness/ARCH_V2_3/aura_pr_continuity_capsule.v2_3.schema.json",
+      "docs/arena/COLLISION_SAFE_REBASE_ADDENDUM_SOP_V1.md",
+      "docs/arena/COLLISION_SAFE_REBASE_ADDENDUM_SOP_V1__PR717_REBASE_ADDENDUM.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -288077,6 +288508,7 @@
       "tests/test_aura_coding_workbench_actions.py",
       "tests/test_aura_coding_workbench_sequence.py",
       "tests/test_aura_coding_workbench_wfst_equivalence.py",
+      "tests/test_aura_collision_safe_rebase.py",
       "tests/test_aura_command_risk_gate.py",
       "tests/test_aura_construction_adapter.py",
       "tests/test_aura_construction_adapter_hardening.py",
@@ -288296,6 +288728,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_collision_safe_rebase.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -411384,6 +411817,116 @@
         "file_digest8": "a3a6f0f3475cf422"
       },
       {
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#class:CollisionSafeRebaseTests:ea70abdd4d241a00",
+        "name": "CollisionSafeRebaseTests",
+        "kind": "class",
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "line": 16,
+        "end_line": 121,
+        "signature_hash": "edcea60e62e2cfe6",
+        "file_digest8": "9bd345c7099c779a"
+      },
+      {
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#function:h:e36165a8504e83f6",
+        "name": "h",
+        "kind": "function",
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "line": 12,
+        "end_line": 13,
+        "signature_hash": "ad123cb640a00f07",
+        "file_digest8": "9bd345c7099c779a"
+      },
+      {
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.candidate:9214ec4ed3aa065f",
+        "name": "CollisionSafeRebaseTests.candidate",
+        "kind": "method",
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "line": 25,
+        "end_line": 32,
+        "signature_hash": "6e495d790b64aaa6",
+        "file_digest8": "9bd345c7099c779a"
+      },
+      {
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.owner:8c27e054b1b22195",
+        "name": "CollisionSafeRebaseTests.owner",
+        "kind": "method",
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "line": 17,
+        "end_line": 23,
+        "signature_hash": "458ff024d3b2152b",
+        "file_digest8": "9bd345c7099c779a"
+      },
+      {
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_assessment_digest_is_deterministic_under_ordering_noise:1a1b93c5a19f2962",
+        "name": "CollisionSafeRebaseTests.test_assessment_digest_is_deterministic_under_ordering_noise",
+        "kind": "method",
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "line": 103,
+        "end_line": 121,
+        "signature_hash": "ecea1b8434ea4a99",
+        "file_digest8": "9bd345c7099c779a"
+      },
+      {
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_claim_sets_must_come_from_candidate:3a9637f4eef5d9d0",
+        "name": "CollisionSafeRebaseTests.test_claim_sets_must_come_from_candidate",
+        "kind": "method",
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "line": 94,
+        "end_line": 101,
+        "signature_hash": "6b8456f83fe231ac",
+        "file_digest8": "9bd345c7099c779a"
+      },
+      {
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_duplicate_semantics_are_retained_but_get_zero_sibling_credit:420b79967cce8ca2",
+        "name": "CollisionSafeRebaseTests.test_duplicate_semantics_are_retained_but_get_zero_sibling_credit",
+        "kind": "method",
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "line": 34,
+        "end_line": 47,
+        "signature_hash": "a303cf329c1d3df3",
+        "file_digest8": "9bd345c7099c779a"
+      },
+      {
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_no_overlap_is_orthogonal_owner_candidate_not_automatic_authority:883a64b1dda2a003",
+        "name": "CollisionSafeRebaseTests.test_no_overlap_is_orthogonal_owner_candidate_not_automatic_authority",
+        "kind": "method",
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "line": 72,
+        "end_line": 83,
+        "signature_hash": "6098ebff9ed19d0d",
+        "file_digest8": "9bd345c7099c779a"
+      },
+      {
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_overlap_and_residual_must_be_disjoint:7b1def87802ecbe1",
+        "name": "CollisionSafeRebaseTests.test_overlap_and_residual_must_be_disjoint",
+        "kind": "method",
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "line": 85,
+        "end_line": 92,
+        "signature_hash": "60a1ed7c32f13754",
+        "file_digest8": "9bd345c7099c779a"
+      },
+      {
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_overlap_plus_unique_residual_becomes_addendum_candidate:e45cdf6b17b75e65",
+        "name": "CollisionSafeRebaseTests.test_overlap_plus_unique_residual_becomes_addendum_candidate",
+        "kind": "method",
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "line": 49,
+        "end_line": 59,
+        "signature_hash": "ec0d3f75b3afb38c",
+        "file_digest8": "9bd345c7099c779a"
+      },
+      {
+        "semantic_id": "tests/test_aura_collision_safe_rebase.py#method:CollisionSafeRebaseTests.test_stale_owner_forces_hold_before_rebase:674edbcbc5cbc546",
+        "name": "CollisionSafeRebaseTests.test_stale_owner_forces_hold_before_rebase",
+        "kind": "method",
+        "file": "tests/test_aura_collision_safe_rebase.py",
+        "line": 61,
+        "end_line": 70,
+        "signature_hash": "c6a698c9fe6bc4f8",
+        "file_digest8": "9bd345c7099c779a"
+      },
+      {
         "semantic_id": "tests/test_aura_command_risk_gate.py#class:TestRiskGate:05488bc4d49c8dbe",
         "name": "TestRiskGate",
         "kind": "class",
@@ -445634,6 +446177,86 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_collision_safe_rebase.py#class:CandidateContribution:6a880c27174c1253",
+        "name": "CandidateContribution",
+        "kind": "class",
+        "file": "tools/aura_collision_safe_rebase.py",
+        "line": 38,
+        "end_line": 43,
+        "signature_hash": "8d0ccf9d03d59c95",
+        "file_digest8": "05c5ca6b3ecebd15"
+      },
+      {
+        "semantic_id": "tools/aura_collision_safe_rebase.py#class:CollisionAssessment:4e80b5f410af2389",
+        "name": "CollisionAssessment",
+        "kind": "class",
+        "file": "tools/aura_collision_safe_rebase.py",
+        "line": 47,
+        "end_line": 60,
+        "signature_hash": "ec43dd8c6000d86a",
+        "file_digest8": "05c5ca6b3ecebd15"
+      },
+      {
+        "semantic_id": "tools/aura_collision_safe_rebase.py#class:CollisionDisposition:6db2cfe838083187",
+        "name": "CollisionDisposition",
+        "kind": "class",
+        "file": "tools/aura_collision_safe_rebase.py",
+        "line": 22,
+        "end_line": 26,
+        "signature_hash": "5758675f48175d69",
+        "file_digest8": "05c5ca6b3ecebd15"
+      },
+      {
+        "semantic_id": "tools/aura_collision_safe_rebase.py#class:OwnerState:9053a9e149d0f416",
+        "name": "OwnerState",
+        "kind": "class",
+        "file": "tools/aura_collision_safe_rebase.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "6bb6689769499b42",
+        "file_digest8": "05c5ca6b3ecebd15"
+      },
+      {
+        "semantic_id": "tools/aura_collision_safe_rebase.py#function:_canonical_tuple:a2c9da5c20ee90b6",
+        "name": "_canonical_tuple",
+        "kind": "function",
+        "file": "tools/aura_collision_safe_rebase.py",
+        "line": 63,
+        "end_line": 64,
+        "signature_hash": "60cbac922dd34e15",
+        "file_digest8": "05c5ca6b3ecebd15"
+      },
+      {
+        "semantic_id": "tools/aura_collision_safe_rebase.py#function:_digest:841a1a470941a37f",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/aura_collision_safe_rebase.py",
+        "line": 72,
+        "end_line": 74,
+        "signature_hash": "ea79c5a561431792",
+        "file_digest8": "05c5ca6b3ecebd15"
+      },
+      {
+        "semantic_id": "tools/aura_collision_safe_rebase.py#function:_require_digest:10cf0f8b2a7c565e",
+        "name": "_require_digest",
+        "kind": "function",
+        "file": "tools/aura_collision_safe_rebase.py",
+        "line": 67,
+        "end_line": 69,
+        "signature_hash": "361edb4ad3534165",
+        "file_digest8": "05c5ca6b3ecebd15"
+      },
+      {
+        "semantic_id": "tools/aura_collision_safe_rebase.py#function:assess_collision:30d74de06a199451",
+        "name": "assess_collision",
+        "kind": "function",
+        "file": "tools/aura_collision_safe_rebase.py",
+        "line": 77,
+        "end_line": 188,
+        "signature_hash": "fbaaa998b8268789",
+        "file_digest8": "05c5ca6b3ecebd15"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447507,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "d4979a30dcdbd5a39fa22337520321a3",
+    "payload_hash": "9edb4c3670ab605cdfa7d8af46b7c972"
   }
 }
