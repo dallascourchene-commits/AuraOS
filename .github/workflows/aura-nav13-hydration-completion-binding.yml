@@ -1,0 +1,157 @@
+name: Aura NAV-13 Hydration Completion Binding Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_nav13_hydration_completion.py"
+      - "tests/test_aura_nav13_hydration_completion.py"
+      - ".github/workflows/aura-nav13-hydration-completion-binding.yml"
+  push:
+    branches:
+      - "arena/nav13-hydration-completion-binding-v1-20260831-sol"
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: nav13-hydration-completion-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  exact-hydration-completion-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NAV750_HEAD: "59efe2859a2e02893df4d91c69bde87a7cc39d84"
+      NAV750_RUN: "33428173043"
+      NAV752_HEAD: "319783b665778ca7f3de6765e73b6e096cc10bf7"
+      NAV752_RUN: "33433549543"
+    steps:
+      - name: Fetch exact head and semantic parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "$TARGET_SHA" "$NAV750_HEAD" "$NAV752_HEAD"
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Authenticate exact parent semantic surfaces
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$NAV750_HEAD:tools/aura_nav13_lawfield.py")" = "$(git rev-parse HEAD:tools/aura_nav13_lawfield.py)"
+          test "$(git rev-parse "$NAV752_HEAD:tools/aura_nav13_minimum_hydration.py")" = "$(git rev-parse HEAD:tools/aura_nav13_minimum_hydration.py)"
+          test "$(git rev-parse "$NAV752_HEAD:tests/test_aura_nav13_minimum_hydration.py")" = "$(git rev-parse HEAD:tests/test_aura_nav13_minimum_hydration.py)"
+          echo "PARENT_SEMANTIC_SURFACES_EXACT=true"
+
+      - name: Revalidate exact hosted parent proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          expected = (
+              (int(os.environ["NAV750_RUN"]), os.environ["NAV750_HEAD"], "Aura NAV-13 LawField Boundary Proof"),
+              (int(os.environ["NAV752_RUN"]), os.environ["NAV752_HEAD"], "Aura NAV-13 Minimum Lawful Hydration Proof"),
+          )
+          headers = {
+              "Authorization": f"Bearer {token}",
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+          for run_id, head, name in expected:
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{run_id}", headers=headers
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  run = json.load(response)
+              assert run["head_sha"] == head, (run_id, run["head_sha"], head)
+              assert run["name"] == name, (run_id, run["name"], name)
+              assert run["status"] == "completed" and run["conclusion"] == "success", (
+                  run_id, run["status"], run["conclusion"]
+              )
+              print(f"EXACT_PARENT_SUCCESS run={run_id} head={head}")
+          PY
+
+      - name: Compile and run parent plus completion contracts
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_nav13_lawfield.py \
+            tools/aura_nav13_minimum_hydration.py \
+            tools/aura_nav13_hydration_completion.py \
+            tests/test_aura_nav13_hydration_completion.py
+          python3 -m unittest -v \
+            tests.test_aura_nav13_minimum_hydration \
+            tests.test_aura_nav13_hydration_completion
+
+      - name: Exhaust completion currentness and achieved-level lattice
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from dataclasses import replace
+          from tests.test_aura_nav13_hydration_completion import law, plan_for, observation
+          from tools.aura_nav13_minimum_hydration import HydrationLevel
+          from tools.aura_nav13_hydration_completion import CompletionDisposition, bind_hydration_completion
+
+          current_law = law()
+          plan = plan_for(current_law)
+          count = 0
+          for currentness in ("RESOLVED_CURRENT", "STALE", "UNKNOWN"):
+              for achieved in HydrationLevel:
+                  for generation_matches in (False, True):
+                      obs = observation(
+                          plan,
+                          source_currentness=currentness,
+                          achieved_level=achieved,
+                          evidence_generation_key=(
+                              plan.steps[0].evidence_generation_key
+                              if generation_matches
+                              else "f" * 64
+                          ),
+                      )
+                      receipt = bind_hydration_completion(
+                          law=current_law, plan=plan, observations=(obs,)
+                      )
+                      if not generation_matches:
+                          expected = CompletionDisposition.HOLD_SOURCE_GENERATION_MISMATCH
+                      elif currentness != "RESOLVED_CURRENT":
+                          expected = CompletionDisposition.HOLD_CURRENTNESS_UNRESOLVED
+                      elif achieved < plan.steps[0].target_level:
+                          expected = CompletionDisposition.HOLD_LEVEL_INSUFFICIENT
+                      else:
+                          expected = CompletionDisposition.BOUND_COMPLETE
+                      if receipt.disposition is not expected:
+                          raise SystemExit(
+                              f"COMPLETION_LATTICE_MISMATCH:{currentness}:{achieved}:"
+                              f"{generation_matches}:{receipt.disposition}:{expected}"
+                          )
+                      if receipt.hydration_obligation_satisfied != (expected is CompletionDisposition.BOUND_COMPLETE):
+                          raise SystemExit("COMPLETION_SATISFACTION_MISMATCH")
+                      count += 1
+          if count != 30:
+              raise SystemExit(f"COMPLETION_LATTICE_COUNT_MISMATCH:{count}")
+          print("NAV13_HYDRATION_COMPLETION_LATTICE_OK=30")
+          PY
+
+      - name: Enforce nonpromotion laws
+        run: |
+          set -euo pipefail
+          grep -q 'HydrationPlan!=HydrationObservation!=EvidenceAdmission' tools/aura_nav13_hydration_completion.py
+          grep -q 'HydrationObservedAndBound!=SemanticTruth' tools/aura_nav13_hydration_completion.py
+          grep -q 'MaterialDigestBound!=ObserverAuthenticatedByThisContract' tools/aura_nav13_hydration_completion.py
+          grep -q 'HydrationCompletion!=Authorization!=EffectAuthority' tools/aura_nav13_hydration_completion.py
+          grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' tools/aura_nav13_hydration_completion.py
+          echo "SOURCE_TRUTH_PROVEN=false"
+          echo "EVIDENCE_ADMITTED=false"
+          echo "AUTHORIZATION_ISSUED=false"
+          echo "EFFECT_AUTHORIZED=false"
+          echo "SEMANTIC_K27_AUTHORITY=false"
+          echo "NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false"
