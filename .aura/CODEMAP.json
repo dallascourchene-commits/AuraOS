@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788160192,
+  "generated_at_unix": 1788161753,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1787,8 +1787,8 @@
     {
       "ring": "repo",
       "files": 1670,
-      "bytes": 26674737,
-      "tokens_est": 6659043,
+      "bytes": 26670481,
+      "tokens_est": 6657979,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
@@ -3946,8 +3946,8 @@
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "function",
-        "line": 36,
-        "end_line": 39,
+        "line": 34,
+        "end_line": 35,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_canonical:6b25ede425721fdb",
         "signature_hash": "8d5bf5695239b859"
       },
@@ -4436,8 +4436,8 @@
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "function",
-        "line": 42,
-        "end_line": 43,
+        "line": 38,
+        "end_line": 39,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_digest:7426ed05a57735ff",
         "signature_hash": "514f786724465716"
       },
@@ -8180,8 +8180,8 @@
       {
         "file": "tools/k27_eye_pose_observation_contract.py",
         "kind": "function",
-        "line": 211,
-        "end_line": 212,
+        "line": 204,
+        "end_line": 205,
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_canonical_json:ad18b204d8799926",
         "signature_hash": "c6d0368c0d268d56"
       }
@@ -32034,14 +32034,6 @@
         "end_line": 103,
         "semantic_id": "scripts/aura_ifc_storey_index.py#function:_finite:e26559cf2b618e2f",
         "signature_hash": "ee2fd2b67e42aa60"
-      },
-      {
-        "file": "tools/k27_eye_pose_observation_contract.py",
-        "kind": "function",
-        "line": 30,
-        "end_line": 33,
-        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_finite:57c75e2e8e1c5514",
-        "signature_hash": "c71561197bc4f764"
       }
     ],
     "_optional_bounded": [
@@ -136880,6 +136872,14 @@
         "end_line": 184,
         "semantic_id": "tests/test_aura_gate.py#function:policy:6c4234b7f9aaa5a3",
         "signature_hash": "96c8d2d81ca0f6b2"
+      },
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 40,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:policy:46054b302ea6e378",
+        "signature_hash": "1490428864694da8"
       }
     ],
     "test_policy_round_trip_and_strict_contract": [
@@ -157372,16 +157372,16 @@
       {
         "file": "tests/test_k27_eye_pose_observation_contract.py",
         "kind": "function",
-        "line": 17,
-        "end_line": 30,
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:calibration:28e9abcc04967ab2",
-        "signature_hash": "f59fac0cedb002c5"
+        "line": 15,
+        "end_line": 22,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:calibration:976ec4761162e358",
+        "signature_hash": "80d0c39e9f5d65ed"
       },
       {
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
         "kind": "function",
-        "line": 25,
-        "end_line": 36,
+        "line": 19,
+        "end_line": 26,
         "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:calibration:6f235f10011e4cb1",
         "signature_hash": "80d0c39e9f5d65ed"
       }
@@ -157390,110 +157390,100 @@
       {
         "file": "tests/test_k27_eye_pose_observation_contract.py",
         "kind": "function",
-        "line": 33,
-        "end_line": 47,
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:frame:d1556235ca21c7d0",
-        "signature_hash": "d986bf8a8e22e32d"
+        "line": 24,
+        "end_line": 31,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:frame:ebd818a43fc40e11",
+        "signature_hash": "a25fa4f7e2f30e59"
       }
     ],
-    "EyePoseObservationContractTests": [
+    "EyeProducerTraversalTests": [
       {
         "file": "tests/test_k27_eye_pose_observation_contract.py",
         "kind": "class",
-        "line": 50,
-        "end_line": 170,
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#class:EyePoseObservationContractTests:92ccf178978891ad",
-        "signature_hash": "0ab6a0fdc72f2159"
+        "line": 42,
+        "end_line": 93,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#class:EyeProducerTraversalTests:d36941fd8b656d3b",
+        "signature_hash": "991365bb2d85aa24"
       }
     ],
-    "EyePoseObservationContractTests.test_assumed_ipd_geometry_is_estimate_not_metric_truth": [
+    "EyeProducerTraversalTests.test_anisotropic_intrinsics_are_used_in_depth": [
       {
         "file": "tests/test_k27_eye_pose_observation_contract.py",
         "kind": "method",
-        "line": 51,
-        "end_line": 60,
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_assumed_ipd_geometry_is_estimate_not_metric_truth:8090cd72d39540fd",
-        "signature_hash": "e1a978586c6c2d51"
+        "line": 43,
+        "end_line": 46,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_anisotropic_intrinsics_are_used_in_depth:8dfb51f47091b989",
+        "signature_hash": "0bcd230870815f0b"
       }
     ],
-    "EyePoseObservationContractTests.test_stale_frame_fails_closed": [
+    "EyeProducerTraversalTests.test_raw_coordinate_space_rejected": [
       {
         "file": "tests/test_k27_eye_pose_observation_contract.py",
         "kind": "method",
-        "line": 62,
+        "line": 48,
+        "end_line": 51,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_raw_coordinate_space_rejected:32a4bd796897dbec",
+        "signature_hash": "2616b182b31d17ac"
+      }
+    ],
+    "EyeProducerTraversalTests.test_receipt_builder_accepts_no_estimate_or_gate": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 56,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_receipt_builder_accepts_no_estimate_or_gate:4c0fca28629fc449",
+        "signature_hash": "88ecf96d47fa55ee"
+      }
+    ],
+    "EyeProducerTraversalTests.test_receipt_recomputes_producer_and_verifies": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 63,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_receipt_recomputes_producer_and_verifies:1b0e0e754bf8cf35",
+        "signature_hash": "2a8c93234c6c9b88"
+      }
+    ],
+    "EyeProducerTraversalTests.test_forged_gate_with_fresh_hash_rejected": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 65,
         "end_line": 71,
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_stale_frame_fails_closed:43d5bd63bbdba56c",
-        "signature_hash": "b5047fe9314a0d6e"
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_forged_gate_with_fresh_hash_rejected:74d8cc81d20c325e",
+        "signature_hash": "4e0dce8887456e3c"
       }
     ],
-    "EyePoseObservationContractTests.test_sensor_aba_runtime_change_fails_common_cut": [
+    "EyeProducerTraversalTests.test_forged_estimate_with_fresh_hash_rejected": [
       {
         "file": "tests/test_k27_eye_pose_observation_contract.py",
         "kind": "method",
         "line": 73,
-        "end_line": 83,
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_sensor_aba_runtime_change_fails_common_cut:350757c7aa36354d",
-        "signature_hash": "79da1579c48d4265"
+        "end_line": 79,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_forged_estimate_with_fresh_hash_rejected:518bab7161871a65",
+        "signature_hash": "e7ea91acf6e24132"
       }
     ],
-    "EyePoseObservationContractTests.test_calibration_generation_movement_reopens_gate": [
+    "EyeProducerTraversalTests.test_stale_frame_fails_software_gate": [
       {
         "file": "tests/test_k27_eye_pose_observation_contract.py",
         "kind": "method",
-        "line": 85,
-        "end_line": 95,
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_calibration_generation_movement_reopens_gate:14cb16b4df918966",
-        "signature_hash": "4cb88962c7068094"
+        "line": 81,
+        "end_line": 86,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_stale_frame_fails_software_gate:d8dae7ea2d0d4e5a",
+        "signature_hash": "1b35091de97e93ff"
       }
     ],
-    "EyePoseObservationContractTests.test_landmark_model_generation_movement_reopens_gate": [
+    "EyeProducerTraversalTests.test_claim_ceiling_never_upgrades_capture_or_authority": [
       {
         "file": "tests/test_k27_eye_pose_observation_contract.py",
         "kind": "method",
-        "line": 97,
-        "end_line": 107,
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_landmark_model_generation_movement_reopens_gate:c2349f7d2edd384c",
-        "signature_hash": "a9cf4c2a286afa11"
-      }
-    ],
-    "EyePoseObservationContractTests.test_low_tracking_confidence_fails_closed": [
-      {
-        "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "kind": "method",
-        "line": 109,
-        "end_line": 119,
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_low_tracking_confidence_fails_closed:e28597e01d6c9e7c",
-        "signature_hash": "7a579e0b94dd3d95"
-      }
-    ],
-    "EyePoseObservationContractTests.test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized": [
-      {
-        "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "kind": "method",
-        "line": 121,
-        "end_line": 132,
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized:81ca910e14a753d1",
-        "signature_hash": "050365dd551d50e3"
-      }
-    ],
-    "EyePoseObservationContractTests.test_receipt_is_two_parent_source_bound_and_tamper_evident": [
-      {
-        "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "kind": "method",
-        "line": 134,
-        "end_line": 153,
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_receipt_is_two_parent_source_bound_and_tamper_evident:591790535fd26ecf",
-        "signature_hash": "8377b91b4d42debe"
-      }
-    ],
-    "EyePoseObservationContractTests.test_receipt_requires_exactly_two_distinct_parents": [
-      {
-        "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "kind": "method",
-        "line": 155,
-        "end_line": 170,
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_receipt_requires_exactly_two_distinct_parents:bb0476af135e5cfd",
-        "signature_hash": "a37f9709b3c30236"
+        "line": 88,
+        "end_line": 93,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_claim_ceiling_never_upgrades_capture_or_authority:716bec64f2a0502f",
+        "signature_hash": "5ca1a5f3a5dcebfb"
       }
     ],
     "make_decision": [
@@ -157760,18 +157750,18 @@
       {
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
         "kind": "function",
-        "line": 39,
-        "end_line": 73,
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:eye_receipt:cdfe16727bfa68c4",
-        "signature_hash": "9020eb40c8d5b771"
+        "line": 28,
+        "end_line": 49,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:eye_receipt:3fc4c9d3e6a0f91a",
+        "signature_hash": "7258159eb082020b"
       }
     ],
     "series": [
       {
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
         "kind": "function",
-        "line": 76,
-        "end_line": 77,
+        "line": 51,
+        "end_line": 52,
         "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:series:6abfab6e4795e1d7",
         "signature_hash": "e3a95641818231ec"
       }
@@ -157780,88 +157770,78 @@
       {
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
         "kind": "class",
-        "line": 80,
-        "end_line": 156,
+        "line": 54,
+        "end_line": 103,
         "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeCoordinateTests:e24a09e66f248d98",
         "signature_hash": "230c0e4416bb511a"
       }
     ],
-    "TemporalEvidenceScopeCoordinateTests.test_point_before_historical_series_is_classified_without_currentness_promotion": [
+    "TemporalEvidenceScopeCoordinateTests.test_repaired_point_holds_unknown_until_temporal_authentication": [
       {
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
         "kind": "method",
-        "line": 81,
-        "end_line": 89,
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_point_before_historical_series_is_classified_without_currentness_promotion:d5f1d9dae66ec1da",
-        "signature_hash": "fabcd849fc86c988"
+        "line": 55,
+        "end_line": 62,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_repaired_point_holds_unknown_until_temporal_authentication:1d2cc3dc1b7b0535",
+        "signature_hash": "5390bae90b8bdaaa"
       }
     ],
-    "TemporalEvidenceScopeCoordinateTests.test_point_during_historical_series_overlap_is_not_shared_current_world_or_causality": [
+    "TemporalEvidenceScopeCoordinateTests.test_stale_point_is_unknown_before_time_relation": [
       {
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
         "kind": "method",
-        "line": 91,
-        "end_line": 106,
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_point_during_historical_series_overlap_is_not_shared_current_world_or_causality:86cbac1792b35f5c",
-        "signature_hash": "1a800ebec5a362cb"
+        "line": 64,
+        "end_line": 69,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_stale_point_is_unknown_before_time_relation:e306f21f49b83ccb",
+        "signature_hash": "96dc5bf4614e85fd"
       }
     ],
-    "TemporalEvidenceScopeCoordinateTests.test_point_after_historical_series_is_classified": [
+    "TemporalEvidenceScopeCoordinateTests.test_caller_cannot_flip_temporal_admission_with_fresh_hash": [
       {
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
         "kind": "method",
-        "line": 108,
-        "end_line": 114,
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_point_after_historical_series_is_classified:9a1528a1ac7e2666",
-        "signature_hash": "b319af35511d2f4b"
+        "line": 71,
+        "end_line": 76,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_caller_cannot_flip_temporal_admission_with_fresh_hash:ffd52dc910ae2585",
+        "signature_hash": "c31aa6074b986a15"
       }
     ],
-    "TemporalEvidenceScopeCoordinateTests.test_inadmissible_eye_common_cut_fails_before_temporal_relation_credit": [
+    "TemporalEvidenceScopeCoordinateTests.test_forged_gate_result_is_rejected_before_temporal_use": [
       {
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
         "kind": "method",
-        "line": 116,
-        "end_line": 121,
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_inadmissible_eye_common_cut_fails_before_temporal_relation_credit:793e9c1fbab6e2ec",
-        "signature_hash": "caafd8fef4bd35c5"
+        "line": 78,
+        "end_line": 84,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_forged_gate_result_is_rejected_before_temporal_use:3c2873bf5c2caa77",
+        "signature_hash": "b798a7467572a4ab"
       }
     ],
-    "TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_fails_before_composition": [
+    "TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_still_fails": [
       {
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
         "kind": "method",
-        "line": 123,
-        "end_line": 129,
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_fails_before_composition:1721eb10f0e3a89d",
-        "signature_hash": "b2727eeb6f6a5228"
+        "line": 86,
+        "end_line": 90,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_still_fails:c052e93d40176ffc",
+        "signature_hash": "78789c2f9e5b6bde"
       }
     ],
-    "TemporalEvidenceScopeCoordinateTests.test_portable_coordinate_is_tamper_evident_and_nonauthorizing": [
+    "TemporalEvidenceScopeCoordinateTests.test_portable_unknown_coordinate_is_tamper_evident": [
       {
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
         "kind": "method",
-        "line": 131,
-        "end_line": 142,
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_portable_coordinate_is_tamper_evident_and_nonauthorizing:866496b235e9e472",
-        "signature_hash": "21389ce5e5f55866"
-      }
-    ],
-    "TemporalEvidenceScopeCoordinateTests.test_public_builder_has_only_exact_evidence_objects": [
-      {
-        "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "kind": "method",
-        "line": 144,
-        "end_line": 148,
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_public_builder_has_only_exact_evidence_objects:2b399a78af846400",
-        "signature_hash": "b99db4856f95ff5a"
+        "line": 92,
+        "end_line": 97,
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_portable_unknown_coordinate_is_tamper_evident:1972afc224399135",
+        "signature_hash": "40e2d3a374fd8970"
       }
     ],
     "TemporalEvidenceScopeCoordinateTests.test_coordinate_identity_is_deterministic": [
       {
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
         "kind": "method",
-        "line": 150,
-        "end_line": 156,
+        "line": 99,
+        "end_line": 103,
         "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_coordinate_identity_is_deterministic:0f80fde6dde5635a",
         "signature_hash": "da6cbc800ca8f7c8"
       }
@@ -159196,22 +159176,32 @@
         "signature_hash": "f680ff8905fe4b81"
       }
     ],
-    "_finite_positive": [
+    "_real": [
       {
         "file": "tools/k27_eye_pose_observation_contract.py",
         "kind": "function",
         "line": 24,
-        "end_line": 27,
-        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_finite_positive:74809e1755678bd8",
-        "signature_hash": "c763af4e62e0138d"
+        "end_line": 30,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_real:0ed59cde6ee5b4c1",
+        "signature_hash": "3ebe1d51bad7416d"
+      }
+    ],
+    "_nonempty": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 36,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_nonempty:7f15aab702ddd43d",
+        "signature_hash": "1cde724336d688ac"
       }
     ],
     "CameraCalibration": [
       {
         "file": "tools/k27_eye_pose_observation_contract.py",
         "kind": "class",
-        "line": 37,
-        "end_line": 59,
+        "line": 40,
+        "end_line": 65,
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:CameraCalibration:ee4d07347dc14a11",
         "signature_hash": "960d15363264b4f7"
       }
@@ -159220,8 +159210,8 @@
       {
         "file": "tools/k27_eye_pose_observation_contract.py",
         "kind": "method",
-        "line": 48,
-        "end_line": 59,
+        "line": 53,
+        "end_line": 65,
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:CameraCalibration.validate:07aebbb2da45c3d9",
         "signature_hash": "99559e6add5bcf3e"
       }
@@ -159230,8 +159220,8 @@
       {
         "file": "tools/k27_eye_pose_observation_contract.py",
         "kind": "class",
-        "line": 63,
-        "end_line": 96,
+        "line": 69,
+        "end_line": 90,
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:IrisFrameObservation:c87bd3bb37e8f341",
         "signature_hash": "b403f130812ee23a"
       }
@@ -159240,8 +159230,8 @@
       {
         "file": "tools/k27_eye_pose_observation_contract.py",
         "kind": "method",
-        "line": 75,
-        "end_line": 96,
+        "line": 81,
+        "end_line": 90,
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:IrisFrameObservation.validate:e0f6472f6af3e0fe",
         "signature_hash": "99559e6add5bcf3e"
       }
@@ -159250,8 +159240,8 @@
       {
         "file": "tools/k27_eye_pose_observation_contract.py",
         "kind": "class",
-        "line": 100,
-        "end_line": 107,
+        "line": 94,
+        "end_line": 101,
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:EyePoseEstimate:f11cf7a67b7578f7",
         "signature_hash": "4426a584e1b24e0e"
       }
@@ -159260,18 +159250,48 @@
       {
         "file": "tools/k27_eye_pose_observation_contract.py",
         "kind": "class",
-        "line": 111,
-        "end_line": 118,
+        "line": 105,
+        "end_line": 120,
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:SteeringGate:96d323032a7c0afa",
         "signature_hash": "f942ccb186596668"
+      }
+    ],
+    "SteeringGate.admissible": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 120,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:SteeringGate.admissible:eefd407c4acdf37e",
+        "signature_hash": "2cb1f04a61ff31ba"
+      }
+    ],
+    "GatePolicyV1": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "class",
+        "line": 124,
+        "end_line": 145,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:GatePolicyV1:37d8ef44dafc24a7",
+        "signature_hash": "0779629bed0c4076"
+      }
+    ],
+    "GatePolicyV1.validate": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 145,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:GatePolicyV1.validate:ffa2b2fb6eee6c1b",
+        "signature_hash": "99559e6add5bcf3e"
       }
     ],
     "estimate_eye_pose_from_assumed_ipd": [
       {
         "file": "tools/k27_eye_pose_observation_contract.py",
         "kind": "function",
-        "line": 121,
-        "end_line": 152,
+        "line": 148,
+        "end_line": 166,
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:estimate_eye_pose_from_assumed_ipd:6b4d707dff063222",
         "signature_hash": "a55deab9508aba9c"
       }
@@ -159280,28 +159300,38 @@
       {
         "file": "tools/k27_eye_pose_observation_contract.py",
         "kind": "function",
-        "line": 155,
-        "end_line": 208,
-        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:gate_eye_pose_for_steering:60cb74a522fb06ee",
-        "signature_hash": "c6d9f9a477e7e240"
+        "line": 169,
+        "end_line": 201,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:gate_eye_pose_for_steering:4f96deb0b646cab9",
+        "signature_hash": "adbb4687641debca"
       }
     ],
     "build_eye_pose_receipt": [
       {
         "file": "tools/k27_eye_pose_observation_contract.py",
         "kind": "function",
-        "line": 215,
-        "end_line": 250,
-        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:build_eye_pose_receipt:42d8ae9df25ff7d0",
-        "signature_hash": "d27cdddecd456503"
+        "line": 208,
+        "end_line": 254,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:build_eye_pose_receipt:e466159b1f583d60",
+        "signature_hash": "8088374c30a86366"
+      }
+    ],
+    "_from_receipt_inputs": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 257,
+        "end_line": 266,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_from_receipt_inputs:35bd02771257e9a6",
+        "signature_hash": "2ec4faabd83bc641"
       }
     ],
     "verify_eye_pose_receipt": [
       {
         "file": "tools/k27_eye_pose_observation_contract.py",
         "kind": "function",
-        "line": 253,
-        "end_line": 275,
+        "line": 269,
+        "end_line": 277,
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:verify_eye_pose_receipt:df451dd0d0d41e8b",
         "signature_hash": "447e8c7de4f26e0d"
       }
@@ -159310,8 +159340,8 @@
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "class",
-        "line": 29,
-        "end_line": 33,
+        "line": 27,
+        "end_line": 31,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeError:b6e0061efe702f05",
         "signature_hash": "2340462d0127e911"
       }
@@ -159320,8 +159350,8 @@
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "method",
-        "line": 30,
-        "end_line": 33,
+        "line": 28,
+        "end_line": 31,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeError.__init__:b0b3ea5930e70609",
         "signature_hash": "0b6534a3148e5c5d"
       }
@@ -159330,8 +159360,8 @@
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "function",
-        "line": 46,
-        "end_line": 53,
+        "line": 42,
+        "end_line": 49,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_parse_time:207a51d90fb9ee59",
         "signature_hash": "0e7d03ca78676525"
       },
@@ -159356,8 +159386,8 @@
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "function",
-        "line": 56,
-        "end_line": 58,
+        "line": 52,
+        "end_line": 54,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_datetime_ns:7649bd7747019780",
         "signature_hash": "261c131fb889d031"
       }
@@ -159366,8 +159396,8 @@
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "class",
-        "line": 62,
-        "end_line": 99,
+        "line": 58,
+        "end_line": 97,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeCoordinate:a76dc6e6a47590f2",
         "signature_hash": "cc261fd5e3e2c4b8"
       }
@@ -159376,8 +159406,8 @@
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "method",
-        "line": 90,
-        "end_line": 91,
+        "line": 88,
+        "end_line": 89,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.to_dict:bb7bab207d496b24",
         "signature_hash": "5c1a69a9659e2089"
       }
@@ -159386,8 +159416,8 @@
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "method",
-        "line": 94,
-        "end_line": 95,
+        "line": 92,
+        "end_line": 93,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.coordinate_digest:94ea7ec41dce2315",
         "signature_hash": "ab3c3df3e11c71cd"
       }
@@ -159396,18 +159426,28 @@
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "method",
-        "line": 98,
-        "end_line": 99,
+        "line": 96,
+        "end_line": 97,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.evidence_ref:6ea642c1d63d8a6f",
         "signature_hash": "c27cb8129b449d59"
+      }
+    ],
+    "_validate_series": [
+      {
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 120,
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_validate_series:0c613437359ada51",
+        "signature_hash": "715b2019ba747fb5"
       }
     ],
     "bind_temporal_evidence_scope": [
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "function",
-        "line": 102,
-        "end_line": 176,
+        "line": 123,
+        "end_line": 168,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:bind_temporal_evidence_scope:6a5978ea886832fb",
         "signature_hash": "19027a376992efa4"
       }
@@ -159416,8 +159456,8 @@
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "function",
-        "line": 179,
-        "end_line": 211,
+        "line": 171,
+        "end_line": 197,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:verify_temporal_evidence_scope_coordinate:11674854ba2b738c",
         "signature_hash": "97a71849ccb4be37"
       }
@@ -159426,8 +159466,8 @@
       {
         "file": "tools/temporal_evidence_scope_coordinate.py",
         "kind": "function",
-        "line": 214,
-        "end_line": 224,
+        "line": 200,
+        "end_line": 203,
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:portable_temporal_evidence_scope_receipt:fc8dea3355f5f7e9",
         "signature_hash": "d7df1893885c8c2e"
       }
@@ -170990,9 +171030,9 @@
       "path": ".github/workflows/aura-temporal-evidence-scope-coordinate.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 7155,
-      "lines": 156,
-      "tokens_est": 1789,
+      "bytes": 4480,
+      "lines": 107,
+      "tokens_est": 1120,
       "symbol_count": 0,
       "commands": [
         "python3 -m py_compile",
@@ -171000,51 +171040,49 @@
       ],
       "command_lines": {
         "python3 -m py_compile": [
-          70,
-          78,
-          86
+          60,
+          68
         ],
         "python3 -m unittest": [
-          71,
-          79,
-          87
+          61,
+          69
         ]
       },
       "topology": {},
-      "digest8": "92ca3dce33d1dc47",
+      "digest8": "aa9ffd00965150df",
       "vector": [
-        0.218785,
-        -0.277562,
-        0.055512,
-        0.242731,
-        -0.199192,
-        0.155653,
-        0.051159,
-        0.205723,
-        -0.033743,
-        -0.075105,
-        0.109937,
-        0.075105,
-        -0.022858,
-        -0.247085,
-        -0.088167,
-        -0.220961,
-        -0.2079,
-        -0.277562,
-        0.197015,
-        -0.183953,
-        0.181776,
-        0.168714,
-        0.277562,
-        -0.271032,
-        0.109937,
-        0.033743,
-        -0.066397,
-        0.088167,
-        -0.262324,
-        -0.031566,
-        -0.075105,
-        -0.2362
+        -0.182034,
+        0.073079,
+        0.219238,
+        -0.179377,
+        -0.184692,
+        0.04119,
+        -0.152802,
+        0.245813,
+        -0.102311,
+        0.16609,
+        0.089024,
+        0.038533,
+        -0.152802,
+        0.298961,
+        -0.04119,
+        0.038533,
+        -0.043848,
+        -0.328193,
+        0.150145,
+        -0.338823,
+        0.131543,
+        -0.168747,
+        0.136858,
+        0.001329,
+        0.070422,
+        -0.275044,
+        -0.253785,
+        0.216581,
+        0.16609,
+        0.017273,
+        0.102311,
+        -0.23784
       ]
     },
     {
@@ -265870,47 +265908,47 @@
       "path": "tests/test_k27_eye_pose_observation_contract.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 7712,
-      "lines": 175,
-      "tokens_est": 1928,
+      "bytes": 4687,
+      "lines": 97,
+      "tokens_est": 1172,
       "symbol_count": 12,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "a54da33860b95f00",
+      "digest8": "001790b0b75577ec",
       "vector": [
-        -0.022386,
-        0.201475,
-        -0.128426,
-        -0.15199,
-        0.298089,
-        -0.088366,
-        -0.159059,
-        0.114287,
-        -0.298089,
-        -0.123713,
-        0.156703,
-        0.111931,
-        0.111931,
-        -0.109574,
-        -0.100148,
-        0.229752,
-        0.083653,
-        -0.168485,
-        -0.133138,
-        -0.194406,
-        -0.005891,
-        0.286307,
-        -0.203832,
-        -0.187336,
-        0.276881,
-        0.029455,
-        0.241534,
-        0.121356,
-        -0.107218,
-        -0.229752,
-        0.274525,
-        0.126069
+        0.012607,
+        0.065328,
+        -0.267043,
+        0.081374,
+        0.159309,
+        -0.209738,
+        0.159309,
+        0.122634,
+        0.285381,
+        0.085958,
+        -0.145556,
+        -0.024068,
+        0.246413,
+        -0.08825,
+        -0.267043,
+        0.042406,
+        0.283089,
+        0.173062,
+        0.25329,
+        0.060744,
+        0.209738,
+        0.035529,
+        -0.166186,
+        -0.202861,
+        0.25329,
+        -0.257874,
+        -0.017192,
+        -0.099711,
+        0.085958,
+        -0.214322,
+        -0.15014,
+        0.216614
       ]
     },
     {
@@ -266011,47 +266049,47 @@
       "path": "tests/test_temporal_evidence_scope_coordinate.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 6394,
-      "lines": 161,
-      "tokens_est": 1599,
-      "symbol_count": 12,
+      "bytes": 5454,
+      "lines": 107,
+      "tokens_est": 1364,
+      "symbol_count": 11,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "6a41591f7c48b2bd",
+      "digest8": "1498c90cf3b7bbad",
       "vector": [
-        -0.10936,
-        -0.207905,
-        0.068501,
-        -0.270397,
-        -0.304046,
-        -0.133396,
-        -0.284818,
-        -0.030044,
-        -0.200694,
-        -0.118975,
-        0.253572,
-        -0.234344,
-        0.203098,
-        -0.301643,
-        0.085325,
-        0.010816,
-        0.025237,
-        0.092536,
-        0.099746,
-        0.255976,
-        0.082922,
-        -0.126185,
-        -0.19108,
-        0.246361,
-        0.159835,
-        -0.078115,
-        0.087729,
-        -0.02043,
-        0.236747,
-        -0.128589,
-        -0.056483,
-        0.203098
+        -0.018665,
+        0.297393,
+        0.145585,
+        0.153051,
+        0.13812,
+        -0.130654,
+        -0.314813,
+        0.232688,
+        0.260063,
+        0.150563,
+        -0.068438,
+        -0.279972,
+        -0.055994,
+        0.230199,
+        0.222733,
+        -0.172961,
+        -0.130654,
+        -0.021153,
+        -0.272506,
+        0.195358,
+        -0.065949,
+        0.130654,
+        0.135631,
+        0.068438,
+        0.053506,
+        -0.048528,
+        0.240154,
+        -0.080881,
+        -0.163006,
+        0.190381,
+        -0.051017,
+        -0.242642
       ]
     },
     {
@@ -266669,94 +266707,94 @@
       "path": "tools/k27_eye_pose_observation_contract.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 9814,
-      "lines": 276,
-      "tokens_est": 2454,
-      "symbol_count": 13,
+      "bytes": 11454,
+      "lines": 278,
+      "tokens_est": 2864,
+      "symbol_count": 17,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "2566cb9278c688d2",
+      "digest8": "49bc9b60b3c218b1",
       "vector": [
-        0.342518,
-        0.076892,
-        -0.322946,
-        0.093668,
-        0.130017,
-        -0.032155,
-        -0.174754,
-        0.25584,
-        0.127221,
-        0.314558,
-        0.208307,
-        -0.308966,
-        -0.25584,
-        -0.001398,
-        0.113241,
-        -0.032155,
-        0.032155,
-        -0.00699,
-        0.160774,
-        -0.275413,
-        -0.138405,
-        -0.023767,
-        0.118833,
-        -0.088076,
-        0.14959,
-        0.043339,
-        0.065708,
-        -0.233472,
-        0.051727,
-        0.230676,
-        0.160774,
-        0.08528
+        0.267203,
+        -0.012507,
+        0.258107,
+        0.196707,
+        0.048892,
+        -0.269477,
+        0.183062,
+        -0.280847,
+        -0.242188,
+        0.23764,
+        0.126211,
+        0.10347,
+        0.162596,
+        0.026152,
+        0.283121,
+        -0.037522,
+        0.146677,
+        0.267203,
+        0.278573,
+        -0.169418,
+        0.244462,
+        -0.046618,
+        -0.060263,
+        0.123937,
+        -0.128485,
+        0.255833,
+        -0.017056,
+        0.0921,
+        -0.094374,
+        -0.026152,
+        -0.053441,
+        -0.044344
       ]
     },
     {
       "path": "tools/temporal_evidence_scope_coordinate.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 8773,
-      "lines": 225,
-      "tokens_est": 2194,
-      "symbol_count": 13,
+      "bytes": 9517,
+      "lines": 204,
+      "tokens_est": 2380,
+      "symbol_count": 14,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "07bbe57113aa025a",
+      "digest8": "de255a9af5767316",
       "vector": [
-        0.067781,
-        -0.052719,
-        -0.186129,
-        -0.220557,
-        -0.128031,
-        -0.01829,
-        0.239923,
-        0.231316,
-        -0.091451,
-        -0.237771,
-        -0.024745,
-        0.052719,
-        0.267896,
-        -0.218405,
-        -0.082843,
-        -0.112968,
-        0.003228,
-        0.222709,
-        -0.173218,
-        0.270048,
-        0.145245,
-        0.011835,
-        0.214102,
-        -0.214102,
-        0.121575,
-        0.244227,
-        0.205495,
-        -0.265744,
-        0.237771,
-        -0.074236,
-        -0.229164,
-        0.082843
+        0.213739,
+        -0.085737,
+        0.107474,
+        0.102643,
+        0.119549,
+        -0.078492,
+        0.257212,
+        -0.121964,
+        -0.143701,
+        0.143701,
+        0.013283,
+        0.278948,
+        0.102643,
+        0.303099,
+        0.291024,
+        -0.252382,
+        -0.107474,
+        0.051925,
+        -0.189588,
+        -0.204079,
+        0.001208,
+        -0.247551,
+        0.025359,
+        0.124379,
+        0.100228,
+        0.179928,
+        -0.278948,
+        -0.088152,
+        -0.288609,
+        -0.143701,
+        -0.22823,
+        -0.006038
       ]
     },
     {
@@ -290806,8 +290844,8 @@
   },
   "summary": {
     "file_count": 1670,
-    "total_bytes": 26674737,
-    "text_tokens_est": 6659043,
+    "total_bytes": 26670481,
+    "text_tokens_est": 6657979,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
@@ -449754,124 +449792,124 @@
         "file_digest8": "6c778071b97c5ee9"
       },
       {
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#class:EyePoseObservationContractTests:92ccf178978891ad",
-        "name": "EyePoseObservationContractTests",
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#class:EyeProducerTraversalTests:d36941fd8b656d3b",
+        "name": "EyeProducerTraversalTests",
         "kind": "class",
         "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "line": 50,
-        "end_line": 170,
-        "signature_hash": "0ab6a0fdc72f2159",
-        "file_digest8": "a54da33860b95f00"
+        "line": 42,
+        "end_line": 93,
+        "signature_hash": "991365bb2d85aa24",
+        "file_digest8": "001790b0b75577ec"
       },
       {
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:calibration:28e9abcc04967ab2",
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:calibration:976ec4761162e358",
         "name": "calibration",
         "kind": "function",
         "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "line": 17,
-        "end_line": 30,
-        "signature_hash": "f59fac0cedb002c5",
-        "file_digest8": "a54da33860b95f00"
+        "line": 15,
+        "end_line": 22,
+        "signature_hash": "80d0c39e9f5d65ed",
+        "file_digest8": "001790b0b75577ec"
       },
       {
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:frame:d1556235ca21c7d0",
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:frame:ebd818a43fc40e11",
         "name": "frame",
         "kind": "function",
         "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 24,
+        "end_line": 31,
+        "signature_hash": "a25fa4f7e2f30e59",
+        "file_digest8": "001790b0b75577ec"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:policy:46054b302ea6e378",
+        "name": "policy",
+        "kind": "function",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
         "line": 33,
-        "end_line": 47,
-        "signature_hash": "d986bf8a8e22e32d",
-        "file_digest8": "a54da33860b95f00"
+        "end_line": 40,
+        "signature_hash": "1490428864694da8",
+        "file_digest8": "001790b0b75577ec"
       },
       {
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_assumed_ipd_geometry_is_estimate_not_metric_truth:8090cd72d39540fd",
-        "name": "EyePoseObservationContractTests.test_assumed_ipd_geometry_is_estimate_not_metric_truth",
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_anisotropic_intrinsics_are_used_in_depth:8dfb51f47091b989",
+        "name": "EyeProducerTraversalTests.test_anisotropic_intrinsics_are_used_in_depth",
         "kind": "method",
         "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "line": 51,
-        "end_line": 60,
-        "signature_hash": "e1a978586c6c2d51",
-        "file_digest8": "a54da33860b95f00"
+        "line": 43,
+        "end_line": 46,
+        "signature_hash": "0bcd230870815f0b",
+        "file_digest8": "001790b0b75577ec"
       },
       {
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_calibration_generation_movement_reopens_gate:14cb16b4df918966",
-        "name": "EyePoseObservationContractTests.test_calibration_generation_movement_reopens_gate",
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_claim_ceiling_never_upgrades_capture_or_authority:716bec64f2a0502f",
+        "name": "EyeProducerTraversalTests.test_claim_ceiling_never_upgrades_capture_or_authority",
         "kind": "method",
         "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "line": 85,
-        "end_line": 95,
-        "signature_hash": "4cb88962c7068094",
-        "file_digest8": "a54da33860b95f00"
+        "line": 88,
+        "end_line": 93,
+        "signature_hash": "5ca1a5f3a5dcebfb",
+        "file_digest8": "001790b0b75577ec"
       },
       {
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized:81ca910e14a753d1",
-        "name": "EyePoseObservationContractTests.test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized",
-        "kind": "method",
-        "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "line": 121,
-        "end_line": 132,
-        "signature_hash": "050365dd551d50e3",
-        "file_digest8": "a54da33860b95f00"
-      },
-      {
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_landmark_model_generation_movement_reopens_gate:c2349f7d2edd384c",
-        "name": "EyePoseObservationContractTests.test_landmark_model_generation_movement_reopens_gate",
-        "kind": "method",
-        "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "line": 97,
-        "end_line": 107,
-        "signature_hash": "a9cf4c2a286afa11",
-        "file_digest8": "a54da33860b95f00"
-      },
-      {
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_low_tracking_confidence_fails_closed:e28597e01d6c9e7c",
-        "name": "EyePoseObservationContractTests.test_low_tracking_confidence_fails_closed",
-        "kind": "method",
-        "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "line": 109,
-        "end_line": 119,
-        "signature_hash": "7a579e0b94dd3d95",
-        "file_digest8": "a54da33860b95f00"
-      },
-      {
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_receipt_is_two_parent_source_bound_and_tamper_evident:591790535fd26ecf",
-        "name": "EyePoseObservationContractTests.test_receipt_is_two_parent_source_bound_and_tamper_evident",
-        "kind": "method",
-        "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "line": 134,
-        "end_line": 153,
-        "signature_hash": "8377b91b4d42debe",
-        "file_digest8": "a54da33860b95f00"
-      },
-      {
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_receipt_requires_exactly_two_distinct_parents:bb0476af135e5cfd",
-        "name": "EyePoseObservationContractTests.test_receipt_requires_exactly_two_distinct_parents",
-        "kind": "method",
-        "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "line": 155,
-        "end_line": 170,
-        "signature_hash": "a37f9709b3c30236",
-        "file_digest8": "a54da33860b95f00"
-      },
-      {
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_sensor_aba_runtime_change_fails_common_cut:350757c7aa36354d",
-        "name": "EyePoseObservationContractTests.test_sensor_aba_runtime_change_fails_common_cut",
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_forged_estimate_with_fresh_hash_rejected:518bab7161871a65",
+        "name": "EyeProducerTraversalTests.test_forged_estimate_with_fresh_hash_rejected",
         "kind": "method",
         "file": "tests/test_k27_eye_pose_observation_contract.py",
         "line": 73,
-        "end_line": 83,
-        "signature_hash": "79da1579c48d4265",
-        "file_digest8": "a54da33860b95f00"
+        "end_line": 79,
+        "signature_hash": "e7ea91acf6e24132",
+        "file_digest8": "001790b0b75577ec"
       },
       {
-        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_stale_frame_fails_closed:43d5bd63bbdba56c",
-        "name": "EyePoseObservationContractTests.test_stale_frame_fails_closed",
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_forged_gate_with_fresh_hash_rejected:74d8cc81d20c325e",
+        "name": "EyeProducerTraversalTests.test_forged_gate_with_fresh_hash_rejected",
         "kind": "method",
         "file": "tests/test_k27_eye_pose_observation_contract.py",
-        "line": 62,
+        "line": 65,
         "end_line": 71,
-        "signature_hash": "b5047fe9314a0d6e",
-        "file_digest8": "a54da33860b95f00"
+        "signature_hash": "4e0dce8887456e3c",
+        "file_digest8": "001790b0b75577ec"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_raw_coordinate_space_rejected:32a4bd796897dbec",
+        "name": "EyeProducerTraversalTests.test_raw_coordinate_space_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 48,
+        "end_line": 51,
+        "signature_hash": "2616b182b31d17ac",
+        "file_digest8": "001790b0b75577ec"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_receipt_builder_accepts_no_estimate_or_gate:4c0fca28629fc449",
+        "name": "EyeProducerTraversalTests.test_receipt_builder_accepts_no_estimate_or_gate",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 53,
+        "end_line": 56,
+        "signature_hash": "88ecf96d47fa55ee",
+        "file_digest8": "001790b0b75577ec"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_receipt_recomputes_producer_and_verifies:1b0e0e754bf8cf35",
+        "name": "EyeProducerTraversalTests.test_receipt_recomputes_producer_and_verifies",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 58,
+        "end_line": 63,
+        "signature_hash": "2a8c93234c6c9b88",
+        "file_digest8": "001790b0b75577ec"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyeProducerTraversalTests.test_stale_frame_fails_software_gate:d8dae7ea2d0d4e5a",
+        "name": "EyeProducerTraversalTests.test_stale_frame_fails_software_gate",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 81,
+        "end_line": 86,
+        "signature_hash": "1b35091de97e93ff",
+        "file_digest8": "001790b0b75577ec"
       },
       {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
@@ -450158,120 +450196,110 @@
         "name": "TemporalEvidenceScopeCoordinateTests",
         "kind": "class",
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "line": 80,
-        "end_line": 156,
+        "line": 54,
+        "end_line": 103,
         "signature_hash": "230c0e4416bb511a",
-        "file_digest8": "6a41591f7c48b2bd"
+        "file_digest8": "1498c90cf3b7bbad"
       },
       {
         "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:calibration:6f235f10011e4cb1",
         "name": "calibration",
         "kind": "function",
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "line": 25,
-        "end_line": 36,
+        "line": 19,
+        "end_line": 26,
         "signature_hash": "80d0c39e9f5d65ed",
-        "file_digest8": "6a41591f7c48b2bd"
+        "file_digest8": "1498c90cf3b7bbad"
       },
       {
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:eye_receipt:cdfe16727bfa68c4",
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:eye_receipt:3fc4c9d3e6a0f91a",
         "name": "eye_receipt",
         "kind": "function",
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "line": 39,
-        "end_line": 73,
-        "signature_hash": "9020eb40c8d5b771",
-        "file_digest8": "6a41591f7c48b2bd"
+        "line": 28,
+        "end_line": 49,
+        "signature_hash": "7258159eb082020b",
+        "file_digest8": "1498c90cf3b7bbad"
       },
       {
         "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#function:series:6abfab6e4795e1d7",
         "name": "series",
         "kind": "function",
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "line": 76,
-        "end_line": 77,
+        "line": 51,
+        "end_line": 52,
         "signature_hash": "e3a95641818231ec",
-        "file_digest8": "6a41591f7c48b2bd"
+        "file_digest8": "1498c90cf3b7bbad"
+      },
+      {
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_caller_cannot_flip_temporal_admission_with_fresh_hash:ffd52dc910ae2585",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_caller_cannot_flip_temporal_admission_with_fresh_hash",
+        "kind": "method",
+        "file": "tests/test_temporal_evidence_scope_coordinate.py",
+        "line": 71,
+        "end_line": 76,
+        "signature_hash": "c31aa6074b986a15",
+        "file_digest8": "1498c90cf3b7bbad"
       },
       {
         "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_coordinate_identity_is_deterministic:0f80fde6dde5635a",
         "name": "TemporalEvidenceScopeCoordinateTests.test_coordinate_identity_is_deterministic",
         "kind": "method",
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "line": 150,
-        "end_line": 156,
+        "line": 99,
+        "end_line": 103,
         "signature_hash": "da6cbc800ca8f7c8",
-        "file_digest8": "6a41591f7c48b2bd"
+        "file_digest8": "1498c90cf3b7bbad"
       },
       {
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_inadmissible_eye_common_cut_fails_before_temporal_relation_credit:793e9c1fbab6e2ec",
-        "name": "TemporalEvidenceScopeCoordinateTests.test_inadmissible_eye_common_cut_fails_before_temporal_relation_credit",
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_forged_gate_result_is_rejected_before_temporal_use:3c2873bf5c2caa77",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_forged_gate_result_is_rejected_before_temporal_use",
         "kind": "method",
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "line": 116,
-        "end_line": 121,
-        "signature_hash": "caafd8fef4bd35c5",
-        "file_digest8": "6a41591f7c48b2bd"
+        "line": 78,
+        "end_line": 84,
+        "signature_hash": "b798a7467572a4ab",
+        "file_digest8": "1498c90cf3b7bbad"
       },
       {
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_fails_before_composition:1721eb10f0e3a89d",
-        "name": "TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_fails_before_composition",
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_still_fails:c052e93d40176ffc",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_longitudinal_current_now_widening_still_fails",
         "kind": "method",
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "line": 123,
-        "end_line": 129,
-        "signature_hash": "b2727eeb6f6a5228",
-        "file_digest8": "6a41591f7c48b2bd"
+        "line": 86,
+        "end_line": 90,
+        "signature_hash": "78789c2f9e5b6bde",
+        "file_digest8": "1498c90cf3b7bbad"
       },
       {
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_point_after_historical_series_is_classified:9a1528a1ac7e2666",
-        "name": "TemporalEvidenceScopeCoordinateTests.test_point_after_historical_series_is_classified",
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_portable_unknown_coordinate_is_tamper_evident:1972afc224399135",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_portable_unknown_coordinate_is_tamper_evident",
         "kind": "method",
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "line": 108,
-        "end_line": 114,
-        "signature_hash": "b319af35511d2f4b",
-        "file_digest8": "6a41591f7c48b2bd"
+        "line": 92,
+        "end_line": 97,
+        "signature_hash": "40e2d3a374fd8970",
+        "file_digest8": "1498c90cf3b7bbad"
       },
       {
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_point_before_historical_series_is_classified_without_currentness_promotion:d5f1d9dae66ec1da",
-        "name": "TemporalEvidenceScopeCoordinateTests.test_point_before_historical_series_is_classified_without_currentness_promotion",
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_repaired_point_holds_unknown_until_temporal_authentication:1d2cc3dc1b7b0535",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_repaired_point_holds_unknown_until_temporal_authentication",
         "kind": "method",
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "line": 81,
-        "end_line": 89,
-        "signature_hash": "fabcd849fc86c988",
-        "file_digest8": "6a41591f7c48b2bd"
+        "line": 55,
+        "end_line": 62,
+        "signature_hash": "5390bae90b8bdaaa",
+        "file_digest8": "1498c90cf3b7bbad"
       },
       {
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_point_during_historical_series_overlap_is_not_shared_current_world_or_causality:86cbac1792b35f5c",
-        "name": "TemporalEvidenceScopeCoordinateTests.test_point_during_historical_series_overlap_is_not_shared_current_world_or_causality",
+        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_stale_point_is_unknown_before_time_relation:e306f21f49b83ccb",
+        "name": "TemporalEvidenceScopeCoordinateTests.test_stale_point_is_unknown_before_time_relation",
         "kind": "method",
         "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "line": 91,
-        "end_line": 106,
-        "signature_hash": "1a800ebec5a362cb",
-        "file_digest8": "6a41591f7c48b2bd"
-      },
-      {
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_portable_coordinate_is_tamper_evident_and_nonauthorizing:866496b235e9e472",
-        "name": "TemporalEvidenceScopeCoordinateTests.test_portable_coordinate_is_tamper_evident_and_nonauthorizing",
-        "kind": "method",
-        "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "line": 131,
-        "end_line": 142,
-        "signature_hash": "21389ce5e5f55866",
-        "file_digest8": "6a41591f7c48b2bd"
-      },
-      {
-        "semantic_id": "tests/test_temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinateTests.test_public_builder_has_only_exact_evidence_objects:2b399a78af846400",
-        "name": "TemporalEvidenceScopeCoordinateTests.test_public_builder_has_only_exact_evidence_objects",
-        "kind": "method",
-        "file": "tests/test_temporal_evidence_scope_coordinate.py",
-        "line": 144,
-        "end_line": 148,
-        "signature_hash": "b99db4856f95ff5a",
-        "file_digest8": "6a41591f7c48b2bd"
+        "line": 64,
+        "end_line": 69,
+        "signature_hash": "96dc5bf4614e85fd",
+        "file_digest8": "1498c90cf3b7bbad"
       },
       {
         "semantic_id": "tools/aura_review/aura_review_cache_policy.py#class:CacheResponsibility:6e4eb98cde824ef3",
@@ -451758,260 +451786,310 @@
         "name": "CameraCalibration",
         "kind": "class",
         "file": "tools/k27_eye_pose_observation_contract.py",
-        "line": 37,
-        "end_line": 59,
+        "line": 40,
+        "end_line": 65,
         "signature_hash": "960d15363264b4f7",
-        "file_digest8": "2566cb9278c688d2"
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:EyePoseEstimate:f11cf7a67b7578f7",
         "name": "EyePoseEstimate",
         "kind": "class",
         "file": "tools/k27_eye_pose_observation_contract.py",
-        "line": 100,
-        "end_line": 107,
+        "line": 94,
+        "end_line": 101,
         "signature_hash": "4426a584e1b24e0e",
-        "file_digest8": "2566cb9278c688d2"
+        "file_digest8": "49bc9b60b3c218b1"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:GatePolicyV1:37d8ef44dafc24a7",
+        "name": "GatePolicyV1",
+        "kind": "class",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 124,
+        "end_line": 145,
+        "signature_hash": "0779629bed0c4076",
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:IrisFrameObservation:c87bd3bb37e8f341",
         "name": "IrisFrameObservation",
         "kind": "class",
         "file": "tools/k27_eye_pose_observation_contract.py",
-        "line": 63,
-        "end_line": 96,
+        "line": 69,
+        "end_line": 90,
         "signature_hash": "b403f130812ee23a",
-        "file_digest8": "2566cb9278c688d2"
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:SteeringGate:96d323032a7c0afa",
         "name": "SteeringGate",
         "kind": "class",
         "file": "tools/k27_eye_pose_observation_contract.py",
-        "line": 111,
-        "end_line": 118,
+        "line": 105,
+        "end_line": 120,
         "signature_hash": "f942ccb186596668",
-        "file_digest8": "2566cb9278c688d2"
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_canonical_json:ad18b204d8799926",
         "name": "_canonical_json",
         "kind": "function",
         "file": "tools/k27_eye_pose_observation_contract.py",
-        "line": 211,
-        "end_line": 212,
+        "line": 204,
+        "end_line": 205,
         "signature_hash": "c6d0368c0d268d56",
-        "file_digest8": "2566cb9278c688d2"
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
-        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_finite:57c75e2e8e1c5514",
-        "name": "_finite",
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_from_receipt_inputs:35bd02771257e9a6",
+        "name": "_from_receipt_inputs",
         "kind": "function",
         "file": "tools/k27_eye_pose_observation_contract.py",
-        "line": 30,
-        "end_line": 33,
-        "signature_hash": "c71561197bc4f764",
-        "file_digest8": "2566cb9278c688d2"
+        "line": 257,
+        "end_line": 266,
+        "signature_hash": "2ec4faabd83bc641",
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
-        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_finite_positive:74809e1755678bd8",
-        "name": "_finite_positive",
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_nonempty:7f15aab702ddd43d",
+        "name": "_nonempty",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 33,
+        "end_line": 36,
+        "signature_hash": "1cde724336d688ac",
+        "file_digest8": "49bc9b60b3c218b1"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_real:0ed59cde6ee5b4c1",
+        "name": "_real",
         "kind": "function",
         "file": "tools/k27_eye_pose_observation_contract.py",
         "line": 24,
-        "end_line": 27,
-        "signature_hash": "c763af4e62e0138d",
-        "file_digest8": "2566cb9278c688d2"
+        "end_line": 30,
+        "signature_hash": "3ebe1d51bad7416d",
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
-        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:build_eye_pose_receipt:42d8ae9df25ff7d0",
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:build_eye_pose_receipt:e466159b1f583d60",
         "name": "build_eye_pose_receipt",
         "kind": "function",
         "file": "tools/k27_eye_pose_observation_contract.py",
-        "line": 215,
-        "end_line": 250,
-        "signature_hash": "d27cdddecd456503",
-        "file_digest8": "2566cb9278c688d2"
+        "line": 208,
+        "end_line": 254,
+        "signature_hash": "8088374c30a86366",
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:estimate_eye_pose_from_assumed_ipd:6b4d707dff063222",
         "name": "estimate_eye_pose_from_assumed_ipd",
         "kind": "function",
         "file": "tools/k27_eye_pose_observation_contract.py",
-        "line": 121,
-        "end_line": 152,
+        "line": 148,
+        "end_line": 166,
         "signature_hash": "a55deab9508aba9c",
-        "file_digest8": "2566cb9278c688d2"
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
-        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:gate_eye_pose_for_steering:60cb74a522fb06ee",
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:gate_eye_pose_for_steering:4f96deb0b646cab9",
         "name": "gate_eye_pose_for_steering",
         "kind": "function",
         "file": "tools/k27_eye_pose_observation_contract.py",
-        "line": 155,
-        "end_line": 208,
-        "signature_hash": "c6d9f9a477e7e240",
-        "file_digest8": "2566cb9278c688d2"
+        "line": 169,
+        "end_line": 201,
+        "signature_hash": "adbb4687641debca",
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:verify_eye_pose_receipt:df451dd0d0d41e8b",
         "name": "verify_eye_pose_receipt",
         "kind": "function",
         "file": "tools/k27_eye_pose_observation_contract.py",
-        "line": 253,
-        "end_line": 275,
+        "line": 269,
+        "end_line": 277,
         "signature_hash": "447e8c7de4f26e0d",
-        "file_digest8": "2566cb9278c688d2"
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:CameraCalibration.validate:07aebbb2da45c3d9",
         "name": "CameraCalibration.validate",
         "kind": "method",
         "file": "tools/k27_eye_pose_observation_contract.py",
-        "line": 48,
-        "end_line": 59,
+        "line": 53,
+        "end_line": 65,
         "signature_hash": "99559e6add5bcf3e",
-        "file_digest8": "2566cb9278c688d2"
+        "file_digest8": "49bc9b60b3c218b1"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:GatePolicyV1.validate:ffa2b2fb6eee6c1b",
+        "name": "GatePolicyV1.validate",
+        "kind": "method",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 133,
+        "end_line": 145,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
         "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:IrisFrameObservation.validate:e0f6472f6af3e0fe",
         "name": "IrisFrameObservation.validate",
         "kind": "method",
         "file": "tools/k27_eye_pose_observation_contract.py",
-        "line": 75,
-        "end_line": 96,
+        "line": 81,
+        "end_line": 90,
         "signature_hash": "99559e6add5bcf3e",
-        "file_digest8": "2566cb9278c688d2"
+        "file_digest8": "49bc9b60b3c218b1"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:SteeringGate.admissible:eefd407c4acdf37e",
+        "name": "SteeringGate.admissible",
+        "kind": "method",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 118,
+        "end_line": 120,
+        "signature_hash": "2cb1f04a61ff31ba",
+        "file_digest8": "49bc9b60b3c218b1"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeCoordinate:a76dc6e6a47590f2",
         "name": "TemporalEvidenceScopeCoordinate",
         "kind": "class",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 62,
-        "end_line": 99,
+        "line": 58,
+        "end_line": 97,
         "signature_hash": "cc261fd5e3e2c4b8",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#class:TemporalEvidenceScopeError:b6e0061efe702f05",
         "name": "TemporalEvidenceScopeError",
         "kind": "class",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 29,
-        "end_line": 33,
+        "line": 27,
+        "end_line": 31,
         "signature_hash": "2340462d0127e911",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_canonical:6b25ede425721fdb",
         "name": "_canonical",
         "kind": "function",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 36,
-        "end_line": 39,
+        "line": 34,
+        "end_line": 35,
         "signature_hash": "8d5bf5695239b859",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_datetime_ns:7649bd7747019780",
         "name": "_datetime_ns",
         "kind": "function",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 56,
-        "end_line": 58,
+        "line": 52,
+        "end_line": 54,
         "signature_hash": "261c131fb889d031",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_digest:7426ed05a57735ff",
         "name": "_digest",
         "kind": "function",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 42,
-        "end_line": 43,
+        "line": 38,
+        "end_line": 39,
         "signature_hash": "514f786724465716",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_parse_time:207a51d90fb9ee59",
         "name": "_parse_time",
         "kind": "function",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 46,
-        "end_line": 53,
+        "line": 42,
+        "end_line": 49,
         "signature_hash": "0e7d03ca78676525",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
+      },
+      {
+        "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:_validate_series:0c613437359ada51",
+        "name": "_validate_series",
+        "kind": "function",
+        "file": "tools/temporal_evidence_scope_coordinate.py",
+        "line": 100,
+        "end_line": 120,
+        "signature_hash": "715b2019ba747fb5",
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:bind_temporal_evidence_scope:6a5978ea886832fb",
         "name": "bind_temporal_evidence_scope",
         "kind": "function",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 102,
-        "end_line": 176,
+        "line": 123,
+        "end_line": 168,
         "signature_hash": "19027a376992efa4",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:portable_temporal_evidence_scope_receipt:fc8dea3355f5f7e9",
         "name": "portable_temporal_evidence_scope_receipt",
         "kind": "function",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 214,
-        "end_line": 224,
+        "line": 200,
+        "end_line": 203,
         "signature_hash": "d7df1893885c8c2e",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#function:verify_temporal_evidence_scope_coordinate:11674854ba2b738c",
         "name": "verify_temporal_evidence_scope_coordinate",
         "kind": "function",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 179,
-        "end_line": 211,
+        "line": 171,
+        "end_line": 197,
         "signature_hash": "97a71849ccb4be37",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.coordinate_digest:94ea7ec41dce2315",
         "name": "TemporalEvidenceScopeCoordinate.coordinate_digest",
         "kind": "method",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 94,
-        "end_line": 95,
+        "line": 92,
+        "end_line": 93,
         "signature_hash": "ab3c3df3e11c71cd",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.evidence_ref:6ea642c1d63d8a6f",
         "name": "TemporalEvidenceScopeCoordinate.evidence_ref",
         "kind": "method",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 98,
-        "end_line": 99,
+        "line": 96,
+        "end_line": 97,
         "signature_hash": "c27cb8129b449d59",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeCoordinate.to_dict:bb7bab207d496b24",
         "name": "TemporalEvidenceScopeCoordinate.to_dict",
         "kind": "method",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 90,
-        "end_line": 91,
+        "line": 88,
+        "end_line": 89,
         "signature_hash": "5c1a69a9659e2089",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/temporal_evidence_scope_coordinate.py#method:TemporalEvidenceScopeError.__init__:b0b3ea5930e70609",
         "name": "TemporalEvidenceScopeError.__init__",
         "kind": "method",
         "file": "tools/temporal_evidence_scope_coordinate.py",
-        "line": 30,
-        "end_line": 33,
+        "line": 28,
+        "end_line": 31,
         "signature_hash": "0b6534a3148e5c5d",
-        "file_digest8": "07bbe57113aa025a"
+        "file_digest8": "de255a9af5767316"
       },
       {
         "semantic_id": "tools/test_thinkpad_longitudinal_envelope_series.py#class:ThinkPadLongitudinalEnvelopeSeriesTests:e204702492ed99f3",
@@ -453754,7 +453832,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "4bfd91797aaaf90f9f59a24b3394e0b7",
-    "payload_hash": "add05691a16adb9c3d7bf64f2ef1dbea"
+    "record_fingerprint": "af5fa872ef02e6182fbe8355e07f6bd3",
+    "payload_hash": "a425e99e283676075db2f7a7f43bf8e9"
   }
 }
