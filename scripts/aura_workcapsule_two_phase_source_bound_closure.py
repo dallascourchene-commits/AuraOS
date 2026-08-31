@@ -80,6 +80,9 @@ def verify_two_phase_source_bound_exact_closure(
 ) -> list[str]:
     """Verify exact re-entry and exact closure against distinct raw phase evidence."""
     violations: list[str] = []
+    if pre_root.resolve() == post_root.resolve():
+        return ["PRE_POST_EVIDENCE_ROOTS_NOT_DISTINCT"]
+
     pre_violations = verify_source_bound_exact_reentry(
         root=pre_root,
         codemap=pre_codemap,
