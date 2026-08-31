@@ -13,6 +13,11 @@ It also makes the Drive-side result contract executable: model self-report ->
 validation/currentness/authority -> host observation when required -> deterministic
 reducer -> optional exact-once semantic commit. Narrative text and K27/external
 coordinates are non-authoritative retrieval/context surfaces.
+
+Host execution receipts are not self-authenticating. When execution is required,
+host authority must arrive through the trusted policy/control-plane input and bind
+the expected route and observer identity before receipt fields can satisfy the
+execution gate.
 """
 from __future__ import annotations
 
@@ -78,7 +83,9 @@ class ClaimRef:
         _required(self.claim_id, "CLAIM_ID")
         _required(self.claim_class, "CLAIM_CLASS")
         _required(self.value, "CLAIM_VALUE")
-        if not self.evidence_refs or any(not x.strip() for x in self.evidence_refs):
+        if not self.evidence_refs or any(
+            not isinstance(ref, str) or not ref.strip() for ref in self.evidence_refs
+        ):
             raise ValueError("CLAIM_EVIDENCE_REQUIRED")
 
 
@@ -187,6 +194,9 @@ class LifecyclePolicy:
     independent_review_required: bool
     distinct_reviewer_receipt_present: bool
     hard_gates: tuple[HardGate, ...]
+    expected_route_fingerprint: str | None = None
+    expected_observer_identity: str | None = None
+    host_receipt_authority_verified: bool = False
 
     def validate(self) -> None:
         _required(self.policy_generation_ref, "POLICY_GENERATION_REF")
@@ -207,6 +217,20 @@ class LifecyclePolicy:
             raise ValueError("INDEPENDENT_REVIEW_REQUIRED_MUST_BE_BOOL")
         if type(self.distinct_reviewer_receipt_present) is not bool:
             raise ValueError("DISTINCT_REVIEWER_RECEIPT_PRESENT_MUST_BE_BOOL")
+        if type(self.host_receipt_authority_verified) is not bool:
+            raise ValueError("HOST_RECEIPT_AUTHORITY_VERIFIED_MUST_BE_BOOL")
+        if self.execution_required:
+            if self.expected_route_fingerprint is None:
+                raise ValueError("EXPECTED_ROUTE_FINGERPRINT_REQUIRED")
+            if self.expected_observer_identity is None:
+                raise ValueError("EXPECTED_OBSERVER_IDENTITY_REQUIRED")
+            _required(self.expected_route_fingerprint, "EXPECTED_ROUTE_FINGERPRINT")
+            _required(self.expected_observer_identity, "EXPECTED_OBSERVER_IDENTITY")
+        else:
+            if self.expected_route_fingerprint is not None:
+                _required(self.expected_route_fingerprint, "EXPECTED_ROUTE_FINGERPRINT")
+            if self.expected_observer_identity is not None:
+                _required(self.expected_observer_identity, "EXPECTED_OBSERVER_IDENTITY")
         if len({gate.gate_id for gate in self.hard_gates}) != len(self.hard_gates):
             raise ValueError("DUPLICATE_HARD_GATE_ID")
         for gate in self.hard_gates:
@@ -284,6 +308,10 @@ def reduce_result_lifecycle(
     Ordering is fail-closed and non-compensatory. A model's narrative is never read by
     this reducer. Coordinates/cache labels are deliberately absent from admission
     inputs so they cannot satisfy source, validation, authority, review, or host gates.
+
+    Host receipt fields cannot self-mint host authority: a trusted policy/control-plane
+    input must independently verify receipt authority and bind the expected route and
+    observer identity.
     """
     model.validate()
     policy.validate()
@@ -335,6 +363,21 @@ def reduce_result_lifecycle(
             return _decision(
                 model=model, policy=policy, terminal_state="HOLD", reason_code="HOST_EXECUTION_RECEIPT_REQUIRED"
             )
+        if not policy.host_receipt_authority_verified:
+            return _decision(
+                model=model, policy=policy, terminal_state="HOLD",
+                reason_code="HOST_RECEIPT_AUTHORITY_NOT_VERIFIED"
+            )
+        if host.route_fingerprint != policy.expected_route_fingerprint:
+            return _decision(
+                model=model, policy=policy, terminal_state="HOLD",
+                reason_code="HOST_ROUTE_FINGERPRINT_MISMATCH"
+            )
+        if host.observer_identity != policy.expected_observer_identity:
+            return _decision(
+                model=model, policy=policy, terminal_state="HOLD",
+                reason_code="HOST_OBSERVER_IDENTITY_MISMATCH"
+            )
         if host.attempt_id != model.attempt_id:
             return _decision(
                 model=model, policy=policy, terminal_state="HOLD", reason_code="HOST_ATTEMPT_MISMATCH"
@@ -355,7 +398,8 @@ def reduce_result_lifecycle(
     if policy.physical_fanout_required is not None:
         if host is None or host.physical_fanout_observed is None:
             return _decision(
-                model=model, policy=policy, terminal_state="HOLD", reason_code="PHYSICAL_FANOUT_OBSERVATION_REQUIRED"
+                model=model, policy=policy, terminal_state="HOLD",
+                reason_code="PHYSICAL_FANOUT_OBSERVATION_REQUIRED"
             )
         if host.physical_fanout_observed < policy.physical_fanout_required:
             return _decision(
@@ -414,6 +458,8 @@ def main() -> None:
                     "NarrativeText!=TerminalAuthority",
                     "PositiveEvidenceCannotPayHardGateDebt",
                     "ExecutionQualified!=SemanticTruth!=EffectAuthority",
+                    "HostReceiptFields!=HostAuthority",
+                    "HostAuthorityRequiresPolicyBoundRouteAndObserver",
                     "ConsequenceCommitOccursAfterValidationCurrentnessAndAuthority",
                     "K27Coordinate!=EvidenceTruth!=Authority!=PhysicalPlacement",
                     "CacheStateDoesNotPromoteWithoutExplicitWitness",
