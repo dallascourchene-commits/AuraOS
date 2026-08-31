@@ -76,6 +76,9 @@ def policy(**overrides):
         independent_review_required=False,
         distinct_reviewer_receipt_present=False,
         hard_gates=(HardGate("source-current", True), HardGate("authority", True)),
+        expected_route_fingerprint="route:provider:worker:exact",
+        expected_observer_identity="HOST_OBSERVER",
+        host_receipt_authority_verified=True,
     )
     return replace(base, **overrides)
 
@@ -98,6 +101,40 @@ class ClosedWorldLifecycleGateTests(unittest.TestCase):
         self.assertEqual(result.reason_code, "HOST_EXECUTION_RECEIPT_REQUIRED")
         self.assertFalse(result.narrative_can_mint_success)
         self.assertFalse(result.model_self_report_is_execution_truth)
+
+    def test_host_receipt_fields_cannot_self_mint_host_authority(self):
+        result = reduce_result_lifecycle(
+            model=model(),
+            policy=policy(host_receipt_authority_verified=False),
+            host=host(),
+        )
+        self.assertEqual(result.terminal_state, "HOLD")
+        self.assertEqual(result.reason_code, "HOST_RECEIPT_AUTHORITY_NOT_VERIFIED")
+        self.assertFalse(result.semantic_commit_eligible)
+
+    def test_host_route_must_match_trusted_policy_binding(self):
+        result = reduce_result_lifecycle(
+            model=model(),
+            policy=policy(),
+            host=host(route_fingerprint="route:caller:minted"),
+        )
+        self.assertEqual(result.terminal_state, "HOLD")
+        self.assertEqual(result.reason_code, "HOST_ROUTE_FINGERPRINT_MISMATCH")
+
+    def test_host_observer_must_match_trusted_policy_binding(self):
+        result = reduce_result_lifecycle(
+            model=model(),
+            policy=policy(),
+            host=host(observer_identity="CALLER_SELF_REPORT"),
+        )
+        self.assertEqual(result.terminal_state, "HOLD")
+        self.assertEqual(result.reason_code, "HOST_OBSERVER_IDENTITY_MISMATCH")
+
+    def test_execution_policy_requires_route_and_observer_bindings(self):
+        with self.assertRaisesRegex(ValueError, "EXPECTED_ROUTE_FINGERPRINT_REQUIRED"):
+            policy(expected_route_fingerprint=None).validate()
+        with self.assertRaisesRegex(ValueError, "EXPECTED_OBSERVER_IDENTITY_REQUIRED"):
+            policy(expected_observer_identity=None).validate()
 
     def test_positive_result_cannot_compensate_failed_hard_gate(self):
         p = policy(hard_gates=(HardGate("source-current", False, "SOURCE_NOT_CURRENT"),))
