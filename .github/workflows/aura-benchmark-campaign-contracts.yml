@@ -8,6 +8,7 @@ on:
       - "tests/test_aura_benchmark_score_admission.py"
       - "tests/test_select_swe_verified_smoke.py"
       - "tests/test_long_horizon_state_benchmark.py"
+      - "tests/test_long_horizon_preregistration.py"
       - ".github/workflows/aura-benchmark-campaign-contracts.yml"
   workflow_dispatch:
 
@@ -38,9 +39,11 @@ jobs:
             tools/benchmarks/aura_benchmark_score_admission.py \
             tools/benchmarks/select_swe_verified_smoke.py \
             tools/benchmarks/long_horizon_state_benchmark.py \
+            tools/benchmarks/long_horizon_preregistration.py \
             tests/test_aura_benchmark_score_admission.py \
             tests/test_select_swe_verified_smoke.py \
-            tests/test_long_horizon_state_benchmark.py
+            tests/test_long_horizon_state_benchmark.py \
+            tests/test_long_horizon_preregistration.py
       - name: Validate campaign manifest JSON
         run: python -m json.tool benchmarks/arena/campaign_v1.json > /dev/null
       - name: Run focused adversarial suite
@@ -48,4 +51,5 @@ jobs:
           python -m pytest -q \
             tests/test_aura_benchmark_score_admission.py \
             tests/test_select_swe_verified_smoke.py \
-            tests/test_long_horizon_state_benchmark.py
+            tests/test_long_horizon_state_benchmark.py \
+            tests/test_long_horizon_preregistration.py
