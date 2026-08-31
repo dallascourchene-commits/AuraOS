@@ -1,0 +1,71 @@
+name: Aura Q5 Execution-Qualified Portable Scientific Evidence
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_q5_execution_qualified_portable_scientific_evidence.py"
+      - "tests/test_aura_q5_execution_qualified_portable_scientific_evidence.py"
+      - ".github/workflows/aura-q5-execution-qualified-portable-scientific-evidence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q5-execution-qualified-portable-scientific-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Revalidate exact A7 and Q5 other-agent generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          repo="$GITHUB_REPOSITORY"
+          a7_head="235147f5df440ea18bdc8ad72087419bd997cc1e"
+          a7_run="33399083996"
+          a7_blob="e73e0305d1b21aa93a3545dde9bd20b0e2f68c67"
+          a7_path="tools/aura_execution_qualified_portable_evidence_admission.py"
+          q5_head="23c8345a1e3d5034ce88bea1ab32c69c1a9cf3f2"
+          q5_run="33400399223"
+          q5_blob="5b39ce1132f8ef520529487411628be04e51f32a"
+          q5_path="tools/quantization/aura_glm53_official_equal_rate_e8_canary.py"
+          for sha in "$a7_head" "$q5_head"; do
+            git fetch --no-tags --depth=1 origin "$sha"
+            git cat-file -e "$sha^{commit}"
+          done
+          test "$(git show "$a7_head:$a7_path" | git hash-object --stdin)" = "$a7_blob"
+          test "$(git show "$q5_head:$q5_path" | git hash-object --stdin)" = "$q5_blob"
+          test "$(gh api "repos/$repo/actions/runs/$a7_run" --jq '.head_sha')" = "$a7_head"
+          test "$(gh api "repos/$repo/actions/runs/$a7_run" --jq '.conclusion')" = "success"
+          test "$(gh api "repos/$repo/actions/runs/$q5_run" --jq '.head_sha')" = "$q5_head"
+          test "$(gh api "repos/$repo/actions/runs/$q5_run" --jq '.conclusion')" = "success"
+
+      - name: Reprove A7 and Q5 adapter
+        run: |
+          python -m pip install --disable-pip-version-check pytest
+          python -m tools.aura_execution_qualified_portable_evidence_admission >/tmp/a7.json
+          python -m pytest -q tests/test_aura_q5_execution_qualified_portable_scientific_evidence.py
+          python -m tools.quantization.aura_q5_execution_qualified_portable_scientific_evidence | tee /tmp/q9.json
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/q9.json', encoding='utf-8'))
+          assert r['execution_qualified_portable_semantic_evidence'] is True
+          assert r['portable_evidence_reuse_allowed'] is True
+          assert r['semantic_sibling_credit'] is False
+          assert r['historical_exact_execution_reuse'] is True
+          assert r['q5_scientific_receipt_digest'] == '00bae035570665f19c40405c8d04002f894f6a7c05c75155ce9e63d8dcf9f01a'
+          assert r['representative_e8_over_control'] == 0.6220981458103897
+          assert r['scientific_claim_ceiling_preserved'] is True
+          assert r['effect_authority_granted'] is False
+          assert r['semantic_k27_authority_minted'] is False
+          print('Q5_PORTABLE_EXECUTION_QUALIFIED_WITHOUT_FRESHNESS_RESET=true')
+          PY
