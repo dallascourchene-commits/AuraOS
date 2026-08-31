@@ -1,7 +1,7 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788198710,
+  "generated_at_unix": 1788198771,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
@@ -1775,8 +1775,8 @@
     {
       "ring": "repo",
       "files": 1658,
-      "bytes": 26587224,
-      "tokens_est": 6637164,
+      "bytes": 26592778,
+      "tokens_est": 6638553,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
@@ -160261,6 +160261,7 @@
     "python -m unittest": [
       ".github/workflows/aura-eki-coordinate-memory-candidate.yml",
       ".github/workflows/aura-eki-read-currentness-proof-mirror.yml",
+      ".github/workflows/ci.yml",
       "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 -m py_compile": [
@@ -170096,77 +170097,82 @@
       "path": ".github/workflows/ci.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 12796,
-      "lines": 348,
-      "tokens_est": 3199,
+      "bytes": 18350,
+      "lines": 429,
+      "tokens_est": 4588,
       "symbol_count": 0,
       "commands": [
         "python -m pip",
         "python -m py_compile",
         "python -m pytest",
+        "python -m unittest",
         "python aura_codebase_navigator.py",
         "python -m aura_codemap_verify"
       ],
       "command_lines": {
         "python -m pip": [
-          39,
           40,
-          187,
+          41,
           188,
-          245,
+          189,
           246,
-          293,
-          294
+          247,
+          291,
+          292
         ],
         "python -m py_compile": [
-          43
+          44,
+          357
         ],
         "python -m pytest": [
-          136,
-          200
+          137,
+          201
+        ],
+        "python -m unittest": [
+          358
         ],
         "python aura_codebase_navigator.py": [
-          335
+          416
         ],
         "python -m aura_codemap_verify": [
-          336
+          417
         ]
       },
       "topology": {},
-      "digest8": "1e5cf15d6657f8db",
+      "digest8": "1d697b80e9326b4c",
       "vector": [
-        0.156765,
-        -0.100375,
-        0.26278,
-        0.285336,
-        0.014662,
-        -0.2109,
-        -0.005639,
-        0.091353,
-        -0.077819,
-        -0.28308,
-        0.168044,
-        -0.102631,
-        -0.172555,
-        0.260524,
-        -0.267291,
-        0.22669,
-        0.219923,
-        -0.037218,
-        0.17481,
-        -0.204133,
-        -0.201878,
-        -0.260524,
-        0.113909,
-        0.179322,
-        -0.197367,
-        -0.098119,
-        0.11842,
-        -0.147743,
-        0.136465,
-        -0.100375,
-        -0.003383,
-        0.165788
+        0.166805,
+        -0.312604,
+        -0.040774,
+        0.258238,
+        0.139622,
+        0.082784,
+        0.169276,
+        -0.018534,
+        -0.154449,
+        0.075371,
+        0.03089,
+        0.097612,
+        -0.154449,
+        0.117381,
+        -0.203872,
+        0.075371,
+        -0.300248,
+        -0.206343,
+        -0.169276,
+        0.245882,
+        -0.033361,
+        0.11491,
+        0.278008,
+        -0.127266,
+        -0.13715,
+        -0.196459,
+        0.001236,
+        0.211286,
+        0.307662,
+        0.01112,
+        0.315075,
+        -0.01112
       ]
     },
     {
@@ -289266,8 +289272,8 @@
   },
   "summary": {
     "file_count": 1658,
-    "total_bytes": 26587224,
-    "text_tokens_est": 6637164,
+    "total_bytes": 26592778,
+    "text_tokens_est": 6638553,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
@@ -451213,6 +451219,6 @@
       }
     ],
     "record_fingerprint": "b1dfa53c92f204a374232b263e0e8aa3",
-    "payload_hash": "9693439f0e3a5e29e55466c6ca07ee82"
+    "payload_hash": "657e66afc764688065252ba125b38241"
   }
 }
