@@ -91,17 +91,20 @@ jobs:
               raise SystemExit(f"G4_W3_PUBLIC_API_WIDENED:{sig}")
           PY
 
-      - name: Enforce nonpromotion and external-trust ceilings
+      - name: Enforce candidate-only external-trust ceiling
         run: |
           python3 - <<'PY'
           from pathlib import Path
           text = Path("tools/awj032/glm53_g4_owner_currentness_addendum.py").read_text()
           required = (
+              'RESOLVER_MATCHED_EXTERNAL_TRUST_REQUIRED = "RESOLVER_MATCHED_EXTERNAL_TRUST_REQUIRED"',
+              "external_resolver_trust_required: bool = True",
               "owner_resolver_authenticated_by_this_contract: bool = False",
               "owner_currentness_truth_proven_by_this_contract: bool = False",
               "owner_epoch_change_complete_required: bool = True",
               "owner_epoch_change_complete_proven_by_this_contract: bool = False",
               "revalidation_required_at_effect_boundary: bool = True",
+              "reusable_without_recompute=False",
               "plan_executed_by_this_contract: bool = False",
               "transfer_effect_authorized: bool = False",
               "physical_io_proven: bool = False",
@@ -111,5 +114,13 @@ jobs:
           )
           for marker in required:
               if marker not in text:
-                  raise SystemExit(f"G4_W3_CLAIM_CEILING_MARKER_MISSING:{marker}")
+                  raise SystemExit(f"G4_W3_TRUST_CEILING_MARKER_MISSING:{marker}")
+          forbidden = (
+              'OWNER_REVALIDATED_UNCHANGED =',
+              'disposition=OWNER_REVALIDATED_UNCHANGED',
+              'reusable_without_recompute=True',
+          )
+          for marker in forbidden:
+              if marker in text:
+                  raise SystemExit(f"G4_W3_FORBIDDEN_REUSE_MARKER_PRESENT:{marker}")
           PY
