@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 """Fail-closed official-source admission for GLM-5.3 quantization trials.
 
-This module closes an evidence-grammar gap.  It can validate the official
-configuration profile, verify the *actual bytes* of the official safetensors
-index when those bytes become available, parse bounded safetensors headers,
-and prove that a routed-expert weight plus its FP8 scale companion share a
-source-bound header bundle.
+The public admission path consumes raw config/index/header evidence. It never
+accepts caller-authored booleans such as ``header_verified=True`` and never
+promotes object identity, filenames, K27 coordinates, neighboring checkpoints,
+or a candidate quantizer into missing source evidence.
 
-It deliberately does NOT infer missing index/header evidence from filenames,
-K27 coordinates, neighboring GLM checkpoints, or a candidate quantizer.
-Current public evidence therefore returns HOLD.
+Current public evidence intentionally returns HOLD because the exact 11.4 MB
+index body and representative official safetensors headers are not materialized
+in this execution surface.
 """
 
 from __future__ import annotations
@@ -19,7 +18,7 @@ import json
 import math
 import struct
 from dataclasses import asdict, dataclass
-from typing import Mapping, Sequence
+from typing import Mapping
 
 OFFICIAL_REPO = "zai-org/GLM-5.3"
 OFFICIAL_COMMIT = "7cda81930d6e4cef42f48555de830aa32ecdde28"
@@ -28,8 +27,6 @@ OFFICIAL_INDEX_SHA256 = "e0fe7f28c1f853d4824e4d796374e3dacf1fe470988773952c79b06
 OFFICIAL_INDEX_SIZE = 11_359_251
 OFFICIAL_INDEX_XET_HASH = "cc559a187bc99b20039b572a3161f394c51ad19eb2c8eed41371f54740af5f94"
 
-# Exact-green independent candidate artifact.  The mutable PR tip is not an
-# authority source; this historical semantic artifact is intentionally pinned.
 PR628_E8_PAGE_ARTIFACT_SHA = "b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae"
 PR628_E8_PAGE_WORKFLOW_RUN = 33367948262
 PR628_E8_PAGE_SCHEME = "AURA_E8_BALL10_16BIT_REF_V1"
@@ -147,7 +144,7 @@ class AdmissionState:
 
 
 def observe_official_config(config: Mapping[str, object]) -> OfficialConfigObservation:
-    """Validate exact current public config facts; reject analogy/substitution."""
+    """Validate current official config-plane facts and reject substitutions."""
     architectures = config.get("architectures")
     quant = config.get("quantization_config")
     if not isinstance(architectures, list) or architectures != [EXPECTED_ARCHITECTURE]:
@@ -155,10 +152,6 @@ def observe_official_config(config: Mapping[str, object]) -> OfficialConfigObser
     if not isinstance(quant, Mapping):
         raise ValueError("missing quantization_config")
     block = quant.get("weight_block_size")
-    if tuple(block) if isinstance(block, list) else () != EXPECTED_WEIGHT_BLOCK:
-        # Parenthesized explicitly below; this branch is retained only for
-        # readability after the conditional-expression parse.
-        pass
     block_tuple = tuple(block) if isinstance(block, list) else ()
     expected = {
         "model_type": (config.get("model_type"), EXPECTED_MODEL_TYPE),
@@ -179,8 +172,8 @@ def observe_official_config(config: Mapping[str, object]) -> OfficialConfigObser
     profile = {
         "repository": OFFICIAL_REPO,
         "revision": OFFICIAL_COMMIT,
-        **{name: observed for name, (observed, _wanted) in expected.items()},
         "architecture": architectures[0],
+        **{name: observed for name, (observed, _wanted) in expected.items()},
     }
     return OfficialConfigObservation(
         repository=OFFICIAL_REPO,
@@ -202,7 +195,7 @@ def observe_official_config(config: Mapping[str, object]) -> OfficialConfigObser
 
 
 def official_index_object_identity() -> IndexObjectIdentity:
-    """Return object identity only.  This never claims the remote bytes exist locally."""
+    """Return object identity only; never claim remote bytes were materialized."""
     return IndexObjectIdentity(
         filename=OFFICIAL_INDEX_FILENAME,
         sha256=OFFICIAL_INDEX_SHA256,
@@ -214,7 +207,7 @@ def official_index_object_identity() -> IndexObjectIdentity:
 
 
 def verify_index_bytes(index_bytes: bytes, *, expected_sha256: str, expected_size: int) -> IndexBytesObservation:
-    """Verify exact bytes and derive the weight-map observation from those bytes."""
+    """Verify exact bytes, then derive the weight map only from those bytes."""
     if len(index_bytes) != expected_size:
         raise ValueError("index byte length mismatch")
     digest = _sha256(index_bytes)
@@ -227,7 +220,10 @@ def verify_index_bytes(index_bytes: bytes, *, expected_sha256: str, expected_siz
     weight_map = parsed.get("weight_map") if isinstance(parsed, dict) else None
     if not isinstance(weight_map, dict) or not weight_map:
         raise ValueError("missing weight_map")
-    if not all(isinstance(k, str) and isinstance(v, str) and v.endswith(".safetensors") for k, v in weight_map.items()):
+    if not all(
+        isinstance(k, str) and isinstance(v, str) and v.endswith(".safetensors")
+        for k, v in weight_map.items()
+    ):
         raise ValueError("invalid weight_map entry")
     return IndexBytesObservation(
         sha256=digest,
@@ -240,6 +236,7 @@ def verify_index_bytes(index_bytes: bytes, *, expected_sha256: str, expected_siz
 
 
 def verify_official_index_bytes(index_bytes: bytes) -> IndexBytesObservation:
+    """Only exact official SHA/length can cross this byte boundary."""
     return verify_index_bytes(
         index_bytes,
         expected_sha256=OFFICIAL_INDEX_SHA256,
@@ -248,7 +245,6 @@ def verify_official_index_bytes(index_bytes: bytes) -> IndexBytesObservation:
 
 
 def extract_expert_bundle(index: IndexBytesObservation, expert_prefix: str) -> Mapping[str, str]:
-    """Resolve exactly six weight/scale roles from an observed index body."""
     if not expert_prefix or expert_prefix.endswith("."):
         raise ValueError("expert_prefix must be non-empty and omit trailing dot")
     result: dict[str, str] = {}
@@ -264,7 +260,9 @@ def extract_expert_bundle(index: IndexBytesObservation, expert_prefix: str) -> M
 
 
 def parse_safetensors_header(prefix_bytes: bytes, shard: str) -> Mapping[str, HeaderEntry]:
-    """Parse only a safetensors header prefix: uint64 header length + JSON bytes."""
+    """Parse bounded safetensors metadata: uint64 header length + JSON header."""
+    if not shard.endswith(".safetensors"):
+        raise ValueError("invalid shard identity")
     if len(prefix_bytes) < 8:
         raise ValueError("header prefix shorter than uint64 length")
     header_len = struct.unpack("<Q", prefix_bytes[:8])[0]
@@ -307,15 +305,15 @@ def bind_expert_headers(
     key_to_shard: Mapping[str, str],
     parsed_headers: Mapping[str, Mapping[str, HeaderEntry]],
 ) -> ExpertHeaderBundle:
-    """Bind weight headers to their F32 128x128 scale companions."""
+    """Bind each FP8 weight to the F32 companion required by 128x128 blocks."""
     entries: list[HeaderEntry] = []
     for weight_role, scale_role in zip(WEIGHT_ROLES, SCALE_ROLES):
         weight_key = f"{expert_prefix}.{weight_role}"
         scale_key = f"{expert_prefix}.{scale_role}"
-        if key_to_shard.get(weight_key) is None or key_to_shard.get(scale_key) is None:
+        weight_shard = key_to_shard.get(weight_key)
+        scale_shard = key_to_shard.get(scale_key)
+        if weight_shard is None or scale_shard is None:
             raise ValueError("weight/scale mapping incomplete")
-        weight_shard = key_to_shard[weight_key]
-        scale_shard = key_to_shard[scale_key]
         weight = parsed_headers.get(weight_shard, {}).get(weight_key)
         scale = parsed_headers.get(scale_shard, {}).get(scale_key)
         if weight is None or scale is None:
@@ -326,7 +324,9 @@ def bind_expert_headers(
             raise ValueError("routed expert scale companion is not observed F32")
         if len(weight.shape) != 2 or len(scale.shape) != 2:
             raise ValueError("routed expert weight/scale must be rank-2")
-        expected_scale = tuple(math.ceil(dim / block) for dim, block in zip(weight.shape, EXPECTED_WEIGHT_BLOCK))
+        expected_scale = tuple(
+            math.ceil(dim / block) for dim, block in zip(weight.shape, EXPECTED_WEIGHT_BLOCK)
+        )
         if scale.shape != expected_scale:
             raise ValueError("FP8 companion scale shape does not match 128x128 block geometry")
         entries.extend((weight, scale))
@@ -338,15 +338,15 @@ def bind_expert_headers(
     )
 
 
-def current_public_state(config_profile_bound: bool = True) -> AdmissionState:
-    """Encode the current earned evidence state without caller-promotable proof flags."""
+def current_public_state() -> AdmissionState:
+    """Current evidence: config/index object known; index/header bytes absent."""
     return AdmissionState(
         schema="AURA_GLM53_OFFICIAL_QUANTIZATION_SOURCE_ADMISSION_V1",
         official_repository=OFFICIAL_REPO,
         official_revision=OFFICIAL_COMMIT,
         candidate_parent_sha=PR628_E8_PAGE_ARTIFACT_SHA,
         candidate_scheme=PR628_E8_PAGE_SCHEME,
-        config_profile_bound=bool(config_profile_bound),
+        config_profile_bound=True,
         index_object_identity_bound=True,
         index_bytes_verified=False,
         representative_key_to_shard_bound=False,
@@ -363,14 +363,12 @@ def current_public_state(config_profile_bound: bool = True) -> AdmissionState:
     )
 
 
-def admitted_header_state(
+def _header_state_from_verified(
     config: OfficialConfigObservation,
     index: IndexBytesObservation,
     bundle: ExpertHeaderBundle,
-    *,
     candidate_parent_sha: str,
 ) -> AdmissionState:
-    """Admit a header-level trial only from recomputed exact evidence objects."""
     if config.repository != OFFICIAL_REPO or config.revision != OFFICIAL_COMMIT:
         raise ValueError("official config generation mismatch")
     if index.sha256 != OFFICIAL_INDEX_SHA256 or index.size_bytes != OFFICIAL_INDEX_SIZE:
@@ -402,11 +400,41 @@ def admitted_header_state(
     )
 
 
+def admit_official_header_state(
+    config: Mapping[str, object],
+    index_bytes: bytes,
+    expert_prefix: str,
+    shard_header_prefixes: Mapping[str, bytes],
+    *,
+    candidate_parent_sha: str,
+) -> AdmissionState:
+    """Recompute every header-level official proof from raw bytes.
+
+    No admission boolean is caller-selectable. Without the exact official index
+    bytes this path fails before key-to-shard or header evidence can be minted.
+    """
+    config_obs = observe_official_config(config)
+    index_obs = verify_official_index_bytes(index_bytes)
+    key_to_shard = extract_expert_bundle(index_obs, expert_prefix)
+    needed_shards = set(key_to_shard.values())
+    if set(shard_header_prefixes) != needed_shards:
+        raise ValueError("exact representative shard-header set required")
+    parsed_headers = {
+        shard: parse_safetensors_header(shard_header_prefixes[shard], shard)
+        for shard in sorted(needed_shards)
+    }
+    bundle = bind_expert_headers(expert_prefix, key_to_shard, parsed_headers)
+    return _header_state_from_verified(config_obs, index_obs, bundle, candidate_parent_sha)
+
+
 def main() -> None:
     state = current_public_state()
     body = asdict(state)
     body["receipt_sha256"] = state.digest()
-    body["law"] = "IndexObjectIdentity != IndexBytesVerified != KeyToShardBound != HeaderObserved != TensorPayloadBound"
+    body["law"] = (
+        "IndexObjectIdentity != IndexBytesVerified != KeyToShardBound != "
+        "HeaderObserved != TensorPayloadBound"
+    )
     print(json.dumps(body, sort_keys=True, separators=(",", ":")))
 
 
