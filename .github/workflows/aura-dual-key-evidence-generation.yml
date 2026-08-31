@@ -1,0 +1,83 @@
+name: Aura Dual-Key Evidence Generation
+
+on:
+  pull_request:
+    paths:
+      - tools/aura_dual_key_evidence_generation.py
+      - tests/test_aura_dual_key_evidence_generation.py
+      - .github/workflows/aura-dual-key-evidence-generation.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  dual-key-evidence-generation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout exact child head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Revalidate exact-green PR646 evidence generation
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          run_id=33371459229
+          head='71d4816cf0702a39b57ecf7d6bae6298ec239800'
+          req=urllib.request.Request(
+              f"https://api.github.com/repos/{os.environ['GH_REPO']}/actions/runs/{run_id}",
+              headers={
+                  'Authorization':f"Bearer {os.environ['GH_TOKEN']}",
+                  'Accept':'application/vnd.github+json',
+                  'X-GitHub-Api-Version':'2022-11-28',
+              },
+          )
+          with urllib.request.urlopen(req,timeout=30) as response:
+              run=json.load(response)
+          assert run['head_sha']==head, (run['head_sha'],head)
+          assert run['conclusion']=='success', run['conclusion']
+          print('A2_PR646_EXACT_EGK_PARENT_GREEN=true')
+          PY
+
+      - name: Compile and run dual-key adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_dual_key_evidence_generation.py \
+            tests/test_aura_dual_key_evidence_generation.py
+          python3 -m unittest -v tests.test_aura_dual_key_evidence_generation
+          python3 -m tools.aura_dual_key_evidence_generation > /tmp/a2.json
+
+      - name: Assert stable semantic key and exact evidence generation boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/a2.json',encoding='utf-8'))
+          assert r['version']=='AURA_DUAL_KEY_EVIDENCE_GENERATION_V1'
+          assert r['a1_drive_parent']=='1mc0wUGe2tpUNesiCvwuI7JzjULZBrMIf90FirmIAfrE'
+          assert r['pr646_head']=='71d4816cf0702a39b57ecf7d6bae6298ec239800'
+          assert r['pr646_run']==33371459229
+          assert len(r['sck'])==64
+          assert len(r['historical_egk'])==64
+          assert r['sck'] != r['historical_egk']
+          assert r['consequence']['claim_ceiling']=='REPRESENTATIVE_HEADERS_ONLY_NO_TENSOR_PAYLOAD'
+          c=r['claim_ceiling']
+          assert c['semantic_truth_minted'] is False
+          assert c['native_private_transformer_kv_accessed'] is False
+          assert c['gate10_promoted'] is False
+          assert c['merge_or_deployment_authorized'] is False
+          print('A2_SCK_EGK_RIK_MEMBRANE_GREEN=true')
+          PY
