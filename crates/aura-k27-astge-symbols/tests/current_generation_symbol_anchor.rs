@@ -58,7 +58,9 @@ fn write_generation(
 
     let mut nodes = File::create(&node_path).expect("create node file");
     for record in &encoded.records {
-        nodes.write_all(&record.encode()).expect("write node record");
+        nodes
+            .write_all(&record.encode())
+            .expect("write node record");
     }
     nodes.sync_all().expect("sync node file");
 
@@ -83,10 +85,8 @@ fn write_generation(
 
 fn persisted_record(node_path: &Path, node_id: u64) -> NodeIndexRecordV1 {
     let mut file = File::open(node_path).expect("open node file");
-    file.seek(SeekFrom::Start(
-        node_id * NODE_INDEX_RECORD_SIZE as u64,
-    ))
-    .expect("seek node record");
+    file.seek(SeekFrom::Start(node_id * NODE_INDEX_RECORD_SIZE as u64))
+        .expect("seek node record");
     let mut raw = [0u8; NODE_INDEX_RECORD_SIZE];
     file.read_exact(&mut raw).expect("read node record");
     NodeIndexRecordV1::decode(&raw).expect("decode node record")
@@ -97,20 +97,13 @@ fn cpython_validated_module_symbols_remain_exact_current_generation_ast_anchors(
     let file_id = 83_u32;
     let graph = parse_python_named_ast(FIXTURE, file_id).expect("parse parent AST");
     let supplied = handles(&graph);
-    let symbols =
-        index_python_module_symbols(FIXTURE, file_id, &supplied).expect("module symbols");
+    let symbols = index_python_module_symbols(FIXTURE, file_id, &supplied).expect("module symbols");
     assert_eq!(symbols.duplicate_names, vec!["alpha"]);
 
     let root = temp_root();
     let (node_path, page_path, binding) = write_generation(&root, &graph, &supplied);
-    let admission = admit_data_serving_backend(
-        &root,
-        &node_path,
-        &page_path,
-        &binding,
-        [0x83; 32],
-    )
-    .expect("backend admission");
+    let admission = admit_data_serving_backend(&root, &node_path, &page_path, &binding, [0x83; 32])
+        .expect("backend admission");
     assert_eq!(
         admission.receipt().backend,
         DataServingBackendV1::ReadSeekSafeDefault
@@ -128,7 +121,10 @@ fn cpython_validated_module_symbols_remain_exact_current_generation_ast_anchors(
         assert_eq!(persisted.file_id, symbol.file_id);
         assert_eq!(persisted.byte_start, symbol.byte_start);
         assert_eq!(persisted.byte_end, symbol.byte_end);
-        assert_eq!(persisted.semantic_handle_digest, symbol.semantic_handle_digest);
+        assert_eq!(
+            persisted.semantic_handle_digest,
+            symbol.semantic_handle_digest
+        );
 
         let observed = reader
             .query_cone(
