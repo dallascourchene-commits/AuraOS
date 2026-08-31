@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788193810,
+  "generated_at_unix": 1788194690,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1652,
+    "repo_file_count": 1653,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -140,6 +140,7 @@
       ".github/workflows/aura-o65-r-exact-reproof.yml",
       ".github/workflows/aura-o65r-authority-materialization-proposal-conformance-proof.yml",
       ".github/workflows/aura-q21-pre-attempt-lifecycle-lineage.yml",
+      ".github/workflows/aura-q22-immutable-head-reproof.yml",
       ".github/workflows/aura-q22-materialization-support-lifecycle-lineage.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -1768,16 +1769,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1652,
-      "bytes": 26544839,
-      "tokens_est": 6626565,
+      "files": 1653,
+      "bytes": 26552959,
+      "tokens_est": 6628595,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1005,
-        "schema_or_lexicon": 276,
+        "schema_or_lexicon": 277,
         "support_file": 49
       }
     },
@@ -159643,12 +159644,14 @@
     "python3 -m py_compile": [
       ".github/workflows/aura-o65-r-exact-reproof.yml",
       ".github/workflows/aura-q21-pre-attempt-lifecycle-lineage.yml",
+      ".github/workflows/aura-q22-immutable-head-reproof.yml",
       ".github/workflows/aura-q22-materialization-support-lifecycle-lineage.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
       ".github/workflows/aura-o65-r-exact-reproof.yml",
       ".github/workflows/aura-q21-pre-attempt-lifecycle-lineage.yml",
+      ".github/workflows/aura-q22-immutable-head-reproof.yml",
       ".github/workflows/aura-q22-materialization-support-lifecycle-lineage.yml"
     ],
     "python3 tools/aura_authority_materialization_proposal_conformance.py > /tmp/o65-r-cli.json": [
@@ -159658,6 +159661,7 @@
       ".github/workflows/aura-q21-pre-attempt-lifecycle-lineage.yml"
     ],
     "python3 -m tools.aura_q22_materialization_support_lifecycle": [
+      ".github/workflows/aura-q22-immutable-head-reproof.yml",
       ".github/workflows/aura-q22-materialization-support-lifecycle-lineage.yml"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
@@ -169046,6 +169050,67 @@
         -0.225292,
         -0.149074,
         0.10424
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-q22-immutable-head-reproof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 8120,
+      "lines": 180,
+      "tokens_est": 2030,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m unittest",
+        "python3 -m py_compile",
+        "python3 -m tools.aura_q22_materialization_support_lifecycle"
+      ],
+      "command_lines": {
+        "python3 -m unittest": [
+          140
+        ],
+        "python3 -m py_compile": [
+          149
+        ],
+        "python3 -m tools.aura_q22_materialization_support_lifecycle": [
+          154
+        ]
+      },
+      "topology": {},
+      "digest8": "bd7699e2c1f03aee",
+      "vector": [
+        -0.146645,
+        -0.251562,
+        0.063188,
+        0.10134,
+        -0.029806,
+        -0.30402,
+        0.277791,
+        0.025037,
+        0.075111,
+        0.01073,
+        0.1228,
+        -0.008346,
+        0.196719,
+        -0.187181,
+        0.087033,
+        0.215794,
+        0.211026,
+        0.17049,
+        0.106109,
+        0.029806,
+        -0.292098,
+        0.053651,
+        0.184796,
+        -0.125185,
+        0.227717,
+        0.017884,
+        0.280175,
+        -0.098955,
+        0.261099,
+        0.237255,
+        0.294482,
+        0.075111
       ]
     },
     {
@@ -288393,16 +288458,16 @@
     }
   },
   "summary": {
-    "file_count": 1652,
-    "total_bytes": 26544839,
-    "text_tokens_est": 6626565,
+    "file_count": 1653,
+    "total_bytes": 26552959,
+    "text_tokens_est": 6628595,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1005,
-      "schema_or_lexicon": 276,
+      "schema_or_lexicon": 277,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288552,6 +288617,7 @@
       ".github/workflows/aura-o65-r-exact-reproof.yml",
       ".github/workflows/aura-o65r-authority-materialization-proposal-conformance-proof.yml",
       ".github/workflows/aura-q21-pre-attempt-lifecycle-lineage.yml",
+      ".github/workflows/aura-q22-immutable-head-reproof.yml",
       ".github/workflows/aura-q22-materialization-support-lifecycle-lineage.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
@@ -449715,6 +449781,6 @@
       }
     ],
     "record_fingerprint": "85d845324d1b04de58284ff8dc4ba7b2",
-    "payload_hash": "2032856358c637cf9444f480d0208c1a"
+    "payload_hash": "7816a3b36159e4466002896b6376c3bf"
   }
 }
