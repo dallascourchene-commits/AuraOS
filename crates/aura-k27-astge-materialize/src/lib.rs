@@ -336,7 +336,12 @@ mod tests {
         fs::write(root.join("src/module.py"), PYTHON).unwrap();
         let catalog = AdmittedSourceCatalogV1::admit(
             &root,
-            [SourceLocatorV1::bind(4, "src/module.py", 2, PYTHON.as_bytes())],
+            [SourceLocatorV1::bind(
+                4,
+                "src/module.py",
+                2,
+                PYTHON.as_bytes(),
+            )],
         )
         .unwrap();
         fs::write(
@@ -356,11 +361,15 @@ mod tests {
     #[test]
     fn traversal_absolute_and_windows_style_paths_fail_admission() {
         let root = temp_root("paths");
-        for bad in ["../outside.py", "/abs.py", "src/../x.py", "C:/x.py", "src\\x.py"] {
-            let result = AdmittedSourceCatalogV1::admit(
-                &root,
-                [SourceLocatorV1::bind(1, bad, 1, b"")],
-            );
+        for bad in [
+            "../outside.py",
+            "/abs.py",
+            "src/../x.py",
+            "C:/x.py",
+            "src\\x.py",
+        ] {
+            let result =
+                AdmittedSourceCatalogV1::admit(&root, [SourceLocatorV1::bind(1, bad, 1, b"")]);
             assert_eq!(
                 result.err(),
                 Some(MaterializeError::InvalidRelativePath(bad.to_owned()))
@@ -378,7 +387,12 @@ mod tests {
         symlink(root.join("real.py"), root.join("src/link.py")).unwrap();
         let result = AdmittedSourceCatalogV1::admit(
             &root,
-            [SourceLocatorV1::bind(8, "src/link.py", 1, PYTHON.as_bytes())],
+            [SourceLocatorV1::bind(
+                8,
+                "src/link.py",
+                1,
+                PYTHON.as_bytes(),
+            )],
         );
         assert_eq!(
             result.err(),
@@ -402,7 +416,10 @@ mod tests {
                 SourceLocatorV1::bind(3, "src/b.py", 1, b"b\n"),
             ],
         );
-        assert_eq!(duplicate_id.err(), Some(MaterializeError::DuplicateFileId(3)));
+        assert_eq!(
+            duplicate_id.err(),
+            Some(MaterializeError::DuplicateFileId(3))
+        );
 
         let duplicate_path = AdmittedSourceCatalogV1::admit(
             &root,
@@ -413,7 +430,9 @@ mod tests {
         );
         assert_eq!(
             duplicate_path.err(),
-            Some(MaterializeError::DuplicateRelativePath("src/a.py".to_owned()))
+            Some(MaterializeError::DuplicateRelativePath(
+                "src/a.py".to_owned()
+            ))
         );
         fs::remove_dir_all(root).unwrap();
     }
