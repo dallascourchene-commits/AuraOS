@@ -4,6 +4,9 @@ import unittest
 
 from tools.quantization import aura_glm53_official_equal_rate_e8_canary as q5
 
+# Hosted reproof trigger after CODEMAP-bot-only head drift; experiment, codecs,
+# fixed source coordinates, outcome neutrality, and claim ceiling are unchanged.
+
 
 class OfficialEqualRateE8CanaryTests(unittest.TestCase):
     def test_exact_two_nonself_derivation_anchors_are_pinned(self):
