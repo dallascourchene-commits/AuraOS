@@ -16,6 +16,7 @@ jobs:
       Q14_RUN: "33399560819"
       Q14_SOURCE_BLOB: ef26cf18731b2f6dfc3c63d08260fb64aded96f6
       Q6_SEMANTIC_SHA: ded816ac542b4cd4a097ce4c5500aefbc4f34b10
+      Q6_SOURCE_BLOB: fd4bd2b8317f981c28e19cd77a193e1e65b8b261
     steps:
       - name: Exact authenticated checkout without legacy submodule traversal
         env:
@@ -32,7 +33,7 @@ jobs:
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
 
-      - name: Revalidate exact Q14 producer generation
+      - name: Revalidate exact Q14 and comparator generations
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
@@ -51,8 +52,10 @@ jobs:
           PY
           AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$Q14_SHA"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$Q6_SEMANTIC_SHA"
           test "$(git ls-tree "$Q14_SHA" tools/quantization/aura_glm53_official_source_e8_materialization_canary.py | awk '{print $3}')" = "$Q14_SOURCE_BLOB"
-          test "$(git rev-parse "$Q6_SEMANTIC_SHA^{tree}")" = "$(git rev-parse "$Q6_SEMANTIC_SHA^{tree}")"
+          test "$(git ls-tree "$Q6_SEMANTIC_SHA" tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py | awk '{print $3}')" = "$Q6_SOURCE_BLOB"
+          test "$(git hash-object tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py)" = "$Q6_SOURCE_BLOB"
 
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
         with:
