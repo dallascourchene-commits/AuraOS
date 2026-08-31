@@ -24,7 +24,7 @@ jobs:
       - name: Fetch exact child and prove PR620 x PR619 convergence
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 20
 
       - name: Prove exact two-parent ancestry and owner blobs
         shell: bash
