@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788194434,
+  "generated_at_unix": 1788200396,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1644,
+    "repo_file_count": 1646,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -20,6 +20,7 @@
       ".aura/SECURITY.md",
       ".aura/amd_track3_demo_tasks.json",
       ".aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md",
+      ".aura/arena/collision-safe-proof-activation-sol2.txt",
       ".aura/arena_routes/coding.v1.json",
       ".aura/arena_routes/construction.v1.json",
       ".aura/arena_routes/human_agent.v1.json",
@@ -134,6 +135,7 @@
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-collision-safe-rebase-addendum.yml",
+      ".github/workflows/aura-collision-safe-rebase-hosted-proof-mirror-sol2.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -1760,17 +1762,17 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1644,
-      "bytes": 26436841,
-      "tokens_est": 6599563,
+      "files": 1646,
+      "bytes": 26440147,
+      "tokens_est": 6600390,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 999,
-        "schema_or_lexicon": 272,
-        "support_file": 49
+        "schema_or_lexicon": 273,
+        "support_file": 50
       }
     },
     {
@@ -158482,6 +158484,7 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-collision-safe-rebase-hosted-proof-mirror-sol2.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -158767,6 +158770,10 @@
     ],
     "python aura_agent_arena_mcp_architect.py --list-tools > architect-mcp-tools.json": [
       ".github/workflows/architect-real-refactor-trial.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/aura-collision-safe-rebase-hosted-proof-mirror-sol2.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python aura_spatial_cli.py --repo-root . construction-video-demo \\": [
       ".github/workflows/aura-construction-demo-g7-g8.yml"
@@ -159486,9 +159493,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -162243,6 +162247,53 @@
         0.075319,
         -0.142527,
         -0.198147
+      ]
+    },
+    {
+      "path": ".aura/arena/collision-safe-proof-activation-sol2.txt",
+      "role": "support_file",
+      "binary": false,
+      "bytes": 100,
+      "lines": 2,
+      "tokens_est": 25,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bc3b2a9d385c7322",
+      "vector": [
+        -0.120476,
+        -0.068095,
+        0.258761,
+        -0.233619,
+        -0.212666,
+        -0.122571,
+        0.133047,
+        -0.15819,
+        0.017809,
+        -0.221047,
+        -0.210571,
+        0.265047,
+        0.028286,
+        0.267142,
+        -0.20219,
+        0.210571,
+        -0.049238,
+        -0.262952,
+        -0.141428,
+        0.040857,
+        0.164476,
+        0.185428,
+        0.248285,
+        0.149809,
+        -0.256666,
+        0.141428,
+        0.019905,
+        -0.118381,
+        0.116286,
+        -0.20219,
+        -0.112095,
+        -0.170762
       ]
     },
     {
@@ -167788,6 +167839,63 @@
         0.083953,
         0.035573,
         -0.317315
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-collision-safe-rebase-hosted-proof-mirror-sol2.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3206,
+      "lines": 61,
+      "tokens_est": 802,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          29
+        ],
+        "python -m unittest": [
+          30
+        ]
+      },
+      "topology": {},
+      "digest8": "5f2333e08c7b8e0c",
+      "vector": [
+        0.276095,
+        -0.030141,
+        0.227869,
+        0.107303,
+        0.184465,
+        0.078368,
+        -0.225458,
+        -0.157941,
+        0.30262,
+        0.073545,
+        -0.112126,
+        -0.225458,
+        0.264039,
+        0.145884,
+        -0.235103,
+        0.104892,
+        -0.018085,
+        0.295386,
+        -0.109715,
+        0.109715,
+        -0.300208,
+        -0.184465,
+        -0.030141,
+        0.010851,
+        0.268861,
+        -0.104892,
+        -0.025319,
+        -0.034964,
+        0.145884,
+        -0.107303,
+        0.223046,
+        0.145884
       ]
     },
     {
@@ -287074,17 +287182,17 @@
     }
   },
   "summary": {
-    "file_count": 1644,
-    "total_bytes": 26436841,
-    "text_tokens_est": 6599563,
+    "file_count": 1646,
+    "total_bytes": 26440147,
+    "text_tokens_est": 6600390,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 999,
-      "schema_or_lexicon": 272,
-      "support_file": 49
+      "schema_or_lexicon": 273,
+      "support_file": 50
     },
     "topology_nodes": 11478,
     "topology_edges": 28068,
@@ -287113,6 +287221,7 @@
       ".aura/SECURITY.md",
       ".aura/amd_track3_demo_tasks.json",
       ".aura/architecture_addenda/BILATERAL_LIVE_REPAIR_B11_B15.md",
+      ".aura/arena/collision-safe-proof-activation-sol2.txt",
       ".aura/arena_routes/coding.v1.json",
       ".aura/arena_routes/construction.v1.json",
       ".aura/arena_routes/human_agent.v1.json",
@@ -287227,6 +287336,7 @@
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-collision-safe-rebase-addendum.yml",
+      ".github/workflows/aura-collision-safe-rebase-hosted-proof-mirror-sol2.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
@@ -447508,6 +447618,6 @@
       }
     ],
     "record_fingerprint": "d4979a30dcdbd5a39fa22337520321a3",
-    "payload_hash": "9edb4c3670ab605cdfa7d8af46b7c972"
+    "payload_hash": "a4b978a63319fe7c215f9a77578b8bbb"
   }
 }
