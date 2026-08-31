@@ -1,0 +1,117 @@
+name: Aura EKI-2 Persistent Candidate Projection
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_external_knowledge_ingress.py"
+      - "tools/aura_external_cognition_resolve_adapter.py"
+      - "tools/aura_eki_persistent_candidate_projection.py"
+      - "tests/test_aura_external_knowledge_ingress.py"
+      - "tests/test_aura_external_cognition_resolve_adapter.py"
+      - "tests/test_aura_eki_persistent_candidate_projection.py"
+      - ".github/workflows/aura-eki2-persistent-candidate-projection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  eki2-persistent-candidate-projection:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Immutable exact-head checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if [ "${GITHUB_EVENT_NAME}" = "pull_request" ]; then
+            EXPECTED="${{ github.event.pull_request.head.sha }}"
+          else
+            EXPECTED="${GITHUB_SHA}"
+          fi
+          git fetch --no-tags --depth=1 origin "${EXPECTED}"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${EXPECTED}"
+          echo "EKI2_HEAD=${EXPECTED}" >> "$GITHUB_ENV"
+
+      - name: Authenticate exact inherited EKI-1 and WP03 blobs
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/aura_external_knowledge_ingress.py)" = "7a5e113568bef07019146005c2a00b8acf196e60"
+          test "$(git hash-object tests/test_aura_external_knowledge_ingress.py)" = "021ab1d75b5d446d298ea87ce0ff6dd3b31583e6"
+          test "$(git hash-object .github/workflows/aura-external-knowledge-ingress.yml)" = "5f349a916b6c13fec5adfacc31144fa45610e11c"
+          test "$(git hash-object tools/aura_external_cognition_resolve_adapter.py)" = "53de9d551c81a0eb495eb180294c0aba5eb359d0"
+          test "$(git hash-object tests/test_aura_external_cognition_resolve_adapter.py)" = "577b96492b090a6c7fb19b0c92add007e594d57c"
+          test "$(git hash-object .github/workflows/aura-external-cognition-resolve-adapter.yml)" = "a4e23a4681a98fffb3f150b2ae02b7a7c7b832dd"
+          echo "EKI2_PARENT_BLOBS=PASS"
+
+      - name: Prove true two-history convergence and EKI-1 hosted prerequisite
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          EKI1 = "719698bb456ace375205a92c859ef347655a178a"
+          WP03 = "1a871a9fc7ed6a3a27527aa2b042695c254c405b"
+          CONVERGENCE = "712c213061665604af0e3d714ec24721b8acaf97"
+
+          def get(path):
+              request = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/{path}",
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                      "X-GitHub-Api-Version": "2022-11-28",
+                  },
+              )
+              with urllib.request.urlopen(request, timeout=30) as response:
+                  return json.load(response)
+
+          merge = get(f"git/commits/{CONVERGENCE}")
+          parents = [item["sha"] for item in merge["parents"]]
+          assert parents == [EKI1, WP03], parents
+
+          run = get("actions/runs/33416243609")
+          assert run["head_sha"] == EKI1, run["head_sha"]
+          assert run["status"] == "completed" and run["conclusion"] == "success", (run["status"], run["conclusion"])
+
+          wp03_run = get("actions/runs/33416703451")
+          assert wp03_run["head_sha"] == WP03, wp03_run["head_sha"]
+          assert wp03_run["conclusion"] == "action_required", wp03_run["conclusion"]
+          print("EKI2_TRUE_TWO_PARENT_CONVERGENCE=PASS")
+          print("EKI2_EKI1_HOSTED_PROOF=PASS")
+          print("EKI2_WP03_PROVIDER_STATE=ACTION_REQUIRED_SOURCE_REEXECUTION_REQUIRED")
+          PY
+
+      - name: Compile and reexecute both parents plus EKI-2
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_external_knowledge_ingress.py \
+            tools/aura_external_cognition_resolve_adapter.py \
+            tools/aura_eki_persistent_candidate_projection.py \
+            tests/test_aura_eki_persistent_candidate_projection.py
+          python3 -m unittest \
+            tests.test_aura_external_knowledge_ingress \
+            tests.test_aura_external_cognition_resolve_adapter \
+            tests.test_aura_eki_persistent_candidate_projection
+
+      - name: Prove persistent freshness and authority separation
+        run: |
+          set -euo pipefail
+          grep -q 'PersistedRow!=CurrentTruth' tools/aura_eki_persistent_candidate_projection.py
+          grep -q 'SemanticID+SourceGeneration=>PersistentSemanticKey' tools/aura_eki_persistent_candidate_projection.py
+          grep -q 'K27Placement!=SemanticIdentity!=SourceCurrentness!=Authority' tools/aura_eki_persistent_candidate_projection.py
+          grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' tools/aura_eki_persistent_candidate_projection.py
+          grep -q 'ReadTimeCurrentnessMustBeReSupplied' tools/aura_eki_persistent_candidate_projection.py
+          echo "EKI2_PERSISTENCE_NONPROMOTION=PASS"
+          echo "EKI2_HEAD=${EKI2_HEAD}"
