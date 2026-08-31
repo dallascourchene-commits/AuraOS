@@ -1,0 +1,210 @@
+name: K27 ASTGE Raw-Slice Portable Causal Handoff
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'crates/aura-k27-astge-portable-target-raw-slice/**'
+      - 'crates/aura-k27-astge-portable-target-raw-slice-projection/**'
+      - 'scripts/aura_k27_astge_portable_raw_slice_causal_handoff.py'
+      - 'tests/test_aura_k27_astge_portable_raw_slice_causal_handoff.py'
+      - 'tests/fixtures/o30_portable_raw_slice_projection.json'
+      - '.github/workflows/k27-astge-raw-slice-portable-causal-handoff.yml'
+
+permissions:
+  contents: read
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  CONVERGENCE_SHA: 2a515bf55a300d937cbd725dc1fbb8f217198daa
+  PR560_SHA: 22414a80710d695a53f96665991c003dd889eb2c
+  PR556_SHA: 5fae4070f82a9b5882ae0f63877359bf6e5a9a2b
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Fetch exact child and prove two-parent convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$CONVERGENCE_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          parents="$(git cat-file -p "$CONVERGENCE_SHA" | awk '$1 == "parent" {print $2}' | paste -sd ' ' -)"
+          test "$parents" = "$PR560_SHA $PR556_SHA"
+          echo "TRUE_TWO_PARENT_CONVERGENCE=$CONVERGENCE_SHA"
+
+      - name: Re-prove inherited PR560 exact raw-slice owner
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml
+          cargo clippy --manifest-path crates/aura-k27-astge-portable-target-raw-slice/Cargo.toml --all-targets -- -D warnings
+
+      - name: Prove Rust portable raw-slice projection
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml --all-targets -- -D warnings
+
+      - name: Prove Python portable consumer and adversarial matrix
+        run: |
+          python -m py_compile scripts/aura_k27_astge_portable_raw_slice_causal_handoff.py
+          python -m unittest tests.test_aura_k27_astge_portable_raw_slice_causal_handoff
+
+      - name: Prove one shared vector has byte-identical Rust and Python canonical payload
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.aura_k27_astge_portable_raw_slice_causal_handoff import (
+              canonical_raw_slice_payload_bytes,
+              verify_portable_raw_slice_projection,
+          )
+          fixture = json.loads(Path('tests/fixtures/o30_portable_raw_slice_projection.json').read_text())
+          assert verify_portable_raw_slice_projection(fixture) == []
+          Path('/tmp/python-o30-payload.json').write_bytes(
+              canonical_raw_slice_payload_bytes(fixture['payload'])
+          )
+          PY
+          cargo run --quiet \
+            --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml \
+            --example o30_vector_probe -- tests/fixtures/o30_portable_raw_slice_projection.json \
+            >/tmp/rust-o30-payload.json
+          cmp /tmp/python-o30-payload.json /tmp/rust-o30-payload.json
+          echo 'RUST_PYTHON_RAW_SLICE_CANONICAL_BYTES_EQUAL=true'
+
+      - name: Fetch and re-prove exact PR556 causal POST owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr556
+          mkdir /tmp/pr556
+          cd /tmp/pr556
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR556_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$PR556_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          PYTHONPATH=. python -m unittest tests.test_aura_workcapsule_raw_owner_derived_post_closure_transition
+
+      - name: Extract real PR556 CURRENT POST witness and prove coordinate compatibility
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/pr556
+          PYTHONPATH=. python - <<'PY' >/tmp/pr556-post-witness.json
+          import json
+          from scripts.aura_workcapsule_raw_owner_derived_post_closure_transition import _derive_transition_inputs
+          from tests.test_aura_workcapsule_raw_owner_derived_post_closure_transition import WorkCapsuleRawOwnerDerivedPostClosureTransitionTests
+
+          case = WorkCapsuleRawOwnerDerivedPostClosureTransitionTests(
+              'test_raw_pre_and_raw_post_derive_exact_transition_without_caller_closure'
+          )
+          case.setUp()
+          try:
+              _pre, projection, _candidate, _closure = _derive_transition_inputs(
+                  pre_root=case.pre_root,
+                  pre_codemap=case.codemap,
+                  pre_anchor_manifest=case.anchors,
+                  pre_witness_manifest=case.pre_witness,
+                  previous_binding=case.previous,
+                  pre_graph_witness=case.graph,
+                  post_root=case.post_root,
+                  post_codemap=case.codemap,
+                  post_anchor_manifest=case.anchors,
+                  post_witness_manifest=case.post_witness,
+                  post_graph_witness=case.graph,
+              )
+              rows = [row for row in projection['o7_source_witnesses'] if row['currentness'] == 'CURRENT']
+              assert rows
+              print(json.dumps(rows[0], separators=(',', ':'), sort_keys=True))
+          finally:
+              case.tearDown()
+          PY
+
+          cd "$GITHUB_WORKSPACE"
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          from scripts.aura_k27_astge_portable_raw_slice_causal_handoff import (
+              canonical_raw_slice_payload_bytes,
+              verify_portable_raw_slice_projection,
+              verify_raw_slice_against_causal_post_source,
+          )
+          witness = json.loads(Path('/tmp/pr556-post-witness.json').read_text())
+          item = json.loads(Path('tests/fixtures/o30_portable_raw_slice_projection.json').read_text())
+          payload = item['payload']
+          payload['file_id'] = witness['file_id']
+          payload['relative_path'] = witness['relative_path']
+          payload['source_generation'] = witness['source_generation']
+          payload['full_source_sha256_hex'] = witness['source_sha256']
+          payload['full_source_byte_len'] = witness['source_byte_len']
+          assert payload['full_source_byte_len'] > 0
+          payload['target_byte_start'] = 0
+          payload['target_byte_end'] = min(6, payload['full_source_byte_len'])
+          payload['target_slice_byte_len'] = payload['target_byte_end']
+          item['payload_sha256'] = hashlib.sha256(canonical_raw_slice_payload_bytes(payload)).hexdigest()
+          assert verify_portable_raw_slice_projection(item) == []
+          assert verify_raw_slice_against_causal_post_source(
+              raw_slice_projection=item,
+              post_source_witness=witness,
+          ) == []
+          print('EXACT_PR556_POST_WITNESS_CONSUMER_COMPATIBLE=true')
+          print('SYNTHETIC_RAW_SLICE_FOR_COMPATIBILITY_ONLY=true')
+          print('LIVE_PR560_TO_PR556_CAUSAL_SLICE_JOIN_PROVEN=false')
+          PY
+
+      - name: Assert owner boundary and emit D0 ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import inspect
+          from scripts.aura_k27_astge_portable_raw_slice_causal_handoff import (
+              verify_raw_slice_against_causal_post_source,
+          )
+          params = set(inspect.signature(verify_raw_slice_against_causal_post_source).parameters)
+          assert params == {'raw_slice_projection', 'post_source_witness'}
+          print('RAW_SOURCE_REMATERIALIZED_BY_PYTHON=false')
+          print('PR556_CAUSAL_OWNER_REIMPLEMENTED_BY_CHILD=false')
+          PY
+          cat <<'EOF'
+          OBJECTIVE_30=PORTABLE_RAW_SLICE_CAUSAL_HANDOFF
+          PR560_RAW_SLICE_OWNER_REPROVED=true
+          RAW_SLICE_PORTABLE_ENVELOPE_PROVEN=true
+          RUST_PYTHON_CANONICAL_BYTES_EQUAL=true
+          PR556_CAUSAL_POST_OWNER_REPROVED=true
+          PR556_POST_SOURCE_COORDINATE_COMPATIBLE=true
+          LIVE_PR560_TO_PR556_CAUSAL_SLICE_JOIN_PROVEN=false
+          RAW_SLICE_PROJECTION_PRODUCER_AUTHENTICATED=false
+          SEMANTIC_HANDLE_DERIVED_FROM_RAW_SLICE=false
+          SEMANTIC_IDENTITY_PROVEN_BY_RAW_SLICE=false
+          SEMANTIC_REPAIR_CORRECTNESS_PROVEN=false
+          REENTRY_CLOSED_BY_CHILD=false
+          SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false
+          NODE_LEVEL_INVALIDATION_CONE_PROVEN=false
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_EFFECT_AUTHORITY=false
+          GATE10_PROMOTION=false
+          EOF
