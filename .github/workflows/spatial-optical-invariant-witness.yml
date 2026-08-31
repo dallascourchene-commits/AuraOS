@@ -1,0 +1,58 @@
+name: Aura Spatial Optical Invariant Witness
+
+on:
+  pull_request:
+    paths:
+      - "tools/spatial/optical_invariant_witness.py"
+      - "tools/spatial/requirements-optical.txt"
+      - "tests/test_spatial_optical_invariant_witness.py"
+      - ".github/workflows/spatial-optical-invariant-witness.yml"
+  workflow_dispatch:
+
+jobs:
+  optical-invariant-witness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Assert exact PR head
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha }}"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install exact numerical dependency
+        run: python -m pip install -r tools/spatial/requirements-optical.txt
+
+      - name: Run optical invariant tests
+        run: python -m unittest -v tests.test_spatial_optical_invariant_witness
+
+      - name: Emit deterministic optical receipt
+        run: python tools/spatial/optical_invariant_witness.py | tee "${RUNNER_TEMP}/optical-receipt.json"
+
+      - name: Enforce claim ceiling
+        shell: python
+        run: |
+          import json, os
+          from pathlib import Path
+          r = json.loads(Path(os.environ['RUNNER_TEMP'], 'optical-receipt.json').read_text())
+          assert r['power_conservation_measured'] is True
+          assert r['full_field_roundtrip_measured'] is True
+          assert r['phase_only_power_matched'] is True
+          assert r['phase_only_full_field_fidelity_proven'] is False
+          assert r['speckle_elimination_proven'] is False
+          assert r['rayleigh_sommerfeld_implementation_proven'] is False
+          assert r['physical_display_fidelity_proven'] is False
+          assert r['semantic_k27_authority'] is False
+          assert r['native_transformer_kv_accessed'] is False
+          print('OPTICAL_INVARIANT_WITNESS_EXECUTED=true')
+          print('POWER_CONSERVATION_MEASURED=true')
+          print('POWER_CONSERVATION_IMPLIES_FIELD_FIDELITY=false')
+          print('SPECKLE_ELIMINATION_PROVEN=false')
+          print('PHYSICAL_DISPLAY_FIDELITY_PROVEN=false')
