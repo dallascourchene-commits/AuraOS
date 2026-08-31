@@ -174,11 +174,24 @@ class GitHubReviewTriadGateTests(unittest.TestCase):
         )
         self.assertFalse(evaluate_review_triad(data, HEAD)["reviewer_pass"]["codacy"])
 
-    def test_wrong_slug_same_codacy_app_id_cannot_spoof(self):
+    def test_missing_app_id_same_codacy_slug_cannot_spoof(self):
         data = snapshot(codacy=False)
         data["check_runs"].append(
             {
                 "id": 24,
+                "name": "Codacy Static Code Analysis",
+                "status": "completed",
+                "conclusion": "success",
+                "app": {"slug": "codacy-production"},
+            }
+        )
+        self.assertFalse(evaluate_review_triad(data, HEAD)["reviewer_pass"]["codacy"])
+
+    def test_wrong_slug_same_codacy_app_id_cannot_spoof(self):
+        data = snapshot(codacy=False)
+        data["check_runs"].append(
+            {
+                "id": 25,
                 "name": "Codacy Static Code Analysis",
                 "status": "completed",
                 "conclusion": "success",
