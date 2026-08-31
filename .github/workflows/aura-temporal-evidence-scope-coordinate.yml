@@ -1,0 +1,106 @@
+name: Aura Temporal Evidence Scope Coordinate
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR614_HEAD: c2c112f627e93b8fd0b11c971be41badd1902cb6
+  PR614_RUN: '33365263419'
+  PR610_REPAIR_HEAD: 3503065b862fd23a5df4ecd350a33c49496349a8
+  PR610_OWNER_BLOB: 828e5056980289165069398833fff6623306a6ed
+  PR610_TEST_BLOB: 25f0ae34135408acbb6981813572c4556e345d06
+
+jobs:
+  temporal-evidence-scope-coordinate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact child and bind repaired PR610 materialization
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TARGET_SHA }}
+          fetch-depth: 0
+
+      - name: Assert exact child and repaired producer blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git fetch --no-tags origin "$PR610_REPAIR_HEAD" "$PR614_HEAD"
+          git cat-file -e "$PR610_REPAIR_HEAD^{commit}"
+          git cat-file -e "$PR614_HEAD^{commit}"
+          git merge-base --is-ancestor "$PR614_HEAD" HEAD
+          test "$(git hash-object tools/k27_eye_pose_observation_contract.py)" = "$PR610_OWNER_BLOB"
+          test "$(git hash-object tests/test_k27_eye_pose_observation_contract.py)" = "$PR610_TEST_BLOB"
+          test "$(git show "$PR610_REPAIR_HEAD:tools/k27_eye_pose_observation_contract.py" | git hash-object --stdin)" = "$PR610_OWNER_BLOB"
+          test "$(git show "$PR610_REPAIR_HEAD:tests/test_k27_eye_pose_observation_contract.py" | git hash-object --stdin)" = "$PR610_TEST_BLOB"
+          echo "PR610_REPAIR_MATERIALIZED=true"
+          echo "PR610_REPAIR_HOSTED_GREEN_CLAIMED=false"
+
+      - name: Preserve exact PR614 hosted historical-series proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR614_RUN}" --jq .head_sha)" = "$PR614_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR614_RUN}" --jq .conclusion)" = success
+          echo "PR614_EXACT_HOSTED=true"
+
+      - name: Re-prove repaired PR610 producer traversal
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/k27_eye_pose_observation_contract.py
+          python3 -m unittest -v tests.test_k27_eye_pose_observation_contract
+          echo "PR610_REPAIR_LOCALLY_REPROVED_IN_CHILD=true"
+
+      - name: Prove UNKNOWN-preserving temporal coordinate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile tools/temporal_evidence_scope_coordinate.py
+          python3 -m unittest -v tests.test_temporal_evidence_scope_coordinate
+          python3 - <<'PY'
+          from tests.test_temporal_evidence_scope_coordinate import eye_receipt, series
+          from tools.temporal_evidence_scope_coordinate import bind_temporal_evidence_scope
+          out = bind_temporal_evidence_scope(
+              eye_pose_receipt=eye_receipt(1_788_156_600_000_000_000),
+              longitudinal_series=series(),
+          )
+          assert out.point_vs_series_relation == 'UNKNOWN'
+          assert out.temporal_overlap is False
+          assert out.point_observation_software_gate_admissible is True
+          assert out.point_observation_temporal_admissible is False
+          assert out.hold_reason == 'POINT_EVIDENCE_NOT_AUTHENTICATED'
+          assert out.shared_current_world_proven is False
+          assert out.temporal_overlap_proves_causality is False
+          assert out.effect_authority_proven is False
+          print('TEMPORAL_RELATION=UNKNOWN')
+          print('HOLD=POINT_EVIDENCE_NOT_AUTHENTICATED')
+          print('SHARED_CURRENT_WORLD=false')
+          print('CAUSALITY=false')
+          PY
+
+      - name: Assert claim ceiling
+        shell: bash
+        run: |
+          cat <<'EOF'
+          SOFTWARE_PRODUCER_TRAVERSAL=true
+          PHYSICAL_SENSOR_CAPTURE_AUTHENTICATED=false
+          TEMPORAL_POINT_EVIDENCE_ADMISSIBLE=false
+          CURRENT_NOW_PROVEN=false
+          SHARED_CURRENT_WORLD_PROVEN=false
+          SAME_HOST_PROVEN=false
+          CAUSALITY_PROVEN=false
+          EFFECT_AUTHORITY_PROVEN=false
+          SEMANTIC_K27_AUTHORITY_PROVEN=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTED=false
+          EOF
