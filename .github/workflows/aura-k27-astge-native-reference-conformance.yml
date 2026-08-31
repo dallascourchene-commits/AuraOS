@@ -1,0 +1,60 @@
+name: Aura K27 ASTGE Native Reference Conformance
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - "tools/k27_astge_native_reference_conformance.py"
+      - ".github/workflows/aura-k27-astge-native-reference-conformance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  REFERENCE_SHA: a71d1c55af84973a29b28fdfa3db157056780e92
+
+jobs:
+  native-reference-conformance:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Fetch pinned independent PR459 oracle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$REFERENCE_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git show "$REFERENCE_SHA:tools/k27_astge_reference.py" > /tmp/k27_astge_reference.py
+          test -s /tmp/k27_astge_reference.py
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Build and test native S-plane
+        run: |
+          rustc --version
+          cargo --version
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets --locked
+          cargo build --manifest-path crates/aura-k27-astge/Cargo.toml --example reference_conformance --locked
+
+      - name: Compare exact native traversal with independent oracle
+        run: |
+          python3 --version
+          python3 tools/k27_astge_native_reference_conformance.py \
+            --reference /tmp/k27_astge_reference.py \
+            --rust-bin crates/aura-k27-astge/target/debug/examples/reference_conformance
