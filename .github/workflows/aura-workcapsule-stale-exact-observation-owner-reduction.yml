@@ -1,0 +1,79 @@
+name: Aura WorkCapsule Stale Exact Observation Owner Reduction
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_observation_bound_closure.py'
+      - 'scripts/aura_workcapsule_observation_bound_exact_verifier.py'
+      - 'scripts/aura_workcapsule_stale_exact_reentry.py'
+      - 'scripts/aura_workcapsule_stale_exact_observation_owner_reduction.py'
+      - 'tests/test_aura_workcapsule_observation_bound_exact_verifier.py'
+      - 'tests/test_aura_workcapsule_stale_exact_reentry.py'
+      - 'tests/test_aura_workcapsule_stale_exact_observation_owner_reduction.py'
+      - '.github/workflows/aura-workcapsule-stale-exact-observation-owner-reduction.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  owner-reduction:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR519 general exact raw-input owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_observation_bound_exact_verifier.py
+          python3 -m unittest -v tests.test_aura_workcapsule_observation_bound_exact_verifier
+
+      - name: Re-prove PR517 rejected-currentness owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_stale_exact_reentry.py
+          python3 -m unittest -v tests.test_aura_workcapsule_stale_exact_reentry
+
+      - name: Prove owner-reduction membrane
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_stale_exact_observation_owner_reduction.py
+          python3 -m unittest -v tests.test_aura_workcapsule_stale_exact_observation_owner_reduction
+
+      - name: Assert no duplicate raw replay implementation
+        run: |
+          ! grep -q 'compile_source_reentry_observations' scripts/aura_workcapsule_stale_exact_observation_owner_reduction.py
+          ! grep -q 'compile_observation_bound_reentry_closure' scripts/aura_workcapsule_stale_exact_observation_owner_reduction.py
+          grep -q 'verify_exact_observation_bound_reentry_closure' scripts/aura_workcapsule_stale_exact_observation_owner_reduction.py
+          grep -q 'verify_stale_safe_exact_reentry' scripts/aura_workcapsule_stale_exact_observation_owner_reduction.py
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'GENERAL_RAW_INPUT_OWNER_CONSUMED=true'
+          echo 'STALE_SAFETY_OWNER_CONSUMED=true'
+          echo 'RAW_REPLAY_REIMPLEMENTED_BY_CHILD=false'
+          echo 'SOURCE_CURRENTNESS_MINTED=false'
+          echo 'STALE_OBSERVED_BYTES_BOUND_TO_SOURCE_GENERATION=false'
+          echo 'UNKNOWN_IDENTITY_GUESSED=false'
+          echo 'PRODUCER_IDENTITY_AUTHENTICATED=false'
+          echo 'GRAPH_WITNESS_PRODUCER_AUTHENTICATED=false'
+          echo 'SEMANTIC_TRUTH_MINTED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
