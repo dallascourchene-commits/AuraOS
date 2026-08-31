@@ -201,7 +201,7 @@ def build_historical_official_w2_bridge(
     if any(entry.header_sha256 != PR398_HEADER_SHA256 for entry in bundle.entries):
         raise ValueError("PR398_HEADER_DIGEST_MISMATCH")
 
-    # The current PR639 public execution surface is still raw-byte HOLD. Historical
+    # The current PR639 public execution surface is still raw-byte HOLD.  Historical
     # producer evidence constrains the source geometry; it does not materialize bytes
     # into this consumer process.
     current = q5.current_public_state()
