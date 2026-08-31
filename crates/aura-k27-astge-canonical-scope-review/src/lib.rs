@@ -225,7 +225,6 @@ mod tests {
     struct Setup {
         root: PathBuf,
         index: PythonLexicalScopeIndexV1,
-        records: Vec<NodeIndexRecordV1>,
         catalog: AdmittedSourceCatalogV1,
         selected_scope_id: u64,
         selected_record: NodeIndexRecordV1,
@@ -295,7 +294,6 @@ mod tests {
         Setup {
             root,
             index,
-            records: encoded.records,
             catalog,
             selected_scope_id,
             selected_record,
