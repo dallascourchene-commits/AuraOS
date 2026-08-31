@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788115863,
+  "generated_at_unix": 1788156607,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1645,
+    "repo_file_count": 1663,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-k27-astge-splane.yml",
       ".github/workflows/aura-review-ghr002.yml",
       ".github/workflows/aura-review-ghr015.yml",
       ".github/workflows/aura-review-learning.yml",
@@ -151,6 +152,11 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-astge-immutability-capability.yml",
+      ".github/workflows/k27-astge-io-uring-capability.yml",
+      ".github/workflows/k27-astge-snapshot-open-handle-selector-v2.yml",
+      ".github/workflows/k27-astge-thinkpad-host-qualification.yml",
+      ".github/workflows/k27-astge-v4-lease-mmap-exec.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -929,6 +935,14 @@
       "cognitive_search.rs",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
+      "crates/aura-k27-astge-v4-mmap-exec/Cargo.toml",
+      "crates/aura-k27-astge-v4-mmap-exec/src/lib.rs",
+      "crates/aura-k27-astge/Cargo.toml",
+      "crates/aura-k27-astge/README.md",
+      "crates/aura-k27-astge/src/lib.rs",
+      "crates/aura-k27-astge/src/v2.rs",
+      "crates/aura-k27-astge/src/v3.rs",
+      "crates/aura-k27-astge/src/v4.rs",
       "dag_executor.py",
       "dag_executor.rs",
       "debug_att.py",
@@ -1625,6 +1639,8 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_astge_io_uring_capability_probe.py",
+      "tests/test_k27_astge_thinkpad_host_probe.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -1639,6 +1655,8 @@
       "tools/aura_review/test_aura_review_context_compiler.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/k27_astge_io_uring_capability_probe.py",
+      "tools/k27_astge_thinkpad_host_probe.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1761,16 +1779,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1645,
-      "bytes": 26479690,
-      "tokens_est": 6610276,
+      "files": 1663,
+      "bytes": 26625409,
+      "tokens_est": 6646711,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 237,
-        "native_accelerator": 12,
+        "knowledge_artifact": 238,
+        "native_accelerator": 17,
         "operator_script": 9,
-        "python_module": 1001,
-        "schema_or_lexicon": 273,
+        "python_module": 1005,
+        "schema_or_lexicon": 281,
         "support_file": 49
       }
     },
@@ -1900,6 +1918,7 @@
         "aura_workspace/inbox/bounties/active/batch2/W8_rust-grpc-44/ALLOCATION.md",
         "aura_workspace/inbox/bounties/active/batch2/W9_BLOCKED_SOURCE_AUTHORITY.md",
         "aura_workspace/inbox/bounties/active/typeorm_3357_POLICY_BLOCK.md",
+        "crates/aura-k27-astge/README.md",
         "defensive-publications/Paper_XI_Predictive_Locality_Recursive_Cardinality_World_Seed_2026-08-12.md",
         "demo_assets/construction_tuwien/ATTRIBUTION.md",
         "demo_assets/construction_tuwien/README.md",
@@ -2044,8 +2063,7 @@
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY.md",
         "docs/AURA_UNIFIED_MEMORY_CONTINUITY_VERIFICATION.md",
         "docs/AURA_VERIFIED_EPHEMERAL_WORKSPACE_PR2.md",
-        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md",
-        "docs/BENCHMARKS.md"
+        "docs/AURA_WINNIPEG_PATHWAYS_DEMO.md"
       ]
     },
     {
@@ -3464,6 +3482,22 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "kind": "function",
+        "line": 117,
+        "end_line": 126,
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#function:main:f49697eb5ecaeb06",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 291,
+        "end_line": 307,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:main:efdb71f00cb9783b",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -13753,6 +13787,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 30,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:_sha256:90c5729661254445",
+        "signature_hash": "9084cb89be4caca5"
       }
     ],
     "PullRequestRouteBinding": [
@@ -157015,6 +157057,136 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "IoUringProbeTests": [
+      {
+        "file": "tests/test_k27_astge_io_uring_capability_probe.py",
+        "kind": "class",
+        "line": 13,
+        "end_line": 37,
+        "semantic_id": "tests/test_k27_astge_io_uring_capability_probe.py#class:IoUringProbeTests:002762014f090665",
+        "signature_hash": "adfa4551e964af72"
+      }
+    ],
+    "IoUringProbeTests.test_linux_abi_struct_sizes_are_exact": [
+      {
+        "file": "tests/test_k27_astge_io_uring_capability_probe.py",
+        "kind": "method",
+        "line": 14,
+        "end_line": 18,
+        "semantic_id": "tests/test_k27_astge_io_uring_capability_probe.py#method:IoUringProbeTests.test_linux_abi_struct_sizes_are_exact:a2be094c8b94c07c",
+        "signature_hash": "7c733163bb128050"
+      }
+    ],
+    "IoUringProbeTests.test_non_x86_fails_closed": [
+      {
+        "file": "tests/test_k27_astge_io_uring_capability_probe.py",
+        "kind": "method",
+        "line": 20,
+        "end_line": 24,
+        "semantic_id": "tests/test_k27_astge_io_uring_capability_probe.py#method:IoUringProbeTests.test_non_x86_fails_closed:20be566f84f0f226",
+        "signature_hash": "d119412b73548d10"
+      }
+    ],
+    "IoUringProbeTests.test_observation_never_claims_direct_io_or_performance": [
+      {
+        "file": "tests/test_k27_astge_io_uring_capability_probe.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 33,
+        "semantic_id": "tests/test_k27_astge_io_uring_capability_probe.py#method:IoUringProbeTests.test_observation_never_claims_direct_io_or_performance:89c4968882d615f4",
+        "signature_hash": "f277b680feb1011a"
+      }
+    ],
+    "IoUringProbeTests.test_receipt_is_sealed": [
+      {
+        "file": "tests/test_k27_astge_io_uring_capability_probe.py",
+        "kind": "method",
+        "line": 35,
+        "end_line": 37,
+        "semantic_id": "tests/test_k27_astge_io_uring_capability_probe.py#method:IoUringProbeTests.test_receipt_is_sealed:4029c93a1b000bb9",
+        "signature_hash": "e3578c72b7c99afb"
+      }
+    ],
+    "ProbeTests": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 51,
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#class:ProbeTests:5ccc5f4c5dc6dbe0",
+        "signature_hash": "e50e2b9983b3a98b"
+      }
+    ],
+    "ProbeTests.test_intel_hybrid_flags_select_avx2": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 17,
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_intel_hybrid_flags_select_avx2:01034b0af1fb4177",
+        "signature_hash": "ed59b4ec9944abd3"
+      }
+    ],
+    "ProbeTests.test_avx512_requires_vpopcnt": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "kind": "method",
+        "line": 19,
+        "end_line": 21,
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_avx512_requires_vpopcnt:e9d36adccf222345",
+        "signature_hash": "693422786a5bbfec"
+      }
+    ],
+    "ProbeTests.test_wsl_detection": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "kind": "method",
+        "line": 23,
+        "end_line": 25,
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_wsl_detection:b4dada29ed860595",
+        "signature_hash": "07e958315f3eec65"
+      }
+    ],
+    "ProbeTests.test_memtotal": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "kind": "method",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_memtotal:31bd186e784c7a4a",
+        "signature_hash": "92e066ed0e83a78b"
+      }
+    ],
+    "ProbeTests.test_same_page_benchmark_has_same_consequence": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 37,
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_same_page_benchmark_has_same_consequence:4dba89ac239288c7",
+        "signature_hash": "cbe56a6b31c627bc"
+      }
+    ],
+    "ProbeTests.test_bandwidth_sanity_rejects_impossible_claim": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 41,
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_bandwidth_sanity_rejects_impossible_claim:4404cd6bc7482535",
+        "signature_hash": "ffa3fefd2bc115b5"
+      }
+    ],
+    "ProbeTests.test_qualify_never_promotes": [
+      {
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 51,
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_qualify_never_promotes:0b6814d641b99cad",
+        "signature_hash": "7c2c027ca6756b48"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -158403,6 +158575,246 @@
         "end_line": 224,
         "semantic_id": "tools/aura_review/test_aura_review_context_compiler.py#method:T.test_coordinate_locator_order_does_not_change_identity:9561a0884d298e23",
         "signature_hash": "acf16eb57d91cb81"
+      }
+    ],
+    "IoSqringOffsets": [
+      {
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "kind": "class",
+        "line": 17,
+        "end_line": 24,
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#class:IoSqringOffsets:db4ba4c64d9c7d51",
+        "signature_hash": "7d63240e196bf192"
+      }
+    ],
+    "IoCqringOffsets": [
+      {
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "kind": "class",
+        "line": 27,
+        "end_line": 34,
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#class:IoCqringOffsets:c07b4fa8767adf18",
+        "signature_hash": "ea00f44c6226eb95"
+      }
+    ],
+    "IoUringParams": [
+      {
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 44,
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#class:IoUringParams:97015b86587d5f87",
+        "signature_hash": "169b48672ad99a40"
+      }
+    ],
+    "IOVec": [
+      {
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "kind": "class",
+        "line": 47,
+        "end_line": 48,
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#class:IOVec:ce5a91d5be2984ac",
+        "signature_hash": "263fffa7d89c3451"
+      }
+    ],
+    "_wsl": [
+      {
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 56,
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#function:_wsl:105d8c28bfdaa90e",
+        "signature_hash": "745646bb6c44aad6"
+      }
+    ],
+    "observe": [
+      {
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 107,
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#function:observe:36aaf868ac20396a",
+        "signature_hash": "f2045a9f04423635"
+      }
+    ],
+    "_seal": [
+      {
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "kind": "function",
+        "line": 110,
+        "end_line": 114,
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#function:_seal:81efa6506197036c",
+        "signature_hash": "9beeab0ba1b4f5f2"
+      }
+    ],
+    "_read_text": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 37,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:_read_text:704bc9e9a4a16a22",
+        "signature_hash": "ce7417c498000602"
+      }
+    ],
+    "cpu_flags": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 47,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:cpu_flags:768e315f4f3e6cff",
+        "signature_hash": "62662c26604a1929"
+      }
+    ],
+    "select_simd_path": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 58,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:select_simd_path:02069c5997913cae",
+        "signature_hash": "85d332eaf4e49e7c"
+      }
+    ],
+    "detect_wsl": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 64,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:detect_wsl:3503d103573b4ab5",
+        "signature_hash": "fec9c33b0b9130a6"
+      }
+    ],
+    "memory_total_bytes": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 67,
+        "end_line": 74,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:memory_total_bytes:22983490ce4a80a8",
+        "signature_hash": "91d8c5def0d861c1"
+      }
+    ],
+    "nvidia_cuda_present": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 85,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:nvidia_cuda_present:bba171e25cdaea53",
+        "signature_hash": "8e205f439cec348a"
+      }
+    ],
+    "storage_summary": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 106,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:storage_summary:6ac18880aeacc085",
+        "signature_hash": "eef5c28d97b19cb5"
+      }
+    ],
+    "deterministic_file": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 109,
+        "end_line": 128,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:deterministic_file:0c20e241af14dc4f",
+        "signature_hash": "5dce1ae44fdecf20"
+      }
+    ],
+    "_offsets": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 131,
+        "end_line": 136,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:_offsets:36d96f06c6e046f4",
+        "signature_hash": "ef5c1b4094d8924f"
+      }
+    ],
+    "benchmark_same_pages": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 139,
+        "end_line": 202,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:benchmark_same_pages:1bf1e5ea78b8323b",
+        "signature_hash": "79d653f69e682e2a"
+      }
+    ],
+    "benchmark_same_pages.run_pread": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 158,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#method:benchmark_same_pages.run_pread:92a2eee6d3beb7f9",
+        "signature_hash": "525d336f46df842e"
+      }
+    ],
+    "benchmark_same_pages.run_mmap": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 171,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#method:benchmark_same_pages.run_mmap:1d024325573e8e01",
+        "signature_hash": "227ab0afdbe86225"
+      }
+    ],
+    "benchmark_same_pages.stats": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 190,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#method:benchmark_same_pages.stats:3158ea66e06007bd",
+        "signature_hash": "34ad8e2d0af44403"
+      }
+    ],
+    "bandwidth_sanity": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 205,
+        "end_line": 213,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:bandwidth_sanity:6931cb5b8cb647fe",
+        "signature_hash": "02a7ea55bb631a76"
+      }
+    ],
+    "HostQualificationReceipt": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "class",
+        "line": 217,
+        "end_line": 237,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#class:HostQualificationReceipt:d34831773da95ca9",
+        "signature_hash": "e407decefaf32146"
+      }
+    ],
+    "cpu_model_name": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 240,
+        "end_line": 246,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:cpu_model_name:5095247f3273d3d6",
+        "signature_hash": "906193fd082dc0ea"
+      }
+    ],
+    "qualify": [
+      {
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "kind": "function",
+        "line": 249,
+        "end_line": 288,
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:qualify:f2ddae3aa2d86e4c",
+        "signature_hash": "2faee4fb427dca35"
       }
     ],
     "_coordinates": [
@@ -159852,6 +160264,9 @@
     ],
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
+    ],
+    "python tools/k27_astge_thinkpad_host_probe.py \\": [
+      ".github/workflows/k27-astge-thinkpad-host-qualification.yml"
     ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
@@ -168965,6 +169380,53 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-k27-astge-splane.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1261,
+      "lines": 39,
+      "tokens_est": 316,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f942772dcadeeebd",
+      "vector": [
+        0.175094,
+        -0.112838,
+        0.232162,
+        -0.141372,
+        -0.110244,
+        0.042801,
+        0.216598,
+        -0.317763,
+        -0.13359,
+        -0.016861,
+        -0.19844,
+        0.201034,
+        -0.112838,
+        0.016861,
+        0.208816,
+        -0.263289,
+        0.099868,
+        0.21141,
+        0.154342,
+        0.190658,
+        0.102462,
+        0.263289,
+        -0.221786,
+        0.216598,
+        -0.024643,
+        -0.001297,
+        0.263289,
+        0.291823,
+        -0.037613,
+        -0.006485,
+        0.221786,
+        0.022049
+      ]
+    },
+    {
       "path": ".github/workflows/aura-review-ghr002.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -169856,6 +170318,247 @@
         0.193092,
         -0.001409,
         -0.102888
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-astge-immutability-capability.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1833,
+      "lines": 47,
+      "tokens_est": 459,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a294f5be79c353c7",
+      "vector": [
+        -0.035814,
+        -0.065453,
+        -0.255636,
+        -0.092622,
+        0.075332,
+        0.248226,
+        0.058043,
+        0.077802,
+        -0.179069,
+        -0.13214,
+        -0.213647,
+        0.159309,
+        -0.235877,
+        0.280335,
+        0.253166,
+        -0.085212,
+        0.033344,
+        -0.077802,
+        0.104971,
+        0.221057,
+        0.13214,
+        0.307504,
+        0.070392,
+        -0.095092,
+        0.025934,
+        0.124731,
+        -0.001235,
+        -0.297624,
+        0.302564,
+        0.179069,
+        -0.292685,
+        -0.102501
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-astge-io-uring-capability.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 1777,
+      "lines": 42,
+      "tokens_est": 445,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4e0148bb491806b9",
+      "vector": [
+        -0.00574,
+        0.168762,
+        -0.219276,
+        -0.157281,
+        0.177946,
+        0.056254,
+        0.033293,
+        -0.05855,
+        -0.258309,
+        0.106768,
+        -0.051662,
+        -0.11136,
+        -0.086103,
+        -0.125136,
+        -0.072327,
+        0.265197,
+        0.109064,
+        0.001148,
+        -0.060846,
+        0.086103,
+        0.285862,
+        -0.285862,
+        -0.242236,
+        0.246829,
+        0.22846,
+        -0.16417,
+        0.269789,
+        0.267493,
+        -0.290454,
+        0.056254,
+        -0.148097,
+        0.168762
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-astge-snapshot-open-handle-selector-v2.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3237,
+      "lines": 75,
+      "tokens_est": 810,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f3e26271767da417",
+      "vector": [
+        -0.177959,
+        0.053497,
+        0.256567,
+        0.110269,
+        0.250017,
+        -0.001092,
+        0.228181,
+        -0.062231,
+        -0.243466,
+        -0.136472,
+        0.250017,
+        0.042579,
+        0.164858,
+        -0.110269,
+        -0.221631,
+        0.140839,
+        -0.094985,
+        0.160491,
+        -0.016377,
+        -0.221631,
+        0.164858,
+        0.278403,
+        -0.2522,
+        0.2522,
+        0.206346,
+        -0.175776,
+        0.070965,
+        0.062231,
+        -0.219447,
+        -0.149573,
+        -0.186694,
+        0.121187
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-astge-thinkpad-host-qualification.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2221,
+      "lines": 54,
+      "tokens_est": 556,
+      "symbol_count": 0,
+      "commands": [
+        "python tools/k27_astge_thinkpad_host_probe.py \\"
+      ],
+      "command_lines": {
+        "python tools/k27_astge_thinkpad_host_probe.py \\": [
+          31
+        ]
+      },
+      "topology": {},
+      "digest8": "b715d07417eb98f0",
+      "vector": [
+        0.24532,
+        -0.188208,
+        0.289451,
+        0.237532,
+        -0.208976,
+        0.237532,
+        -0.081773,
+        -0.073985,
+        -0.068793,
+        0.073985,
+        -0.138885,
+        0.315411,
+        -0.089561,
+        -0.014278,
+        0.115521,
+        0.01947,
+        -0.221956,
+        0.1934,
+        0.247916,
+        -0.063601,
+        -0.328391,
+        -0.073985,
+        0.133693,
+        0.048026,
+        -0.151865,
+        -0.195996,
+        -0.307623,
+        -0.081773,
+        -0.159653,
+        -0.061005,
+        0.03245,
+        0.149269
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-astge-v4-lease-mmap-exec.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3627,
+      "lines": 81,
+      "tokens_est": 907,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7b1fcd08beb88b9e",
+      "vector": [
+        -0.027886,
+        0.206358,
+        -0.110429,
+        0.155047,
+        0.054657,
+        0.052426,
+        0.233129,
+        -0.177356,
+        0.025655,
+        0.204127,
+        -0.190742,
+        0.007808,
+        0.159509,
+        -0.237591,
+        0.192973,
+        0.266592,
+        -0.032348,
+        -0.148355,
+        -0.039041,
+        -0.195204,
+        0.181818,
+        -0.110429,
+        0.228667,
+        0.134969,
+        -0.271054,
+        -0.16174,
+        -0.239822,
+        0.242052,
+        -0.152817,
+        0.226436,
+        0.1372,
+        -0.268823
       ]
     },
     {
@@ -227371,6 +228074,382 @@
       ]
     },
     {
+      "path": "crates/aura-k27-astge-v4-mmap-exec/Cargo.toml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 286,
+      "lines": 12,
+      "tokens_est": 72,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8938024856fc1e1e",
+      "vector": [
+        0.131519,
+        0.175728,
+        0.224357,
+        -0.08068,
+        0.266354,
+        -0.005526,
+        -0.003316,
+        0.02542,
+        -0.018788,
+        0.038682,
+        -0.149203,
+        -0.180148,
+        0.248671,
+        0.215515,
+        -0.005526,
+        -0.204463,
+        0.228777,
+        -0.281827,
+        -0.195621,
+        -0.02542,
+        -0.109415,
+        -0.202253,
+        0.151413,
+        -0.175728,
+        0.051945,
+        0.257513,
+        -0.272986,
+        -0.275196,
+        -0.18899,
+        -0.171307,
+        -0.164676,
+        0.166886
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge-v4-mmap-exec/src/lib.rs",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 16288,
+      "lines": 469,
+      "tokens_est": 4072,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1bf219b4aaaa4634",
+      "vector": [
+        0.261315,
+        -0.131308,
+        -0.113106,
+        0.146908,
+        0.016901,
+        -0.081905,
+        0.092305,
+        0.211912,
+        0.227513,
+        -0.240514,
+        -0.287317,
+        0.263915,
+        -0.315918,
+        -0.071504,
+        -0.032502,
+        0.274316,
+        0.032502,
+        -0.011701,
+        -0.022101,
+        0.204112,
+        0.048103,
+        0.17031,
+        -0.079305,
+        0.219713,
+        0.328919,
+        0.193711,
+        -0.16771,
+        -0.071504,
+        0.146908,
+        0.068904,
+        -0.128707,
+        0.159909
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge/Cargo.toml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 241,
+      "lines": 13,
+      "tokens_est": 61,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2343ba6684f9dcc9",
+      "vector": [
+        0.058354,
+        -0.130971,
+        0.278801,
+        -0.309923,
+        -0.281394,
+        -0.195809,
+        -0.10763,
+        0.265833,
+        0.265833,
+        -0.011671,
+        -0.019451,
+        -0.151719,
+        -0.120598,
+        0.084289,
+        0.092069,
+        -0.118004,
+        -0.193215,
+        -0.120598,
+        -0.001297,
+        0.27102,
+        -0.001297,
+        -0.011671,
+        0.027232,
+        0.273614,
+        -0.224337,
+        0.073915,
+        0.234711,
+        -0.169874,
+        0.309923,
+        -0.063541,
+        -0.060947,
+        -0.151719
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge/README.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 3715,
+      "lines": 67,
+      "tokens_est": 927,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7baa371fcc997451",
+      "vector": [
+        -0.24771,
+        0.306749,
+        -0.291348,
+        0.106528,
+        0.186103,
+        0.039788,
+        0.250277,
+        0.139898,
+        0.119363,
+        0.042355,
+        0.147599,
+        -0.1553,
+        -0.085992,
+        -0.008984,
+        0.12963,
+        -0.075725,
+        -0.293915,
+        0.12963,
+        -0.25541,
+        0.006417,
+        -0.311883,
+        0.047488,
+        0.073158,
+        0.00385,
+        -0.309316,
+        -0.160434,
+        0.088559,
+        0.119363,
+        0.047488,
+        -0.160434,
+        0.124497,
+        -0.278513
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge/src/lib.rs",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 19864,
+      "lines": 553,
+      "tokens_est": 4966,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8ec46eb5d40dddd5",
+      "vector": [
+        0.09584,
+        -0.070437,
+        -0.181288,
+        0.204382,
+        0.269045,
+        -0.229785,
+        0.28752,
+        0.061199,
+        -0.21131,
+        -0.181288,
+        0.185907,
+        0.125862,
+        -0.061199,
+        -0.021939,
+        -0.209001,
+        -0.061199,
+        -0.220548,
+        -0.25057,
+        -0.17205,
+        0.195144,
+        0.121244,
+        0.271355,
+        0.146647,
+        -0.275973,
+        -0.005774,
+        0.264426,
+        0.05889,
+        0.220548,
+        -0.072746,
+        -0.042724,
+        0.086603,
+        0.1351
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge/src/v2.rs",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 18404,
+      "lines": 527,
+      "tokens_est": 4601,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1b042fe87e6cef8f",
+      "vector": [
+        0.208189,
+        0.148377,
+        0.086266,
+        -0.178283,
+        -0.238094,
+        0.210489,
+        -0.242695,
+        0.097768,
+        -0.040257,
+        0.079365,
+        0.05176,
+        0.157579,
+        0.010352,
+        -0.040257,
+        0.208189,
+        0.16448,
+        -0.113871,
+        0.263399,
+        -0.047159,
+        -0.042558,
+        -0.258798,
+        0.291004,
+        -0.238094,
+        -0.014953,
+        -0.100069,
+        0.2726,
+        -0.10927,
+        -0.284103,
+        0.132274,
+        -0.136875,
+        -0.15988,
+        0.291004
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge/src/v3.rs",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 23836,
+      "lines": 639,
+      "tokens_est": 5959,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a48681556f9e5fe7",
+      "vector": [
+        -0.065221,
+        -0.208928,
+        0.08733,
+        -0.257567,
+        -0.26641,
+        -0.184608,
+        -0.250934,
+        -0.127125,
+        -0.21556,
+        0.120493,
+        0.16471,
+        0.219982,
+        0.124914,
+        -0.235458,
+        -0.226615,
+        -0.200084,
+        -0.171343,
+        -0.034269,
+        0.009949,
+        -0.202295,
+        0.005527,
+        0.091751,
+        -0.023214,
+        0.080697,
+        -0.193452,
+        0.279676,
+        -0.166921,
+        0.036479,
+        -0.049745,
+        0.235458,
+        -0.244302,
+        0.213349
+      ]
+    },
+    {
+      "path": "crates/aura-k27-astge/src/v4.rs",
+      "role": "native_accelerator",
+      "binary": false,
+      "bytes": 29715,
+      "lines": 794,
+      "tokens_est": 7429,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4e4af13663760b5c",
+      "vector": [
+        0.061131,
+        -0.290684,
+        -0.043665,
+        0.13349,
+        0.290684,
+        0.188383,
+        0.048655,
+        -0.160936,
+        -0.091073,
+        0.028694,
+        -0.180898,
+        0.016218,
+        -0.170917,
+        -0.135985,
+        0.190878,
+        -0.098558,
+        0.066121,
+        0.223315,
+        -0.103548,
+        0.033684,
+        0.275713,
+        -0.218325,
+        -0.233296,
+        -0.208344,
+        -0.063626,
+        -0.293179,
+        0.056141,
+        -0.103548,
+        0.283198,
+        0.168422,
+        -0.238286,
+        0.22581
+      ]
+    },
+    {
       "path": "dag_executor.py",
       "role": "python_module",
       "binary": false,
@@ -263598,6 +264677,100 @@
       ]
     },
     {
+      "path": "tests/test_k27_astge_io_uring_capability_probe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 1764,
+      "lines": 42,
+      "tokens_est": 441,
+      "symbol_count": 5,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9caed3cbc32b5aea",
+      "vector": [
+        0.170826,
+        0.245199,
+        0.156881,
+        -0.133639,
+        0.163853,
+        0.015107,
+        -0.177798,
+        0.094129,
+        -0.240551,
+        0.133639,
+        0.147584,
+        -0.224282,
+        -0.261468,
+        -0.019755,
+        0.066239,
+        -0.161529,
+        0.075535,
+        0.219633,
+        -0.187095,
+        -0.226606,
+        0.212661,
+        0.187095,
+        -0.02208,
+        0.029052,
+        -0.161529,
+        0.275413,
+        -0.0337,
+        -0.177798,
+        -0.040673,
+        -0.289358,
+        -0.154557,
+        0.296331
+      ]
+    },
+    {
+      "path": "tests/test_k27_astge_thinkpad_host_probe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 2497,
+      "lines": 56,
+      "tokens_est": 625,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "46abbffa87be5ccb",
+      "vector": [
+        0.003536,
+        0.038896,
+        -0.067184,
+        0.218052,
+        -0.147333,
+        -0.279343,
+        -0.284058,
+        -0.107258,
+        -0.008251,
+        0.208623,
+        -0.232196,
+        0.215695,
+        -0.102544,
+        0.104901,
+        0.142618,
+        0.003536,
+        0.213338,
+        0.288772,
+        0.060112,
+        -0.11433,
+        -0.163834,
+        0.267556,
+        0.243983,
+        0.14969,
+        -0.177978,
+        -0.062469,
+        0.060112,
+        0.076613,
+        -0.24634,
+        -0.288772,
+        0.135546,
+        0.187407
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -264253,6 +265426,100 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/k27_astge_io_uring_capability_probe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4261,
+      "lines": 131,
+      "tokens_est": 1066,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "69895b9ea36fb54c",
+      "vector": [
+        -0.039159,
+        -0.245632,
+        0.276484,
+        0.157822,
+        -0.001187,
+        -0.10561,
+        0.005933,
+        0.148328,
+        0.162568,
+        -0.245632,
+        -0.205287,
+        -0.186301,
+        0.117476,
+        0.060518,
+        -0.262245,
+        0.070011,
+        -0.262245,
+        -0.015426,
+        0.036785,
+        0.255125,
+        0.024919,
+        -0.248005,
+        -0.148328,
+        -0.238512,
+        -0.262245,
+        0.079504,
+        -0.205287,
+        0.233766,
+        0.043905,
+        -0.124596,
+        0.051025,
+        -0.283604
+      ]
+    },
+    {
+      "path": "tools/k27_astge_thinkpad_host_probe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10892,
+      "lines": 311,
+      "tokens_est": 2723,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "006cd52a1adfe617",
+      "vector": [
+        -0.159095,
+        -0.099897,
+        0.139362,
+        -0.287358,
+        0.107297,
+        0.085097,
+        -0.225693,
+        -0.225693,
+        0.139362,
+        0.075231,
+        -0.057965,
+        -0.154162,
+        0.19856,
+        -0.11963,
+        -0.22076,
+        0.072764,
+        0.284891,
+        0.277491,
+        0.252825,
+        0.008633,
+        0.10483,
+        -0.028366,
+        -0.201027,
+        0.050565,
+        0.31449,
+        0.223226,
+        -0.136896,
+        -0.304624,
+        -0.171428,
+        0.11223,
+        -0.040699,
+        0.035766
       ]
     },
     {
@@ -288160,16 +289427,16 @@
     }
   },
   "summary": {
-    "file_count": 1645,
-    "total_bytes": 26479690,
-    "text_tokens_est": 6610276,
+    "file_count": 1663,
+    "total_bytes": 26625409,
+    "text_tokens_est": 6646711,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 237,
-      "native_accelerator": 12,
+      "knowledge_artifact": 238,
+      "native_accelerator": 17,
       "operator_script": 9,
-      "python_module": 1001,
-      "schema_or_lexicon": 273,
+      "python_module": 1005,
+      "schema_or_lexicon": 281,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288315,6 +289582,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-k27-astge-splane.yml",
       ".github/workflows/aura-review-ghr002.yml",
       ".github/workflows/aura-review-ghr015.yml",
       ".github/workflows/aura-review-learning.yml",
@@ -288330,6 +289598,11 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-astge-immutability-capability.yml",
+      ".github/workflows/k27-astge-io-uring-capability.yml",
+      ".github/workflows/k27-astge-snapshot-open-handle-selector-v2.yml",
+      ".github/workflows/k27-astge-thinkpad-host-qualification.yml",
+      ".github/workflows/k27-astge-v4-lease-mmap-exec.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -289108,6 +290381,14 @@
       "cognitive_search.rs",
       "core/aura_task_dispatcher.py",
       "core/aura_worker_daemon.py",
+      "crates/aura-k27-astge-v4-mmap-exec/Cargo.toml",
+      "crates/aura-k27-astge-v4-mmap-exec/src/lib.rs",
+      "crates/aura-k27-astge/Cargo.toml",
+      "crates/aura-k27-astge/README.md",
+      "crates/aura-k27-astge/src/lib.rs",
+      "crates/aura-k27-astge/src/v2.rs",
+      "crates/aura-k27-astge/src/v3.rs",
+      "crates/aura-k27-astge/src/v4.rs",
       "dag_executor.py",
       "dag_executor.rs",
       "debug_att.py",
@@ -289804,6 +291085,8 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_astge_io_uring_capability_probe.py",
+      "tests/test_k27_astge_thinkpad_host_probe.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -289818,6 +291101,8 @@
       "tools/aura_review/test_aura_review_context_compiler.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/k27_astge_io_uring_capability_probe.py",
+      "tools/k27_astge_thinkpad_host_probe.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -446874,6 +448159,136 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_k27_astge_io_uring_capability_probe.py#class:IoUringProbeTests:002762014f090665",
+        "name": "IoUringProbeTests",
+        "kind": "class",
+        "file": "tests/test_k27_astge_io_uring_capability_probe.py",
+        "line": 13,
+        "end_line": 37,
+        "signature_hash": "adfa4551e964af72",
+        "file_digest8": "9caed3cbc32b5aea"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_io_uring_capability_probe.py#method:IoUringProbeTests.test_linux_abi_struct_sizes_are_exact:a2be094c8b94c07c",
+        "name": "IoUringProbeTests.test_linux_abi_struct_sizes_are_exact",
+        "kind": "method",
+        "file": "tests/test_k27_astge_io_uring_capability_probe.py",
+        "line": 14,
+        "end_line": 18,
+        "signature_hash": "7c733163bb128050",
+        "file_digest8": "9caed3cbc32b5aea"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_io_uring_capability_probe.py#method:IoUringProbeTests.test_non_x86_fails_closed:20be566f84f0f226",
+        "name": "IoUringProbeTests.test_non_x86_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_astge_io_uring_capability_probe.py",
+        "line": 20,
+        "end_line": 24,
+        "signature_hash": "d119412b73548d10",
+        "file_digest8": "9caed3cbc32b5aea"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_io_uring_capability_probe.py#method:IoUringProbeTests.test_observation_never_claims_direct_io_or_performance:89c4968882d615f4",
+        "name": "IoUringProbeTests.test_observation_never_claims_direct_io_or_performance",
+        "kind": "method",
+        "file": "tests/test_k27_astge_io_uring_capability_probe.py",
+        "line": 26,
+        "end_line": 33,
+        "signature_hash": "f277b680feb1011a",
+        "file_digest8": "9caed3cbc32b5aea"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_io_uring_capability_probe.py#method:IoUringProbeTests.test_receipt_is_sealed:4029c93a1b000bb9",
+        "name": "IoUringProbeTests.test_receipt_is_sealed",
+        "kind": "method",
+        "file": "tests/test_k27_astge_io_uring_capability_probe.py",
+        "line": 35,
+        "end_line": 37,
+        "signature_hash": "e3578c72b7c99afb",
+        "file_digest8": "9caed3cbc32b5aea"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#class:ProbeTests:5ccc5f4c5dc6dbe0",
+        "name": "ProbeTests",
+        "kind": "class",
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "line": 14,
+        "end_line": 51,
+        "signature_hash": "e50e2b9983b3a98b",
+        "file_digest8": "46abbffa87be5ccb"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_avx512_requires_vpopcnt:e9d36adccf222345",
+        "name": "ProbeTests.test_avx512_requires_vpopcnt",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "line": 19,
+        "end_line": 21,
+        "signature_hash": "693422786a5bbfec",
+        "file_digest8": "46abbffa87be5ccb"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_bandwidth_sanity_rejects_impossible_claim:4404cd6bc7482535",
+        "name": "ProbeTests.test_bandwidth_sanity_rejects_impossible_claim",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "line": 39,
+        "end_line": 41,
+        "signature_hash": "ffa3fefd2bc115b5",
+        "file_digest8": "46abbffa87be5ccb"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_intel_hybrid_flags_select_avx2:01034b0af1fb4177",
+        "name": "ProbeTests.test_intel_hybrid_flags_select_avx2",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "line": 15,
+        "end_line": 17,
+        "signature_hash": "ed59b4ec9944abd3",
+        "file_digest8": "46abbffa87be5ccb"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_memtotal:31bd186e784c7a4a",
+        "name": "ProbeTests.test_memtotal",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "92e066ed0e83a78b",
+        "file_digest8": "46abbffa87be5ccb"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_qualify_never_promotes:0b6814d641b99cad",
+        "name": "ProbeTests.test_qualify_never_promotes",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "line": 43,
+        "end_line": 51,
+        "signature_hash": "7c2c027ca6756b48",
+        "file_digest8": "46abbffa87be5ccb"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_same_page_benchmark_has_same_consequence:4dba89ac239288c7",
+        "name": "ProbeTests.test_same_page_benchmark_has_same_consequence",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "line": 30,
+        "end_line": 37,
+        "signature_hash": "cbe56a6b31c627bc",
+        "file_digest8": "46abbffa87be5ccb"
+      },
+      {
+        "semantic_id": "tests/test_k27_astge_thinkpad_host_probe.py#method:ProbeTests.test_wsl_detection:b4dada29ed860595",
+        "name": "ProbeTests.test_wsl_detection",
+        "kind": "method",
+        "file": "tests/test_k27_astge_thinkpad_host_probe.py",
+        "line": 23,
+        "end_line": 25,
+        "signature_hash": "07e958315f3eec65",
+        "file_digest8": "46abbffa87be5ccb"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -448394,6 +449809,276 @@
         "file_digest8": "aaec38d45a1a5e4c"
       },
       {
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#class:IOVec:ce5a91d5be2984ac",
+        "name": "IOVec",
+        "kind": "class",
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "line": 47,
+        "end_line": 48,
+        "signature_hash": "263fffa7d89c3451",
+        "file_digest8": "69895b9ea36fb54c"
+      },
+      {
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#class:IoCqringOffsets:c07b4fa8767adf18",
+        "name": "IoCqringOffsets",
+        "kind": "class",
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "line": 27,
+        "end_line": 34,
+        "signature_hash": "ea00f44c6226eb95",
+        "file_digest8": "69895b9ea36fb54c"
+      },
+      {
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#class:IoSqringOffsets:db4ba4c64d9c7d51",
+        "name": "IoSqringOffsets",
+        "kind": "class",
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "line": 17,
+        "end_line": 24,
+        "signature_hash": "7d63240e196bf192",
+        "file_digest8": "69895b9ea36fb54c"
+      },
+      {
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#class:IoUringParams:97015b86587d5f87",
+        "name": "IoUringParams",
+        "kind": "class",
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "line": 37,
+        "end_line": 44,
+        "signature_hash": "169b48672ad99a40",
+        "file_digest8": "69895b9ea36fb54c"
+      },
+      {
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#function:_seal:81efa6506197036c",
+        "name": "_seal",
+        "kind": "function",
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "line": 110,
+        "end_line": 114,
+        "signature_hash": "9beeab0ba1b4f5f2",
+        "file_digest8": "69895b9ea36fb54c"
+      },
+      {
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#function:_wsl:105d8c28bfdaa90e",
+        "name": "_wsl",
+        "kind": "function",
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "line": 51,
+        "end_line": 56,
+        "signature_hash": "745646bb6c44aad6",
+        "file_digest8": "69895b9ea36fb54c"
+      },
+      {
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#function:main:f49697eb5ecaeb06",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "line": 117,
+        "end_line": 126,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "69895b9ea36fb54c"
+      },
+      {
+        "semantic_id": "tools/k27_astge_io_uring_capability_probe.py#function:observe:36aaf868ac20396a",
+        "name": "observe",
+        "kind": "function",
+        "file": "tools/k27_astge_io_uring_capability_probe.py",
+        "line": 59,
+        "end_line": 107,
+        "signature_hash": "f2045a9f04423635",
+        "file_digest8": "69895b9ea36fb54c"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#class:HostQualificationReceipt:d34831773da95ca9",
+        "name": "HostQualificationReceipt",
+        "kind": "class",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 217,
+        "end_line": 237,
+        "signature_hash": "e407decefaf32146",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:_offsets:36d96f06c6e046f4",
+        "name": "_offsets",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 131,
+        "end_line": 136,
+        "signature_hash": "ef5c1b4094d8924f",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:_read_text:704bc9e9a4a16a22",
+        "name": "_read_text",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 33,
+        "end_line": 37,
+        "signature_hash": "ce7417c498000602",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:_sha256:90c5729661254445",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 29,
+        "end_line": 30,
+        "signature_hash": "9084cb89be4caca5",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:bandwidth_sanity:6931cb5b8cb647fe",
+        "name": "bandwidth_sanity",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 205,
+        "end_line": 213,
+        "signature_hash": "02a7ea55bb631a76",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:benchmark_same_pages:1bf1e5ea78b8323b",
+        "name": "benchmark_same_pages",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 139,
+        "end_line": 202,
+        "signature_hash": "79d653f69e682e2a",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:cpu_flags:768e315f4f3e6cff",
+        "name": "cpu_flags",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 40,
+        "end_line": 47,
+        "signature_hash": "62662c26604a1929",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:cpu_model_name:5095247f3273d3d6",
+        "name": "cpu_model_name",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 240,
+        "end_line": 246,
+        "signature_hash": "906193fd082dc0ea",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:detect_wsl:3503d103573b4ab5",
+        "name": "detect_wsl",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 61,
+        "end_line": 64,
+        "signature_hash": "fec9c33b0b9130a6",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:deterministic_file:0c20e241af14dc4f",
+        "name": "deterministic_file",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 109,
+        "end_line": 128,
+        "signature_hash": "5dce1ae44fdecf20",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:main:efdb71f00cb9783b",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 291,
+        "end_line": 307,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:memory_total_bytes:22983490ce4a80a8",
+        "name": "memory_total_bytes",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 67,
+        "end_line": 74,
+        "signature_hash": "91d8c5def0d861c1",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:nvidia_cuda_present:bba171e25cdaea53",
+        "name": "nvidia_cuda_present",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 77,
+        "end_line": 85,
+        "signature_hash": "8e205f439cec348a",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:qualify:f2ddae3aa2d86e4c",
+        "name": "qualify",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 249,
+        "end_line": 288,
+        "signature_hash": "2faee4fb427dca35",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:select_simd_path:02069c5997913cae",
+        "name": "select_simd_path",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 50,
+        "end_line": 58,
+        "signature_hash": "85d332eaf4e49e7c",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#function:storage_summary:6ac18880aeacc085",
+        "name": "storage_summary",
+        "kind": "function",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 88,
+        "end_line": 106,
+        "signature_hash": "eef5c28d97b19cb5",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#method:benchmark_same_pages.run_mmap:1d024325573e8e01",
+        "name": "benchmark_same_pages.run_mmap",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 160,
+        "end_line": 171,
+        "signature_hash": "227ab0afdbe86225",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#method:benchmark_same_pages.run_pread:92a2eee6d3beb7f9",
+        "name": "benchmark_same_pages.run_pread",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 148,
+        "end_line": 158,
+        "signature_hash": "525d336f46df842e",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
+        "semantic_id": "tools/k27_astge_thinkpad_host_probe.py#method:benchmark_same_pages.stats:3158ea66e06007bd",
+        "name": "benchmark_same_pages.stats",
+        "kind": "method",
+        "file": "tools/k27_astge_thinkpad_host_probe.py",
+        "line": 183,
+        "end_line": 190,
+        "signature_hash": "34ad8e2d0af44403",
+        "file_digest8": "006cd52a1adfe617"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -449644,7 +451329,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "4c2197143abc8b3d1c8ffe4f97ffc975",
-    "payload_hash": "0bb52120998daa48903facd4225d8f12"
+    "record_fingerprint": "0a39d2312e176ea2dfc1694ab464c5c4",
+    "payload_hash": "7caf10160e6795be1ce9ea8eecfec14a"
   }
 }
