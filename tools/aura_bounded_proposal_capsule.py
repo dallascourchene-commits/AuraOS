@@ -41,6 +41,7 @@ def _sha256(value: str, name: str) -> None:
 
 @dataclass(frozen=True)
 class EligibilityReceiptRef:
+    owner_ref: str
     disposition: str
     receipt_digest: str
     receipt_generation: str
@@ -50,6 +51,7 @@ class EligibilityReceiptRef:
     provider_effect_authorized: bool
 
     def validate(self) -> None:
+        _required(self.owner_ref, "ELIGIBILITY_OWNER_REF")
         if self.disposition != ELIGIBILITY_DISPOSITION:
             raise ValueError("ELIGIBILITY_RECEIPT_NOT_PROPOSAL_ELIGIBLE")
         _sha256(self.receipt_digest, "ELIGIBILITY_RECEIPT_DIGEST")
@@ -123,6 +125,14 @@ class ProposalBasis:
         payload["invalidators"] = sorted(self.invalidators)
         return payload
 
+    @property
+    def basis_digest(self) -> str:
+        return _sha({"domain": "AURA-BOUNDED-PROPOSAL-BASIS-v1", "basis": self.canonical_identity_payload})
+
+    @property
+    def proposal_id(self) -> str:
+        return _sha({"domain": "AURA-BOUNDED-PROPOSAL-ID-v1", "basis_digest": self.basis_digest})
+
 
 @dataclass(frozen=True)
 class ProposalCapsule:
@@ -154,6 +164,19 @@ class ProposalCapsule:
         if any(value is not False for value in forbidden):
             raise ValueError("PROPOSAL_CAPSULE_CANNOT_CARRY_EFFECT_AUTHORITY")
 
+    def validate_integrity(self) -> None:
+        if self.schema_version != CAPSULE_SCHEMA:
+            raise ValueError("PROPOSAL_CAPSULE_SCHEMA_MISMATCH")
+        _sha256(self.proposal_basis_digest, "PROPOSAL_BASIS_DIGEST")
+        _sha256(self.proposal_id, "PROPOSAL_ID")
+        expected_basis_digest = self.basis.basis_digest
+        if self.proposal_basis_digest != expected_basis_digest:
+            raise ValueError("PROPOSAL_CAPSULE_BASIS_INTEGRITY_MISMATCH")
+        expected_proposal_id = self.basis.proposal_id
+        if self.proposal_id != expected_proposal_id:
+            raise ValueError("PROPOSAL_CAPSULE_ID_INTEGRITY_MISMATCH")
+        self.validate_claim_ceiling()
+
 
 @dataclass(frozen=True)
 class ProposalGeneration:
@@ -174,20 +197,17 @@ class ProposalCurrentnessDecision:
 def create_bounded_proposal_capsule(*, basis: ProposalBasis, producer_identity: str) -> ProposalGeneration:
     """Freeze exact eligible basis; producer identity does not alter proposal_id."""
     _required(producer_identity, "PRODUCER_IDENTITY")
-    payload = basis.canonical_identity_payload
-    basis_digest = _sha({"domain": "AURA-BOUNDED-PROPOSAL-BASIS-v1", "basis": payload})
-    proposal_id = _sha({"domain": "AURA-BOUNDED-PROPOSAL-ID-v1", "basis_digest": basis_digest})
     capsule = ProposalCapsule(
         schema_version=CAPSULE_SCHEMA,
-        proposal_id=proposal_id,
-        proposal_basis_digest=basis_digest,
+        proposal_id=basis.proposal_id,
+        proposal_basis_digest=basis.basis_digest,
         basis=basis,
     )
-    capsule.validate_claim_ceiling()
+    capsule.validate_integrity()
     generation_receipt_digest = _sha(
         {
             "domain": "AURA-BOUNDED-PROPOSAL-GENERATION-v1",
-            "proposal_id": proposal_id,
+            "proposal_id": capsule.proposal_id,
             "producer_identity": producer_identity,
         }
     )
@@ -202,15 +222,15 @@ def revalidate_proposal_capsule(
     *, capsule: ProposalCapsule, current_basis: ProposalBasis
 ) -> ProposalCurrentnessDecision:
     """Revalidate exact operands without renewing or authorizing the proposal."""
-    capsule.validate_claim_ceiling()
-    current = create_bounded_proposal_capsule(basis=current_basis, producer_identity="REVALIDATOR")
-    if current.capsule.proposal_id != capsule.proposal_id:
+    capsule.validate_integrity()
+    current_basis.validate()
+    if current_basis.proposal_id != capsule.proposal_id:
         return ProposalCurrentnessDecision(
             state="INVALIDATED",
             reason_code="PROPOSAL_OPERAND_OR_CURRENTNESS_DRIFT",
             proposal_id=capsule.proposal_id,
         )
-    if current.capsule.proposal_basis_digest != capsule.proposal_basis_digest:
+    if current_basis.basis_digest != capsule.proposal_basis_digest:
         return ProposalCurrentnessDecision(
             state="INVALIDATED",
             reason_code="PROPOSAL_BASIS_DIGEST_MISMATCH",
