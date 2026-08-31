@@ -1,0 +1,15 @@
+[package]
+name = "aura-k27-astge-mmap"
+version = "0.1.0"
+edition = "2021"
+description = "Immutable-generation mmap adapter for the AuraOS K27 ASTGE S-plane"
+license = "MIT"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+aura-k27-astge = { path = "../aura-k27-astge" }
+memmap2 = "=0.9.11"
+sha2 = "=0.10.9"
