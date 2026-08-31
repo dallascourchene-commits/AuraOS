@@ -1,0 +1,134 @@
+name: Aura O67 Materialization Support Lineage Attachment
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_materialization_support_lineage_attachment.py'
+      - 'tests/test_aura_materialization_support_lineage_attachment.py'
+      - '.github/workflows/aura-o67-materialization-support-lineage-attachment.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: read
+
+jobs:
+  o67-materialization-support-lineage-attachment:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    env:
+      O65R_HEAD: '361b01579ab2debc34f4b836c3ea605de635a8c3'
+      O65R_RUN: '33411109692'
+      O65R_JOB: '99550605797'
+      O65R_SOURCE_BLOB: 'bdaa9b0338cdab05c48dc0337ab46522b40ac42f'
+      O65R_MATERIALIZATION_BASIS: 'e94c482318e0c25ad7052328fcd6722ac85470ba756ac7d6e2056131f4ff0c0d'
+      O66_HEAD: '2034bb9afcc801e1655bf334548042f6602c8c17'
+      O66_RUN: '33410906307'
+      O66_JOB: '99549924922'
+      O66_SOURCE_BLOB: 'bdd5b9639995eaf9353efbe454db5817698c9690'
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Fetch exact proof world without shallow state
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init -q .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch -q --no-tags origin \
+            "$TARGET_SHA" "$O65R_HEAD" "$O66_HEAD"
+          git checkout -q --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test ! -f .git/shallow
+
+      - name: Revalidate exact-current hosted parents
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          token=os.environ['GH_TOKEN']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json'}
+          def get(path):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/{path}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r: return json.load(r)
+          expected=(
+              (708, os.environ['O65R_HEAD'], int(os.environ['O65R_RUN']), int(os.environ['O65R_JOB']), 'Aura O65-R Authority Materialization Proposal Conformance Proof'),
+              (710, os.environ['O66_HEAD'], int(os.environ['O66_RUN']), int(os.environ['O66_JOB']), 'Aura O66 Pre-Attempt Lifecycle Conformance'),
+          )
+          for pr_number,head,run_id,job_id,workflow in expected:
+              pr=get(f'pulls/{pr_number}')
+              assert pr['head']['sha']==head,(pr_number,pr['head']['sha'],head)
+              run=get(f'actions/runs/{run_id}')
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['name']==workflow,(run_id,run['name'],workflow)
+              assert run['status']=='completed' and run['conclusion']=='success',run
+              job=get(f'actions/jobs/{job_id}')
+              assert job['run_id']==run_id,(job_id,job['run_id'],run_id)
+              assert job['head_sha']==head,(job_id,job['head_sha'],head)
+              assert job['status']=='completed' and job['conclusion']=='success',job
+              print(f'exact_parent_green pr={pr_number} run={run_id} job={job_id} head={head}')
+          PY
+
+      - name: Authenticate parent source blobs and O65-R materialization basis
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$O65R_HEAD:tools/aura_authority_materialization_proposal_conformance.py")" = "$O65R_SOURCE_BLOB"
+          test "$(git rev-parse "$O66_HEAD:tools/aura_pre_attempt_lifecycle_conformance.py")" = "$O66_SOURCE_BLOB"
+          git show "$O65R_HEAD:tools/aura_authority_materialization_proposal_conformance.py" > /tmp/o65r_parent.py
+          python3 - <<'PY'
+          import importlib.util, os
+          spec=importlib.util.spec_from_file_location('o65r_parent','/tmp/o65r_parent.py')
+          mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+          actual=mod.q20_materialization_bound_basis_digest()
+          expected=os.environ['O65R_MATERIALIZATION_BASIS']
+          assert actual==expected,(actual,expected)
+          assert mod.SCHEMA=='AURA-AUTHORITY-MATERIALIZATION-PROPOSAL-CONFORMANCE-v2'
+          print('O67_O65R_EXACT_BASIS_REDERIVED=true')
+          PY
+
+      - name: Run exact lineage parent and O67 adversarial contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_pre_attempt_lifecycle_conformance.py \
+            tests/test_aura_pre_attempt_lifecycle_conformance.py \
+            tools/aura_materialization_support_lineage_attachment.py \
+            tests/test_aura_materialization_support_lineage_attachment.py
+          python3 -m unittest -v \
+            tests.test_aura_pre_attempt_lifecycle_conformance \
+            tests.test_aura_materialization_support_lineage_attachment
+
+      - name: Prove live boundary is explicit HOLD without an attachment owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m tools.aura_materialization_support_lineage_attachment > /tmp/o67.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/o67.json',encoding='utf-8'))
+          assert d['schema']=='AURA-MATERIALIZATION-SUPPORT-LINEAGE-ATTACHMENT-v1'
+          assert d['disposition']=='HOLD_EXPLICIT_SUPPORT_ATTACHMENT_REQUIRED'
+          assert d['reason_code']=='NO_OWNER_RESOLVED_CROSS_PLANE_ATTACHMENT'
+          assert d['relation_id'] is None
+          assert d['attachment_id'] is None
+          assert d['support_attached_to_lineage_proposal'] is False
+          assert d['support_currentness_self_resolved'] is False
+          assert d['effect_boundary_revalidation_required'] is True
+          forbidden=(
+              'execution_authority_granted','execution_lease_minted',
+              'provider_effect_authority_granted','provider_effect_started',
+              'semantic_k27_authority_minted','native_private_transformer_kv_accessed',
+              'gate10_promoted','merge_deploy_spend_public_financial_human_effect_authorized',
+          )
+          assert all(d[k] is False for k in forbidden),d
+          print('O67_NO_IMPLICIT_SUPPORT_TO_LINEAGE_CROSSCAST=true')
+          print('O67_EXPLICIT_ATTACHMENT_REQUIRED=true')
+          print('O67_EFFECT_AUTHORITY=false')
+          PY
