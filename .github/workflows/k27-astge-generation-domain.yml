@@ -1,0 +1,67 @@
+name: K27 ASTGE typed generation domains
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge-generation-domain/**"
+      - "crates/aura-k27-astge/**"
+      - "crates/aura-k27-astge-canonical-backend/**"
+      - ".github/workflows/k27-astge-generation-domain.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: k27-astge-generation-domain-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typed-generation-domain:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact candidate head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Reprove PR484 owner planes
+        run: |
+          cargo test --locked --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-mmap/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-canonical-backend/Cargo.toml --all-targets
+
+      - name: Verify typed generation contract
+        run: |
+          cargo fmt --check --manifest-path crates/aura-k27-astge-generation-domain/Cargo.toml
+          cargo test --manifest-path crates/aura-k27-astge-generation-domain/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-generation-domain/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-generation-domain/Cargo.toml --all-targets -- -D warnings
+
+      - name: Retain current owner scar until selector adopts typed axes
+        run: |
+          grep -F "record.snapshot_generation == binding.placement_generation" crates/aura-k27-astge/src/v3.rs
+          grep -F "HoldSnapshotGenerationAxisUnbound" crates/aura-k27-astge-canonical-backend/src/lib.rs
+
+      - name: Emit claim ceiling
+        run: |
+          echo "GENERATION_DOMAIN_IS_TYPE_LEVEL=true"
+          echo "SNAPSHOT_PLACEMENT_CROSS_TYPE_EQUALITY_COMPILES=false"
+          echo "SOURCE_GRAPH_SERVING_CROSS_TYPE_EQUALITY_COMPILES=false"
+          echo "SAME_NUMERIC_VALUE_IMPLIES_SAME_DOMAIN=false"
+          echo "PR472_SELECTOR_TYPED_AXIS_ADOPTION_COMPLETE=false"
+          echo "CANONICAL_MMAP_EXECUTION=HOLD_SNAPSHOT_AXIS_UNBOUND"
+          echo "PRODUCTION_BACKEND=READ_SEEK_SAFE_DEFAULT"
+          echo "HUMAN_AUTHORITY=false"
+          echo "EXTERNAL_EFFECT=false"
