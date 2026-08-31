@@ -1,0 +1,23 @@
+name: K27 optics candidate falsifier
+
+on:
+  pull_request:
+    paths:
+      - "tools/k27_optics_candidate_falsifier.py"
+      - "tests/test_k27_optics_candidate_falsifier.py"
+      - ".github/workflows/k27-optics-candidate-falsifier.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  falsifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run closed imported-candidate falsifier
+        run: python -m unittest tests/test_k27_optics_candidate_falsifier.py -v
