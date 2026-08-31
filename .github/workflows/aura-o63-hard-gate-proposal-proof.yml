@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 env:
-  SEMANTIC_HEAD: ce572f29af25a7951116de931aa03a4e492d597c
+  SEMANTIC_HEAD: f05b3918af3a39ca0c0d06b3d5487ec447b54968
   Q15_CUT_EPOCH: "1788188632"
 
 jobs:
@@ -37,7 +37,7 @@ jobs:
           test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_hard_gate_transition_admission.py")" = "18ada65d0aca81ba915c4dc57c98414f38c3b068"
           test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_bounded_proposal_capsule.py")" = "dbc223de381d2146e88769a7213455c57a27569d"
           test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_hard_gate_transition_admission.py")" = "9e878769b1fae198035135a8ada3d8c6db3a787d"
-          test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_bounded_proposal_capsule.py")" = "d663587e6698e61e4574b87eb891f41aee31ac63"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_bounded_proposal_capsule.py")" = "21fa17aaf08fd1733c064ec049c35ac65b8c319b"
           echo O63_POST_Q15_SEMANTIC_GENERATION=true
 
       - name: Compile exact semantic surface
@@ -133,7 +133,7 @@ jobs:
 
           receipt={
               'schema':'AURA-O63-HOSTED-PROOF-v1',
-              'semantic_head':'ce572f29af25a7951116de931aa03a4e492d597c',
+              'semantic_head':'f05b3918af3a39ca0c0d06b3d5487ec447b54968',
               'post_q15_semantic_generation':True,
               'eligibility_owner_bound':True,
               'capsule_self_integrity_reproved':True,
