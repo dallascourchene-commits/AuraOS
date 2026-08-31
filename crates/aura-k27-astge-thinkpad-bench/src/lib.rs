@@ -129,43 +129,73 @@ impl BenchmarkReceipt {
         lines.push(format!("schema={}", self.schema));
         lines.push(format!("backend={}", self.backend));
         lines.push(format!("snapshot_generation={}", self.snapshot_generation));
-        lines.push(format!("placement_generation={}", self.placement_generation));
+        lines.push(format!(
+            "placement_generation={}",
+            self.placement_generation
+        ));
         lines.push(format!("index_sha256={}", self.index_sha256));
         lines.push(format!("pages_sha256={}", self.pages_sha256));
         lines.push(format!("query_corpus_sha256={}", self.query_corpus_sha256));
-        lines.push(format!("semantic_result_sha256={}", self.semantic_result_sha256));
+        lines.push(format!(
+            "semantic_result_sha256={}",
+            self.semantic_result_sha256
+        ));
         lines.push(format!("roots={}", self.roots));
         lines.push(format!("iterations={}", self.iterations));
         lines.push(format!("max_depth={}", self.max_depth));
         lines.push(format!("max_nodes={}", self.max_nodes));
         lines.push(format!("elapsed_ns={}", self.elapsed_ns));
-        lines.push(format!("hydrated_nodes_total={}", self.hydrated_nodes_total));
-        lines.push(format!("edges_traversed_total={}", self.edges_traversed_total));
+        lines.push(format!(
+            "hydrated_nodes_total={}",
+            self.hydrated_nodes_total
+        ));
+        lines.push(format!(
+            "edges_traversed_total={}",
+            self.edges_traversed_total
+        ));
         lines.push(format!("unique_pages_sum={}", self.unique_pages_sum));
         lines.push(format!("minflt_delta={}", opt(self.counters.minflt)));
         lines.push(format!("majflt_delta={}", opt(self.counters.majflt)));
         lines.push(format!("rchar_delta={}", opt(self.counters.rchar)));
-        lines.push(format!("kernel_read_bytes_delta={}", opt(self.counters.read_bytes)));
+        lines.push(format!(
+            "kernel_read_bytes_delta={}",
+            opt(self.counters.read_bytes)
+        ));
         lines.push(format!("read_syscalls_delta={}", opt(self.counters.syscr)));
         lines.push(format!("host_os={}", clean(&self.host.os)));
         lines.push(format!("host_arch={}", clean(&self.host.arch)));
-        lines.push(format!("kernel_release={}", clean(&self.host.kernel_release)));
+        lines.push(format!(
+            "kernel_release={}",
+            clean(&self.host.kernel_release)
+        ));
         lines.push(format!("cpu_model={}", clean(&self.host.cpu_model)));
         lines.push(format!("product_name={}", clean(&self.host.product_name)));
         lines.push(format!("wsl_observed={}", self.host.wsl_observed));
         lines.push(format!("cache_state={}", self.cache_state));
-        lines.push(format!("same_snapshot_verified={}", self.same_snapshot_verified));
+        lines.push(format!(
+            "same_snapshot_verified={}",
+            self.same_snapshot_verified
+        ));
         lines.push(format!(
             "physical_locality_proven_by_this_run={}",
             self.physical_locality_proven_by_this_run
         ));
-        lines.push(format!("cache_coldness_proven={}", self.cache_coldness_proven));
-        lines.push(format!("physical_nvme_read_proven={}", self.physical_nvme_read_proven));
+        lines.push(format!(
+            "cache_coldness_proven={}",
+            self.cache_coldness_proven
+        ));
+        lines.push(format!(
+            "physical_nvme_read_proven={}",
+            self.physical_nvme_read_proven
+        ));
         lines.push(format!(
             "performance_superiority_proven={}",
             self.performance_superiority_proven
         ));
-        lines.push(format!("producer_authenticated={}", self.producer_authenticated));
+        lines.push(format!(
+            "producer_authenticated={}",
+            self.producer_authenticated
+        ));
         lines.push(format!("effect_authority={}", self.effect_authority));
         lines.push(format!("claim_ceiling={}", self.claim_ceiling));
         lines.join("\n") + "\n"
@@ -435,9 +465,7 @@ fn clean(value: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use aura_k27_astge::{
-        PageRow, PhysicalPageV1, StorageGenerationBindingV1, BLOCK_SIZE,
-    };
+    use aura_k27_astge::{PageRow, PhysicalPageV1, StorageGenerationBindingV1, BLOCK_SIZE};
     use aura_k27_astge_mmap::publish_generation;
     use std::sync::atomic::{AtomicU64, Ordering};
 
@@ -502,10 +530,7 @@ mod tests {
                 let node_id = start_node + row as u64;
                 let first_edge = targets.len() as u16;
                 let degree = if node_id + 1 < node_count { 1 } else { 0 };
-                rows.push(PageRow {
-                    first_edge,
-                    degree,
-                });
+                rows.push(PageRow { first_edge, degree });
                 if degree == 1 {
                     targets.push(node_id + 1);
                 }
