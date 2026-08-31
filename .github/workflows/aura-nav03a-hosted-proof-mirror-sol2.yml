@@ -1,0 +1,49 @@
+name: Aura NAV03A Hosted Proof Mirror Sol2
+
+on:
+  push:
+    branches:
+      - 'feature/arena-nav03a-hosted-proof-20260831-sol2'
+
+permissions:
+  contents: read
+
+jobs:
+  nav03a-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact mirror head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Authenticate other-Agent NAV03A surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object tools/aura_fractal_k27.py)" = "37260b421ff4e191d398f53673feba2cf4af5857"
+          test "$(git hash-object tests/test_aura_fractal_k27.py)" = "6aec5e515321037ccb6b423bfb63b61e1eda1f19"
+      - name: Compile and replay NAV03A adversarials
+        run: |
+          python -m py_compile tools/aura_fractal_k27.py tests/test_aura_fractal_k27.py
+          python -m unittest -v tests.test_aura_fractal_k27
+      - name: Independently prove legacy handle and authority ceiling
+        shell: bash
+        run: |
+          python - <<'PY'
+          from tools.aura_fractal_k27 import K27Segment, K27Path, K27Candidate, ZoomDisposition, legacy_segment_micro_equivalence, prove_different_j
+          seg=K27Segment(11,17,15)
+          assert legacy_segment_micro_equivalence(seg)==((1,1,1),(0,2,2),(2,2,0))
+          a=K27Candidate('a',K27Path.parse('K27:/11.17.15'))
+          b=K27Candidate('b',K27Path.parse('K27:/11.17.16'))
+          r=prove_different_j((a,b))
+          assert r.disposition is ZoomDisposition.DISTINGUISHED
+          assert r.semantic_identity is False
+          assert r.evidence_rank is False
+          assert r.currentness_witness is False
+          assert r.authority is False
+          assert r.effect_authority is False
+          print('NAV03A_EXACT_OTHER_AGENT_PROOF=true')
+          print('K27_LOCALITY_NE_SEMANTIC_AUTHORITY=true')
+          PY
