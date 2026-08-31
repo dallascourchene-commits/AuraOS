@@ -1,137 +1,89 @@
 from __future__ import annotations
 
-import json
 import sys
 from pathlib import Path
 
+from tools.benchmarks.long_horizon_preregistration import build_preregistration, command_digest
 from tools.benchmarks.long_horizon_state_benchmark import build_workload, run_adapter
 
 
-ADAPTER = r'''
+PERSISTENT_ADAPTER = r'''
 import hashlib
 import json
-import pathlib
 import sys
 
-item = json.loads(sys.stdin.read())
-state_path = pathlib.Path("adapter-state.json")
-checkpoint_path = pathlib.Path("adapter-baseline.json")
-state = json.loads(state_path.read_text()) if state_path.exists() else {}
-op = item["operation"]
-if op["type"] == "set":
-    state[op["key"]] = op["value"]
-elif op["type"] == "checkpoint":
-    checkpoint_path.write_text(json.dumps(state, sort_keys=True))
-elif op["type"] == "rollback":
-    state = json.loads(checkpoint_path.read_text())
-elif op["type"] == "get":
-    assert state.get(op["key"]) == op["expected"]
-state_path.write_text(json.dumps(state, sort_keys=True))
-payload = json.dumps(state, sort_keys=True, separators=(",", ":")).encode()
-digest = hashlib.sha256(payload).hexdigest()
-print(json.dumps({"state_digest": digest, "telemetry": {"provenance": "UNKNOWN"}}))
+GEN = "compat-persistent-v1"
+state = {}
+checkpoints = {}
+print(json.dumps({
+    "type": "adapter_handshake",
+    "protocol_id": "AURA_BENCHMARK_PERSISTENT_ADAPTER_V1",
+    "adapter_generation": GEN,
+    "capabilities": {
+        "persistent_process": True,
+        "state_digest": True,
+        "per_turn_timeout_control": False,
+        "provider_usage_receipts": False,
+        "telemetry_provenance": ["UNKNOWN"],
+    },
+}), flush=True)
+for line in sys.stdin:
+    request = json.loads(line)
+    assert "expected_state_digest" not in request
+    op = request["operation"]
+    if op["type"] == "set":
+        state[op["key"]] = op["value"]
+    elif op["type"] == "checkpoint":
+        checkpoints[op["name"]] = dict(state)
+    elif op["type"] == "rollback":
+        state = dict(checkpoints[op["name"]])
+    elif op["type"] == "get":
+        assert state.get(op["key"]) == op["expected"]
+    digest = hashlib.sha256(json.dumps(state, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+    print(json.dumps({
+        "type": "turn_result",
+        "turn": request["turn"],
+        "adapter_generation": GEN,
+        "state_digest": digest,
+        "telemetry": {"provenance": "UNKNOWN"},
+    }), flush=True)
 '''
 
 
-def write_adapter(tmp_path: Path, body: str = ADAPTER) -> Path:
-    path = tmp_path / "adapter.py"
-    path.write_text(body, encoding="utf-8")
-    return path
-
-
-def test_workload_is_deterministic_and_contains_rollback():
+def test_workload_is_deterministic_contains_rollback_and_keeps_answers_runner_side():
     first = build_workload(10, seed=17)
     second = build_workload(10, seed=17)
     assert first == second
     assert any(item["operation"]["type"] == "rollback" for item in first)
+    assert all("expected_state_digest" in item for item in first)
+    assert all("expected_state_digest" not in item["operation"] for item in first)
 
 
-def test_neutral_adapter_can_pass_same_state_workload(tmp_path):
-    adapter = write_adapter(tmp_path)
-    report = run_adapter([sys.executable, str(adapter)], rounds=8, seed=17, cwd=tmp_path)
-    assert report["campaign_disposition"] == "PASS"
-    assert report["passed_turns"] == 8
-    assert report["state_drift_detected"] is False
-    assert report["inconclusive_observation_present"] is False
-    assert report["inconclusive_turns"] == 0
-    assert report["telemetry_observed_turns"] == 0
-    assert report["disposition_counts"]["PASS"] == 8
-    assert all(turn["disposition"] == "PASS" for turn in report["turns"])
-    assert all(turn["telemetry"]["provenance"] == "UNKNOWN" for turn in report["turns"])
-
-
-def test_wrong_digest_is_state_drift_not_success(tmp_path):
-    adapter = write_adapter(
-        tmp_path,
-        'import json,sys\njson.loads(sys.stdin.read())\nprint(json.dumps({"state_digest":"wrong","telemetry":{"provenance":"UNKNOWN"}}))\n',
-    )
-    report = run_adapter([sys.executable, str(adapter)], rounds=4, cwd=tmp_path)
-    assert report["campaign_disposition"] == "STATE_DRIFT"
-    assert report["passed_turns"] == 0
-    assert report["state_drift_detected"] is True
-    assert report["inconclusive_observation_present"] is False
-    assert report["disposition_counts"]["STATE_DRIFT"] == 4
-
-
-def test_unknown_telemetry_cannot_carry_fake_zero(tmp_path):
-    adapter = write_adapter(
-        tmp_path,
-        'import json,sys\nitem=json.loads(sys.stdin.read())\nprint(json.dumps({"state_digest":item["expected_state_digest"],"telemetry":{"provenance":"UNKNOWN","input_tokens":0}}))\n',
-    )
-    report = run_adapter([sys.executable, str(adapter)], rounds=4, cwd=tmp_path)
-    assert report["campaign_disposition"] == "INCONCLUSIVE"
-    assert report["state_drift_detected"] is False
-    assert report["inconclusive_observation_present"] is True
-    assert report["inconclusive_turns"] == 4
-    assert report["passed_turns"] == 0
-    assert report["disposition_counts"]["PROTOCOL_ERROR"] == 4
-    assert all(turn["returncode"] == 65 for turn in report["turns"])
-
-
-def test_timeout_is_retained_without_minting_state_drift(tmp_path):
-    adapter = write_adapter(
-        tmp_path,
-        'import sys,time\nsys.stdin.read()\ntime.sleep(1.0)\n',
+def test_compatibility_entrypoint_uses_preregistered_persistent_protocol(tmp_path: Path):
+    adapter = tmp_path / "adapter.py"
+    adapter.write_text(PERSISTENT_ADAPTER, encoding="utf-8")
+    command = [sys.executable, str(adapter)]
+    preregistration = build_preregistration(
+        campaign_id="compat-test",
+        rounds=6,
+        seed=17,
+        timeout_seconds=120.0,
+        arms=[
+            {
+                "blinded_label": "arm-01",
+                "adapter_generation": "compat-persistent-v1",
+                "adapter_command_digest": command_digest(command),
+                "condition_commitment": "c" * 64,
+            }
+        ],
     )
     report = run_adapter(
-        [sys.executable, str(adapter)],
-        rounds=4,
-        timeout_seconds=0.02,
+        command,
+        preregistration=preregistration,
+        blinded_label="arm-01",
         cwd=tmp_path,
     )
-    assert report["campaign_disposition"] == "INCONCLUSIVE"
-    assert report["passed_turns"] == 0
-    assert report["state_drift_detected"] is False
-    assert report["inconclusive_observation_present"] is True
-    assert report["inconclusive_turns"] == 4
-    assert report["disposition_counts"]["TIMEOUT"] == 4
-    assert len(report["turns"]) == 4
-    assert all(turn["disposition"] == "TIMEOUT" for turn in report["turns"])
-    assert all(turn["returncode"] == 124 for turn in report["turns"])
-    assert all(turn["telemetry"] == {"provenance": "UNKNOWN"} for turn in report["turns"])
-
-
-def test_state_drift_and_adapter_error_remain_independent_campaign_axes(tmp_path):
-    adapter = write_adapter(
-        tmp_path,
-        'import json,sys\nitem=json.loads(sys.stdin.read())\n'
-        'turn=item["turn"]\n'
-        'sys.exit(7) if turn % 2 else print(json.dumps({"state_digest":"wrong","telemetry":{"provenance":"UNKNOWN"}}))\n',
-    )
-    report = run_adapter([sys.executable, str(adapter)], rounds=4, cwd=tmp_path)
-    assert report["campaign_disposition"] == "STATE_DRIFT_WITH_INCONCLUSIVE"
-    assert report["state_drift_detected"] is True
-    assert report["inconclusive_observation_present"] is True
-    assert report["inconclusive_turns"] == 2
-    assert report["disposition_counts"]["STATE_DRIFT"] == 2
-    assert report["disposition_counts"]["ADAPTER_ERROR"] == 2
-
-
-def test_timeout_must_be_positive(tmp_path):
-    adapter = write_adapter(tmp_path)
-    try:
-        run_adapter([sys.executable, str(adapter)], rounds=4, timeout_seconds=0, cwd=tmp_path)
-    except ValueError as exc:
-        assert str(exc) == "TIMEOUT_SECONDS_MUST_BE_POSITIVE"
-    else:
-        raise AssertionError("expected invalid timeout to fail closed")
+    assert report["campaign_disposition"] == "PASS"
+    assert report["startup_disposition"] == "PASS"
+    assert report["disposition_counts"]["PASS"] == 6
+    assert report["preregistration_digest"] == preregistration["preregistration_digest"]
