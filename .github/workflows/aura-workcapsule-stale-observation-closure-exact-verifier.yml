@@ -1,0 +1,92 @@
+name: Aura WorkCapsule Stale Observation Closure Exact Verifier
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_astge_anchor_hydration.py'
+      - 'scripts/aura_workcapsule_context_binding.py'
+      - 'scripts/aura_workcapsule_reentry_invalidation.py'
+      - 'scripts/aura_workcapsule_source_reentry_observation.py'
+      - 'scripts/aura_workcapsule_reentry_exact_verifier.py'
+      - 'scripts/aura_workcapsule_stale_exact_reentry.py'
+      - 'scripts/aura_workcapsule_reentry_closure.py'
+      - 'scripts/aura_workcapsule_observation_bound_closure.py'
+      - 'scripts/aura_workcapsule_stale_observation_closure_exact_verifier.py'
+      - 'tests/test_aura_astge_anchor_hydration.py'
+      - 'tests/test_aura_workcapsule_context_binding.py'
+      - 'tests/test_aura_workcapsule_reentry_invalidation.py'
+      - 'tests/test_aura_workcapsule_source_reentry_observation.py'
+      - 'tests/test_aura_workcapsule_reentry_exact_verifier.py'
+      - 'tests/test_aura_workcapsule_stale_exact_reentry.py'
+      - 'tests/test_aura_workcapsule_reentry_closure.py'
+      - 'tests/test_aura_workcapsule_observation_bound_closure.py'
+      - 'tests/test_aura_workcapsule_stale_observation_closure_exact_verifier.py'
+      - '.github/workflows/aura-workcapsule-stale-observation-closure-exact-verifier.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  stale-observation-closure-exact-reproduction:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove source-currentness and WorkCapsule base owners
+        run: |
+          python3 -m py_compile scripts/aura_source_anchor_map.py scripts/aura_astge_anchor_hydration.py scripts/aura_workcapsule_context_binding.py scripts/aura_workcapsule_reentry_invalidation.py scripts/aura_workcapsule_source_reentry_observation.py
+          python3 -m unittest -v tests.test_aura_astge_anchor_hydration tests.test_aura_workcapsule_context_binding tests.test_aura_workcapsule_reentry_invalidation tests.test_aura_workcapsule_source_reentry_observation
+
+      - name: Re-prove PR517 stale-safe exact re-entry
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_reentry_exact_verifier.py scripts/aura_workcapsule_stale_exact_reentry.py
+          python3 -m unittest -v tests.test_aura_workcapsule_reentry_exact_verifier tests.test_aura_workcapsule_stale_exact_reentry
+
+      - name: Re-prove PR516 observation-bound closure
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_reentry_closure.py scripts/aura_workcapsule_observation_bound_closure.py
+          python3 -m unittest -v tests.test_aura_workcapsule_reentry_closure tests.test_aura_workcapsule_observation_bound_closure
+
+      - name: Prove stale raw-input-bound closure reproduction
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_stale_observation_closure_exact_verifier.py
+          python3 -m unittest -v tests.test_aura_workcapsule_stale_observation_closure_exact_verifier
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'RAW_INPUT_BOUND_OBSERVATION_CLOSURE_REPRODUCTION=true'
+          echo 'REJECTED_CURRENTNESS_PATH_REQUIRED=true'
+          echo 'COHERENT_FOREIGN_RESEALED_RECEIPT_ACCEPTED=false'
+          echo 'SOURCE_CURRENTNESS_MINTED=false'
+          echo 'STALE_OBSERVED_BYTES_BOUND_TO_SOURCE_GENERATION=false'
+          echo 'UNKNOWN_IDENTITY_GUESSED=false'
+          echo 'PRODUCER_IDENTITY_AUTHENTICATED=false'
+          echo 'GRAPH_WITNESS_PRODUCER_PROVEN=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_INVALIDATION_CONE_PROVEN=false'
+          echo 'SEMANTIC_TRUTH_MINTED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
