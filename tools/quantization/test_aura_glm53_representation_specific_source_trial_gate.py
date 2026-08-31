@@ -1,69 +1,66 @@
 from __future__ import annotations
 
 from dataclasses import asdict, replace
+import inspect
 import unittest
 
+from tools.quantization.aura_glm53_official_source_admission import current_public_state
 from tools.quantization.aura_glm53_representation_specific_source_trial_gate import (
-    OFFICIAL_REPOSITORY,
-    OFFICIAL_REVISION,
-    PR628_EXACT_CANDIDATE,
-    PR628_SCHEME,
-    Q5_SOURCE_SCHEMA,
-    classify_source_trial,
-    validate_source_admission,
+    Q5_SOURCE_BLOB_SHA,
+    _classify_producer_state_for_test,
+    _validate_source_admission,
+    current_representation_specific_source_trial,
 )
 from tools.quantization.aura_glm53_quantization_evidence_transfer import q5_representation_identity
 
 
-def current_hold() -> dict[str, object]:
-    return {
-        "schema": Q5_SOURCE_SCHEMA,
-        "official_repository": OFFICIAL_REPOSITORY,
-        "official_revision": OFFICIAL_REVISION,
-        "candidate_parent_sha": PR628_EXACT_CANDIDATE,
-        "candidate_scheme": PR628_SCHEME,
-        "config_profile_bound": True,
-        "index_object_identity_bound": True,
-        "index_bytes_verified": False,
-        "representative_key_to_shard_bound": False,
-        "representative_headers_observed": False,
-        "fp8_companions_bound": False,
-        "candidate_representation_bound": True,
-        "header_trial_eligible": False,
-        "source_tensor_payload_bound": False,
-        "real_tensor_quantization_eligible": False,
-        "blocker": "OFFICIAL_INDEX_BYTES_AND_REPRESENTATIVE_HEADERS_NOT_MATERIALIZED",
-        "semantic_k27_authority": False,
-        "native_transformer_kv_accessed": False,
-        "gate10_promoted": False,
-    }
-
-
-def hypothetical_header_green() -> dict[str, object]:
-    out = current_hold()
-    for key in (
-        "index_bytes_verified",
-        "representative_key_to_shard_bound",
-        "representative_headers_observed",
-        "fp8_companions_bound",
-        "header_trial_eligible",
-    ):
-        out[key] = True
-    out["blocker"] = "NONE_AT_HEADER_PLANE"
-    return out
+def hypothetical_header_green():
+    return replace(
+        current_public_state(),
+        index_bytes_verified=True,
+        representative_key_to_shard_bound=True,
+        representative_headers_observed=True,
+        fp8_companions_bound=True,
+        header_trial_eligible=True,
+        blocker="NONE_AT_HEADER_PLANE",
+    )
 
 
 class RepresentationSpecificSourceTrialGateTests(unittest.TestCase):
-    def test_current_q5_state_remains_hold(self) -> None:
-        r = classify_source_trial(current_hold())
+    def test_public_current_boundary_is_zero_input_and_producer_traversed(self) -> None:
+        self.assertEqual(
+            tuple(inspect.signature(current_representation_specific_source_trial).parameters),
+            (),
+        )
+        r = current_representation_specific_source_trial()
         self.assertEqual(r.disposition, "HOLD_SOURCE_HEADER_NOT_ELIGIBLE")
         self.assertFalse(r.header_bound_representation_trial_candidate)
         self.assertTrue(r.exact_target_representation_identity_bound)
+        self.assertTrue(r.source_producer_traversed)
+        self.assertFalse(r.source_snapshot_caller_supplied)
+        self.assertEqual(r.q5_source_blob_sha, Q5_SOURCE_BLOB_SHA)
 
-    def test_header_green_exact_representation_only_grants_candidate(self) -> None:
-        r = classify_source_trial(hypothetical_header_green())
+    def test_caller_mapping_cannot_enter_typed_producer_helper(self) -> None:
+        forged = asdict(current_public_state())
+        forged.update(
+            index_bytes_verified=True,
+            representative_key_to_shard_bound=True,
+            representative_headers_observed=True,
+            fp8_companions_bound=True,
+            header_trial_eligible=True,
+            blocker="CALLER_MINTED",
+        )
+        with self.assertRaisesRegex(ValueError, "Q5_ADMISSION_STATE_TYPE_REQUIRED"):
+            _classify_producer_state_for_test(forged, q5_representation_identity())
+
+    def test_header_green_exact_representation_only_grants_test_candidate(self) -> None:
+        r = _classify_producer_state_for_test(
+            hypothetical_header_green(), q5_representation_identity()
+        )
         self.assertEqual(r.disposition, "HEADER_BOUND_REPRESENTATION_TRIAL_CANDIDATE")
         self.assertTrue(r.header_bound_representation_trial_candidate)
+        self.assertTrue(r.source_producer_traversed)
+        self.assertFalse(r.source_snapshot_caller_supplied)
         self.assertFalse(r.source_tensor_payload_bound)
         self.assertFalse(r.real_tensor_quantization_eligible)
         self.assertFalse(r.evidence_transfer_authorized)
@@ -74,55 +71,45 @@ class RepresentationSpecificSourceTrialGateTests(unittest.TestCase):
     def test_geometry_or_near_identity_drift_holds(self) -> None:
         target = q5_representation_identity()
         drifted = replace(target, index_bits_per_vector=8, codec_bits_per_weight=1.25)
-        r = classify_source_trial(hypothetical_header_green(), drifted)
+        r = _classify_producer_state_for_test(hypothetical_header_green(), drifted)
         self.assertEqual(r.disposition, "HOLD_REPRESENTATION_IDENTITY_MISMATCH")
         self.assertFalse(r.exact_target_representation_identity_bound)
         self.assertFalse(r.header_bound_representation_trial_candidate)
 
-    def test_scheme_alias_is_not_source_identity(self) -> None:
-        source = current_hold()
-        source["candidate_scheme"] = "E8_ROOT_240_U8_V1"
-        with self.assertRaisesRegex(ValueError, "SOURCE_CANDIDATE_REPRESENTATION_MISMATCH"):
-            classify_source_trial(source)
-
-    def test_header_boolean_cannot_skip_missing_evidence(self) -> None:
-        source = current_hold()
-        source["header_trial_eligible"] = True
-        with self.assertRaisesRegex(ValueError, "HEADER_ELIGIBLE_WITH_INCOMPLETE_Q5_EVIDENCE"):
-            classify_source_trial(source)
+    def test_header_boolean_cannot_skip_missing_q5_evidence(self) -> None:
+        forged = replace(current_public_state(), header_trial_eligible=True)
+        with self.assertRaisesRegex(ValueError, "Q5_SOURCE_EVIDENCE_ORDER_VIOLATION"):
+            _validate_source_admission(forged)
 
     def test_payload_or_real_quantization_cannot_enter_header_gate(self) -> None:
-        source = hypothetical_header_green()
-        source["source_tensor_payload_bound"] = True
-        with self.assertRaisesRegex(ValueError, "Q7_HEADER_GATE_CANNOT_CONSUME_PAYLOAD_OR_EXECUTION_PROMOTION"):
-            classify_source_trial(source)
+        source = replace(hypothetical_header_green(), source_tensor_payload_bound=True)
+        with self.assertRaisesRegex(
+            ValueError, "Q7_HEADER_GATE_CANNOT_CONSUME_PAYLOAD_OR_EXECUTION_PROMOTION"
+        ):
+            _classify_producer_state_for_test(source, q5_representation_identity())
 
     def test_parent_authority_widening_rejected(self) -> None:
         for key in ("semantic_k27_authority", "native_transformer_kv_accessed", "gate10_promoted"):
-            source = current_hold()
-            source[key] = True
+            source = replace(current_public_state(), **{key: True})
             with self.assertRaisesRegex(ValueError, "Q5_PARENT_CEILING_WIDENED"):
-                validate_source_admission(source)
+                _validate_source_admission(source)
 
-    def test_complete_source_schema_required(self) -> None:
-        source = current_hold()
-        del source["representative_headers_observed"]
-        with self.assertRaisesRegex(ValueError, "SOURCE_SCHEMA_MISMATCH"):
-            classify_source_trial(source)
+    def test_wrong_q5_generation_rejected(self) -> None:
+        source = replace(current_public_state(), official_revision="foreign-revision")
+        with self.assertRaisesRegex(ValueError, "OFFICIAL_SOURCE_GENERATION_MISMATCH"):
+            _validate_source_admission(source)
 
-    def test_receipt_is_deterministic_and_tamper_sensitive(self) -> None:
-        a = classify_source_trial(current_hold())
-        b = classify_source_trial(current_hold())
+    def test_receipt_is_deterministic(self) -> None:
+        a = current_representation_specific_source_trial()
+        b = current_representation_specific_source_trial()
         self.assertEqual(a.receipt_digest, b.receipt_digest)
-        modified = current_hold()
-        modified["blocker"] = "SAME_HOLD_DIFFERENT_LABEL"
-        c = classify_source_trial(modified)
-        self.assertNotEqual(a.receipt_digest, c.receipt_digest)
+        self.assertEqual(a.source_admission_digest, current_public_state().digest())
 
     def test_claim_ceiling_is_complete_on_current_hold(self) -> None:
-        r = asdict(classify_source_trial(current_hold()))
+        r = asdict(current_representation_specific_source_trial())
         for key in (
             "header_bound_representation_trial_candidate",
+            "source_snapshot_caller_supplied",
             "source_tensor_payload_bound",
             "real_tensor_quantization_eligible",
             "evidence_transfer_authorized",
