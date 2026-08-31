@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788208137,
+  "generated_at_unix": 1788208952,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1690,
+    "repo_file_count": 1694,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -141,6 +141,7 @@
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-glm53-g3-abstention-safe-transfer-admission.yml",
       ".github/workflows/aura-glm53-g4-prefetch-plan-revalidation.yml",
+      ".github/workflows/aura-glm53-g4-w3-owner-currentness-quarantine.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
@@ -1117,6 +1118,7 @@
       "docs/arena/AWJ032_G3_EXTERNAL_COORDINATE_DELTA_20260831.md",
       "docs/arena/AWJ032_G3_HOSTED_PROOF_EXPECTATIONS_20260831.md",
       "docs/arena/AWJ032_G4_PREFETCH_PLAN_REVALIDATION_20260831.md",
+      "docs/arena/AWJ032_G4_W3_OWNER_CURRENTNESS_QUARANTINE_20260831.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -1665,6 +1667,7 @@
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
       "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
       "tools/awj032/glm53_io_feasibility.py",
       "tools/awj032/glm53_packed_expert_pager.py",
@@ -1675,6 +1678,7 @@
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+      "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
       "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
       "tools/awj032/test_glm53_io_feasibility.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
@@ -1806,16 +1810,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1690,
-      "bytes": 26684923,
-      "tokens_est": 6661631,
+      "files": 1694,
+      "bytes": 26711118,
+      "tokens_est": 6668179,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 248,
+        "knowledge_artifact": 249,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1027,
-        "schema_or_lexicon": 281,
+        "python_module": 1029,
+        "schema_or_lexicon": 282,
         "support_file": 49
       }
     },
@@ -3986,6 +3990,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "kind": "function",
+        "line": 42,
+        "end_line": 49,
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#function:_canonical:66573528157c043e",
+        "signature_hash": "8d5bf5695239b859"
       },
       {
         "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
@@ -8198,6 +8210,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "kind": "function",
+        "line": 52,
+        "end_line": 53,
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#function:_sha:6556d9abf788a7d3",
+        "signature_hash": "e47bc2e8d0ade77b"
       },
       {
         "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
@@ -158342,6 +158362,56 @@
         "signature_hash": "3313625eaf98b5c7"
       }
     ],
+    "G4OwnerCurrentnessQuarantineReceipt": [
+      {
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "kind": "class",
+        "line": 57,
+        "end_line": 138,
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#class:G4OwnerCurrentnessQuarantineReceipt:931e87151559e209",
+        "signature_hash": "ba527dd57e5b0c93"
+      }
+    ],
+    "G4OwnerCurrentnessQuarantineReceipt.validate_claim_ceiling": [
+      {
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 133,
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#method:G4OwnerCurrentnessQuarantineReceipt.validate_claim_ceiling:987946fdaf92dca3",
+        "signature_hash": "d379bda2928aaff4"
+      }
+    ],
+    "G4OwnerCurrentnessQuarantineReceipt.receipt_digest": [
+      {
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 138,
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#method:G4OwnerCurrentnessQuarantineReceipt.receipt_digest:b5c2f48f3fa4734b",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "quarantine_caller_shaped_currentness": [
+      {
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 180,
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#function:quarantine_caller_shaped_currentness:c264af3557fdd5a2",
+        "signature_hash": "0fa8f51d716b67f9"
+      }
+    ],
+    "prove_quarantine_lattice": [
+      {
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "kind": "function",
+        "line": 183,
+        "end_line": 212,
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#function:prove_quarantine_lattice:e860b1f921586f38",
+        "signature_hash": "ff96e1c8578a9ded"
+      }
+    ],
     "G3PlanProjection": [
       {
         "file": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
@@ -160090,12 +160160,130 @@
     ],
     "d": [
       {
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 22,
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#function:d:b84358b80c414167",
+        "signature_hash": "20548e4956440a9b"
+      },
+      {
         "file": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
         "kind": "function",
         "line": 20,
         "end_line": 21,
         "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#function:d:576a781baff44827",
         "signature_hash": "20548e4956440a9b"
+      }
+    ],
+    "GLM53G4OwnerCurrentnessQuarantineTests": [
+      {
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#class:GLM53G4OwnerCurrentnessQuarantineTests:c1ce761e27f6a052",
+        "signature_hash": "8364afb8758ff4ee"
+      }
+    ],
+    "GLM53G4OwnerCurrentnessQuarantineTests.plan": [
+      {
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 41,
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.plan:6701772ceaa55f44",
+        "signature_hash": "ba2cc4c5a5735aba"
+      }
+    ],
+    "GLM53G4OwnerCurrentnessQuarantineTests.echoed_current": [
+      {
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "kind": "method",
+        "line": 43,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.echoed_current:37ea2543b0a70d64",
+        "signature_hash": "613d49b052b945f4"
+      }
+    ],
+    "GLM53G4OwnerCurrentnessQuarantineTests.test_reproduces_base_self_attestation_seam": [
+      {
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 60,
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_reproduces_base_self_attestation_seam:68ff60094b4eaf7c",
+        "signature_hash": "74655dab1ede611d"
+      }
+    ],
+    "GLM53G4OwnerCurrentnessQuarantineTests.test_any_real_label_drift_preserves_base_recompute_hold": [
+      {
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 72,
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_any_real_label_drift_preserves_base_recompute_hold:c8d2dced8aa2e2ca",
+        "signature_hash": "44526a34aa691b37"
+      }
+    ],
+    "GLM53G4OwnerCurrentnessQuarantineTests.test_abstention_plan_does_not_escape_currentness_quarantine": [
+      {
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 81,
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_abstention_plan_does_not_escape_currentness_quarantine:6659a21801a194e9",
+        "signature_hash": "3477740c231e5792"
+      }
+    ],
+    "GLM53G4OwnerCurrentnessQuarantineTests.test_complete_256_state_lattice_has_zero_reusable_states": [
+      {
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 93,
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_complete_256_state_lattice_has_zero_reusable_states:01252da08968d3cd",
+        "signature_hash": "3555001dc6549105"
+      }
+    ],
+    "GLM53G4OwnerCurrentnessQuarantineTests.test_structural_equality_is_not_currentness_proof": [
+      {
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 102,
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_structural_equality_is_not_currentness_proof:a9bdf19d2a040ebb",
+        "signature_hash": "bc3fea529d9bbe09"
+      }
+    ],
+    "GLM53G4OwnerCurrentnessQuarantineTests.test_receipt_is_deterministic": [
+      {
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 108,
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_receipt_is_deterministic:9712c9474e215b45",
+        "signature_hash": "4676c27ccb236b1c"
+      }
+    ],
+    "GLM53G4OwnerCurrentnessQuarantineTests.test_receipt_cannot_self_mint_currentness_or_reuse": [
+      {
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 116,
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_receipt_cannot_self_mint_currentness_or_reuse:a92d6fdb750b98f4",
+        "signature_hash": "cb4bba27d7948c8b"
+      }
+    ],
+    "GLM53G4OwnerCurrentnessQuarantineTests.test_receipt_cannot_widen_authority": [
+      {
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 132,
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_receipt_cannot_widen_authority:bc45b7374eb9b851",
+        "signature_hash": "cabfbc953413ef7a"
       }
     ],
     "GLM53G4PrefetchPlanRevalidationTests": [
@@ -162894,6 +163082,7 @@
     ],
     "python3 -m py_compile": [
       ".github/workflows/aura-glm53-g4-prefetch-plan-revalidation.yml",
+      ".github/workflows/aura-glm53-g4-w3-owner-currentness-quarantine.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
@@ -172314,6 +172503,59 @@
         -0.033459,
         0.250364,
         0.224982
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-g4-w3-owner-currentness-quarantine.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4665,
+      "lines": 123,
+      "tokens_est": 1167,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          62
+        ]
+      },
+      "topology": {},
+      "digest8": "5b50443c8bf8b477",
+      "vector": [
+        -0.168535,
+        -0.202504,
+        0.074469,
+        0.301796,
+        0.064017,
+        0.155471,
+        0.184213,
+        -0.103212,
+        0.097986,
+        0.259989,
+        -0.155471,
+        -0.009145,
+        0.056178,
+        -0.273054,
+        0.111051,
+        -0.142406,
+        0.283505,
+        -0.139793,
+        0.3227,
+        0.105825,
+        -0.111051,
+        -0.02221,
+        0.100599,
+        0.22602,
+        -0.189439,
+        0.165923,
+        0.024823,
+        0.113663,
+        0.009145,
+        0.239085,
+        0.194665,
+        -0.29657
       ]
     },
     {
@@ -240139,6 +240381,53 @@
       ]
     },
     {
+      "path": "docs/arena/AWJ032_G4_W3_OWNER_CURRENTNESS_QUARANTINE_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 7429,
+      "lines": 132,
+      "tokens_est": 1855,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f8e8a6af8f0a48f5",
+      "vector": [
+        -0.062143,
+        -0.341098,
+        -0.109096,
+        0.051096,
+        0.029,
+        -0.285859,
+        0.045572,
+        0.075953,
+        -0.225097,
+        -0.164335,
+        -0.294145,
+        0.18643,
+        -0.145001,
+        0.219573,
+        -0.139477,
+        0.067667,
+        -0.089763,
+        0.142239,
+        0.238907,
+        0.274812,
+        0.294145,
+        0.04281,
+        0.335574,
+        0.029,
+        0.139477,
+        0.133953,
+        -0.106334,
+        0.051096,
+        0.081477,
+        0.117382,
+        -0.12843,
+        -0.178144
+      ]
+    },
+    {
       "path": "docs/aura_substrate_manifest.files.01.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -268665,6 +268954,53 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8288,
+      "lines": 213,
+      "tokens_est": 2072,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4d1338d48018759f",
+      "vector": [
+        0.068736,
+        -0.165208,
+        0.059089,
+        -0.307503,
+        0.034971,
+        0.198973,
+        0.049442,
+        0.095266,
+        0.160384,
+        -0.14109,
+        -0.07356,
+        0.138678,
+        0.145913,
+        -0.268914,
+        -0.003618,
+        -0.150737,
+        -0.109736,
+        0.11456,
+        -0.044618,
+        -0.278562,
+        -0.247208,
+        0.153149,
+        -0.307503,
+        -0.220679,
+        -0.259267,
+        0.290621,
+        0.288209,
+        0.071148,
+        0.129031,
+        0.080795,
+        -0.085619,
+        -0.167619
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
       "role": "python_module",
       "binary": false,
@@ -269132,6 +269468,53 @@
         0.25173,
         0.164303,
         0.052758
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5813,
+      "lines": 137,
+      "tokens_est": 1454,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0f9541aef4db8794",
+      "vector": [
+        0.153871,
+        -0.163268,
+        0.019968,
+        -0.172665,
+        -0.120983,
+        0.196156,
+        0.109237,
+        0.247838,
+        -0.193807,
+        -0.073999,
+        -0.12803,
+        -0.233743,
+        -0.193807,
+        -0.245489,
+        -0.005873,
+        0.139776,
+        -0.001175,
+        -0.21495,
+        -0.175014,
+        -0.059904,
+        0.151522,
+        0.233743,
+        -0.219648,
+        0.273679,
+        0.196156,
+        -0.172665,
+        0.240791,
+        -0.240791,
+        -0.153871,
+        0.066952,
+        -0.09984,
+        -0.240791
       ]
     },
     {
@@ -293462,16 +293845,16 @@
     }
   },
   "summary": {
-    "file_count": 1690,
-    "total_bytes": 26684923,
-    "text_tokens_est": 6661631,
+    "file_count": 1694,
+    "total_bytes": 26711118,
+    "text_tokens_est": 6668179,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 248,
+      "knowledge_artifact": 249,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1027,
-      "schema_or_lexicon": 281,
+      "python_module": 1029,
+      "schema_or_lexicon": 282,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -293622,6 +294005,7 @@
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-glm53-g3-abstention-safe-transfer-admission.yml",
       ".github/workflows/aura-glm53-g4-prefetch-plan-revalidation.yml",
+      ".github/workflows/aura-glm53-g4-w3-owner-currentness-quarantine.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
@@ -294598,6 +294982,7 @@
       "docs/arena/AWJ032_G3_EXTERNAL_COORDINATE_DELTA_20260831.md",
       "docs/arena/AWJ032_G3_HOSTED_PROOF_EXPECTATIONS_20260831.md",
       "docs/arena/AWJ032_G4_PREFETCH_PLAN_REVALIDATION_20260831.md",
+      "docs/arena/AWJ032_G4_W3_OWNER_CURRENTNESS_QUARANTINE_20260831.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -295146,6 +295531,7 @@
       "tools/awj032/README.md",
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
+      "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
       "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
       "tools/awj032/glm53_io_feasibility.py",
       "tools/awj032/glm53_packed_expert_pager.py",
@@ -295156,6 +295542,7 @@
       "tools/awj032/test_airllm_source_admission.py",
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
+      "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
       "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
       "tools/awj032/test_glm53_io_feasibility.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
@@ -453511,6 +453898,76 @@
         "file_digest8": "e47f5028c4e7cc25"
       },
       {
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#class:G4OwnerCurrentnessQuarantineReceipt:931e87151559e209",
+        "name": "G4OwnerCurrentnessQuarantineReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "line": 57,
+        "end_line": 138,
+        "signature_hash": "ba527dd57e5b0c93",
+        "file_digest8": "4d1338d48018759f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#function:_canonical:66573528157c043e",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "line": 42,
+        "end_line": 49,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "4d1338d48018759f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#function:_sha:6556d9abf788a7d3",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "line": 52,
+        "end_line": 53,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "4d1338d48018759f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#function:prove_quarantine_lattice:e860b1f921586f38",
+        "name": "prove_quarantine_lattice",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "line": 183,
+        "end_line": 212,
+        "signature_hash": "ff96e1c8578a9ded",
+        "file_digest8": "4d1338d48018759f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#function:quarantine_caller_shaped_currentness:c264af3557fdd5a2",
+        "name": "quarantine_caller_shaped_currentness",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "line": 141,
+        "end_line": 180,
+        "signature_hash": "0fa8f51d716b67f9",
+        "file_digest8": "4d1338d48018759f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#method:G4OwnerCurrentnessQuarantineReceipt.receipt_digest:b5c2f48f3fa4734b",
+        "name": "G4OwnerCurrentnessQuarantineReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "line": 136,
+        "end_line": 138,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "4d1338d48018759f"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g4_owner_currentness_quarantine.py#method:G4OwnerCurrentnessQuarantineReceipt.validate_claim_ceiling:987946fdaf92dca3",
+        "name": "G4OwnerCurrentnessQuarantineReceipt.validate_claim_ceiling",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g4_owner_currentness_quarantine.py",
+        "line": 84,
+        "end_line": 133,
+        "signature_hash": "d379bda2928aaff4",
+        "file_digest8": "4d1338d48018759f"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#class:CurrentReuseContext:1dcf7d585f5bcf9a",
         "name": "CurrentReuseContext",
         "kind": "class",
@@ -455389,6 +455846,126 @@
         "end_line": 34,
         "signature_hash": "0df0c57f238a2bb4",
         "file_digest8": "610691ae4f369676"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#class:GLM53G4OwnerCurrentnessQuarantineTests:c1ce761e27f6a052",
+        "name": "GLM53G4OwnerCurrentnessQuarantineTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "line": 25,
+        "end_line": 132,
+        "signature_hash": "8364afb8758ff4ee",
+        "file_digest8": "0f9541aef4db8794"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#function:d:b84358b80c414167",
+        "name": "d",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "line": 21,
+        "end_line": 22,
+        "signature_hash": "20548e4956440a9b",
+        "file_digest8": "0f9541aef4db8794"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.echoed_current:37ea2543b0a70d64",
+        "name": "GLM53G4OwnerCurrentnessQuarantineTests.echoed_current",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "line": 43,
+        "end_line": 46,
+        "signature_hash": "613d49b052b945f4",
+        "file_digest8": "0f9541aef4db8794"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.plan:6701772ceaa55f44",
+        "name": "GLM53G4OwnerCurrentnessQuarantineTests.plan",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "line": 26,
+        "end_line": 41,
+        "signature_hash": "ba2cc4c5a5735aba",
+        "file_digest8": "0f9541aef4db8794"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_abstention_plan_does_not_escape_currentness_quarantine:6659a21801a194e9",
+        "name": "GLM53G4OwnerCurrentnessQuarantineTests.test_abstention_plan_does_not_escape_currentness_quarantine",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "line": 74,
+        "end_line": 81,
+        "signature_hash": "3477740c231e5792",
+        "file_digest8": "0f9541aef4db8794"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_any_real_label_drift_preserves_base_recompute_hold:c8d2dced8aa2e2ca",
+        "name": "GLM53G4OwnerCurrentnessQuarantineTests.test_any_real_label_drift_preserves_base_recompute_hold",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "line": 62,
+        "end_line": 72,
+        "signature_hash": "44526a34aa691b37",
+        "file_digest8": "0f9541aef4db8794"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_complete_256_state_lattice_has_zero_reusable_states:01252da08968d3cd",
+        "name": "GLM53G4OwnerCurrentnessQuarantineTests.test_complete_256_state_lattice_has_zero_reusable_states",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "line": 83,
+        "end_line": 93,
+        "signature_hash": "3555001dc6549105",
+        "file_digest8": "0f9541aef4db8794"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_receipt_cannot_self_mint_currentness_or_reuse:a92d6fdb750b98f4",
+        "name": "GLM53G4OwnerCurrentnessQuarantineTests.test_receipt_cannot_self_mint_currentness_or_reuse",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "line": 110,
+        "end_line": 116,
+        "signature_hash": "cb4bba27d7948c8b",
+        "file_digest8": "0f9541aef4db8794"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_receipt_cannot_widen_authority:bc45b7374eb9b851",
+        "name": "GLM53G4OwnerCurrentnessQuarantineTests.test_receipt_cannot_widen_authority",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "line": 118,
+        "end_line": 132,
+        "signature_hash": "cabfbc953413ef7a",
+        "file_digest8": "0f9541aef4db8794"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_receipt_is_deterministic:9712c9474e215b45",
+        "name": "GLM53G4OwnerCurrentnessQuarantineTests.test_receipt_is_deterministic",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "line": 104,
+        "end_line": 108,
+        "signature_hash": "4676c27ccb236b1c",
+        "file_digest8": "0f9541aef4db8794"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_reproduces_base_self_attestation_seam:68ff60094b4eaf7c",
+        "name": "GLM53G4OwnerCurrentnessQuarantineTests.test_reproduces_base_self_attestation_seam",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "line": 48,
+        "end_line": 60,
+        "signature_hash": "74655dab1ede611d",
+        "file_digest8": "0f9541aef4db8794"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py#method:GLM53G4OwnerCurrentnessQuarantineTests.test_structural_equality_is_not_currentness_proof:a9bdf19d2a040ebb",
+        "name": "GLM53G4OwnerCurrentnessQuarantineTests.test_structural_equality_is_not_currentness_proof",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g4_owner_currentness_quarantine.py",
+        "line": 95,
+        "end_line": 102,
+        "signature_hash": "bc3fea529d9bbe09",
+        "file_digest8": "0f9541aef4db8794"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#class:GLM53G4PrefetchPlanRevalidationTests:6e585bdcaa59ff3c",
@@ -458051,7 +458628,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "df82a9e6184e16f6e50a1e4ebc4d0d52",
-    "payload_hash": "71cda4f868c7b4e8f57a232a91790323"
+    "record_fingerprint": "ce137ccd459cfc7b197e5460f0a4c4fc",
+    "payload_hash": "ecb2ec152f2b385a8fd60b3d5fde5bc5"
   }
 }
