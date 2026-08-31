@@ -1,0 +1,131 @@
+name: Aura NAV-14 Progress-Bound Hydrated Version Handoff Proof
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_nav14_progress_bound_hydrated_version_handoff.py'
+      - 'tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py'
+      - 'docs/arena/NAV14_PROGRESS_BOUND_HYDRATED_VERSION_HANDOFF_V1.md'
+      - '.github/workflows/aura-nav14-progress-bound-hydrated-version-handoff.yml'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-head-progress-bound-handoff:
+    runs-on: ubuntu-24.04
+    env:
+      HANDOFF_HEAD: 1a7ab9d884acc917ea28bea2b28bc747222f1aed
+      HANDOFF_BLOB: edac88e89e0659cd6bbf99c7a138e2ae3f516ae8
+      HANDOFF_RUN: '33436321891'
+      RETRIEVAL_HEAD: 412e683b8a3d28bd57e4dc39059283cc823e2fb3
+      RETRIEVAL_BLOB: 5e20a51af1bbafa17c56b3a80125bcf003cc6b62
+      RETRIEVAL_RUN: '33435590114'
+      RETRIEVAL_JOB: '99631099474'
+      REPO: dallascourchene-commits/AuraOS
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout exact pull-request head
+        shell: bash
+        run: |
+          set -euo pipefail
+          HEAD='${{ github.event.pull_request.head.sha }}'
+          git init .
+          git remote add origin "https://github.com/${REPO}.git"
+          git fetch --no-tags --depth=1 origin "$HEAD"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$HEAD"
+
+      - name: Authenticate exact parent semantic blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --depth=1 origin "$HANDOFF_HEAD"
+          git fetch --no-tags --depth=1 origin "$RETRIEVAL_HEAD"
+          test "$(git rev-parse "$HANDOFF_HEAD:tools/aura_nav13d_eki4_hydrated_version_handoff.py")" = "$HANDOFF_BLOB"
+          test "$(git rev-parse "$RETRIEVAL_HEAD:tools/aura_retrieval_progress_guard.py")" = "$RETRIEVAL_BLOB"
+
+      - name: Revalidate hosted parent proof coordinates
+        shell: bash
+        run: |
+          set -euo pipefail
+          auth=(-H "Authorization: Bearer $GITHUB_TOKEN" -H 'Accept: application/vnd.github+json')
+          curl -fsSL "${auth[@]}" "https://api.github.com/repos/${REPO}/actions/runs/${HANDOFF_RUN}" > /tmp/handoff-run.json
+          curl -fsSL "${auth[@]}" "https://api.github.com/repos/${REPO}/actions/runs/${RETRIEVAL_RUN}" > /tmp/retrieval-run.json
+          curl -fsSL "${auth[@]}" "https://api.github.com/repos/${REPO}/actions/jobs/${RETRIEVAL_JOB}" > /tmp/retrieval-job.json
+          python - <<'PY'
+          import json, os
+          handoff = json.load(open('/tmp/handoff-run.json', encoding='utf-8'))
+          retrieval = json.load(open('/tmp/retrieval-run.json', encoding='utf-8'))
+          job = json.load(open('/tmp/retrieval-job.json', encoding='utf-8'))
+          assert handoff['conclusion'] == 'success', handoff.get('conclusion')
+          assert handoff['head_sha'] == os.environ['HANDOFF_HEAD'], handoff.get('head_sha')
+          assert retrieval['conclusion'] == 'success', retrieval.get('conclusion')
+          assert job['conclusion'] == 'success', job.get('conclusion')
+          assert str(job['run_id']) == os.environ['RETRIEVAL_RUN'], job.get('run_id')
+          PY
+
+      - name: Reexecute exact retrieval-progress owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/pr754 "$RETRIEVAL_HEAD"
+          (
+            cd /tmp/pr754
+            python -m py_compile tools/aura_retrieval_progress_guard.py tests/test_aura_retrieval_progress_guard.py
+            python -m unittest discover -s tests -p 'test_aura_retrieval_progress_guard.py'
+          )
+
+      - name: Reexecute inherited hydrated-version handoff
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/aura_nav13d_eki4_hydrated_version_handoff.py tests/test_aura_nav13d_eki4_hydrated_version_handoff.py
+          python -m unittest discover -s tests -p 'test_aura_nav13d_eki4_hydrated_version_handoff.py'
+
+      - name: Compile and run NAV-14 adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/aura_nav14_progress_bound_hydrated_version_handoff.py tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py
+          python -m unittest discover -s tests -p 'test_aura_nav14_progress_bound_hydrated_version_handoff.py'
+
+      - name: Exhaust complete 80-state Different-J matrix
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import tools.aura_nav14_progress_bound_hydrated_version_handoff as m
+          assert m.prove_different_j() == 80
+          assert 'IdenticalNoProgressRetrievalCannotMintHandoffConsequence' in m.LAWS
+          assert 'FingerprintAxisChangeAloneCannotMintHandoffConsequence' in m.LAWS
+          PY
+
+      - name: Assert external coordinate and claim ceilings
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'SCHOLAR_DIRECT_GAP:NAV14:retrieval-progress-hydrated-handoff' docs/arena/NAV14_PROGRESS_BOUND_HYDRATED_VERSION_HANDOFF_V1.md
+          grep -F 'CoordinateMemory != MODEL_PREFIX_KV' docs/arena/NAV14_PROGRESS_BOUND_HYDRATED_VERSION_HANDOFF_V1.md
+          python - <<'PY'
+          import tools.aura_nav14_progress_bound_hydrated_version_handoff as m
+          r = m.bind_progress_bound_handoff(
+              handoff=m.HydratedVersionHandoffProjectionV1(
+                  m.HANDOFF_HEAD, '1'*64, 'HANDOFF_READY_CANDIDATE', '1'*64, '2'*64,
+                  '0'*64, 'https://example.test/source', m.REQUIRED_FUTURE_READ_AXES,
+                  m.REQUIRED_EKI2_AXES,
+              ),
+              retrieval=m._retrieval_fixture(m.RetrievalDecision.ALLOW_INITIAL, evidence_digest='0'*64),
+          )
+          assert r.ready
+          assert r.candidate_only
+          assert not r.persistent_write_authorized
+          assert not r.evidence_admitted
+          assert not r.source_truth_proven
+          assert not r.source_currentness_proven
+          assert not r.read_currentness_proven
+          assert not r.effect_authorized
+          assert not r.semantic_k27_authority
+          assert not r.native_private_transformer_kv_accessed
+          PY
