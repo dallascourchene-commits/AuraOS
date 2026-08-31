@@ -19,10 +19,6 @@ from typing import Any
 
 from scripts import aura_workcapsule_post_source_portable_higher_owner_continuity as _canonical
 
-# Legacy PR544 source-boundary marker retained for its exact source-level compatibility test:
-# verify_post_repair_source_projection_continuity remains owned transitively by PR542; this facade
-# deliberately does not import or call that lower owner directly.
-
 VERSION = "AURA_WORKCAPSULE_POST_REPAIR_PORTABLE_HIGHER_OWNER_CONTINUITY_V1"
 OWNER_CHAIN_SCHEMA = _canonical.OWNER_CHAIN_SCHEMA
 CANONICALIZATION_PROFILE = _canonical.OWNER_CHAIN_CANONICALIZATION
