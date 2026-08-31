@@ -1,0 +1,85 @@
+name: K27 ASTGE Canonical Higher-Owner Owner Reduction
+
+on:
+  pull_request:
+    paths:
+      - 'crates/aura-k27-astge-post-edit-canonical-scope/**'
+      - 'crates/aura-k27-astge-post-edit-higher-owner-continuity/**'
+      - 'crates/aura-k27-astge-post-edit-canonical-higher-owner/**'
+      - 'crates/aura-k27-astge-post-edit-canonical-target-handle-continuity/**'
+      - 'crates/aura-k27-astge-canonical-higher-owner-owner-reduction/**'
+      - '.github/workflows/k27-astge-canonical-higher-owner-owner-reduction.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-owner-reduction:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch exact candidate head without persisted credentials
+        env:
+          TARGET_SHA: ${{ github.event.pull_request.head.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR534 canonical receipt verifier
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-post-edit-canonical-higher-owner/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-higher-owner/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-higher-owner/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-post-edit-canonical-higher-owner/Cargo.toml --all-targets -- -D warnings
+
+      - name: Re-prove PR535 raw-input constructor
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-post-edit-canonical-target-handle-continuity/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-target-handle-continuity/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-post-edit-canonical-target-handle-continuity/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-post-edit-canonical-target-handle-continuity/Cargo.toml --all-targets -- -D warnings
+
+      - name: Prove canonical owner chain
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-canonical-higher-owner-owner-reduction/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-canonical-higher-owner-owner-reduction/Cargo.toml --all-targets
+          cargo test --manifest-path crates/aura-k27-astge-canonical-higher-owner-owner-reduction/Cargo.toml --doc
+          cargo clippy --manifest-path crates/aura-k27-astge-canonical-higher-owner-owner-reduction/Cargo.toml --all-targets -- -D warnings
+
+      - name: Assert owner-reduction boundary
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path('crates/aura-k27-astge-canonical-higher-owner-owner-reduction/src/lib.rs').read_text()
+          assert 'require_post_edit_canonical_higher_owner_continuity(' in text
+          main = text.split('#[cfg(test)]', 1)[0]
+          assert 'admit_post_edit_canonical_definition_target_current' not in main
+          assert 'admit_post_edit_higher_owner_continuity' not in main
+          assert 'admit_post_edit_profiled_scope_current' not in main
+          print('PR535_OUTER_CONSTRUCTOR_CONSUMED=true')
+          print('PR534_CANONICAL_INNER_VERIFIER_CONSUMED=true')
+          print('LOWER_CONJUNCTION_REIMPLEMENTED=false')
+          PY
+          ! grep -R --line-number -E 'unsafe[[:space:]]*\{' crates/aura-k27-astge-canonical-higher-owner-owner-reduction/src
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'OUTER_CONSTRUCTOR_REPROVED_BY_INNER_OWNER=true'
+          echo 'ONE_CANONICAL_POST_EDIT_CONSEQUENCE=true'
+          echo 'DUPLICATE_CONJUNCTION_OWNER_REDUCED=true'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'SEMANTIC_PATCH_CORRECTNESS_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
+          echo 'EXTERNAL_EFFECT_AUTHORIZED=false'
+          echo 'PRODUCER_AUTHENTICATED=false'
+          echo 'HIDDEN_NATIVE_KV_MUTATED=false'
