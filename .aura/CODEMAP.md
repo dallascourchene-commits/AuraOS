@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1671
-- **total_bytes**: 26538030
-- **text_tokens_est**: 6624903
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1018, 'schema_or_lexicon': 276, 'support_file': 49}
+- **file_count**: 1677
+- **total_bytes**: 26581759
+- **text_tokens_est**: 6635837
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1022, 'schema_or_lexicon': 278, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1671,
+  "repo_file_count": 1677,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -157,6 +157,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-demo-g4-g6.yml",
     ".github/workflows/aura-construction-demo-g7-g8.yml",
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
+    ".github/workflows/aura-glm53-router-separated-prefetch.yml",
+    ".github/workflows/aura-glm53-source-bound-prefetch-w3.yml",
     ".github/workflows/aura-review-learning.yml",
     ".github/workflows/aura-showcase.yml",
     ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1676,11 +1678,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/glm53_packed_expert_pager.py",
     "tools/awj032/glm53_pager_cache_telemetry.py",
     "tools/awj032/glm53_per_expert_index_pager.py",
+    "tools/awj032/glm53_router_separated_prefetch.py",
+    "tools/awj032/glm53_router_separated_prefetch_source_guard.py",
     "tools/awj032/test_airllm_source_admission.py",
     "tools/awj032/test_glm53_compatibility_probe.py",
     "tools/awj032/test_glm53_packed_expert_pager.py",
     "tools/awj032/test_glm53_pager_cache_telemetry.py",
     "tools/awj032/test_glm53_per_expert_index_pager.py",
+    "tools/awj032/test_glm53_router_separated_prefetch.py",
+    "tools/awj032/test_glm53_router_separated_prefetch_source_guard.py",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
     "travel_extractors/__init__.py",
@@ -1811,16 +1817,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1671,
-  "bytes": 26538030,
-  "tokens_est": 6624903,
+  "files": 1677,
+  "bytes": 26581759,
+  "tokens_est": 6635837,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1018,
-    "schema_or_lexicon": 276,
+    "python_module": 1022,
+    "schema_or_lexicon": 278,
     "support_file": 49
   }
 }
