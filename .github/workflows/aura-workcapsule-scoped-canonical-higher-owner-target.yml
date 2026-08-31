@@ -1,0 +1,118 @@
+name: Aura WorkCapsule Scoped Canonical Higher-Owner Target
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_scoped_portable_target_identity.py'
+      - 'scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py'
+      - 'scripts/aura_workcapsule_scoped_canonical_higher_owner_target.py'
+      - 'tests/test_aura_workcapsule_scoped_canonical_higher_owner_target.py'
+      - '.github/workflows/aura-workcapsule-scoped-canonical-higher-owner-target.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      PR548_SHA: c10eb7316e76c75df6a4f04b933536f99f310702
+      PR545_SHA: f9667094d6870303d5b24502387f839a2a6d7a39
+      CANONICAL_OWNER_BLOB: 50c48fce25971d2fc13293932bd8af2b6b6ba233
+    steps:
+      - name: Fetch exact child ancestry
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=120 origin "$TARGET_SHA" "$PR548_SHA" "$PR545_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor "$PR548_SHA" HEAD
+          git merge-base --is-ancestor "$PR545_SHA" HEAD
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'PR548_ANCESTOR_BOUND=true'
+          echo 'PR545_ANCESTOR_BOUND=true'
+
+      - name: Re-prove PR548 scoped portable target owner
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_scoped_portable_target_identity.py
+          python3 -m unittest -v tests.test_aura_workcapsule_scoped_portable_target_identity
+
+      - name: Fetch and re-prove exact PR545 owner reduction
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf /tmp/pr545 && mkdir -p /tmp/pr545
+          git -C /tmp/pr545 init .
+          git -C /tmp/pr545 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr545 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR545_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr545 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr545 rev-parse HEAD)" = "$PR545_SHA"
+          (cd /tmp/pr545 && python3 -m unittest -v tests.test_aura_workcapsule_portable_higher_owner_owner_reduction)
+
+      - name: Verify exact canonical PR542 owner blob was materialized
+        run: |
+          child_blob="$(git rev-parse HEAD:scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py)"
+          owner_blob="$(git -C /tmp/pr545 rev-parse HEAD:scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py)"
+          test "$child_blob" = "$owner_blob"
+          test "$owner_blob" = "$CANONICAL_OWNER_BLOB"
+          echo 'CANONICAL_PR542_OWNER_BLOB_EXACT=true'
+
+      - name: Prove canonical-envelope scoped target convergence
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_scoped_canonical_higher_owner_target.py
+          python3 -m unittest -v tests.test_aura_workcapsule_scoped_canonical_higher_owner_target
+
+      - name: Assert no second portable target pivot
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from pathlib import Path
+          from scripts.aura_workcapsule_scoped_canonical_higher_owner_target import verify_scoped_canonical_higher_owner_target
+          params = set(inspect.signature(verify_scoped_canonical_higher_owner_target).parameters)
+          assert params == {'scoped_rebind_inputs', 'workcapsule_inputs', 'portable_higher_owner_projection'}
+          assert 'astge_projection' not in params
+          assert 'canonical_target_projection' not in params
+          source = Path('scripts/aura_workcapsule_scoped_canonical_higher_owner_target.py').read_text()
+          assert 'verify_post_source_portable_higher_owner_continuity' in source
+          assert 'verify_scoped_portable_target_identity' in source
+          assert 'canonical_target_projection' in source
+          print('CALLER_SECOND_PORTABLE_TARGET_ACCEPTED=false')
+          print('SCOPED_POST_EDIT_WITNESS_DERIVED_BY_CHILD=false')
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'CANONICAL_HIGHER_OWNER_CHAIN_VERIFIED=true'
+          echo 'SAME_SCOPED_POST_EDIT_TARGET_COORDINATE_PROVEN=true'
+          echo 'CALLER_SECOND_PORTABLE_TARGET_ACCEPTED=false'
+          echo 'CALLER_POST_EDIT_WITNESS_ACCEPTED_BY_CHILD=true'
+          echo 'POST_EDIT_WITNESS_DERIVATION_CLAIMED=false'
+          echo 'REENTRY_CLOSED=false'
+          echo 'REENTRY_SCOPE_NARROWED_BY_CHILD=false'
+          echo 'SOURCE_CURRENTNESS_MINTED_BY_CHILD=false'
+          echo 'SEMANTIC_REPAIR_CORRECTNESS_PROVEN=false'
+          echo 'PRODUCER_AUTHENTICATED=false'
+          echo 'RUNTIME_NAME_RESOLUTION_PROVEN=false'
+          echo 'CALL_GRAPH_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
