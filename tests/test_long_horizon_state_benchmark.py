@@ -52,6 +52,8 @@ def test_neutral_adapter_can_pass_same_state_workload(tmp_path):
     assert report["passed_turns"] == 8
     assert report["state_drift_detected"] is False
     assert report["telemetry_observed_turns"] == 0
+    assert report["disposition_counts"]["PASS"] == 8
+    assert all(turn["disposition"] == "PASS" for turn in report["turns"])
     assert all(turn["telemetry"]["provenance"] == "UNKNOWN" for turn in report["turns"])
 
 
@@ -63,6 +65,7 @@ def test_wrong_digest_is_state_drift_not_success(tmp_path):
     report = run_adapter([sys.executable, str(adapter)], rounds=4, cwd=tmp_path)
     assert report["passed_turns"] == 0
     assert report["state_drift_detected"] is True
+    assert report["disposition_counts"]["STATE_DRIFT"] == 4
 
 
 def test_unknown_telemetry_cannot_carry_fake_zero(tmp_path):
@@ -72,4 +75,35 @@ def test_unknown_telemetry_cannot_carry_fake_zero(tmp_path):
     )
     report = run_adapter([sys.executable, str(adapter)], rounds=4, cwd=tmp_path)
     assert report["passed_turns"] == 0
+    assert report["disposition_counts"]["PROTOCOL_ERROR"] == 4
     assert all(turn["returncode"] == 65 for turn in report["turns"])
+
+
+def test_timeout_is_retained_and_campaign_continues(tmp_path):
+    adapter = write_adapter(
+        tmp_path,
+        'import sys,time\nsys.stdin.read()\ntime.sleep(1.0)\n',
+    )
+    report = run_adapter(
+        [sys.executable, str(adapter)],
+        rounds=4,
+        timeout_seconds=0.02,
+        cwd=tmp_path,
+    )
+    assert report["passed_turns"] == 0
+    assert report["state_drift_detected"] is True
+    assert report["disposition_counts"]["TIMEOUT"] == 4
+    assert len(report["turns"]) == 4
+    assert all(turn["disposition"] == "TIMEOUT" for turn in report["turns"])
+    assert all(turn["returncode"] == 124 for turn in report["turns"])
+    assert all(turn["telemetry"] == {"provenance": "UNKNOWN"} for turn in report["turns"])
+
+
+def test_timeout_must_be_positive(tmp_path):
+    adapter = write_adapter(tmp_path)
+    try:
+        run_adapter([sys.executable, str(adapter)], rounds=4, timeout_seconds=0, cwd=tmp_path)
+    except ValueError as exc:
+        assert str(exc) == "TIMEOUT_SECONDS_MUST_BE_POSITIVE"
+    else:
+        raise AssertionError("expected invalid timeout to fail closed")
