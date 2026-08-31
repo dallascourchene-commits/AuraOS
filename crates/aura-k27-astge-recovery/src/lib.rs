@@ -307,9 +307,7 @@ mod tests {
     fn corrupt_current_generation_fails_closed_even_if_directory_name_is_valid() {
         let root = temp_root("corrupt-current");
         publish(&root, 50);
-        let page_path = root
-            .join("gen-00000000000000000050")
-            .join("pages.bin");
+        let page_path = root.join("gen-00000000000000000050").join("pages.bin");
         let mut permissions = fs::metadata(&page_path).unwrap().permissions();
         #[cfg(unix)]
         {
