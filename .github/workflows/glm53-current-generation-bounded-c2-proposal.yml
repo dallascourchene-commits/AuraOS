@@ -1,0 +1,170 @@
+name: GLM53 Current Generation Bounded C2 Proposal
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py"
+      - "tests/test_aura_glm53_current_generation_bounded_c2_proposal.py"
+      - ".github/workflows/glm53-current-generation-bounded-c2-proposal.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  current-generation-bounded-c2-proposal:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout Q18 with full parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          submodules: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Revalidate exact Q16 and S1 generations
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          Q16=dbdfad22555c78f84c6a203e20c0300b503448d7
+          S1=9dab15c3a0bb0b9ad2408fdd54b09cfcfa1373d8
+          test "$(git rev-parse "$Q16:tools/quantization/aura_glm53_representative_equal_rate_admission.py")" = "07621b198dd2fa5f458c96edb452b885359adb41"
+          test "$(git rev-parse "$S1:tools/quantization/aura_glm53_owner_host_source_header_materializer.py")" = "a1a23cfe4b2b2582af584d2f5b0dffe464070ae8"
+          test "$(git hash-object tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py)" = "4cee26edaf0759fc80d31889ab9e4e268f9a4fbe"
+          python3 - <<'PY'
+          import json, os, urllib.request
+
+          headers={
+              'Authorization':f"Bearer {os.environ['GH_TOKEN']}",
+              'Accept':'application/vnd.github+json',
+              'X-GitHub-Api-Version':'2022-11-28',
+          }
+          repo=os.environ['GH_REPO']
+          expected=(
+              {
+                  'run':33403013214,
+                  'head':'dbdfad22555c78f84c6a203e20c0300b503448d7',
+                  'workflow':'GLM53 Representative Equal Rate Admission',
+                  'job':99523673267,
+                  'job_name':'representative-equal-rate-admission',
+                  'artifact':9762051329,
+                  'artifact_name':'q16-representative-equal-rate-admission',
+                  'artifact_digest':'sha256:edaf31905c50e0a10b76ea215ad323050752b6637605e465e25b8fb43699fa61',
+              },
+              {
+                  'run':33403087858,
+                  'head':'9dab15c3a0bb0b9ad2408fdd54b09cfcfa1373d8',
+                  'workflow':'GLM53 Owner Host Source Header Materializer',
+                  'job':99523917975,
+                  'job_name':'source-header-materializer',
+                  'artifact':9762044001,
+                  'artifact_name':'glm53-owner-host-source-header-materializer',
+                  'artifact_digest':'sha256:55681db1241c439302f595acbdf66c845d7e2b09d3b5040d5a05d7a237e9ad36',
+              },
+          )
+          for item in expected:
+              req=urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{item['run']}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  run=json.load(response)
+              assert run['head_sha']==item['head'],(item['run'],run['head_sha'],item['head'])
+              assert run['name']==item['workflow'],(item['run'],run['name'],item['workflow'])
+              assert run['status']=='completed' and run['conclusion']=='success',run
+
+              req=urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/jobs/{item['job']}",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  job=json.load(response)
+              assert job['head_sha']==item['head'],(item['job'],job['head_sha'],item['head'])
+              assert job['name']==item['job_name'],(item['job'],job['name'],item['job_name'])
+              assert job['status']=='completed' and job['conclusion']=='success',job
+
+              req=urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{item['run']}/artifacts",
+                  headers=headers,
+              )
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  artifacts=json.load(response)['artifacts']
+              exact=[a for a in artifacts if a['id']==item['artifact']]
+              assert len(exact)==1,(item['run'],item['artifact'],len(exact))
+              artifact=exact[0]
+              assert artifact['name']==item['artifact_name'],artifact
+              assert artifact['expired'] is False,artifact
+              assert artifact.get('digest')==item['artifact_digest'],artifact
+          print('Q18_EXACT_Q16_S1_GENERATIONS_GREEN=true')
+          PY
+
+      - name: Run Q18 adversarial contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/quantization/aura_glm53_current_generation_bounded_c2_proposal.py \
+            tests/test_aura_glm53_current_generation_bounded_c2_proposal.py
+          PYTHONPATH=. python -m unittest -v \
+            tests.test_aura_glm53_current_generation_bounded_c2_proposal
+
+      - name: Produce bounded Q18 proposal receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python -m tools.quantization.aura_glm53_current_generation_bounded_c2_proposal \
+            | tee /tmp/q18-a.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q18-a.json',encoding='utf-8'))
+          assert r['receipt_digest']=='c53acb3ff471dbe3971ee4e7a75b28c4316b50fba88a414f406b93c271c90230',r['receipt_digest']
+          assert r['disposition']=='BOUNDED_REPRESENTATIVE_E8_C2_REQUEST_PROPOSAL_ELIGIBLE',r
+          assert r['bounded_c2_request_proposal_eligible'] is True,r
+          assert r['exact_other_agent_heads']==[
+              'dbdfad22555c78f84c6a203e20c0300b503448d7',
+              '9dab15c3a0bb0b9ad2408fdd54b09cfcfa1373d8',
+          ],r
+          assert r['legacy_q7_disposition_reused'] is False,r
+          for key in (
+              'tensor_payload_bound','real_tensor_quantization_observed',
+              'model_execution_observed','execution_authorized',
+              'owner_host_execution_observed','physical_io_performance_proven',
+              'full_tensor_superiority_proven','whole_model_superiority_proven',
+              'quality_superiority_proven','runtime_superiority_proven','g2_admitted',
+              'gate10_promoted','semantic_k27_authority_minted',
+              'native_private_transformer_kv_accessed',
+          ):
+              assert r[key] is False,key
+          print('Q18_BOUNDED_PROPOSAL_RECEIPT_EXACT=true')
+          PY
+
+      - name: Independently reproduce Q18 receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python -m tools.quantization.aura_glm53_current_generation_bounded_c2_proposal > /tmp/q18-b.json
+          python3 - <<'PY'
+          import json
+          a=json.load(open('/tmp/q18-a.json',encoding='utf-8'))
+          b=json.load(open('/tmp/q18-b.json',encoding='utf-8'))
+          assert a==b
+          assert a['receipt_digest']==b['receipt_digest']
+          print('Q18_INDEPENDENT_RECEIPT_REPLAY=true')
+          PY
+
+      - name: Preserve Q18 receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: q18-current-generation-bounded-c2-proposal
+          path: /tmp/q18-a.json
+          if-no-files-found: error
