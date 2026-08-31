@@ -7,7 +7,9 @@
 //! an already-admitted raw-slice receipt under a closed, deterministic struct-order profile so a
 //! heterogeneous consumer can verify one exact evidence object without duplicating the owner.
 
-use aura_k27_astge_portable_target_raw_slice::{PortableTargetRawSliceV1, VERSION as RAW_SLICE_VERSION};
+use aura_k27_astge_portable_target_raw_slice::{
+    PortableTargetRawSliceV1, VERSION as RAW_SLICE_VERSION,
+};
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::error::Error;
@@ -196,12 +198,16 @@ fn require_raw_slice_owner(
         return Err(RawSliceProjectionErrorV1::RawSliceOwnerNotProven);
     }
     if raw_slice.target_byte_start >= raw_slice.target_byte_end
+        || u64::from(raw_slice.target_byte_end) > raw_slice.full_source_byte_len
         || raw_slice.target_slice_byte_len
             != u64::from(raw_slice.target_byte_end - raw_slice.target_byte_start)
     {
         return Err(RawSliceProjectionErrorV1::InvalidSpan);
     }
-    require_digest("projection_payload_sha256", &raw_slice.projection_payload_sha256)?;
+    require_digest(
+        "projection_payload_sha256",
+        &raw_slice.projection_payload_sha256,
+    )?;
     require_digest("full_source_sha256_hex", &raw_slice.full_source_sha256_hex)?;
     require_digest("target_slice_sha256_hex", &raw_slice.target_slice_sha256_hex)?;
     require_digest(
@@ -248,12 +254,16 @@ fn require_payload(
         return Err(RawSliceProjectionErrorV1::RawSliceOwnerNotProven);
     }
     if payload.target_byte_start >= payload.target_byte_end
+        || u64::from(payload.target_byte_end) > payload.full_source_byte_len
         || payload.target_slice_byte_len
             != u64::from(payload.target_byte_end - payload.target_byte_start)
     {
         return Err(RawSliceProjectionErrorV1::InvalidSpan);
     }
-    require_digest("projection_payload_sha256", &payload.projection_payload_sha256)?;
+    require_digest(
+        "projection_payload_sha256",
+        &payload.projection_payload_sha256,
+    )?;
     require_digest("full_source_sha256_hex", &payload.full_source_sha256_hex)?;
     require_digest("target_slice_sha256_hex", &payload.target_slice_sha256_hex)?;
     require_digest(
