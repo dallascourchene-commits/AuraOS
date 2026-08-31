@@ -1,0 +1,159 @@
+name: Aura GLM53 G5 Recompute Admission
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  g5-recompute-admission:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact candidate
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Verify pull-request exact head
+        if: github.event_name == 'pull_request'
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Authenticate G4 and two earned semantic parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.parse
+          import urllib.request
+
+          repo = "dallascourchene-commits/AuraOS"
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+              "X-GitHub-Api-Version": "2022-11-28",
+          }
+
+          def get(url):
+              req = urllib.request.Request(url, headers=headers)
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  return json.load(response)
+
+          def prove_run(run_id, job_id, expected_head, label):
+              run = get(f"https://api.github.com/repos/{repo}/actions/runs/{run_id}")
+              if run.get("conclusion") != "success":
+                  raise SystemExit(f"{label}_RUN_NOT_SUCCESS")
+              if run.get("head_sha") != expected_head:
+                  raise SystemExit(f"{label}_HEAD_MISMATCH:{run.get('head_sha')}")
+              job = get(f"https://api.github.com/repos/{repo}/actions/jobs/{job_id}")
+              if job.get("conclusion") != "success":
+                  raise SystemExit(f"{label}_JOB_NOT_SUCCESS")
+
+          def blob(path, ref):
+              encoded = urllib.parse.quote(path, safe="/")
+              data = get(f"https://api.github.com/repos/{repo}/contents/{encoded}?ref={ref}")
+              return data.get("sha")
+
+          # G4 terminal proof.
+          prove_run(
+              33436142388,
+              99632931053,
+              "68d76cb7d08366d085be13ad68871ab3c9cf00e1",
+              "G4",
+          )
+
+          # PR #754 semantic owner + proof-only mirror. The mirror may prove the
+          # owner only because source/test blobs are identical across both refs.
+          owner = "412e683b8a3d28bd57e4dc39059283cc823e2fb3"
+          mirror = "f85135562a5975cd7ea1892ab1c221d9004d3e0d"
+          prove_run(33435590114, 99631099474, mirror, "PR754_PROOF_MIRROR")
+          expected_754 = {
+              "tools/aura_retrieval_progress_guard.py": "5e20a51af1bbafa17c56b3a80125bcf003cc6b62",
+              "tests/test_aura_retrieval_progress_guard.py": "fd70a6a2ba38220f633c7becf421fbe472bd6b6b",
+          }
+          for path, expected in expected_754.items():
+              for ref, label in ((owner, "OWNER"), (mirror, "MIRROR")):
+                  actual = blob(path, ref)
+                  if actual != expected:
+                      raise SystemExit(f"PR754_{label}_BLOB_MISMATCH:{path}:{actual}")
+
+          # PR #755 EKI-4 exact-head proof and semantic blobs.
+          p755 = "162fdb9c69f288090845453a67d1f41da28e8a53"
+          prove_run(33435683382, 99631408076, p755, "PR755_EKI4")
+          expected_755 = {
+              "tools/aura_external_version_transition_envelope.py": "7ac33764ee238098a2887af96344ed642565ac48",
+              "tests/test_aura_external_version_transition_envelope.py": "10c83c2432636908b237fe171eebd0714a10788f",
+          }
+          for path, expected in expected_755.items():
+              actual = blob(path, p755)
+              if actual != expected:
+                  raise SystemExit(f"PR755_BLOB_MISMATCH:{path}:{actual}")
+          PY
+
+      - name: Compile G4 and G5 proof surfaces
+        run: |
+          python3 -m py_compile \
+            tools/awj032/glm53_g4_prefetch_plan_revalidation.py \
+            tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py \
+            tools/awj032/glm53_g5_recompute_admission.py \
+            tools/awj032/test_glm53_g5_recompute_admission.py
+
+      - name: Reexecute inherited G4 adversarial contract
+        run: python3 -m unittest tools.awj032.test_glm53_g4_prefetch_plan_revalidation -v
+
+      - name: Execute G5 adversarial contract
+        run: python3 -m unittest tools.awj032.test_glm53_g5_recompute_admission -v
+
+      - name: Exhaust finite recompute lattice
+        run: |
+          python3 - <<'PY'
+          from tools.awj032.glm53_g5_recompute_admission import prove_finite_recompute_lattice
+          proof = prove_finite_recompute_lattice()
+          if proof.get("states") != 90:
+              raise SystemExit(f"G5_FINITE_PROOF_STATE_COUNT_MISMATCH:{proof}")
+          required = (
+              "ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT",
+              "COLLAPSE_RECOMPUTE_CONE",
+              "HOLD_RETRIEVAL_AXIS_CHANGE_REQUIRED",
+              "HOLD_SOURCE_READ_CURRENTNESS_REQUIRED",
+              "HOLD_VERSION_TRANSITION_REQUIRED",
+              "NOT_APPLICABLE_RECOMPUTE",
+          )
+          for disposition in required:
+              if proof.get(disposition, 0) <= 0:
+                  raise SystemExit(f"G5_FINITE_PROOF_MISSING_DISPOSITION:{disposition}:{proof}")
+          print(proof)
+          PY
+
+      - name: Enforce G5 nonpromotion ceiling
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path("tools/awj032/glm53_g5_recompute_admission.py").read_text()
+          required = (
+              "recompute_executed_by_this_contract: bool = False",
+              "retrieval_or_provider_effect_authorized: bool = False",
+              "transfer_effect_authorized: bool = False",
+              "native_route_mutated: bool = False",
+              "physical_io_proven: bool = False",
+              "source_currentness_minted: bool = False",
+              "semantic_k27_authority_minted: bool = False",
+              "native_private_transformer_kv_accessed: bool = False",
+              "gate10_promoted: bool = False",
+          )
+          for marker in required:
+              if marker not in text:
+                  raise SystemExit(f"G5_CLAIM_CEILING_MARKER_MISSING:{marker}")
+          PY
