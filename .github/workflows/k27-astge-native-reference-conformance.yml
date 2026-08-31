@@ -1,0 +1,125 @@
+name: K27 ASTGE native-reference conformance
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - ".github/workflows/k27-astge-native-reference-conformance.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: k27-astge-conformance-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  native-reference-conformance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      ORACLE_SHA: a71d1c55af84973a29b28fdfa3db157056780e92
+      ORACLE_BLOB: 559573d156271ac9128ecdd46b5df34b0fb90a3c
+    steps:
+      - name: Fetch exact candidate head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: "3.12"
+
+      - name: Materialize exact non-self PR459 oracle source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$ORACLE_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          test "$(git rev-parse "$ORACLE_SHA:tools/k27_astge_reference.py")" = "$ORACLE_BLOB"
+          git show "$ORACLE_SHA:tools/k27_astge_reference.py" > /tmp/k27_astge_reference.py
+
+      - name: Emit independent PR459 oracle cones
+        run: |
+          python - <<'PY' > /tmp/reference.tsv
+          import importlib.util
+          import tempfile
+          from pathlib import Path
+
+          spec = importlib.util.spec_from_file_location("k27_astge_reference", "/tmp/k27_astge_reference.py")
+          module = importlib.util.module_from_spec(spec)
+          assert spec.loader is not None
+          spec.loader.exec_module(module)
+
+          roots = (0, 1, 2, 5, 40, 120, 121, 500, 1000, 2000, 3279)
+          depths = (0, 1, 2, 3)
+          graph = module.build_balanced_tree(7, 3)
+          assert len(graph) == 3280
+          assert sum(len(targets) for targets in graph.values()) == 3279
+
+          with tempfile.TemporaryDirectory() as tmp:
+              nodes = Path(tmp) / "nodes.bin"
+              edges = Path(tmp) / "edges.bin"
+              module.serialize_graph(
+                  nodes,
+                  edges,
+                  graph,
+                  placement_scheme=module.PLACEMENT_CONTIGUOUS_CSR_V1,
+              )
+              with module.MmapGraphReader(nodes, edges) as reader:
+                  for root in roots:
+                      for depth in depths:
+                          cone = reader.query_affected_cone(root, depth)
+                          node_ids = ",".join(str(node_id) for node_id in cone.node_ids)
+                          print(f"{root}\t{depth}\t{cone.edge_traversals}\t{node_ids}")
+          PY
+
+      - name: Emit native PR461 S-plane cones
+        run: |
+          cargo run --quiet --locked \
+            --manifest-path crates/aura-k27-astge/Cargo.toml \
+            --bin reference_conformance > /tmp/native.tsv
+
+      - name: Require exact cross-implementation semantic agreement
+        run: |
+          test "$(wc -l < /tmp/reference.tsv)" -eq 44
+          test "$(wc -l < /tmp/native.tsv)" -eq 44
+          diff -u /tmp/reference.tsv /tmp/native.tsv
+          echo "SAME_GRAPH_NODES=3280"
+          echo "SAME_GRAPH_EDGES=3279"
+          echo "QUERY_MATRIX=44"
+          echo "ORDERED_CONE_EQUIVALENCE=true"
+          echo "TRAVERSED_EDGE_EQUIVALENCE=true"
+
+      - name: Preserve inherited native S-plane regressions
+        run: cargo test --locked --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets --verbose
+
+      - name: Format and Clippy
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge/Cargo.toml -- --check
+          cargo clippy --locked --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+
+      - name: Emit claim ceiling
+        run: |
+          echo "REFERENCE_ORACLE_SHA=$ORACLE_SHA"
+          echo "REFERENCE_ORACLE_BLOB=$ORACLE_BLOB"
+          echo "NATIVE_REFERENCE_CONFORMANCE_PROVEN=true"
+          echo "BINARY_FORMAT_EQUIVALENCE_PROVEN=false"
+          echo "MMAP_SUITABILITY_PROVEN=false"
+          echo "NATIVE_PERFORMANCE_SUPERIORITY_PROVEN=false"
+          echo "COLD_NVME_BEHAVIOR_PROVEN=false"
+          echo "AURAOS_RUNTIME_INTEGRATION_PROVEN=false"
+          echo "EXTERNAL_EFFECT_AUTHORIZED=false"
