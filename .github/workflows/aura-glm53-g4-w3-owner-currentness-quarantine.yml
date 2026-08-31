@@ -52,10 +52,10 @@ jobs:
               raise SystemExit(f"CURRENTNESS_LAW_HEAD_MISMATCH:{run.get('head_sha')}")
           PY
 
-      - name: Verify G4 parent semantic surface is preserved
+      - name: Verify inherited G4 semantic blob is unchanged
         run: |
-          test "$(git rev-parse HEAD^:tools/awj032/glm53_g4_prefetch_plan_revalidation.py | git hash-object --stdin)" = \
-            "$(git rev-parse HEAD:tools/awj032/glm53_g4_prefetch_plan_revalidation.py)"
+          test "$(git rev-parse HEAD:tools/awj032/glm53_g4_prefetch_plan_revalidation.py)" = \
+            "78e4f56bdf9c1e0c0babda24acdd2af80ce5d175"
 
       - name: Compile G4 and W3 surfaces
         run: |
