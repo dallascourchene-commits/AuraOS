@@ -11,6 +11,7 @@ from tools.benchmarks.persistent_adapter_runner import RUNNER_SCHEMA_ID
 
 PAIR_SCHEMA_ID = "AURA_BLINDED_PAIR_ADMISSION_V1"
 _SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+_METRIC_KEYS = ("input_tokens", "output_tokens", "cost_usd", "peak_rss_mb")
 
 
 def _canonical_digest(payload: Any) -> str:
@@ -28,23 +29,21 @@ def _verify_embedded_digest(payload: dict[str, Any], field: str) -> None:
         raise ValueError(f"{field.upper()}_MISMATCH")
 
 
-def _telemetry_status(report: dict[str, Any]) -> str:
+def _observed_metrics(report: dict[str, Any]) -> set[str]:
     if report.get("startup_disposition") != "PASS":
-        return "NOT_COMPARABLE"
+        return set()
     turns = report.get("turns")
     if not isinstance(turns, list) or not turns:
-        return "NOT_COMPARABLE"
-    provenances: list[str] = []
+        return set()
+    eligible = set(_METRIC_KEYS)
     for turn in turns:
         if turn.get("disposition") not in {"PASS", "STATE_DRIFT"}:
-            return "NOT_COMPARABLE"
+            return set()
         telemetry = turn.get("telemetry")
-        if not isinstance(telemetry, dict):
-            return "NOT_COMPARABLE"
-        provenances.append(str(telemetry.get("provenance", "UNKNOWN")))
-    if provenances and all(item == "OBSERVED" for item in provenances):
-        return "OBSERVED_MATCHED_ELIGIBLE"
-    return "NOT_COMPARABLE"
+        if not isinstance(telemetry, dict) or telemetry.get("provenance") != "OBSERVED":
+            return set()
+        eligible &= {key for key in _METRIC_KEYS if telemetry.get(key) is not None}
+    return eligible
 
 
 def admit_blinded_pair(
@@ -66,6 +65,7 @@ def admit_blinded_pair(
 
     seen: set[str] = set()
     admitted: list[dict[str, Any]] = []
+    observed_metric_sets: list[set[str]] = []
     for envelope in run_envelopes:
         if not isinstance(envelope, dict):
             raise ValueError("RUN_ENVELOPE_MUST_BE_OBJECT")
@@ -104,6 +104,8 @@ def admit_blinded_pair(
                 raise ValueError("FAILED_STARTUP_CANNOT_ASSERT_GENERATION")
             identity_status = "COMMAND_MATCH_GENERATION_UNOBSERVED"
 
+        observed_metrics = _observed_metrics(report)
+        observed_metric_sets.append(observed_metrics)
         admitted.append(
             {
                 "blinded_label": label,
@@ -111,7 +113,7 @@ def admit_blinded_pair(
                 "campaign_disposition": report.get("campaign_disposition"),
                 "startup_disposition": startup,
                 "evidence_digest": report["evidence_digest"],
-                "telemetry_status": _telemetry_status(report),
+                "observed_metrics": sorted(observed_metrics),
             }
         )
 
@@ -119,14 +121,15 @@ def admit_blinded_pair(
         raise ValueError("MISSING_PREREGISTERED_ARM")
     admitted.sort(key=lambda item: item["blinded_label"])
     all_exact = all(item["identity_status"] == "EXACT" for item in admitted)
-    all_observed = all(item["telemetry_status"] == "OBSERVED_MATCHED_ELIGIBLE" for item in admitted)
     any_inconclusive = any(
         item["campaign_disposition"] in {"INCONCLUSIVE", "STATE_DRIFT_WITH_INCONCLUSIVE"}
         or item["startup_disposition"] != "PASS"
         for item in admitted
     )
+    comparable_metrics = set.intersection(*observed_metric_sets) if observed_metric_sets else set()
     if not all_exact or any_inconclusive:
         pair_disposition = "PAIR_ADMITTED_INCONCLUSIVE"
+        comparable_metrics = set()
     else:
         pair_disposition = "PAIR_ADMITTED"
 
@@ -136,7 +139,8 @@ def admit_blinded_pair(
         "claim_ceiling": "BLINDED_PAIR_EVIDENCE_ONLY_NO_WINNER",
         "pair_disposition": pair_disposition,
         "state_outcomes_comparable": all_exact and not any_inconclusive,
-        "telemetry_comparison_allowed": all_exact and all_observed and not any_inconclusive,
+        "comparable_observed_metrics": sorted(comparable_metrics),
+        "telemetry_comparison_allowed": bool(comparable_metrics),
         "winner": None,
         "arms": admitted,
     }
