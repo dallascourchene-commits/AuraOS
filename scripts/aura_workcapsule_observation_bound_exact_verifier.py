@@ -9,9 +9,11 @@ its pinned closure inputs.
 
 This D0 membrane composes those laws. It reruns PR516 from the exact raw currentness
 inputs, previous WorkCapsule binding, O8 re-entry receipt and candidate graph witness,
-then requires canonical byte equality with the candidate PR516 receipt. Whenever an
-inner PR512 closure receipt exists, the PR513 exact-closure verifier is also replayed
-against the independently derived candidate binding.
+then requires canonical byte equality with the candidate PR516 receipt. Whenever both
+the candidate and independently replayed PR516 consequence contain an inner PR512
+closure receipt, the PR513 exact-closure verifier is replayed against the independently
+derived candidate binding. A CLOSED-vs-HOLD inner-closure presence mismatch is itself
+an exact-input contradiction and is never coerced into closure.
 
 Exact reproduction is not producer authentication, semantic truth, review approval,
 mutation authority, execution authority, commit/merge authority, or external effect.
@@ -34,6 +36,7 @@ PREVIOUS_BINDING_IDENTITY_MISMATCH = "OBSERVATION_BOUND_PREVIOUS_BINDING_IDENTIT
 REENTRY_RECEIPT_IDENTITY_MISMATCH = "OBSERVATION_BOUND_REENTRY_RECEIPT_IDENTITY_NOT_EXACT"
 SOURCE_OBSERVATION_IDENTITY_MISMATCH = "OBSERVATION_BOUND_SOURCE_OBSERVATION_IDENTITY_NOT_EXACT"
 DERIVED_CANDIDATE_IDENTITY_MISMATCH = "OBSERVATION_BOUND_DERIVED_CANDIDATE_IDENTITY_NOT_EXACT"
+INNER_CLOSURE_PRESENCE_MISMATCH = "OBSERVATION_BOUND_INNER_CLOSURE_PRESENCE_NOT_EXACT"
 
 
 def _canonical_bytes(value: Any) -> bytes:
@@ -83,7 +86,8 @@ def verify_exact_observation_bound_reentry_closure(
         violations.append(DERIVED_CANDIDATE_IDENTITY_MISMATCH)
 
     closure = receipt.get("closure_receipt")
-    if isinstance(closure, dict):
+    expected_closure = expected.get("closure_receipt")
+    if isinstance(closure, dict) and isinstance(expected_closure, dict):
         inner_violations = verify_exact_reentry_closure(
             previous_binding=previous_binding,
             reentry_receipt=reentry_receipt,
@@ -91,6 +95,8 @@ def verify_exact_observation_bound_reentry_closure(
             closure_receipt=closure,
         )
         violations.extend(f"PR513_{item}" for item in inner_violations)
+    elif isinstance(closure, dict) != isinstance(expected_closure, dict):
+        violations.append(INNER_CLOSURE_PRESENCE_MISMATCH)
 
     if _canonical_bytes(receipt) != _canonical_bytes(expected):
         violations.append(EXACT_OBSERVATION_BOUND_INPUT_MISMATCH)
