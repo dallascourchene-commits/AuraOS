@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 env:
-  SEMANTIC_HEAD: 71bc9e4ccd4166f0dda7d2a0e16d2ef8393c69fb
+  SEMANTIC_HEAD: ce572f29af25a7951116de931aa03a4e492d597c
   Q15_CUT_EPOCH: "1788188632"
 
 jobs:
@@ -34,9 +34,9 @@ jobs:
           git merge-base --is-ancestor "$SEMANTIC_HEAD" HEAD
           semantic_epoch="$(git show -s --format='%at' "$SEMANTIC_HEAD")"
           test "$semantic_epoch" -gt "$Q15_CUT_EPOCH"
-          test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_hard_gate_transition_admission.py")" = "895cf976e7c43f3853259915b64dc43533d78fc0"
-          test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_bounded_proposal_capsule.py")" = "855c1f166ba46f464cf760655334176d1fcee6c9"
-          test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_hard_gate_transition_admission.py")" = "0ee41f6f7aeea25acc66d3e53e95677a2aeb146e"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_hard_gate_transition_admission.py")" = "18ada65d0aca81ba915c4dc57c98414f38c3b068"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_bounded_proposal_capsule.py")" = "dbc223de381d2146e88769a7213455c57a27569d"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_hard_gate_transition_admission.py")" = "9e878769b1fae198035135a8ada3d8c6db3a787d"
           test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_bounded_proposal_capsule.py")" = "d663587e6698e61e4574b87eb891f41aee31ac63"
           echo O63_POST_Q15_SEMANTIC_GENERATION=true
 
@@ -74,7 +74,7 @@ jobs:
           A='a'*64; B='b'*64; C='c'*64; D='d'*64; E='e'*64; F='f'*64; G='1'*64; H='2'*64
           def gate(gid, passed, gen, receipt, scope):
               return GateEvidenceState(
-                  gate_id=gid, gate_scope_digest=scope,
+                  gate_id=gid, owner_ref='owner:'+gid+':v1', gate_scope_digest=scope,
                   evidence_generation=gen, receipt_digest=receipt,
                   verification_state='EXACT_GREEN' if passed else 'HOLD',
                   blocker=None if passed else gid.upper()+'_BLOCKED', passed=passed,
@@ -97,6 +97,7 @@ jobs:
           assert transition.gate10_promoted is False
 
           eligibility=EligibilityReceiptRef(
+              owner_ref='owner:hard-gate-transition:v1',
               disposition='ELIGIBLE_BOUNDED_PROPOSAL',
               receipt_digest=transition.transition_receipt_digest,
               receipt_generation='transition-gen-hosted-1',
@@ -120,6 +121,7 @@ jobs:
           p2=create_bounded_proposal_capsule(basis=basis, producer_identity='hosted-worker-b')
           assert p1.capsule.proposal_id == p2.capsule.proposal_id
           assert p1.generation_receipt_digest != p2.generation_receipt_digest
+          p1.capsule.validate_integrity()
           assert p1.capsule.execution_authorized is False
           assert p1.capsule.provider_effect_authorized is False
           assert p1.capsule.native_private_transformer_kv_accessed is False
@@ -131,8 +133,10 @@ jobs:
 
           receipt={
               'schema':'AURA-O63-HOSTED-PROOF-v1',
-              'semantic_head':'71bc9e4ccd4166f0dda7d2a0e16d2ef8393c69fb',
+              'semantic_head':'ce572f29af25a7951116de931aa03a4e492d597c',
               'post_q15_semantic_generation':True,
+              'eligibility_owner_bound':True,
+              'capsule_self_integrity_reproved':True,
               'gate_transition_disposition':transition.disposition,
               'proposal_id':p1.capsule.proposal_id,
               'same_basis_collapses_across_producers':True,
