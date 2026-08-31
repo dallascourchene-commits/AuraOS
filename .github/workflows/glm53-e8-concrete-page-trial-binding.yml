@@ -1,0 +1,121 @@
+name: GLM53 Concrete E8 Page Trial Binding
+
+on:
+  pull_request:
+    paths:
+      - 'tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py'
+      - 'tools/quantization/aura_glm53_quantized_representation_trial.py'
+      - 'tools/quantization/aura_glm53_e8_concrete_page_trial_binding.py'
+      - 'tools/quantization/test_aura_glm53_e8_indexed_expert_page_reference.py'
+      - 'tools/quantization/test_aura_glm53_quantized_representation_trial.py'
+      - 'tests/test_glm53_e8_concrete_page_trial_binding.py'
+      - '.github/workflows/glm53-e8-concrete-page-trial-binding.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  o60-concrete-e8-page-trial:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact child with bounded convergence history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
+
+      - name: Prove exact two-parent convergence and parent blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          CONVERGENCE=d93834a73635fbbe7498377637e6df404d0d22ab
+          PR628=b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae
+          PR629=c4f526714e89fc36c55230c55ab2f704695212dc
+          test "$(git show -s --format=%P "$CONVERGENCE")" = "$PR628 $PR629"
+          git merge-base --is-ancestor "$CONVERGENCE" "$GITHUB_SHA"
+          test "$(git rev-parse "$GITHUB_SHA:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py")" = 5df2cd69a1519b2626cb52c1d8f23a25504425d9
+          test "$(git rev-parse "$GITHUB_SHA:tools/quantization/test_aura_glm53_e8_indexed_expert_page_reference.py")" = 3014d543a2371b84b6f1bbc460124869c150d2d4
+          test "$(git rev-parse "$GITHUB_SHA:tools/quantization/aura_glm53_quantized_representation_trial.py")" = 87266d031f5a201559794428eff14d9ac8595a8c
+          test "$(git rev-parse "$GITHUB_SHA:tools/quantization/test_aura_glm53_quantized_representation_trial.py")" = 501008dc55935483f3c7dfa748c519d189cf36b6
+
+      - name: Pin exact successful parent hosted runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          expected = {
+              33367948262: "b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae",
+              33367951206: "c4f526714e89fc36c55230c55ab2f704695212dc",
+          }
+          for run_id, sha in expected.items():
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{os.environ['REPO']}/actions/runs/{run_id}",
+                  headers={"Authorization": f"Bearer {os.environ['GH_TOKEN']}", "Accept": "application/vnd.github+json"},
+              )
+              with urllib.request.urlopen(req) as response:
+                  data = json.load(response)
+              assert data["head_sha"] == sha, (run_id, data["head_sha"], sha)
+              assert data["status"] == "completed"
+              assert data["conclusion"] == "success"
+              print(f"PINNED_PARENT_RUN={run_id}:{sha}:SUCCESS")
+          PY
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install exact PR628 numerical dependency
+        run: python -m pip install --disable-pip-version-check numpy==2.3.5
+
+      - name: Re-prove exact PR628 indexed E8 page owner
+        run: python tools/quantization/test_aura_glm53_e8_indexed_expert_page_reference.py
+
+      - name: Re-prove exact PR629 quantized trial owner
+        run: python -m unittest -v tools.quantization.test_aura_glm53_quantized_representation_trial
+
+      - name: Prove O60 concrete-page trial adversarials
+        run: python -m unittest -v tests.test_glm53_e8_concrete_page_trial_binding
+
+      - name: Prove public boundary and exact parent constants
+        shell: bash
+        run: |
+          python - <<'PY'
+          import inspect
+          from tools.quantization import aura_glm53_e8_concrete_page_trial_binding as b
+          assert b.PARENT_ARTIFACT_IDS == (
+              "b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae",
+              "c4f526714e89fc36c55230c55ab2f704695212dc",
+          )
+          assert b.PAGE_SOURCE_BLOB_SHA == "5df2cd69a1519b2626cb52c1d8f23a25504425d9"
+          assert b.TRIAL_SOURCE_BLOB_SHA == "87266d031f5a201559794428eff14d9ac8595a8c"
+          params = tuple(inspect.signature(b.bind_concrete_e8_trial).parameters)
+          assert params == ("pages", "request", "baseline_sample", "candidate_sample", "independent_verification"), params
+          forbidden = {"representation_digest", "static_weight_bytes", "nominal_bits_per_weight", "quality", "authority", "k27", "gate10"}
+          assert not forbidden.intersection(params)
+          print("O60_PUBLIC_BOUNDARY_FIXED=true")
+          PY
+
+      - name: Emit O60 consequence ceiling
+        shell: bash
+        run: |
+          cat <<'EOF'
+          CONCRETE_PAGE_VALID_PLUS_Q3_TRIAL_VALID_NE_TRIAL_OF_PAGE_UNTIL_EXACT_BINDING=true
+          CODEC_BPW_NE_SERIALIZED_PAGE_SET_BPW=true
+          CONCRETE_CANDIDATE_BINDING_NE_OFFICIAL_GLM_SOURCE_AUTHENTICATION=true
+          CONCRETE_CANDIDATE_BINDING_NE_BASELINE_SAME_SOURCE_SET=true
+          CONCRETE_CANDIDATE_BINDING_NE_WHOLE_MODEL_COVERAGE=true
+          CONCRETE_CANDIDATE_BINDING_NE_MODEL_OR_ROUTER_EXECUTION=true
+          FROZEN_CORPUS_QUALITY_NE_GENERALIZED_CODING_QUALITY=true
+          GENERAL_PERFORMANCE_WINNER_PROVEN=false
+          PHYSICAL_IO_EXCLUSIVELY_ATTRIBUTED=false
+          SEMANTIC_K27_AUTHORITY_MINTED=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_READY_FOR_OWNER_PROMOTION=false
+          DEPLOYMENT_AUTHORIZED=false
+          EOF
