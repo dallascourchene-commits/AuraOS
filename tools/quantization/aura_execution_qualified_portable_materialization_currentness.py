@@ -2,19 +2,26 @@
 """Q15 verification-generation currentness adapter.
 
 The Q15 semantic membrane remains owned by
-``aura_execution_qualified_portable_materialization_evidence``.  This adapter
+``aura_execution_qualified_portable_materialization_evidence``. This adapter
 binds the exact provider identifiers observed for the terminal Q14 producer
 run without changing any source/page/semantic/freshness/claim law.
 
 Why this exists: the first Q15 hosted generations exposed two proof-transport
 scars in sequence: timezone rendering was compared instead of the exact
 instant, then Q14 provider evidence was addressed with a stale job id and a
-noncanonical workflow label.  Provider identity is currentness evidence, not a
+noncanonical workflow label. Provider identity is currentness evidence, not a
 reason to fork the semantic owner.
 """
 from __future__ import annotations
 
+from pathlib import Path
+import sys
 from typing import Any
+
+# Support both `python -m tools.quantization...` and direct file execution from
+# repository-root workflows. This modifies import transport only.
+if __package__ in {None, ""}:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.quantization import aura_execution_qualified_portable_materialization_evidence as q15
 
