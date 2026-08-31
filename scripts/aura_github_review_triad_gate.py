@@ -6,10 +6,9 @@ Required planes:
 - CodeRabbit code review
 - Codacy quality/static analysis
 
-This module does not merge, approve, mutate, or promote code. It only verifies
-provider evidence for one exact pull-request head and emits a deterministic
-review-admission receipt. Any new push changes the head SHA and invalidates the
-prior receipt.
+Provider identity is pinned to GitHub-owned actor IDs/logins or GitHub App slugs.
+Mutable status names, check names, review bodies, and comment text never establish
+provider identity. This module does not merge, approve, mutate, or promote code.
 """
 from __future__ import annotations
 
@@ -17,9 +16,9 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import sys
 import urllib.error
-import urllib.parse
 import urllib.request
 from dataclasses import dataclass
 from typing import Any, Iterable
@@ -27,6 +26,24 @@ from typing import Any, Iterable
 VERSION = "AURA_GITHUB_REVIEW_TRIAD_GATE_V1"
 CANONICALIZATION = "JSON_SORT_KEYS_COMPACT_UTF8_V1"
 REQUIRED_REVIEWERS = ("codex", "coderabbit", "codacy")
+
+# GitHub-owned immutable user IDs paired with their expected bot login. A login
+# string alone is never trusted. Codex's GitHub connector actor is 199175422;
+# CodeRabbit's repository bot actor observed on this repository is 136622811.
+TRUSTED_USER_ACTORS: dict[str, frozenset[tuple[int, str]]] = {
+    "codex": frozenset({(199175422, "chatgpt-codex-connector[bot]")}),
+    "coderabbit": frozenset({(136622811, "coderabbitai[bot]")}),
+    "codacy": frozenset(),
+}
+
+# GitHub App slugs are provider-owned identities. Codacy is a private GitHub App
+# at github.com/apps/codacy. If an installed provider exposes a different slug,
+# the gate MUST remain HOLD until this canonical allowlist is deliberately updated.
+TRUSTED_APP_SLUGS: dict[str, frozenset[str]] = {
+    "codex": frozenset({"chatgpt-codex-connector"}),
+    "coderabbit": frozenset({"coderabbitai"}),
+    "codacy": frozenset({"codacy"}),
+}
 
 SUCCESS_CHECK_CONCLUSIONS = {"success"}
 SUCCESS_STATUS_STATES = {"success"}
@@ -69,27 +86,50 @@ def _norm(value: Any) -> str:
     return str(value or "").strip().lower()
 
 
-def _actor(item: dict[str, Any]) -> str:
-    user = item.get("user")
-    if isinstance(user, dict):
-        login = user.get("login")
-        if login:
-            return str(login)
-    app = item.get("app")
-    if isinstance(app, dict):
-        return str(app.get("slug") or app.get("name") or "")
-    return ""
+def _user_identity(user: Any) -> tuple[int | None, str]:
+    if not isinstance(user, dict):
+        return None, ""
+    raw_id = user.get("id")
+    try:
+        user_id = int(raw_id) if raw_id is not None else None
+    except (TypeError, ValueError):
+        user_id = None
+    return user_id, _norm(user.get("login"))
 
 
-def _provider_from_text(*parts: Any) -> str | None:
-    text = " ".join(_norm(part) for part in parts)
-    if "coderabbit" in text or "coderabbitai" in text:
-        return "coderabbit"
-    if "codacy" in text:
-        return "codacy"
-    if "codex" in text or "openai-codex" in text or "chatgpt-codex" in text:
-        return "codex"
+def _app_slug(app: Any) -> str:
+    if not isinstance(app, dict):
+        return ""
+    return _norm(app.get("slug"))
+
+
+def _trusted_provider_from_user(user: Any) -> str | None:
+    identity = _user_identity(user)
+    if identity[0] is None or not identity[1]:
+        return None
+    for provider, allowed in TRUSTED_USER_ACTORS.items():
+        if identity in allowed:
+            return provider
     return None
+
+
+def _trusted_provider_from_app(app: Any) -> str | None:
+    slug = _app_slug(app)
+    if not slug:
+        return None
+    for provider, allowed in TRUSTED_APP_SLUGS.items():
+        if slug in allowed:
+            return provider
+    return None
+
+
+def _actor_label_from_user(user: Any) -> str:
+    user_id, login = _user_identity(user)
+    return f"{login}#{user_id}" if login and user_id is not None else login
+
+
+def _actor_label_from_app(app: Any) -> str:
+    return _app_slug(app)
 
 
 def _is_coderabbit_skip(body: Any) -> bool:
@@ -97,32 +137,45 @@ def _is_coderabbit_skip(body: Any) -> bool:
     return (
         "draft pr not reviewed" in text
         or "skip review by coderabbit.ai" in text
-        or "review skipped" in text and "coderabbit" in text
+        or ("review skipped" in text and "coderabbit" in text)
     )
 
 
-def collect_evidence(snapshot: dict[str, Any], head_sha: str) -> tuple[list[Evidence], list[str]]:
-    """Collect provider evidence while preserving exact-head binding.
+def _comment_binds_head(body: str, head_sha: str) -> bool:
+    """Accept a full SHA or a provider-style 'Reviewed commit: <prefix>' marker.
 
-    Commit statuses/check runs are already queried by exact head SHA and are
-    therefore head-bound. PR reviews/review comments count only when their
-    ``commit_id`` equals the exact head. Issue comments are not trusted as review
-    completion unless a provider-authored comment includes the full exact head SHA.
+    Provider identity is established independently by immutable actor identity.
+    A short SHA is only a head-binding coordinate after provider identity is pinned;
+    at least seven hexadecimal characters are required.
     """
+    if head_sha in body:
+        return True
+    for match in re.finditer(r"Reviewed commit:\s*`?([0-9a-fA-F]{7,40})`?", body):
+        prefix = match.group(1).lower()
+        if head_sha.lower().startswith(prefix):
+            return True
+    return False
+
+
+def collect_evidence(snapshot: dict[str, Any], head_sha: str) -> tuple[list[Evidence], list[str]]:
+    """Collect only trusted-provider evidence bound to the exact current head."""
     evidence: list[Evidence] = []
     notes: list[str] = []
 
+    # Only a CodeRabbit-authored skip marker can suppress CodeRabbit evidence.
     coderabbit_skip = any(
-        _provider_from_text(_actor(item), item.get("body")) == "coderabbit"
+        _trusted_provider_from_user(item.get("user")) == "coderabbit"
         and _is_coderabbit_skip(item.get("body"))
         for item in snapshot.get("issue_comments", [])
         if isinstance(item, dict)
     )
 
+    # Commit status context is mutable and therefore NEVER establishes provider
+    # identity. Only its GitHub-owned creator identity may do so.
     for item in snapshot.get("statuses", []):
         if not isinstance(item, dict):
             continue
-        provider = _provider_from_text(item.get("context"), item.get("creator", {}))
+        provider = _trusted_provider_from_user(item.get("creator"))
         if provider is None:
             continue
         state = _norm(item.get("state"))
@@ -135,7 +188,7 @@ def collect_evidence(snapshot: dict[str, Any], head_sha: str) -> tuple[list[Evid
             Evidence(
                 provider=provider,
                 kind="commit_status",
-                actor=_actor(item),
+                actor=_actor_label_from_user(item.get("creator")),
                 label=str(item.get("context") or ""),
                 state=state,
                 head_bound=True,
@@ -143,14 +196,11 @@ def collect_evidence(snapshot: dict[str, Any], head_sha: str) -> tuple[list[Evid
             )
         )
 
+    # Check-run name is mutable. Only the GitHub App slug establishes provider.
     for item in snapshot.get("check_runs", []):
         if not isinstance(item, dict):
             continue
-        provider = _provider_from_text(
-            item.get("name"),
-            _actor(item),
-            (item.get("app") or {}).get("name") if isinstance(item.get("app"), dict) else "",
-        )
+        provider = _trusted_provider_from_app(item.get("app"))
         if provider is None:
             continue
         if _norm(item.get("status")) != "completed":
@@ -165,7 +215,7 @@ def collect_evidence(snapshot: dict[str, Any], head_sha: str) -> tuple[list[Evid
             Evidence(
                 provider=provider,
                 kind="check_run",
-                actor=_actor(item),
+                actor=_actor_label_from_app(item.get("app")),
                 label=str(item.get("name") or ""),
                 state=conclusion,
                 head_bound=True,
@@ -173,17 +223,25 @@ def collect_evidence(snapshot: dict[str, Any], head_sha: str) -> tuple[list[Evid
             )
         )
 
-    for collection_name, kind in (("reviews", "pull_request_review"), ("review_comments", "review_comment")):
+    # Review body text never establishes provider identity. The GitHub reviewer
+    # actor must be pinned, and the review commit_id must equal the current head.
+    for collection_name, kind in (
+        ("reviews", "pull_request_review"),
+        ("review_comments", "review_comment"),
+    ):
         for item in snapshot.get(collection_name, []):
             if not isinstance(item, dict):
                 continue
-            provider = _provider_from_text(_actor(item), item.get("body"))
+            provider = _trusted_provider_from_user(item.get("user"))
             if provider not in {"codex", "coderabbit"}:
                 continue
-            commit_id = str(item.get("commit_id") or "")
-            if commit_id != head_sha:
+            if str(item.get("commit_id") or "") != head_sha:
                 continue
-            state = str(item.get("state") or item.get("review", {}).get("state") or "COMMENTED").upper()
+            state = str(
+                item.get("state")
+                or (item.get("review") or {}).get("state")
+                or "COMMENTED"
+            ).upper()
             if state not in REVIEW_STATES:
                 continue
             if provider == "coderabbit" and _is_coderabbit_skip(item.get("body")):
@@ -192,7 +250,7 @@ def collect_evidence(snapshot: dict[str, Any], head_sha: str) -> tuple[list[Evid
                 Evidence(
                     provider=provider,
                     kind=kind,
-                    actor=_actor(item),
+                    actor=_actor_label_from_user(item.get("user")),
                     label=str(item.get("body") or "")[:160],
                     state=state,
                     head_bound=True,
@@ -200,22 +258,24 @@ def collect_evidence(snapshot: dict[str, Any], head_sha: str) -> tuple[list[Evid
                 )
             )
 
+    # Provider-authored issue comments may represent a clean review. They count
+    # only from a pinned actor and only when they explicitly bind the current head.
     for item in snapshot.get("issue_comments", []):
         if not isinstance(item, dict):
             continue
-        provider = _provider_from_text(_actor(item))
+        provider = _trusted_provider_from_user(item.get("user"))
         if provider not in {"codex", "coderabbit"}:
             continue
         body = str(item.get("body") or "")
         if provider == "coderabbit" and _is_coderabbit_skip(body):
             continue
-        if head_sha not in body:
+        if not _comment_binds_head(body, head_sha):
             continue
         evidence.append(
             Evidence(
                 provider=provider,
-                kind="provider_issue_comment_with_exact_head",
-                actor=_actor(item),
+                kind="trusted_provider_issue_comment_with_head_binding",
+                actor=_actor_label_from_user(item.get("user")),
                 label=body[:160],
                 state="COMMENTED",
                 head_bound=True,
@@ -257,6 +317,7 @@ def evaluate_review_triad(snapshot: dict[str, Any], expected_head_sha: str) -> d
         "expected_head_sha": expected_head_sha,
         "actual_pull_request_head_sha": actual_head,
         "exact_head_bound": exact_head,
+        "provider_identity_policy": "PINNED_GITHUB_ACTOR_OR_APP_IDENTITY_V1",
         "required_reviewers": list(REQUIRED_REVIEWERS),
         "reviewer_pass": reviewer_pass,
         "evidence": by_provider,
