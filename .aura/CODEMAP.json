@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788162591,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -147,6 +147,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-quantized-representation-trial.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -1633,6 +1634,8 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/quantization/aura_glm53_quantized_representation_trial.py",
+      "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26439591,
+      "tokens_est": 6600250,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3895,6 +3898,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_canonical:216d59940c81ab9c",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -8067,6 +8078,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_sha:e9cadab1392f2b3d",
+        "signature_hash": "3c3bc3c037860fe9"
       }
     ],
     "_repo": [
@@ -68107,6 +68126,14 @@
         "end_line": 229,
         "semantic_id": "aura_pascal_spatial_presentation_part1.py#function:_hex64:aebaedfeb4247965",
         "signature_hash": "3956785c98c04eb6"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 46,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_hex64:f100f8ef9315a8a0",
+        "signature_hash": "499219dd29dcebeb"
       }
     ],
     "_utc_timestamp": [
@@ -72473,6 +72500,14 @@
         "end_line": 40,
         "semantic_id": "aura_shadow_model_router.py#function:_finite_nonnegative:c63a8aab46cefd97",
         "signature_hash": "14b9126d6f07027d"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_finite_nonnegative:eda280cb02c010b3",
+        "signature_hash": "20e259232a7c5769"
       }
     ],
     "_projection_findings": [
@@ -157181,6 +157216,296 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "RepresentationIdentity": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "class",
+        "line": 55,
+        "end_line": 79,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:RepresentationIdentity:f73206aabe7462eb",
+        "signature_hash": "1e7a894bc7031b52"
+      }
+    ],
+    "RepresentationIdentity.validate": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 79,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:RepresentationIdentity.validate:824bb3b62691a286",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "QuantizedTrialRequest": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "class",
+        "line": 83,
+        "end_line": 120,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:QuantizedTrialRequest:c98d4ddb9c465392",
+        "signature_hash": "f326996298ad4143"
+      }
+    ],
+    "QuantizedTrialRequest.validate": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 115,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:QuantizedTrialRequest.validate:e65ae0473ebb6126",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "QuantizedTrialRequest.request_digest": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 120,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:QuantizedTrialRequest.request_digest:77c37dfe54ee66cc",
+        "signature_hash": "6fa9305943538fcf"
+      }
+    ],
+    "TrialSample": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "class",
+        "line": 124,
+        "end_line": 163,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:TrialSample:9055673a2d653770",
+        "signature_hash": "9b7a125a54b521c2"
+      }
+    ],
+    "TrialSample.validate": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 158,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:TrialSample.validate:814b5c3b5b2236d0",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "TrialSample.sample_digest": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 163,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:TrialSample.sample_digest:4ede8f6b1126d616",
+        "signature_hash": "478d5e8521ed441f"
+      }
+    ],
+    "IndependentVerification": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "class",
+        "line": 167,
+        "end_line": 188,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:IndependentVerification:6aa1c454477a1580",
+        "signature_hash": "ca58cc7334c1fb40"
+      }
+    ],
+    "IndependentVerification.validate": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 188,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:IndependentVerification.validate:51b68da9db2a40a3",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "QuantizedRepresentationComparison": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "class",
+        "line": 192,
+        "end_line": 220,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:QuantizedRepresentationComparison:f8ba652ce2b6368f",
+        "signature_hash": "a464d62e1b8839f3"
+      }
+    ],
+    "QuantizedRepresentationComparison.comparison_digest": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 219,
+        "end_line": 220,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationComparison.comparison_digest:6577bcb56f9f4420",
+        "signature_hash": "3fd561a33772329d"
+      }
+    ],
+    "compare_quantized_representation": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 223,
+        "end_line": 303,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:compare_quantized_representation:7dfc7e2022db92c0",
+        "signature_hash": "9371d95a4912bc5d"
+      }
+    ],
+    "reps": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 30,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#function:reps:7514f6814f0b8de8",
+        "signature_hash": "8835eae6d1851465"
+      }
+    ],
+    "req": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 35,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#function:req:f9c5f9e70dcc4f48",
+        "signature_hash": "00103277aea7340e"
+      }
+    ],
+    "sample": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 58,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#function:sample:8093e44a8f0d6256",
+        "signature_hash": "c3f6adac2cf55d0d"
+      }
+    ],
+    "verify": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 62,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#function:verify:fd9789e59bd2d897",
+        "signature_hash": "646e0a41d38cd7f4"
+      }
+    ],
+    "QuantizedRepresentationTrialTests": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "class",
+        "line": 65,
+        "end_line": 157,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#class:QuantizedRepresentationTrialTests:5973b8177f973a71",
+        "signature_hash": "888ad455f1dd4a0c"
+      }
+    ],
+    "QuantizedRepresentationTrialTests.test_smaller_faster_candidate_requires_quality_and_independent_reproduction": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 76,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_smaller_faster_candidate_requires_quality_and_independent_reproduction:931ecb50f11905cb",
+        "signature_hash": "b80dcfa9cdbf3cfb"
+      }
+    ],
+    "QuantizedRepresentationTrialTests.test_resource_gain_with_quality_regression_is_not_winner": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 83,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_resource_gain_with_quality_regression_is_not_winner:1df79b479fd6a98c",
+        "signature_hash": "b1b1c1f922493451"
+      }
+    ],
+    "QuantizedRepresentationTrialTests.test_same_model_and_topology_are_required": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 93,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_same_model_and_topology_are_required:dbd7dc5968e03932",
+        "signature_hash": "4549d933d4598c8e"
+      }
+    ],
+    "QuantizedRepresentationTrialTests.test_whole_model_vs_routed_expert_byte_cross_cast_is_rejected": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 103,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_whole_model_vs_routed_expert_byte_cross_cast_is_rejected:be0ba5782caf4e47",
+        "signature_hash": "31cd2af29faadf0d"
+      }
+    ],
+    "QuantizedRepresentationTrialTests.test_same_domain_label_with_different_component_manifest_is_rejected": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 113,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_same_domain_label_with_different_component_manifest_is_rejected:e0456ba8f01774b7",
+        "signature_hash": "493dc7707e89ae0f"
+      }
+    ],
+    "QuantizedRepresentationTrialTests.test_invalid_byte_domain_is_rejected": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 123,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_invalid_byte_domain_is_rejected:e75b8b42ef6a3d85",
+        "signature_hash": "ec9f7f0ada9bdeca"
+      }
+    ],
+    "QuantizedRepresentationTrialTests.test_candidate_output_may_differ_but_quality_must_be_measured": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 130,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_candidate_output_may_differ_but_quality_must_be_measured:fe978474d24bfb19",
+        "signature_hash": "8bef96df08182cb8"
+      }
+    ],
+    "QuantizedRepresentationTrialTests.test_same_producer_and_verifier_is_rejected": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 132,
+        "end_line": 135,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_same_producer_and_verifier_is_rejected:b370bc941ee00243",
+        "signature_hash": "529310091c582e20"
+      }
+    ],
+    "QuantizedRepresentationTrialTests.test_independent_verifier_must_bind_exact_candidate_sample": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 141,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_independent_verifier_must_bind_exact_candidate_sample:ead111a362b86b5c",
+        "signature_hash": "c9d608a1cd4b2572"
+      }
+    ],
+    "QuantizedRepresentationTrialTests.test_quality_retention_includes_error_and_currentness_axes": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 146,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_quality_retention_includes_error_and_currentness_axes:0213cb4e6348ec1b",
+        "signature_hash": "48a29abe1b17f586"
+      }
+    ],
+    "QuantizedRepresentationTrialTests.test_successful_frozen_corpus_receipt_remains_nonauthorizing": [
+      {
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 157,
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_successful_frozen_corpus_receipt_remains_nonauthorizing:abebec6c790f044b",
+        "signature_hash": "7f4753da47216360"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158628,6 +158953,10 @@
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/glm53-quantized-representation-trial.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
     ],
@@ -159147,9 +159476,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -168415,6 +168741,59 @@
         0.151989,
         -0.198544,
         0.335472
+      ]
+    },
+    {
+      "path": ".github/workflows/glm53-quantized-representation-trial.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2812,
+      "lines": 73,
+      "tokens_est": 703,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          26
+        ]
+      },
+      "topology": {},
+      "digest8": "5975bdc06a0cc30a",
+      "vector": [
+        0.300574,
+        -0.10336,
+        0.108112,
+        0.105736,
+        -0.062966,
+        0.260181,
+        -0.29107,
+        0.257805,
+        0.155633,
+        -0.036829,
+        -0.207907,
+        0.245924,
+        0.293446,
+        0.188898,
+        -0.222164,
+        0.198403,
+        -0.022573,
+        -0.110488,
+        -0.124744,
+        -0.158009,
+        -0.024949,
+        -0.264933,
+        0.217411,
+        0.110488,
+        -0.027325,
+        -0.00594,
+        0.055838,
+        -0.12712,
+        -0.162762,
+        -0.100983,
+        -0.150881,
+        0.22454
       ]
     },
     {
@@ -262742,6 +263121,100 @@
       ]
     },
     {
+      "path": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13150,
+      "lines": 304,
+      "tokens_est": 3288,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6ae8cbb621e00c71",
+      "vector": [
+        -0.117383,
+        0.259276,
+        0.060627,
+        -0.143182,
+        0.068366,
+        0.287654,
+        -0.17414,
+        0.161241,
+        0.045147,
+        -0.248956,
+        0.158661,
+        0.194779,
+        -0.248956,
+        0.192199,
+        -0.029668,
+        0.078686,
+        0.109644,
+        -0.034828,
+        0.1793,
+        -0.076106,
+        0.034828,
+        -0.259276,
+        -0.202519,
+        -0.233477,
+        0.228317,
+        -0.083845,
+        0.1793,
+        -0.065786,
+        -0.316032,
+        0.068366,
+        -0.272175,
+        -0.168981
+      ]
+    },
+    {
+      "path": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8581,
+      "lines": 162,
+      "tokens_est": 2146,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5321184ecfae5e87",
+      "vector": [
+        -0.282219,
+        0.179168,
+        -0.18151,
+        0.256456,
+        0.094854,
+        -0.073775,
+        0.085485,
+        -0.148721,
+        0.122959,
+        0.076117,
+        0.153405,
+        -0.162774,
+        -0.104222,
+        0.080801,
+        0.298614,
+        -0.085485,
+        0.151063,
+        0.214299,
+        -0.200247,
+        -0.040986,
+        -0.291587,
+        -0.1698,
+        -0.209615,
+        -0.244746,
+        -0.167458,
+        -0.272851,
+        -0.052697,
+        0.176826,
+        -0.015223,
+        0.202589,
+        0.211957,
+        -0.099538
+      ]
+    },
+    {
       "path": "travel_extractors/__init__.py",
       "role": "python_module",
       "binary": false,
@@ -286646,16 +287119,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26439591,
+    "text_tokens_est": 6600250,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286812,6 +287285,7 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-quantized-representation-trial.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -288298,6 +288772,8 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/quantization/aura_glm53_quantized_representation_trial.py",
+      "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -445634,6 +446110,336 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:IndependentVerification:6aa1c454477a1580",
+        "name": "IndependentVerification",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 167,
+        "end_line": 188,
+        "signature_hash": "ca58cc7334c1fb40",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:QuantizedRepresentationComparison:f8ba652ce2b6368f",
+        "name": "QuantizedRepresentationComparison",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 192,
+        "end_line": 220,
+        "signature_hash": "a464d62e1b8839f3",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:QuantizedTrialRequest:c98d4ddb9c465392",
+        "name": "QuantizedTrialRequest",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 83,
+        "end_line": 120,
+        "signature_hash": "f326996298ad4143",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:RepresentationIdentity:f73206aabe7462eb",
+        "name": "RepresentationIdentity",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 55,
+        "end_line": 79,
+        "signature_hash": "1e7a894bc7031b52",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:TrialSample:9055673a2d653770",
+        "name": "TrialSample",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 124,
+        "end_line": 163,
+        "signature_hash": "9b7a125a54b521c2",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_canonical:216d59940c81ab9c",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_finite_nonnegative:eda280cb02c010b3",
+        "name": "_finite_nonnegative",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "20e259232a7c5769",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_hex64:f100f8ef9315a8a0",
+        "name": "_hex64",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 44,
+        "end_line": 46,
+        "signature_hash": "499219dd29dcebeb",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_sha:e9cadab1392f2b3d",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "3c3bc3c037860fe9",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:compare_quantized_representation:7dfc7e2022db92c0",
+        "name": "compare_quantized_representation",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 223,
+        "end_line": 303,
+        "signature_hash": "9371d95a4912bc5d",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:IndependentVerification.validate:51b68da9db2a40a3",
+        "name": "IndependentVerification.validate",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 176,
+        "end_line": 188,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationComparison.comparison_digest:6577bcb56f9f4420",
+        "name": "QuantizedRepresentationComparison.comparison_digest",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 219,
+        "end_line": 220,
+        "signature_hash": "3fd561a33772329d",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:QuantizedTrialRequest.request_digest:77c37dfe54ee66cc",
+        "name": "QuantizedTrialRequest.request_digest",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 118,
+        "end_line": 120,
+        "signature_hash": "6fa9305943538fcf",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:QuantizedTrialRequest.validate:e65ae0473ebb6126",
+        "name": "QuantizedTrialRequest.validate",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 93,
+        "end_line": 115,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:RepresentationIdentity.validate:824bb3b62691a286",
+        "name": "RepresentationIdentity.validate",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 66,
+        "end_line": 79,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:TrialSample.sample_digest:4ede8f6b1126d616",
+        "name": "TrialSample.sample_digest",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 161,
+        "end_line": 163,
+        "signature_hash": "478d5e8521ed441f",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:TrialSample.validate:814b5c3b5b2236d0",
+        "name": "TrialSample.validate",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 143,
+        "end_line": 158,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#class:QuantizedRepresentationTrialTests:5973b8177f973a71",
+        "name": "QuantizedRepresentationTrialTests",
+        "kind": "class",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 65,
+        "end_line": 157,
+        "signature_hash": "888ad455f1dd4a0c",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#function:reps:7514f6814f0b8de8",
+        "name": "reps",
+        "kind": "function",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 27,
+        "end_line": 30,
+        "signature_hash": "8835eae6d1851465",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#function:req:f9c5f9e70dcc4f48",
+        "name": "req",
+        "kind": "function",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 33,
+        "end_line": 35,
+        "signature_hash": "00103277aea7340e",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#function:sample:8093e44a8f0d6256",
+        "name": "sample",
+        "kind": "function",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 38,
+        "end_line": 58,
+        "signature_hash": "c3f6adac2cf55d0d",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#function:verify:fd9789e59bd2d897",
+        "name": "verify",
+        "kind": "function",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 61,
+        "end_line": 62,
+        "signature_hash": "646e0a41d38cd7f4",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_candidate_output_may_differ_but_quality_must_be_measured:fe978474d24bfb19",
+        "name": "QuantizedRepresentationTrialTests.test_candidate_output_may_differ_but_quality_must_be_measured",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 125,
+        "end_line": 130,
+        "signature_hash": "8bef96df08182cb8",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_independent_verifier_must_bind_exact_candidate_sample:ead111a362b86b5c",
+        "name": "QuantizedRepresentationTrialTests.test_independent_verifier_must_bind_exact_candidate_sample",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 137,
+        "end_line": 141,
+        "signature_hash": "c9d608a1cd4b2572",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_invalid_byte_domain_is_rejected:e75b8b42ef6a3d85",
+        "name": "QuantizedRepresentationTrialTests.test_invalid_byte_domain_is_rejected",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 115,
+        "end_line": 123,
+        "signature_hash": "ec9f7f0ada9bdeca",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_quality_retention_includes_error_and_currentness_axes:0213cb4e6348ec1b",
+        "name": "QuantizedRepresentationTrialTests.test_quality_retention_includes_error_and_currentness_axes",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 143,
+        "end_line": 146,
+        "signature_hash": "48a29abe1b17f586",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_resource_gain_with_quality_regression_is_not_winner:1df79b479fd6a98c",
+        "name": "QuantizedRepresentationTrialTests.test_resource_gain_with_quality_regression_is_not_winner",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 78,
+        "end_line": 83,
+        "signature_hash": "b1b1c1f922493451",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_same_domain_label_with_different_component_manifest_is_rejected:e0456ba8f01774b7",
+        "name": "QuantizedRepresentationTrialTests.test_same_domain_label_with_different_component_manifest_is_rejected",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 105,
+        "end_line": 113,
+        "signature_hash": "493dc7707e89ae0f",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_same_model_and_topology_are_required:dbd7dc5968e03932",
+        "name": "QuantizedRepresentationTrialTests.test_same_model_and_topology_are_required",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 85,
+        "end_line": 93,
+        "signature_hash": "4549d933d4598c8e",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_same_producer_and_verifier_is_rejected:b370bc941ee00243",
+        "name": "QuantizedRepresentationTrialTests.test_same_producer_and_verifier_is_rejected",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 132,
+        "end_line": 135,
+        "signature_hash": "529310091c582e20",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_smaller_faster_candidate_requires_quality_and_independent_reproduction:931ecb50f11905cb",
+        "name": "QuantizedRepresentationTrialTests.test_smaller_faster_candidate_requires_quality_and_independent_reproduction",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 66,
+        "end_line": 76,
+        "signature_hash": "b80dcfa9cdbf3cfb",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_successful_frozen_corpus_receipt_remains_nonauthorizing:abebec6c790f044b",
+        "name": "QuantizedRepresentationTrialTests.test_successful_frozen_corpus_receipt_remains_nonauthorizing",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 148,
+        "end_line": 157,
+        "signature_hash": "7f4753da47216360",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationTrialTests.test_whole_model_vs_routed_expert_byte_cross_cast_is_rejected:be0ba5782caf4e47",
+        "name": "QuantizedRepresentationTrialTests.test_whole_model_vs_routed_expert_byte_cross_cast_is_rejected",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_quantized_representation_trial.py",
+        "line": 95,
+        "end_line": 103,
+        "signature_hash": "31cd2af29faadf0d",
+        "file_digest8": "5321184ecfae5e87"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447690,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "80cd1b86bb74c122c85daac6b389c02f",
+    "payload_hash": "b6c2666f3e97f63fa4a8f06626417901"
   }
 }
