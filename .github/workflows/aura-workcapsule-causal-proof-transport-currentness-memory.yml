@@ -1,0 +1,165 @@
+name: Aura WorkCapsule Causal Proof Transport Currentness Memory
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  CONVERGENCE_SHA: dce096700b319d2e123b3397171895ebc41c3a6a
+  PR594_HEAD: 9a5a35a85a47f5a8b47a63e6b3927a055172773e
+  PR594_RUN: '33362801350'
+  PR594_OWNER_BLOB: 6619d97637064b3b8d78b96c0c31c6b4ab2a9ee9
+  PR594_TEST_BLOB: f70c5b5ab776b515c093fb973315f027b47a2ba4
+  PR581_V2_HEAD: 4b0cdcef93bfaf09d8bb4545a9e022f922067dc7
+  PR581_V2_RUN: '33361104103'
+  PR581_V2_OWNER_BLOB: d2831fceadeb6abc4855943c0615fe84be5bd879
+  PR581_V2_TEST_BLOB: 8360b18e0ab958f7908bddecc89e8fb08fd6b366
+
+jobs:
+  exact-causal-proof-transport-currentness-memory:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Fetch exact child and prove PR594 x PR581-V2 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR594_HEAD" "$PR581_V2_HEAD"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor "$CONVERGENCE_SHA" HEAD
+          mapfile -t parents < <(git cat-file -p "$CONVERGENCE_SHA" | awk '/^parent /{print $2}')
+          test "${#parents[@]}" -eq 2
+          test "${parents[0]}" = "$PR594_HEAD"
+          test "${parents[1]}" = "$PR581_V2_HEAD"
+          test "$(git hash-object scripts/aura_workcapsule_corroboration_preserves_causal_envelope_class.py)" = "$PR594_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py)" = "$PR594_TEST_BLOB"
+          test "$(git hash-object scripts/aura_provenance_corroboration_memory_admission.py)" = "$PR581_V2_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_provenance_corroboration_memory_admission.py)" = "$PR581_V2_TEST_BLOB"
+          echo "TRUE_TWO_PARENT_CONVERGENCE=$CONVERGENCE_SHA"
+
+      - name: Pin exact successful parent hosted runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR594_RUN}" --jq .head_sha)" = "$PR594_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR594_RUN}" --jq .conclusion)" = success
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR581_V2_RUN}" --jq .head_sha)" = "$PR581_V2_HEAD"
+          test "$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${PR581_V2_RUN}" --jq .conclusion)" = success
+          echo "PR594_EXACT_HOSTED=true"
+          echo "PR581_V2_EXACT_HOSTED=true"
+
+      - name: Re-prove PR594 causal transport-class owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_corroboration_preserves_causal_envelope_class.py
+          python3 -m unittest -v tests.test_aura_workcapsule_corroboration_preserves_causal_envelope_class
+          echo "PR594_CAUSAL_TRANSPORT_CLASS_REPROVED=true"
+
+      - name: Re-prove PR581 V2 typed memory substrate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_provenance_corroboration_memory_admission.py
+          python3 -m unittest -v tests.test_aura_provenance_corroboration_memory_admission
+          echo "PR581_V2_TYPED_MEMORY_REPROVED=true"
+
+      - name: Prove O50 transport-currentness adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py
+          python3 -m unittest -v tests.test_aura_workcapsule_causal_proof_transport_currentness_memory
+          echo "O50_TRANSPORT_CURRENTNESS_ADVERSARIALS=true"
+
+      - name: Prove proof-generation currentness cannot become causal-host-envelope currentness
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts.aura_workcapsule_causal_proof_transport_currentness_memory import (
+              CROSS_TRANSPORT_REJECTION,
+              admit_causal_proof_transport_currentness_memory,
+          )
+          from tests.test_aura_workcapsule_causal_proof_transport_currentness_memory import kwargs
+          out = admit_causal_proof_transport_currentness_memory(**kwargs())
+          refs = sorted(n['artifact_ref'] for n in out['proof_memory_nodes'])
+          assert len(refs) == 2 and refs[0] != refs[1]
+          assert out['retrieval_admission']['eligible_artifact_refs'] == refs
+          assert out['proof_currentness_admission']['eligible_artifact_refs'] == refs
+          host = out['causal_host_envelope_currentness_admission']
+          assert host['eligible_artifact_refs'] == []
+          for ref in refs:
+              assert host['excluded_by_artifact_ref'][ref] == CROSS_TRANSPORT_REJECTION
+          assert out['corroboration_relation_count'] == 1
+          assert out['corroboration_kappa'] == 2
+          assert out['proof_to_host_envelope_type_conversion_performed'] is False
+          assert out['corroboration_rank_transition_performed'] is False
+          assert out['causal_host_envelope_currentness_proven'] is False
+          print('TWO_CAUSAL_PROOFS_REMAIN_TWO_MEMORY_NODES=true')
+          print('PROOF_GENERATION_CURRENT=true')
+          print('CAUSAL_HOST_ENVELOPE_CURRENT=false')
+          PY
+
+      - name: Assert narrow public boundary and complete consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import ast
+          import inspect
+          from scripts.aura_workcapsule_causal_proof_transport_currentness_memory import admit_causal_proof_transport_currentness_memory
+          expected = [
+              'causal_artifact_host_receipt',
+              'causal_raw_slice_host_separation_receipt',
+              'pr568_receipt',
+              'pr572_receipt',
+          ]
+          assert list(inspect.signature(admit_causal_proof_transport_currentness_memory).parameters) == expected
+          path='scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py'
+          tree=ast.parse(open(path,encoding='utf-8').read(),filename=path)
+          forbidden={'sqlite3','redis','requests','subprocess','socket'}
+          for item in ast.walk(tree):
+              if isinstance(item,ast.Import):
+                  for alias in item.names:
+                      assert alias.name.split('.')[0] not in forbidden
+              elif isinstance(item,ast.ImportFrom) and item.module:
+                  assert item.module.split('.')[0] not in forbidden
+              elif isinstance(item,ast.Call) and isinstance(item.func,ast.Name) and item.func.id=='open':
+                  raise AssertionError('O50 membrane must not open files')
+          print('PUBLIC_INPUTS=four_exact_parent_receipts')
+          PY
+          cat <<'EOF'
+          CAUSAL_PROOF_ARTIFACT_IDENTITIES_PRESERVED=true
+          CAUSAL_PROOF_EVIDENCE_TYPE_PRESERVED=true
+          CAUSAL_PROOF_CURRENTNESS_DOMAIN_PRESERVED=true
+          CAUSAL_PROOF_CURRENT_IN_OWN_GENERATION=true
+          CAUSAL_HOST_ENVELOPE_CURRENTNESS_PROVEN=false
+          PROOF_TO_HOST_ENVELOPE_TYPE_CONVERSION_PERFORMED=false
+          CORROBORATION_RANK_TRANSITION_PERFORMED=false
+          PRODUCER_AUTHENTICATED=false
+          SEMANTIC_TRUTH_PROVEN=false
+          HOST_RESOLVER_TRUST_PROVEN=false
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          TRUSTED_CONTINUATION_READY=false
+          EFFECT_AUTHORITY_PROVEN=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          SEMANTIC_K27_AUTHORITY_MINTED=false
+          MERGE_PROMOTION_AUTHORITY=false
+          GATE10_PROMOTION=false
+          EOF

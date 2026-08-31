@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788156279,
+  "generated_at_unix": 1788158327,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1740,
+    "repo_file_count": 1745,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -151,6 +151,7 @@
       ".github/workflows/aura-workcapsule-canonical-temporal-lifecycle-equivalence.yml",
       ".github/workflows/aura-workcapsule-causal-artifact-qualified-host-envelope.yml",
       ".github/workflows/aura-workcapsule-causal-envelope-raw-slice-noninterchangeability.yml",
+      ".github/workflows/aura-workcapsule-causal-proof-transport-currentness-memory.yml",
       ".github/workflows/aura-workcapsule-corroboration-preserves-causal-envelope-class.yml",
       ".github/workflows/aura-workcapsule-current-recursive-target-raw-slice.yml",
       ".github/workflows/aura-workcapsule-observation-bound-closure.yml",
@@ -1278,6 +1279,7 @@
       "scripts/aura_navigation_refresh.py",
       "scripts/aura_prepare_construction_demo_assets.py",
       "scripts/aura_prepare_construction_demo_assets_core.py",
+      "scripts/aura_provenance_corroboration_memory_admission.py",
       "scripts/aura_review_learning_architect_harness.py",
       "scripts/aura_runtime_profile_v2_adapter.py",
       "scripts/aura_runtime_refactor_harness.py",
@@ -1291,6 +1293,7 @@
       "scripts/aura_workcapsule_canonical_temporal_lifecycle_equivalence.py",
       "scripts/aura_workcapsule_causal_artifact_qualified_host_envelope.py",
       "scripts/aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py",
+      "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py",
       "scripts/aura_workcapsule_context_binding.py",
       "scripts/aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
       "scripts/aura_workcapsule_current_recursive_target_raw_slice_binding.py",
@@ -1594,6 +1597,7 @@
       "tests/test_aura_prepare_construction_demo_assets_temp_cleanup.py",
       "tests/test_aura_project_context_acceptance.py",
       "tests/test_aura_project_context_compiler.py",
+      "tests/test_aura_provenance_corroboration_memory_admission.py",
       "tests/test_aura_provider_routing.py",
       "tests/test_aura_qdkt_compatibility.py",
       "tests/test_aura_qdkt_compatibility_hardening.py",
@@ -1694,6 +1698,7 @@
       "tests/test_aura_workcapsule_canonical_temporal_lifecycle_equivalence.py",
       "tests/test_aura_workcapsule_causal_artifact_qualified_host_envelope.py",
       "tests/test_aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py",
+      "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
       "tests/test_aura_workcapsule_context_binding.py",
       "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
       "tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py",
@@ -1787,6 +1792,7 @@
       "scripts/aura_navigation_refresh.py",
       "scripts/aura_prepare_construction_demo_assets.py",
       "scripts/aura_prepare_construction_demo_assets_core.py",
+      "scripts/aura_provenance_corroboration_memory_admission.py",
       "scripts/aura_review_learning_architect_harness.py",
       "scripts/aura_runtime_profile_v2_adapter.py",
       "scripts/aura_runtime_refactor_harness.py",
@@ -1800,6 +1806,7 @@
       "scripts/aura_workcapsule_canonical_temporal_lifecycle_equivalence.py",
       "scripts/aura_workcapsule_causal_artifact_qualified_host_envelope.py",
       "scripts/aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py",
+      "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py",
       "scripts/aura_workcapsule_context_binding.py",
       "scripts/aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
       "scripts/aura_workcapsule_current_recursive_target_raw_slice_binding.py",
@@ -1846,9 +1853,7 @@
       "tests/test_aura_agent_arena_github_bridge.py",
       "tests/test_aura_agent_arena_mcp.py",
       "tests/test_aura_agent_arena_review_learning.py",
-      "tests/test_aura_agent_workbench_interface.py",
-      "tests/test_aura_ai_router_dynamic.py",
-      "tests/test_aura_amd_track3_demo.py"
+      "tests/test_aura_agent_workbench_interface.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1856,16 +1861,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1740,
-      "bytes": 27248430,
-      "tokens_est": 6802491,
+      "files": 1745,
+      "bytes": 27299736,
+      "tokens_est": 6815319,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 19,
         "operator_script": 9,
-        "python_module": 1055,
-        "schema_or_lexicon": 305,
+        "python_module": 1059,
+        "schema_or_lexicon": 306,
         "support_file": 49
       }
     },
@@ -8210,6 +8215,14 @@
         "signature_hash": "1921b9de96961362"
       },
       {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_sha:4953921864bc9770",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
         "file": "scripts/aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py",
         "kind": "function",
         "line": 95,
@@ -8480,6 +8493,14 @@
         "end_line": 376,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_identity:ba68ae7b40e27b53",
         "signature_hash": "33fd118fba12f51b"
+      },
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 87,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_identity:85c5ada0d55317fb",
+        "signature_hash": "234af5886835eece"
       },
       {
         "file": "scripts/aura_workcapsule_observation_bound_closure.py",
@@ -23374,6 +23395,14 @@
         "end_line": 740,
         "semantic_id": "aura_coding_arena_3d.py#function:_node:77f202bae33ea4fb",
         "signature_hash": "e74ab9435de468f7"
+      },
+      {
+        "file": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 89,
+        "semantic_id": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py#function:_node:0024f28250078e07",
+        "signature_hash": "d6a7036b20675d18"
       },
       {
         "file": "tests/test_aura_emergent_evidence_spine_coderabbit.py",
@@ -86514,6 +86543,14 @@
         "end_line": 404,
         "semantic_id": "aura_spatial_projection.py#function:_relation:233f9a749602a82f",
         "signature_hash": "a3afcb510ac0f4e4"
+      },
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 182,
+        "end_line": 205,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_relation:4041794dc75515f5",
+        "signature_hash": "7767960c35526891"
       }
     ],
     "_position": [
@@ -101638,6 +101675,116 @@
         "signature_hash": "ba2b92f681eb8e76"
       }
     ],
+    "_bytes": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_bytes:19511567e9766c9e",
+        "signature_hash": "089be838e1846e35"
+      }
+    ],
+    "_require_bool": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 47,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_bool:2be3dec143324b76",
+        "signature_hash": "9026038dace5198b"
+      }
+    ],
+    "_require_str": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 52,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_str:fb1e6829e2fb3cd5",
+        "signature_hash": "2d04682b2359d63d"
+      }
+    ],
+    "_require_list": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 61,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_list:29c539b91e284e54",
+        "signature_hash": "97846c59fe2fa043"
+      }
+    ],
+    "_require_typed_ref": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 76,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_typed_ref:adafed291c871514",
+        "signature_hash": "af41d853150a2da9"
+      }
+    ],
+    "seal_evidence_node": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 97,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:seal_evidence_node:b2fe565a530963a0",
+        "signature_hash": "c20648a35a5d6af7"
+      }
+    ],
+    "verify_evidence_node": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 138,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:verify_evidence_node:601908ac5dd65ab8",
+        "signature_hash": "77c3eb342b8a2c6b"
+      }
+    ],
+    "verify_context": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 153,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:verify_context:9fb8bd316d783845",
+        "signature_hash": "6c2137f9c199c090"
+      }
+    ],
+    "eligibility_violations": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 179,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:eligibility_violations:561401a74818d410",
+        "signature_hash": "9483ac3d750528e1"
+      }
+    ],
+    "_type_partition": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 208,
+        "end_line": 219,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_type_partition:8d42e5650c26afbd",
+        "signature_hash": "ca71f378385d6f58"
+      }
+    ],
+    "admit_evidence_nodes": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 222,
+        "end_line": 312,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:admit_evidence_nodes:2234bb93f9b385f9",
+        "signature_hash": "a3f1bca7a7c75b36"
+      }
+    ],
     "_plan": [
       {
         "file": "scripts/aura_review_learning_architect_harness.py",
@@ -103008,6 +103155,26 @@
         "end_line": 255,
         "semantic_id": "scripts/aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py#function:admit_causal_envelope_raw_slice_noninterchangeability:926da4fef90ad045",
         "signature_hash": "711140b0762421c3"
+      }
+    ],
+    "_split_ref": [
+      {
+        "file": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 63,
+        "semantic_id": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py#function:_split_ref:4fa666c999e887f8",
+        "signature_hash": "1ea3c5149b9f0f54"
+      }
+    ],
+    "admit_causal_proof_transport_currentness_memory": [
+      {
+        "file": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 182,
+        "semantic_id": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py#function:admit_causal_proof_transport_currentness_memory:f128d26a665c36a4",
+        "signature_hash": "4615370ebec775e4"
       }
     ],
     "_uint": [
@@ -147252,6 +147419,256 @@
         "signature_hash": "faa6d593407c8ebc"
       }
     ],
+    "node": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 59,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#function:node:92bd93b8c4fb8849",
+        "signature_hash": "7de6e906ebf84759"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "class",
+        "line": 62,
+        "end_line": 301,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#class:ProvenanceCorroborationMemoryAdmissionTests:7b9f101f439c480c",
+        "signature_hash": "6e6a710adcd9631b"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_exact_eligible_node_is_admitted_but_nonauthorizing": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 82,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_exact_eligible_node_is_admitted_but_nonauthorizing:586f4f6855264127",
+        "signature_hash": "d7d7f38729c97426"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_stale_node_is_excluded_but_history_is_preserved": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_stale_node_is_excluded_but_history_is_preserved:c078088e24d829c9",
+        "signature_hash": "5713caa6f2d03bae"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_revoked_node_is_excluded": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 93,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_revoked_node_is_excluded:ba021e824fadf9c7",
+        "signature_hash": "63af6c19c7b746f0"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_scope_use_type_and_currentness_domain_are_hard_gates": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_scope_use_type_and_currentness_domain_are_hard_gates:54ac911f7969ebf9",
+        "signature_hash": "f3df289b64db7287"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_contract_currentness_cannot_impersonate_host_observation_currentness": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 129,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_contract_currentness_cannot_impersonate_host_observation_currentness:3a37cdccc366e3a3",
+        "signature_hash": "6308eef615706ee1"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_currentness_domains_can_corroborate_without_cross_cast_when_explicitly_accepted": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 148,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_currentness_domains_can_corroborate_without_cross_cast_when_explicitly_accepted:a147331e97f766a0",
+        "signature_hash": "799804be446c59d1"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_evidence_type_is_hard_gate_before_corroboration": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 162,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_evidence_type_is_hard_gate_before_corroboration:a73ac1d14b511651",
+        "signature_hash": "890be072b4b147a1"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_cross_type_corroboration_is_partitioned_and_rank_neutral": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 181,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_cross_type_corroboration_is_partitioned_and_rank_neutral:499442ab80f842dc",
+        "signature_hash": "55a633132d51e324"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_same_lineage_corroborates_without_increasing_kappa": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 188,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_lineage_corroborates_without_increasing_kappa:b23707bb6c4ed572",
+        "signature_hash": "1bde5ff4775a8d34"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_dependency_distinct_corroborator_increases_type_partition_without_node_merge": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 190,
+        "end_line": 195,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_dependency_distinct_corroborator_increases_type_partition_without_node_merge:31b08bc53471702e",
+        "signature_hash": "bed169f3a4b32440"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_same_dependency_class_across_two_types_does_not_make_types_interchangeable": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 205,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_dependency_class_across_two_types_does_not_make_types_interchangeable:f8908925cdb05ee2",
+        "signature_hash": "1cd0cc15d3443add"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_same_reference_value_across_schemes_remains_distinct_identity": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 207,
+        "end_line": 216,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_reference_value_across_schemes_remains_distinct_identity:15d5f789c2527c10",
+        "signature_hash": "a0e0e1f1ed95f519"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_typed_reference_fields_must_match_canonical_ref": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 223,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_typed_reference_fields_must_match_canonical_ref:164b028c3de4556f",
+        "signature_hash": "6a875315ff2e6bef"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_sha256_reference_scheme_requires_lower_hex_digest": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 225,
+        "end_line": 247,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_sha256_reference_scheme_requires_lower_hex_digest:6f82727f6562cf84",
+        "signature_hash": "31501cd483213ebd"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_v1_shape_cannot_enter_v2_membrane_by_omitting_currentness_domain": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 249,
+        "end_line": 253,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_v1_shape_cannot_enter_v2_membrane_by_omitting_currentness_domain:0d138dd020a72a7f",
+        "signature_hash": "f3b68d9c252853db"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_same_claim_value_in_different_world_does_not_corroborate": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 255,
+        "end_line": 257,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_claim_value_in_different_world_does_not_corroborate:f6996f38594a0b33",
+        "signature_hash": "3e2eddee25d0f5c3"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_contradiction_is_preserved_without_last_write_wins": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 259,
+        "end_line": 262,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_contradiction_is_preserved_without_last_write_wins:75876a66d777b884",
+        "signature_hash": "891d5266842bca10"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_supersession_keeps_stale_history": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 264,
+        "end_line": 269,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_supersession_keeps_stale_history:0cce90348555036b",
+        "signature_hash": "10b8a7ab63a42e69"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_tampered_receipt_digest_fails_closed": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 271,
+        "end_line": 276,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_tampered_receipt_digest_fails_closed:1cf511d86815613f",
+        "signature_hash": "ca7a15926f0e5a06"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_python_bool_int_confusion_fails_closed": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 278,
+        "end_line": 284,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_python_bool_int_confusion_fails_closed:6a526fdccb0fc385",
+        "signature_hash": "b9acc21c6a65ccae"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_closed_schema_rejects_k27_or_cache_escape_hatches": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 286,
+        "end_line": 291,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_closed_schema_rejects_k27_or_cache_escape_hatches:9c2527b18c03d502",
+        "signature_hash": "71310c8e308e6d38"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_duplicate_artifact_identity_fails_closed": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 293,
+        "end_line": 296,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_duplicate_artifact_identity_fails_closed:a1dd1feaa39e373c",
+        "signature_hash": "a3d129218f875377"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_output_is_deterministic_under_input_permutation": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 298,
+        "end_line": 301,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_output_is_deterministic_under_input_permutation:89b004aed3c25e5c",
+        "signature_hash": "6631d2c7f205bbbd"
+      }
+    ],
     "test_provider_key_pool_collects_primary_plural_numbered_and_aliases": [
       {
         "file": "tests/test_aura_provider_routing.py",
@@ -159140,6 +159557,106 @@
         "signature_hash": "c50e67a694c0b92c"
       }
     ],
+    "kwargs": [
+      {
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 35,
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#function:kwargs:b94845b5eaeb5f78",
+        "signature_hash": "aebff8f9075351e6"
+      }
+    ],
+    "CausalProofTransportCurrentnessMemoryTests": [
+      {
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 131,
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#class:CausalProofTransportCurrentnessMemoryTests:5d837731905ba5d2",
+        "signature_hash": "8be512e59366ecbc"
+      }
+    ],
+    "CausalProofTransportCurrentnessMemoryTests.test_exact_relation_projects_two_proof_nodes_and_one_rank_neutral_edge": [
+      {
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 55,
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_exact_relation_projects_two_proof_nodes_and_one_rank_neutral_edge:0f752fddfc1de31f",
+        "signature_hash": "2c1adc3554de24d9"
+      }
+    ],
+    "CausalProofTransportCurrentnessMemoryTests.test_causal_host_envelope_currentness_rejects_both_on_three_axes": [
+      {
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "method",
+        "line": 57,
+        "end_line": 67,
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_causal_host_envelope_currentness_rejects_both_on_three_axes:2d64983368a1237a",
+        "signature_hash": "7772c8e9d1a701fa"
+      }
+    ],
+    "CausalProofTransportCurrentnessMemoryTests.test_stale_proof_node_fails_even_in_owned_proof_domain": [
+      {
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "method",
+        "line": 69,
+        "end_line": 77,
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_stale_proof_node_fails_even_in_owned_proof_domain:1bb7ffc2e0fa448e",
+        "signature_hash": "0768f95006e9a574"
+      }
+    ],
+    "CausalProofTransportCurrentnessMemoryTests.test_pr577_world_drift_fails_before_memory_projection": [
+      {
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 83,
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_pr577_world_drift_fails_before_memory_projection:bb70d85f9df1db71",
+        "signature_hash": "e8a4037114c074d0"
+      }
+    ],
+    "CausalProofTransportCurrentnessMemoryTests.test_pr594_authority_ceiling_survives_memory_projection": [
+      {
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 91,
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_pr594_authority_ceiling_survives_memory_projection:4aac2ee6db7952f3",
+        "signature_hash": "f2178cbdfc0a5ef8"
+      }
+    ],
+    "CausalProofTransportCurrentnessMemoryTests.test_all_positive_memory_results_remain_nonauthorizing": [
+      {
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 108,
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_all_positive_memory_results_remain_nonauthorizing:ef05e0ede8bff98d",
+        "signature_hash": "72e34541b87ab4f1"
+      }
+    ],
+    "CausalProofTransportCurrentnessMemoryTests.test_public_boundary_has_only_four_exact_parent_receipts": [
+      {
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 126,
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_public_boundary_has_only_four_exact_parent_receipts:daf3a25c1f882925",
+        "signature_hash": "b411d3a17738f8e0"
+      }
+    ],
+    "CausalProofTransportCurrentnessMemoryTests.test_projection_is_deterministic": [
+      {
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 131,
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_projection_is_deterministic:60f32d0fd9e07225",
+        "signature_hash": "7d5a55bba1ba35da"
+      }
+    ],
     "WorkCapsuleContextBindingTests": [
       {
         "file": "tests/test_aura_workcapsule_context_binding.py",
@@ -165042,6 +165559,7 @@
       ".github/workflows/aura-workcapsule-canonical-temporal-lifecycle-equivalence.yml",
       ".github/workflows/aura-workcapsule-causal-artifact-qualified-host-envelope.yml",
       ".github/workflows/aura-workcapsule-causal-envelope-raw-slice-noninterchangeability.yml",
+      ".github/workflows/aura-workcapsule-causal-proof-transport-currentness-memory.yml",
       ".github/workflows/aura-workcapsule-current-recursive-target-raw-slice.yml",
       ".github/workflows/aura-workcapsule-observation-bound-closure.yml",
       ".github/workflows/aura-workcapsule-observation-bound-exact-closure.yml",
@@ -165070,6 +165588,7 @@
       ".github/workflows/aura-workcapsule-canonical-temporal-lifecycle-equivalence.yml",
       ".github/workflows/aura-workcapsule-causal-artifact-qualified-host-envelope.yml",
       ".github/workflows/aura-workcapsule-causal-envelope-raw-slice-noninterchangeability.yml",
+      ".github/workflows/aura-workcapsule-causal-proof-transport-currentness-memory.yml",
       ".github/workflows/aura-workcapsule-current-recursive-target-raw-slice.yml",
       ".github/workflows/aura-workcapsule-observation-bound-closure.yml",
       ".github/workflows/aura-workcapsule-observation-bound-exact-closure.yml",
@@ -175127,6 +175646,67 @@
         -0.205855,
         -0.282571,
         -0.144482
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-workcapsule-causal-proof-transport-currentness-memory.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 8201,
+      "lines": 166,
+      "tokens_est": 2051,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          70,
+          78,
+          86
+        ],
+        "python3 -m unittest": [
+          71,
+          79,
+          87
+        ]
+      },
+      "topology": {},
+      "digest8": "62387fc9df8c55d8",
+      "vector": [
+        -0.310226,
+        -0.149173,
+        0.165014,
+        -0.051484,
+        -0.178215,
+        0.207258,
+        -0.067326,
+        0.11485,
+        0.194056,
+        0.109569,
+        -0.157093,
+        -0.275903,
+        0.040923,
+        -0.048844,
+        0.215178,
+        0.199337,
+        -0.283824,
+        0.038283,
+        -0.125411,
+        -0.159734,
+        0.225739,
+        0.130691,
+        0.162374,
+        -0.326068,
+        -0.151813,
+        -0.244221,
+        -0.00396,
+        0.022442,
+        -0.11485,
+        0.080527,
+        -0.225739,
+        0.201977
       ]
     },
     {
@@ -250862,6 +251442,53 @@
       ]
     },
     {
+      "path": "scripts/aura_provenance_corroboration_memory_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13830,
+      "lines": 313,
+      "tokens_est": 3458,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d28d1ac9b0e8360b",
+      "vector": [
+        -0.093671,
+        0.195241,
+        -0.066585,
+        -0.071099,
+        0.287783,
+        -0.211041,
+        -0.019186,
+        -0.147842,
+        -0.202013,
+        0.276498,
+        0.118499,
+        -0.123013,
+        0.019186,
+        -0.274241,
+        -0.179441,
+        -0.271983,
+        0.062071,
+        -0.077871,
+        -0.269726,
+        0.012414,
+        0.238127,
+        -0.071099,
+        -0.249412,
+        -0.222327,
+        -0.278755,
+        0.068842,
+        -0.071099,
+        0.202013,
+        0.238127,
+        0.048528,
+        0.032728,
+        -0.145584
+      ]
+    },
+    {
       "path": "scripts/aura_review_learning_architect_harness.py",
       "role": "python_module",
       "binary": false,
@@ -251470,6 +252097,53 @@
         -0.120541,
         -0.223179,
         0.108606
+      ]
+    },
+    {
+      "path": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7956,
+      "lines": 183,
+      "tokens_est": 1989,
+      "symbol_count": 3,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c8d3745734ab154b",
+      "vector": [
+        0.055558,
+        0.003402,
+        0.080502,
+        0.284593,
+        0.096376,
+        -0.189351,
+        -0.216563,
+        0.280058,
+        -0.236972,
+        0.289128,
+        -0.27779,
+        0.035149,
+        -0.173477,
+        0.225633,
+        -0.173477,
+        -0.280058,
+        -0.275522,
+        0.1508,
+        -0.041952,
+        0.017008,
+        0.028346,
+        -0.207492,
+        0.078235,
+        -0.048755,
+        -0.087305,
+        0.241507,
+        -0.007937,
+        0.12132,
+        0.230169,
+        -0.071432,
+        -0.155336,
+        -0.123588
       ]
     },
     {
@@ -267749,6 +268423,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_provenance_corroboration_memory_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15407,
+      "lines": 306,
+      "tokens_est": 3852,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3cd6e6bec6123eac",
+      "vector": [
+        0.268626,
+        0.060409,
+        0.132385,
+        0.098967,
+        -0.147809,
+        -0.281479,
+        0.029562,
+        0.268626,
+        -0.093826,
+        -0.080973,
+        0.098967,
+        -0.06555,
+        -0.106679,
+        0.201791,
+        -0.075832,
+        0.070691,
+        0.044985,
+        -0.086115,
+        -0.304614,
+        0.304614,
+        -0.217214,
+        -0.06812,
+        0.047556,
+        -0.235208,
+        -0.258344,
+        0.248061,
+        -0.003856,
+        0.145238,
+        -0.188938,
+        -0.209503,
+        -0.28662,
+        0.122103
+      ]
+    },
+    {
       "path": "tests/test_aura_provider_routing.py",
       "role": "python_module",
       "binary": false,
@@ -272446,6 +273167,53 @@
         0.099113,
         0.274017,
         0.012826
+      ]
+    },
+    {
+      "path": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5912,
+      "lines": 136,
+      "tokens_est": 1478,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b32a57ddcdc7d597",
+      "vector": [
+        -0.068987,
+        -0.184342,
+        -0.231841,
+        0.059939,
+        0.087082,
+        0.238627,
+        -0.098391,
+        -0.014702,
+        -0.04863,
+        0.24315,
+        -0.229579,
+        0.114224,
+        0.211484,
+        -0.007917,
+        0.136843,
+        -0.245412,
+        -0.055416,
+        -0.261245,
+        -0.249936,
+        0.161723,
+        -0.256722,
+        -0.24315,
+        -0.057678,
+        -0.24315,
+        0.238627,
+        0.062201,
+        0.206961,
+        0.026011,
+        -0.132319,
+        0.059939,
+        0.166247,
+        0.27934
       ]
     },
     {
@@ -298233,16 +299001,16 @@
     }
   },
   "summary": {
-    "file_count": 1740,
-    "total_bytes": 27248430,
-    "text_tokens_est": 6802491,
+    "file_count": 1745,
+    "total_bytes": 27299736,
+    "text_tokens_est": 6815319,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 19,
       "operator_script": 9,
-      "python_module": 1055,
-      "schema_or_lexicon": 305,
+      "python_module": 1059,
+      "schema_or_lexicon": 306,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -298403,6 +299171,7 @@
       ".github/workflows/aura-workcapsule-canonical-temporal-lifecycle-equivalence.yml",
       ".github/workflows/aura-workcapsule-causal-artifact-qualified-host-envelope.yml",
       ".github/workflows/aura-workcapsule-causal-envelope-raw-slice-noninterchangeability.yml",
+      ".github/workflows/aura-workcapsule-causal-proof-transport-currentness-memory.yml",
       ".github/workflows/aura-workcapsule-corroboration-preserves-causal-envelope-class.yml",
       ".github/workflows/aura-workcapsule-current-recursive-target-raw-slice.yml",
       ".github/workflows/aura-workcapsule-observation-bound-closure.yml",
@@ -299530,6 +300299,7 @@
       "scripts/aura_navigation_refresh.py",
       "scripts/aura_prepare_construction_demo_assets.py",
       "scripts/aura_prepare_construction_demo_assets_core.py",
+      "scripts/aura_provenance_corroboration_memory_admission.py",
       "scripts/aura_review_learning_architect_harness.py",
       "scripts/aura_runtime_profile_v2_adapter.py",
       "scripts/aura_runtime_refactor_harness.py",
@@ -299543,6 +300313,7 @@
       "scripts/aura_workcapsule_canonical_temporal_lifecycle_equivalence.py",
       "scripts/aura_workcapsule_causal_artifact_qualified_host_envelope.py",
       "scripts/aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py",
+      "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py",
       "scripts/aura_workcapsule_context_binding.py",
       "scripts/aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
       "scripts/aura_workcapsule_current_recursive_target_raw_slice_binding.py",
@@ -299846,6 +300617,7 @@
       "tests/test_aura_prepare_construction_demo_assets_temp_cleanup.py",
       "tests/test_aura_project_context_acceptance.py",
       "tests/test_aura_project_context_compiler.py",
+      "tests/test_aura_provenance_corroboration_memory_admission.py",
       "tests/test_aura_provider_routing.py",
       "tests/test_aura_qdkt_compatibility.py",
       "tests/test_aura_qdkt_compatibility_hardening.py",
@@ -299946,6 +300718,7 @@
       "tests/test_aura_workcapsule_canonical_temporal_lifecycle_equivalence.py",
       "tests/test_aura_workcapsule_causal_artifact_qualified_host_envelope.py",
       "tests/test_aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py",
+      "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
       "tests/test_aura_workcapsule_context_binding.py",
       "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
       "tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py",
@@ -399222,6 +399995,146 @@
         "file_digest8": "13b5d7bb1da4a348"
       },
       {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_bytes:19511567e9766c9e",
+        "name": "_bytes",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "089be838e1846e35",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_identity:85c5ada0d55317fb",
+        "name": "_identity",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 79,
+        "end_line": 87,
+        "signature_hash": "234af5886835eece",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_relation:4041794dc75515f5",
+        "name": "_relation",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 182,
+        "end_line": 205,
+        "signature_hash": "7767960c35526891",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_bool:2be3dec143324b76",
+        "name": "_require_bool",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 45,
+        "end_line": 47,
+        "signature_hash": "9026038dace5198b",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_list:29c539b91e284e54",
+        "name": "_require_list",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 55,
+        "end_line": 61,
+        "signature_hash": "97846c59fe2fa043",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_str:fb1e6829e2fb3cd5",
+        "name": "_require_str",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 50,
+        "end_line": 52,
+        "signature_hash": "2d04682b2359d63d",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_typed_ref:adafed291c871514",
+        "name": "_require_typed_ref",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 64,
+        "end_line": 76,
+        "signature_hash": "af41d853150a2da9",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_sha:4953921864bc9770",
+        "name": "_sha",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_type_partition:8d42e5650c26afbd",
+        "name": "_type_partition",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 208,
+        "end_line": 219,
+        "signature_hash": "ca71f378385d6f58",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:admit_evidence_nodes:2234bb93f9b385f9",
+        "name": "admit_evidence_nodes",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 222,
+        "end_line": 312,
+        "signature_hash": "a3f1bca7a7c75b36",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:eligibility_violations:561401a74818d410",
+        "name": "eligibility_violations",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 156,
+        "end_line": 179,
+        "signature_hash": "9483ac3d750528e1",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:seal_evidence_node:b2fe565a530963a0",
+        "name": "seal_evidence_node",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 90,
+        "end_line": 97,
+        "signature_hash": "c20648a35a5d6af7",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:verify_context:9fb8bd316d783845",
+        "name": "verify_context",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 141,
+        "end_line": 153,
+        "signature_hash": "6c2137f9c199c090",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:verify_evidence_node:601908ac5dd65ab8",
+        "name": "verify_evidence_node",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 100,
+        "end_line": 138,
+        "signature_hash": "77c3eb342b8a2c6b",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
         "semantic_id": "scripts/aura_review_learning_architect_harness.py#function:_canonical:692db8dcccd7494d",
         "name": "_canonical",
         "kind": "function",
@@ -401080,6 +401993,36 @@
         "end_line": 210,
         "signature_hash": "b4d3afe1a5ebb5df",
         "file_digest8": "e32e040c22312ccb"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py#function:_node:0024f28250078e07",
+        "name": "_node",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 66,
+        "end_line": 89,
+        "signature_hash": "d6a7036b20675d18",
+        "file_digest8": "c8d3745734ab154b"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py#function:_split_ref:4fa666c999e887f8",
+        "name": "_split_ref",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 57,
+        "end_line": 63,
+        "signature_hash": "1ea3c5149b9f0f54",
+        "file_digest8": "c8d3745734ab154b"
+      },
+      {
+        "semantic_id": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py#function:admit_causal_proof_transport_currentness_memory:f128d26a665c36a4",
+        "name": "admit_causal_proof_transport_currentness_memory",
+        "kind": "function",
+        "file": "scripts/aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 92,
+        "end_line": 182,
+        "signature_hash": "4615370ebec775e4",
+        "file_digest8": "c8d3745734ab154b"
       },
       {
         "semantic_id": "scripts/aura_workcapsule_context_binding.py#function:_binding_identity:211798941e9497f3",
@@ -446302,6 +447245,256 @@
         "file_digest8": "7222033800a1bdcf"
       },
       {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#class:ProvenanceCorroborationMemoryAdmissionTests:7b9f101f439c480c",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests",
+        "kind": "class",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 62,
+        "end_line": 301,
+        "signature_hash": "6e6a710adcd9631b",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#function:node:92bd93b8c4fb8849",
+        "name": "node",
+        "kind": "function",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 21,
+        "end_line": 59,
+        "signature_hash": "7de6e906ebf84759",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_closed_schema_rejects_k27_or_cache_escape_hatches:9c2527b18c03d502",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_closed_schema_rejects_k27_or_cache_escape_hatches",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 286,
+        "end_line": 291,
+        "signature_hash": "71310c8e308e6d38",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_contract_currentness_cannot_impersonate_host_observation_currentness:3a37cdccc366e3a3",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_contract_currentness_cannot_impersonate_host_observation_currentness",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 115,
+        "end_line": 129,
+        "signature_hash": "6308eef615706ee1",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_contradiction_is_preserved_without_last_write_wins:75876a66d777b884",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_contradiction_is_preserved_without_last_write_wins",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 259,
+        "end_line": 262,
+        "signature_hash": "891d5266842bca10",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_cross_type_corroboration_is_partitioned_and_rank_neutral:499442ab80f842dc",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_cross_type_corroboration_is_partitioned_and_rank_neutral",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 164,
+        "end_line": 181,
+        "signature_hash": "55a633132d51e324",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_currentness_domains_can_corroborate_without_cross_cast_when_explicitly_accepted:a147331e97f766a0",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_currentness_domains_can_corroborate_without_cross_cast_when_explicitly_accepted",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 131,
+        "end_line": 148,
+        "signature_hash": "799804be446c59d1",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_dependency_distinct_corroborator_increases_type_partition_without_node_merge:31b08bc53471702e",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_dependency_distinct_corroborator_increases_type_partition_without_node_merge",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 190,
+        "end_line": 195,
+        "signature_hash": "bed169f3a4b32440",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_duplicate_artifact_identity_fails_closed:a1dd1feaa39e373c",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_duplicate_artifact_identity_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 293,
+        "end_line": 296,
+        "signature_hash": "a3d129218f875377",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_evidence_type_is_hard_gate_before_corroboration:a73ac1d14b511651",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_evidence_type_is_hard_gate_before_corroboration",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 150,
+        "end_line": 162,
+        "signature_hash": "890be072b4b147a1",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_exact_eligible_node_is_admitted_but_nonauthorizing:586f4f6855264127",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_exact_eligible_node_is_admitted_but_nonauthorizing",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 63,
+        "end_line": 82,
+        "signature_hash": "d7d7f38729c97426",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_output_is_deterministic_under_input_permutation:89b004aed3c25e5c",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_output_is_deterministic_under_input_permutation",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 298,
+        "end_line": 301,
+        "signature_hash": "6631d2c7f205bbbd",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_python_bool_int_confusion_fails_closed:6a526fdccb0fc385",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_python_bool_int_confusion_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 278,
+        "end_line": 284,
+        "signature_hash": "b9acc21c6a65ccae",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_revoked_node_is_excluded:ba021e824fadf9c7",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_revoked_node_is_excluded",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 90,
+        "end_line": 93,
+        "signature_hash": "63af6c19c7b746f0",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_claim_value_in_different_world_does_not_corroborate:f6996f38594a0b33",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_same_claim_value_in_different_world_does_not_corroborate",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 255,
+        "end_line": 257,
+        "signature_hash": "3e2eddee25d0f5c3",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_dependency_class_across_two_types_does_not_make_types_interchangeable:f8908925cdb05ee2",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_same_dependency_class_across_two_types_does_not_make_types_interchangeable",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 197,
+        "end_line": 205,
+        "signature_hash": "1cd0cc15d3443add",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_lineage_corroborates_without_increasing_kappa:b23707bb6c4ed572",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_same_lineage_corroborates_without_increasing_kappa",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 183,
+        "end_line": 188,
+        "signature_hash": "1bde5ff4775a8d34",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_reference_value_across_schemes_remains_distinct_identity:15d5f789c2527c10",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_same_reference_value_across_schemes_remains_distinct_identity",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 207,
+        "end_line": 216,
+        "signature_hash": "a0e0e1f1ed95f519",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_scope_use_type_and_currentness_domain_are_hard_gates:54ac911f7969ebf9",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_scope_use_type_and_currentness_domain_are_hard_gates",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 95,
+        "end_line": 113,
+        "signature_hash": "f3df289b64db7287",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_sha256_reference_scheme_requires_lower_hex_digest:6f82727f6562cf84",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_sha256_reference_scheme_requires_lower_hex_digest",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 225,
+        "end_line": 247,
+        "signature_hash": "31501cd483213ebd",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_stale_node_is_excluded_but_history_is_preserved:c078088e24d829c9",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_stale_node_is_excluded_but_history_is_preserved",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 84,
+        "end_line": 88,
+        "signature_hash": "5713caa6f2d03bae",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_supersession_keeps_stale_history:0cce90348555036b",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_supersession_keeps_stale_history",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 264,
+        "end_line": 269,
+        "signature_hash": "10b8a7ab63a42e69",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_tampered_receipt_digest_fails_closed:1cf511d86815613f",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_tampered_receipt_digest_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 271,
+        "end_line": 276,
+        "signature_hash": "ca7a15926f0e5a06",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_typed_reference_fields_must_match_canonical_ref:164b028c3de4556f",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_typed_reference_fields_must_match_canonical_ref",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 218,
+        "end_line": 223,
+        "signature_hash": "6a875315ff2e6bef",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_v1_shape_cannot_enter_v2_membrane_by_omitting_currentness_domain:0d138dd020a72a7f",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_v1_shape_cannot_enter_v2_membrane_by_omitting_currentness_domain",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 249,
+        "end_line": 253,
+        "signature_hash": "f3b68d9c252853db",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
         "semantic_id": "tests/test_aura_provider_routing.py#class:test_architect_model_callback_maps_cost_tier_to_role.FakeExternalLLM:437eaace1fcd07b5",
         "name": "test_architect_model_callback_maps_cost_tier_to_role.FakeExternalLLM",
         "kind": "class",
@@ -459042,6 +460235,106 @@
         "file_digest8": "ac2debc8e32fcb13"
       },
       {
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#class:CausalProofTransportCurrentnessMemoryTests:5d837731905ba5d2",
+        "name": "CausalProofTransportCurrentnessMemoryTests",
+        "kind": "class",
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 38,
+        "end_line": 131,
+        "signature_hash": "8be512e59366ecbc",
+        "file_digest8": "b32a57ddcdc7d597"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#function:kwargs:b94845b5eaeb5f78",
+        "name": "kwargs",
+        "kind": "function",
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 29,
+        "end_line": 35,
+        "signature_hash": "aebff8f9075351e6",
+        "file_digest8": "b32a57ddcdc7d597"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_all_positive_memory_results_remain_nonauthorizing:ef05e0ede8bff98d",
+        "name": "CausalProofTransportCurrentnessMemoryTests.test_all_positive_memory_results_remain_nonauthorizing",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 93,
+        "end_line": 108,
+        "signature_hash": "72e34541b87ab4f1",
+        "file_digest8": "b32a57ddcdc7d597"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_causal_host_envelope_currentness_rejects_both_on_three_axes:2d64983368a1237a",
+        "name": "CausalProofTransportCurrentnessMemoryTests.test_causal_host_envelope_currentness_rejects_both_on_three_axes",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 57,
+        "end_line": 67,
+        "signature_hash": "7772c8e9d1a701fa",
+        "file_digest8": "b32a57ddcdc7d597"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_exact_relation_projects_two_proof_nodes_and_one_rank_neutral_edge:0f752fddfc1de31f",
+        "name": "CausalProofTransportCurrentnessMemoryTests.test_exact_relation_projects_two_proof_nodes_and_one_rank_neutral_edge",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 39,
+        "end_line": 55,
+        "signature_hash": "2c1adc3554de24d9",
+        "file_digest8": "b32a57ddcdc7d597"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_pr577_world_drift_fails_before_memory_projection:bb70d85f9df1db71",
+        "name": "CausalProofTransportCurrentnessMemoryTests.test_pr577_world_drift_fails_before_memory_projection",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 79,
+        "end_line": 83,
+        "signature_hash": "e8a4037114c074d0",
+        "file_digest8": "b32a57ddcdc7d597"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_pr594_authority_ceiling_survives_memory_projection:4aac2ee6db7952f3",
+        "name": "CausalProofTransportCurrentnessMemoryTests.test_pr594_authority_ceiling_survives_memory_projection",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 85,
+        "end_line": 91,
+        "signature_hash": "f2178cbdfc0a5ef8",
+        "file_digest8": "b32a57ddcdc7d597"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_projection_is_deterministic:60f32d0fd9e07225",
+        "name": "CausalProofTransportCurrentnessMemoryTests.test_projection_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 128,
+        "end_line": 131,
+        "signature_hash": "7d5a55bba1ba35da",
+        "file_digest8": "b32a57ddcdc7d597"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_public_boundary_has_only_four_exact_parent_receipts:daf3a25c1f882925",
+        "name": "CausalProofTransportCurrentnessMemoryTests.test_public_boundary_has_only_four_exact_parent_receipts",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 110,
+        "end_line": 126,
+        "signature_hash": "b411d3a17738f8e0",
+        "file_digest8": "b32a57ddcdc7d597"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py#method:CausalProofTransportCurrentnessMemoryTests.test_stale_proof_node_fails_even_in_owned_proof_domain:1bb7ffc2e0fa448e",
+        "name": "CausalProofTransportCurrentnessMemoryTests.test_stale_proof_node_fails_even_in_owned_proof_domain",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_causal_proof_transport_currentness_memory.py",
+        "line": 69,
+        "end_line": 77,
+        "signature_hash": "0768f95006e9a574",
+        "file_digest8": "b32a57ddcdc7d597"
+      },
+      {
         "semantic_id": "tests/test_aura_workcapsule_context_binding.py#class:WorkCapsuleContextBindingTests:450c9ce4f3cf0aee",
         "name": "WorkCapsuleContextBindingTests",
         "kind": "class",
@@ -465052,7 +466345,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1c53e534bf166c6c29dee3cde8997cb1",
-    "payload_hash": "932d9ec0a06347cf6dcc96578f488407"
+    "record_fingerprint": "6479ac5bb8f41d45b7f060700511222a",
+    "payload_hash": "f8591e9f2086ee5624d9e94189a4bfb9"
   }
 }
