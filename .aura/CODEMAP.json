@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788167349,
+  "generated_at_unix": 1788182213,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1652,
+    "repo_file_count": 1653,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -150,6 +150,7 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/glm53-lattice-quantization-feasibility.yml",
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
+      ".github/workflows/glm53-live-payload-coverage-delta-push-proof.yml",
       ".github/workflows/glm53-live-payload-coverage-delta.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -1768,16 +1769,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1652,
-      "bytes": 26510621,
-      "tokens_est": 6618009,
+      "files": 1653,
+      "bytes": 26514633,
+      "tokens_est": 6619012,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
         "python_module": 1005,
-        "schema_or_lexicon": 275,
+        "schema_or_lexicon": 276,
         "support_file": 49
       }
     },
@@ -159686,11 +159687,13 @@
     "python3 -m py_compile": [
       ".github/workflows/glm53-lattice-quantization-feasibility.yml",
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
+      ".github/workflows/glm53-live-payload-coverage-delta-push-proof.yml",
       ".github/workflows/glm53-live-payload-coverage-delta.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
+      ".github/workflows/glm53-live-payload-coverage-delta-push-proof.yml",
       ".github/workflows/glm53-live-payload-coverage-delta.yml"
     ],
     "python3 -m tools.quantization.aura_glm53_live_official_tensor_payload_canary": [
@@ -169641,6 +169644,63 @@
         0.045449,
         -0.165826,
         -0.256723
+      ]
+    },
+    {
+      "path": ".github/workflows/glm53-live-payload-coverage-delta-push-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4012,
+      "lines": 74,
+      "tokens_est": 1003,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          50
+        ],
+        "python3 -m unittest": [
+          51
+        ]
+      },
+      "topology": {},
+      "digest8": "a22d3bda517460b2",
+      "vector": [
+        -0.190267,
+        -0.296914,
+        0.246015,
+        0.107859,
+        0.069078,
+        0.267829,
+        -0.243591,
+        -0.139368,
+        0.214505,
+        -0.11513,
+        0.214505,
+        -0.119978,
+        -0.216929,
+        -0.030297,
+        -0.02545,
+        -0.081197,
+        -0.192691,
+        0.153911,
+        0.289643,
+        -0.190267,
+        -0.052111,
+        0.18542,
+        0.076349,
+        0.141792,
+        -0.195115,
+        0.006059,
+        0.146639,
+        0.195115,
+        0.088468,
+        -0.212081,
+        0.279948,
+        -0.023026
       ]
     },
     {
@@ -288352,16 +288412,16 @@
     }
   },
   "summary": {
-    "file_count": 1652,
-    "total_bytes": 26510621,
-    "text_tokens_est": 6618009,
+    "file_count": 1653,
+    "total_bytes": 26514633,
+    "text_tokens_est": 6619012,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
       "python_module": 1005,
-      "schema_or_lexicon": 275,
+      "schema_or_lexicon": 276,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288521,6 +288581,7 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/glm53-lattice-quantization-feasibility.yml",
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
+      ".github/workflows/glm53-live-payload-coverage-delta-push-proof.yml",
       ".github/workflows/glm53-live-payload-coverage-delta.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -449664,6 +449725,6 @@
       }
     ],
     "record_fingerprint": "7ce9a964eb4ac36e5cfb87ca0856413a",
-    "payload_hash": "eb4a2f5a63298dcbf27ac1d8dd692038"
+    "payload_hash": "fc258e1fe44200267e36d7057ea86df0"
   }
 }
