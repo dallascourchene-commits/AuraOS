@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788155246,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1647,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -133,9 +133,11 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-awj032-owner-host-c2-persistent-cognition-bridge.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-provenance-corroboration-memory-admission.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1223,6 +1225,7 @@
       "scripts/aura_arch_v2_3_capsule_validator.py",
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
+      "scripts/aura_awj032_owner_host_c2_memory_bridge.py",
       "scripts/aura_benchmark_suite.py",
       "scripts/aura_blind_gate10_benchmark.py",
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -1235,6 +1238,7 @@
       "scripts/aura_navigation_refresh.py",
       "scripts/aura_prepare_construction_demo_assets.py",
       "scripts/aura_prepare_construction_demo_assets_core.py",
+      "scripts/aura_provenance_corroboration_memory_admission.py",
       "scripts/aura_review_learning_architect_harness.py",
       "scripts/aura_runtime_profile_v2_adapter.py",
       "scripts/aura_runtime_refactor_harness.py",
@@ -1359,6 +1363,7 @@
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
       "tests/test_aura_arena_wfst_phase_a.py",
+      "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
@@ -1523,6 +1528,7 @@
       "tests/test_aura_prepare_construction_demo_assets_temp_cleanup.py",
       "tests/test_aura_project_context_acceptance.py",
       "tests/test_aura_project_context_compiler.py",
+      "tests/test_aura_provenance_corroboration_memory_admission.py",
       "tests/test_aura_provider_routing.py",
       "tests/test_aura_qdkt_compatibility.py",
       "tests/test_aura_qdkt_compatibility_hardening.py",
@@ -1631,6 +1637,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/awj032/glm53_owner_host_c2_handoff.py",
+      "tools/awj032/test_glm53_owner_host_c2_handoff.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1673,6 +1681,7 @@
       "scripts/aura_arch_v2_3_capsule_validator.py",
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
+      "scripts/aura_awj032_owner_host_c2_memory_bridge.py",
       "scripts/aura_benchmark_suite.py",
       "scripts/aura_blind_gate10_benchmark.py",
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -1685,6 +1694,7 @@
       "scripts/aura_navigation_refresh.py",
       "scripts/aura_prepare_construction_demo_assets.py",
       "scripts/aura_prepare_construction_demo_assets_core.py",
+      "scripts/aura_provenance_corroboration_memory_admission.py",
       "scripts/aura_review_learning_architect_harness.py",
       "scripts/aura_runtime_profile_v2_adapter.py",
       "scripts/aura_runtime_refactor_harness.py",
@@ -1737,6 +1747,7 @@
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
       "tests/test_aura_arena_wfst_phase_a.py",
+      "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
@@ -1744,10 +1755,7 @@
       "tests/test_aura_bilateral_live_repair_foundry_hardening.py",
       "tests/test_aura_bilateral_planning_enforcement.py",
       "tests/test_aura_blind_gate10_benchmark.py",
-      "tests/test_aura_capability_connectome.py",
-      "tests/test_aura_capability_connectome_v2.py",
-      "tests/test_aura_capability_lane_registry.py",
-      "tests/test_aura_capability_resolver.py"
+      "tests/test_aura_capability_connectome.py"
     ],
     "topology_paths_without_source_cards": [],
     "coverage_complete_for_repo_scan": true
@@ -1755,16 +1763,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1647,
+      "bytes": 26484654,
+      "tokens_est": 6611518,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 1003,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -3895,6 +3903,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 46,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_canonical:82c97d8c71895859",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4337,6 +4353,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 50,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_digest:956157d18c018414",
+        "signature_hash": "514f786724465716"
       }
     ],
     "_token_proxy": [
@@ -8067,6 +8091,22 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "scripts/aura_awj032_owner_host_c2_memory_bridge.py",
+        "kind": "function",
+        "line": 38,
+        "end_line": 41,
+        "semantic_id": "scripts/aura_awj032_owner_host_c2_memory_bridge.py#function:_sha:56af9cf54f0a5acd",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 42,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_sha:4953921864bc9770",
+        "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
     "_repo": [
@@ -8307,6 +8347,14 @@
         "end_line": 376,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_identity:ba68ae7b40e27b53",
         "signature_hash": "33fd118fba12f51b"
+      },
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 87,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_identity:85c5ada0d55317fb",
+        "signature_hash": "234af5886835eece"
       },
       {
         "file": "tests/test_aura_relational_index.py",
@@ -13707,6 +13755,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 59,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_sha256:032c51d60a2138de",
+        "signature_hash": "a67fb107614d9ca0"
       }
     ],
     "PullRequestRouteBinding": [
@@ -14653,6 +14709,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 56,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_text:d8ca8fd3ed2c71d4",
+        "signature_hash": "a4ea29b9a7789fe0"
       }
     ],
     "_bounded": [
@@ -26327,6 +26391,14 @@
         "end_line": 68,
         "semantic_id": "aura_spatial_importers/contracts.py#function:_positive_int:cb9f2b4384fccde6",
         "signature_hash": "5cca323f428421e2"
+      },
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 69,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_positive_int:619a649b847e005b",
+        "signature_hash": "9fa9d0d235d67d55"
       }
     ],
     "_span_line_bounds": [
@@ -86029,6 +86101,14 @@
         "end_line": 404,
         "semantic_id": "aura_spatial_projection.py#function:_relation:233f9a749602a82f",
         "signature_hash": "a3afcb510ac0f4e4"
+      },
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 182,
+        "end_line": 205,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_relation:4041794dc75515f5",
+        "signature_hash": "7767960c35526891"
       }
     ],
     "_position": [
@@ -99791,6 +99871,16 @@
         "signature_hash": "cee2a7bb613f105d"
       }
     ],
+    "project_owner_host_c2_attempt_memory": [
+      {
+        "file": "scripts/aura_awj032_owner_host_c2_memory_bridge.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 101,
+        "semantic_id": "scripts/aura_awj032_owner_host_c2_memory_bridge.py#function:project_owner_host_c2_attempt_memory:19ddacc384254e5c",
+        "signature_hash": "bd08b9c8463ce9d3"
+      }
+    ],
     "now_ns": [
       {
         "file": "scripts/aura_benchmark_suite.py",
@@ -101101,6 +101191,116 @@
         "end_line": 778,
         "semantic_id": "scripts/aura_prepare_construction_demo_assets_core.py#function:compile_gaussian_assets:0d4b03ce52d15dde",
         "signature_hash": "ba2b92f681eb8e76"
+      }
+    ],
+    "_bytes": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 38,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_bytes:19511567e9766c9e",
+        "signature_hash": "089be838e1846e35"
+      }
+    ],
+    "_require_bool": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 47,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_bool:2be3dec143324b76",
+        "signature_hash": "9026038dace5198b"
+      }
+    ],
+    "_require_str": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 52,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_str:fb1e6829e2fb3cd5",
+        "signature_hash": "2d04682b2359d63d"
+      }
+    ],
+    "_require_list": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 61,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_list:29c539b91e284e54",
+        "signature_hash": "97846c59fe2fa043"
+      }
+    ],
+    "_require_typed_ref": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 76,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_typed_ref:adafed291c871514",
+        "signature_hash": "af41d853150a2da9"
+      }
+    ],
+    "seal_evidence_node": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 90,
+        "end_line": 97,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:seal_evidence_node:b2fe565a530963a0",
+        "signature_hash": "c20648a35a5d6af7"
+      }
+    ],
+    "verify_evidence_node": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 100,
+        "end_line": 138,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:verify_evidence_node:601908ac5dd65ab8",
+        "signature_hash": "77c3eb342b8a2c6b"
+      }
+    ],
+    "verify_context": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 141,
+        "end_line": 153,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:verify_context:9fb8bd316d783845",
+        "signature_hash": "6c2137f9c199c090"
+      }
+    ],
+    "eligibility_violations": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 179,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:eligibility_violations:561401a74818d410",
+        "signature_hash": "9483ac3d750528e1"
+      }
+    ],
+    "_type_partition": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 208,
+        "end_line": 219,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_type_partition:8d42e5650c26afbd",
+        "signature_hash": "ca71f378385d6f58"
+      }
+    ],
+    "admit_evidence_nodes": [
+      {
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 222,
+        "end_line": 312,
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:admit_evidence_nodes:2234bb93f9b385f9",
+        "signature_hash": "a3f1bca7a7c75b36"
       }
     ],
     "_plan": [
@@ -117563,6 +117763,112 @@
         "end_line": 189,
         "semantic_id": "tests/test_aura_arena_wfst_phase_a.py#method:test_audit_surfaces_persistence_failure.record_trace_event:ed75c30fe0ff0fbd",
         "signature_hash": "e32de3db9ab18df2"
+      }
+    ],
+    "request": [
+      {
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 32,
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#function:request:ea53e98afbf5dc1f",
+        "signature_hash": "0a92ba0bcaac69ef"
+      },
+      {
+        "file": "tests/test_aura_forge.py",
+        "kind": "function",
+        "line": 149,
+        "end_line": 165,
+        "semantic_id": "tests/test_aura_forge.py#function:request:c5b24e2ac94dd485",
+        "signature_hash": "0a92ba0bcaac69ef"
+      },
+      {
+        "file": "tests/test_aura_gate.py",
+        "kind": "function",
+        "line": 187,
+        "end_line": 223,
+        "semantic_id": "tests/test_aura_gate.py#function:request:7c151532eef8bfd3",
+        "signature_hash": "9045b73142116e1c"
+      }
+    ],
+    "receipt": [
+      {
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 64,
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#function:receipt:a4642040c21a3d84",
+        "signature_hash": "66138be83456f8c6"
+      }
+    ],
+    "OwnerHostC2MemoryBridgeTests": [
+      {
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 141,
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#class:OwnerHostC2MemoryBridgeTests:14ef4ff242e70076",
+        "signature_hash": "2e90a2fab9865b3f"
+      }
+    ],
+    "OwnerHostC2MemoryBridgeTests.test_valid_attempt_projects_contract_current_evidence_only": [
+      {
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 87,
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#method:OwnerHostC2MemoryBridgeTests.test_valid_attempt_projects_contract_current_evidence_only:5789fecb87b878b5",
+        "signature_hash": "92980127434b9bb4"
+      }
+    ],
+    "OwnerHostC2MemoryBridgeTests.test_host_observation_context_excludes_contract_current_node": [
+      {
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 98,
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#method:OwnerHostC2MemoryBridgeTests.test_host_observation_context_excludes_contract_current_node:68f448acf046b8b1",
+        "signature_hash": "eb16435287077aa2"
+      }
+    ],
+    "OwnerHostC2MemoryBridgeTests.test_two_distinct_attempts_same_outcome_corroborate_without_rank": [
+      {
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#method:OwnerHostC2MemoryBridgeTests.test_two_distinct_attempts_same_outcome_corroborate_without_rank:f833ab6e08d2aa2f",
+        "signature_hash": "3a6c140ed1957e3f"
+      }
+    ],
+    "OwnerHostC2MemoryBridgeTests.test_success_and_failure_attempts_are_contradictory_not_last_write_wins": [
+      {
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 127,
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#method:OwnerHostC2MemoryBridgeTests.test_success_and_failure_attempts_are_contradictory_not_last_write_wins:e550112c83219ed9",
+        "signature_hash": "b8ea8a256ee25435"
+      }
+    ],
+    "OwnerHostC2MemoryBridgeTests.test_request_receipt_mismatch_fails_before_memory_projection": [
+      {
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 133,
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#method:OwnerHostC2MemoryBridgeTests.test_request_receipt_mismatch_fails_before_memory_projection:51b986f6c87e8695",
+        "signature_hash": "2a0215591dfaaca0"
+      }
+    ],
+    "OwnerHostC2MemoryBridgeTests.test_projection_is_deterministic": [
+      {
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "kind": "method",
+        "line": 135,
+        "end_line": 141,
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#method:OwnerHostC2MemoryBridgeTests.test_projection_is_deterministic:f21d96c149ba39ce",
+        "signature_hash": "7d5a55bba1ba35da"
       }
     ],
     "test_route_failure_never_raises_on_untrusted_counts": [
@@ -136135,24 +136441,6 @@
         "signature_hash": "9817e92e7c3eb5d7"
       }
     ],
-    "request": [
-      {
-        "file": "tests/test_aura_forge.py",
-        "kind": "function",
-        "line": 149,
-        "end_line": 165,
-        "semantic_id": "tests/test_aura_forge.py#function:request:c5b24e2ac94dd485",
-        "signature_hash": "0a92ba0bcaac69ef"
-      },
-      {
-        "file": "tests/test_aura_gate.py",
-        "kind": "function",
-        "line": 187,
-        "end_line": 223,
-        "semantic_id": "tests/test_aura_gate.py#function:request:7c151532eef8bfd3",
-        "signature_hash": "9045b73142116e1c"
-      }
-    ],
     "test_prepare_compiles_exact_evidence_contract": [
       {
         "file": "tests/test_aura_forge.py",
@@ -145287,6 +145575,256 @@
         "end_line": 1057,
         "semantic_id": "tests/test_aura_project_context_compiler.py#method:test_provenance_start_ids_reject_hostile_sequence_before_protocol_calls.HostileIds.__len__:541fd942e4d4cb4c",
         "signature_hash": "faa6d593407c8ebc"
+      }
+    ],
+    "node": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 59,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#function:node:92bd93b8c4fb8849",
+        "signature_hash": "7de6e906ebf84759"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "class",
+        "line": 62,
+        "end_line": 301,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#class:ProvenanceCorroborationMemoryAdmissionTests:7b9f101f439c480c",
+        "signature_hash": "6e6a710adcd9631b"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_exact_eligible_node_is_admitted_but_nonauthorizing": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 82,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_exact_eligible_node_is_admitted_but_nonauthorizing:586f4f6855264127",
+        "signature_hash": "d7d7f38729c97426"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_stale_node_is_excluded_but_history_is_preserved": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_stale_node_is_excluded_but_history_is_preserved:c078088e24d829c9",
+        "signature_hash": "5713caa6f2d03bae"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_revoked_node_is_excluded": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 93,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_revoked_node_is_excluded:ba021e824fadf9c7",
+        "signature_hash": "63af6c19c7b746f0"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_scope_use_type_and_currentness_domain_are_hard_gates": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_scope_use_type_and_currentness_domain_are_hard_gates:54ac911f7969ebf9",
+        "signature_hash": "f3df289b64db7287"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_contract_currentness_cannot_impersonate_host_observation_currentness": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 129,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_contract_currentness_cannot_impersonate_host_observation_currentness:3a37cdccc366e3a3",
+        "signature_hash": "6308eef615706ee1"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_currentness_domains_can_corroborate_without_cross_cast_when_explicitly_accepted": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 148,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_currentness_domains_can_corroborate_without_cross_cast_when_explicitly_accepted:a147331e97f766a0",
+        "signature_hash": "799804be446c59d1"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_evidence_type_is_hard_gate_before_corroboration": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 162,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_evidence_type_is_hard_gate_before_corroboration:a73ac1d14b511651",
+        "signature_hash": "890be072b4b147a1"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_cross_type_corroboration_is_partitioned_and_rank_neutral": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 181,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_cross_type_corroboration_is_partitioned_and_rank_neutral:499442ab80f842dc",
+        "signature_hash": "55a633132d51e324"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_same_lineage_corroborates_without_increasing_kappa": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 188,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_lineage_corroborates_without_increasing_kappa:b23707bb6c4ed572",
+        "signature_hash": "1bde5ff4775a8d34"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_dependency_distinct_corroborator_increases_type_partition_without_node_merge": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 190,
+        "end_line": 195,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_dependency_distinct_corroborator_increases_type_partition_without_node_merge:31b08bc53471702e",
+        "signature_hash": "bed169f3a4b32440"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_same_dependency_class_across_two_types_does_not_make_types_interchangeable": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 197,
+        "end_line": 205,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_dependency_class_across_two_types_does_not_make_types_interchangeable:f8908925cdb05ee2",
+        "signature_hash": "1cd0cc15d3443add"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_same_reference_value_across_schemes_remains_distinct_identity": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 207,
+        "end_line": 216,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_reference_value_across_schemes_remains_distinct_identity:15d5f789c2527c10",
+        "signature_hash": "a0e0e1f1ed95f519"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_typed_reference_fields_must_match_canonical_ref": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 218,
+        "end_line": 223,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_typed_reference_fields_must_match_canonical_ref:164b028c3de4556f",
+        "signature_hash": "6a875315ff2e6bef"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_sha256_reference_scheme_requires_lower_hex_digest": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 225,
+        "end_line": 247,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_sha256_reference_scheme_requires_lower_hex_digest:6f82727f6562cf84",
+        "signature_hash": "31501cd483213ebd"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_v1_shape_cannot_enter_v2_membrane_by_omitting_currentness_domain": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 249,
+        "end_line": 253,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_v1_shape_cannot_enter_v2_membrane_by_omitting_currentness_domain:0d138dd020a72a7f",
+        "signature_hash": "f3b68d9c252853db"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_same_claim_value_in_different_world_does_not_corroborate": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 255,
+        "end_line": 257,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_claim_value_in_different_world_does_not_corroborate:f6996f38594a0b33",
+        "signature_hash": "3e2eddee25d0f5c3"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_contradiction_is_preserved_without_last_write_wins": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 259,
+        "end_line": 262,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_contradiction_is_preserved_without_last_write_wins:75876a66d777b884",
+        "signature_hash": "891d5266842bca10"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_supersession_keeps_stale_history": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 264,
+        "end_line": 269,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_supersession_keeps_stale_history:0cce90348555036b",
+        "signature_hash": "10b8a7ab63a42e69"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_tampered_receipt_digest_fails_closed": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 271,
+        "end_line": 276,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_tampered_receipt_digest_fails_closed:1cf511d86815613f",
+        "signature_hash": "ca7a15926f0e5a06"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_python_bool_int_confusion_fails_closed": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 278,
+        "end_line": 284,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_python_bool_int_confusion_fails_closed:6a526fdccb0fc385",
+        "signature_hash": "b9acc21c6a65ccae"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_closed_schema_rejects_k27_or_cache_escape_hatches": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 286,
+        "end_line": 291,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_closed_schema_rejects_k27_or_cache_escape_hatches:9c2527b18c03d502",
+        "signature_hash": "71310c8e308e6d38"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_duplicate_artifact_identity_fails_closed": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 293,
+        "end_line": 296,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_duplicate_artifact_identity_fails_closed:a1dd1feaa39e373c",
+        "signature_hash": "a3d129218f875377"
+      }
+    ],
+    "ProvenanceCorroborationMemoryAdmissionTests.test_output_is_deterministic_under_input_permutation": [
+      {
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "kind": "method",
+        "line": 298,
+        "end_line": 301,
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_output_is_deterministic_under_input_permutation:89b004aed3c25e5c",
+        "signature_hash": "6631d2c7f205bbbd"
       }
     ],
     "test_provider_key_pool_collects_primary_plural_numbered_and_aliases": [
@@ -157181,6 +157719,356 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "OwnerHostC2HandoffError": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "class",
+        "line": 29,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2HandoffError:3478a5bdfb49ef64",
+        "signature_hash": "6b7462371eb08f8d"
+      }
+    ],
+    "OwnerHostC2HandoffError.__init__": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffError.__init__:eef7b725cfd16306",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_nonneg_int": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 72,
+        "end_line": 75,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_nonneg_int:78063f97f0681742",
+        "signature_hash": "de511ebb37461ace"
+      }
+    ],
+    "_positive_float": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 84,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_positive_float:0a2bc9f0392f908a",
+        "signature_hash": "b2fece0b5243771f"
+      }
+    ],
+    "_exact_bool": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 89,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_exact_bool:a1243bad81411609",
+        "signature_hash": "5a63b7579db28835"
+      }
+    ],
+    "_utc": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 92,
+        "end_line": 100,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_utc:5cd91f9ce1611753",
+        "signature_hash": "0da762b8bec66904"
+      }
+    ],
+    "OwnerHostC2CanaryRequest": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "class",
+        "line": 104,
+        "end_line": 168,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2CanaryRequest:f2456c99dcf56388",
+        "signature_hash": "fe4cefa33562e880"
+      }
+    ],
+    "OwnerHostC2CanaryRequest.__post_init__": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 161,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryRequest.__post_init__:35ab0ec4e482897a",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "OwnerHostC2CanaryRequest.to_dict": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 164,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryRequest.to_dict:d77a8bfe335e1477",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "OwnerHostC2CanaryRequest.request_digest": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 167,
+        "end_line": 168,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryRequest.request_digest:7465361c1e35d675",
+        "signature_hash": "6fa9305943538fcf"
+      }
+    ],
+    "OwnerHostC2CanaryReceipt": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "class",
+        "line": 172,
+        "end_line": 257,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2CanaryReceipt:c255f70e8afe0b7c",
+        "signature_hash": "0967335b2db491fc"
+      }
+    ],
+    "OwnerHostC2CanaryReceipt.__post_init__": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 250,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryReceipt.__post_init__:71f0c7989c142cb1",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "OwnerHostC2CanaryReceipt.to_dict": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 252,
+        "end_line": 253,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryReceipt.to_dict:6d8cf47f5b4f3fa9",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "OwnerHostC2CanaryReceipt.receipt_digest": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 256,
+        "end_line": 257,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryReceipt.receipt_digest:2630aaa125574a4a",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "OwnerHostC2JoinReceipt": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "class",
+        "line": 261,
+        "end_line": 285,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2JoinReceipt:1fe0c79917639e6b",
+        "signature_hash": "db6c9872995e331e"
+      }
+    ],
+    "OwnerHostC2JoinReceipt.to_dict": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 280,
+        "end_line": 281,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2JoinReceipt.to_dict:84a2004cfb3208df",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "OwnerHostC2JoinReceipt.logical_id": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 284,
+        "end_line": 285,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2JoinReceipt.logical_id:cd5122090ee96db7",
+        "signature_hash": "77512dea4c34aaf7"
+      }
+    ],
+    "join_owner_host_c2_attempt": [
+      {
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "kind": "function",
+        "line": 288,
+        "end_line": 321,
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:join_owner_host_c2_attempt:5edc56f5e54a38ba",
+        "signature_hash": "457dbc96033c9b2f"
+      }
+    ],
+    "OwnerHostC2HandoffTests": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "class",
+        "line": 25,
+        "end_line": 213,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#class:OwnerHostC2HandoffTests:1153e004795fa244",
+        "signature_hash": "fb4a2f986ce2eb3e"
+      }
+    ],
+    "OwnerHostC2HandoffTests.request": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 26,
+        "end_line": 39,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.request:25cb409a25b603de",
+        "signature_hash": "213557bb0946e88e"
+      }
+    ],
+    "OwnerHostC2HandoffTests.receipt": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 66,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.receipt:ee654684dbbed1e5",
+        "signature_hash": "86fea5122b8c7054"
+      }
+    ],
+    "OwnerHostC2HandoffTests.assert_code": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 71,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.assert_code:97461d1d636d52ff",
+        "signature_hash": "eb1a74aa8011ddd4"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_exact_upstream_generations_are_bound": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 78,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_exact_upstream_generations_are_bound:a8e2c3926ce05c4e",
+        "signature_hash": "5b6e0e2e56d70378"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_request_digest_is_deterministic": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 81,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_digest_is_deterministic:755b20f0cdd3a087",
+        "signature_hash": "bdd35efe8ac4b0de"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_request_rejects_remote_code_fallback_and_substitution": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 95,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_rejects_remote_code_fallback_and_substitution:3f39d833c33a6143",
+        "signature_hash": "9a64799dd45cdb6b"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_request_rejects_stale_owner_generations": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 105,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_rejects_stale_owner_generations:b91e6ce2a144b4dc",
+        "signature_hash": "6e43d3fa46ba8fdf"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_request_requires_bounded_workspace": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 111,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_requires_bounded_workspace:31434c46aa666a65",
+        "signature_hash": "8d945a36d0694e51"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_receipt_records_attempt_but_does_not_authenticate_itself": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 127,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_records_attempt_but_does_not_authenticate_itself:934d8d64220cc18b",
+        "signature_hash": "379d0e96aa08c932"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_receipt_must_bind_exact_request": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 136,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_must_bind_exact_request:97e7f38a761823ec",
+        "signature_hash": "1bf05e6b68ed56e1"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_receipt_rejects_airllm_generation_drift": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 144,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_rejects_airllm_generation_drift:34f1d31afb23f8e7",
+        "signature_hash": "16d326a8518d96d7"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_receipt_rejects_payload_and_wall_budget_escape": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 162,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_rejects_payload_and_wall_budget_escape:283a994aab9353e9",
+        "signature_hash": "5e6cf5f60865aed9"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_receipt_rejects_remote_or_substituted_execution": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 180,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_rejects_remote_or_substituted_execution:3981487122ed16bf",
+        "signature_hash": "e540147b1496feac"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_c2_receipt_cannot_promote_full_model_or_g2": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 182,
+        "end_line": 194,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_c2_receipt_cannot_promote_full_model_or_g2:92c24748c8a0f33d",
+        "signature_hash": "834a7df2fa30327a"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_generated_tokens_require_output_digest": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 196,
+        "end_line": 200,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_generated_tokens_require_output_digest:365d3cb930af3d12",
+        "signature_hash": "0d05036087a810c5"
+      }
+    ],
+    "OwnerHostC2HandoffTests.test_nonzero_exit_is_recorded_without_false_success": [
+      {
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "kind": "method",
+        "line": 202,
+        "end_line": 213,
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_nonzero_exit_is_recorded_without_false_success:2c1da6601cf0a0e9",
+        "signature_hash": "d6a8975fc12898f7"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158575,6 +159463,15 @@
     "python aura_agent_arena_mcp_architect.py --list-tools > architect-mcp-tools.json": [
       ".github/workflows/architect-real-refactor-trial.yml"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-awj032-owner-host-c2-persistent-cognition-bridge.yml",
+      ".github/workflows/aura-provenance-corroboration-memory-admission.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/aura-awj032-owner-host-c2-persistent-cognition-bridge.yml",
+      ".github/workflows/aura-provenance-corroboration-memory-admission.yml"
+    ],
     "python aura_spatial_cli.py --repo-root . construction-video-demo \\": [
       ".github/workflows/aura-construction-demo-g7-g8.yml"
     ],
@@ -159147,9 +160044,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -167551,6 +168445,65 @@
       ]
     },
     {
+      "path": ".github/workflows/aura-awj032-owner-host-c2-persistent-cognition-bridge.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4482,
+      "lines": 107,
+      "tokens_est": 1121,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          44,
+          52
+        ],
+        "python3 -m unittest": [
+          45,
+          55
+        ]
+      },
+      "topology": {},
+      "digest8": "7e59b55044e43e0b",
+      "vector": [
+        -0.236415,
+        0.173802,
+        -0.227778,
+        -0.165166,
+        0.258005,
+        -0.258005,
+        -0.22346,
+        0.234255,
+        -0.152212,
+        -0.245051,
+        -0.011875,
+        0.078805,
+        -0.100395,
+        0.102554,
+        -0.208347,
+        -0.154371,
+        -0.184598,
+        0.145735,
+        -0.093918,
+        0.037783,
+        -0.22346,
+        0.132781,
+        -0.00108,
+        -0.160848,
+        0.212665,
+        -0.15653,
+        0.206188,
+        0.227778,
+        -0.076646,
+        0.22346,
+        0.197552,
+        -0.037783
+      ]
+    },
+    {
       "path": ".github/workflows/aura-construction-demo-g4-g6.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -167737,6 +168690,63 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-provenance-corroboration-memory-admission.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3674,
+      "lines": 92,
+      "tokens_est": 919,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          39
+        ],
+        "python3 -m unittest": [
+          40
+        ]
+      },
+      "topology": {},
+      "digest8": "799b17fa6efd9f5e",
+      "vector": [
+        -0.187618,
+        -0.159091,
+        -0.0779,
+        0.235894,
+        -0.009875,
+        -0.156897,
+        0.049373,
+        -0.242477,
+        0.200784,
+        0.235894,
+        -0.154703,
+        0.12837,
+        -0.174452,
+        -0.082289,
+        0.165675,
+        0.238089,
+        0.137148,
+        0.227117,
+        0.0779,
+        0.044984,
+        0.246866,
+        0.222728,
+        0.187618,
+        -0.18323,
+        0.126176,
+        -0.277587,
+        -0.229311,
+        0.275393,
+        -0.02743,
+        -0.123982,
+        0.095455,
+        0.172258
       ]
     },
     {
@@ -241437,6 +242447,53 @@
       ]
     },
     {
+      "path": "scripts/aura_awj032_owner_host_c2_memory_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 3914,
+      "lines": 102,
+      "tokens_est": 979,
+      "symbol_count": 2,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "7bc226eb7d0eceae",
+      "vector": [
+        -0.143412,
+        0.048636,
+        -0.106001,
+        -0.28059,
+        0.09353,
+        -0.285578,
+        -0.183319,
+        0.17833,
+        -0.0636,
+        -0.188307,
+        -0.031177,
+        0.260637,
+        -0.185813,
+        -0.076071,
+        -0.048636,
+        0.205766,
+        0.160871,
+        -0.058612,
+        -0.228213,
+        -0.16586,
+        -0.096024,
+        -0.0636,
+        0.091036,
+        0.115977,
+        -0.258142,
+        0.20826,
+        0.298049,
+        -0.041153,
+        -0.228213,
+        0.290566,
+        -0.220731,
+        -0.091036
+      ]
+    },
+    {
       "path": "scripts/aura_benchmark_suite.py",
       "role": "python_module",
       "binary": false,
@@ -241998,6 +243055,53 @@
         0.102752,
         -0.071322,
         -0.226055
+      ]
+    },
+    {
+      "path": "scripts/aura_provenance_corroboration_memory_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13830,
+      "lines": 313,
+      "tokens_est": 3458,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d28d1ac9b0e8360b",
+      "vector": [
+        -0.093671,
+        0.195241,
+        -0.066585,
+        -0.071099,
+        0.287783,
+        -0.211041,
+        -0.019186,
+        -0.147842,
+        -0.202013,
+        0.276498,
+        0.118499,
+        -0.123013,
+        0.019186,
+        -0.274241,
+        -0.179441,
+        -0.271983,
+        0.062071,
+        -0.077871,
+        -0.269726,
+        0.012414,
+        0.238127,
+        -0.071099,
+        -0.249412,
+        -0.222327,
+        -0.278755,
+        0.068842,
+        -0.071099,
+        0.202013,
+        0.238127,
+        0.048528,
+        0.032728,
+        -0.145584
       ]
     },
     {
@@ -249864,6 +250968,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5930,
+      "lines": 146,
+      "tokens_est": 1483,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c3bdb6ac928939b6",
+      "vector": [
+        0.102882,
+        -0.030731,
+        0.257874,
+        -0.086849,
+        -0.249857,
+        0.060126,
+        -0.028059,
+        -0.006681,
+        0.108227,
+        0.249857,
+        -0.247185,
+        0.324681,
+        -0.180378,
+        0.012025,
+        0.268563,
+        0.132277,
+        0.177706,
+        0.180378,
+        -0.014697,
+        0.161672,
+        -0.263218,
+        -0.105555,
+        -0.169689,
+        0.281924,
+        -0.150983,
+        -0.121588,
+        0.084176,
+        -0.255202,
+        -0.137622,
+        -0.020042,
+        0.204429,
+        -0.185723
+      ]
+    },
+    {
       "path": "tests/test_aura_benchmark_four.py",
       "role": "python_module",
       "binary": false,
@@ -257572,6 +258723,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_provenance_corroboration_memory_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 15407,
+      "lines": 306,
+      "tokens_est": 3852,
+      "symbol_count": 25,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "3cd6e6bec6123eac",
+      "vector": [
+        0.268626,
+        0.060409,
+        0.132385,
+        0.098967,
+        -0.147809,
+        -0.281479,
+        0.029562,
+        0.268626,
+        -0.093826,
+        -0.080973,
+        0.098967,
+        -0.06555,
+        -0.106679,
+        0.201791,
+        -0.075832,
+        0.070691,
+        0.044985,
+        -0.086115,
+        -0.304614,
+        0.304614,
+        -0.217214,
+        -0.06812,
+        0.047556,
+        -0.235208,
+        -0.258344,
+        0.248061,
+        -0.003856,
+        0.145238,
+        -0.188938,
+        -0.209503,
+        -0.28662,
+        0.122103
+      ]
+    },
+    {
       "path": "tests/test_aura_provider_routing.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +263843,100 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_owner_host_c2_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13991,
+      "lines": 322,
+      "tokens_est": 3498,
+      "symbol_count": 23,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e295400e67afa9f7",
+      "vector": [
+        0.271437,
+        0.173228,
+        -0.028644,
+        -0.246885,
+        0.290533,
+        -0.0341,
+        0.02046,
+        0.279621,
+        0.271437,
+        0.205965,
+        -0.121396,
+        -0.135036,
+        -0.121396,
+        -0.312357,
+        -0.04774,
+        0.238701,
+        0.151404,
+        0.094116,
+        -0.137764,
+        -0.009548,
+        0.178685,
+        -0.066836,
+        0.107756,
+        -0.012276,
+        0.083204,
+        0.271437,
+        0.148676,
+        -0.042284,
+        -0.328725,
+        0.0341,
+        -0.077748,
+        0.175957
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8378,
+      "lines": 218,
+      "tokens_est": 2095,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "59ea671973a372da",
+      "vector": [
+        0.048844,
+        0.272439,
+        -0.179093,
+        -0.257243,
+        0.187777,
+        -0.202972,
+        0.237706,
+        -0.033648,
+        -0.215997,
+        -0.009769,
+        0.226851,
+        0.068381,
+        -0.209485,
+        0.263756,
+        -0.226851,
+        0.272439,
+        -0.255072,
+        0.022794,
+        -0.083577,
+        0.179093,
+        -0.161727,
+        0.024965,
+        0.001085,
+        -0.129164,
+        0.218168,
+        0.252901,
+        -0.231193,
+        0.009769,
+        0.048844,
+        -0.083577,
+        -0.031477,
+        -0.159556
       ]
     },
     {
@@ -286646,16 +287938,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1647,
+    "total_bytes": 26484654,
+    "text_tokens_est": 6611518,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 1003,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286798,9 +288090,11 @@
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
+      ".github/workflows/aura-awj032-owner-host-c2-persistent-cognition-bridge.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-provenance-corroboration-memory-admission.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -287888,6 +289182,7 @@
       "scripts/aura_arch_v2_3_capsule_validator.py",
       "scripts/aura_architecture_harness.py",
       "scripts/aura_architecture_harness_core.py",
+      "scripts/aura_awj032_owner_host_c2_memory_bridge.py",
       "scripts/aura_benchmark_suite.py",
       "scripts/aura_blind_gate10_benchmark.py",
       "scripts/aura_construction_pascal_spatial_foundry_pr5_runtime.py",
@@ -287900,6 +289195,7 @@
       "scripts/aura_navigation_refresh.py",
       "scripts/aura_prepare_construction_demo_assets.py",
       "scripts/aura_prepare_construction_demo_assets_core.py",
+      "scripts/aura_provenance_corroboration_memory_admission.py",
       "scripts/aura_review_learning_architect_harness.py",
       "scripts/aura_runtime_profile_v2_adapter.py",
       "scripts/aura_runtime_refactor_harness.py",
@@ -288024,6 +289320,7 @@
       "tests/test_aura_arena_st3gg_shadow.py",
       "tests/test_aura_arena_st3gg_shadow_hardening.py",
       "tests/test_aura_arena_wfst_phase_a.py",
+      "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
       "tests/test_aura_benchmark_four.py",
       "tests/test_aura_benchmark_four_hardening.py",
       "tests/test_aura_bilateral_gate_dialogue.py",
@@ -288188,6 +289485,7 @@
       "tests/test_aura_prepare_construction_demo_assets_temp_cleanup.py",
       "tests/test_aura_project_context_acceptance.py",
       "tests/test_aura_project_context_compiler.py",
+      "tests/test_aura_provenance_corroboration_memory_admission.py",
       "tests/test_aura_provider_routing.py",
       "tests/test_aura_qdkt_compatibility.py",
       "tests/test_aura_qdkt_compatibility_hardening.py",
@@ -288296,6 +289594,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/awj032/glm53_owner_host_c2_handoff.py",
+      "tools/awj032/test_glm53_owner_host_c2_handoff.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -385854,6 +387154,26 @@
         "file_digest8": "13bcaf16442c7fcd"
       },
       {
+        "semantic_id": "scripts/aura_awj032_owner_host_c2_memory_bridge.py#function:_sha:56af9cf54f0a5acd",
+        "name": "_sha",
+        "kind": "function",
+        "file": "scripts/aura_awj032_owner_host_c2_memory_bridge.py",
+        "line": 38,
+        "end_line": 41,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "7bc226eb7d0eceae"
+      },
+      {
+        "semantic_id": "scripts/aura_awj032_owner_host_c2_memory_bridge.py#function:project_owner_host_c2_attempt_memory:19ddacc384254e5c",
+        "name": "project_owner_host_c2_attempt_memory",
+        "kind": "function",
+        "file": "scripts/aura_awj032_owner_host_c2_memory_bridge.py",
+        "line": 44,
+        "end_line": 101,
+        "signature_hash": "bd08b9c8463ce9d3",
+        "file_digest8": "7bc226eb7d0eceae"
+      },
+      {
         "semantic_id": "scripts/aura_benchmark_suite.py#function:_fmt:f89ec2beedf8d5dc",
         "name": "_fmt",
         "kind": "function",
@@ -387442,6 +388762,146 @@
         "end_line": 469,
         "signature_hash": "17df93d6c2271fff",
         "file_digest8": "13b5d7bb1da4a348"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_bytes:19511567e9766c9e",
+        "name": "_bytes",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 37,
+        "end_line": 38,
+        "signature_hash": "089be838e1846e35",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_identity:85c5ada0d55317fb",
+        "name": "_identity",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 79,
+        "end_line": 87,
+        "signature_hash": "234af5886835eece",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_relation:4041794dc75515f5",
+        "name": "_relation",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 182,
+        "end_line": 205,
+        "signature_hash": "7767960c35526891",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_bool:2be3dec143324b76",
+        "name": "_require_bool",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 45,
+        "end_line": 47,
+        "signature_hash": "9026038dace5198b",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_list:29c539b91e284e54",
+        "name": "_require_list",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 55,
+        "end_line": 61,
+        "signature_hash": "97846c59fe2fa043",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_str:fb1e6829e2fb3cd5",
+        "name": "_require_str",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 50,
+        "end_line": 52,
+        "signature_hash": "2d04682b2359d63d",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_require_typed_ref:adafed291c871514",
+        "name": "_require_typed_ref",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 64,
+        "end_line": 76,
+        "signature_hash": "af41d853150a2da9",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_sha:4953921864bc9770",
+        "name": "_sha",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 41,
+        "end_line": 42,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:_type_partition:8d42e5650c26afbd",
+        "name": "_type_partition",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 208,
+        "end_line": 219,
+        "signature_hash": "ca71f378385d6f58",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:admit_evidence_nodes:2234bb93f9b385f9",
+        "name": "admit_evidence_nodes",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 222,
+        "end_line": 312,
+        "signature_hash": "a3f1bca7a7c75b36",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:eligibility_violations:561401a74818d410",
+        "name": "eligibility_violations",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 156,
+        "end_line": 179,
+        "signature_hash": "9483ac3d750528e1",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:seal_evidence_node:b2fe565a530963a0",
+        "name": "seal_evidence_node",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 90,
+        "end_line": 97,
+        "signature_hash": "c20648a35a5d6af7",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:verify_context:9fb8bd316d783845",
+        "name": "verify_context",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 141,
+        "end_line": 153,
+        "signature_hash": "6c2137f9c199c090",
+        "file_digest8": "d28d1ac9b0e8360b"
+      },
+      {
+        "semantic_id": "scripts/aura_provenance_corroboration_memory_admission.py#function:verify_evidence_node:601908ac5dd65ab8",
+        "name": "verify_evidence_node",
+        "kind": "function",
+        "file": "scripts/aura_provenance_corroboration_memory_admission.py",
+        "line": 100,
+        "end_line": 138,
+        "signature_hash": "77c3eb342b8a2c6b",
+        "file_digest8": "d28d1ac9b0e8360b"
       },
       {
         "semantic_id": "scripts/aura_review_learning_architect_harness.py#function:_canonical:692db8dcccd7494d",
@@ -404542,6 +406002,96 @@
         "end_line": 174,
         "signature_hash": "e32de3db9ab18df2",
         "file_digest8": "209f276f9a6c5c18"
+      },
+      {
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#class:OwnerHostC2MemoryBridgeTests:14ef4ff242e70076",
+        "name": "OwnerHostC2MemoryBridgeTests",
+        "kind": "class",
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "line": 67,
+        "end_line": 141,
+        "signature_hash": "2e90a2fab9865b3f",
+        "file_digest8": "c3bdb6ac928939b6"
+      },
+      {
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#function:receipt:a4642040c21a3d84",
+        "name": "receipt",
+        "kind": "function",
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "line": 35,
+        "end_line": 64,
+        "signature_hash": "66138be83456f8c6",
+        "file_digest8": "c3bdb6ac928939b6"
+      },
+      {
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#function:request:ea53e98afbf5dc1f",
+        "name": "request",
+        "kind": "function",
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "line": 20,
+        "end_line": 32,
+        "signature_hash": "0a92ba0bcaac69ef",
+        "file_digest8": "c3bdb6ac928939b6"
+      },
+      {
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#method:OwnerHostC2MemoryBridgeTests.test_host_observation_context_excludes_contract_current_node:68f448acf046b8b1",
+        "name": "OwnerHostC2MemoryBridgeTests.test_host_observation_context_excludes_contract_current_node",
+        "kind": "method",
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "line": 89,
+        "end_line": 98,
+        "signature_hash": "eb16435287077aa2",
+        "file_digest8": "c3bdb6ac928939b6"
+      },
+      {
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#method:OwnerHostC2MemoryBridgeTests.test_projection_is_deterministic:f21d96c149ba39ce",
+        "name": "OwnerHostC2MemoryBridgeTests.test_projection_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "line": 135,
+        "end_line": 141,
+        "signature_hash": "7d5a55bba1ba35da",
+        "file_digest8": "c3bdb6ac928939b6"
+      },
+      {
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#method:OwnerHostC2MemoryBridgeTests.test_request_receipt_mismatch_fails_before_memory_projection:51b986f6c87e8695",
+        "name": "OwnerHostC2MemoryBridgeTests.test_request_receipt_mismatch_fails_before_memory_projection",
+        "kind": "method",
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "line": 129,
+        "end_line": 133,
+        "signature_hash": "2a0215591dfaaca0",
+        "file_digest8": "c3bdb6ac928939b6"
+      },
+      {
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#method:OwnerHostC2MemoryBridgeTests.test_success_and_failure_attempts_are_contradictory_not_last_write_wins:e550112c83219ed9",
+        "name": "OwnerHostC2MemoryBridgeTests.test_success_and_failure_attempts_are_contradictory_not_last_write_wins",
+        "kind": "method",
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "line": 115,
+        "end_line": 127,
+        "signature_hash": "b8ea8a256ee25435",
+        "file_digest8": "c3bdb6ac928939b6"
+      },
+      {
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#method:OwnerHostC2MemoryBridgeTests.test_two_distinct_attempts_same_outcome_corroborate_without_rank:f833ab6e08d2aa2f",
+        "name": "OwnerHostC2MemoryBridgeTests.test_two_distinct_attempts_same_outcome_corroborate_without_rank",
+        "kind": "method",
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "line": 100,
+        "end_line": 113,
+        "signature_hash": "3a6c140ed1957e3f",
+        "file_digest8": "c3bdb6ac928939b6"
+      },
+      {
+        "semantic_id": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py#method:OwnerHostC2MemoryBridgeTests.test_valid_attempt_projects_contract_current_evidence_only:5789fecb87b878b5",
+        "name": "OwnerHostC2MemoryBridgeTests.test_valid_attempt_projects_contract_current_evidence_only",
+        "kind": "method",
+        "file": "tests/test_aura_awj032_owner_host_c2_memory_bridge.py",
+        "line": 68,
+        "end_line": 87,
+        "signature_hash": "92980127434b9bb4",
+        "file_digest8": "c3bdb6ac928939b6"
       },
       {
         "semantic_id": "tests/test_aura_benchmark_four.py#class:_FakeConnector:49726edfa0a76ca9",
@@ -432884,6 +434434,256 @@
         "file_digest8": "7222033800a1bdcf"
       },
       {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#class:ProvenanceCorroborationMemoryAdmissionTests:7b9f101f439c480c",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests",
+        "kind": "class",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 62,
+        "end_line": 301,
+        "signature_hash": "6e6a710adcd9631b",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#function:node:92bd93b8c4fb8849",
+        "name": "node",
+        "kind": "function",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 21,
+        "end_line": 59,
+        "signature_hash": "7de6e906ebf84759",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_closed_schema_rejects_k27_or_cache_escape_hatches:9c2527b18c03d502",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_closed_schema_rejects_k27_or_cache_escape_hatches",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 286,
+        "end_line": 291,
+        "signature_hash": "71310c8e308e6d38",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_contract_currentness_cannot_impersonate_host_observation_currentness:3a37cdccc366e3a3",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_contract_currentness_cannot_impersonate_host_observation_currentness",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 115,
+        "end_line": 129,
+        "signature_hash": "6308eef615706ee1",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_contradiction_is_preserved_without_last_write_wins:75876a66d777b884",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_contradiction_is_preserved_without_last_write_wins",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 259,
+        "end_line": 262,
+        "signature_hash": "891d5266842bca10",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_cross_type_corroboration_is_partitioned_and_rank_neutral:499442ab80f842dc",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_cross_type_corroboration_is_partitioned_and_rank_neutral",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 164,
+        "end_line": 181,
+        "signature_hash": "55a633132d51e324",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_currentness_domains_can_corroborate_without_cross_cast_when_explicitly_accepted:a147331e97f766a0",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_currentness_domains_can_corroborate_without_cross_cast_when_explicitly_accepted",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 131,
+        "end_line": 148,
+        "signature_hash": "799804be446c59d1",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_dependency_distinct_corroborator_increases_type_partition_without_node_merge:31b08bc53471702e",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_dependency_distinct_corroborator_increases_type_partition_without_node_merge",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 190,
+        "end_line": 195,
+        "signature_hash": "bed169f3a4b32440",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_duplicate_artifact_identity_fails_closed:a1dd1feaa39e373c",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_duplicate_artifact_identity_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 293,
+        "end_line": 296,
+        "signature_hash": "a3d129218f875377",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_evidence_type_is_hard_gate_before_corroboration:a73ac1d14b511651",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_evidence_type_is_hard_gate_before_corroboration",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 150,
+        "end_line": 162,
+        "signature_hash": "890be072b4b147a1",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_exact_eligible_node_is_admitted_but_nonauthorizing:586f4f6855264127",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_exact_eligible_node_is_admitted_but_nonauthorizing",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 63,
+        "end_line": 82,
+        "signature_hash": "d7d7f38729c97426",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_output_is_deterministic_under_input_permutation:89b004aed3c25e5c",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_output_is_deterministic_under_input_permutation",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 298,
+        "end_line": 301,
+        "signature_hash": "6631d2c7f205bbbd",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_python_bool_int_confusion_fails_closed:6a526fdccb0fc385",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_python_bool_int_confusion_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 278,
+        "end_line": 284,
+        "signature_hash": "b9acc21c6a65ccae",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_revoked_node_is_excluded:ba021e824fadf9c7",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_revoked_node_is_excluded",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 90,
+        "end_line": 93,
+        "signature_hash": "63af6c19c7b746f0",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_claim_value_in_different_world_does_not_corroborate:f6996f38594a0b33",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_same_claim_value_in_different_world_does_not_corroborate",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 255,
+        "end_line": 257,
+        "signature_hash": "3e2eddee25d0f5c3",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_dependency_class_across_two_types_does_not_make_types_interchangeable:f8908925cdb05ee2",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_same_dependency_class_across_two_types_does_not_make_types_interchangeable",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 197,
+        "end_line": 205,
+        "signature_hash": "1cd0cc15d3443add",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_lineage_corroborates_without_increasing_kappa:b23707bb6c4ed572",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_same_lineage_corroborates_without_increasing_kappa",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 183,
+        "end_line": 188,
+        "signature_hash": "1bde5ff4775a8d34",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_same_reference_value_across_schemes_remains_distinct_identity:15d5f789c2527c10",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_same_reference_value_across_schemes_remains_distinct_identity",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 207,
+        "end_line": 216,
+        "signature_hash": "a0e0e1f1ed95f519",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_scope_use_type_and_currentness_domain_are_hard_gates:54ac911f7969ebf9",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_scope_use_type_and_currentness_domain_are_hard_gates",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 95,
+        "end_line": 113,
+        "signature_hash": "f3df289b64db7287",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_sha256_reference_scheme_requires_lower_hex_digest:6f82727f6562cf84",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_sha256_reference_scheme_requires_lower_hex_digest",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 225,
+        "end_line": 247,
+        "signature_hash": "31501cd483213ebd",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_stale_node_is_excluded_but_history_is_preserved:c078088e24d829c9",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_stale_node_is_excluded_but_history_is_preserved",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 84,
+        "end_line": 88,
+        "signature_hash": "5713caa6f2d03bae",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_supersession_keeps_stale_history:0cce90348555036b",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_supersession_keeps_stale_history",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 264,
+        "end_line": 269,
+        "signature_hash": "10b8a7ab63a42e69",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_tampered_receipt_digest_fails_closed:1cf511d86815613f",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_tampered_receipt_digest_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 271,
+        "end_line": 276,
+        "signature_hash": "ca7a15926f0e5a06",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_typed_reference_fields_must_match_canonical_ref:164b028c3de4556f",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_typed_reference_fields_must_match_canonical_ref",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 218,
+        "end_line": 223,
+        "signature_hash": "6a875315ff2e6bef",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
+        "semantic_id": "tests/test_aura_provenance_corroboration_memory_admission.py#method:ProvenanceCorroborationMemoryAdmissionTests.test_v1_shape_cannot_enter_v2_membrane_by_omitting_currentness_domain:0d138dd020a72a7f",
+        "name": "ProvenanceCorroborationMemoryAdmissionTests.test_v1_shape_cannot_enter_v2_membrane_by_omitting_currentness_domain",
+        "kind": "method",
+        "file": "tests/test_aura_provenance_corroboration_memory_admission.py",
+        "line": 249,
+        "end_line": 253,
+        "signature_hash": "f3b68d9c252853db",
+        "file_digest8": "3cd6e6bec6123eac"
+      },
+      {
         "semantic_id": "tests/test_aura_provider_routing.py#class:test_architect_model_callback_maps_cost_tier_to_role.FakeExternalLLM:437eaace1fcd07b5",
         "name": "test_architect_model_callback_maps_cost_tier_to_role.FakeExternalLLM",
         "kind": "class",
@@ -445634,6 +447434,406 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2CanaryReceipt:c255f70e8afe0b7c",
+        "name": "OwnerHostC2CanaryReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 172,
+        "end_line": 257,
+        "signature_hash": "0967335b2db491fc",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2CanaryRequest:f2456c99dcf56388",
+        "name": "OwnerHostC2CanaryRequest",
+        "kind": "class",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 104,
+        "end_line": 168,
+        "signature_hash": "fe4cefa33562e880",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2HandoffError:3478a5bdfb49ef64",
+        "name": "OwnerHostC2HandoffError",
+        "kind": "class",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 29,
+        "end_line": 33,
+        "signature_hash": "6b7462371eb08f8d",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#class:OwnerHostC2JoinReceipt:1fe0c79917639e6b",
+        "name": "OwnerHostC2JoinReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 261,
+        "end_line": 285,
+        "signature_hash": "db6c9872995e331e",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_canonical:82c97d8c71895859",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 36,
+        "end_line": 46,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_digest:956157d18c018414",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 49,
+        "end_line": 50,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_exact_bool:a1243bad81411609",
+        "name": "_exact_bool",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 87,
+        "end_line": 89,
+        "signature_hash": "5a63b7579db28835",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_nonneg_int:78063f97f0681742",
+        "name": "_nonneg_int",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 72,
+        "end_line": 75,
+        "signature_hash": "de511ebb37461ace",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_positive_float:0a2bc9f0392f908a",
+        "name": "_positive_float",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 78,
+        "end_line": 84,
+        "signature_hash": "b2fece0b5243771f",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_positive_int:619a649b847e005b",
+        "name": "_positive_int",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 66,
+        "end_line": 69,
+        "signature_hash": "9fa9d0d235d67d55",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_sha256:032c51d60a2138de",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 59,
+        "end_line": 63,
+        "signature_hash": "a67fb107614d9ca0",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_text:d8ca8fd3ed2c71d4",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 53,
+        "end_line": 56,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_utc:5cd91f9ce1611753",
+        "name": "_utc",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 92,
+        "end_line": 100,
+        "signature_hash": "0da762b8bec66904",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:join_owner_host_c2_attempt:5edc56f5e54a38ba",
+        "name": "join_owner_host_c2_attempt",
+        "kind": "function",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 288,
+        "end_line": 321,
+        "signature_hash": "457dbc96033c9b2f",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryReceipt.__post_init__:71f0c7989c142cb1",
+        "name": "OwnerHostC2CanaryReceipt.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 204,
+        "end_line": 250,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryReceipt.receipt_digest:2630aaa125574a4a",
+        "name": "OwnerHostC2CanaryReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 256,
+        "end_line": 257,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryReceipt.to_dict:6d8cf47f5b4f3fa9",
+        "name": "OwnerHostC2CanaryReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 252,
+        "end_line": 253,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryRequest.__post_init__:35ab0ec4e482897a",
+        "name": "OwnerHostC2CanaryRequest.__post_init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 129,
+        "end_line": 161,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryRequest.request_digest:7465361c1e35d675",
+        "name": "OwnerHostC2CanaryRequest.request_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 167,
+        "end_line": 168,
+        "signature_hash": "6fa9305943538fcf",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2CanaryRequest.to_dict:d77a8bfe335e1477",
+        "name": "OwnerHostC2CanaryRequest.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 163,
+        "end_line": 164,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffError.__init__:eef7b725cfd16306",
+        "name": "OwnerHostC2HandoffError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2JoinReceipt.logical_id:cd5122090ee96db7",
+        "name": "OwnerHostC2JoinReceipt.logical_id",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 284,
+        "end_line": 285,
+        "signature_hash": "77512dea4c34aaf7",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#method:OwnerHostC2JoinReceipt.to_dict:84a2004cfb3208df",
+        "name": "OwnerHostC2JoinReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/glm53_owner_host_c2_handoff.py",
+        "line": 280,
+        "end_line": 281,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "e295400e67afa9f7"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#class:OwnerHostC2HandoffTests:1153e004795fa244",
+        "name": "OwnerHostC2HandoffTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 25,
+        "end_line": 213,
+        "signature_hash": "fb4a2f986ce2eb3e",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.assert_code:97461d1d636d52ff",
+        "name": "OwnerHostC2HandoffTests.assert_code",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 68,
+        "end_line": 71,
+        "signature_hash": "eb1a74aa8011ddd4",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.receipt:ee654684dbbed1e5",
+        "name": "OwnerHostC2HandoffTests.receipt",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 41,
+        "end_line": 66,
+        "signature_hash": "86fea5122b8c7054",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.request:25cb409a25b603de",
+        "name": "OwnerHostC2HandoffTests.request",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 26,
+        "end_line": 39,
+        "signature_hash": "213557bb0946e88e",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_c2_receipt_cannot_promote_full_model_or_g2:92c24748c8a0f33d",
+        "name": "OwnerHostC2HandoffTests.test_c2_receipt_cannot_promote_full_model_or_g2",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 182,
+        "end_line": 194,
+        "signature_hash": "834a7df2fa30327a",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_exact_upstream_generations_are_bound:a8e2c3926ce05c4e",
+        "name": "OwnerHostC2HandoffTests.test_exact_upstream_generations_are_bound",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 73,
+        "end_line": 78,
+        "signature_hash": "5b6e0e2e56d70378",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_generated_tokens_require_output_digest:365d3cb930af3d12",
+        "name": "OwnerHostC2HandoffTests.test_generated_tokens_require_output_digest",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 196,
+        "end_line": 200,
+        "signature_hash": "0d05036087a810c5",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_nonzero_exit_is_recorded_without_false_success:2c1da6601cf0a0e9",
+        "name": "OwnerHostC2HandoffTests.test_nonzero_exit_is_recorded_without_false_success",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 202,
+        "end_line": 213,
+        "signature_hash": "d6a8975fc12898f7",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_must_bind_exact_request:97e7f38a761823ec",
+        "name": "OwnerHostC2HandoffTests.test_receipt_must_bind_exact_request",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 129,
+        "end_line": 136,
+        "signature_hash": "1bf05e6b68ed56e1",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_records_attempt_but_does_not_authenticate_itself:934d8d64220cc18b",
+        "name": "OwnerHostC2HandoffTests.test_receipt_records_attempt_but_does_not_authenticate_itself",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 113,
+        "end_line": 127,
+        "signature_hash": "379d0e96aa08c932",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_rejects_airllm_generation_drift:34f1d31afb23f8e7",
+        "name": "OwnerHostC2HandoffTests.test_receipt_rejects_airllm_generation_drift",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 138,
+        "end_line": 144,
+        "signature_hash": "16d326a8518d96d7",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_rejects_payload_and_wall_budget_escape:283a994aab9353e9",
+        "name": "OwnerHostC2HandoffTests.test_receipt_rejects_payload_and_wall_budget_escape",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 146,
+        "end_line": 162,
+        "signature_hash": "5e6cf5f60865aed9",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_receipt_rejects_remote_or_substituted_execution:3981487122ed16bf",
+        "name": "OwnerHostC2HandoffTests.test_receipt_rejects_remote_or_substituted_execution",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 164,
+        "end_line": 180,
+        "signature_hash": "e540147b1496feac",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_digest_is_deterministic:755b20f0cdd3a087",
+        "name": "OwnerHostC2HandoffTests.test_request_digest_is_deterministic",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 80,
+        "end_line": 81,
+        "signature_hash": "bdd35efe8ac4b0de",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_rejects_remote_code_fallback_and_substitution:3f39d833c33a6143",
+        "name": "OwnerHostC2HandoffTests.test_request_rejects_remote_code_fallback_and_substitution",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 83,
+        "end_line": 95,
+        "signature_hash": "9a64799dd45cdb6b",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_rejects_stale_owner_generations:b91e6ce2a144b4dc",
+        "name": "OwnerHostC2HandoffTests.test_request_rejects_stale_owner_generations",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 97,
+        "end_line": 105,
+        "signature_hash": "6e43d3fa46ba8fdf",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_owner_host_c2_handoff.py#method:OwnerHostC2HandoffTests.test_request_requires_bounded_workspace:31434c46aa666a65",
+        "name": "OwnerHostC2HandoffTests.test_request_requires_bounded_workspace",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_owner_host_c2_handoff.py",
+        "line": 107,
+        "end_line": 111,
+        "signature_hash": "8d945a36d0694e51",
+        "file_digest8": "59ea671973a372da"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +449084,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "32e1c0a8b62a5267f95d406476b430a6",
+    "payload_hash": "b0ce3d1655c4b242713eff11bc604333"
   }
 }
