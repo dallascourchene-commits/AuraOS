@@ -1,0 +1,46 @@
+name: K27 ASTGE Mmap Immutability Admission
+
+on:
+  pull_request:
+    paths:
+      - 'crates/aura-k27-astge/**'
+      - '.github/workflows/k27-astge-immutability-capability.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  immutability-admission:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify mmap immutability admission
+        run: |
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+          if grep -R --line-number -E 'unsafe\s*\{' crates/aura-k27-astge/src; then
+            echo 'unsafe block found in safe S-plane crate' >&2
+            exit 1
+          fi
+          echo 'ASTGE_MMAP_CAPABILITY_PRODUCTION_DEFAULT=READ_SEEK_SAFE_DEFAULT'
+          echo 'PRODUCTION_IMMUTABILITY_CAPABILITIES=0'
+          echo 'CALLER_CAPABILITY_OVERRIDE_ACCEPTED=false'
+          echo 'EXACT_OPENED_FILE_HANDLES_REQUIRED_FOR_MMAP=true'
+          echo 'HUMAN_AUTHORITY=false'
+          echo 'EXTERNAL_EFFECT=false'
