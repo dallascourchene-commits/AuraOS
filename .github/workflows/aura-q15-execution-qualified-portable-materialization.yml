@@ -42,13 +42,13 @@ jobs:
         run: |
           set -euo pipefail
           git merge-base --is-ancestor 1801de258fa88075565e62bd8f2ce9dbe6663f09 10481aa76117c24e5fdf7f93752e7820713a8285
-          git merge-base --is-ancestor 5269c1ce8f6ba7017d6f02b6bd4624953a2a9113 ee70934e0c45572588829e742e512a897b23863f
+          git merge-base --is-ancestor 74e5ee32379ddabb498587b08ba40ff21cebf13d ee70934e0c45572588829e742e512a897b23863f
           test "$(git show -s --format='%aI' 1801de258fa88075565e62bd8f2ce9dbe6663f09)" = "2026-08-31T13:44:56+00:00"
-          test "$(git show -s --format='%aI' 5269c1ce8f6ba7017d6f02b6bd4624953a2a9113)" = "2026-08-31T13:45:40+00:00"
+          test "$(git show -s --format='%aI' 74e5ee32379ddabb498587b08ba40ff21cebf13d)" = "2026-08-31T13:43:26+00:00"
           cat > /tmp/generation.json <<'JSON'
           {
             "a7": {"head":"1801de258fa88075565e62bd8f2ce9dbe6663f09","generated_at":"2026-08-31T13:44:56Z","ancestor_of":"10481aa76117c24e5fdf7f93752e7820713a8285","ancestor_proven":true},
-            "q14": {"head":"5269c1ce8f6ba7017d6f02b6bd4624953a2a9113","generated_at":"2026-08-31T13:45:40Z","ancestor_of":"ee70934e0c45572588829e742e512a897b23863f","ancestor_proven":true}
+            "q14": {"head":"74e5ee32379ddabb498587b08ba40ff21cebf13d","generated_at":"2026-08-31T13:43:26Z","ancestor_of":"ee70934e0c45572588829e742e512a897b23863f","ancestor_proven":true}
           }
           JSON
           echo Q15_C5_SEMANTIC_GENERATION_AUTHENTICATED=true
