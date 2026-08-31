@@ -19,8 +19,7 @@
 //! ```
 
 use aura_k27_astge::{
-    DataServingBackendV2, HydratedConeV1, MmapBackendAdmissionReceiptV2,
-    StorageGenerationBindingV1,
+    DataServingBackendV2, HydratedConeV1, MmapBackendAdmissionReceiptV2, StorageGenerationBindingV1,
 };
 use aura_k27_astge_generation_domain::{
     require_placement_generation, require_snapshot_generation, GenerationDomainErrorV1,
@@ -236,17 +235,10 @@ mod tests {
     fn typed_boundary_preserves_production_readseek_and_exact_cone() {
         let root = root("safe-default");
         let (binding, node, pages) = fixture(&root);
-        let axes = MmapGenerationAxesV1::new(
-            SnapshotGenerationV1::new(41),
-            PlacementGenerationV1::new(7),
-        );
+        let axes =
+            MmapGenerationAxesV1::new(SnapshotGenerationV1::new(41), PlacementGenerationV1::new(7));
         let mut reader = open_typed_canonical_data_serving_reader_v1(
-            &root,
-            &node,
-            &pages,
-            binding,
-            axes,
-            [0x44; 32],
+            &root, &node, &pages, binding, axes, [0x44; 32],
         )
         .unwrap();
 
@@ -258,7 +250,10 @@ mod tests {
         );
         assert_eq!(reader.receipt().snapshot_generation, 41);
         assert_eq!(reader.receipt().placement_generation, 7);
-        assert_eq!(reader.query_cone(0, 1, 10, None).unwrap().node_ids, vec![0, 1, 2]);
+        assert_eq!(
+            reader.query_cone(0, 1, 10, None).unwrap().node_ids,
+            vec![0, 1, 2]
+        );
         assert!(!reader.receipt().human_authority);
         assert!(!reader.receipt().external_effect);
         fs::remove_dir_all(root).unwrap();
@@ -272,10 +267,8 @@ mod tests {
             placement_generation: 7,
             placement_scheme_digest: [0x31; 32],
         };
-        let axes = MmapGenerationAxesV1::new(
-            SnapshotGenerationV1::new(41),
-            PlacementGenerationV1::new(8),
-        );
+        let axes =
+            MmapGenerationAxesV1::new(SnapshotGenerationV1::new(41), PlacementGenerationV1::new(8));
         let result = open_typed_canonical_data_serving_reader_v1(
             "/definitely/not/a/storage/root",
             "/definitely/not/nodes.idx",
@@ -294,10 +287,8 @@ mod tests {
 
     #[test]
     fn equal_numeric_snapshot_and_placement_still_retain_distinct_domains() {
-        let axes = MmapGenerationAxesV1::new(
-            SnapshotGenerationV1::new(7),
-            PlacementGenerationV1::new(7),
-        );
+        let axes =
+            MmapGenerationAxesV1::new(SnapshotGenerationV1::new(7), PlacementGenerationV1::new(7));
         assert_eq!(axes.snapshot.value(), axes.placement.value());
         assert_ne!(axes.snapshot.coordinate(), axes.placement.coordinate());
     }
