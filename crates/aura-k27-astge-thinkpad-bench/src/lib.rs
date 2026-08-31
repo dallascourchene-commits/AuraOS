@@ -358,12 +358,13 @@ where
 
 fn read_index(path: &Path) -> Result<Vec<NodeIndexRecordV1>, BenchmarkError> {
     let bytes = fs::read(path)?;
-    if bytes.len() % NODE_INDEX_RECORD_SIZE != 0 {
+    let (chunks, remainder) = bytes.as_chunks::<NODE_INDEX_RECORD_SIZE>();
+    if !remainder.is_empty() {
         return Err(BenchmarkError::InvalidConfig("node-index-length"));
     }
-    bytes
-        .chunks_exact(NODE_INDEX_RECORD_SIZE)
-        .map(NodeIndexRecordV1::decode)
+    chunks
+        .iter()
+        .map(|raw| NodeIndexRecordV1::decode(raw))
         .collect::<Result<Vec<_>, _>>()
         .map_err(BenchmarkError::Storage)
 }
