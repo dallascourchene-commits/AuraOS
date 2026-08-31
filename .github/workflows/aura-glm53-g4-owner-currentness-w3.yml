@@ -91,12 +91,14 @@ jobs:
               raise SystemExit(f"G4_W3_PUBLIC_API_WIDENED:{sig}")
           PY
 
-      - name: Enforce nonpromotion ceiling in source
+      - name: Enforce nonpromotion and non-self-authentication ceiling
         run: |
           python3 - <<'PY'
           from pathlib import Path
           text = Path("tools/awj032/glm53_g4_owner_currentness_addendum.py").read_text()
           required = (
+              "owner_resolver_authenticated_by_this_contract: bool = False",
+              "owner_currentness_truth_proven_by_this_contract: bool = False",
               "revalidation_required_at_effect_boundary: bool = True",
               "plan_executed_by_this_contract: bool = False",
               "transfer_effect_authorized: bool = False",
