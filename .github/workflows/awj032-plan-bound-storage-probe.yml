@@ -1,0 +1,76 @@
+name: AWJ032 Plan-Bound Storage Probe
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-plan-bound-storage-probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact PR603 x PR599 convergence
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "${{ github.event.pull_request.head.sha || github.sha }}"
+          git merge-base --is-ancestor 9b24b5b99901bdfb5406e0a28aeb8caa0fbf304a HEAD
+          git merge-base --is-ancestor 1a7e3ca521f43836c12cddb3cd5132264dce40da HEAD
+          test "$(git hash-object tools/awj032/thinkpad_bounded_storage_probe.py)" = "2ae6e46430d5bfa638ba128dc1c16c7581a479f2"
+          test "$(git hash-object tools/awj032/test_thinkpad_bounded_storage_probe.py)" = "04a887880601a0414ef2deab3e6ec935569dc670"
+          test "$(git hash-object tools/awj032/thinkpad_nvme_residency_plan.py)" = "1a802171273a8d7b4b60ef81bcd5649c858dfd0a"
+          test "$(git hash-object tools/awj032/test_thinkpad_nvme_residency_plan.py)" = "3b14faf2d220391218dfc3445e947f59c3e0d3da"
+
+      - name: Re-prove exact PR603 bounded logical-read owner
+        run: python tools/awj032/test_thinkpad_bounded_storage_probe.py
+
+      - name: Re-prove exact PR599 deterministic residency planner
+        run: python tools/awj032/test_thinkpad_nvme_residency_plan.py
+
+      - name: Prove O51 plan-bound observation adversarials
+        run: python tools/awj032/test_thinkpad_plan_bound_storage_probe.py
+
+      - name: Prove fixed public boundary
+        shell: bash
+        run: |
+          python - <<'PY'
+          import inspect
+          from tools.awj032.thinkpad_plan_bound_storage_probe import run_plan_bound_storage_probe
+          got = tuple(inspect.signature(run_plan_bound_storage_probe).parameters)
+          expected = ("plan", "request", "tensor_id", "chunk_bytes", "max_wall_seconds")
+          assert got == expected, (got, expected)
+          forbidden = {
+              "relative_path", "byte_offset", "probe_bytes", "storage_plan_digest",
+              "planned_backend_executed", "physical_nvme_io_attested",
+              "page_cache_bypass_proven", "w4_admitted", "g2_admitted",
+              "effect_authority_proven",
+          }
+          assert forbidden.isdisjoint(got)
+          print("O51_PUBLIC_BOUNDARY_CLOSED=true")
+          PY
+
+      - name: Emit consequence ceiling
+        shell: bash
+        run: |
+          echo 'PLAN_WINDOW_IDENTITY_BOUND_NE_PLAN_EXECUTED=true'
+          echo 'PLANNED_MODE_NE_OBSERVED_BACKEND=true'
+          echo 'LOGICAL_READ_WINDOW_NE_BACKEND_COMPLIANCE=true'
+          echo 'BUFFERED_PREAD_NE_PHYSICAL_NVME_ATTESTATION=true'
+          echo 'PROCESS_OR_PAGE_CACHE_COLDNESS_PROVEN=false'
+          echo 'STORAGE_MEDIUM_NVME_PROVEN=false'
+          echo 'PRODUCER_AUTHENTICATED=false'
+          echo 'MODEL_EXECUTION_OBSERVED=false'
+          echo 'LIFECYCLE_MEASUREMENT_ADMITTED=false'
+          echo 'PERFORMANCE_WINNER_PROVEN=false'
+          echo 'W4_ADMITTED=false'
+          echo 'G2_ADMITTED=false'
+          echo 'EFFECT_AUTHORITY_PROVEN=false'
+          echo 'NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false'
