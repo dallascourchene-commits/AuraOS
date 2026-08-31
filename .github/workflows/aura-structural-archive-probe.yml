@@ -48,8 +48,12 @@ jobs:
           python - <<'PY'
           import lzma, zlib
           from tools.aura_structural_archive_probe import build_40_rack_matrix, decode, encode
+
           racks = build_40_rack_matrix()
-          structural = fallback = candidate_total = generic_total = 0
+          structural = 0
+          fallback = 0
+          candidate_total = 0
+          generic_total = 0
           for rack in racks:
               blob, receipt = encode(rack)
               assert decode(blob) == rack
@@ -64,23 +68,56 @@ jobs:
               fallback += int(not receipt.structured_candidate_selected)
               candidate_total += len(blob)
               generic_total += min(len(rack), len(zlib.compress(rack, 9)), len(lzma.compress(rack, preset=9)))
+
           assert len(racks) == 40
           assert structural > 0 and fallback > 0
           assert candidate_total < generic_total
-          print({"racks": 40, "structural_selected": structural, "fallback_selected": fallback, "candidate_total": candidate_total, "best_generic_total": generic_total, "artifact_compression_only": True})
+          print({
+              "racks": 40,
+              "structural_selected": structural,
+              "fallback_selected": fallback,
+              "candidate_total": candidate_total,
+              "best_generic_total": generic_total,
+              "artifact_compression_only": True,
+          })
           PY
 
       - name: Prove cross-generation exact dedup and index nonauthority
         shell: bash
         run: |
           python - <<'PY'
-          from tools.aura_archive_versioned_chunk_dag import ChunkingPolicy, VersionedArtifact, inspect_versioned_archive, pack_versioned_archive, unpack_versioned_archive
+          from tools.aura_archive_versioned_chunk_dag import (
+              ChunkingPolicy,
+              VersionedArtifact,
+              inspect_versioned_archive,
+              pack_versioned_archive,
+              unpack_versioned_archive,
+          )
+
           shared = (b'{"law":"StableSubjectKey != EvidenceGenerationKey","payload":"' + b"A" * 2048 + b'"}\n') * 6
           v1 = shared + b'{"generation":"g1","delta":"alpha"}\n' + shared
           v2 = shared + b'{"generation":"g2","delta":"beta"}\n' + shared
+
           def artifact(name, body, generation):
-              return VersionedArtifact(artifact_id=name, subject_key="subject:archive-proof", generation_id=generation, source_bytes=body, sector="08_RSH", event_at="2026-08-31T17:00:00Z", recorded_at="2026-08-31T17:01:00Z", scale="WORLD", hydration_index={"L0": "orientation", "L1": "purpose"}, connectome_edges=({"relation": "DERIVED_FROM", "target": "archive-parent"},), d13=(0,) * 13, k27=(13, 2, 25))
-          archive, stats = pack_versioned_archive([artifact("g1", v1, "g1"), artifact("g2", v2, "g2")], policy=ChunkingPolicy(min_size=64, avg_size=128, max_size=256))
+              return VersionedArtifact(
+                  artifact_id=name,
+                  subject_key="subject:archive-proof",
+                  generation_id=generation,
+                  source_bytes=body,
+                  sector="08_RSH",
+                  event_at="2026-08-31T17:00:00Z",
+                  recorded_at="2026-08-31T17:01:00Z",
+                  scale="WORLD",
+                  hydration_index={"L0": "orientation", "L1": "purpose"},
+                  connectome_edges=({"relation": "DERIVED_FROM", "target": "archive-parent"},),
+                  d13=(0,) * 13,
+                  k27=(13, 2, 25),
+              )
+
+          archive, stats = pack_versioned_archive(
+              [artifact("g1", v1, "g1"), artifact("g2", v2, "g2")],
+              policy=ChunkingPolicy(min_size=64, avg_size=128, max_size=256),
+          )
           assert unpack_versioned_archive(archive) == {"g1": v1, "g2": v2}
           info = inspect_versioned_archive(archive)
           assert stats.unique_chunk_source_bytes < stats.logical_source_bytes
@@ -90,5 +127,11 @@ jobs:
           assert info["claim_ceiling"]["coordinate_memory_write_authority"] is False
           assert info["claim_ceiling"]["native_private_transformer_kv"] is False
           assert info["claim_ceiling"]["effect_authority"] is False
-          print({"logical_source_bytes": stats.logical_source_bytes, "unique_chunk_source_bytes": stats.unique_chunk_source_bytes, "archive_bytes": stats.archive_bytes, "dedup_fraction_fixture_only": stats.exact_dedup_savings_fraction, "structural_modes": stats.structural_modes})
+          print({
+              "logical_source_bytes": stats.logical_source_bytes,
+              "unique_chunk_source_bytes": stats.unique_chunk_source_bytes,
+              "archive_bytes": stats.archive_bytes,
+              "dedup_fraction_fixture_only": stats.exact_dedup_savings_fraction,
+              "structural_modes": stats.structural_modes,
+          })
           PY
