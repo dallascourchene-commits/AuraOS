@@ -81,13 +81,24 @@ pub enum SyntaxGraphAdmissionError {
     InvalidGrammarAbi,
     EmptySourceDigest,
     EmptyProjection,
-    InvalidSpan { local_node_id: u64, start: u64, end: u64 },
-    AnonymousNodeForbidden { local_node_id: u64 },
-    EmptyKindName { local_node_id: u64 },
+    InvalidSpan {
+        local_node_id: u64,
+        start: u64,
+        end: u64,
+    },
+    AnonymousNodeForbidden {
+        local_node_id: u64,
+    },
+    EmptyKindName {
+        local_node_id: u64,
+    },
     DuplicateLocalNodeId(u64),
     UnknownEdgeEndpoint(u64),
     SelfEdge(u64),
-    DuplicateEdge { parent: u64, child: u64 },
+    DuplicateEdge {
+        parent: u64,
+        child: u64,
+    },
     NonDirectEdgePolicy,
 }
 
@@ -145,8 +156,13 @@ pub fn admit_syntax_graph(
                 local_node_id: node.local_node_id,
             });
         }
-        if local_to_ordinal.insert(node.local_node_id, ordinal).is_some() {
-            return Err(SyntaxGraphAdmissionError::DuplicateLocalNodeId(node.local_node_id));
+        if local_to_ordinal
+            .insert(node.local_node_id, ordinal)
+            .is_some()
+        {
+            return Err(SyntaxGraphAdmissionError::DuplicateLocalNodeId(
+                node.local_node_id,
+            ));
         }
     }
 
@@ -164,7 +180,9 @@ pub fn admit_syntax_graph(
             ));
         };
         if parent == child {
-            return Err(SyntaxGraphAdmissionError::SelfEdge(edge.parent_local_node_id));
+            return Err(SyntaxGraphAdmissionError::SelfEdge(
+                edge.parent_local_node_id,
+            ));
         }
         if !seen_edges.insert((parent, child)) {
             return Err(SyntaxGraphAdmissionError::DuplicateEdge {
@@ -306,9 +324,18 @@ mod tests {
     #[test]
     fn storage_local_node_ids_do_not_define_syntax_graph_identity() {
         let g = grammar("python", "0.25.0", "0.25.10");
-        let p = profile("python/NAMED_ONLY/v1", NodeSelectionPolicyV1::NamedNodesOnly);
-        let a = admit_syntax_graph(&g, &p, &source(), &named_nodes([1, 2, 3]), &edges([1, 2, 3]))
-            .unwrap();
+        let p = profile(
+            "python/NAMED_ONLY/v1",
+            NodeSelectionPolicyV1::NamedNodesOnly,
+        );
+        let a = admit_syntax_graph(
+            &g,
+            &p,
+            &source(),
+            &named_nodes([1, 2, 3]),
+            &edges([1, 2, 3]),
+        )
+        .unwrap();
         let b = admit_syntax_graph(
             &g,
             &p,
@@ -323,7 +350,10 @@ mod tests {
     #[test]
     fn normalization_profile_is_part_of_identity() {
         let g = grammar("python", "0.25.0", "0.25.10");
-        let named = profile("python/NAMED_ONLY/v1", NodeSelectionPolicyV1::NamedNodesOnly);
+        let named = profile(
+            "python/NAMED_ONLY/v1",
+            NodeSelectionPolicyV1::NamedNodesOnly,
+        );
         let all = profile("python/ALL_CHILDREN/v1", NodeSelectionPolicyV1::AllChildren);
         let nodes = named_nodes([1, 2, 3]);
         let e = edges([1, 2, 3]);
@@ -334,7 +364,10 @@ mod tests {
 
     #[test]
     fn grammar_and_binding_versions_are_part_of_identity() {
-        let p = profile("language/NAMED_ONLY/v1", NodeSelectionPolicyV1::NamedNodesOnly);
+        let p = profile(
+            "language/NAMED_ONLY/v1",
+            NodeSelectionPolicyV1::NamedNodesOnly,
+        );
         let nodes = named_nodes([1, 2, 3]);
         let e = edges([1, 2, 3]);
         let python = admit_syntax_graph(
@@ -359,12 +392,17 @@ mod tests {
     #[test]
     fn named_only_profile_rejects_anonymous_nodes() {
         let g = grammar("python", "0.25.0", "0.25.10");
-        let p = profile("python/NAMED_ONLY/v1", NodeSelectionPolicyV1::NamedNodesOnly);
+        let p = profile(
+            "python/NAMED_ONLY/v1",
+            NodeSelectionPolicyV1::NamedNodesOnly,
+        );
         let mut nodes = named_nodes([1, 2, 3]);
         nodes[2].named = false;
         assert_eq!(
             admit_syntax_graph(&g, &p, &source(), &nodes, &edges([1, 2, 3])),
-            Err(SyntaxGraphAdmissionError::AnonymousNodeForbidden { local_node_id: 3 })
+            Err(SyntaxGraphAdmissionError::AnonymousNodeForbidden {
+                local_node_id: 3
+            })
         );
     }
 
@@ -381,7 +419,10 @@ mod tests {
     #[test]
     fn source_generation_is_part_of_identity() {
         let g = grammar("python", "0.25.0", "0.25.10");
-        let p = profile("python/NAMED_ONLY/v1", NodeSelectionPolicyV1::NamedNodesOnly);
+        let p = profile(
+            "python/NAMED_ONLY/v1",
+            NodeSelectionPolicyV1::NamedNodesOnly,
+        );
         let nodes = named_nodes([1, 2, 3]);
         let e = edges([1, 2, 3]);
         let a = admit_syntax_graph(&g, &p, &source(), &nodes, &e).unwrap();
@@ -394,7 +435,10 @@ mod tests {
     #[test]
     fn malformed_projection_fails_closed() {
         let g = grammar("python", "0.25.0", "0.25.10");
-        let p = profile("python/NAMED_ONLY/v1", NodeSelectionPolicyV1::NamedNodesOnly);
+        let p = profile(
+            "python/NAMED_ONLY/v1",
+            NodeSelectionPolicyV1::NamedNodesOnly,
+        );
         let nodes = named_nodes([1, 2, 3]);
         let bad_edge = [SyntaxEdgeProjectionV1 {
             parent_local_node_id: 1,
