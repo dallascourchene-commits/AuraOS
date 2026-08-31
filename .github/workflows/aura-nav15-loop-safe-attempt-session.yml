@@ -1,0 +1,145 @@
+name: Aura NAV-15 Loop-Safe Attempt Session Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_nav14_loop_safe_attempt_session.py"
+      - "tests/test_aura_nav14_loop_safe_attempt_session.py"
+      - "docs/arena/NAV15_LOOP_SAFE_ATTEMPT_SESSION_V1.md"
+      - ".github/workflows/aura-nav15-loop-safe-attempt-session.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-nav15-attempt-session-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      NAV14_HEAD: 6cdd1be40428250bffba20e924f664c7be585469
+      NAV14_BLOB: b1bdfb4c65281c314e658a6fb6fc8727a4b54245
+      NAV14_RUN: "33437542974"
+      NAV14_JOB: "99637538062"
+      LOOP_HEAD: 6406e2f302335f940a7e780d818966a539c88845
+      LOOP_BLOB: ba5800c20b09fd736054ef69615fd2e8f872b664
+      LOOP_RUN: "33437846633"
+      LOOP_JOB: "99638534069"
+      CONVERGENCE: 5e986b2a40f6575ca7c42a8b8a93c89c8ca13872
+      REPO: dallascourchene-commits/AuraOS
+      GITHUB_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout exact pull-request head and full history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          submodules: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Authenticate true convergence and exact parent blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$CONVERGENCE^1")" = "$NAV14_HEAD"
+          test "$(git rev-parse "$CONVERGENCE^2")" = "$LOOP_HEAD"
+          test "$(git rev-parse "$NAV14_HEAD:tools/aura_nav14_progress_bound_hydrated_version_handoff.py")" = "$NAV14_BLOB"
+          test "$(git rev-parse "$LOOP_HEAD:tools/aura_execution_loop_guard.py")" = "$LOOP_BLOB"
+          git merge-base --is-ancestor "$CONVERGENCE" HEAD
+          echo "NAV15_TRUE_TWO_PARENT_CONVERGENCE=true"
+
+      - name: Revalidate exact hosted parent proof coordinates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          headers={
+              'Authorization':f"Bearer {os.environ['GITHUB_TOKEN']}",
+              'Accept':'application/vnd.github+json',
+              'X-GitHub-Api-Version':'2022-11-28',
+          }
+          repo=os.environ['REPO']
+          expected=(
+              (os.environ['NAV14_RUN'],os.environ['NAV14_JOB'],os.environ['NAV14_HEAD'],'Aura NAV-14 Progress-Bound Hydrated Version Handoff Proof'),
+              (os.environ['LOOP_RUN'],os.environ['LOOP_JOB'],os.environ['LOOP_HEAD'],'Universal Loop Safety Guard'),
+          )
+          for run_id,job_id,head,name in expected:
+              req=urllib.request.Request(f"https://api.github.com/repos/{repo}/actions/runs/{run_id}",headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  run=json.load(response)
+              assert run['head_sha']==head,run
+              assert run['name']==name,run
+              assert run['status']=='completed' and run['conclusion']=='success',run
+              req=urllib.request.Request(f"https://api.github.com/repos/{repo}/actions/jobs/{job_id}",headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as response:
+                  job=json.load(response)
+              assert job['head_sha']==head,job
+              assert job['status']=='completed' and job['conclusion']=='success',job
+          print('NAV15_PARENT_PROOFS_EXACT_GREEN=true')
+          PY
+
+      - name: Reexecute universal loop guard parent
+        shell: bash
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/loop-parent "$LOOP_HEAD"
+          (
+            cd /tmp/loop-parent
+            python -m py_compile tools/aura_execution_loop_guard.py tests/test_aura_execution_loop_guard.py
+            python -m unittest -v tests.test_aura_execution_loop_guard
+          )
+
+      - name: Reexecute NAV-14 parent and run NAV-15 adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/aura_nav14_progress_bound_hydrated_version_handoff.py \
+            tests/test_aura_nav14_progress_bound_hydrated_version_handoff.py \
+            tools/aura_nav14_loop_safe_attempt_session.py \
+            tests/test_aura_nav14_loop_safe_attempt_session.py
+          PYTHONPATH=. python -m unittest -v \
+            tests.test_aura_nav14_progress_bound_hydrated_version_handoff \
+            tests.test_aura_nav14_loop_safe_attempt_session
+
+      - name: Exhaust complete 64-state Different-J session lattice
+        shell: bash
+        run: |
+          set -euo pipefail
+          PYTHONPATH=. python3 - <<'PY'
+          import tools.aura_nav14_loop_safe_attempt_session as m
+          checked=m.prove_different_j()
+          assert checked==64,checked
+          assert 'AttemptHistoryProjectionRequiredBeforeSessionCandidate' in m.LAWS
+          assert 'AttemptHistoryProjection!=LedgerProducerAuthentication!=PersistenceProof' in m.LAWS
+          print(f'NAV15_DIFFERENT_J_STATES={checked}')
+          PY
+
+      - name: Enforce trust and nonpromotion ceilings
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'SCHOLAR_DIRECT_GAP:NAV15:loop-safe-attempt-session' docs/arena/NAV15_LOOP_SAFE_ATTEMPT_SESSION_V1.md
+          grep -F 'CoordinateMemory != MODEL_PREFIX_KV' docs/arena/NAV15_LOOP_SAFE_ATTEMPT_SESSION_V1.md
+          PYTHONPATH=. python3 - <<'PY'
+          import tools.aura_nav14_loop_safe_attempt_session as m
+          h,l,g,i=m._fixture()
+          r=m.bind_loop_safe_attempt_session(handoff=h,ledger=l,guard=g,intent=i)
+          assert r.attempt_session_candidate is True
+          assert r.candidate_only is True
+          assert r.ledger_producer_authenticated is False
+          assert r.ledger_persistence_proven is False
+          assert r.currentness_resolved is False
+          assert r.evidence_admitted is False
+          assert r.tool_execution_authorized is False
+          assert r.effect_authorized is False
+          assert r.semantic_k27_authority is False
+          assert r.native_private_transformer_kv_accessed is False
+          print('NAV15_NONPROMOTION_AND_TRUST_CEILING=true')
+          PY
