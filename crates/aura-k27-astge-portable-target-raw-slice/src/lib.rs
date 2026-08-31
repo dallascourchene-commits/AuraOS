@@ -13,7 +13,7 @@
 use aura_k27_astge::NodeIndexRecordV1;
 use aura_k27_astge_materialize::{AdmittedSourceCatalogV1, MaterializeError};
 use aura_k27_astge_post_edit_canonical_projection::{
-    CanonicalDefinitionTargetProjectionV1, ProjectionErrorV1, verify_projection,
+    verify_projection, CanonicalDefinitionTargetProjectionV1, ProjectionErrorV1,
 };
 use sha2::{Digest, Sha256};
 use std::error::Error;
@@ -173,8 +173,7 @@ pub fn admit_portable_target_raw_slice(
             .selected_target_semantic_handle_digest_hex
             .clone(),
         portable_target_bound_to_exact_current_raw_slice: true,
-        source_currentness_revalidated_at_materialization: materialized
-            .source_currentness_verified,
+        source_currentness_revalidated_at_materialization: materialized.source_currentness_verified,
         synthetic_record_is_materialization_coordinate_only: true,
         storage_node_identity_minted: false,
         semantic_handle_carried_from_portable_owner: true,
