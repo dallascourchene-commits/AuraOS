@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788188321,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1641,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1385,6 +1385,7 @@
       "tests/test_aura_civic_planning_stress.py",
       "tests/test_aura_civic_snapshots_and_store.py",
       "tests/test_aura_civic_tensor_adapter.py",
+      "tests/test_aura_closed_world_result_lifecycle_gate.py",
       "tests/test_aura_cockpit_audit_trail.py",
       "tests/test_aura_cockpit_capability_router.py",
       "tests/test_aura_cockpit_planner.py",
@@ -1631,6 +1632,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_closed_world_result_lifecycle_gate.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,15 +1757,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1641,
+      "bytes": 26440479,
+      "tokens_est": 6600471,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
+        "python_module": 999,
         "schema_or_lexicon": 271,
         "support_file": 49
       }
@@ -3461,6 +3463,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "function",
+        "line": 406,
+        "end_line": 433,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:main:472c87e4f108491d",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -3895,6 +3905,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 53,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_canonical:678b565d2d564657",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -8067,6 +8085,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 57,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_sha:e0a6f9968a1db67f",
+        "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
     "_repo": [
@@ -13707,6 +13733,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "function",
+        "line": 65,
+        "end_line": 67,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_sha256:9e05fffaff211cff",
+        "signature_hash": "a46cbd439e4d33c2"
       }
     ],
     "PullRequestRouteBinding": [
@@ -15765,6 +15799,14 @@
         "end_line": 81,
         "semantic_id": "aura_unified_memory_continuity_toolchain.py#function:_required:fd9913556df96604",
         "signature_hash": "8b28cfce6f68b96b"
+      },
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 62,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_required:b03a704e3236269d",
+        "signature_hash": "9737d32c1db83273"
       }
     ],
     "_hash": [
@@ -121805,6 +121847,214 @@
         "signature_hash": "adbded239c81694b"
       }
     ],
+    "model": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 45,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#function:model:59d420eaa25d4722",
+        "signature_hash": "8dfcc9812c38177a"
+      }
+    ],
+    "host": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "function",
+        "line": 48,
+        "end_line": 61,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#function:host:821cca5188d3a7b7",
+        "signature_hash": "1007c8033efc5ee6"
+      }
+    ],
+    "policy": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "function",
+        "line": 64,
+        "end_line": 80,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#function:policy:69a6608bd6ee95a7",
+        "signature_hash": "6753272820539b09"
+      },
+      {
+        "file": "tests/test_aura_gate.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 184,
+        "semantic_id": "tests/test_aura_gate.py#function:policy:6c4234b7f9aaa5a3",
+        "signature_hash": "96c8d2d81ca0f6b2"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "class",
+        "line": 83,
+        "end_line": 198,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#class:ClosedWorldLifecycleGateTests:2f8c589f584cc2fc",
+        "signature_hash": "2b620d1d3ae9e582"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_happy_path_is_terminal_success_with_deterministic_semantic_commit": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 93,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_happy_path_is_terminal_success_with_deterministic_semantic_commit:46f9d8705678d668",
+        "signature_hash": "f2ec7ec29b7a54e7"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_completed_narrative_cannot_replace_required_host_receipt": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 100,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_completed_narrative_cannot_replace_required_host_receipt:b73bb6b83a822e60",
+        "signature_hash": "e055ab1b4d746dba"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_positive_result_cannot_compensate_failed_hard_gate": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 108,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_positive_result_cannot_compensate_failed_hard_gate:070bad460258329d",
+        "signature_hash": "91c6f6ed318cb1bc"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_parent_validation_failure_blocks_commit": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 115,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_parent_validation_failure_blocks_commit:4f2d98346fe5471b",
+        "signature_hash": "41aa14ae213cb65a"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_old_source_generation_holds_even_with_completed_model": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 121,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_old_source_generation_holds_even_with_completed_model:46519631a3a2f01f",
+        "signature_hash": "7b5933e8042b4930"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_authority_mismatch_holds": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 127,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_authority_mismatch_holds:00d759369c00aa63",
+        "signature_hash": "67a1a588904172d1"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_contradiction_requires_review": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 134,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_contradiction_requires_review:368279872797203d",
+        "signature_hash": "8f35708c75093b01"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_distinct_review_requirement_is_non_self_certifying": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 136,
+        "end_line": 143,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_distinct_review_requirement_is_non_self_certifying:f8f57db2587b5f38",
+        "signature_hash": "90779dab1ce0d913"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_missing_required_artifact_holds": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 149,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_missing_required_artifact_holds:b06c92382489e0cc",
+        "signature_hash": "e960feeafdefb145"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_missing_required_typed_claim_holds": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 155,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_missing_required_typed_claim_holds:b959c2287c6976c2",
+        "signature_hash": "b06dc25a303480fc"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_host_output_digest_must_match_model_output": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 161,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_host_output_digest_must_match_model_output:caf9043ad50501e5",
+        "signature_hash": "9c019f970c2610c5"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_host_effect_must_be_observed_completed": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 163,
+        "end_line": 167,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_host_effect_must_be_observed_completed:b91358c933507803",
+        "signature_hash": "9c8a6bf639d21f96"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_physical_fanout_claim_requires_host_observation": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 173,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_physical_fanout_claim_requires_host_observation:9efefea7e431604b",
+        "signature_hash": "d033b9b2d20f12e2"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_partial_unknown_review_required_dispositions_do_not_terminal_success": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 182,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_partial_unknown_review_required_dispositions_do_not_terminal_success:e8ab8fcb24f91627",
+        "signature_hash": "acd0ba16dfae4814"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_blocked_refused_and_error_remain_terminal_but_not_success_commits": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 184,
+        "end_line": 192,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_blocked_refused_and_error_remain_terminal_but_not_success_commits:55359415658085d8",
+        "signature_hash": "ebfd97af82a4a11f"
+      }
+    ],
+    "ClosedWorldLifecycleGateTests.test_cache_reuse_state_never_promotes_by_name_or_coordinate": [
+      {
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 194,
+        "end_line": 198,
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_cache_reuse_state_never_promotes_by_name_or_coordinate:0da54f3dad2c95b6",
+        "signature_hash": "347d074d9ede0289"
+      }
+    ],
     "TestAuditTrail": [
       {
         "file": "tests/test_aura_cockpit_audit_trail.py",
@@ -136641,16 +136891,6 @@
         "signature_hash": "49f2fd618649a7d1"
       }
     ],
-    "policy": [
-      {
-        "file": "tests/test_aura_gate.py",
-        "kind": "function",
-        "line": 152,
-        "end_line": 184,
-        "semantic_id": "tests/test_aura_gate.py#function:policy:6c4234b7f9aaa5a3",
-        "signature_hash": "96c8d2d81ca0f6b2"
-      }
-    ],
     "test_policy_round_trip_and_strict_contract": [
       {
         "file": "tests/test_aura_gate.py",
@@ -149897,6 +150137,14 @@
         "end_line": 27,
         "semantic_id": "tests/test_aura_shadow_tool_observability.py#function:_decision:54ec1730b687141b",
         "signature_hash": "5a7f6afd4061ff16"
+      },
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "function",
+        "line": 242,
+        "end_line": 273,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_decision:a2752fa3e56fcec4",
+        "signature_hash": "0f9c8cc08efb5955"
       }
     ],
     "test_wrapper_forwards_only_original_tool_arguments": [
@@ -157179,6 +157427,146 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "ClaimRef": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "class",
+        "line": 71,
+        "end_line": 82,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#class:ClaimRef:65233d1d4034f0c9",
+        "signature_hash": "6fa815799e56b758"
+      }
+    ],
+    "ClaimRef.validate": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 82,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#method:ClaimRef.validate:a8e1939eb0db7d86",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ModelResultEnvelope": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "class",
+        "line": 86,
+        "end_line": 122,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#class:ModelResultEnvelope:c168ceed3b1cec57",
+        "signature_hash": "3c93461ecb218750"
+      }
+    ],
+    "ModelResultEnvelope.validate": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 122,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#method:ModelResultEnvelope.validate:c9c546869b04f621",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "HostExecutionReceipt": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "class",
+        "line": 126,
+        "end_line": 156,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#class:HostExecutionReceipt:d44d51172e88303d",
+        "signature_hash": "d92042340bd68350"
+      }
+    ],
+    "HostExecutionReceipt.validate": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 138,
+        "end_line": 156,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#method:HostExecutionReceipt.validate:7384a44ba5a7c2ee",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "HardGate": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "class",
+        "line": 160,
+        "end_line": 172,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#class:HardGate:956a2f75451e8be8",
+        "signature_hash": "6ced5aefbfe87f41"
+      }
+    ],
+    "HardGate.validate": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 172,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#method:HardGate.validate:2f96e5a1b41141ed",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "LifecyclePolicy": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "class",
+        "line": 176,
+        "end_line": 213,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#class:LifecyclePolicy:2fa776d6c9415722",
+        "signature_hash": "cbcb27f3c53be3d1"
+      }
+    ],
+    "LifecyclePolicy.validate": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 191,
+        "end_line": 213,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#method:LifecyclePolicy.validate:0e0b47408b73c4e6",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ReducerDecision": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "class",
+        "line": 217,
+        "end_line": 239,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#class:ReducerDecision:c21422e932665496",
+        "signature_hash": "7dd99b9a3c8385d5"
+      }
+    ],
+    "ReducerDecision.reducer_digest": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "method",
+        "line": 238,
+        "end_line": 239,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#method:ReducerDecision.reducer_digest:c102ea9e5663bb3c",
+        "signature_hash": "fbaaa931d776ed10"
+      }
+    ],
+    "reduce_result_lifecycle": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "function",
+        "line": 276,
+        "end_line": 396,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:reduce_result_lifecycle:56b62147da214512",
+        "signature_hash": "6dc58e850585e9a7"
+      }
+    ],
+    "validate_reuse_state": [
+      {
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "kind": "function",
+        "line": 399,
+        "end_line": 403,
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:validate_reuse_state:9b23d612362ecca0",
+        "signature_hash": "6a5c948aff4604db"
       }
     ],
     "_coordinates": [
@@ -251086,6 +251474,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8675,
+      "lines": 203,
+      "tokens_est": 2169,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "ed57228018e9b121",
+      "vector": [
+        0.096074,
+        -0.23442,
+        -0.021777,
+        -0.03971,
+        -0.049958,
+        -0.211362,
+        0.236982,
+        -0.249792,
+        -0.075578,
+        -0.121693,
+        0.147313,
+        0.249792,
+        0.201114,
+        -0.311279,
+        0.244668,
+        -0.10376,
+        0.288221,
+        0.147313,
+        -0.277973,
+        -0.026901,
+        -0.011529,
+        0.178057,
+        0.260039,
+        -0.198552,
+        -0.108883,
+        -0.026901,
+        0.175495,
+        -0.149875,
+        -0.06533,
+        -0.057644,
+        0.144751,
+        -0.198552
+      ]
+    },
+    {
       "path": "tests/test_aura_cockpit_audit_trail.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +263080,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_closed_world_result_lifecycle_gate.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 16756,
+      "lines": 438,
+      "tokens_est": 4189,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "b525ebc9f2ad75a0",
+      "vector": [
+        0.066332,
+        -0.234193,
+        0.052795,
+        -0.033843,
+        0.307294,
+        -0.185459,
+        0.023013,
+        0.098821,
+        -0.004061,
+        -0.223363,
+        0.004061,
+        0.193581,
+        -0.039258,
+        0.066332,
+        -0.134018,
+        0.288342,
+        -0.261267,
+        0.253145,
+        -0.204411,
+        0.24773,
+        -0.161092,
+        -0.112358,
+        0.180044,
+        0.215241,
+        -0.239608,
+        -0.266682,
+        -0.017598,
+        0.155677,
+        0.06904,
+        0.079869,
+        0.134018,
+        -0.261267
       ]
     },
     {
@@ -286646,15 +287128,15 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1641,
+    "total_bytes": 26440479,
+    "text_tokens_est": 6600471,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
+      "python_module": 999,
       "schema_or_lexicon": 271,
       "support_file": 49
     },
@@ -288050,6 +288532,7 @@
       "tests/test_aura_civic_planning_stress.py",
       "tests/test_aura_civic_snapshots_and_store.py",
       "tests/test_aura_civic_tensor_adapter.py",
+      "tests/test_aura_closed_world_result_lifecycle_gate.py",
       "tests/test_aura_cockpit_audit_trail.py",
       "tests/test_aura_cockpit_capability_router.py",
       "tests/test_aura_cockpit_planner.py",
@@ -288296,6 +288779,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_closed_world_result_lifecycle_gate.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -408734,6 +409218,206 @@
         "file_digest8": "013ce0ed2eeffd52"
       },
       {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#class:ClosedWorldLifecycleGateTests:2f8c589f584cc2fc",
+        "name": "ClosedWorldLifecycleGateTests",
+        "kind": "class",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 83,
+        "end_line": 198,
+        "signature_hash": "2b620d1d3ae9e582",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#function:host:821cca5188d3a7b7",
+        "name": "host",
+        "kind": "function",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 48,
+        "end_line": 61,
+        "signature_hash": "1007c8033efc5ee6",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#function:model:59d420eaa25d4722",
+        "name": "model",
+        "kind": "function",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 22,
+        "end_line": 45,
+        "signature_hash": "8dfcc9812c38177a",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#function:policy:69a6608bd6ee95a7",
+        "name": "policy",
+        "kind": "function",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 64,
+        "end_line": 80,
+        "signature_hash": "6753272820539b09",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_authority_mismatch_holds:00d759369c00aa63",
+        "name": "ClosedWorldLifecycleGateTests.test_authority_mismatch_holds",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 123,
+        "end_line": 127,
+        "signature_hash": "67a1a588904172d1",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_blocked_refused_and_error_remain_terminal_but_not_success_commits:55359415658085d8",
+        "name": "ClosedWorldLifecycleGateTests.test_blocked_refused_and_error_remain_terminal_but_not_success_commits",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 184,
+        "end_line": 192,
+        "signature_hash": "ebfd97af82a4a11f",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_cache_reuse_state_never_promotes_by_name_or_coordinate:0da54f3dad2c95b6",
+        "name": "ClosedWorldLifecycleGateTests.test_cache_reuse_state_never_promotes_by_name_or_coordinate",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 194,
+        "end_line": 198,
+        "signature_hash": "347d074d9ede0289",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_completed_narrative_cannot_replace_required_host_receipt:b73bb6b83a822e60",
+        "name": "ClosedWorldLifecycleGateTests.test_completed_narrative_cannot_replace_required_host_receipt",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 95,
+        "end_line": 100,
+        "signature_hash": "e055ab1b4d746dba",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_contradiction_requires_review:368279872797203d",
+        "name": "ClosedWorldLifecycleGateTests.test_contradiction_requires_review",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 129,
+        "end_line": 134,
+        "signature_hash": "8f35708c75093b01",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_distinct_review_requirement_is_non_self_certifying:f8f57db2587b5f38",
+        "name": "ClosedWorldLifecycleGateTests.test_distinct_review_requirement_is_non_self_certifying",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 136,
+        "end_line": 143,
+        "signature_hash": "90779dab1ce0d913",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_happy_path_is_terminal_success_with_deterministic_semantic_commit:46f9d8705678d668",
+        "name": "ClosedWorldLifecycleGateTests.test_happy_path_is_terminal_success_with_deterministic_semantic_commit",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 84,
+        "end_line": 93,
+        "signature_hash": "f2ec7ec29b7a54e7",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_host_effect_must_be_observed_completed:b91358c933507803",
+        "name": "ClosedWorldLifecycleGateTests.test_host_effect_must_be_observed_completed",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 163,
+        "end_line": 167,
+        "signature_hash": "9c8a6bf639d21f96",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_host_output_digest_must_match_model_output:caf9043ad50501e5",
+        "name": "ClosedWorldLifecycleGateTests.test_host_output_digest_must_match_model_output",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 157,
+        "end_line": 161,
+        "signature_hash": "9c019f970c2610c5",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_missing_required_artifact_holds:b06c92382489e0cc",
+        "name": "ClosedWorldLifecycleGateTests.test_missing_required_artifact_holds",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 145,
+        "end_line": 149,
+        "signature_hash": "e960feeafdefb145",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_missing_required_typed_claim_holds:b959c2287c6976c2",
+        "name": "ClosedWorldLifecycleGateTests.test_missing_required_typed_claim_holds",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 151,
+        "end_line": 155,
+        "signature_hash": "b06dc25a303480fc",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_old_source_generation_holds_even_with_completed_model:46519631a3a2f01f",
+        "name": "ClosedWorldLifecycleGateTests.test_old_source_generation_holds_even_with_completed_model",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 117,
+        "end_line": 121,
+        "signature_hash": "7b5933e8042b4930",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_parent_validation_failure_blocks_commit:4f2d98346fe5471b",
+        "name": "ClosedWorldLifecycleGateTests.test_parent_validation_failure_blocks_commit",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 110,
+        "end_line": 115,
+        "signature_hash": "41aa14ae213cb65a",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_partial_unknown_review_required_dispositions_do_not_terminal_success:e8ab8fcb24f91627",
+        "name": "ClosedWorldLifecycleGateTests.test_partial_unknown_review_required_dispositions_do_not_terminal_success",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 175,
+        "end_line": 182,
+        "signature_hash": "acd0ba16dfae4814",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_physical_fanout_claim_requires_host_observation:9efefea7e431604b",
+        "name": "ClosedWorldLifecycleGateTests.test_physical_fanout_claim_requires_host_observation",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 169,
+        "end_line": 173,
+        "signature_hash": "d033b9b2d20f12e2",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
+        "semantic_id": "tests/test_aura_closed_world_result_lifecycle_gate.py#method:ClosedWorldLifecycleGateTests.test_positive_result_cannot_compensate_failed_hard_gate:070bad460258329d",
+        "name": "ClosedWorldLifecycleGateTests.test_positive_result_cannot_compensate_failed_hard_gate",
+        "kind": "method",
+        "file": "tests/test_aura_closed_world_result_lifecycle_gate.py",
+        "line": 102,
+        "end_line": 108,
+        "signature_hash": "91c6f6ed318cb1bc",
+        "file_digest8": "ed57228018e9b121"
+      },
+      {
         "semantic_id": "tests/test_aura_cockpit_audit_trail.py#class:TestAuditTrail:abad1cf4af1da215",
         "name": "TestAuditTrail",
         "kind": "class",
@@ -445634,6 +446318,206 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#class:ClaimRef:65233d1d4034f0c9",
+        "name": "ClaimRef",
+        "kind": "class",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 71,
+        "end_line": 82,
+        "signature_hash": "6fa815799e56b758",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#class:HardGate:956a2f75451e8be8",
+        "name": "HardGate",
+        "kind": "class",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 160,
+        "end_line": 172,
+        "signature_hash": "6ced5aefbfe87f41",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#class:HostExecutionReceipt:d44d51172e88303d",
+        "name": "HostExecutionReceipt",
+        "kind": "class",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 126,
+        "end_line": 156,
+        "signature_hash": "d92042340bd68350",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#class:LifecyclePolicy:2fa776d6c9415722",
+        "name": "LifecyclePolicy",
+        "kind": "class",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 176,
+        "end_line": 213,
+        "signature_hash": "cbcb27f3c53be3d1",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#class:ModelResultEnvelope:c168ceed3b1cec57",
+        "name": "ModelResultEnvelope",
+        "kind": "class",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 86,
+        "end_line": 122,
+        "signature_hash": "3c93461ecb218750",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#class:ReducerDecision:c21422e932665496",
+        "name": "ReducerDecision",
+        "kind": "class",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 217,
+        "end_line": 239,
+        "signature_hash": "7dd99b9a3c8385d5",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_canonical:678b565d2d564657",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 50,
+        "end_line": 53,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_decision:a2752fa3e56fcec4",
+        "name": "_decision",
+        "kind": "function",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 242,
+        "end_line": 273,
+        "signature_hash": "0f9c8cc08efb5955",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_required:b03a704e3236269d",
+        "name": "_required",
+        "kind": "function",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 60,
+        "end_line": 62,
+        "signature_hash": "9737d32c1db83273",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_sha256:9e05fffaff211cff",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 65,
+        "end_line": 67,
+        "signature_hash": "a46cbd439e4d33c2",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:_sha:e0a6f9968a1db67f",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 56,
+        "end_line": 57,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:main:472c87e4f108491d",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 406,
+        "end_line": 433,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:reduce_result_lifecycle:56b62147da214512",
+        "name": "reduce_result_lifecycle",
+        "kind": "function",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 276,
+        "end_line": 396,
+        "signature_hash": "6dc58e850585e9a7",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#function:validate_reuse_state:9b23d612362ecca0",
+        "name": "validate_reuse_state",
+        "kind": "function",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 399,
+        "end_line": 403,
+        "signature_hash": "6a5c948aff4604db",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#method:ClaimRef.validate:a8e1939eb0db7d86",
+        "name": "ClaimRef.validate",
+        "kind": "method",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 77,
+        "end_line": 82,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#method:HardGate.validate:2f96e5a1b41141ed",
+        "name": "HardGate.validate",
+        "kind": "method",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 165,
+        "end_line": 172,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#method:HostExecutionReceipt.validate:7384a44ba5a7c2ee",
+        "name": "HostExecutionReceipt.validate",
+        "kind": "method",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 138,
+        "end_line": 156,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#method:LifecyclePolicy.validate:0e0b47408b73c4e6",
+        "name": "LifecyclePolicy.validate",
+        "kind": "method",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 191,
+        "end_line": 213,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#method:ModelResultEnvelope.validate:c9c546869b04f621",
+        "name": "ModelResultEnvelope.validate",
+        "kind": "method",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 101,
+        "end_line": 122,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
+        "semantic_id": "tools/aura_closed_world_result_lifecycle_gate.py#method:ReducerDecision.reducer_digest:c102ea9e5663bb3c",
+        "name": "ReducerDecision.reducer_digest",
+        "kind": "method",
+        "file": "tools/aura_closed_world_result_lifecycle_gate.py",
+        "line": 238,
+        "end_line": 239,
+        "signature_hash": "fbaaa931d776ed10",
+        "file_digest8": "b525ebc9f2ad75a0"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447768,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "b04b94f4b355aec3a4ef00ef2fa496e5",
+    "payload_hash": "5e38a53ba8bc223c7ce9728fb79b3820"
   }
 }
