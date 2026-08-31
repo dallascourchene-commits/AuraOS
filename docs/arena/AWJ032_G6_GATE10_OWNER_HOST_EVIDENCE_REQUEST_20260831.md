@@ -26,6 +26,23 @@ Exact hosted proof head `293c59d7260372ccd3b9e8130b12979b052c3ed9`; source blob 
 
 Reusable law: caller/structural evidence cannot manufacture physical truth. Exact operation/workload/source identity plus observer/backend provenance are required before physical observation can be authenticated. The tiny runtime fixture is never GLM-5.3 performance evidence; only the provenance law is consumed.
 
+## W3 executable-proof repair — source HOLD must be reachable
+Self-review found the first v2 compiler represented `HOLD_EXACT_FLAGSHIP_SOURCE_IDENTITY_REQUIRED` in the 512-state proof while hardcoding the production source predicate to true. That made the abstract proof surface wider than the executable public membrane.
+
+Repair: add `SourceIdentityProjection(repository, pinned_revision, source_set_digest, official_revision_revalidation_required)`. Repository/revision/source-set mismatch or dropped revision-revalidation debt now reaches the typed source HOLD. A held receipt suppresses the unaccepted source identity rather than echoing it as canonical. The projection cannot set source currentness or tensor binding true.
+
+`SourceRequestIdentity != SourceCurrentnessTruth`.
+
+## Canonical downstream owner constraint — no duplicate return protocol
+Collision scan found the owner-host return path already exists and must be reused rather than re-created:
+
+- PR #582 exact hosted semantic generation `24a5404ee3b987dee12192917e40b35d3a43e81c`; production blob `91da9f6f5c9c8175fbe123634e53e14bc9ba3cbe`; `AWJ032 GLM53 Owner Host C2 Handoff` run `33360061584`, SUCCESS. It owns `OwnerHostC2CanaryRequest -> OwnerHostC2CanaryReceipt -> join_owner_host_c2_attempt` and explicitly does not self-authenticate the producer.
+- PR #586 exact hosted generation `aa3fcd9a4cefd18dbc991c3e8a450fcfbbb6726b`; lifecycle-return blob `8e57494c1c77eb41d6a402aa7dceb43121512863`; `AWJ032 GLM53 Owner Host Lifecycle Return Packet` run `33360529366`, SUCCESS. It carries attempt telemetry toward W4 while preserving independent lifecycle-metric, producer-authentication and registry ownership.
+
+These are **canonical owner constraints, not additional derivation parents**. The dedicated G6 workflow now authenticates their exact blobs and successful hosted runs. The request receipt carries their canonical heads/runs so future execution has one existing transport/return path.
+
+`CanonicalC2ReturnPath != ProducerAuthentication`.
+
 ## Request evidence axes
 The future owner-host evidence return must cover exactly:
 - OFFICIAL_SOURCE_REVISION_REVALIDATION
@@ -56,8 +73,14 @@ No native/private transformer KV state is accessed or represented.
 
 ## HyperDrive
 `CURRENT_BOUNDED_C2_REUSE_CANDIDATE + OPERATION_PROVENANCE_CONTRACT`
+`-> EXACT_SOURCE_REQUEST_IDENTITY`
 `-> EXACT_OWNER_HOST_REQUEST_BINDING`
-`-> OWNER_HOST_BOUNDED_C2_EVIDENCE_REQUEST_ENVELOPE_COMPILED | TYPED_HOLD`.
+`-> OWNER_HOST_BOUNDED_C2_EVIDENCE_REQUEST_ENVELOPE_COMPILED | TYPED_HOLD`
+`-> FUTURE PR582 REQUEST/RECEIPT/JOIN`
+`-> FUTURE PR586 LIFECYCLE RETURN`
+`-> INDEPENDENT PRODUCER/OBSERVER/LIFECYCLE AUTHENTICATION`
+`-> REPLAY/RECOVERY + AURAOS RESIDENT ROUTING`
+`-> GATE10 SYNTHESIS`.
 
 ## HyperScale
 HS1. Nine binary request preconditions yield a complete 512-state Different-J surface.
@@ -65,7 +88,7 @@ HS1. Nine binary request preconditions yield a complete 512-state Different-J su
 More synthetic request workers cannot replace one authenticated owner-host observation.
 
 ## Triadic / Creation / Omega-8
-Triadic: current-reuse thesis × operation-provenance counterplane -> exact nonexecuting owner-host request. Creation: freeze terminal parents -> detect stale G5 parent -> quotient superseded generation -> rebase parent plane -> bind request axes -> adversarial substitutions -> 512-state proof -> hosted exact proof -> persist -> recurse only after closure. Omega-8 covers provenance, ordered handoff, substitutions, currentness/provenance contradictions, factor separation, two-parent synthesis, Different-J quotient, temporal invalidators and effect ceiling.
+Triadic: current-reuse thesis × operation-provenance counterplane -> exact nonexecuting owner-host request. Creation: freeze terminal parents -> detect stale G5 parent -> quotient superseded generation -> rebase parent plane -> collision-scan existing C2 return owners -> expose source input rather than hardcode proof state -> adversarial substitutions -> 512-state proof -> hosted exact proof -> persist -> recurse only after closure. Omega-8 covers provenance, ordered handoff, substitutions, currentness/provenance contradictions, factor separation, two-parent synthesis, Different-J quotient, temporal invalidators and effect ceiling.
 
 ## Laws
 `AdmissionValidAtProduce!=AdmissionReusableAtUse`.
@@ -74,7 +97,9 @@ Triadic: current-reuse thesis × operation-provenance counterplane -> exact none
 `PhysicalAttestationBoolean!=PhysicalObservationProvenance`.
 `RequestEnvelopeCompiled!=TensorPayloadBound!=ExecutionObserved`.
 `PinnedOfficialRevision!=CurrentOfficialRevisionUntilRevalidated`.
+`SourceRequestIdentity!=SourceCurrentnessTruth`.
 `FullFlagshipIdentity!=FullFlagshipExecution`.
+`CanonicalC2ReturnPath!=ProducerAuthentication`.
 `Gate10DebtMustRemainExplicitUntilObserved`.
 `CoordinateMemory!=MODEL_PREFIX_KV`.
 
