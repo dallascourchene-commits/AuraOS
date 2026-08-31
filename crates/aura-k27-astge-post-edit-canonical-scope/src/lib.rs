@@ -124,9 +124,7 @@ pub fn require_candidate_definition_target_relation(
             ))?;
     let syntax_ordinal = selected
         .syntax_ordinal
-        .ok_or(PostEditCanonicalScopeErrorV1::SelectedScopeHasNoSyntaxOrdinal(
-            selected.scope_id,
-        ))?;
+        .ok_or(PostEditCanonicalScopeErrorV1::SelectedScopeHasNoSyntaxOrdinal(selected.scope_id))?;
     let ast_local_node_id = selected.ast_local_node_id.ok_or(
         PostEditCanonicalScopeErrorV1::SelectedScopeHasNoAstWitness(selected.scope_id),
     )?;
