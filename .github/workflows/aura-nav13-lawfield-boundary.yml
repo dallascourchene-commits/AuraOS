@@ -1,0 +1,164 @@
+name: Aura NAV-13 LawField Boundary Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_nav13_lawfield.py"
+      - "tests/test_aura_nav13_lawfield.py"
+      - "tools/aura_fractal_k27.py"
+      - "tools/aura_navigator_k27_collision_router.py"
+      - ".github/workflows/aura-nav13-lawfield-boundary.yml"
+  push:
+    branches:
+      - "arena/nav13-lawfield-boundary-v1-20260831-sol"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nav13-lawfield-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  exact-lawfield-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=100 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Authenticate proved Navigator substrate
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          import urllib.request
+          from pathlib import Path
+
+          expected = {
+              "tools/aura_fractal_k27.py": "37260b421ff4e191d398f53673feba2cf4af5857",
+              "tools/aura_navigator_k27_collision_router.py": "303bf85ddb57143766845070f839c1b66d9fc1a5",
+          }
+          for path, expected_git_blob in expected.items():
+              data = Path(path).read_bytes()
+              header = f"blob {len(data)}\0".encode()
+              observed = hashlib.sha1(header + data).hexdigest()
+              if observed != expected_git_blob:
+                  raise SystemExit(
+                      f"NAV13_UPSTREAM_BLOB_DRIFT:{path}:{observed}:{expected_git_blob}"
+                  )
+
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+          }
+          req = urllib.request.Request(
+              "https://api.github.com/repos/dallascourchene-commits/AuraOS/actions/runs/33425081520",
+              headers=headers,
+          )
+          with urllib.request.urlopen(req, timeout=20) as response:
+              run = json.load(response)
+          if run.get("conclusion") != "success":
+              raise SystemExit("NAV13_UPSTREAM_PROOF_RUN_NOT_SUCCESS")
+
+          req = urllib.request.Request(
+              "https://api.github.com/repos/dallascourchene-commits/AuraOS/actions/jobs/99596580819",
+              headers=headers,
+          )
+          with urllib.request.urlopen(req, timeout=20) as response:
+              job = json.load(response)
+          if job.get("conclusion") != "success":
+              raise SystemExit("NAV13_UPSTREAM_PROOF_JOB_NOT_SUCCESS")
+          PY
+
+      - name: Compile exact NAV-13 surface
+        run: |
+          python3 -m py_compile \
+            tools/aura_nav13_lawfield.py \
+            tests/test_aura_nav13_lawfield.py
+
+      - name: Run focused adversarial contracts
+        run: python3 -m unittest -v tests.test_aura_nav13_lawfield
+
+      - name: Exhaust all boundary-change masks with Different-J detectors
+        run: |
+          python3 - <<'PY'
+          from dataclasses import replace
+          import hashlib
+
+          from tools.aura_nav13_lawfield import (
+              BoundarySnapshot,
+              boundary_reasons_explicit,
+              boundary_reasons_table,
+              detect_lawfield_boundary,
+          )
+
+          def d(x: str) -> str:
+              return hashlib.sha256(x.encode()).hexdigest()
+
+          base = BoundarySnapshot(
+              path="K27:/11.17.15/2.8.21",
+              effective_law_digest=d("law-a"),
+              semantic_owner_ref="owner:a",
+              domain_role_digest=d("roles-a"),
+              evidence_state_digest=d("evidence-a"),
+              authority_state_digest=d("authority-a"),
+              temporal_state_digest=d("time-a"),
+              execution_environment_digest=d("env-a"),
+              provider_policy_digest=d("provider-a"),
+              work_order_state_digest=d("wo-a"),
+          )
+          mutations = (
+              ("path", "K27:/11.17.15/2.8.22"),
+              ("effective_law_digest", d("law-b")),
+              ("semantic_owner_ref", "owner:b"),
+              ("domain_role_digest", d("roles-b")),
+              ("evidence_state_digest", d("evidence-b")),
+              ("authority_state_digest", d("authority-b")),
+              ("temporal_state_digest", d("time-b")),
+              ("execution_environment_digest", d("env-b")),
+              ("provider_policy_digest", d("provider-b")),
+              ("work_order_state_digest", d("wo-b")),
+          )
+
+          for mask in range(1 << len(mutations)):
+              changed = {}
+              for i, (field_name, value) in enumerate(mutations):
+                  if mask & (1 << i):
+                      changed[field_name] = value
+              after = replace(base, **changed)
+              left = boundary_reasons_explicit(base, after)
+              right = boundary_reasons_table(base, after)
+              if left != right:
+                  raise SystemExit(f"DIFFERENT_J_MISMATCH:{mask}:{left}:{right}")
+              decision = detect_lawfield_boundary(base, after)
+              if decision.requires_recomputation != (mask != 0):
+                  raise SystemExit(f"RECOMPUTE_MASK_MISMATCH:{mask}")
+              if decision.transition_authorized or decision.effect_authorized or decision.effect_executed:
+                  raise SystemExit(f"AUTHORITY_CEILING_BREACH:{mask}")
+          print("NAV13_BOUNDARY_MASKS_OK=1024")
+          PY
+
+      - name: Assert nonpromotion law surface
+        run: |
+          grep -q 'CHILD_PERMISSION_WIDENING_REJECTED' tools/aura_nav13_lawfield.py
+          grep -q 'CHILD_AUTHORITY_WIDENING_REJECTED' tools/aura_nav13_lawfield.py
+          grep -q 'CHILD_EFFECT_WIDENING_REJECTED' tools/aura_nav13_lawfield.py
+          grep -q 'SUPERSESSION_PARENT_DIGEST_MISMATCH' tools/aura_nav13_lawfield.py
+          grep -q 'DIFFERENT_J_BOUNDARY_DETECTORS_DISAGREE' tools/aura_nav13_lawfield.py
