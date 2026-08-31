@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788165737,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1646,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -147,6 +147,8 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-official-quantization-source-admission.yml",
+      ".github/workflows/glm53-official-source-trial-bridge.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -1480,6 +1482,7 @@
       "tests/test_aura_gate_egress.py",
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
+      "tests/test_aura_glm53_official_source_admission.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -1633,6 +1636,10 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/quantization/aura_glm53_official_source_admission.py",
+      "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+      "tools/quantization/aura_glm53_quantized_representation_trial.py",
+      "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1755,16 +1762,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1646,
+      "bytes": 26479520,
+      "tokens_est": 6610234,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 1002,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -3461,6 +3468,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 430,
+        "end_line": 438,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:main:6775eb6b68bc00e3",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -3895,6 +3910,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 36,
+        "end_line": 37,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_canonical:216d59940c81ab9c",
+        "signature_hash": "707d518dafca1a42"
       }
     ],
     "_digest": [
@@ -4337,6 +4360,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 59,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#function:_digest:07a1e56e4a2f552f",
+        "signature_hash": "d4a8cba568e54ac5"
       }
     ],
     "_token_proxy": [
@@ -8067,6 +8098,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 40,
+        "end_line": 41,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_sha:e9cadab1392f2b3d",
+        "signature_hash": "3c3bc3c037860fe9"
       }
     ],
     "_repo": [
@@ -13707,6 +13746,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 57,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:_sha256:61762815abc239d8",
+        "signature_hash": "9084cb89be4caca5"
       }
     ],
     "PullRequestRouteBinding": [
@@ -68107,6 +68154,14 @@
         "end_line": 229,
         "semantic_id": "aura_pascal_spatial_presentation_part1.py#function:_hex64:aebaedfeb4247965",
         "signature_hash": "3956785c98c04eb6"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 46,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_hex64:f100f8ef9315a8a0",
+        "signature_hash": "499219dd29dcebeb"
       }
     ],
     "_utc_timestamp": [
@@ -72473,6 +72528,14 @@
         "end_line": 40,
         "semantic_id": "aura_shadow_model_router.py#function:_finite_nonnegative:c63a8aab46cefd97",
         "signature_hash": "14b9126d6f07027d"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 51,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_finite_nonnegative:eda280cb02c010b3",
+        "signature_hash": "20e259232a7c5769"
       }
     ],
     "_projection_findings": [
@@ -136151,6 +136214,14 @@
         "end_line": 223,
         "semantic_id": "tests/test_aura_gate.py#function:request:7c151532eef8bfd3",
         "signature_hash": "9045b73142116e1c"
+      },
+      {
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 46,
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#function:request:538c0c9adbeb0195",
+        "signature_hash": "49cf403d4886565d"
       }
     ],
     "test_prepare_compiles_exact_evidence_contract": [
@@ -138533,6 +138604,146 @@
         "end_line": 727,
         "semantic_id": "tests/test_aura_gate_server.py#function:test_direct_server_factory_refuses_public_bind:5471a563e13ec2d1",
         "signature_hash": "ee5f19dbb698e25c"
+      }
+    ],
+    "official_config_fixture": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 34,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#function:official_config_fixture:38c6309480a68fd5",
+        "signature_hash": "62bdc19be50db000"
+      }
+    ],
+    "synthetic_index_bytes": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 41,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#function:synthetic_index_bytes:67b1c55ebab8e969",
+        "signature_hash": "49bc8edefbd20ee2"
+      }
+    ],
+    "synthetic_header": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 44,
+        "end_line": 68,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#function:synthetic_header:668cb1eddf245541",
+        "signature_hash": "1de2ca923bc65769"
+      }
+    ],
+    "OfficialGLM53SourceAdmissionTests": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "class",
+        "line": 71,
+        "end_line": 166,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#class:OfficialGLM53SourceAdmissionTests:58f1c4f39bbda7c2",
+        "signature_hash": "fc2d47c929ae054d"
+      }
+    ],
+    "OfficialGLM53SourceAdmissionTests.test_current_official_config_profile_is_typed": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 78,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_current_official_config_profile_is_typed:bc95226f4bfbfe1b",
+        "signature_hash": "ae8307505d4cf54f"
+      }
+    ],
+    "OfficialGLM53SourceAdmissionTests.test_config_substitution_fails_closed": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 88,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_config_substitution_fails_closed:16d171ff09a5a7ae",
+        "signature_hash": "7cad76f5ee80a1d8"
+      }
+    ],
+    "OfficialGLM53SourceAdmissionTests.test_index_object_identity_does_not_claim_bytes": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 95,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_index_object_identity_does_not_claim_bytes:eb924a72c50651a2",
+        "signature_hash": "8f647fa2d44145d0"
+      }
+    ],
+    "OfficialGLM53SourceAdmissionTests.test_generic_index_bytes_are_recomputed_and_tamper_sensitive": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 105,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_generic_index_bytes_are_recomputed_and_tamper_sensitive:1dc2f356f8ba3d87",
+        "signature_hash": "667c8953015b8eb4"
+      }
+    ],
+    "OfficialGLM53SourceAdmissionTests.test_synthetic_bytes_cannot_impersonate_official_index": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 110,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_synthetic_bytes_cannot_impersonate_official_index:d6a444f09ca09599",
+        "signature_hash": "3b3dd730057ebdd1"
+      }
+    ],
+    "OfficialGLM53SourceAdmissionTests.test_header_parser_and_fp8_companion_binding": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 122,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_header_parser_and_fp8_companion_binding:4bbd7ff8bbfdfa1c",
+        "signature_hash": "02ffad9cb797d5b5"
+      }
+    ],
+    "OfficialGLM53SourceAdmissionTests.test_bad_fp8_companion_shape_fails_closed": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "method",
+        "line": 124,
+        "end_line": 131,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_bad_fp8_companion_shape_fails_closed:294acd9cca96b289",
+        "signature_hash": "d2173797888ff446"
+      }
+    ],
+    "OfficialGLM53SourceAdmissionTests.test_current_public_state_is_hold_not_header_trial": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 147,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_current_public_state_is_hold_not_header_trial:501e8012b8804f81",
+        "signature_hash": "af7699d233ad0002"
+      }
+    ],
+    "OfficialGLM53SourceAdmissionTests.test_public_official_admission_has_no_boolean_escape_hatch": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 155,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_public_official_admission_has_no_boolean_escape_hatch:2401da925fa3bade",
+        "signature_hash": "19bd93da0a529411"
+      }
+    ],
+    "OfficialGLM53SourceAdmissionTests.test_official_admission_stops_before_headers_without_exact_index_bytes": [
+      {
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 166,
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_official_admission_stops_before_headers_without_exact_index_bytes:64610106e628c0ed",
+        "signature_hash": "be60fce9902d2fea"
       }
     ],
     "_write_minimal_codemap": [
@@ -157181,6 +157392,476 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "_canonical_sha256": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 60,
+        "end_line": 61,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:_canonical_sha256:34c1e0afef608216",
+        "signature_hash": "d8cbd26b51f4519e"
+      }
+    ],
+    "OfficialConfigObservation": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "class",
+        "line": 65,
+        "end_line": 80,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#class:OfficialConfigObservation:c5803b39cff89808",
+        "signature_hash": "553e4cff553f5150"
+      }
+    ],
+    "IndexObjectIdentity": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "class",
+        "line": 84,
+        "end_line": 90,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#class:IndexObjectIdentity:08aebf9766e165f8",
+        "signature_hash": "548fd4be6a3eb69d"
+      }
+    ],
+    "IndexBytesObservation": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "class",
+        "line": 94,
+        "end_line": 100,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#class:IndexBytesObservation:5e9bb6c92a56d168",
+        "signature_hash": "674ca016269ffb7a"
+      }
+    ],
+    "HeaderEntry": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "class",
+        "line": 104,
+        "end_line": 110,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#class:HeaderEntry:32186015bce96166",
+        "signature_hash": "bdc756871de450f9"
+      }
+    ],
+    "ExpertHeaderBundle": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "class",
+        "line": 114,
+        "end_line": 117,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#class:ExpertHeaderBundle:81708475deef4b03",
+        "signature_hash": "3aac52a4616a6f3a"
+      }
+    ],
+    "AdmissionState": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "class",
+        "line": 121,
+        "end_line": 143,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#class:AdmissionState:ce5260d99f101c8c",
+        "signature_hash": "ff0666875ea3a682"
+      }
+    ],
+    "AdmissionState.digest": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 143,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#method:AdmissionState.digest:44115403bedb76f1",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "observe_official_config": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 146,
+        "end_line": 194,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:observe_official_config:93def3075b6b581f",
+        "signature_hash": "30ba6f6e35313181"
+      }
+    ],
+    "official_index_object_identity": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 197,
+        "end_line": 206,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:official_index_object_identity:820951d8dbe1332a",
+        "signature_hash": "c7a95a1ba5c832b4"
+      }
+    ],
+    "verify_index_bytes": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 209,
+        "end_line": 235,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:verify_index_bytes:0049e14a376d1473",
+        "signature_hash": "b22d5e4eabe3600e"
+      }
+    ],
+    "verify_official_index_bytes": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 238,
+        "end_line": 244,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:verify_official_index_bytes:2e667c122b4fa5f3",
+        "signature_hash": "0d4e103461304726"
+      }
+    ],
+    "extract_expert_bundle": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 247,
+        "end_line": 259,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:extract_expert_bundle:0bdd25f7d4e5999c",
+        "signature_hash": "005c4037eb9ef273"
+      }
+    ],
+    "parse_safetensors_header": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 262,
+        "end_line": 300,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:parse_safetensors_header:642e60ee52f11687",
+        "signature_hash": "675bd214de1263bd"
+      }
+    ],
+    "bind_expert_headers": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 303,
+        "end_line": 338,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:bind_expert_headers:1c056bdd7b8a9b51",
+        "signature_hash": "d40d7ec76f82c833"
+      }
+    ],
+    "current_public_state": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 341,
+        "end_line": 363,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:current_public_state:677efdce56ebb241",
+        "signature_hash": "e340f7e05dc9b923"
+      }
+    ],
+    "_header_state_from_verified": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 366,
+        "end_line": 400,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:_header_state_from_verified:ac0d6d7e6411ea6b",
+        "signature_hash": "6d99611fffbf3ab9"
+      }
+    ],
+    "admit_official_header_state": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "kind": "function",
+        "line": 403,
+        "end_line": 427,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:admit_official_header_state:df791a1d8f8ae487",
+        "signature_hash": "ec968d31364ddff2"
+      }
+    ],
+    "_source_evidence_vector": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#function:_source_evidence_vector:d7431206f58c217c",
+        "signature_hash": "2655de8db1c11c46"
+      }
+    ],
+    "_validate_source_state": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 87,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#function:_validate_source_state:d5c62824f5d9928c",
+        "signature_hash": "d4cf06e6de28bed1"
+      }
+    ],
+    "OfficialSourceTrialBridgeReceipt": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "kind": "class",
+        "line": 91,
+        "end_line": 128,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#class:OfficialSourceTrialBridgeReceipt:10b15640a175ef7c",
+        "signature_hash": "6622750599d037f6"
+      }
+    ],
+    "OfficialSourceTrialBridgeReceipt.receipt_digest": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 128,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeReceipt.receipt_digest:8842bf478da32d55",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "_classify_source_state_for_test": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "kind": "function",
+        "line": 131,
+        "end_line": 216,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#function:_classify_source_state_for_test:83453462881feff2",
+        "signature_hash": "2c7092cd4b2ec2af"
+      }
+    ],
+    "current_official_source_trial_hold": [
+      {
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "kind": "function",
+        "line": 219,
+        "end_line": 228,
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#function:current_official_source_trial_hold:80127cda65760492",
+        "signature_hash": "8e9b2ec146c6d2ab"
+      }
+    ],
+    "RepresentationIdentity": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "class",
+        "line": 55,
+        "end_line": 79,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:RepresentationIdentity:f73206aabe7462eb",
+        "signature_hash": "1e7a894bc7031b52"
+      }
+    ],
+    "RepresentationIdentity.validate": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 66,
+        "end_line": 79,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:RepresentationIdentity.validate:824bb3b62691a286",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "QuantizedTrialRequest": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "class",
+        "line": 83,
+        "end_line": 120,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:QuantizedTrialRequest:c98d4ddb9c465392",
+        "signature_hash": "f326996298ad4143"
+      }
+    ],
+    "QuantizedTrialRequest.validate": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 93,
+        "end_line": 115,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:QuantizedTrialRequest.validate:e65ae0473ebb6126",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "QuantizedTrialRequest.request_digest": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 120,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:QuantizedTrialRequest.request_digest:77c37dfe54ee66cc",
+        "signature_hash": "6fa9305943538fcf"
+      }
+    ],
+    "TrialSample": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "class",
+        "line": 124,
+        "end_line": 163,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:TrialSample:9055673a2d653770",
+        "signature_hash": "9b7a125a54b521c2"
+      }
+    ],
+    "TrialSample.validate": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 143,
+        "end_line": 158,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:TrialSample.validate:814b5c3b5b2236d0",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "TrialSample.sample_digest": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 161,
+        "end_line": 163,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:TrialSample.sample_digest:4ede8f6b1126d616",
+        "signature_hash": "478d5e8521ed441f"
+      }
+    ],
+    "IndependentVerification": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "class",
+        "line": 167,
+        "end_line": 188,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:IndependentVerification:6aa1c454477a1580",
+        "signature_hash": "ca58cc7334c1fb40"
+      }
+    ],
+    "IndependentVerification.validate": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 188,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:IndependentVerification.validate:51b68da9db2a40a3",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "QuantizedRepresentationComparison": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "class",
+        "line": 192,
+        "end_line": 220,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:QuantizedRepresentationComparison:f8ba652ce2b6368f",
+        "signature_hash": "a464d62e1b8839f3"
+      }
+    ],
+    "QuantizedRepresentationComparison.comparison_digest": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "method",
+        "line": 219,
+        "end_line": 220,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationComparison.comparison_digest:6577bcb56f9f4420",
+        "signature_hash": "3fd561a33772329d"
+      }
+    ],
+    "compare_quantized_representation": [
+      {
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "kind": "function",
+        "line": 223,
+        "end_line": 303,
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:compare_quantized_representation:7dfc7e2022db92c0",
+        "signature_hash": "9371d95a4912bc5d"
+      }
+    ],
+    "comparison": [
+      {
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "kind": "function",
+        "line": 49,
+        "end_line": 75,
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#function:comparison:60aac76ae5048925",
+        "signature_hash": "e497e5be9dbfb180"
+      }
+    ],
+    "OfficialSourceTrialBridgeTests": [
+      {
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "kind": "class",
+        "line": 78,
+        "end_line": 181,
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#class:OfficialSourceTrialBridgeTests:0527764ae8567bb6",
+        "signature_hash": "6b708545bbca80b2"
+      }
+    ],
+    "OfficialSourceTrialBridgeTests.test_current_public_bridge_traverses_q5_producer": [
+      {
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "kind": "method",
+        "line": 79,
+        "end_line": 94,
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_current_public_bridge_traverses_q5_producer:d8171fab6b8a2e38",
+        "signature_hash": "d918d0c65dea31fc"
+      }
+    ],
+    "OfficialSourceTrialBridgeTests.test_exact_current_source_vector_is_explicit": [
+      {
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 102,
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_exact_current_source_vector_is_explicit:7c69d6c90037a111",
+        "signature_hash": "40a5730bb1558ec8"
+      }
+    ],
+    "OfficialSourceTrialBridgeTests.test_synthetic_future_state_may_move_hold_but_is_not_evidence": [
+      {
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 125,
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_synthetic_future_state_may_move_hold_but_is_not_evidence:d274b6a255246fc7",
+        "signature_hash": "877ca1a8f3216bfd"
+      }
+    ],
+    "OfficialSourceTrialBridgeTests.test_synthetic_deeper_hold_ne_current_evidence_advance": [
+      {
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 149,
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_synthetic_deeper_hold_ne_current_evidence_advance:8593812a8a937f66",
+        "signature_hash": "0af8358b201a13dd"
+      }
+    ],
+    "OfficialSourceTrialBridgeTests.test_inconsistent_source_boolean_cannot_bypass_prerequisites": [
+      {
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "kind": "method",
+        "line": 151,
+        "end_line": 157,
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_inconsistent_source_boolean_cannot_bypass_prerequisites:de6eb9912cd69a79",
+        "signature_hash": "2ef39438f54e3afc"
+      }
+    ],
+    "OfficialSourceTrialBridgeTests.test_foreign_model_revision_is_not_official_source_trial": [
+      {
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 164,
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_foreign_model_revision_is_not_official_source_trial:ab0c4c7add576b53",
+        "signature_hash": "afa7a8f5f430d724"
+      }
+    ],
+    "OfficialSourceTrialBridgeTests.test_trial_domain_manifest_substitution_fails_closed": [
+      {
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 170,
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_trial_domain_manifest_substitution_fails_closed:bfc58b92a05b5e3a",
+        "signature_hash": "323efbd10688a05a"
+      }
+    ],
+    "OfficialSourceTrialBridgeTests.test_bridge_never_promotes_unearned_authority_planes": [
+      {
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "kind": "method",
+        "line": 172,
+        "end_line": 181,
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_bridge_never_promotes_unearned_authority_planes:0d9931bbfafd5db7",
+        "signature_hash": "6ed3ba7b7e110a99"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158300,6 +158981,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-official-quantization-source-admission.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -158627,6 +159309,20 @@
     ],
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
+    ],
+    "python -m unittest": [
+      ".github/workflows/glm53-official-quantization-source-admission.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
+    "python tools/quantization/aura_glm53_official_source_admission.py | tee /tmp/q5.json": [
+      ".github/workflows/glm53-official-quantization-source-admission.yml"
+    ],
+    "python3 -m py_compile": [
+      ".github/workflows/glm53-official-source-trial-bridge.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/glm53-official-source-trial-bridge.yml"
     ],
     "python aura_router.py route --help": [
       ".github/workflows/model-cognome-adaptive-router.yml"
@@ -159148,9 +159844,6 @@
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
     ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
-    ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
     ],
@@ -159293,9 +159986,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -168415,6 +169105,124 @@
         0.151989,
         -0.198544,
         0.335472
+      ]
+    },
+    {
+      "path": ".github/workflows/glm53-official-quantization-source-admission.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 2888,
+      "lines": 65,
+      "tokens_est": 722,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest",
+        "python tools/quantization/aura_glm53_official_source_admission.py | tee /tmp/q5.json"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          27
+        ],
+        "python -m unittest": [
+          32
+        ],
+        "python tools/quantization/aura_glm53_official_source_admission.py | tee /tmp/q5.json": [
+          37
+        ]
+      },
+      "topology": {},
+      "digest8": "57ec2bfbfb200027",
+      "vector": [
+        -0.001198,
+        0.204826,
+        -0.130561,
+        -0.192848,
+        0.109001,
+        -0.192848,
+        0.209617,
+        -0.269508,
+        -0.171287,
+        0.250343,
+        0.085045,
+        -0.058693,
+        -0.015572,
+        0.250343,
+        -0.003593,
+        0.247947,
+        -0.058693,
+        0.147331,
+        0.01078,
+        0.061088,
+        0.29586,
+        -0.068275,
+        0.147331,
+        -0.111396,
+        -0.089836,
+        -0.097023,
+        -0.298255,
+        -0.223991,
+        0.27909,
+        -0.166496,
+        0.305442,
+        -0.015572
+      ]
+    },
+    {
+      "path": ".github/workflows/glm53-official-source-trial-bridge.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6397,
+      "lines": 144,
+      "tokens_est": 1600,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          87
+        ],
+        "python3 -m unittest": [
+          92
+        ]
+      },
+      "topology": {},
+      "digest8": "b35a414ab5f2a488",
+      "vector": [
+        -0.276217,
+        -0.194196,
+        -0.276217,
+        -0.155598,
+        -0.300341,
+        -0.032567,
+        -0.022918,
+        0.022918,
+        -0.044629,
+        -0.013268,
+        -0.078402,
+        0.044629,
+        0.276217,
+        0.281042,
+        -0.112176,
+        0.300341,
+        -0.07599,
+        -0.206258,
+        0.085639,
+        0.141124,
+        -0.143537,
+        0.223145,
+        0.083227,
+        -0.170073,
+        0.17731,
+        -0.090464,
+        0.297929,
+        0.061516,
+        -0.295516,
+        -0.092877,
+        -0.121825,
+        0.003619
       ]
     },
     {
@@ -255551,6 +256359,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_glm53_official_source_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7339,
+      "lines": 171,
+      "tokens_est": 1835,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "33b056b319c58455",
+      "vector": [
+        -0.015682,
+        0.133896,
+        0.063932,
+        -0.107358,
+        -0.293124,
+        0.138721,
+        0.266586,
+        -0.037394,
+        -0.276237,
+        0.145959,
+        -0.150784,
+        -0.102533,
+        -0.001206,
+        0.261761,
+        0.160434,
+        0.305187,
+        0.037394,
+        0.302775,
+        0.090471,
+        0.240048,
+        0.143547,
+        0.191797,
+        0.027744,
+        -0.020507,
+        0.302775,
+        -0.049457,
+        -0.006031,
+        0.088058,
+        0.244874,
+        -0.186972,
+        0.191797,
+        0.138721
+      ]
+    },
+    {
       "path": "tests/test_aura_harness_issue_capsules.py",
       "role": "python_module",
       "binary": false,
@@ -262739,6 +263594,194 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/quantization/aura_glm53_official_source_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 17303,
+      "lines": 443,
+      "tokens_est": 4326,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "c9b5737c30a5958f",
+      "vector": [
+        0.22032,
+        0.190329,
+        -0.218013,
+        0.021917,
+        -0.125732,
+        0.208785,
+        -0.128039,
+        0.130346,
+        0.014996,
+        -0.109583,
+        0.160338,
+        -0.234162,
+        0.261846,
+        -0.17418,
+        -0.26646,
+        -0.264153,
+        0.218013,
+        0.222627,
+        0.093434,
+        -0.188022,
+        -0.229548,
+        -0.204171,
+        0.021917,
+        -0.068057,
+        0.148802,
+        0.104969,
+        0.146495,
+        0.259539,
+        0.169566,
+        0.001154,
+        0.188022,
+        -0.123425
+      ]
+    },
+    {
+      "path": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9333,
+      "lines": 229,
+      "tokens_est": 2334,
+      "symbol_count": 7,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5bf0fe09f49c3cee",
+      "vector": [
+        -0.105436,
+        -0.234681,
+        -0.094099,
+        -0.044215,
+        -0.286833,
+        0.232414,
+        -0.121309,
+        0.241484,
+        -0.037413,
+        0.005669,
+        -0.264158,
+        -0.05782,
+        -0.114506,
+        0.137181,
+        0.28003,
+        0.026076,
+        -0.087297,
+        -0.123576,
+        0.123576,
+        -0.200669,
+        -0.216542,
+        -0.1916,
+        -0.123576,
+        -0.107704,
+        0.28003,
+        -0.264158,
+        -0.130378,
+        -0.27096,
+        0.010204,
+        0.137181,
+        -0.284565,
+        0.026076
+      ]
+    },
+    {
+      "path": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13150,
+      "lines": 304,
+      "tokens_est": 3288,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "6ae8cbb621e00c71",
+      "vector": [
+        -0.117383,
+        0.259276,
+        0.060627,
+        -0.143182,
+        0.068366,
+        0.287654,
+        -0.17414,
+        0.161241,
+        0.045147,
+        -0.248956,
+        0.158661,
+        0.194779,
+        -0.248956,
+        0.192199,
+        -0.029668,
+        0.078686,
+        0.109644,
+        -0.034828,
+        0.1793,
+        -0.076106,
+        0.034828,
+        -0.259276,
+        -0.202519,
+        -0.233477,
+        0.228317,
+        -0.083845,
+        0.1793,
+        -0.065786,
+        -0.316032,
+        0.068366,
+        -0.272175,
+        -0.168981
+      ]
+    },
+    {
+      "path": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8062,
+      "lines": 186,
+      "tokens_est": 2016,
+      "symbol_count": 11,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "372c3fe52485abe4",
+      "vector": [
+        0.001264,
+        0.314802,
+        -0.168147,
+        0.125162,
+        -0.092291,
+        0.034135,
+        -0.117577,
+        0.170676,
+        -0.125162,
+        -0.170676,
+        0.195961,
+        -0.16309,
+        0.109991,
+        0.322387,
+        0.26676,
+        -0.051835,
+        -0.254117,
+        0.125162,
+        0.238946,
+        0.05942,
+        -0.264231,
+        -0.039192,
+        -0.173204,
+        0.137805,
+        0.112519,
+        -0.024021,
+        -0.254117,
+        0.216189,
+        0.061949,
+        -0.001264,
+        -0.294573,
+        -0.168147
       ]
     },
     {
@@ -286646,16 +287689,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1646,
+    "total_bytes": 26479520,
+    "text_tokens_est": 6610234,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 1002,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286812,6 +287855,8 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-official-quantization-source-admission.yml",
+      ".github/workflows/glm53-official-source-trial-bridge.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -288145,6 +289190,7 @@
       "tests/test_aura_gate_egress.py",
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
+      "tests/test_aura_glm53_official_source_admission.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -288298,6 +289344,10 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/quantization/aura_glm53_official_source_admission.py",
+      "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+      "tools/quantization/aura_glm53_quantized_representation_trial.py",
+      "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -425814,6 +426864,146 @@
         "file_digest8": "ada41f95735768a2"
       },
       {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#class:OfficialGLM53SourceAdmissionTests:58f1c4f39bbda7c2",
+        "name": "OfficialGLM53SourceAdmissionTests",
+        "kind": "class",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 71,
+        "end_line": 166,
+        "signature_hash": "fc2d47c929ae054d",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#function:official_config_fixture:38c6309480a68fd5",
+        "name": "official_config_fixture",
+        "kind": "function",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 18,
+        "end_line": 34,
+        "signature_hash": "62bdc19be50db000",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#function:synthetic_header:668cb1eddf245541",
+        "name": "synthetic_header",
+        "kind": "function",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 44,
+        "end_line": 68,
+        "signature_hash": "1de2ca923bc65769",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#function:synthetic_index_bytes:67b1c55ebab8e969",
+        "name": "synthetic_index_bytes",
+        "kind": "function",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 37,
+        "end_line": 41,
+        "signature_hash": "49bc8edefbd20ee2",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_bad_fp8_companion_shape_fails_closed:294acd9cca96b289",
+        "name": "OfficialGLM53SourceAdmissionTests.test_bad_fp8_companion_shape_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 124,
+        "end_line": 131,
+        "signature_hash": "d2173797888ff446",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_config_substitution_fails_closed:16d171ff09a5a7ae",
+        "name": "OfficialGLM53SourceAdmissionTests.test_config_substitution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 80,
+        "end_line": 88,
+        "signature_hash": "7cad76f5ee80a1d8",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_current_official_config_profile_is_typed:bc95226f4bfbfe1b",
+        "name": "OfficialGLM53SourceAdmissionTests.test_current_official_config_profile_is_typed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 72,
+        "end_line": 78,
+        "signature_hash": "ae8307505d4cf54f",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_current_public_state_is_hold_not_header_trial:501e8012b8804f81",
+        "name": "OfficialGLM53SourceAdmissionTests.test_current_public_state_is_hold_not_header_trial",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 133,
+        "end_line": 147,
+        "signature_hash": "af7699d233ad0002",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_generic_index_bytes_are_recomputed_and_tamper_sensitive:1dc2f356f8ba3d87",
+        "name": "OfficialGLM53SourceAdmissionTests.test_generic_index_bytes_are_recomputed_and_tamper_sensitive",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 97,
+        "end_line": 105,
+        "signature_hash": "667c8953015b8eb4",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_header_parser_and_fp8_companion_binding:4bbd7ff8bbfdfa1c",
+        "name": "OfficialGLM53SourceAdmissionTests.test_header_parser_and_fp8_companion_binding",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 112,
+        "end_line": 122,
+        "signature_hash": "02ffad9cb797d5b5",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_index_object_identity_does_not_claim_bytes:eb924a72c50651a2",
+        "name": "OfficialGLM53SourceAdmissionTests.test_index_object_identity_does_not_claim_bytes",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 90,
+        "end_line": 95,
+        "signature_hash": "8f647fa2d44145d0",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_official_admission_stops_before_headers_without_exact_index_bytes:64610106e628c0ed",
+        "name": "OfficialGLM53SourceAdmissionTests.test_official_admission_stops_before_headers_without_exact_index_bytes",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 157,
+        "end_line": 166,
+        "signature_hash": "be60fce9902d2fea",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_public_official_admission_has_no_boolean_escape_hatch:2401da925fa3bade",
+        "name": "OfficialGLM53SourceAdmissionTests.test_public_official_admission_has_no_boolean_escape_hatch",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 149,
+        "end_line": 155,
+        "signature_hash": "19bd93da0a529411",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_official_source_admission.py#method:OfficialGLM53SourceAdmissionTests.test_synthetic_bytes_cannot_impersonate_official_index:d6a444f09ca09599",
+        "name": "OfficialGLM53SourceAdmissionTests.test_synthetic_bytes_cannot_impersonate_official_index",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_official_source_admission.py",
+        "line": 107,
+        "end_line": 110,
+        "signature_hash": "3b3dd730057ebdd1",
+        "file_digest8": "33b056b319c58455"
+      },
+      {
         "semantic_id": "tests/test_aura_harness_issue_capsules.py#function:_raise_secret:a2391cb47c115705",
         "name": "_raise_secret",
         "kind": "function",
@@ -445634,6 +446824,556 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#class:AdmissionState:ce5260d99f101c8c",
+        "name": "AdmissionState",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 121,
+        "end_line": 143,
+        "signature_hash": "ff0666875ea3a682",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#class:ExpertHeaderBundle:81708475deef4b03",
+        "name": "ExpertHeaderBundle",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 114,
+        "end_line": 117,
+        "signature_hash": "3aac52a4616a6f3a",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#class:HeaderEntry:32186015bce96166",
+        "name": "HeaderEntry",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 104,
+        "end_line": 110,
+        "signature_hash": "bdc756871de450f9",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#class:IndexBytesObservation:5e9bb6c92a56d168",
+        "name": "IndexBytesObservation",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 94,
+        "end_line": 100,
+        "signature_hash": "674ca016269ffb7a",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#class:IndexObjectIdentity:08aebf9766e165f8",
+        "name": "IndexObjectIdentity",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 84,
+        "end_line": 90,
+        "signature_hash": "548fd4be6a3eb69d",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#class:OfficialConfigObservation:c5803b39cff89808",
+        "name": "OfficialConfigObservation",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 65,
+        "end_line": 80,
+        "signature_hash": "553e4cff553f5150",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:_canonical_sha256:34c1e0afef608216",
+        "name": "_canonical_sha256",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 60,
+        "end_line": 61,
+        "signature_hash": "d8cbd26b51f4519e",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:_header_state_from_verified:ac0d6d7e6411ea6b",
+        "name": "_header_state_from_verified",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 366,
+        "end_line": 400,
+        "signature_hash": "6d99611fffbf3ab9",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:_sha256:61762815abc239d8",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 56,
+        "end_line": 57,
+        "signature_hash": "9084cb89be4caca5",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:admit_official_header_state:df791a1d8f8ae487",
+        "name": "admit_official_header_state",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 403,
+        "end_line": 427,
+        "signature_hash": "ec968d31364ddff2",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:bind_expert_headers:1c056bdd7b8a9b51",
+        "name": "bind_expert_headers",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 303,
+        "end_line": 338,
+        "signature_hash": "d40d7ec76f82c833",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:current_public_state:677efdce56ebb241",
+        "name": "current_public_state",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 341,
+        "end_line": 363,
+        "signature_hash": "e340f7e05dc9b923",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:extract_expert_bundle:0bdd25f7d4e5999c",
+        "name": "extract_expert_bundle",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 247,
+        "end_line": 259,
+        "signature_hash": "005c4037eb9ef273",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:main:6775eb6b68bc00e3",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 430,
+        "end_line": 438,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:observe_official_config:93def3075b6b581f",
+        "name": "observe_official_config",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 146,
+        "end_line": 194,
+        "signature_hash": "30ba6f6e35313181",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:official_index_object_identity:820951d8dbe1332a",
+        "name": "official_index_object_identity",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 197,
+        "end_line": 206,
+        "signature_hash": "c7a95a1ba5c832b4",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:parse_safetensors_header:642e60ee52f11687",
+        "name": "parse_safetensors_header",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 262,
+        "end_line": 300,
+        "signature_hash": "675bd214de1263bd",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:verify_index_bytes:0049e14a376d1473",
+        "name": "verify_index_bytes",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 209,
+        "end_line": 235,
+        "signature_hash": "b22d5e4eabe3600e",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#function:verify_official_index_bytes:2e667c122b4fa5f3",
+        "name": "verify_official_index_bytes",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 238,
+        "end_line": 244,
+        "signature_hash": "0d4e103461304726",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_admission.py#method:AdmissionState.digest:44115403bedb76f1",
+        "name": "AdmissionState.digest",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_official_source_admission.py",
+        "line": 142,
+        "end_line": 143,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "c9b5737c30a5958f"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#class:OfficialSourceTrialBridgeReceipt:10b15640a175ef7c",
+        "name": "OfficialSourceTrialBridgeReceipt",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "line": 91,
+        "end_line": 128,
+        "signature_hash": "6622750599d037f6",
+        "file_digest8": "5bf0fe09f49c3cee"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#function:_classify_source_state_for_test:83453462881feff2",
+        "name": "_classify_source_state_for_test",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "line": 131,
+        "end_line": 216,
+        "signature_hash": "2c7092cd4b2ec2af",
+        "file_digest8": "5bf0fe09f49c3cee"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#function:_digest:07a1e56e4a2f552f",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "line": 56,
+        "end_line": 59,
+        "signature_hash": "d4a8cba568e54ac5",
+        "file_digest8": "5bf0fe09f49c3cee"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#function:_source_evidence_vector:d7431206f58c217c",
+        "name": "_source_evidence_vector",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "line": 62,
+        "end_line": 63,
+        "signature_hash": "2655de8db1c11c46",
+        "file_digest8": "5bf0fe09f49c3cee"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#function:_validate_source_state:d5c62824f5d9928c",
+        "name": "_validate_source_state",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "line": 66,
+        "end_line": 87,
+        "signature_hash": "d4cf06e6de28bed1",
+        "file_digest8": "5bf0fe09f49c3cee"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#function:current_official_source_trial_hold:80127cda65760492",
+        "name": "current_official_source_trial_hold",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "line": 219,
+        "end_line": 228,
+        "signature_hash": "8e9b2ec146c6d2ab",
+        "file_digest8": "5bf0fe09f49c3cee"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeReceipt.receipt_digest:8842bf478da32d55",
+        "name": "OfficialSourceTrialBridgeReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_official_source_trial_bridge.py",
+        "line": 127,
+        "end_line": 128,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "5bf0fe09f49c3cee"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:IndependentVerification:6aa1c454477a1580",
+        "name": "IndependentVerification",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 167,
+        "end_line": 188,
+        "signature_hash": "ca58cc7334c1fb40",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:QuantizedRepresentationComparison:f8ba652ce2b6368f",
+        "name": "QuantizedRepresentationComparison",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 192,
+        "end_line": 220,
+        "signature_hash": "a464d62e1b8839f3",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:QuantizedTrialRequest:c98d4ddb9c465392",
+        "name": "QuantizedTrialRequest",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 83,
+        "end_line": 120,
+        "signature_hash": "f326996298ad4143",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:RepresentationIdentity:f73206aabe7462eb",
+        "name": "RepresentationIdentity",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 55,
+        "end_line": 79,
+        "signature_hash": "1e7a894bc7031b52",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#class:TrialSample:9055673a2d653770",
+        "name": "TrialSample",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 124,
+        "end_line": 163,
+        "signature_hash": "9b7a125a54b521c2",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_canonical:216d59940c81ab9c",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 36,
+        "end_line": 37,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_finite_nonnegative:eda280cb02c010b3",
+        "name": "_finite_nonnegative",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 49,
+        "end_line": 51,
+        "signature_hash": "20e259232a7c5769",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_hex64:f100f8ef9315a8a0",
+        "name": "_hex64",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 44,
+        "end_line": 46,
+        "signature_hash": "499219dd29dcebeb",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:_sha:e9cadab1392f2b3d",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 40,
+        "end_line": 41,
+        "signature_hash": "3c3bc3c037860fe9",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#function:compare_quantized_representation:7dfc7e2022db92c0",
+        "name": "compare_quantized_representation",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 223,
+        "end_line": 303,
+        "signature_hash": "9371d95a4912bc5d",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:IndependentVerification.validate:51b68da9db2a40a3",
+        "name": "IndependentVerification.validate",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 176,
+        "end_line": 188,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:QuantizedRepresentationComparison.comparison_digest:6577bcb56f9f4420",
+        "name": "QuantizedRepresentationComparison.comparison_digest",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 219,
+        "end_line": 220,
+        "signature_hash": "3fd561a33772329d",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:QuantizedTrialRequest.request_digest:77c37dfe54ee66cc",
+        "name": "QuantizedTrialRequest.request_digest",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 118,
+        "end_line": 120,
+        "signature_hash": "6fa9305943538fcf",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:QuantizedTrialRequest.validate:e65ae0473ebb6126",
+        "name": "QuantizedTrialRequest.validate",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 93,
+        "end_line": 115,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:RepresentationIdentity.validate:824bb3b62691a286",
+        "name": "RepresentationIdentity.validate",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 66,
+        "end_line": 79,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:TrialSample.sample_digest:4ede8f6b1126d616",
+        "name": "TrialSample.sample_digest",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 161,
+        "end_line": 163,
+        "signature_hash": "478d5e8521ed441f",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_quantized_representation_trial.py#method:TrialSample.validate:814b5c3b5b2236d0",
+        "name": "TrialSample.validate",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_quantized_representation_trial.py",
+        "line": 143,
+        "end_line": 158,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "6ae8cbb621e00c71"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#class:OfficialSourceTrialBridgeTests:0527764ae8567bb6",
+        "name": "OfficialSourceTrialBridgeTests",
+        "kind": "class",
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "line": 78,
+        "end_line": 181,
+        "signature_hash": "6b708545bbca80b2",
+        "file_digest8": "372c3fe52485abe4"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#function:comparison:60aac76ae5048925",
+        "name": "comparison",
+        "kind": "function",
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "line": 49,
+        "end_line": 75,
+        "signature_hash": "e497e5be9dbfb180",
+        "file_digest8": "372c3fe52485abe4"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#function:request:538c0c9adbeb0195",
+        "name": "request",
+        "kind": "function",
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "line": 28,
+        "end_line": 46,
+        "signature_hash": "49cf403d4886565d",
+        "file_digest8": "372c3fe52485abe4"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_bridge_never_promotes_unearned_authority_planes:0d9931bbfafd5db7",
+        "name": "OfficialSourceTrialBridgeTests.test_bridge_never_promotes_unearned_authority_planes",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "line": 172,
+        "end_line": 181,
+        "signature_hash": "6ed3ba7b7e110a99",
+        "file_digest8": "372c3fe52485abe4"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_current_public_bridge_traverses_q5_producer:d8171fab6b8a2e38",
+        "name": "OfficialSourceTrialBridgeTests.test_current_public_bridge_traverses_q5_producer",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "line": 79,
+        "end_line": 94,
+        "signature_hash": "d918d0c65dea31fc",
+        "file_digest8": "372c3fe52485abe4"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_exact_current_source_vector_is_explicit:7c69d6c90037a111",
+        "name": "OfficialSourceTrialBridgeTests.test_exact_current_source_vector_is_explicit",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "line": 96,
+        "end_line": 102,
+        "signature_hash": "40a5730bb1558ec8",
+        "file_digest8": "372c3fe52485abe4"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_foreign_model_revision_is_not_official_source_trial:ab0c4c7add576b53",
+        "name": "OfficialSourceTrialBridgeTests.test_foreign_model_revision_is_not_official_source_trial",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "line": 159,
+        "end_line": 164,
+        "signature_hash": "afa7a8f5f430d724",
+        "file_digest8": "372c3fe52485abe4"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_inconsistent_source_boolean_cannot_bypass_prerequisites:de6eb9912cd69a79",
+        "name": "OfficialSourceTrialBridgeTests.test_inconsistent_source_boolean_cannot_bypass_prerequisites",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "line": 151,
+        "end_line": 157,
+        "signature_hash": "2ef39438f54e3afc",
+        "file_digest8": "372c3fe52485abe4"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_synthetic_deeper_hold_ne_current_evidence_advance:8593812a8a937f66",
+        "name": "OfficialSourceTrialBridgeTests.test_synthetic_deeper_hold_ne_current_evidence_advance",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "line": 127,
+        "end_line": 149,
+        "signature_hash": "0af8358b201a13dd",
+        "file_digest8": "372c3fe52485abe4"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_synthetic_future_state_may_move_hold_but_is_not_evidence:d274b6a255246fc7",
+        "name": "OfficialSourceTrialBridgeTests.test_synthetic_future_state_may_move_hold_but_is_not_evidence",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "line": 104,
+        "end_line": 125,
+        "signature_hash": "877ca1a8f3216bfd",
+        "file_digest8": "372c3fe52485abe4"
+      },
+      {
+        "semantic_id": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py#method:OfficialSourceTrialBridgeTests.test_trial_domain_manifest_substitution_fails_closed:bfc58b92a05b5e3a",
+        "name": "OfficialSourceTrialBridgeTests.test_trial_domain_manifest_substitution_fails_closed",
+        "kind": "method",
+        "file": "tools/quantization/test_aura_glm53_official_source_trial_bridge.py",
+        "line": 166,
+        "end_line": 170,
+        "signature_hash": "323efbd10688a05a",
+        "file_digest8": "372c3fe52485abe4"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +448624,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "35d48986887520ef3775220977417909",
+    "payload_hash": "eb8a5ae1257235a9ae669a7cffbc8cdc"
   }
 }
