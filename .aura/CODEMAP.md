@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1642
-- **total_bytes**: 26441339
-- **text_tokens_est**: 6600687
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1650
+- **total_bytes**: 26484556
+- **text_tokens_est**: 6611494
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 17, 'operator_script': 9, 'python_module': 999, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1642,
+  "repo_file_count": 1650,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -168,6 +168,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/f1-financial-exact-contracts.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
+    ".github/workflows/k27-astge-storage-contract.yml",
     ".github/workflows/model-cognome-adaptive-router.yml",
     ".github/workflows/model-cognome-governed-routing.yml",
     ".github/workflows/model-cognome-replay-probes.yml",
@@ -1176,6 +1177,13 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "logging_kit.py",
     "mint_genesis.py",
     "mistral_gate.py",
+    "native/aura-k27-astge/Cargo.toml",
+    "native/aura-k27-astge/README.md",
+    "native/aura-k27-astge/src/format.rs",
+    "native/aura-k27-astge/src/lib.rs",
+    "native/aura-k27-astge/src/reader.rs",
+    "native/aura-k27-astge/src/storage.rs",
+    "native/aura-k27-astge/tests/storage_contract.rs",
     "package.json",
     "paper1_extracted.txt",
     "paper2_extracted.txt",
@@ -1782,16 +1790,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1642,
-  "bytes": 26441339,
-  "tokens_est": 6600687,
+  "files": 1650,
+  "bytes": 26484556,
+  "tokens_est": 6611494,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 237,
-    "native_accelerator": 12,
+    "knowledge_artifact": 238,
+    "native_accelerator": 17,
     "operator_script": 9,
     "python_module": 999,
-    "schema_or_lexicon": 272,
+    "schema_or_lexicon": 274,
     "support_file": 49
   }
 }
