@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788110865,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -132,6 +132,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf02.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -1631,6 +1632,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/android_adaptive_provisioner.py",
+      "tools/aura_adopt/test_android_adaptive_provisioner.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26440477,
+      "tokens_est": 6600472,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -136649,6 +136652,14 @@
         "end_line": 184,
         "semantic_id": "tests/test_aura_gate.py#function:policy:6c4234b7f9aaa5a3",
         "signature_hash": "96c8d2d81ca0f6b2"
+      },
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 60,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#function:policy:5ac32a9dabe75c71",
+        "signature_hash": "acfe03c0615e309a"
       }
     ],
     "test_policy_round_trip_and_strict_contract": [
@@ -157181,6 +157192,466 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "HostKind": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "class",
+        "line": 8,
+        "end_line": 11,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:HostKind:8af6600a4e3bdc45",
+        "signature_hash": "6b1aa8dcc5d0925d"
+      }
+    ],
+    "EntrySurface": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 18,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:EntrySurface:527375fa687bb7f7",
+        "signature_hash": "ca3f068093935465"
+      }
+    ],
+    "ProvisioningProfile": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 27,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:ProvisioningProfile:c286f77af219a7d9",
+        "signature_hash": "bc13a9a079699f78"
+      }
+    ],
+    "PlanStatus": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 35,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:PlanStatus:d17095f5ff3a14af",
+        "signature_hash": "847d53963a50d13c"
+      }
+    ],
+    "HostSubstrateWitnessV1": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "class",
+        "line": 39,
+        "end_line": 75,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:HostSubstrateWitnessV1:c0d6ab5795bacf0a",
+        "signature_hash": "b2615502b03fdb90"
+      }
+    ],
+    "HostSubstrateWitnessV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 54,
+        "end_line": 75,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#method:HostSubstrateWitnessV1.__post_init__:7007bb6917acd5d5",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "CapabilityRequirementsV1": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "class",
+        "line": 79,
+        "end_line": 108,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:CapabilityRequirementsV1:16ef383f5e6f0c17",
+        "signature_hash": "4530a3c8ace3cc5e"
+      }
+    ],
+    "CapabilityRequirementsV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 108,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#method:CapabilityRequirementsV1.__post_init__:e24dfb7de27c6e3b",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "ProvisioningPolicyV1": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "class",
+        "line": 112,
+        "end_line": 139,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:ProvisioningPolicyV1:6091dca9260a5ee3",
+        "signature_hash": "8e860b4c403a5345"
+      }
+    ],
+    "ProvisioningPolicyV1.__post_init__": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 139,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#method:ProvisioningPolicyV1.__post_init__:ade81db39f03a8b0",
+        "signature_hash": "175e4972e4d2d582"
+      }
+    ],
+    "AdaptiveProvisioningPlanV1": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "class",
+        "line": 143,
+        "end_line": 162,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:AdaptiveProvisioningPlanV1:469090191394bfa8",
+        "signature_hash": "92adda56922653e9"
+      }
+    ],
+    "_sum_or_none": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "function",
+        "line": 165,
+        "end_line": 168,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#function:_sum_or_none:a70f9c9a676e426f",
+        "signature_hash": "1a99ac4395d0b3ba"
+      }
+    ],
+    "compile_adaptive_provisioning_plan": [
+      {
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "kind": "function",
+        "line": 171,
+        "end_line": 348,
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#function:compile_adaptive_provisioning_plan:f8db534fc807036a",
+        "signature_hash": "88cbb0f26fd52b92"
+      }
+    ],
+    "witness": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "function",
+        "line": 21,
+        "end_line": 38,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#function:witness:f159c14da1f31db6",
+        "signature_hash": "c76b37d799639653"
+      }
+    ],
+    "requirements": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 44,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#function:requirements:9a9eaf218ffc986e",
+        "signature_hash": "b6b83d5a4b1737fe"
+      }
+    ],
+    "compile_plan": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 71,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#function:compile_plan:e8b87ae08ce5c7be",
+        "signature_hash": "9a50250bf7205ecd"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "class",
+        "line": 74,
+        "end_line": 230,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#class:AndroidAdaptiveProvisioningTests:3c630d7e7267b1f4",
+        "signature_hash": "6bc1ea92b6727222"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.assertNoEffects": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 85,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.assertNoEffects:e19990bd7ccea342",
+        "signature_hash": "e395689cce04d394"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_01_minimal_native_plan_is_ready_without_model": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 93,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_01_minimal_native_plan_is_ready_without_model:50e7f6daba1894d3",
+        "signature_hash": "e7cbd3d49b371bc1"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_02_non_android_is_blocked_for_native_surface": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 98,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_02_non_android_is_blocked_for_native_surface:7530ce68219f3e48",
+        "signature_hash": "9172ce1f356a8c76"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_03_unknown_host_kind_is_partial_not_zero": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 103,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_03_unknown_host_kind_is_partial_not_zero:a179a7a31626f87c",
+        "signature_hash": "812674e3f1eb38dd"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_04_stale_witness_rebases": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 108,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_04_stale_witness_rebases:5625db943c3afdd7",
+        "signature_hash": "d85d27118fc621d3"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_05_stale_policy_rebases": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 110,
+        "end_line": 112,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_05_stale_policy_rebases:30b9f9b14c724103",
+        "signature_hash": "1e42c99361057e66"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_06_other_surface_is_not_applicable_and_does_not_install": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 118,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_06_other_surface_is_not_applicable_and_does_not_install:9d0d28df772ad76c",
+        "signature_hash": "2ced26dfb5eaf82a"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_07_unknown_api_level_is_partial": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 123,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_07_unknown_api_level_is_partial:a79e3d15f6b1c085",
+        "signature_hash": "05c9e94a51753ac5"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_08_old_api_level_blocks": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 127,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_08_old_api_level_blocks:1d26852c3ef9efe3",
+        "signature_hash": "4a74b1ab35e57e42"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_09_saf_unknown_is_partial": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 131,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_09_saf_unknown_is_partial:152f30f271bc9bb4",
+        "signature_hash": "82e9e8205c753a5b"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_10_saf_false_blocks": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 135,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_10_saf_false_blocks:1add3f6d3b1a8053",
+        "signature_hash": "147b98e38ca14701"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_11_unknown_storage_is_partial_not_assumed_free": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 140,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_11_unknown_storage_is_partial_not_assumed_free:f606ac813bdf199e",
+        "signature_hash": "8e4872e30eed531f"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_12_insufficient_shell_storage_blocks": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 144,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_12_insufficient_shell_storage_blocks:20a4c2244231a1ca",
+        "signature_hash": "4851b5f565979d0d"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_13_unknown_ram_for_working_set_is_partial": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 146,
+        "end_line": 148,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_13_unknown_ram_for_working_set_is_partial:4d6b20efeaca543a",
+        "signature_hash": "3d37b4e40883839b"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_14_insufficient_working_ram_blocks": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 152,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_14_insufficient_working_ram_blocks:682111a02b934cfe",
+        "signature_hash": "66787380e30fb23c"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_15_background_not_requested_is_avoided": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 154,
+        "end_line": 156,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_15_background_not_requested_is_avoided:b8494dbb41d05b9e",
+        "signature_hash": "9dae34aa53596185"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_16_background_unknown_is_partial": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 158,
+        "end_line": 160,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_16_background_unknown_is_partial:82c827fe6d270e8d",
+        "signature_hash": "711494409270f232"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_17_background_unavailable_blocks": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 162,
+        "end_line": 164,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_17_background_unavailable_blocks:a29dc058f1f3615d",
+        "signature_hash": "3eaafd9935dde5a9"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_18_native_tts_requirement_fails_closed": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 166,
+        "end_line": 168,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_18_native_tts_requirement_fails_closed:8bb149df7fc63cd5",
+        "signature_hash": "4815d0d55fdbc8fb"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_19_local_inference_uses_smallest_adequate_model": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 170,
+        "end_line": 176,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_19_local_inference_uses_smallest_adequate_model:303273f6c84106d6",
+        "signature_hash": "e4389123ef3f2003"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_20_missing_micro_model_policy_remains_partial": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 178,
+        "end_line": 181,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_20_missing_micro_model_policy_remains_partial:983e21a1e21345e0",
+        "signature_hash": "112ea1eeba77a76f"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_21_remote_residual_requires_separate_admission": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 190,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_21_remote_residual_requires_separate_admission:5a114b52caeea129",
+        "signature_hash": "537af4190a84d431"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_22_offline_requirement_blocks_remote_substitution": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 192,
+        "end_line": 197,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_22_offline_requirement_blocks_remote_substitution:f1a19913450d0b11",
+        "signature_hash": "1117a7a40dd8051e"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_23_remote_network_unknown_is_partial": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 199,
+        "end_line": 204,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_23_remote_network_unknown_is_partial:0b1f075175665920",
+        "signature_hash": "9d604fa9beed5343"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_24_remote_network_false_blocks": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 206,
+        "end_line": 211,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_24_remote_network_false_blocks:b9bcdf54ba7abbc3",
+        "signature_hash": "a35be72430a579a7"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_25_local_runtime_required_if_remote_not_acceptable": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 213,
+        "end_line": 218,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_25_local_runtime_required_if_remote_not_acceptable:cfc1009fd3238cc5",
+        "signature_hash": "a4577c9bea495860"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_26_full_model_is_not_chosen_when_micro_is_adequate": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 220,
+        "end_line": 222,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_26_full_model_is_not_chosen_when_micro_is_adequate:be6ddc99c9346299",
+        "signature_hash": "7045f1fc7fdeac35"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_27_strict_host_integer_validation": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 224,
+        "end_line": 226,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_27_strict_host_integer_validation:9ea607a1ec6a6e0c",
+        "signature_hash": "95db59340a7e6b79"
+      }
+    ],
+    "AndroidAdaptiveProvisioningTests.test_28_capability_identity_dedup": [
+      {
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "kind": "method",
+        "line": 228,
+        "end_line": 230,
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_28_capability_identity_dedup:7bca84fcad01d185",
+        "signature_hash": "a2c95df56f11eaca"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -167495,6 +167966,53 @@
         0.180531,
         0.255844,
         0.26249
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-adopt-zf02.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 787,
+      "lines": 27,
+      "tokens_est": 197,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f7c7964dac9ec387",
+      "vector": [
+        -0.228506,
+        0.029909,
+        0.228506,
+        -0.123225,
+        0.154331,
+        -0.173473,
+        -0.166295,
+        0.116047,
+        -0.161509,
+        0.247647,
+        0.015553,
+        -0.089727,
+        -0.283538,
+        0.034695,
+        -0.290716,
+        0.230898,
+        -0.084942,
+        0.099298,
+        -0.273967,
+        0.041873,
+        0.008375,
+        0.11844,
+        0.211756,
+        0.161509,
+        0.17108,
+        0.135189,
+        0.180651,
+        0.238076,
+        0.252433,
+        -0.027516,
+        0.056229,
+        0.293109
       ]
     },
     {
@@ -262648,6 +263166,100 @@
       ]
     },
     {
+      "path": "tools/aura_adopt/android_adaptive_provisioner.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14473,
+      "lines": 349,
+      "tokens_est": 3619,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "44d9112259034b1e",
+      "vector": [
+        -0.179318,
+        -0.218239,
+        -0.00139,
+        0.23492,
+        0.101474,
+        -0.257161,
+        0.045872,
+        0.087574,
+        -0.090354,
+        0.321104,
+        -0.193218,
+        -0.118155,
+        0.068113,
+        -0.015291,
+        -0.207119,
+        0.031971,
+        -0.170977,
+        0.268281,
+        0.048652,
+        -0.157077,
+        0.012511,
+        0.179318,
+        0.346125,
+        0.23214,
+        0.056992,
+        -0.070893,
+        -0.187658,
+        -0.129275,
+        0.24604,
+        -0.24882,
+        -0.218239,
+        0.054212
+      ]
+    },
+    {
+      "path": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10169,
+      "lines": 235,
+      "tokens_est": 2543,
+      "symbol_count": 34,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1f3020fc1b5fe0a1",
+      "vector": [
+        0.232301,
+        0.257414,
+        -0.124312,
+        0.091665,
+        -0.217232,
+        0.259926,
+        0.285039,
+        -0.001256,
+        -0.192119,
+        -0.089153,
+        -0.059017,
+        0.259926,
+        0.076596,
+        -0.106733,
+        0.043949,
+        0.114267,
+        0.177051,
+        0.202164,
+        -0.10171,
+        0.006278,
+        0.224767,
+        -0.207187,
+        0.023858,
+        -0.297596,
+        0.269971,
+        -0.307641,
+        0.131846,
+        0.06404,
+        0.172028,
+        0.089153,
+        0.051483,
+        0.131846
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -286646,16 +287258,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26440477,
+    "text_tokens_est": 6600472,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286797,6 +287409,7 @@
       ".github/workflows/architect-external-llm-session.yml",
       ".github/workflows/architect-real-refactor-hardening.yml",
       ".github/workflows/architect-real-refactor-trial.yml",
+      ".github/workflows/aura-adopt-zf02.yml",
       ".github/workflows/aura-architecture-harness-export.yml",
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
@@ -288296,6 +288909,8 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_adopt/android_adaptive_provisioner.py",
+      "tools/aura_adopt/test_android_adaptive_provisioner.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -445634,6 +446249,476 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:AdaptiveProvisioningPlanV1:469090191394bfa8",
+        "name": "AdaptiveProvisioningPlanV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 143,
+        "end_line": 162,
+        "signature_hash": "92adda56922653e9",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:CapabilityRequirementsV1:16ef383f5e6f0c17",
+        "name": "CapabilityRequirementsV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 79,
+        "end_line": 108,
+        "signature_hash": "4530a3c8ace3cc5e",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:EntrySurface:527375fa687bb7f7",
+        "name": "EntrySurface",
+        "kind": "class",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 14,
+        "end_line": 18,
+        "signature_hash": "ca3f068093935465",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:HostKind:8af6600a4e3bdc45",
+        "name": "HostKind",
+        "kind": "class",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 8,
+        "end_line": 11,
+        "signature_hash": "6b1aa8dcc5d0925d",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:HostSubstrateWitnessV1:c0d6ab5795bacf0a",
+        "name": "HostSubstrateWitnessV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 39,
+        "end_line": 75,
+        "signature_hash": "b2615502b03fdb90",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:PlanStatus:d17095f5ff3a14af",
+        "name": "PlanStatus",
+        "kind": "class",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 30,
+        "end_line": 35,
+        "signature_hash": "847d53963a50d13c",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:ProvisioningPolicyV1:6091dca9260a5ee3",
+        "name": "ProvisioningPolicyV1",
+        "kind": "class",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 112,
+        "end_line": 139,
+        "signature_hash": "8e860b4c403a5345",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#class:ProvisioningProfile:c286f77af219a7d9",
+        "name": "ProvisioningProfile",
+        "kind": "class",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 21,
+        "end_line": 27,
+        "signature_hash": "bc13a9a079699f78",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#function:_sum_or_none:a70f9c9a676e426f",
+        "name": "_sum_or_none",
+        "kind": "function",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 165,
+        "end_line": 168,
+        "signature_hash": "1a99ac4395d0b3ba",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#function:compile_adaptive_provisioning_plan:f8db534fc807036a",
+        "name": "compile_adaptive_provisioning_plan",
+        "kind": "function",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 171,
+        "end_line": 348,
+        "signature_hash": "88cbb0f26fd52b92",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#method:CapabilityRequirementsV1.__post_init__:e24dfb7de27c6e3b",
+        "name": "CapabilityRequirementsV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 89,
+        "end_line": 108,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#method:HostSubstrateWitnessV1.__post_init__:7007bb6917acd5d5",
+        "name": "HostSubstrateWitnessV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 54,
+        "end_line": 75,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/android_adaptive_provisioner.py#method:ProvisioningPolicyV1.__post_init__:ade81db39f03a8b0",
+        "name": "ProvisioningPolicyV1.__post_init__",
+        "kind": "method",
+        "file": "tools/aura_adopt/android_adaptive_provisioner.py",
+        "line": 123,
+        "end_line": 139,
+        "signature_hash": "175e4972e4d2d582",
+        "file_digest8": "44d9112259034b1e"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#class:AndroidAdaptiveProvisioningTests:3c630d7e7267b1f4",
+        "name": "AndroidAdaptiveProvisioningTests",
+        "kind": "class",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 74,
+        "end_line": 230,
+        "signature_hash": "6bc1ea92b6727222",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#function:compile_plan:e8b87ae08ce5c7be",
+        "name": "compile_plan",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 63,
+        "end_line": 71,
+        "signature_hash": "9a50250bf7205ecd",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#function:policy:5ac32a9dabe75c71",
+        "name": "policy",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 47,
+        "end_line": 60,
+        "signature_hash": "acfe03c0615e309a",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#function:requirements:9a9eaf218ffc986e",
+        "name": "requirements",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 41,
+        "end_line": 44,
+        "signature_hash": "b6b83d5a4b1737fe",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#function:witness:f159c14da1f31db6",
+        "name": "witness",
+        "kind": "function",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 21,
+        "end_line": 38,
+        "signature_hash": "c76b37d799639653",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.assertNoEffects:e19990bd7ccea342",
+        "name": "AndroidAdaptiveProvisioningTests.assertNoEffects",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 75,
+        "end_line": 85,
+        "signature_hash": "e395689cce04d394",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_01_minimal_native_plan_is_ready_without_model:50e7f6daba1894d3",
+        "name": "AndroidAdaptiveProvisioningTests.test_01_minimal_native_plan_is_ready_without_model",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 87,
+        "end_line": 93,
+        "signature_hash": "e7cbd3d49b371bc1",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_02_non_android_is_blocked_for_native_surface:7530ce68219f3e48",
+        "name": "AndroidAdaptiveProvisioningTests.test_02_non_android_is_blocked_for_native_surface",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 95,
+        "end_line": 98,
+        "signature_hash": "9172ce1f356a8c76",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_03_unknown_host_kind_is_partial_not_zero:a179a7a31626f87c",
+        "name": "AndroidAdaptiveProvisioningTests.test_03_unknown_host_kind_is_partial_not_zero",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 100,
+        "end_line": 103,
+        "signature_hash": "812674e3f1eb38dd",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_04_stale_witness_rebases:5625db943c3afdd7",
+        "name": "AndroidAdaptiveProvisioningTests.test_04_stale_witness_rebases",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 105,
+        "end_line": 108,
+        "signature_hash": "d85d27118fc621d3",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_05_stale_policy_rebases:30b9f9b14c724103",
+        "name": "AndroidAdaptiveProvisioningTests.test_05_stale_policy_rebases",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 110,
+        "end_line": 112,
+        "signature_hash": "1e42c99361057e66",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_06_other_surface_is_not_applicable_and_does_not_install:9d0d28df772ad76c",
+        "name": "AndroidAdaptiveProvisioningTests.test_06_other_surface_is_not_applicable_and_does_not_install",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 114,
+        "end_line": 118,
+        "signature_hash": "2ced26dfb5eaf82a",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_07_unknown_api_level_is_partial:a79e3d15f6b1c085",
+        "name": "AndroidAdaptiveProvisioningTests.test_07_unknown_api_level_is_partial",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 120,
+        "end_line": 123,
+        "signature_hash": "05c9e94a51753ac5",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_08_old_api_level_blocks:1d26852c3ef9efe3",
+        "name": "AndroidAdaptiveProvisioningTests.test_08_old_api_level_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 125,
+        "end_line": 127,
+        "signature_hash": "4a74b1ab35e57e42",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_09_saf_unknown_is_partial:152f30f271bc9bb4",
+        "name": "AndroidAdaptiveProvisioningTests.test_09_saf_unknown_is_partial",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 129,
+        "end_line": 131,
+        "signature_hash": "82e9e8205c753a5b",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_10_saf_false_blocks:1add3f6d3b1a8053",
+        "name": "AndroidAdaptiveProvisioningTests.test_10_saf_false_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 133,
+        "end_line": 135,
+        "signature_hash": "147b98e38ca14701",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_11_unknown_storage_is_partial_not_assumed_free:f606ac813bdf199e",
+        "name": "AndroidAdaptiveProvisioningTests.test_11_unknown_storage_is_partial_not_assumed_free",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 137,
+        "end_line": 140,
+        "signature_hash": "8e4872e30eed531f",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_12_insufficient_shell_storage_blocks:20a4c2244231a1ca",
+        "name": "AndroidAdaptiveProvisioningTests.test_12_insufficient_shell_storage_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 142,
+        "end_line": 144,
+        "signature_hash": "4851b5f565979d0d",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_13_unknown_ram_for_working_set_is_partial:4d6b20efeaca543a",
+        "name": "AndroidAdaptiveProvisioningTests.test_13_unknown_ram_for_working_set_is_partial",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 146,
+        "end_line": 148,
+        "signature_hash": "3d37b4e40883839b",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_14_insufficient_working_ram_blocks:682111a02b934cfe",
+        "name": "AndroidAdaptiveProvisioningTests.test_14_insufficient_working_ram_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 150,
+        "end_line": 152,
+        "signature_hash": "66787380e30fb23c",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_15_background_not_requested_is_avoided:b8494dbb41d05b9e",
+        "name": "AndroidAdaptiveProvisioningTests.test_15_background_not_requested_is_avoided",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 154,
+        "end_line": 156,
+        "signature_hash": "9dae34aa53596185",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_16_background_unknown_is_partial:82c827fe6d270e8d",
+        "name": "AndroidAdaptiveProvisioningTests.test_16_background_unknown_is_partial",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 158,
+        "end_line": 160,
+        "signature_hash": "711494409270f232",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_17_background_unavailable_blocks:a29dc058f1f3615d",
+        "name": "AndroidAdaptiveProvisioningTests.test_17_background_unavailable_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 162,
+        "end_line": 164,
+        "signature_hash": "3eaafd9935dde5a9",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_18_native_tts_requirement_fails_closed:8bb149df7fc63cd5",
+        "name": "AndroidAdaptiveProvisioningTests.test_18_native_tts_requirement_fails_closed",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 166,
+        "end_line": 168,
+        "signature_hash": "4815d0d55fdbc8fb",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_19_local_inference_uses_smallest_adequate_model:303273f6c84106d6",
+        "name": "AndroidAdaptiveProvisioningTests.test_19_local_inference_uses_smallest_adequate_model",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 170,
+        "end_line": 176,
+        "signature_hash": "e4389123ef3f2003",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_20_missing_micro_model_policy_remains_partial:983e21a1e21345e0",
+        "name": "AndroidAdaptiveProvisioningTests.test_20_missing_micro_model_policy_remains_partial",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 178,
+        "end_line": 181,
+        "signature_hash": "112ea1eeba77a76f",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_21_remote_residual_requires_separate_admission:5a114b52caeea129",
+        "name": "AndroidAdaptiveProvisioningTests.test_21_remote_residual_requires_separate_admission",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 183,
+        "end_line": 190,
+        "signature_hash": "537af4190a84d431",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_22_offline_requirement_blocks_remote_substitution:f1a19913450d0b11",
+        "name": "AndroidAdaptiveProvisioningTests.test_22_offline_requirement_blocks_remote_substitution",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 192,
+        "end_line": 197,
+        "signature_hash": "1117a7a40dd8051e",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_23_remote_network_unknown_is_partial:0b1f075175665920",
+        "name": "AndroidAdaptiveProvisioningTests.test_23_remote_network_unknown_is_partial",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 199,
+        "end_line": 204,
+        "signature_hash": "9d604fa9beed5343",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_24_remote_network_false_blocks:b9bcdf54ba7abbc3",
+        "name": "AndroidAdaptiveProvisioningTests.test_24_remote_network_false_blocks",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 206,
+        "end_line": 211,
+        "signature_hash": "a35be72430a579a7",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_25_local_runtime_required_if_remote_not_acceptable:cfc1009fd3238cc5",
+        "name": "AndroidAdaptiveProvisioningTests.test_25_local_runtime_required_if_remote_not_acceptable",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 213,
+        "end_line": 218,
+        "signature_hash": "a4577c9bea495860",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_26_full_model_is_not_chosen_when_micro_is_adequate:be6ddc99c9346299",
+        "name": "AndroidAdaptiveProvisioningTests.test_26_full_model_is_not_chosen_when_micro_is_adequate",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 220,
+        "end_line": 222,
+        "signature_hash": "7045f1fc7fdeac35",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_27_strict_host_integer_validation:9ea607a1ec6a6e0c",
+        "name": "AndroidAdaptiveProvisioningTests.test_27_strict_host_integer_validation",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 224,
+        "end_line": 226,
+        "signature_hash": "95db59340a7e6b79",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
+        "semantic_id": "tools/aura_adopt/test_android_adaptive_provisioner.py#method:AndroidAdaptiveProvisioningTests.test_28_capability_identity_dedup:7bca84fcad01d185",
+        "name": "AndroidAdaptiveProvisioningTests.test_28_capability_identity_dedup",
+        "kind": "method",
+        "file": "tools/aura_adopt/test_android_adaptive_provisioner.py",
+        "line": 228,
+        "end_line": 230,
+        "signature_hash": "a2c95df56f11eaca",
+        "file_digest8": "1f3020fc1b5fe0a1"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447969,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "4b9e874e358623b18dc591a03fb5ccfc",
+    "payload_hash": "9dc873d6214e6c767442d8aa3ae69c4e"
   }
 }
