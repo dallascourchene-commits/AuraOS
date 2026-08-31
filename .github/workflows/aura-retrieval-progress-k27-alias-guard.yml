@@ -1,0 +1,203 @@
+name: Aura Retrieval Progress K27 Alias Guard Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_retrieval_progress_k27_alias_guard.py"
+      - "tests/test_aura_retrieval_progress_k27_alias_guard.py"
+      - ".github/workflows/aura-retrieval-progress-k27-alias-guard.yml"
+  push:
+    branches:
+      - "arena/retrieval-progress-k27-alias-guard-v1-20260831-sol"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  exact-alias-aware-progress-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      RPG_OWNER_HEAD: "412e683b8a3d28bd57e4dc39059283cc823e2fb3"
+      RPG_SOURCE_BLOB: "5e20a51af1bbafa17c56b3a80125bcf003cc6b62"
+      RPG_TEST_BLOB: "fd70a6a2ba38220f633c7becf421fbe472bd6b6b"
+      RPG_VERIFY_HEAD: "f85135562a5975cd7ea1892ab1c221d9004d3e0d"
+      RPG_VERIFY_RUN: "33435590114"
+      NAV09_DRIVE_ID: "1eP6rlOLkJgkPs4ZXZa-OUQsdYrubXOiPhjgavx-nWy8"
+    steps:
+      - name: Exact authenticated checkout
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git fetch --no-tags origin "$TARGET_SHA" "$RPG_OWNER_HEAD"
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Authenticate exact retrieval-progress semantic owner
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse "$RPG_OWNER_HEAD:tools/aura_retrieval_progress_guard.py")" = "$RPG_SOURCE_BLOB"
+          test "$(git rev-parse "$RPG_OWNER_HEAD:tests/test_aura_retrieval_progress_guard.py")" = "$RPG_TEST_BLOB"
+          test "$(git hash-object tools/aura_retrieval_progress_guard.py)" = "$RPG_SOURCE_BLOB"
+          test "$(git hash-object tests/test_aura_retrieval_progress_guard.py)" = "$RPG_TEST_BLOB"
+          grep -q "$NAV09_DRIVE_ID" tools/aura_retrieval_progress_k27_alias_guard.py
+          echo "RPG_OWNER_SOURCE_EXACT=true"
+          echo "NAV09_D0_ARTIFACT_PINNED=true"
+
+      - name: Revalidate exact hosted #754 proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          run_id = int(os.environ["RPG_VERIFY_RUN"])
+          req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/actions/runs/{run_id}",
+              headers={
+                  "Authorization": f"Bearer {token}",
+                  "Accept": "application/vnd.github+json",
+                  "X-GitHub-Api-Version": "2022-11-28",
+              },
+          )
+          with urllib.request.urlopen(req, timeout=30) as response:
+              run = json.load(response)
+          assert run["name"] == "Aura Retrieval Progress Guard", run["name"]
+          assert run["head_sha"] == os.environ["RPG_VERIFY_HEAD"], run["head_sha"]
+          assert run["status"] == "completed" and run["conclusion"] == "success", (
+              run["status"], run["conclusion"]
+          )
+          print("RPG_EXACT_HOSTED_PROOF_REVALIDATED=true")
+          PY
+
+      - name: Compile and execute parent plus alias adversarials
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_retrieval_progress_guard.py \
+            tools/aura_retrieval_progress_k27_alias_guard.py \
+            tests/test_aura_retrieval_progress_guard.py \
+            tests/test_aura_retrieval_progress_k27_alias_guard.py
+          python3 -m unittest -v \
+            tests.test_aura_retrieval_progress_guard \
+            tests.test_aura_retrieval_progress_k27_alias_guard
+
+      - name: Exhaust 48-state semantic-route lattice
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from tests.test_aura_retrieval_progress_k27_alias_guard import alias, obs, other_source_view, session_view, view
+          from tools.aura_retrieval_progress_k27_alias_guard import AliasAwareDecision, assess_k27_alias_aware_retrieval_progress
+
+          checked = 0
+          a, b = view(), session_view()
+
+          # 24 same-SID / different-route states.
+          for alias_present in (False, True):
+              for state_changed in (False, True):
+                  for evidence_changed in (False, True):
+                      for prior in (0, 1, 2):
+                          receipt = assess_k27_alias_aware_retrieval_progress(
+                              previous=obs(a),
+                              current=obs(
+                                  b,
+                                  state="provider:g1" if state_changed else "provider:g0",
+                                  evidence="evidence:e1" if evidence_changed else "evidence:e0",
+                              ),
+                              previous_view=a,
+                              current_view=b,
+                              alias_projection=alias(a, b) if alias_present else None,
+                              prior_no_progress_count=prior,
+                          )
+                          if not alias_present:
+                              expected = AliasAwareDecision.HOLD_ALIAS_RESOLUTION_REQUIRED
+                          elif state_changed or evidence_changed:
+                              expected = AliasAwareDecision.ALLOW_STATE_TRANSITION
+                          elif prior == 0:
+                              expected = AliasAwareDecision.CHANGE_AXIS_REQUIRED
+                          else:
+                              expected = AliasAwareDecision.COLLAPSE_CONE
+                          assert receipt.decision is expected, (
+                              alias_present, state_changed, evidence_changed, prior,
+                              receipt.decision, expected
+                          )
+                          checked += 1
+
+          # 12 same-view states.
+          for state_changed in (False, True):
+              for evidence_changed in (False, True):
+                  for prior in (0, 1, 2):
+                      receipt = assess_k27_alias_aware_retrieval_progress(
+                          previous=obs(a),
+                          current=obs(
+                              a,
+                              state="provider:g1" if state_changed else "provider:g0",
+                              evidence="evidence:e1" if evidence_changed else "evidence:e0",
+                          ),
+                          previous_view=a,
+                          current_view=a,
+                          prior_no_progress_count=prior,
+                      )
+                      if state_changed or evidence_changed:
+                          expected = AliasAwareDecision.ALLOW_STATE_TRANSITION
+                      elif prior == 0:
+                          expected = AliasAwareDecision.CHANGE_AXIS_REQUIRED
+                      else:
+                          expected = AliasAwareDecision.COLLAPSE_CONE
+                      assert receipt.decision is expected
+                      checked += 1
+
+          # 12 different-SID states: SID rotation itself is NEVER sufficient progress.
+          c = other_source_view()
+          for state_changed in (False, True):
+              for evidence_changed in (False, True):
+                  for prior in (0, 1, 2):
+                      receipt = assess_k27_alias_aware_retrieval_progress(
+                          previous=obs(a),
+                          current=obs(
+                              c,
+                              state="provider:g1" if state_changed else "provider:g0",
+                              evidence="evidence:e1" if evidence_changed else "evidence:e0",
+                          ),
+                          previous_view=a,
+                          current_view=c,
+                          prior_no_progress_count=prior,
+                      )
+                      expected = (
+                          AliasAwareDecision.ALLOW_STATE_TRANSITION
+                          if state_changed or evidence_changed
+                          else AliasAwareDecision.HOLD_SOURCE_IDENTITY_TRANSITION_REQUIRED
+                      )
+                      assert receipt.decision is expected, (
+                          state_changed, evidence_changed, prior, receipt.decision, expected
+                      )
+                      checked += 1
+
+          assert checked == 48, checked
+          print("K27_ALIAS_AWARE_RETRIEVAL_LATTICE=48")
+          PY
+
+      - name: Enforce nonpromotion and anti-evasion laws
+        run: |
+          set -euo pipefail
+          grep -q 'RouteProjectionChanged!=SemanticRetrievalAxisChanged' tools/aura_retrieval_progress_k27_alias_guard.py
+          grep -q 'SchemeRotationCannotResetNoProgressDebt' tools/aura_retrieval_progress_k27_alias_guard.py
+          grep -q 'CallerSIDRotationCannotMintProgress' tools/aura_retrieval_progress_k27_alias_guard.py
+          grep -q 'DifferentSIDWithoutIndependentProgress=>HoldForSourceIdentityOwner' tools/aura_retrieval_progress_k27_alias_guard.py
+          grep -q 'AliasProjectionCanOnlyRestrictRetry;CannotGrantProgressOrAuthority' tools/aura_retrieval_progress_k27_alias_guard.py
+          grep -q 'CoordinateView!=SourceIdentity!=SemanticTruth!=Authority' tools/aura_retrieval_progress_k27_alias_guard.py
+          grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' tools/aura_retrieval_progress_k27_alias_guard.py
+          echo "SOURCE_IDENTITY_AUTHENTICATED_BY_THIS_CONTRACT=false"
+          echo "SOURCE_CURRENTNESS_PROVEN=false"
+          echo "SEMANTIC_TRUTH_PROVEN=false"
+          echo "AUTHORITY_GRANTED=false"
+          echo "EFFECT_AUTHORITY_GRANTED=false"
+          echo "SEMANTIC_K27_AUTHORITY_MINTED=false"
+          echo "NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false"
