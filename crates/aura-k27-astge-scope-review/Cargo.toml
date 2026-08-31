@@ -1,0 +1,21 @@
+[package]
+name = "aura-k27-astge-scope-review"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.80"
+description = "Lexical-owner scope binding for current-source ASTGE review admission"
+license = "MIT"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+aura-k27-astge = { path = "../aura-k27-astge" }
+aura-k27-astge-materialize = { path = "../aura-k27-astge-materialize" }
+aura-k27-astge-scope = { path = "../aura-k27-astge-scope" }
+aura-k27-astge-scopes = { path = "../aura-k27-astge-scopes" }
+aura-k27-astge-source-review = { path = "../aura-k27-astge-source-review" }
+
+[dev-dependencies]
+aura-k27-astge-ingest = { path = "../aura-k27-astge-ingest" }
