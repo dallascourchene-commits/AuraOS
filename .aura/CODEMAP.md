@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1662
-- **total_bytes**: 26615230
-- **text_tokens_est**: 6644165
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1012, 'schema_or_lexicon': 278, 'support_file': 49}
+- **file_count**: 1664
+- **total_bytes**: 26625622
+- **text_tokens_est**: 6646764
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1013, 'schema_or_lexicon': 279, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1662,
+  "repo_file_count": 1664,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -171,6 +171,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
     ".github/workflows/glm53-live-payload-coverage-delta.yml",
     ".github/workflows/glm53-minimum-live-payload-cover-verification.yml",
+    ".github/workflows/glm53-official-e8-vs-optimized-scalar-canary.yml",
     ".github/workflows/glm53-official-source-e8-materialization-canary.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
@@ -1508,6 +1509,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_gate_server.py",
     "tests/test_aura_glm53_live_payload_coverage_delta.py",
     "tests/test_aura_glm53_minimum_live_payload_cover_verification.py",
+    "tests/test_aura_glm53_official_e8_vs_optimized_scalar_canary.py",
     "tests/test_aura_harness_issue_capsules.py",
     "tests/test_aura_hermes_arena_mode.py",
     "tests/test_aura_human_agent_arena.py",
@@ -1802,16 +1804,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1662,
-  "bytes": 26615230,
-  "tokens_est": 6644165,
+  "files": 1664,
+  "bytes": 26625622,
+  "tokens_est": 6646764,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1012,
-    "schema_or_lexicon": 278,
+    "python_module": 1013,
+    "schema_or_lexicon": 279,
     "support_file": 49
   }
 }
