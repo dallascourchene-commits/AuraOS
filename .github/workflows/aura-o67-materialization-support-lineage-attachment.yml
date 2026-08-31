@@ -24,7 +24,6 @@ jobs:
       O65R_SOURCE_BLOB: 'bdaa9b0338cdab05c48dc0337ab46522b40ac42f'
       O65R_MATERIALIZATION_BASIS: 'e94c482318e0c25ad7052328fcd6722ac85470ba756ac7d6e2056131f4ff0c0d'
       O66_HEAD: '2034bb9afcc801e1655bf334548042f6602c8c17'
-      O66_CURRENT_HEAD: '54e0a7f59e092d32e49dbff36c6106b620eba8d4'
       O66_RUN: '33410906307'
       O66_JOB: '99549924922'
       O66_SOURCE_BLOB: 'bdd5b9639995eaf9353efbe454db5817698c9690'
@@ -40,62 +39,86 @@ jobs:
           git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
           AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
           git -c http.extraheader="$AUTH" fetch -q --no-tags origin \
-            "$TARGET_SHA" "$O65R_HEAD" "$O66_HEAD" "$O66_CURRENT_HEAD"
+            "$TARGET_SHA" "$O65R_HEAD" "$O66_HEAD"
           git checkout -q --detach "$TARGET_SHA"
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
           test ! -f .git/shallow
 
-      - name: Revalidate exact current O65-R and current-semantic O66
+      - name: Revalidate earned parent proofs and current semantic tips
         shell: bash
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json, os, urllib.request
+          import json, os, urllib.parse, urllib.request
+
           repo=os.environ['GITHUB_REPOSITORY']
           token=os.environ['GH_TOKEN']
           headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json'}
+
           def get(path):
               req=urllib.request.Request(f'https://api.github.com/repos/{repo}/{path}',headers=headers)
-              with urllib.request.urlopen(req,timeout=30) as r: return json.load(r)
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  return json.load(r)
 
-          p708=get('pulls/708')
-          assert p708['head']['sha']==os.environ['O65R_HEAD'],(p708['head']['sha'],os.environ['O65R_HEAD'])
-          run=get(f"actions/runs/{os.environ['O65R_RUN']}")
-          assert run['head_sha']==os.environ['O65R_HEAD'],run
-          assert run['name']=='Aura O65-R Authority Materialization Proposal Conformance Proof',run['name']
-          assert run['status']=='completed' and run['conclusion']=='success',run
-          job=get(f"actions/jobs/{os.environ['O65R_JOB']}")
-          assert str(job['run_id'])==os.environ['O65R_RUN'],job
-          assert job['head_sha']==os.environ['O65R_HEAD'],job
-          assert job['status']=='completed' and job['conclusion']=='success',job
-          print('O67_O65R_CURRENT_EXACT_GREEN=true')
+          def prove_earned_run(*, head, run_id, job_id, workflow):
+              run=get(f'actions/runs/{run_id}')
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              assert run['name']==workflow,(run_id,run['name'],workflow)
+              assert run['status']=='completed' and run['conclusion']=='success',run
+              job=get(f'actions/jobs/{job_id}')
+              assert str(job['run_id'])==str(run_id),(job_id,job['run_id'],run_id)
+              assert job['head_sha']==head,(job_id,job['head_sha'],head)
+              assert job['status']=='completed' and job['conclusion']=='success',job
 
-          p710=get('pulls/710')
-          assert p710['head']['sha']==os.environ['O66_CURRENT_HEAD'],(p710['head']['sha'],os.environ['O66_CURRENT_HEAD'])
-          run=get(f"actions/runs/{os.environ['O66_RUN']}")
-          assert run['head_sha']==os.environ['O66_HEAD'],run
-          assert run['name']=='Aura O66 Pre-Attempt Lifecycle Conformance',run['name']
-          assert run['status']=='completed' and run['conclusion']=='success',run
-          job=get(f"actions/jobs/{os.environ['O66_JOB']}")
-          assert str(job['run_id'])==os.environ['O66_RUN'],job
-          assert job['head_sha']==os.environ['O66_HEAD'],job
-          assert job['status']=='completed' and job['conclusion']=='success',job
-          print('O67_O66_EARNED_SEMANTIC_PROOF_GREEN=true')
+          def prove_current_semantics(*, pr_number, proof_head, source_path, source_blob):
+              live=get(f'pulls/{pr_number}')['head']['sha']
+              encoded=urllib.parse.quote(source_path, safe='/')
+              meta=get(f'contents/{encoded}?ref={live}')
+              assert meta['sha']==source_blob,(pr_number,live,meta['sha'],source_blob)
+              if live != proof_head:
+                  comp=get(f'compare/{proof_head}...{live}')
+                  assert comp['status'] in ('ahead','identical'),(pr_number,comp['status'])
+                  changed={item['filename'] for item in comp.get('files',())}
+                  allowed={'.aura/CODEMAP.json','.aura/CODEMAP.md'}
+                  assert changed and changed <= allowed,(pr_number,sorted(changed))
+              print(f'current_semantic_blob_stable pr={pr_number} live={live} proof={proof_head}')
+              return live
+
+          prove_earned_run(
+              head=os.environ['O65R_HEAD'],
+              run_id=int(os.environ['O65R_RUN']),
+              job_id=int(os.environ['O65R_JOB']),
+              workflow='Aura O65-R Authority Materialization Proposal Conformance Proof',
+          )
+          prove_current_semantics(
+              pr_number=708,
+              proof_head=os.environ['O65R_HEAD'],
+              source_path='tools/aura_authority_materialization_proposal_conformance.py',
+              source_blob=os.environ['O65R_SOURCE_BLOB'],
+          )
+          print('O67_O65R_EARNED_PROOF_AND_CURRENT_SEMANTICS=true')
+
+          prove_earned_run(
+              head=os.environ['O66_HEAD'],
+              run_id=int(os.environ['O66_RUN']),
+              job_id=int(os.environ['O66_JOB']),
+              workflow='Aura O66 Pre-Attempt Lifecycle Conformance',
+          )
+          prove_current_semantics(
+              pr_number=710,
+              proof_head=os.environ['O66_HEAD'],
+              source_path='tools/aura_pre_attempt_lifecycle_conformance.py',
+              source_blob=os.environ['O66_SOURCE_BLOB'],
+          )
+          print('O67_O66_EARNED_PROOF_AND_CURRENT_SEMANTICS=true')
           PY
-
-          git merge-base --is-ancestor "$O66_HEAD" "$O66_CURRENT_HEAD"
-          test "$(git rev-parse "$O66_HEAD:tools/aura_pre_attempt_lifecycle_conformance.py")" = "$O66_SOURCE_BLOB"
-          test "$(git rev-parse "$O66_CURRENT_HEAD:tools/aura_pre_attempt_lifecycle_conformance.py")" = "$O66_SOURCE_BLOB"
-          changed="$(git diff --name-only "$O66_HEAD" "$O66_CURRENT_HEAD")"
-          expected="$(printf '%s\n%s' '.aura/CODEMAP.json' '.aura/CODEMAP.md')"
-          test "$changed" = "$expected"
-          echo O67_O66_CURRENT_DRIFT_CODEMAP_ONLY=true
 
       - name: Authenticate parent source blobs and O65-R materialization basis
         shell: bash
         run: |
           set -euo pipefail
           test "$(git rev-parse "$O65R_HEAD:tools/aura_authority_materialization_proposal_conformance.py")" = "$O65R_SOURCE_BLOB"
+          test "$(git rev-parse "$O66_HEAD:tools/aura_pre_attempt_lifecycle_conformance.py")" = "$O66_SOURCE_BLOB"
           git show "$O65R_HEAD:tools/aura_authority_materialization_proposal_conformance.py" > /tmp/o65r_parent.py
           python3 - <<'PY'
           import importlib.util, os, sys
