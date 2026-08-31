@@ -1,0 +1,112 @@
+name: K27 ASTGE Current Source Review Convergence
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - "crates/aura-k27-astge-ingest/**"
+      - "crates/aura-k27-astge-symbols/**"
+      - "crates/aura-k27-astge-materialize/**"
+      - "crates/aura-k27-astge-scope/**"
+      - "crates/aura-k27-astge-source-review/**"
+      - "tools/k27_astge_python_module_symbol_oracle.py"
+      - ".github/workflows/aura-k27-astge-source-review-convergence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aura-k27-astge-source-review-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  current-source-review:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Show toolchain
+        run: |
+          rustc --version
+          cargo --version
+          python3 --version
+
+      - name: Re-prove current storage and backend owner
+        run: |
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+
+      - name: Re-prove Tree-Sitter current ingestion
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-ingest/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets -- -D warnings
+
+      - name: Re-prove module symbols and independent CPython oracle
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-symbols/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-symbols/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-symbols/Cargo.toml --all-targets -- -D warnings
+          cargo run --quiet --manifest-path crates/aura-k27-astge-symbols/Cargo.toml --example symbol_fixture > /tmp/tree_sitter_symbols.txt
+          python3 tools/k27_astge_python_module_symbol_oracle.py > /tmp/cpython_symbols.txt
+          diff -u /tmp/cpython_symbols.txt /tmp/tree_sitter_symbols.txt
+
+      - name: Re-prove source materialization parent
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-materialize/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-materialize/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-materialize/Cargo.toml --all-targets -- -D warnings
+
+      - name: Re-prove source scope parent
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-scope/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-scope/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-scope/Cargo.toml --all-targets -- -D warnings
+
+      - name: Verify source-bound review composition
+        run: |
+          cargo fmt --manifest-path crates/aura-k27-astge-source-review/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-source-review/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-source-review/Cargo.toml --all-targets -- -D warnings
+
+      - name: Safe-path unsafe scan
+        run: |
+          if grep -R --line-number -E 'unsafe\s*\{' \
+            crates/aura-k27-astge/src \
+            crates/aura-k27-astge-ingest/src \
+            crates/aura-k27-astge-symbols/src \
+            crates/aura-k27-astge-materialize/src \
+            crates/aura-k27-astge-scope/src \
+            crates/aura-k27-astge-source-review/src; then
+            echo 'unsafe block found in source-review safe path' >&2
+            exit 1
+          fi
+
+      - name: Emit claim ceiling
+        run: |
+          echo 'CURRENT_SOURCE_REVIEW_MEMBRANE_EXECUTED=true'
+          echo 'FILE_ID_CURRENT_SOURCE_BOUND=true'
+          echo 'MATERIALIZED_NODE_SLICE_REVALIDATED=true'
+          echo 'EXPLICIT_SOURCE_SCOPE_REQUIRED=true'
+          echo 'TREE_SITTER_SPAN_GRANTS_MUTATION_AUTHORITY=false'
+          echo 'DUPLICATE_SYMBOL_SELECTION_REMAINS_EXPLICIT=true'
+          echo 'OUTSIDE_AUTHORIZED_SCOPE_UNCHANGED=true'
+          echo 'SEMANTIC_CORRECTNESS_PROVEN=false'
+          echo 'B_MINUS_APPROVED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
+          echo 'EXTERNAL_EFFECT=false'
