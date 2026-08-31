@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788157111,
+  "generated_at_unix": 1788157818,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1652,
+    "repo_file_count": 1653,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1644,6 +1644,7 @@
       "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
       "tools/awj032/test_glm53_owner_host_c2_handoff.py",
       "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+      "tools/awj032/thinkpad_bounded_storage_probe.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1768,15 +1769,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1652,
-      "bytes": 26526347,
-      "tokens_est": 6621943,
+      "files": 1653,
+      "bytes": 26535385,
+      "tokens_est": 6624203,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1007,
+        "python_module": 1008,
         "schema_or_lexicon": 274,
         "support_file": 49
       }
@@ -3924,6 +3925,14 @@
         "end_line": 84,
         "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#function:_canonical:d8bd3c34731e118b",
         "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 43,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_canonical:7dcbd184e4d64999",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -4381,6 +4390,14 @@
         "line": 87,
         "end_line": 88,
         "semantic_id": "tools/awj032/glm53_owner_host_lifecycle_return_packet.py#function:_digest:65fbee241fad2360",
+        "signature_hash": "514f786724465716"
+      },
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "function",
+        "line": 46,
+        "end_line": 47,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_digest:82498f16d9704b93",
         "signature_hash": "514f786724465716"
       }
     ],
@@ -14737,6 +14754,14 @@
         "line": 53,
         "end_line": 56,
         "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_text:d8ca8fd3ed2c71d4",
+        "signature_hash": "a4ea29b9a7789fe0"
+      },
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "function",
+        "line": 50,
+        "end_line": 53,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_text:e1a1a225a0270c71",
         "signature_hash": "a4ea29b9a7789fe0"
       }
     ],
@@ -26420,6 +26445,14 @@
         "end_line": 69,
         "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_positive_int:619a649b847e005b",
         "signature_hash": "9fa9d0d235d67d55"
+      },
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "function",
+        "line": 62,
+        "end_line": 65,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_positive_int:fafb868208f620d6",
+        "signature_hash": "9fa9d0d235d67d55"
       }
     ],
     "_span_line_bounds": [
@@ -30788,6 +30821,14 @@
         "end_line": 388,
         "semantic_id": "aura_spatial_projection.py#function:_nonnegative_int:268b62b5575eb7c0",
         "signature_hash": "da3b10c24c5b5036"
+      },
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "function",
+        "line": 56,
+        "end_line": 59,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_nonnegative_int:2ff1a48a7b1f89a9",
+        "signature_hash": "b8739218d7c73d0c"
       }
     ],
     "WorkbenchState": [
@@ -157932,6 +157973,14 @@
         "end_line": 84,
         "semantic_id": "tools/awj032/glm53_owner_host_c2_handoff.py#function:_positive_float:0a2bc9f0392f908a",
         "signature_hash": "b2fece0b5243771f"
+      },
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "function",
+        "line": 68,
+        "end_line": 74,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_positive_float:fef993f823aaa471",
+        "signature_hash": "b2fece0b5243771f"
       }
     ],
     "_exact_bool": [
@@ -158432,6 +158481,96 @@
         "end_line": 192,
         "semantic_id": "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py#method:OwnerHostLifecycleReturnPacketTests.test_packet_digest_is_deterministic:94d09f675a5565d1",
         "signature_hash": "eee6fa1adaef434e"
+      }
+    ],
+    "ThinkPadStorageProbeError": [
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "class",
+        "line": 30,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#class:ThinkPadStorageProbeError:a8db731785f1ff1a",
+        "signature_hash": "675479f5111a78f4"
+      }
+    ],
+    "ThinkPadStorageProbeError.__init__": [
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#method:ThinkPadStorageProbeError.__init__:2689d11bf0ad11e4",
+        "signature_hash": "0b6534a3148e5c5d"
+      }
+    ],
+    "_file_identity": [
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "function",
+        "line": 77,
+        "end_line": 85,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_file_identity:2d9e7f9cbf31e48e",
+        "signature_hash": "022095f2e79ad452"
+      }
+    ],
+    "ThinkPadStorageProbeReceipt": [
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "class",
+        "line": 89,
+        "end_line": 123,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#class:ThinkPadStorageProbeReceipt:fde6a82cbd4eaa3d",
+        "signature_hash": "8a3c65d75a85d759"
+      }
+    ],
+    "ThinkPadStorageProbeReceipt.to_dict": [
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "method",
+        "line": 114,
+        "end_line": 115,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#method:ThinkPadStorageProbeReceipt.to_dict:c376df45f681dbc6",
+        "signature_hash": "5c1a69a9659e2089"
+      }
+    ],
+    "ThinkPadStorageProbeReceipt.receipt_digest": [
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "method",
+        "line": 118,
+        "end_line": 119,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#method:ThinkPadStorageProbeReceipt.receipt_digest:f389d376252d814d",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "ThinkPadStorageProbeReceipt.evidence_ref": [
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 123,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#method:ThinkPadStorageProbeReceipt.evidence_ref:bc1eef4b2fb6e7ed",
+        "signature_hash": "c27cb8129b449d59"
+      }
+    ],
+    "_resolve_bounded_target": [
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "function",
+        "line": 126,
+        "end_line": 153,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_resolve_bounded_target:97d795f836200106",
+        "signature_hash": "6f267d0b86c0f66c"
+      }
+    ],
+    "run_bounded_storage_probe": [
+      {
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "kind": "function",
+        "line": 156,
+        "end_line": 255,
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:run_bounded_storage_probe:295e3e57817cf05a",
+        "signature_hash": "63009562ddb386e4"
       }
     ],
     "_coordinates": [
@@ -264556,6 +264695,53 @@
       ]
     },
     {
+      "path": "tools/awj032/thinkpad_bounded_storage_probe.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9038,
+      "lines": 256,
+      "tokens_est": 2260,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "323452d323e79bce",
+      "vector": [
+        0.266619,
+        -0.269077,
+        0.242046,
+        0.038088,
+        0.146211,
+        0.163412,
+        0.043003,
+        0.070034,
+        0.079863,
+        -0.011058,
+        0.207644,
+        -0.224845,
+        -0.047918,
+        -0.101979,
+        -0.215016,
+        -0.148668,
+        0.05529,
+        0.025802,
+        -0.305937,
+        -0.273991,
+        -0.298565,
+        0.106893,
+        -0.05529,
+        -0.215016,
+        -0.158497,
+        0.099522,
+        0.04546,
+        0.187985,
+        0.133924,
+        -0.21993,
+        0.25679,
+        -0.18307
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -288554,15 +288740,15 @@
     }
   },
   "summary": {
-    "file_count": 1652,
-    "total_bytes": 26526347,
-    "text_tokens_est": 6621943,
+    "file_count": 1653,
+    "total_bytes": 26535385,
+    "text_tokens_est": 6624203,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1007,
+      "python_module": 1008,
       "schema_or_lexicon": 274,
       "support_file": 49
     },
@@ -290217,6 +290403,7 @@
       "tools/awj032/glm53_owner_host_lifecycle_return_packet.py",
       "tools/awj032/test_glm53_owner_host_c2_handoff.py",
       "tools/awj032/test_glm53_owner_host_lifecycle_return_packet.py",
+      "tools/awj032/thinkpad_bounded_storage_probe.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -448825,6 +449012,156 @@
         "file_digest8": "c5d6e3a22d2eb93f"
       },
       {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#class:ThinkPadStorageProbeError:a8db731785f1ff1a",
+        "name": "ThinkPadStorageProbeError",
+        "kind": "class",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 30,
+        "end_line": 34,
+        "signature_hash": "675479f5111a78f4",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#class:ThinkPadStorageProbeReceipt:fde6a82cbd4eaa3d",
+        "name": "ThinkPadStorageProbeReceipt",
+        "kind": "class",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 89,
+        "end_line": 123,
+        "signature_hash": "8a3c65d75a85d759",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_canonical:7dcbd184e4d64999",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 37,
+        "end_line": 43,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_digest:82498f16d9704b93",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 46,
+        "end_line": 47,
+        "signature_hash": "514f786724465716",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_file_identity:2d9e7f9cbf31e48e",
+        "name": "_file_identity",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 77,
+        "end_line": 85,
+        "signature_hash": "022095f2e79ad452",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_nonnegative_int:2ff1a48a7b1f89a9",
+        "name": "_nonnegative_int",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 56,
+        "end_line": 59,
+        "signature_hash": "b8739218d7c73d0c",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_positive_float:fef993f823aaa471",
+        "name": "_positive_float",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 68,
+        "end_line": 74,
+        "signature_hash": "b2fece0b5243771f",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_positive_int:fafb868208f620d6",
+        "name": "_positive_int",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 62,
+        "end_line": 65,
+        "signature_hash": "9fa9d0d235d67d55",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_resolve_bounded_target:97d795f836200106",
+        "name": "_resolve_bounded_target",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 126,
+        "end_line": 153,
+        "signature_hash": "6f267d0b86c0f66c",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:_text:e1a1a225a0270c71",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 50,
+        "end_line": 53,
+        "signature_hash": "a4ea29b9a7789fe0",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#function:run_bounded_storage_probe:295e3e57817cf05a",
+        "name": "run_bounded_storage_probe",
+        "kind": "function",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 156,
+        "end_line": 255,
+        "signature_hash": "63009562ddb386e4",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#method:ThinkPadStorageProbeError.__init__:2689d11bf0ad11e4",
+        "name": "ThinkPadStorageProbeError.__init__",
+        "kind": "method",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "0b6534a3148e5c5d",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#method:ThinkPadStorageProbeReceipt.evidence_ref:bc1eef4b2fb6e7ed",
+        "name": "ThinkPadStorageProbeReceipt.evidence_ref",
+        "kind": "method",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 122,
+        "end_line": 123,
+        "signature_hash": "c27cb8129b449d59",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#method:ThinkPadStorageProbeReceipt.receipt_digest:f389d376252d814d",
+        "name": "ThinkPadStorageProbeReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 118,
+        "end_line": 119,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
+        "semantic_id": "tools/awj032/thinkpad_bounded_storage_probe.py#method:ThinkPadStorageProbeReceipt.to_dict:c376df45f681dbc6",
+        "name": "ThinkPadStorageProbeReceipt.to_dict",
+        "kind": "method",
+        "file": "tools/awj032/thinkpad_bounded_storage_probe.py",
+        "line": 114,
+        "end_line": 115,
+        "signature_hash": "5c1a69a9659e2089",
+        "file_digest8": "323452d323e79bce"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -450075,7 +450412,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "2f4c412d8d57e8c7460ca521c61ae011",
-    "payload_hash": "e3ee162ce92f463d760f3b2d7e2ec942"
+    "record_fingerprint": "eef57f7bde9128af6535b9686d3f8471",
+    "payload_hash": "cfb3664aef3a5e20f2a1fe68c4293460"
   }
 }
