@@ -1,0 +1,197 @@
+name: Aura WorkCapsule Corroboration Preserves Evidence Classes
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR580_SHA: 5d13a9bd5f939fcf2e281a92114a15e99b929c67
+  PR577_SHA: 1dd21e248d0925297d52a8067f1ded35fbba9cbf
+  CONVERGENCE_SHA: 871c034eabab95c284d575ae2de3741b540867f2
+  PR580_RUN: '33359458853'
+  PR577_RUN: '33358365017'
+  PR580_OWNER_BLOB: 19cec404761811a7422e3cd6c79672357ede5b8f
+  PR580_TEST_BLOB: 5f9f0f20c888e06967a8239f159f4ae7a739c714
+  PR577_OWNER_BLOB: ea56321ab6ebd06a74a22d8ee4736d362a561b16
+  PR577_TEST_BLOB: e28d017a1706419e7203d5c4e7056a732fa9fb1c
+
+jobs:
+  exact-corroboration-evidence-class-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact child and prove PR580 x PR577 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=320 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR580_SHA" "$PR577_SHA"
+          unset AUTH_HEADER
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR580_SHA $PR577_SHA"
+          git merge-base --is-ancestor "$PR580_SHA" HEAD
+          git merge-base --is-ancestor "$PR577_SHA" HEAD
+          test "$(git hash-object scripts/aura_workcapsule_live_artifact_raw_slice_noninterchangeability.py)" = "$PR580_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_workcapsule_live_artifact_raw_slice_noninterchangeability.py)" = "$PR580_TEST_BLOB"
+          test "$(git hash-object scripts/aura_workcapsule_live_causal_corroboration.py)" = "$PR577_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_workcapsule_live_causal_corroboration.py)" = "$PR577_TEST_BLOB"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+          echo 'EXACT_PARENT_OWNER_BLOBS=true'
+
+      - name: Pin exact successful parent hosted runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          expected = {
+              os.environ['PR580_RUN']: os.environ['PR580_SHA'],
+              os.environ['PR577_RUN']: os.environ['PR577_SHA'],
+          }
+          for run_id, sha in expected.items():
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json'},
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  data = json.load(response)
+              assert data['head_sha'] == sha, (run_id, data['head_sha'], sha)
+              assert data['status'] == 'completed', (run_id, data['status'])
+              assert data['conclusion'] == 'success', (run_id, data['conclusion'])
+              print(f'PINNED_PARENT_RUN={run_id}@{sha}=SUCCESS')
+          PY
+
+      - name: Re-prove exact PR580 noninterchangeability owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_live_artifact_raw_slice_noninterchangeability.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_artifact_raw_slice_noninterchangeability
+
+      - name: Re-prove exact PR577 corroboration owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_live_causal_corroboration.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_causal_corroboration
+
+      - name: Prove O45 evidence-class preservation adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_corroboration_preserves_evidence_classes.py
+          python3 -m unittest -v tests.test_aura_workcapsule_corroboration_preserves_evidence_classes
+
+      - name: Prove sibling substitution remains rejected after corroboration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib, json
+          from scripts.aura_workcapsule_corroboration_preserves_evidence_classes import (
+              HOST_TARGET_PREFIX,
+              admit_corroboration_preserves_evidence_classes,
+          )
+          from tests.test_aura_workcapsule_live_artifact_raw_slice_noninterchangeability import live_receipt, raw_receipt
+          from tests.test_aura_workcapsule_live_causal_corroboration import pr568_receipt, pr572_receipt
+
+          def digest(value):
+              raw = json.dumps(value, sort_keys=True, separators=(',', ':'), ensure_ascii=False).encode('utf-8')
+              return hashlib.sha256(raw).hexdigest()
+
+          a = pr568_receipt()
+          b = pr572_receipt()
+          live = live_receipt(
+              live_causal_artifact_target_ref=HOST_TARGET_PREFIX + digest(a),
+              dependency_key=a['dependency_key'],
+              source_generation=a['source_generation'],
+              full_source_sha256_hex=a['full_source_sha256_hex'],
+              full_source_byte_len=a['full_source_byte_len'],
+              target_byte_start=a['target_byte_start'],
+              target_byte_end=a['target_byte_end'],
+              target_slice_sha256_hex=a['target_slice_sha256_hex'],
+              selected_target_semantic_handle_digest_hex=a['selected_target_semantic_handle_digest_hex'],
+              causal_post_closure_receipt_identity=a['causal_post_closure_receipt_identity'],
+          )
+          out = admit_corroboration_preserves_evidence_classes(
+              live_artifact_host_receipt=live,
+              causal_raw_slice_host_separation_receipt=raw_receipt(),
+              pr568_receipt=a,
+              pr572_receipt=b,
+          )
+          assert out['corroboration_preserves_evidence_class_boundary'] is True
+          assert out['pr572_sibling_substitutable_for_live_artifact_host_evidence'] is False
+          assert out['pr572_sibling_substitutable_for_causal_raw_slice_evidence'] is False
+          assert out['raw_slice_and_live_artifact_host_evidence_interchangeable_after_corroboration'] is False
+          assert out['proof_artifact_refs_distinct'] is True
+          assert out['semantic_equivalence_proven'] is False
+          assert out['semantic_truth_proven'] is False
+          assert out['host_observation_authority_proven'] is False
+          assert out['effect_authority_proven'] is False
+          assert not any(out['authority'].values())
+          print('CORROBORATION_PRESERVES_EVIDENCE_CLASS_BOUNDARY=true')
+          print('PR572_SIBLING_SUBSTITUTABLE_FOR_PR575_LIVE_HOST=false')
+          print('PR572_SIBLING_SUBSTITUTABLE_FOR_PR574_RAW_SLICE=false')
+          PY
+
+      - name: Assert owner reuse and complete consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_workcapsule_corroboration_preserves_evidence_classes.py
+          grep -q 'verify_live_artifact_raw_slice_noninterchangeability' "$child"
+          grep -q 'verify_live_causal_corroboration' "$child"
+          if grep -q '^def verify_live_artifact_raw_slice_noninterchangeability' "$child"; then
+            echo 'child duplicated PR580 relation owner' >&2
+            exit 1
+          fi
+          if grep -q '^def verify_live_causal_corroboration' "$child"; then
+            echo 'child duplicated PR577 relation owner' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_corroboration_preserves_evidence_classes import verify_corroboration_preserves_evidence_classes
+          params = set(inspect.signature(verify_corroboration_preserves_evidence_classes).parameters)
+          assert params == {
+              'live_artifact_host_receipt',
+              'causal_raw_slice_host_separation_receipt',
+              'pr568_receipt',
+              'pr572_receipt',
+          }
+          PY
+          cat <<'EOF'
+          PR580_NONINTERCHANGEABILITY_OWNER_REUSED=true
+          PR577_CORROBORATION_OWNER_REUSED=true
+          LIVE_ARTIFACT_TARGET_IS_PR568_CORROBORATION_MEMBER=true
+          CORROBORATION_PRESERVES_EVIDENCE_CLASS_BOUNDARY=true
+          PR572_SIBLING_SUBSTITUTABLE_FOR_LIVE_ARTIFACT_HOST_EVIDENCE=false
+          PR572_SIBLING_SUBSTITUTABLE_FOR_CAUSAL_RAW_SLICE_EVIDENCE=false
+          RAW_SLICE_AND_LIVE_ARTIFACT_HOST_EVIDENCE_INTERCHANGEABLE_AFTER_CORROBORATION=false
+          PRODUCER_AUTHENTICATION_PROVEN=false
+          SEMANTIC_EQUIVALENCE_PROVEN=false
+          SEMANTIC_TRUTH_PROVEN=false
+          HOST_RESOLVER_TRUST_PROVEN=false
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          TRUSTED_CONTINUATION_READY=false
+          EFFECT_AUTHORITY_PROVEN=false
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_PROVIDER_PUBLIC_HUMAN_AUTHORITY=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF
