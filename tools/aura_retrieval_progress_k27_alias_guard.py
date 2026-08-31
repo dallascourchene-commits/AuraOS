@@ -4,16 +4,16 @@
 D0 / HS1 / NONPROMOTING.
 
 Exactly two post-cut other-Agent artifacts define this residual:
-- PR #754: repeated identical retrieval without provider/evidence transition accrues
+- PR #754: repeated retrieval without a true axis/state/evidence transition accrues
   no-progress debt and eventually collapses the cone.
-- NAV09 scheme-bound external-coordinate envelope (Aura Drive 2): the same source SID
-  may lawfully have multiple scheme/version-bound routing projections; coordinate changes
+- NAV09 scheme-bound external-coordinate envelope (Aura Drive 2): one source SID may
+  lawfully have multiple scheme/version-bound routing projections; coordinate changes
   are not semantic source changes.
 
-This module is an additive guard. It does not own source identity, alias verification,
-K27 placement, retrieval execution, source currentness, semantic truth, or effects.
-A supplied owner-bound alias projection can only make retry admission *stricter* than
-raw route-key comparison; it can never mint progress, truth, or authority.
+This additive guard does not own source identity, alias verification, K27 placement,
+retrieval execution, currentness, truth, or effects. Route aliases may only make retry
+admission stricter. A caller-supplied SID change is never sufficient to mint progress:
+without an independently changed non-resource axis or provider/evidence state it HOLDS.
 """
 from __future__ import annotations
 
@@ -45,6 +45,7 @@ class AliasAwareDecision(str, Enum):
     CHANGE_AXIS_REQUIRED = RetrievalDecision.CHANGE_AXIS_REQUIRED.value
     COLLAPSE_CONE = RetrievalDecision.COLLAPSE_CONE.value
     HOLD_ALIAS_RESOLUTION_REQUIRED = "HOLD_ALIAS_RESOLUTION_REQUIRED"
+    HOLD_SOURCE_IDENTITY_TRANSITION_REQUIRED = "HOLD_SOURCE_IDENTITY_TRANSITION_REQUIRED"
 
 
 def _canonical(value: object) -> bytes:
@@ -84,11 +85,11 @@ def _xyz(value: tuple[int, int, int]) -> tuple[int, int, int]:
 
 @dataclass(frozen=True)
 class SchemeBoundCoordinateViewProjection:
-    """A scheme/version-bound route projection supplied by an upstream K27 owner.
+    """Scheme/version-bound route projection supplied by an upstream K27 owner.
 
-    The full digest is checked against the declared canonical key. The xyz mapping itself
-    is deliberately not re-derived here because NAV09 leaves canonical MOD27 mapping
-    ownership outside this addendum.
+    Full digest is verified against the declared canonical key. The xyz mapping itself
+    is not rederived because NAV09 leaves canonical MOD27 mapping ownership outside this
+    addendum. Source identity is also not authenticated by this contract.
     """
 
     schema: str
@@ -153,11 +154,11 @@ class SchemeBoundCoordinateViewProjection:
 
 @dataclass(frozen=True)
 class ProjectionAliasOwnerProjection:
-    """Opaque upstream source-owner projection tying two route views to one SID.
+    """Opaque upstream projection relating two route views to one source SID.
 
-    This contract checks internal identity/currentness consistency but does not authenticate
-    the owner. Consuming this projection can only prevent/limit retries; it cannot grant a
-    retry, truth, currentness, source authority, or effects that the base guard denied.
+    Internal identity/currentness shape is checked, but source-owner authentication is not
+    performed here. The projection is therefore permitted only to *remove* artificial route
+    progress (or cause a HOLD), never to create a new allow.
     """
 
     schema: str
@@ -220,6 +221,7 @@ class AliasAwareRetrievalProgressReceipt:
     reason: str
     raw_decision: Optional[str]
     semantic_decision: Optional[str]
+    raw_fingerprint_digest: Optional[str]
     previous_view_digest: Optional[str]
     current_view_digest: str
     source_sid_same: bool
@@ -244,6 +246,8 @@ class AliasAwareRetrievalProgressReceipt:
         _digest(self.current_view_digest, "CURRENT_VIEW_DIGEST_INVALID")
         if self.previous_view_digest is not None:
             _digest(self.previous_view_digest, "PREVIOUS_VIEW_DIGEST_INVALID")
+        if self.raw_fingerprint_digest is not None:
+            _digest(self.raw_fingerprint_digest, "RAW_FINGERPRINT_DIGEST_INVALID")
         _digest(self.semantic_fingerprint_digest, "SEMANTIC_FINGERPRINT_DIGEST_INVALID")
         _digest(self.receipt_digest, "ALIAS_AWARE_RECEIPT_DIGEST_INVALID")
         if self.alias_projection_digest is not None:
@@ -253,6 +257,9 @@ class AliasAwareRetrievalProgressReceipt:
         if self.decision is AliasAwareDecision.HOLD_ALIAS_RESOLUTION_REQUIRED:
             if not self.alias_projection_required or self.alias_projection_consumed:
                 raise ValueError("ALIAS_HOLD_STATE_INCONSISTENT")
+        if self.decision is AliasAwareDecision.HOLD_SOURCE_IDENTITY_TRANSITION_REQUIRED:
+            if self.source_sid_same:
+                raise ValueError("SOURCE_IDENTITY_HOLD_REQUIRES_DIFFERENT_SID")
         if any(
             (
                 self.source_identity_authenticated_by_this_contract,
@@ -268,11 +275,8 @@ class AliasAwareRetrievalProgressReceipt:
             raise ValueError("ALIAS_AWARE_RETRIEVAL_EXCEEDED_NONPROMOTION_CEILING")
 
 
-def _semantic_fingerprint(
-    fingerprint: RetrievalFingerprint,
-    source_sid: str,
-) -> RetrievalFingerprint:
-    return replace(fingerprint, resource=f"source-sid:{source_sid}")
+def _semantic_fingerprint(fingerprint: RetrievalFingerprint, resource: str) -> RetrievalFingerprint:
+    return replace(fingerprint, resource=resource)
 
 
 def _decision(value: RetrievalDecision) -> AliasAwareDecision:
@@ -308,6 +312,7 @@ def _receipt(
     reason: str,
     raw: Optional[RetrievalProgressReceipt],
     semantic: Optional[RetrievalProgressReceipt],
+    semantic_current_fingerprint_digest: str,
     previous_view: Optional[SchemeBoundCoordinateViewProjection],
     current_view: SchemeBoundCoordinateViewProjection,
     alias_required: bool,
@@ -318,32 +323,15 @@ def _receipt(
     previous_digest = previous_view.view_digest if previous_view is not None else None
     same_sid = bool(previous_view is not None and previous_view.source_sid == current_view.source_sid)
     route_changed = bool(previous_view is not None and previous_digest != current_digest)
-    semantic_fp_digest = (
-        semantic.fingerprint_digest
-        if semantic is not None
-        else _semantic_fingerprint(
-            RetrievalFingerprint(
-                provider="hold",
-                tool="hold",
-                resource=current_view.resource_token,
-                query_or_pattern="hold",
-                page_or_range="hold",
-                semantic_purpose="alias-resolution",
-            ),
-            current_view.source_sid,
-        ).digest
-    )
     alias_digest = alias.projection_digest if alias is not None else None
-    next_count = (
-        semantic.next_no_progress_count
-        if semantic is not None
-        else prior_no_progress_count
-    )
+    raw_fp_digest = raw.fingerprint_digest if raw is not None else None
+    next_count = semantic.next_no_progress_count if semantic is not None else prior_no_progress_count
     body = {
         "decision": decision.value,
         "reason": reason,
         "raw_decision": raw.decision.value if raw is not None else None,
         "semantic_decision": semantic.decision.value if semantic is not None else None,
+        "raw_fingerprint_digest": raw_fp_digest,
         "previous_view_digest": previous_digest,
         "current_view_digest": current_digest,
         "source_sid_same": same_sid,
@@ -351,7 +339,7 @@ def _receipt(
         "alias_projection_required": alias_required,
         "alias_projection_consumed": alias is not None,
         "alias_projection_digest": alias_digest,
-        "semantic_fingerprint_digest": semantic_fp_digest,
+        "semantic_fingerprint_digest": semantic_current_fingerprint_digest,
         "prior_no_progress_count": prior_no_progress_count,
         "next_no_progress_count": next_count,
     }
@@ -361,6 +349,7 @@ def _receipt(
         reason=reason,
         raw_decision=raw.decision.value if raw is not None else None,
         semantic_decision=semantic.decision.value if semantic is not None else None,
+        raw_fingerprint_digest=raw_fp_digest,
         previous_view_digest=previous_digest,
         current_view_digest=current_digest,
         source_sid_same=same_sid,
@@ -368,7 +357,7 @@ def _receipt(
         alias_projection_required=alias_required,
         alias_projection_consumed=alias is not None,
         alias_projection_digest=alias_digest,
-        semantic_fingerprint_digest=semantic_fp_digest,
+        semantic_fingerprint_digest=semantic_current_fingerprint_digest,
         prior_no_progress_count=prior_no_progress_count,
         next_no_progress_count=next_count,
         receipt_digest=_hash(SCHEMA, body),
@@ -386,12 +375,14 @@ def assess_k27_alias_aware_retrieval_progress(
     alias_projection: Optional[ProjectionAliasOwnerProjection] = None,
     prior_no_progress_count: int = 0,
 ) -> AliasAwareRetrievalProgressReceipt:
-    """Preserve #754 no-progress debt across owner-bound K27 route aliases.
+    """Preserve #754 debt across aliases without trusting caller-minted SID changes.
 
-    Route/view identity is removed from the semantic retrieval fingerprint and replaced by
-    the source SID. When the same SID appears under a changed route projection, an upstream
-    alias-owner projection is mandatory. Its presence can only remove a false
-    ALLOW_CHANGED_AXIS caused by raw resource-token drift; it cannot grant new progress.
+    For same-SID route changes, an upstream alias projection is mandatory and the raw route
+    resource is replaced by stable SID before delegating to #754. For different SIDs this
+    contract deliberately removes *both* SID values from semantic resource comparison; a SID
+    change alone therefore cannot create progress. Only an independent non-resource axis or
+    provider/evidence state change may proceed; otherwise the transition HOLDS for a separate
+    source-identity owner.
     """
 
     _validate_route_binding(current, current_view, "CURRENT")
@@ -400,10 +391,10 @@ def assess_k27_alias_aware_retrieval_progress(
             raise ValueError("INITIAL_RETRIEVAL_CANNOT_HAVE_PREVIOUS_VIEW")
         if alias_projection is not None:
             raise ValueError("INITIAL_RETRIEVAL_CANNOT_CONSUME_ALIAS_PROJECTION")
-        semantic_current = replace(
-            current,
-            fingerprint=_semantic_fingerprint(current.fingerprint, current_view.source_sid),
+        semantic_current_fp = _semantic_fingerprint(
+            current.fingerprint, f"source-sid:{current_view.source_sid}"
         )
+        semantic_current = replace(current, fingerprint=semantic_current_fp)
         semantic = assess_retrieval_progress(
             previous=None,
             current=semantic_current,
@@ -414,6 +405,7 @@ def assess_k27_alias_aware_retrieval_progress(
             reason="INITIAL_SEMANTIC_SOURCE_RETRIEVAL",
             raw=semantic,
             semantic=semantic,
+            semantic_current_fingerprint_digest=semantic_current_fp.digest,
             previous_view=None,
             current_view=current_view,
             alias_required=False,
@@ -424,7 +416,6 @@ def assess_k27_alias_aware_retrieval_progress(
     if previous_view is None:
         raise ValueError("PREVIOUS_VIEW_REQUIRED_FOR_NONINITIAL_RETRIEVAL")
     _validate_route_binding(previous, previous_view, "PREVIOUS")
-
     raw = assess_retrieval_progress(
         previous=previous,
         current=current,
@@ -434,12 +425,31 @@ def assess_k27_alias_aware_retrieval_progress(
     route_changed = previous_view.view_digest != current_view.view_digest
     alias_required = same_sid and route_changed
 
+    if same_sid:
+        semantic_resource = f"source-sid:{current_view.source_sid}"
+        semantic_previous_fp = _semantic_fingerprint(previous.fingerprint, semantic_resource)
+        semantic_current_fp = _semantic_fingerprint(current.fingerprint, semantic_resource)
+    else:
+        # SID values are explicitly untrusted here. Quotient them out so caller SID rotation
+        # cannot become ALLOW_CHANGED_AXIS. Other fingerprint axes and provider/evidence state
+        # remain visible to #754 and may independently establish progress.
+        unresolved = "source-identity-transition:UNVERIFIED"
+        semantic_previous_fp = _semantic_fingerprint(previous.fingerprint, unresolved)
+        semantic_current_fp = _semantic_fingerprint(current.fingerprint, unresolved)
+
+    semantic = assess_retrieval_progress(
+        previous=replace(previous, fingerprint=semantic_previous_fp),
+        current=replace(current, fingerprint=semantic_current_fp),
+        prior_no_progress_count=prior_no_progress_count,
+    )
+
     if alias_required and alias_projection is None:
         return _receipt(
             decision=AliasAwareDecision.HOLD_ALIAS_RESOLUTION_REQUIRED,
             reason="SAME_SID_ROUTE_CHANGED_WITHOUT_OWNER_ALIAS_PROJECTION",
             raw=raw,
-            semantic=None,
+            semantic=semantic,
+            semantic_current_fingerprint_digest=semantic_current_fp.digest,
             previous_view=previous_view,
             current_view=current_view,
             alias_required=True,
@@ -452,19 +462,22 @@ def assess_k27_alias_aware_retrieval_progress(
     elif alias_projection is not None:
         raise ValueError("ALIAS_PROJECTION_NOT_REQUIRED_FOR_THIS_ROUTE_TRANSITION")
 
-    semantic_previous = replace(
-        previous,
-        fingerprint=_semantic_fingerprint(previous.fingerprint, previous_view.source_sid),
-    )
-    semantic_current = replace(
-        current,
-        fingerprint=_semantic_fingerprint(current.fingerprint, current_view.source_sid),
-    )
-    semantic = assess_retrieval_progress(
-        previous=semantic_previous,
-        current=semantic_current,
-        prior_no_progress_count=prior_no_progress_count,
-    )
+    if not same_sid and semantic.decision in {
+        RetrievalDecision.CHANGE_AXIS_REQUIRED,
+        RetrievalDecision.COLLAPSE_CONE,
+    }:
+        return _receipt(
+            decision=AliasAwareDecision.HOLD_SOURCE_IDENTITY_TRANSITION_REQUIRED,
+            reason="CALLER_SID_CHANGE_HAS_NO_INDEPENDENT_PROGRESS_WITNESS",
+            raw=raw,
+            semantic=semantic,
+            semantic_current_fingerprint_digest=semantic_current_fp.digest,
+            previous_view=previous_view,
+            current_view=current_view,
+            alias_required=False,
+            alias=None,
+            prior_no_progress_count=prior_no_progress_count,
+        )
 
     return _receipt(
         decision=_decision(semantic.decision),
@@ -472,9 +485,12 @@ def assess_k27_alias_aware_retrieval_progress(
             "ROUTE_ALIAS_QUOTIENTED_TO_STABLE_SOURCE_SID"
             if alias_required
             else "SEMANTIC_SOURCE_IDENTITY_APPLIED"
+            if same_sid
+            else "SID_CHANGE_IGNORED;INDEPENDENT_PROGRESS_AXIS_USED"
         ),
         raw=raw,
         semantic=semantic,
+        semantic_current_fingerprint_digest=semantic_current_fp.digest,
         previous_view=previous_view,
         current_view=current_view,
         alias_required=alias_required,
@@ -488,6 +504,8 @@ LAWS = (
     "SameSID+DifferentScheme=>AliasableRoutingProjectionsNotNewSource",
     "SameSID+SamePurpose+SameProviderState+SameEvidence=>NoProgressDebtContinuesAcrossSchemes",
     "SchemeRotationCannotResetNoProgressDebt",
+    "CallerSIDRotationCannotMintProgress",
+    "DifferentSIDWithoutIndependentProgress=>HoldForSourceIdentityOwner",
     "SameXYZ+DifferentFullDigest=>CoordinateCollisionNeverSourceMerge",
     "AliasProjectionMissing=>HoldNotProgress",
     "AliasProjectionCanOnlyRestrictRetry;CannotGrantProgressOrAuthority",
