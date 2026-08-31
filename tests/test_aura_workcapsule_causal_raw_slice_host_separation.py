@@ -71,7 +71,7 @@ class CausalRawSliceHostSeparationTests(unittest.TestCase):
             violations = target.verify_causal_raw_slice_host_separation(
                 raw_slice_receipt=raw_slice()
             )
-        self.assertEqual(violations, ["RAW_SLICE_SENTINEL"])
+        self.assertEqual(violations, ["SENTINEL"])
         causal.assert_not_called()
 
     def test_causal_host_owner_violation_surfaces_without_reimplementation(self):
@@ -124,7 +124,7 @@ class CausalRawSliceHostSeparationTests(unittest.TestCase):
             raw_slice_receipt=raw_slice(semantic_identity_proven_by_raw_slice=True)
         )
         self.assertIn(
-            "RAW_SLICE_RAW_SLICE_CEILING_VIOLATED:semantic_identity_proven_by_raw_slice",
+            "RAW_SLICE_CEILING_VIOLATED:semantic_identity_proven_by_raw_slice",
             violations,
         )
 
@@ -133,7 +133,7 @@ class CausalRawSliceHostSeparationTests(unittest.TestCase):
             raw_slice_receipt=raw_slice(producer_authenticated=True)
         )
         self.assertIn(
-            "RAW_SLICE_RAW_SLICE_CEILING_VIOLATED:producer_authenticated",
+            "RAW_SLICE_CEILING_VIOLATED:producer_authenticated",
             violations,
         )
 
