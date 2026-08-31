@@ -1,0 +1,156 @@
+name: Aura WorkCapsule Live Causal Artifact Host Observation
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_live_causal_raw_slice_join.py'
+      - 'scripts/aura_workcapsule_artifact_qualified_host_observation.py'
+      - 'scripts/aura_workcapsule_live_causal_artifact_host_observation.py'
+      - 'tests/test_aura_workcapsule_live_causal_raw_slice_join.py'
+      - 'tests/test_aura_workcapsule_live_causal_artifact_host_observation.py'
+      - '.github/workflows/aura-workcapsule-live-causal-artifact-host-observation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR568_SHA: 1772c31001fd5973a9698aff9506945709de7aaa
+  PR565_SHA: 6a717e1caeb42a2c4074ce4920b5fe1213329dee
+  CONVERGENCE_SHA: 8c2ce3aaed4b1e7a887136a8232064c00263605e
+  PR565_OWNER_BLOB: f46e65220d454d2c7bfeb974c56230072d2af002
+
+jobs:
+  exact-live-causal-artifact-host-binding:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact child and prove PR568 plus PR565 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=260 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR568_SHA" "$PR565_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR568_SHA $PR565_SHA"
+          git merge-base --is-ancestor "$PR568_SHA" HEAD
+          git merge-base --is-ancestor "$PR565_SHA" HEAD
+          test "$(git hash-object scripts/aura_workcapsule_artifact_qualified_host_observation.py)" = "$PR565_OWNER_BLOB"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+          echo 'EXACT_PR565_OWNER_BLOB_MATERIALIZED=true'
+
+      - name: Re-prove PR568 live causal raw-slice owner on child tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/aura_workcapsule_live_causal_raw_slice_join.py \
+            scripts/aura_workcapsule_live_causal_artifact_host_observation.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_causal_raw_slice_join
+
+      - name: Fetch and re-prove exact current PR565 artifact host owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr565 && mkdir -p /tmp/pr565
+          git -C /tmp/pr565 init .
+          git -C /tmp/pr565 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr565 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR565_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr565 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr565 rev-parse HEAD)" = "$PR565_SHA"
+          test -z "$(git -C /tmp/pr565 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr565
+          python3 -m py_compile scripts/aura_workcapsule_artifact_qualified_host_observation.py
+          python3 -m unittest -v tests.test_aura_workcapsule_artifact_qualified_host_observation
+
+      - name: Pass live-causal artifact host adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest -v tests.test_aura_workcapsule_live_causal_artifact_host_observation
+
+      - name: Prove old local artifact ref is stale after causal consequence upgrade
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts.aura_workcapsule_artifact_qualified_host_observation import artifact_target_ref
+          from scripts.aura_workcapsule_current_recursive_target_raw_slice_binding import admit_current_recursive_target_raw_slice_binding
+          from scripts.aura_workcapsule_live_causal_artifact_host_observation import live_causal_artifact_target_ref
+          from scripts.aura_workcapsule_live_causal_raw_slice_join import admit_live_causal_raw_slice_join
+          from tests.test_aura_workcapsule_live_causal_raw_slice_join import WorkCapsuleLiveCausalRawSliceJoinTests
+
+          case = WorkCapsuleLiveCausalRawSliceJoinTests(methodName='test_live_recursive_raw_slice_binds_to_exact_causal_post')
+          case.setUp()
+          try:
+              old = admit_current_recursive_target_raw_slice_binding(**case.join_kwargs(raw=case.raw_receipt()))
+              live = admit_live_causal_raw_slice_join(**case.o38_kwargs())
+              old_ref = artifact_target_ref(old)
+              live_ref = live_causal_artifact_target_ref(live)
+              assert old_ref != live_ref
+              assert old['target_slice_sha256_hex'] == live['target_slice_sha256_hex']
+              assert old['source_generation'] == live['source_generation']
+              assert live['causal_post_owner_reproved_from_raw_evidence'] is True
+              print('SAME_RAW_SLICE_BUT_DIFFERENT_CONSEQUENCE_ARTIFACT_REF=true')
+              print('OLD_PR562_ARTIFACT_REF_STALE_FOR_PR568_CONSEQUENCE=true')
+          finally:
+              case.tearDown()
+          PY
+
+      - name: Assert owner delegation and full consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_workcapsule_live_causal_artifact_host_observation.py
+          grep -q 'verify_live_causal_raw_slice_join' "$child"
+          grep -q 'verify_host_admission_envelope' "$child"
+          grep -q '_target_binding_violations' "$child"
+          if grep -q '^def verify_host_admission_envelope' "$child"; then
+            echo 'child duplicated PR565 host envelope owner' >&2
+            exit 1
+          fi
+          if grep -q '^def _target_binding_violations' "$child"; then
+            echo 'child duplicated PR565 target-binding owner' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_live_causal_artifact_host_observation import verify_live_causal_artifact_host_observation
+          params = set(inspect.signature(verify_live_causal_artifact_host_observation).parameters)
+          assert 'host_admission_receipt' in params
+          for forbidden in ('artifact_target_ref','post_source_witness','host_target_ref','host_effect_ready','trusted_continuation_ready','execution_authorized','provider_effect_authorized'):
+              assert forbidden not in params
+          PY
+          cat <<'EOF'
+          PR568_LIVE_CAUSAL_ARTIFACT_REPROVED=true
+          PR565_HOST_ENVELOPE_OWNER_REUSED=true
+          RESOLVED_HOST_GATES_BOUND_TO_LIVE_CAUSAL_ARTIFACT=true
+          OLD_PR562_ARTIFACT_REF_ACCEPTED_FOR_PR568=false
+          HOST_ADMISSION_REPROVED_BY_CHILD=false
+          HOST_ADMISSION_PRODUCER_AUTHENTICATED=false
+          HOST_RESOLVER_TRUST_PROVEN=false
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          SEMANTIC_HANDLE_DERIVED_FROM_RAW_SLICE=false
+          SEMANTIC_IDENTITY_PROVEN_BY_RAW_SLICE=false
+          SEMANTIC_REPAIR_CORRECTNESS=false
+          TRUSTED_CONTINUATION_READY=false
+          HOST_EFFECT_READY=false
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_PROVIDER_PUBLIC_HUMAN_AUTHORITY=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF

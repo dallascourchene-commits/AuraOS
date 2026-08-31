@@ -1,0 +1,323 @@
+name: Aura WorkCapsule Live Causal Raw Slice Join
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_live_causal_raw_slice_join.py'
+      - 'scripts/aura_workcapsule_current_recursive_target_raw_slice_binding.py'
+      - 'scripts/aura_k27_astge_portable_raw_slice_causal_handoff.py'
+      - 'scripts/aura_workcapsule_raw_owner_derived_post_closure_transition.py'
+      - 'scripts/aura_workcapsule_raw_owner_hold_to_closed_transition.py'
+      - 'scripts/aura_workcapsule_raw_owner_end_to_end_stale_lifecycle.py'
+      - 'scripts/aura_workcapsule_exact_hold_to_closed_transition.py'
+      - 'scripts/aura_workcapsule_stale_observation_closure_exact_verifier.py'
+      - 'tests/test_aura_workcapsule_live_causal_raw_slice_join.py'
+      - '.github/workflows/aura-workcapsule-live-causal-raw-slice-join.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  PR562_SHA: 446df86fb63b582cf8109079a01cafc753836957
+  PR563_SHA: 53370ed9570d14cd90b43b815d10b887bd73ef57
+  PR560_SHA: 22414a80710d695a53f96665991c003dd889eb2c
+  PR556_SHA: 5fae4070f82a9b5882ae0f63877359bf6e5a9a2b
+  CONVERGENCE_SHA: 3582a076b409be0f6de08f293b995a4b1beeef8e
+  PR563_CONSUMER_BLOB: d2f06ac046b0ec114a74372cb40153b9dfd2e21b
+  PR556_STALE_CLOSURE_BLOB: 503dc9c9a746b75d09a2eed651e4aaa3e2f2c25f
+  PR556_RAW_END_BLOB: 811288a1144f8a41c15776073958208430dc73a4
+  PR556_EXACT_TRANSITION_BLOB: c40d7b0ff2502fe07f28acc29acba57531255ec8
+  PR556_RAW_TRANSITION_BLOB: f164a4d065e6ec5f871cfadbd555dc754fe15cb9
+  PR556_DERIVED_POST_BLOB: 920c652189a391a5fc96f8504f2b687812c2c974
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact child and prove true PR562 x repaired-PR563 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=240 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR562_SHA" "$PR563_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR562_SHA $PR563_SHA"
+          git merge-base --is-ancestor "$PR562_SHA" HEAD
+          git merge-base --is-ancestor "$PR563_SHA" HEAD
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+
+      - name: Prove exact imported owner blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git hash-object scripts/aura_k27_astge_portable_raw_slice_causal_handoff.py)" = "$PR563_CONSUMER_BLOB"
+          test "$(git hash-object scripts/aura_workcapsule_stale_observation_closure_exact_verifier.py)" = "$PR556_STALE_CLOSURE_BLOB"
+          test "$(git hash-object scripts/aura_workcapsule_raw_owner_end_to_end_stale_lifecycle.py)" = "$PR556_RAW_END_BLOB"
+          test "$(git hash-object scripts/aura_workcapsule_exact_hold_to_closed_transition.py)" = "$PR556_EXACT_TRANSITION_BLOB"
+          test "$(git hash-object scripts/aura_workcapsule_raw_owner_hold_to_closed_transition.py)" = "$PR556_RAW_TRANSITION_BLOB"
+          test "$(git hash-object scripts/aura_workcapsule_raw_owner_derived_post_closure_transition.py)" = "$PR556_DERIVED_POST_BLOB"
+          echo 'PR563_PORTABLE_CONSUMER_EXACT=true'
+          echo 'PR556_CAUSAL_OWNER_SUBSTRATE_EXACT=true'
+
+      - name: Re-prove PR562 live recursive target raw-slice owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/aura_workcapsule_current_recursive_target_raw_slice_binding.py
+          python3 -m unittest -v \
+            tests.test_aura_workcapsule_current_recursive_target_raw_slice_binding
+
+      - name: Fetch and re-prove repaired exact PR563 transport owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr563 && mkdir -p /tmp/pr563
+          git -C /tmp/pr563 init .
+          git -C /tmp/pr563 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr563 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR563_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr563 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr563 rev-parse HEAD)" = "$PR563_SHA"
+          test -z "$(git -C /tmp/pr563 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr563
+          cargo fmt --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml
+          cargo clippy --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml --all-targets -- -D warnings
+          python3 -m unittest -v tests.test_aura_k27_astge_portable_raw_slice_causal_handoff
+
+      - name: Fetch and re-prove exact PR556 causal POST owner
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr556 && mkdir -p /tmp/pr556
+          git -C /tmp/pr556 init .
+          git -C /tmp/pr556 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr556 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR556_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr556 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr556 rev-parse HEAD)" = "$PR556_SHA"
+          cd /tmp/pr556
+          python3 -m py_compile scripts/aura_workcapsule_raw_owner_derived_post_closure_transition.py
+          python3 -m unittest -v tests.test_aura_workcapsule_raw_owner_derived_post_closure_transition
+
+      - name: Prove O38 focused unit and adversarial surface
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_live_causal_raw_slice_join.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_causal_raw_slice_join
+
+      - name: Generate live PR560 receipt and repaired-PR563 Rust projection on one shared vector
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/pr563/o38-live-probe/src
+          cat >/tmp/pr563/o38-live-probe/Cargo.toml <<'TOML'
+          [package]
+          name = "o38-live-probe"
+          version = "0.1.0"
+          edition = "2021"
+
+          [dependencies]
+          aura-k27-astge-materialize = { path = "../crates/aura-k27-astge-materialize" }
+          aura-k27-astge-post-edit-canonical-projection = { path = "../crates/aura-k27-astge-post-edit-canonical-projection" }
+          aura-k27-astge-portable-target-raw-slice = { path = "../crates/aura-k27-astge-portable-target-raw-slice" }
+          aura-k27-astge-portable-target-raw-slice-projection = { path = "../crates/aura-k27-astge-portable-target-raw-slice-projection" }
+          sha2 = "0.10"
+          serde_json = "1"
+          TOML
+          cat >/tmp/pr563/o38-live-probe/src/main.rs <<'RS'
+          use aura_k27_astge_materialize::{AdmittedSourceCatalogV1, SourceLocatorV1};
+          use aura_k27_astge_post_edit_canonical_projection::{
+              canonical_payload_bytes, CanonicalDefinitionTargetPayloadV1,
+              CanonicalDefinitionTargetProjectionV1, CANONICALIZATION_PROFILE_V1,
+              PROJECTION_SCHEMA_V1,
+          };
+          use aura_k27_astge_portable_target_raw_slice::admit_portable_target_raw_slice;
+          use aura_k27_astge_portable_target_raw_slice_projection::project_portable_target_raw_slice;
+          use sha2::{Digest, Sha256};
+          use std::{fs, path::PathBuf};
+
+          fn hex(bytes: &[u8]) -> String {
+              bytes.iter().map(|byte| format!("{byte:02x}")).collect()
+          }
+
+          fn main() {
+              let source = b"def target(x):\n    return x + 3\n";
+              let root = PathBuf::from("/tmp/o38-live-source");
+              let _ = fs::remove_dir_all(&root);
+              fs::create_dir_all(root.join("src")).unwrap();
+              fs::write(root.join("src/a.py"), source).unwrap();
+              let catalog = AdmittedSourceCatalogV1::admit(
+                  &root,
+                  [SourceLocatorV1::bind(17, "src/a.py", 43, source)],
+              ).unwrap();
+              let payload = CanonicalDefinitionTargetPayloadV1 {
+                  schema: PROJECTION_SCHEMA_V1.to_owned(),
+                  version: 1,
+                  canonicalization_profile: CANONICALIZATION_PROFILE_V1.to_owned(),
+                  source_generation_domain: "SOURCE".to_owned(),
+                  source_generation_value: 43,
+                  source_owner_ref: "source-owner://o28-fixture".to_owned(),
+                  relative_path: "src/a.py".to_owned(),
+                  file_id: 17,
+                  source_sha256_hex: hex(&Sha256::digest(source)),
+                  source_byte_len: source.len() as u64,
+                  selected_target_scope_local_id: 9001,
+                  selected_target_parent_scope_local_id: 8001,
+                  selected_target_syntax_ordinal: 1,
+                  selected_target_byte_start: 0,
+                  selected_target_byte_end: source.len() as u32,
+                  selected_target_semantic_handle_digest_hex: "ab".repeat(32),
+                  definition_name: "target".to_owned(),
+                  definition_owner_scope_local_id: 8001,
+                  definition_target_scope_local_id: 9001,
+                  selected_current_scope_is_binding_target: true,
+                  binding_owner_is_selected_parent: true,
+                  local_scope_id_is_semantic_identity: false,
+                  post_edit_profiled_scope_current: true,
+                  canonical_definition_target_current: true,
+                  runtime_name_resolution_proven: false,
+                  call_graph_proven: false,
+                  semantic_patch_correctness_proven: false,
+                  b_minus_approved: false,
+                  producer_authenticated: false,
+                  review_authorized: false,
+                  mutation_authorized: false,
+                  execution_authorized: false,
+                  commit_authorized: false,
+                  merge_authorized: false,
+                  promotion_authorized: false,
+                  provider_effect_authorized: false,
+                  public_effect_authorized: false,
+                  human_authority: false,
+              };
+              let target = CanonicalDefinitionTargetProjectionV1 {
+                  payload_sha256: hex(&Sha256::digest(canonical_payload_bytes(&payload).unwrap())),
+                  payload,
+              };
+              let raw = admit_portable_target_raw_slice(&catalog, &target).unwrap();
+              let projection = project_portable_target_raw_slice(&raw).unwrap();
+              print!("{}", serde_json::to_string(&projection).unwrap());
+          }
+          RS
+          cargo run --quiet --manifest-path /tmp/pr563/o38-live-probe/Cargo.toml > /tmp/o38-live-projection.json
+          test -s /tmp/o38-live-projection.json
+          echo 'LIVE_PR560_RECEIPT_PROJECTED_BY_EXACT_PR563_RUST=true'
+
+      - name: Prove live Rust projection joins exact PR562 and exact PR556 repaired POST world
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.aura_workcapsule_live_causal_raw_slice_join import (
+              admit_live_causal_raw_slice_join,
+              verify_live_causal_raw_slice_join,
+          )
+          from tests.test_aura_workcapsule_current_recursive_target_raw_slice_binding import (
+              WorkCapsuleCurrentRecursiveTargetRawSliceBindingTests,
+          )
+          from tests.test_aura_workcapsule_two_phase_source_bound_closure import (
+              WorkCapsuleTwoPhaseSourceBoundClosureTests,
+          )
+
+          structural = WorkCapsuleCurrentRecursiveTargetRawSliceBindingTests(
+              'test_current_recursive_target_binds_to_exact_current_raw_slice'
+          )
+          causal = WorkCapsuleTwoPhaseSourceBoundClosureTests(
+              'test_two_phase_raw_owner_bound_exact_closed_lifecycle'
+          )
+          structural.setUp()
+          causal.setUp()
+          try:
+              projection = json.loads(Path('/tmp/o38-live-projection.json').read_text())
+              raw = structural.raw_receipt()
+              kwargs = structural.join_kwargs(raw=raw)
+              kwargs['raw_slice_projection'] = projection
+              kwargs.update({
+                  'pre_root': causal.pre_root,
+                  'pre_codemap': causal.codemap,
+                  'pre_anchor_manifest': causal.anchors,
+                  'pre_witness_manifest': causal.pre_witness,
+                  'previous_binding': causal.previous,
+                  'pre_graph_witness': causal.graph,
+                  'post_root': causal.post_root,
+                  'post_codemap': causal.codemap,
+                  'post_anchor_manifest': causal.anchors,
+                  'post_witness_manifest': causal.post_witness,
+                  'post_graph_witness': causal.graph,
+              })
+              violations = verify_live_causal_raw_slice_join(**kwargs)
+              assert violations == [], violations
+              receipt = admit_live_causal_raw_slice_join(**kwargs)
+              assert receipt['live_recursive_raw_slice_bound_to_exact_causal_post'] is True
+              assert receipt['source_generation'] == 43
+              assert receipt['semantic_handle_derived_from_raw_slice'] is False
+              assert receipt['semantic_repair_correctness_proven'] is False
+              assert not any(receipt['authority'].values())
+              print('LIVE_PR560_TO_PR556_CAUSAL_SLICE_JOIN_PROVEN=true')
+              print('SAME_EXACT_POST_SOURCE_INSTANCE_PROVEN=true')
+              print('SAME_EXACT_RAW_TARGET_SLICE_PROVEN=true')
+          finally:
+              causal.tearDown()
+              structural.tearDown()
+          PY
+
+      - name: Assert public boundary and emit consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_live_causal_raw_slice_join import verify_live_causal_raw_slice_join
+          params = set(inspect.signature(verify_live_causal_raw_slice_join).parameters)
+          for forbidden in (
+              'post_source_witness', 'closure_receipt', 'post_closure_receipt',
+              'candidate_binding', 'reentry_receipt', 'source_observation_receipt',
+              'raw_bytes', 'source_catalog', 'second_raw_slice_receipt', 'authority_override'
+          ):
+              assert forbidden not in params
+          print('CALLER_CAUSAL_INTERMEDIATES_ACCEPTED=false')
+          print('RAW_BYTES_ACCEPTED=false')
+          print('SECOND_RAW_SLICE_ACCEPTED=false')
+          PY
+          cat <<'EOF'
+          OBJECTIVE_O38=LIVE_CAUSAL_RAW_SLICE_JOIN
+          PR562_LIVE_RECURSIVE_RAW_SLICE_REPROVED=true
+          REPAIRED_PR563_PORTABLE_TRANSPORT_REPROVED=true
+          PR556_CAUSAL_POST_OWNER_REPROVED_FROM_RAW_EVIDENCE=true
+          LIVE_PR560_TO_PR556_CAUSAL_SLICE_JOIN_PROVEN=true
+          SEMANTIC_HANDLE_DERIVED_FROM_RAW_SLICE=false
+          SEMANTIC_IDENTITY_PROVEN_BY_RAW_SLICE=false
+          RAW_SLICE_PROJECTION_PRODUCER_AUTHENTICATED=false
+          SOURCE_OBSERVATION_PRODUCER_AUTHENTICATED=false
+          SEMANTIC_REPAIR_CORRECTNESS_PROVEN=false
+          SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false
+          NODE_LEVEL_INVALIDATION_CONE_PROVEN=false
+          RUNTIME_NAME_CALL_GRAPH_PROVEN=false
+          B_MINUS_APPROVED=false
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_EFFECT_AUTHORITY=false
+          GATE10_PROMOTION=false
+          EOF

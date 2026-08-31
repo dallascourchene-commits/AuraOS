@@ -1,0 +1,199 @@
+name: Aura WorkCapsule Corroboration-Qualified Host Member
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR575_SHA: c13a3214e32f93b79b17e5009a53700bbdc4dbf0
+  PR577_SHA: 1dd21e248d0925297d52a8067f1ded35fbba9cbf
+  CONVERGENCE_SHA: 0575f5909f75e7bcab753e565e4fe34a20109fce
+  PR575_RUN: '33357560719'
+  PR577_RUN: '33358365017'
+  PR577_OWNER_BLOB: ea56321ab6ebd06a74a22d8ee4736d362a561b16
+  PR577_TEST_BLOB: e28d017a1706419e7203d5c4e7056a732fa9fb1c
+
+jobs:
+  exact-corroboration-qualified-host-member:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact child and prove PR575 x PR577 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=320 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR575_SHA" "$PR577_SHA"
+          unset AUTH_HEADER
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR575_SHA $PR577_SHA"
+          git merge-base --is-ancestor "$PR575_SHA" HEAD
+          git merge-base --is-ancestor "$PR577_SHA" HEAD
+          test "$(git hash-object scripts/aura_workcapsule_live_causal_corroboration.py)" = "$PR577_OWNER_BLOB"
+          test "$(git hash-object tests/test_aura_workcapsule_live_causal_corroboration.py)" = "$PR577_TEST_BLOB"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+          echo 'EXACT_PR577_CORROBORATION_OWNER_MATERIALIZED=true'
+
+      - name: Pin exact successful parent hosted runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo = os.environ['GITHUB_REPOSITORY']
+          token = os.environ['GH_TOKEN']
+          expected = {
+              os.environ['PR575_RUN']: os.environ['PR575_SHA'],
+              os.environ['PR577_RUN']: os.environ['PR577_SHA'],
+          }
+          for run_id, sha in expected.items():
+              req = urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization': f'Bearer {token}', 'Accept': 'application/vnd.github+json'},
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  data = json.load(response)
+              assert data['head_sha'] == sha, (run_id, data['head_sha'], sha)
+              assert data['status'] == 'completed', (run_id, data['status'])
+              assert data['conclusion'] == 'success', (run_id, data['conclusion'])
+              print(f'PINNED_PARENT_RUN={run_id}@{sha}=SUCCESS')
+          PY
+
+      - name: Re-prove exact PR575 host-target owner on child tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            scripts/aura_workcapsule_live_causal_artifact_host_observation.py \
+            scripts/aura_workcapsule_corroboration_qualified_host_member.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_causal_artifact_host_observation
+
+      - name: Re-prove exact PR577 corroboration owner on child tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_live_causal_corroboration.py
+          python3 -m unittest -v tests.test_aura_workcapsule_live_causal_corroboration
+
+      - name: Prove O43 scheme-adapter and anti-alias adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m unittest -v tests.test_aura_workcapsule_corroboration_qualified_host_member
+
+      - name: Prove live PR575 artifact is PR568 member of PR577 relation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from scripts.aura_workcapsule_live_causal_artifact_host_observation import admit_live_causal_artifact_host_observation
+          from scripts.aura_workcapsule_live_causal_corroboration import admit_live_causal_corroboration
+          from scripts.aura_workcapsule_corroboration_qualified_host_member import admit_corroboration_qualified_host_member
+          from tests.test_aura_workcapsule_live_causal_artifact_host_observation import WorkCapsuleLiveCausalArtifactHostObservationTests
+          from tests.test_aura_workcapsule_live_causal_corroboration import pr572_receipt
+
+          case = WorkCapsuleLiveCausalArtifactHostObservationTests(
+              methodName='test_resolved_gate_binds_to_exact_live_causal_artifact'
+          )
+          case.setUp()
+          try:
+              live = case.live_receipt()
+              live_host = admit_live_causal_artifact_host_observation(**case.child_kwargs())
+              sibling = pr572_receipt(
+                  post_source_projection_receipt_identity=live['post_source_projection_receipt_identity'],
+                  causal_post_o10_receipt_identity=live['causal_post_closure_receipt_identity'],
+                  file_id=live['dependency_key']['file_id'],
+                  relative_path=live['dependency_key']['relative_path'],
+                  source_generation=live['source_generation'],
+                  full_source_sha256_hex=live['full_source_sha256_hex'],
+                  full_source_byte_len=live['full_source_byte_len'],
+                  target_byte_start=live['target_byte_start'],
+                  target_byte_end=live['target_byte_end'],
+                  target_slice_sha256_hex=live['target_slice_sha256_hex'],
+                  selected_target_semantic_handle_digest_hex=live['selected_target_semantic_handle_digest_hex'],
+              )
+              corroboration = admit_live_causal_corroboration(
+                  pr568_receipt=live,
+                  pr572_receipt=sibling,
+              )
+              out = admit_corroboration_qualified_host_member(
+                  live_host_receipt=live_host,
+                  pr568_receipt=live,
+                  pr572_receipt=sibling,
+              )
+              assert out['host_target_is_exact_pr568_corroboration_member'] is True
+              assert out['host_target_ref'] != corroboration['pr568_artifact_ref']
+              assert out['host_target_digest'] == out['pr568_member_digest']
+              assert out['host_target_is_pr572_sibling'] is False
+              assert out['host_target_is_corroboration_edge'] is False
+              assert out['live_host_receipt_producer_authenticated'] is False
+              assert out['corroboration_parent_receipts_producer_authenticated'] is False
+              assert out['semantic_equivalence_proven'] is False
+              assert out['semantic_truth_proven'] is False
+              assert out['host_observation_authority_proven'] is False
+              assert out['effect_authority_proven'] is False
+              assert not any(out['authority'].values())
+              print('LIVE_PR575_TARGET_IS_PR568_CORROBORATION_MEMBER=true')
+              print('REFERENCE_SCHEME_IDENTITY_COLLAPSED=false')
+              print('PR572_SIBLING_TARGET_ALIAS=false')
+              print('CORROBORATION_EDGE_TARGET_ALIAS=false')
+          finally:
+              case.tearDown()
+          PY
+
+      - name: Assert owner reuse and complete negative ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_workcapsule_corroboration_qualified_host_member.py
+          grep -q 'verify_live_causal_corroboration' "$child"
+          grep -q 'admit_live_causal_corroboration' "$child"
+          if grep -q '^def verify_live_causal_corroboration' "$child"; then
+            echo 'child duplicated PR577 corroboration owner' >&2
+            exit 1
+          fi
+          if grep -q '^def live_causal_artifact_target_ref' "$child"; then
+            echo 'child duplicated PR575 target owner' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_corroboration_qualified_host_member import verify_corroboration_qualified_host_member
+          params = set(inspect.signature(verify_corroboration_qualified_host_member).parameters)
+          assert params == {'live_host_receipt','pr568_receipt','pr572_receipt'}
+          PY
+          cat <<'EOF'
+          PR575_LIVE_HOST_CONSEQUENCE_CONSUMED=true
+          PR577_CORROBORATION_OWNER_REUSED=true
+          HOST_TARGET_IS_EXACT_PR568_CORROBORATION_MEMBER=true
+          HOST_TARGET_IS_PR572_SIBLING=false
+          HOST_TARGET_IS_CORROBORATION_EDGE=false
+          CROSS_SCHEME_REFERENCE_IDENTITY=false
+          SAME_UNDERLYING_DIGEST_ACROSS_SCHEMES=true
+          LIVE_HOST_RECEIPT_PRODUCER_AUTHENTICATED=false
+          CORROBORATION_PARENT_PRODUCERS_AUTHENTICATED=false
+          SEMANTIC_EQUIVALENCE_PROVEN=false
+          SEMANTIC_TRUTH_PROVEN=false
+          HOST_RESOLVER_TRUST_PROVEN=false
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          TRUSTED_CONTINUATION_READY=false
+          EFFECT_AUTHORITY_PROVEN=false
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_PROVIDER_PUBLIC_HUMAN_AUTHORITY=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF
