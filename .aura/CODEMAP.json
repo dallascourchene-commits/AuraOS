@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788200620,
+  "generated_at_unix": 1788202873,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1648,
+    "repo_file_count": 1651,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -137,6 +137,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-nav13-lawfield-boundary.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1509,6 +1510,7 @@
       "tests/test_aura_model_connectome_bridge.py",
       "tests/test_aura_music_mitosis_adapter.py",
       "tests/test_aura_native_cockpit_contract.py",
+      "tests/test_aura_nav13_lawfield.py",
       "tests/test_aura_navigator_k27_collision_router.py",
       "tests/test_aura_node_inspector.py",
       "tests/test_aura_pascal_spatial_presentation.py",
@@ -1639,6 +1641,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/aura_collision_safe_rebase.py",
       "tools/aura_fractal_k27.py",
+      "tools/aura_nav13_lawfield.py",
       "tools/aura_navigator_k27_collision_router.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -1764,16 +1767,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1648,
-      "bytes": 26470889,
-      "tokens_est": 6608076,
+      "files": 1651,
+      "bytes": 26508942,
+      "tokens_est": 6617590,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1003,
-        "schema_or_lexicon": 272,
+        "python_module": 1005,
+        "schema_or_lexicon": 273,
         "support_file": 49
       }
     },
@@ -51988,6 +51991,14 @@
         "end_line": 63,
         "semantic_id": "aura_gate_oidc.py#function:_require_text:78662a81d2bc47ed",
         "signature_hash": "5a34bc621c690ee0"
+      },
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 44,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_require_text:ff66d7efa9eaa5a1",
+        "signature_hash": "bbffaf6537380186"
       }
     ],
     "_decode_base64url": [
@@ -142396,6 +142407,176 @@
         "signature_hash": "ea5d38aab5faf9ef"
       }
     ],
+    "d": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 19,
+        "end_line": 20,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#function:d:b74c9814c66f05d5",
+        "signature_hash": "9eecb08c862ad6ce"
+      }
+    ],
+    "Nav13LawFieldTests": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "class",
+        "line": 23,
+        "end_line": 276,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#class:Nav13LawFieldTests:2724685697d1de4b",
+        "signature_hash": "47da473248b514a9"
+      }
+    ],
+    "Nav13LawFieldTests.root_overlay": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 24,
+        "end_line": 40,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.root_overlay:f07db3c7f72ba8b4",
+        "signature_hash": "901a3943ba254a59"
+      }
+    ],
+    "Nav13LawFieldTests.child_overlay": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 42,
+        "end_line": 60,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.child_overlay:cc30c2d1b4cbfad4",
+        "signature_hash": "9acb190d758a65ae"
+      }
+    ],
+    "Nav13LawFieldTests.test_child_narrows_parent_and_accumulates_constraints": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 74,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_child_narrows_parent_and_accumulates_constraints:a1adcb5e3db1e13b",
+        "signature_hash": "05f8b4cf621c6617"
+      }
+    ],
+    "Nav13LawFieldTests.test_child_cannot_widen_parent_permissions": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 76,
+        "end_line": 82,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_child_cannot_widen_parent_permissions:8309634c0da2c459",
+        "signature_hash": "02e6191be673549e"
+      }
+    ],
+    "Nav13LawFieldTests.test_child_cannot_widen_parent_authority_or_effect_scope": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 95,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_child_cannot_widen_parent_authority_or_effect_scope:943e68bf0a3a10c1",
+        "signature_hash": "60f7812616d6b84c"
+      }
+    ],
+    "Nav13LawFieldTests.test_parent_hard_constraint_survives_without_supersession": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 100,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_parent_hard_constraint_survives_without_supersession:0414dac28c7bad60",
+        "signature_hash": "e28b05e4944fd6dd"
+      }
+    ],
+    "Nav13LawFieldTests.test_exact_bounded_supersession_can_remove_one_parent_constraint": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 102,
+        "end_line": 117,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_exact_bounded_supersession_can_remove_one_parent_constraint:d94bdf0abd03c28f",
+        "signature_hash": "d5f2d9c58d654432"
+      }
+    ],
+    "Nav13LawFieldTests.test_stale_or_wrong_supersession_projection_fails_closed": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 143,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_stale_or_wrong_supersession_projection_fails_closed:8faf13553dd93927",
+        "signature_hash": "d40ca1b8fff49cee"
+      }
+    ],
+    "Nav13LawFieldTests.test_skipping_intermediate_k27_lawfield_is_rejected": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 154,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_skipping_intermediate_k27_lawfield_is_rejected:dde3ad8fb9a56803",
+        "signature_hash": "29860a3e173c890b"
+      }
+    ],
+    "Nav13LawFieldTests.test_adjacent_siblings_can_have_distinct_effective_laws": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 156,
+        "end_line": 174,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_adjacent_siblings_can_have_distinct_effective_laws:2602831733e91af0",
+        "signature_hash": "56b6f84e6eae22bb"
+      }
+    ],
+    "Nav13LawFieldTests.test_tiny_path_delta_requires_recomputation": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 176,
+        "end_line": 196,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_tiny_path_delta_requires_recomputation:6b091a8b280c51ca",
+        "signature_hash": "5fd39288b2eef6c3"
+      }
+    ],
+    "Nav13LawFieldTests.test_every_declared_boundary_axis_triggers_recomputation": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 198,
+        "end_line": 225,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_every_declared_boundary_axis_triggers_recomputation:4c5d2548a037cfb2",
+        "signature_hash": "66f88ea3c921375b"
+      }
+    ],
+    "Nav13LawFieldTests.test_identical_snapshot_does_not_recompute": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 227,
+        "end_line": 239,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_identical_snapshot_does_not_recompute:110a06715678759b",
+        "signature_hash": "b7391eac2baecf6e"
+      }
+    ],
+    "Nav13LawFieldTests.test_boundary_different_j_formulations_commute": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 241,
+        "end_line": 267,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_boundary_different_j_formulations_commute:567df2e0c8b8d934",
+        "signature_hash": "caf19c9d8ec072be"
+      }
+    ],
+    "Nav13LawFieldTests.test_duplicate_policy_atoms_fail_closed": [
+      {
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 269,
+        "end_line": 276,
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_duplicate_policy_atoms_fail_closed:52c6c0b5b739a5c8",
+        "signature_hash": "5ce6922bd187d98b"
+      }
+    ],
     "owner": [
       {
         "file": "tests/test_aura_navigator_k27_collision_router.py",
@@ -157602,6 +157783,14 @@
         "end_line": 69,
         "semantic_id": "tools/aura_collision_safe_rebase.py#function:_require_digest:10cf0f8b2a7c565e",
         "signature_hash": "361edb4ad3534165"
+      },
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 47,
+        "end_line": 51,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_require_digest:a0a7ff30a226ae44",
+        "signature_hash": "a11287bd698de932"
       }
     ],
     "assess_collision": [
@@ -157902,6 +158091,246 @@
         "end_line": 330,
         "semantic_id": "tools/aura_fractal_k27.py#function:legacy_segment_micro_equivalence:86f7421a7792e875",
         "signature_hash": "c16dba6acfa367f2"
+      }
+    ],
+    "_sha256_json": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 38,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_sha256_json:60e6cbbca620c6f4",
+        "signature_hash": "46715316a7bc3275"
+      }
+    ],
+    "_normalize_unique": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 58,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_normalize_unique:e2b5e9eae01eb975",
+        "signature_hash": "4185b9752a3ef37d"
+      }
+    ],
+    "_normalize_optional_unique": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 66,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_normalize_optional_unique:8b4a991afcb01a35",
+        "signature_hash": "f0afbd7c2b8aae28"
+      }
+    ],
+    "LawFieldOverlay": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "class",
+        "line": 70,
+        "end_line": 126,
+        "semantic_id": "tools/aura_nav13_lawfield.py#class:LawFieldOverlay:922ee5a12eca84e4",
+        "signature_hash": "ef1b10fae0afb43c"
+      }
+    ],
+    "LawFieldOverlay.normalized": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 126,
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:LawFieldOverlay.normalized:af3e922908bb63e3",
+        "signature_hash": "3e30758942a7bf1b"
+      }
+    ],
+    "SupersessionProjection": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "class",
+        "line": 130,
+        "end_line": 157,
+        "semantic_id": "tools/aura_nav13_lawfield.py#class:SupersessionProjection:86c3b13b10718fce",
+        "signature_hash": "c72c4c4e58bb8d65"
+      }
+    ],
+    "SupersessionProjection.validate": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 149,
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:SupersessionProjection.validate:7bb9407949e56179",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SupersessionProjection.fingerprint": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 152,
+        "end_line": 157,
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:SupersessionProjection.fingerprint:bea66e3a604ad33c",
+        "signature_hash": "639c2b791ce0b655"
+      }
+    ],
+    "EffectiveLawField": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "class",
+        "line": 161,
+        "end_line": 208,
+        "semantic_id": "tools/aura_nav13_lawfield.py#class:EffectiveLawField:6c026ff568ac547d",
+        "signature_hash": "dc9ecac1d0d1c33c"
+      }
+    ],
+    "EffectiveLawField.digest": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 189,
+        "end_line": 191,
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:EffectiveLawField.digest:6371fa0d96a9c1c1",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "EffectiveLawField.validate_ceiling": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 193,
+        "end_line": 208,
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:EffectiveLawField.validate_ceiling:5adf4a313d76a178",
+        "signature_hash": "4c5a4c69920aa269"
+      }
+    ],
+    "_root_tuple": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 211,
+        "end_line": 214,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_root_tuple:86c70dde1f0869ed",
+        "signature_hash": "c1bc043446300afb"
+      }
+    ],
+    "root_law_field": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 217,
+        "end_line": 247,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:root_law_field:a437b4e3a13fbf01",
+        "signature_hash": "40a4f58a4f2a7ea0"
+      }
+    ],
+    "inherit_law_field": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 250,
+        "end_line": 331,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:inherit_law_field:efc7d4bd364f2bb1",
+        "signature_hash": "48001f0e9176c78d"
+      }
+    ],
+    "BoundaryReason": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "class",
+        "line": 334,
+        "end_line": 344,
+        "semantic_id": "tools/aura_nav13_lawfield.py#class:BoundaryReason:f285a42e10a25e5e",
+        "signature_hash": "3e9c59c32fed7ae8"
+      }
+    ],
+    "BoundarySnapshot": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "class",
+        "line": 348,
+        "end_line": 373,
+        "semantic_id": "tools/aura_nav13_lawfield.py#class:BoundarySnapshot:e033c20d9c620315",
+        "signature_hash": "5eb57f878929a9c3"
+      }
+    ],
+    "BoundarySnapshot.validate": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 360,
+        "end_line": 373,
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:BoundarySnapshot.validate:f97a14892b771d15",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "BoundaryDecision": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "class",
+        "line": 377,
+        "end_line": 393,
+        "semantic_id": "tools/aura_nav13_lawfield.py#class:BoundaryDecision:f2929067aaa5bb0d",
+        "signature_hash": "e70e389b9c0883b3"
+      }
+    ],
+    "BoundaryDecision.validate": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "method",
+        "line": 387,
+        "end_line": 393,
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:BoundaryDecision.validate:ea38e8c756a23cb8",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "_snapshot_digest": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 396,
+        "end_line": 398,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_snapshot_digest:437c7f414914d364",
+        "signature_hash": "d0553b225d2ba303"
+      }
+    ],
+    "boundary_reasons_table": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 415,
+        "end_line": 424,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:boundary_reasons_table:d8aad3957eaf7681",
+        "signature_hash": "b1383033bea3bf30"
+      }
+    ],
+    "boundary_reasons_explicit": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 427,
+        "end_line": 453,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:boundary_reasons_explicit:7205f5a2f939401a",
+        "signature_hash": "c42636386e6fe24a"
+      }
+    ],
+    "detect_lawfield_boundary": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 456,
+        "end_line": 471,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:detect_lawfield_boundary:7d86e780f39da9e2",
+        "signature_hash": "1be2325d164afd26"
+      }
+    ],
+    "snapshot_from_field": [
+      {
+        "file": "tools/aura_nav13_lawfield.py",
+        "kind": "function",
+        "line": 474,
+        "end_line": 502,
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:snapshot_from_field:8a5688e50fd19294",
+        "signature_hash": "8c46b4d3ce66ce29"
       }
     ],
     "NavigatorRouteDisposition": [
@@ -159378,6 +159807,10 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-nav13-lawfield-boundary.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
     ],
@@ -159940,9 +160373,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -168577,6 +169007,59 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-nav13-lawfield-boundary.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6720,
+      "lines": 165,
+      "tokens_est": 1680,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          92
+        ]
+      },
+      "topology": {},
+      "digest8": "c16b9e68fff05166",
+      "vector": [
+        0.241939,
+        -0.138986,
+        -0.159577,
+        0.138986,
+        -0.26047,
+        0.223407,
+        -0.248116,
+        0.167813,
+        0.211053,
+        -0.147222,
+        0.15134,
+        0.215171,
+        0.17399,
+        -0.182226,
+        -0.159577,
+        -0.178108,
+        0.221348,
+        0.223407,
+        0.095746,
+        0.06486,
+        0.04427,
+        0.161636,
+        0.050447,
+        -0.178108,
+        -0.15134,
+        0.046329,
+        -0.221348,
+        0.211053,
+        0.15134,
+        0.211053,
+        0.071037,
+        0.219289
       ]
     },
     {
@@ -257707,6 +258190,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_nav13_lawfield.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11738,
+      "lines": 281,
+      "tokens_est": 2935,
+      "symbol_count": 17,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "979270c7ffcf5d92",
+      "vector": [
+        -0.135035,
+        -0.093317,
+        -0.132839,
+        -0.260189,
+        -0.251406,
+        -0.266776,
+        -0.231645,
+        -0.119665,
+        0.192123,
+        -0.031837,
+        0.143818,
+        0.064773,
+        -0.104295,
+        0.277754,
+        0.170166,
+        0.1526,
+        -0.082338,
+        -0.141622,
+        -0.249211,
+        -0.051599,
+        -0.16797,
+        -0.249211,
+        -0.249211,
+        -0.260189,
+        -0.154796,
+        -0.042816,
+        -0.148209,
+        -0.042816,
+        -0.113078,
+        -0.064773,
+        0.266776,
+        -0.181144
+      ]
+    },
+    {
       "path": "tests/test_aura_navigator_k27_collision_router.py",
       "role": "python_module",
       "binary": false,
@@ -263814,6 +264344,53 @@
         0.276193,
         0.173368,
         -0.249888
+      ]
+    },
+    {
+      "path": "tools/aura_nav13_lawfield.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 19595,
+      "lines": 522,
+      "tokens_est": 4899,
+      "symbol_count": 26,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f0be7a0367f588f1",
+      "vector": [
+        0.192213,
+        0.230383,
+        -0.03408,
+        0.064071,
+        0.083156,
+        0.154043,
+        0.214024,
+        -0.167675,
+        0.036807,
+        -0.192213,
+        0.260374,
+        0.017722,
+        -0.113147,
+        0.260374,
+        -0.044986,
+        -0.091335,
+        -0.009542,
+        -0.309449,
+        -0.14859,
+        -0.00409,
+        -0.055892,
+        -0.03408,
+        0.102241,
+        0.009542,
+        -0.254921,
+        -0.293091,
+        -0.336714,
+        0.039533,
+        0.036807,
+        0.336714,
+        0.017722,
+        0.298544
       ]
     },
     {
@@ -287862,16 +288439,16 @@
     }
   },
   "summary": {
-    "file_count": 1648,
-    "total_bytes": 26470889,
-    "text_tokens_est": 6608076,
+    "file_count": 1651,
+    "total_bytes": 26508942,
+    "text_tokens_est": 6617590,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1003,
-      "schema_or_lexicon": 272,
+      "python_module": 1005,
+      "schema_or_lexicon": 273,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288018,6 +288595,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-nav13-lawfield-boundary.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -289390,6 +289968,7 @@
       "tests/test_aura_model_connectome_bridge.py",
       "tests/test_aura_music_mitosis_adapter.py",
       "tests/test_aura_native_cockpit_contract.py",
+      "tests/test_aura_nav13_lawfield.py",
       "tests/test_aura_navigator_k27_collision_router.py",
       "tests/test_aura_node_inspector.py",
       "tests/test_aura_pascal_spatial_presentation.py",
@@ -289520,6 +290099,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/aura_collision_safe_rebase.py",
       "tools/aura_fractal_k27.py",
+      "tools/aura_nav13_lawfield.py",
       "tools/aura_navigator_k27_collision_router.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
@@ -430999,6 +431579,176 @@
         "file_digest8": "d44b09e1fecebab0"
       },
       {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#class:Nav13LawFieldTests:2724685697d1de4b",
+        "name": "Nav13LawFieldTests",
+        "kind": "class",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 23,
+        "end_line": 276,
+        "signature_hash": "47da473248b514a9",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#function:d:b74c9814c66f05d5",
+        "name": "d",
+        "kind": "function",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 19,
+        "end_line": 20,
+        "signature_hash": "9eecb08c862ad6ce",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.child_overlay:cc30c2d1b4cbfad4",
+        "name": "Nav13LawFieldTests.child_overlay",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 42,
+        "end_line": 60,
+        "signature_hash": "9acb190d758a65ae",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.root_overlay:f07db3c7f72ba8b4",
+        "name": "Nav13LawFieldTests.root_overlay",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 24,
+        "end_line": 40,
+        "signature_hash": "901a3943ba254a59",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_adjacent_siblings_can_have_distinct_effective_laws:2602831733e91af0",
+        "name": "Nav13LawFieldTests.test_adjacent_siblings_can_have_distinct_effective_laws",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 156,
+        "end_line": 174,
+        "signature_hash": "56b6f84e6eae22bb",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_boundary_different_j_formulations_commute:567df2e0c8b8d934",
+        "name": "Nav13LawFieldTests.test_boundary_different_j_formulations_commute",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 241,
+        "end_line": 267,
+        "signature_hash": "caf19c9d8ec072be",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_child_cannot_widen_parent_authority_or_effect_scope:943e68bf0a3a10c1",
+        "name": "Nav13LawFieldTests.test_child_cannot_widen_parent_authority_or_effect_scope",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 84,
+        "end_line": 95,
+        "signature_hash": "60f7812616d6b84c",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_child_cannot_widen_parent_permissions:8309634c0da2c459",
+        "name": "Nav13LawFieldTests.test_child_cannot_widen_parent_permissions",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 76,
+        "end_line": 82,
+        "signature_hash": "02e6191be673549e",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_child_narrows_parent_and_accumulates_constraints:a1adcb5e3db1e13b",
+        "name": "Nav13LawFieldTests.test_child_narrows_parent_and_accumulates_constraints",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 62,
+        "end_line": 74,
+        "signature_hash": "05f8b4cf621c6617",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_duplicate_policy_atoms_fail_closed:52c6c0b5b739a5c8",
+        "name": "Nav13LawFieldTests.test_duplicate_policy_atoms_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 269,
+        "end_line": 276,
+        "signature_hash": "5ce6922bd187d98b",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_every_declared_boundary_axis_triggers_recomputation:4c5d2548a037cfb2",
+        "name": "Nav13LawFieldTests.test_every_declared_boundary_axis_triggers_recomputation",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 198,
+        "end_line": 225,
+        "signature_hash": "66f88ea3c921375b",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_exact_bounded_supersession_can_remove_one_parent_constraint:d94bdf0abd03c28f",
+        "name": "Nav13LawFieldTests.test_exact_bounded_supersession_can_remove_one_parent_constraint",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 102,
+        "end_line": 117,
+        "signature_hash": "d5f2d9c58d654432",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_identical_snapshot_does_not_recompute:110a06715678759b",
+        "name": "Nav13LawFieldTests.test_identical_snapshot_does_not_recompute",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 227,
+        "end_line": 239,
+        "signature_hash": "b7391eac2baecf6e",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_parent_hard_constraint_survives_without_supersession:0414dac28c7bad60",
+        "name": "Nav13LawFieldTests.test_parent_hard_constraint_survives_without_supersession",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 97,
+        "end_line": 100,
+        "signature_hash": "e28b05e4944fd6dd",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_skipping_intermediate_k27_lawfield_is_rejected:dde3ad8fb9a56803",
+        "name": "Nav13LawFieldTests.test_skipping_intermediate_k27_lawfield_is_rejected",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 145,
+        "end_line": 154,
+        "signature_hash": "29860a3e173c890b",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_stale_or_wrong_supersession_projection_fails_closed:8faf13553dd93927",
+        "name": "Nav13LawFieldTests.test_stale_or_wrong_supersession_projection_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 119,
+        "end_line": 143,
+        "signature_hash": "d40ca1b8fff49cee",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
+        "semantic_id": "tests/test_aura_nav13_lawfield.py#method:Nav13LawFieldTests.test_tiny_path_delta_requires_recomputation:6b091a8b280c51ca",
+        "name": "Nav13LawFieldTests.test_tiny_path_delta_requires_recomputation",
+        "kind": "method",
+        "file": "tests/test_aura_nav13_lawfield.py",
+        "line": 176,
+        "end_line": 196,
+        "signature_hash": "5fd39288b2eef6c3",
+        "file_digest8": "979270c7ffcf5d92"
+      },
+      {
         "semantic_id": "tests/test_aura_navigator_k27_collision_router.py#class:NavigatorK27CollisionRouterTests:4eea14c81a987862",
         "name": "NavigatorK27CollisionRouterTests",
         "kind": "class",
@@ -447579,6 +448329,266 @@
         "file_digest8": "c0691a27ab9d138a"
       },
       {
+        "semantic_id": "tools/aura_nav13_lawfield.py#class:BoundaryDecision:f2929067aaa5bb0d",
+        "name": "BoundaryDecision",
+        "kind": "class",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 377,
+        "end_line": 393,
+        "signature_hash": "e70e389b9c0883b3",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#class:BoundaryReason:f285a42e10a25e5e",
+        "name": "BoundaryReason",
+        "kind": "class",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 334,
+        "end_line": 344,
+        "signature_hash": "3e9c59c32fed7ae8",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#class:BoundarySnapshot:e033c20d9c620315",
+        "name": "BoundarySnapshot",
+        "kind": "class",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 348,
+        "end_line": 373,
+        "signature_hash": "5eb57f878929a9c3",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#class:EffectiveLawField:6c026ff568ac547d",
+        "name": "EffectiveLawField",
+        "kind": "class",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 161,
+        "end_line": 208,
+        "signature_hash": "dc9ecac1d0d1c33c",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#class:LawFieldOverlay:922ee5a12eca84e4",
+        "name": "LawFieldOverlay",
+        "kind": "class",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 70,
+        "end_line": 126,
+        "signature_hash": "ef1b10fae0afb43c",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#class:SupersessionProjection:86c3b13b10718fce",
+        "name": "SupersessionProjection",
+        "kind": "class",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 130,
+        "end_line": 157,
+        "signature_hash": "c72c4c4e58bb8d65",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_normalize_optional_unique:8b4a991afcb01a35",
+        "name": "_normalize_optional_unique",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 61,
+        "end_line": 66,
+        "signature_hash": "f0afbd7c2b8aae28",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_normalize_unique:e2b5e9eae01eb975",
+        "name": "_normalize_unique",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 54,
+        "end_line": 58,
+        "signature_hash": "4185b9752a3ef37d",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_require_digest:a0a7ff30a226ae44",
+        "name": "_require_digest",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 47,
+        "end_line": 51,
+        "signature_hash": "a11287bd698de932",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_require_text:ff66d7efa9eaa5a1",
+        "name": "_require_text",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 41,
+        "end_line": 44,
+        "signature_hash": "bbffaf6537380186",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_root_tuple:86c70dde1f0869ed",
+        "name": "_root_tuple",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 211,
+        "end_line": 214,
+        "signature_hash": "c1bc043446300afb",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_sha256_json:60e6cbbca620c6f4",
+        "name": "_sha256_json",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 30,
+        "end_line": 38,
+        "signature_hash": "46715316a7bc3275",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:_snapshot_digest:437c7f414914d364",
+        "name": "_snapshot_digest",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 396,
+        "end_line": 398,
+        "signature_hash": "d0553b225d2ba303",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:boundary_reasons_explicit:7205f5a2f939401a",
+        "name": "boundary_reasons_explicit",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 427,
+        "end_line": 453,
+        "signature_hash": "c42636386e6fe24a",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:boundary_reasons_table:d8aad3957eaf7681",
+        "name": "boundary_reasons_table",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 415,
+        "end_line": 424,
+        "signature_hash": "b1383033bea3bf30",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:detect_lawfield_boundary:7d86e780f39da9e2",
+        "name": "detect_lawfield_boundary",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 456,
+        "end_line": 471,
+        "signature_hash": "1be2325d164afd26",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:inherit_law_field:efc7d4bd364f2bb1",
+        "name": "inherit_law_field",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 250,
+        "end_line": 331,
+        "signature_hash": "48001f0e9176c78d",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:root_law_field:a437b4e3a13fbf01",
+        "name": "root_law_field",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 217,
+        "end_line": 247,
+        "signature_hash": "40a4f58a4f2a7ea0",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#function:snapshot_from_field:8a5688e50fd19294",
+        "name": "snapshot_from_field",
+        "kind": "function",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 474,
+        "end_line": 502,
+        "signature_hash": "8c46b4d3ce66ce29",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:BoundaryDecision.validate:ea38e8c756a23cb8",
+        "name": "BoundaryDecision.validate",
+        "kind": "method",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 387,
+        "end_line": 393,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:BoundarySnapshot.validate:f97a14892b771d15",
+        "name": "BoundarySnapshot.validate",
+        "kind": "method",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 360,
+        "end_line": 373,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:EffectiveLawField.digest:6371fa0d96a9c1c1",
+        "name": "EffectiveLawField.digest",
+        "kind": "method",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 189,
+        "end_line": 191,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:EffectiveLawField.validate_ceiling:5adf4a313d76a178",
+        "name": "EffectiveLawField.validate_ceiling",
+        "kind": "method",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 193,
+        "end_line": 208,
+        "signature_hash": "4c5a4c69920aa269",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:LawFieldOverlay.normalized:af3e922908bb63e3",
+        "name": "LawFieldOverlay.normalized",
+        "kind": "method",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 86,
+        "end_line": 126,
+        "signature_hash": "3e30758942a7bf1b",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:SupersessionProjection.fingerprint:bea66e3a604ad33c",
+        "name": "SupersessionProjection.fingerprint",
+        "kind": "method",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 152,
+        "end_line": 157,
+        "signature_hash": "639c2b791ce0b655",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
+        "semantic_id": "tools/aura_nav13_lawfield.py#method:SupersessionProjection.validate:7bb9407949e56179",
+        "name": "SupersessionProjection.validate",
+        "kind": "method",
+        "file": "tools/aura_nav13_lawfield.py",
+        "line": 139,
+        "end_line": 149,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "f0be7a0367f588f1"
+      },
+      {
         "semantic_id": "tools/aura_navigator_k27_collision_router.py#class:NavigatorK27CollisionReceiptV1:dbf8755e37472803",
         "name": "NavigatorK27CollisionReceiptV1",
         "kind": "class",
@@ -448899,7 +449909,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "10c805a4b4560a1043ee2550c5758fcf",
-    "payload_hash": "3e029c9d319491ed57bbba6aecee3cde"
+    "record_fingerprint": "52ba3ce6868e4b909ed30b69654d73f8",
+    "payload_hash": "25f64b84d4a8d1bbbd722546221fbde2"
   }
 }
