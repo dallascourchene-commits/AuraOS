@@ -1,0 +1,60 @@
+name: K27 ASTGE Current Ingestion Convergence
+
+on:
+  pull_request:
+    paths:
+      - "crates/aura-k27-astge/**"
+      - "crates/aura-k27-astge-ingest/**"
+      - ".github/workflows/k27-astge-current-ingest-convergence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  current-ingest-safe-default:
+    runs-on: ubuntu-24.04
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Verify current S-plane and Tree-Sitter convergence
+        run: |
+          rustc --version
+          cargo --version
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+          cargo fmt --manifest-path crates/aura-k27-astge-ingest/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets -- -D warnings
+          if grep -R --line-number -E 'unsafe\s*\{' crates/aura-k27-astge/src crates/aura-k27-astge-ingest/src; then
+            echo 'unsafe block found in safe current-stack ingestion path' >&2
+            exit 1
+          fi
+
+      - name: Emit claim ceiling
+        run: |
+          echo "TREE_SITTER_PYTHON_CURRENT_STACK_EXECUTED=true"
+          echo "CURRENT_GENERATION_BOUND_READSEEK_CONE_EQUIVALENT=true"
+          echo "PRODUCTION_BACKEND_DEFAULT=READ_SEEK_SAFE_DEFAULT"
+          echo "PRODUCTION_IMMUTABILITY_CAPABILITIES=0"
+          echo "MMAP_PROMOTED_BY_INGESTION=false"
+          echo "SEMANTIC_HANDLE_MINTED_BY_INGESTION=false"
+          echo "SYMBOL_GRAPH_PROVEN=false"
+          echo "CALL_GRAPH_PROVEN=false"
+          echo "AURAOS_RUNTIME_INTEGRATION_PROVEN=false"
+          echo "HUMAN_AUTHORITY=false"
+          echo "EXTERNAL_EFFECT=false"
