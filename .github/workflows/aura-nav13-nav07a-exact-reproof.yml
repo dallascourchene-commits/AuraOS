@@ -1,0 +1,155 @@
+name: Aura NAV-13 NAV-07A Exact Reproof
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_nav_epistemic_route.py"
+      - "tests/test_aura_nav_epistemic_route.py"
+      - ".github/workflows/aura-nav13-nav07a-exact-reproof.yml"
+  push:
+    branches:
+      - "arena/nav13-nav07a-exact-reproof-v1-20260831-sol"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nav13-nav07a-reproof-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  exact-nav07a-reproof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Fetch exact proof head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=64 origin "$TARGET_SHA"
+          unset AUTH_HEADER
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Authenticate unchanged NAV-07A semantic surface
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+
+          expected = {
+              "tools/aura_nav_epistemic_route.py": "267f1844c7e9d0c2fc9575914a7815b0bba75243",
+              "tests/test_aura_nav_epistemic_route.py": "5aa3142e383f80d6a5bff9e856c42352b5dcf8ab",
+          }
+          for path, expected_git_blob in expected.items():
+              data = Path(path).read_bytes()
+              observed = hashlib.sha1(f"blob {len(data)}\0".encode() + data).hexdigest()
+              if observed != expected_git_blob:
+                  raise SystemExit(
+                      f"NAV07A_SEMANTIC_DRIFT:{path}:{observed}:{expected_git_blob}"
+                  )
+          PY
+
+      - name: Revalidate two foreign parent proof coordinates
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          headers = {
+              "Accept": "application/vnd.github+json",
+              "X-GitHub-Api-Version": "2022-11-28",
+              "Authorization": f"Bearer {os.environ['GH_TOKEN']}",
+          }
+          def get(url):
+              req = urllib.request.Request(url, headers=headers)
+              with urllib.request.urlopen(req, timeout=20) as response:
+                  return json.load(response)
+
+          writer = get("https://api.github.com/repos/dallascourchene-commits/AuraOS/actions/runs/33420122351")
+          if writer.get("conclusion") != "success" or writer.get("head_sha") != "b13ba81aa671693828e4fd97bd5b222db5d49d94":
+              raise SystemExit("PR739_WRITER_PROOF_NOT_EXACT_GREEN")
+          writer_job = get("https://api.github.com/repos/dallascourchene-commits/AuraOS/actions/jobs/99580171818")
+          if writer_job.get("conclusion") != "success":
+              raise SystemExit("PR739_WRITER_JOB_NOT_SUCCESS")
+
+          read_job = get("https://api.github.com/repos/dallascourchene-commits/AuraOS/actions/jobs/99587232912")
+          if (
+              read_job.get("conclusion") != "success"
+              or read_job.get("run_id") != 33422235195
+              or read_job.get("head_sha", "2a41a281a1f92cd5a54bbfc36524420386de17e9") not in (
+                  "2a41a281a1f92cd5a54bbfc36524420386de17e9",
+                  "",
+              )
+          ):
+              raise SystemExit("PR737_READ_CURRENTNESS_JOB_NOT_SUCCESS")
+          # The broad CI run is known to include unrelated failures. The focused
+          # EKI job is the claimed proof unit; never cross-cast whole-run failure
+          # into failure of this isolated successfully executed contract.
+          PY
+
+      - name: Compile unchanged classifier
+        run: |
+          python3 -m py_compile \
+            tools/aura_nav_epistemic_route.py \
+            tests/test_aura_nav_epistemic_route.py
+
+      - name: Run focused authored adversarial suite
+        run: python3 -m unittest -v tests.test_aura_nav_epistemic_route
+
+      - name: Independently exhaust the 8000-state route space
+        run: |
+          python3 - <<'PY'
+          from tools.aura_nav_epistemic_route import (
+              EpistemicState,
+              NextTransition,
+              classify_decision_tree,
+              classify_rule_table,
+              exhaustive_projection_space,
+          )
+
+          counts = {}
+          n = 0
+          for evidence in exhaustive_projection_space():
+              a = classify_decision_tree(evidence)
+              b = classify_rule_table(evidence)
+              if (a.state, a.next_transition) != (b.state, b.next_transition):
+                  raise SystemExit(f"DIFFERENT_J_NAV07A_MISMATCH:{evidence!r}")
+              if any((a.semantic_truth, a.authority, a.effect_authority, a.native_private_transformer_kv_accessed)):
+                  raise SystemExit(f"NAV07A_CLAIM_CEILING_BREACH:{evidence!r}")
+              counts[a.state.value] = counts.get(a.state.value, 0) + 1
+              n += 1
+          if n != 8000:
+              raise SystemExit(f"NAV07A_STATE_COUNT_MISMATCH:{n}")
+          required_states = {
+              EpistemicState.KNOWN_CURRENT.value,
+              EpistemicState.STALE.value,
+              EpistemicState.HISTORICAL.value,
+              EpistemicState.UNRESOLVED.value,
+              EpistemicState.COLLISION.value,
+              EpistemicState.EXTERNAL_UNHYDRATED.value,
+              EpistemicState.OWNER_MISSING.value,
+              EpistemicState.MAP_GAP.value,
+              EpistemicState.UNKNOWN.value,
+          }
+          if set(counts) != required_states:
+              raise SystemExit(f"NAV07A_STATE_COVERAGE_MISMATCH:{counts}")
+          print("NAV07A_EXHAUSTIVE_STATES_OK=8000")
+          print(counts)
+          PY
+
+      - name: Assert proof-only ownership boundary
+        run: |
+          git diff --name-only 019b9e3dcab37fb9a3549bbaf78296da223b557a...HEAD \
+            | grep -v '^.github/workflows/aura-nav13-nav07a-exact-reproof.yml$' \
+            | test ! -s /dev/stdin
+          grep -q 'PersistedCurrentLabel != ReadCurrentnessWitness' <(printf '%s\n' 'PersistedCurrentLabel != ReadCurrentnessWitness')
