@@ -1,0 +1,57 @@
+name: GLM53 Equal Rate E8 Ablation
+
+on:
+  pull_request:
+    paths:
+      - tools/quantization/aura_glm53_equal_rate_e8_ablation.py
+      - tests/test_aura_glm53_equal_rate_e8_ablation.py
+      - .github/workflows/glm53-equal-rate-e8-ablation.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  q4-equal-rate-e8:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+      - name: Prove exact source and compile
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/quantization/aura_glm53_equal_rate_e8_ablation.py tests/test_aura_glm53_equal_rate_e8_ablation.py
+      - name: Run Q4 adversarial ablation suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest -v tests.test_aura_glm53_equal_rate_e8_ablation
+      - name: Emit deterministic equal-rate receipt
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/quantization/aura_glm53_equal_rate_e8_ablation.py | tee /tmp/q4.json
+          python - <<'PY'
+          import json
+          r=json.load(open('/tmp/q4.json'))
+          assert r['codec_bpw_e8'] == 1.25
+          assert r['codec_bpw_hypercube'] == 1.25
+          assert r['equal_rate'] is True
+          assert all(x['e8_better'] for x in r['lanes'])
+          assert r['real_glm_tensor_quantized'] is False
+          assert r['glm_quality_proven'] is False
+          assert r['runtime_performance_proven'] is False
+          assert r['geometry_privileged'] is False
+          assert r['gate10_promoted'] is False
+          print('EQUAL_RATE_GEOMETRY_EVIDENCE_ONLY=true')
+          PY
+      - name: Prove fixed claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'Synthetic distortion is not model quality, runtime, or deployment evidence.' tools/quantization/aura_glm53_equal_rate_e8_ablation.py
+          grep -F 'geometry_privileged=False' tools/quantization/aura_glm53_equal_rate_e8_ablation.py
