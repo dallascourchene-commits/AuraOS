@@ -2,62 +2,25 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 from hashlib import sha256
+import inspect
 import json
 from typing import Any, Mapping, Sequence
 
 from tools.spatial.eye_calibration_contract import (
-    BinocularCalibrationV1,
-    CameraIntrinsicsV1,
+    BinocularCalibrationV2,
+    CameraIntrinsicsV2,
     eligibility_receipt,
 )
+from tools.temporal_evidence_scope_coordinate import (
+    PORTABLE_SCOPE as TEMPORAL_PORTABLE_SCOPE,
+    SCHEMA as TEMPORAL_SCHEMA,
+    verify_temporal_evidence_scope_coordinate,
+)
 
-SCHEMA = "AURA_SPATIAL_CALIBRATION_TEMPORAL_SCOPE_V1"
-PARENT_CALIBRATION = "PR621:944c4e52be670d251ebf43b05558f7fab275bed2"
-PARENT_TEMPORAL = "PR622:ccc932fc02caf59686e08c3d77ef6154c0cb2b67"
+SCHEMA = "AURA_SPATIAL_CALIBRATION_TEMPORAL_SCOPE_V2"
+PARENT_CALIBRATION = "PR621:6e635976f009104e02f586cb8658651de5532ec1"
+PARENT_TEMPORAL = "PR622:a998e370dd3d757810ebd888f6c982ef9ec9cca0"
 EXACT_PARENT_IDS = (PARENT_CALIBRATION, PARENT_TEMPORAL)
-TEMPORAL_SCHEMA = "AuraTemporalEvidenceScopeCoordinateV1"
-
-_TEMPORAL_KEYS = frozenset({
-    "eye_pose_receipt_sha256",
-    "longitudinal_series_evidence_ref",
-    "longitudinal_series_digest",
-    "point_capture_time_ns",
-    "series_start_time_ns",
-    "series_end_time_ns",
-    "point_vs_series_relation",
-    "temporal_overlap",
-    "eye_k27_coordinate",
-    "point_observation_was_gate_admissible",
-    "point_observation_current_now_proven",
-    "historical_series_current_now_proven",
-    "shared_current_world_proven",
-    "same_host_proven",
-    "temporal_overlap_proves_causality",
-    "operating_envelope_caused_eye_pose",
-    "eye_pose_caused_operating_envelope",
-    "calibrated_metric_eye_truth_proven",
-    "physical_steering_authority",
-    "performance_causality_proven",
-    "producer_authenticated",
-    "semantic_k27_authority_proven",
-    "effect_authority_proven",
-    "native_private_transformer_kv_accessed",
-    "gate10_promoted",
-    "schema",
-})
-_TEMPORAL_HARD_FALSE = tuple(_TEMPORAL_KEYS - {
-    "eye_pose_receipt_sha256",
-    "longitudinal_series_evidence_ref",
-    "longitudinal_series_digest",
-    "point_capture_time_ns",
-    "series_start_time_ns",
-    "series_end_time_ns",
-    "point_vs_series_relation",
-    "temporal_overlap",
-    "eye_k27_coordinate",
-    "point_observation_was_gate_admissible",
-    "schema",
-})
 
 
 def _canonical(value: Any) -> bytes:
@@ -66,12 +29,6 @@ def _canonical(value: Any) -> bytes:
 
 def _digest(value: Any) -> str:
     return sha256(_canonical(value)).hexdigest()
-
-
-def _text(name: str, value: str) -> str:
-    if not isinstance(value, str) or not value.strip():
-        raise ValueError(f"{name} must be non-empty text")
-    return value.strip()
 
 
 def _nonnegative_int(name: str, value: int) -> int:
@@ -92,56 +49,42 @@ def _parents(values: Sequence[str]) -> tuple[str, str]:
         raise ValueError("parent_artifact_ids must be a sequence")
     parents = tuple(values)
     if len(parents) != 2 or len(set(parents)) != 2 or set(parents) != set(EXACT_PARENT_IDS):
-        raise ValueError("exact O58 parent artifacts are required")
+        raise ValueError("exact repaired parent artifacts are required")
     return EXACT_PARENT_IDS
-
-
-def verify_parent_temporal_coordinate(value: Mapping[str, Any]) -> bool:
-    try:
-        full = dict(value)
-        supplied = full.pop("coordinate_digest")
-    except (TypeError, ValueError, KeyError):
-        return False
-    if set(full) != _TEMPORAL_KEYS:
-        return False
-    if full.get("schema") != TEMPORAL_SCHEMA:
-        return False
-    if full.get("point_observation_was_gate_admissible") is not True:
-        return False
-    if full.get("point_vs_series_relation") not in {"BEFORE", "DURING", "AFTER"}:
-        return False
-    if full.get("temporal_overlap") is not (full.get("point_vs_series_relation") == "DURING"):
-        return False
-    if any(full.get(key) is not False for key in _TEMPORAL_HARD_FALSE):
-        return False
-    for key in ("point_capture_time_ns", "series_start_time_ns", "series_end_time_ns", "eye_k27_coordinate"):
-        if isinstance(full.get(key), bool) or not isinstance(full.get(key), int):
-            return False
-    if not (0 <= full["eye_k27_coordinate"] <= 26):
-        return False
-    if not (0 <= full["series_start_time_ns"] < full["series_end_time_ns"]):
-        return False
-    return supplied == _digest(full)
 
 
 @dataclass(frozen=True)
 class CalibrationTemporalScopeReceipt:
     calibration_eligibility_receipt_sha256: str
     temporal_coordinate_digest: str
-    sensor_instance: str
-    sensor_runtime_generation: str
-    calibration_generation: str
-    calibration_observed_at_ns: int
-    use_time_ns: int
-    calibration_age_ns: int
-    max_calibration_age_ns: int
-    intrinsics_calibration_ref: str
-    binocular_calibration_ref: str
+    camera_evidence_sha256: str
+    ipd_evidence_sha256: str
+    camera_policy_digest: str
+    ipd_policy_digest: str
+    camera_sensor_id: str
+    camera_sensor_generation: str
+    camera_calibration_generation: str
+    ipd_sensor_id: str
+    ipd_sensor_generation: str
+    ipd_calibration_generation: str
+    declared_calibration_time_ns: int
+    declared_use_time_ns: int
+    declared_calibration_age_ns: int
+    max_declared_calibration_age_ns: int
     reprojection_rms_px: float
     eye_origin_sigma_m: float
-    declared_scope_admissible: bool = True
-    metric_geometry_parent_eligible: bool = True
-    sensor_identity_bound_for_downstream_replay: bool = True
+    software_scope_candidate: bool
+    point_temporal_admissible: bool
+    declared_scope_admissible: bool
+    hold_reason: str | None
+    temporal_parent_schema: str = TEMPORAL_SCHEMA
+    temporal_parent_portable_scope: str = TEMPORAL_PORTABLE_SCOPE
+    calibration_producer_traversed: bool = True
+    ipd_producer_traversed: bool = True
+    calibration_time_authenticated: bool = False
+    physical_calibration_producer_authenticated: bool = False
+    physical_ipd_producer_authenticated: bool = False
+    physical_use_admissible: bool = False
     calibration_current_now_proven: bool = False
     calibration_accuracy_at_use_time_proven: bool = False
     sensor_matches_original_calibration_proven: bool = False
@@ -165,55 +108,96 @@ class CalibrationTemporalScopeReceipt:
 
 def bind_calibration_temporal_scope(
     *,
-    intrinsics: CameraIntrinsicsV1,
-    binocular: BinocularCalibrationV1,
+    intrinsics: CameraIntrinsicsV2,
+    binocular: BinocularCalibrationV2,
     temporal_coordinate: Mapping[str, Any],
-    sensor_instance: str,
-    sensor_runtime_generation: str,
-    calibration_generation: str,
-    calibration_observed_at_ns: int,
-    max_calibration_age_ns: int,
+    declared_calibration_time_ns: int,
+    max_declared_calibration_age_ns: int,
     parent_artifact_ids: Sequence[str] = EXACT_PARENT_IDS,
 ) -> CalibrationTemporalScopeReceipt:
     _parents(parent_artifact_ids)
-    if not verify_parent_temporal_coordinate(temporal_coordinate):
-        raise ValueError("exact parent temporal coordinate is invalid")
+    if not verify_temporal_evidence_scope_coordinate(temporal_coordinate):
+        raise ValueError("exact repaired portable temporal coordinate is invalid")
 
     eligible = eligibility_receipt(intrinsics, binocular)
-    if eligible.metric_geometry_eligible is not True:
-        raise ValueError("parent calibration is not metric-geometry eligible")
-    if eligible.physical_gaze_accuracy_proven is not False:
-        raise ValueError("parent calibration ceiling widened")
+    if eligible.get("metric_geometry_eligible") is not True:
+        raise ValueError("repaired calibration parents are not metric-geometry eligible")
+    if eligible.get("camera_producer_traversed") is not True or eligible.get("ipd_producer_traversed") is not True:
+        raise ValueError("producer-traversed calibration evidence is required")
+    for name in (
+        "physical_calibration_producer_authenticated",
+        "physical_gaze_accuracy_proven",
+        "physical_3d_accuracy_proven",
+        "semantic_k27_authority",
+        "native_transformer_kv_accessed",
+    ):
+        if eligible.get(name) is not False:
+            raise ValueError(f"parent calibration ceiling widened: {name}")
+
+    camera_evidence = intrinsics.evidence
+    ipd_evidence = binocular.evidence
+    if intrinsics.metric_ray_eligible is not True or binocular.metric_eye_origin_eligible is not True:
+        raise ValueError("producer traversal recheck failed")
 
     use_time_ns = _nonnegative_int("point_capture_time_ns", temporal_coordinate.get("point_capture_time_ns"))
-    calibration_observed_at_ns = _nonnegative_int("calibration_observed_at_ns", calibration_observed_at_ns)
-    max_calibration_age_ns = _positive_int("max_calibration_age_ns", max_calibration_age_ns)
-    if calibration_observed_at_ns > use_time_ns:
-        raise ValueError("calibration observation cannot occur after use time")
-    age = use_time_ns - calibration_observed_at_ns
-    if age > max_calibration_age_ns:
-        raise ValueError("calibration lies outside declared temporal scope")
-    if intrinsics.reprojection_rms_px is None:
-        raise ValueError("calibrated reprojection RMS is required")
+    declared_calibration_time_ns = _nonnegative_int("declared_calibration_time_ns", declared_calibration_time_ns)
+    max_declared_calibration_age_ns = _positive_int(
+        "max_declared_calibration_age_ns", max_declared_calibration_age_ns
+    )
+    if declared_calibration_time_ns > use_time_ns:
+        raise ValueError("declared calibration time cannot occur after declared use time")
+    age = use_time_ns - declared_calibration_time_ns
+    if age > max_declared_calibration_age_ns:
+        raise ValueError("declared calibration time lies outside requested scope")
+
+    point_temporal_admissible = temporal_coordinate.get("point_observation_temporal_admissible") is True
+    relation = temporal_coordinate.get("point_vs_series_relation")
+    software_scope_candidate = (
+        temporal_coordinate.get("schema") == TEMPORAL_SCHEMA
+        and temporal_coordinate.get("portable_scope") == TEMPORAL_PORTABLE_SCOPE
+        and relation == "UNKNOWN"
+        and age <= max_declared_calibration_age_ns
+    )
+    declared_scope_admissible = software_scope_candidate and point_temporal_admissible
+    hold_reason = None if declared_scope_admissible else str(
+        temporal_coordinate.get("hold_reason") or "POINT_TEMPORAL_ADMISSION_REQUIRED"
+    )
 
     return CalibrationTemporalScopeReceipt(
-        calibration_eligibility_receipt_sha256=eligible.receipt_sha256,
+        calibration_eligibility_receipt_sha256=str(eligible["receipt_sha256"]),
         temporal_coordinate_digest=str(temporal_coordinate["coordinate_digest"]),
-        sensor_instance=_text("sensor_instance", sensor_instance),
-        sensor_runtime_generation=_text("sensor_runtime_generation", sensor_runtime_generation),
-        calibration_generation=_text("calibration_generation", calibration_generation),
-        calibration_observed_at_ns=calibration_observed_at_ns,
-        use_time_ns=use_time_ns,
-        calibration_age_ns=age,
-        max_calibration_age_ns=max_calibration_age_ns,
-        intrinsics_calibration_ref=intrinsics.calibration_ref,
-        binocular_calibration_ref=binocular.calibration_ref,
-        reprojection_rms_px=float(intrinsics.reprojection_rms_px),
-        eye_origin_sigma_m=float(eligible.eye_origin_sigma_m),
+        camera_evidence_sha256=camera_evidence.evidence_sha256,
+        ipd_evidence_sha256=ipd_evidence.evidence_sha256,
+        camera_policy_digest=camera_evidence.policy.digest,
+        ipd_policy_digest=ipd_evidence.policy.digest,
+        camera_sensor_id=camera_evidence.dataset.sensor_id,
+        camera_sensor_generation=camera_evidence.dataset.sensor_generation,
+        camera_calibration_generation=camera_evidence.dataset.calibration_generation,
+        ipd_sensor_id=ipd_evidence.dataset.sensor_id,
+        ipd_sensor_generation=ipd_evidence.dataset.sensor_generation,
+        ipd_calibration_generation=ipd_evidence.dataset.calibration_generation,
+        declared_calibration_time_ns=declared_calibration_time_ns,
+        declared_use_time_ns=use_time_ns,
+        declared_calibration_age_ns=age,
+        max_declared_calibration_age_ns=max_declared_calibration_age_ns,
+        reprojection_rms_px=float(camera_evidence.reprojection_rms_px),
+        eye_origin_sigma_m=float(binocular.eye_origin_sigma_m),
+        software_scope_candidate=software_scope_candidate,
+        point_temporal_admissible=point_temporal_admissible,
+        declared_scope_admissible=declared_scope_admissible,
+        hold_reason=hold_reason,
     )
 
 
 def portable_calibration_temporal_scope_receipt(**kwargs: Any) -> dict[str, Any]:
     receipt = bind_calibration_temporal_scope(**kwargs)
     payload = receipt.to_dict()
-    return {**payload, "receipt_digest": receipt.receipt_digest, "parent_artifact_ids": EXACT_PARENT_IDS}
+    return {
+        **payload,
+        "receipt_digest": receipt.receipt_digest,
+        "parent_artifact_ids": EXACT_PARENT_IDS,
+    }
+
+
+def public_inputs() -> tuple[str, ...]:
+    return tuple(inspect.signature(bind_calibration_temporal_scope).parameters)

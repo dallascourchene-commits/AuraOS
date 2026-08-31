@@ -4,7 +4,10 @@ on:
   pull_request:
     paths:
       - 'tools/spatial/eye_calibration_contract.py'
+      - 'tools/temporal_evidence_scope_coordinate.py'
       - 'tools/spatial/calibration_temporal_scope.py'
+      - 'tests/test_spatial_eye_calibration_contract.py'
+      - 'tests/test_temporal_evidence_scope_coordinate.py'
       - 'tests/test_spatial_calibration_temporal_scope.py'
       - '.github/workflows/spatial-calibration-temporal-scope.yml'
   workflow_dispatch:
@@ -14,30 +17,45 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Compile
-        run: python -m py_compile tools/spatial/eye_calibration_contract.py tools/spatial/calibration_temporal_scope.py
-      - name: Focused adversarial suite
-        run: python -m unittest -v tests.test_spatial_calibration_temporal_scope
-      - name: Enforce exact parents and negative consequence ceiling
+      - name: Compile repaired parent and child surfaces
+        run: python -m py_compile tools/spatial/eye_calibration_contract.py tools/temporal_evidence_scope_coordinate.py tools/spatial/calibration_temporal_scope.py
+      - name: Reprove repaired parents and O58 V2
+        run: |
+          python -m unittest -v tests.test_spatial_eye_calibration_contract
+          python -m unittest -v tests.test_temporal_evidence_scope_coordinate
+          python -m unittest -v tests.test_spatial_calibration_temporal_scope
+      - name: Enforce exact repaired parents and UNKNOWN-preserving ceiling
         run: |
           python - <<'PY'
-          from tools.spatial.calibration_temporal_scope import EXACT_PARENT_IDS
+          from tools.spatial.calibration_temporal_scope import EXACT_PARENT_IDS, public_inputs
+          from tools.temporal_evidence_scope_coordinate import SCHEMA as TEMPORAL_SCHEMA
           assert EXACT_PARENT_IDS == (
-              'PR621:944c4e52be670d251ebf43b05558f7fab275bed2',
-              'PR622:ccc932fc02caf59686e08c3d77ef6154c0cb2b67',
+              'PR621:6e635976f009104e02f586cb8658651de5532ec1',
+              'PR622:a998e370dd3d757810ebd888f6c982ef9ec9cca0',
+          )
+          assert TEMPORAL_SCHEMA == 'AuraTemporalEvidenceScopeCoordinateV3'
+          assert public_inputs() == (
+              'intrinsics','binocular','temporal_coordinate',
+              'declared_calibration_time_ns','max_declared_calibration_age_ns',
+              'parent_artifact_ids',
           )
           text = open('tools/spatial/calibration_temporal_scope.py', encoding='utf-8').read()
           for needle in (
+              'declared_scope_admissible: bool',
+              'calibration_time_authenticated: bool = False',
+              'physical_calibration_producer_authenticated: bool = False',
+              'physical_use_admissible: bool = False',
               'calibration_current_now_proven: bool = False',
-              'calibration_accuracy_at_use_time_proven: bool = False',
-              'sensor_matches_original_calibration_proven: bool = False',
               'physical_gaze_accuracy_proven: bool = False',
               'producer_authenticated: bool = False',
-              'native_private_transformer_kv_accessed: bool = False',
           ):
               assert needle in text, needle
-          print('O58_DECLARED_SCOPE_NE_CALIBRATION_TRUTH=true')
+          print('O58_V2_PRODUCER_TRAVERSAL=true')
+          print('O58_V2_PORTABLE_TEMPORAL_UNKNOWN_PRESERVED=true')
+          print('O58_V2_PHYSICAL_USE_ADMISSIBLE=false')
           PY

@@ -1,174 +1,205 @@
+import hashlib
+import json
 import unittest
 
 from tools.spatial.eye_calibration_contract import (
-    BinocularCalibrationV1,
-    CameraIntrinsicsV1,
-    IntrinsicsSource,
-    IpdSource,
-    assumed_population_ipd,
-    nominal_intrinsics_from_horizontal_fov,
+    BinocularCalibrationV2,
+    CalibrationQualityPolicyV1,
+    CameraCalibrationDatasetV1,
+    CameraCalibrationSampleV1,
+    CameraIntrinsicsV2,
+    CoordinateSpace,
+    IpdMeasurementDatasetV1,
+    produce_camera_calibration_evidence,
+    produce_ipd_calibration_evidence,
 )
 from tools.spatial.calibration_temporal_scope import (
     EXACT_PARENT_IDS,
-    _digest,
     bind_calibration_temporal_scope,
     portable_calibration_temporal_scope_receipt,
-    verify_parent_temporal_coordinate,
+    public_inputs,
+)
+from tests.test_temporal_evidence_scope_coordinate import eye_receipt, series
+from tools.temporal_evidence_scope_coordinate import (
+    portable_temporal_evidence_scope_receipt,
+    verify_temporal_evidence_scope_coordinate,
 )
 
 
-def calibrated_intrinsics():
-    return CameraIntrinsicsV1(
+def calibrated_pair():
+    policy = CalibrationQualityPolicyV1(
+        policy_generation="scope-policy-v1",
+        min_camera_samples=6,
+        max_camera_reprojection_rms_px=1.0,
+        min_ipd_samples=3,
+        max_ipd_sample_sigma_m=0.0025,
+    )
+    fx, fy, cx, cy = 1100.0, 1098.0, 959.5, 539.5
+    points = ((-0.3, -0.2), (-0.1, 0.25), (0.0, -0.1), (0.15, 0.1), (0.3, -0.25), (0.4, 0.3))
+    camera_ds = CameraCalibrationDatasetV1(
+        sensor_id="camera:bench-a",
+        sensor_generation="camera-runtime:g5",
+        calibration_generation="camera-cal:g9",
         width_px=1920,
         height_px=1080,
-        fx_px=1000.0,
-        fy_px=1001.0,
-        cx_px=959.5,
-        cy_px=539.5,
-        source=IntrinsicsSource.CALIBRATED,
-        calibration_ref="camera-cal:fixture:g7",
-        reprojection_rms_px=0.31,
-        pixels_are_undistorted=True,
+        coordinate_space=CoordinateSpace.UNDISTORTED_PINHOLE_PIXELS_V1,
+        samples=tuple(CameraCalibrationSampleV1(x, y, fx*x+cx, fy*y+cy) for x, y in points),
     )
-
-
-def measured_ipd():
-    return BinocularCalibrationV1(
-        ipd_m=0.063,
-        ipd_sigma_m=0.0004,
+    ipd_ds = IpdMeasurementDatasetV1(
+        sensor_id="ipd-tool:a",
+        sensor_generation="ipd-runtime:g4",
+        calibration_generation="ipd-cal:g4",
+        coordinate_space="HEAD_LOCAL_METERS_V1",
+        ipd_samples_m=(0.0628, 0.0630, 0.0632),
         midpoint_sigma_m=0.0003,
-        source=IpdSource.MEASURED_USER,
-        calibration_ref="ipd-cal:fixture:g4",
+    )
+    return (
+        CameraIntrinsicsV2(produce_camera_calibration_evidence(camera_ds, policy)),
+        BinocularCalibrationV2(produce_ipd_calibration_evidence(ipd_ds, policy)),
     )
 
 
-def temporal_coordinate(**updates):
-    payload = {
-        "eye_pose_receipt_sha256": "1" * 64,
-        "longitudinal_series_evidence_ref": "longitudinal:fixture",
-        "longitudinal_series_digest": "2" * 64,
-        "point_capture_time_ns": 200,
-        "series_start_time_ns": 100,
-        "series_end_time_ns": 300,
-        "point_vs_series_relation": "DURING",
-        "temporal_overlap": True,
-        "eye_k27_coordinate": 5,
-        "point_observation_was_gate_admissible": True,
-        "point_observation_current_now_proven": False,
-        "historical_series_current_now_proven": False,
-        "shared_current_world_proven": False,
-        "same_host_proven": False,
-        "temporal_overlap_proves_causality": False,
-        "operating_envelope_caused_eye_pose": False,
-        "eye_pose_caused_operating_envelope": False,
-        "calibrated_metric_eye_truth_proven": False,
-        "physical_steering_authority": False,
-        "performance_causality_proven": False,
-        "producer_authenticated": False,
-        "semantic_k27_authority_proven": False,
-        "effect_authority_proven": False,
-        "native_private_transformer_kv_accessed": False,
-        "gate10_promoted": False,
-        "schema": "AuraTemporalEvidenceScopeCoordinateV1",
-    }
-    payload.update(updates)
-    return {**payload, "coordinate_digest": _digest(payload)}
-
-
-def bind(**updates):
-    kwargs = dict(
-        intrinsics=calibrated_intrinsics(),
-        binocular=measured_ipd(),
-        temporal_coordinate=temporal_coordinate(),
-        sensor_instance="camera:bench-a",
-        sensor_runtime_generation="sensor-runtime:g5",
-        calibration_generation="calibration:g9",
-        calibration_observed_at_ns=150,
-        max_calibration_age_ns=100,
-        parent_artifact_ids=EXACT_PARENT_IDS,
+def temporal():
+    return portable_temporal_evidence_scope_receipt(
+        eye_pose_receipt=eye_receipt(1_788_156_600_000_000_000),
+        longitudinal_series=series(),
     )
-    kwargs.update(updates)
-    return bind_calibration_temporal_scope(**kwargs)
 
 
-class TestCalibrationTemporalScope(unittest.TestCase):
-    def test_happy_path_is_declared_scope_not_current_truth(self):
-        receipt = bind()
-        self.assertTrue(receipt.declared_scope_admissible)
-        self.assertTrue(receipt.metric_geometry_parent_eligible)
-        self.assertEqual(receipt.calibration_age_ns, 50)
-        for name in (
-            "calibration_current_now_proven",
-            "calibration_accuracy_at_use_time_proven",
-            "sensor_matches_original_calibration_proven",
-            "unchanged_physical_mount_proven",
-            "same_physical_world_proven",
-            "physical_gaze_accuracy_proven",
-            "physical_display_effect_authority",
-            "producer_authenticated",
-            "semantic_k27_authority",
-            "native_private_transformer_kv_accessed",
-            "gate10_promoted",
-        ):
-            self.assertFalse(getattr(receipt, name))
+def rehash(value):
+    payload = {k: v for k, v in value.items() if k != "coordinate_digest"}
+    value["coordinate_digest"] = hashlib.sha256(
+        json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).encode()
+    ).hexdigest()
+    return value
 
-    def test_population_ipd_cannot_enter_metric_scope(self):
-        with self.assertRaises(ValueError):
-            bind(binocular=assumed_population_ipd())
 
-    def test_nominal_fov_cannot_enter_metric_scope(self):
-        nominal = nominal_intrinsics_from_horizontal_fov(width_px=1920, height_px=1080, horizontal_fov_deg=90.0)
-        with self.assertRaises(ValueError):
-            bind(intrinsics=nominal)
-
-    def test_future_calibration_rejected(self):
-        with self.assertRaises(ValueError):
-            bind(calibration_observed_at_ns=201)
-
-    def test_expired_declared_scope_rejected(self):
-        with self.assertRaises(ValueError):
-            bind(calibration_observed_at_ns=99, max_calibration_age_ns=100)
-
-    def test_incomplete_parent_temporal_schema_rejected(self):
-        value = temporal_coordinate()
-        value.pop("same_host_proven")
-        unsigned = dict(value)
-        unsigned.pop("coordinate_digest")
-        value["coordinate_digest"] = _digest(unsigned)
-        self.assertFalse(verify_parent_temporal_coordinate(value))
-        with self.assertRaises(ValueError):
-            bind(temporal_coordinate=value)
-
-    def test_parent_temporal_tamper_rejected(self):
-        value = temporal_coordinate()
-        value["point_capture_time_ns"] = 201
-        self.assertFalse(verify_parent_temporal_coordinate(value))
-        with self.assertRaises(ValueError):
-            bind(temporal_coordinate=value)
-
-    def test_exact_two_parent_identity_required(self):
-        with self.assertRaises(ValueError):
-            bind(parent_artifact_ids=(EXACT_PARENT_IDS[0], EXACT_PARENT_IDS[0]))
-        with self.assertRaises(ValueError):
-            bind(parent_artifact_ids=(EXACT_PARENT_IDS[0], "PR999:foreign"))
-
-    def test_sensor_generation_change_rebinds_receipt_without_proving_match(self):
-        a = portable_calibration_temporal_scope_receipt(
-            intrinsics=calibrated_intrinsics(), binocular=measured_ipd(), temporal_coordinate=temporal_coordinate(),
-            sensor_instance="camera:bench-a", sensor_runtime_generation="sensor-runtime:g5",
-            calibration_generation="calibration:g9", calibration_observed_at_ns=150,
-            max_calibration_age_ns=100, parent_artifact_ids=EXACT_PARENT_IDS,
+class TestCalibrationTemporalScopeV2(unittest.TestCase):
+    def test_current_portable_temporal_parent_preserves_hold(self):
+        intrinsics, binocular = calibrated_pair()
+        t = temporal()
+        out = bind_calibration_temporal_scope(
+            intrinsics=intrinsics,
+            binocular=binocular,
+            temporal_coordinate=t,
+            declared_calibration_time_ns=t["point_capture_time_ns"] - 50,
+            max_declared_calibration_age_ns=100,
         )
-        b = portable_calibration_temporal_scope_receipt(
-            intrinsics=calibrated_intrinsics(), binocular=measured_ipd(), temporal_coordinate=temporal_coordinate(),
-            sensor_instance="camera:bench-a", sensor_runtime_generation="sensor-runtime:g6",
-            calibration_generation="calibration:g9", calibration_observed_at_ns=150,
-            max_calibration_age_ns=100, parent_artifact_ids=EXACT_PARENT_IDS,
-        )
-        self.assertNotEqual(a["receipt_digest"], b["receipt_digest"])
-        self.assertFalse(a["sensor_matches_original_calibration_proven"])
-        self.assertFalse(b["sensor_matches_original_calibration_proven"])
+        self.assertTrue(out.software_scope_candidate)
+        self.assertFalse(out.point_temporal_admissible)
+        self.assertFalse(out.declared_scope_admissible)
+        self.assertEqual("POINT_EVIDENCE_NOT_AUTHENTICATED", out.hold_reason)
+        self.assertTrue(out.calibration_producer_traversed)
+        self.assertTrue(out.ipd_producer_traversed)
+        self.assertFalse(out.physical_use_admissible)
+        self.assertFalse(out.physical_calibration_producer_authenticated)
 
+    def test_sensor_and_generation_identity_are_derived_from_parent_evidence(self):
+        intrinsics, binocular = calibrated_pair()
+        t = temporal()
+        out = bind_calibration_temporal_scope(
+            intrinsics=intrinsics,
+            binocular=binocular,
+            temporal_coordinate=t,
+            declared_calibration_time_ns=t["point_capture_time_ns"] - 10,
+            max_declared_calibration_age_ns=100,
+        )
+        self.assertEqual("camera:bench-a", out.camera_sensor_id)
+        self.assertEqual("camera-runtime:g5", out.camera_sensor_generation)
+        self.assertEqual("camera-cal:g9", out.camera_calibration_generation)
+        self.assertEqual("ipd-tool:a", out.ipd_sensor_id)
+        self.assertEqual("ipd-runtime:g4", out.ipd_sensor_generation)
+        self.assertEqual("ipd-cal:g4", out.ipd_calibration_generation)
+
+    def test_freshly_rehashed_positive_temporal_parent_is_rejected(self):
+        intrinsics, binocular = calibrated_pair()
+        t = temporal()
+        t["point_observation_temporal_admissible"] = True
+        t["point_vs_series_relation"] = "DURING"
+        t["temporal_overlap"] = True
+        t["hold_reason"] = None
+        rehash(t)
+        self.assertFalse(verify_temporal_evidence_scope_coordinate(t))
+        with self.assertRaises(ValueError):
+            bind_calibration_temporal_scope(
+                intrinsics=intrinsics,
+                binocular=binocular,
+                temporal_coordinate=t,
+                declared_calibration_time_ns=100,
+                max_declared_calibration_age_ns=100,
+            )
+
+    def test_forged_camera_result_fields_fail_parent_producer_replay(self):
+        from dataclasses import replace
+        intrinsics, binocular = calibrated_pair()
+        forged = CameraIntrinsicsV2(replace(intrinsics.evidence, fx_px=intrinsics.evidence.fx_px + 10.0))
+        t = temporal()
+        with self.assertRaises(ValueError):
+            bind_calibration_temporal_scope(
+                intrinsics=forged,
+                binocular=binocular,
+                temporal_coordinate=t,
+                declared_calibration_time_ns=t["point_capture_time_ns"] - 50,
+                max_declared_calibration_age_ns=100,
+            )
+
+    def test_declared_calibration_time_is_not_authenticated(self):
+        intrinsics, binocular = calibrated_pair()
+        t = temporal()
+        out = bind_calibration_temporal_scope(
+            intrinsics=intrinsics,
+            binocular=binocular,
+            temporal_coordinate=t,
+            declared_calibration_time_ns=t["point_capture_time_ns"] - 50,
+            max_declared_calibration_age_ns=100,
+        )
+        self.assertFalse(out.calibration_time_authenticated)
+        self.assertFalse(out.calibration_current_now_proven)
+        self.assertFalse(out.calibration_accuracy_at_use_time_proven)
+
+    def test_future_and_expired_declared_scope_fail_closed(self):
+        intrinsics, binocular = calibrated_pair()
+        t = temporal()
+        use = t["point_capture_time_ns"]
+        with self.assertRaises(ValueError):
+            bind_calibration_temporal_scope(
+                intrinsics=intrinsics, binocular=binocular, temporal_coordinate=t,
+                declared_calibration_time_ns=use + 1, max_declared_calibration_age_ns=100,
+            )
+        with self.assertRaises(ValueError):
+            bind_calibration_temporal_scope(
+                intrinsics=intrinsics, binocular=binocular, temporal_coordinate=t,
+                declared_calibration_time_ns=use - 101, max_declared_calibration_age_ns=100,
+            )
+
+    def test_public_boundary_has_no_caller_sensor_or_generation_override(self):
+        self.assertEqual(
+            (
+                "intrinsics",
+                "binocular",
+                "temporal_coordinate",
+                "declared_calibration_time_ns",
+                "max_declared_calibration_age_ns",
+                "parent_artifact_ids",
+            ),
+            public_inputs(),
+        )
+
+    def test_portable_receipt_is_deterministic_and_exact_parent_bound(self):
+        intrinsics, binocular = calibrated_pair()
+        t = temporal()
+        kwargs = dict(
+            intrinsics=intrinsics,
+            binocular=binocular,
+            temporal_coordinate=t,
+            declared_calibration_time_ns=t["point_capture_time_ns"] - 50,
+            max_declared_calibration_age_ns=100,
+            parent_artifact_ids=EXACT_PARENT_IDS,
+        )
+        a = portable_calibration_temporal_scope_receipt(**kwargs)
+        b = portable_calibration_temporal_scope_receipt(**kwargs)
+        self.assertEqual(a["receipt_digest"], b["receipt_digest"])
+        self.assertEqual(EXACT_PARENT_IDS, tuple(a["parent_artifact_ids"]))
 
 if __name__ == "__main__":
     unittest.main()
