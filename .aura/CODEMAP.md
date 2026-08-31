@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1738
-- **total_bytes**: 27238561
-- **text_tokens_est**: 6800023
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 19, 'operator_script': 9, 'python_module': 1054, 'schema_or_lexicon': 304, 'support_file': 49}
+- **file_count**: 1740
+- **total_bytes**: 27248430
+- **text_tokens_est**: 6802491
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 239, 'native_accelerator': 19, 'operator_script': 9, 'python_module': 1055, 'schema_or_lexicon': 305, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1738,
+  "repo_file_count": 1740,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -169,6 +169,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-workcapsule-canonical-temporal-lifecycle-equivalence.yml",
     ".github/workflows/aura-workcapsule-causal-artifact-qualified-host-envelope.yml",
     ".github/workflows/aura-workcapsule-causal-envelope-raw-slice-noninterchangeability.yml",
+    ".github/workflows/aura-workcapsule-corroboration-preserves-causal-envelope-class.yml",
     ".github/workflows/aura-workcapsule-current-recursive-target-raw-slice.yml",
     ".github/workflows/aura-workcapsule-observation-bound-closure.yml",
     ".github/workflows/aura-workcapsule-observation-bound-exact-closure.yml",
@@ -1712,6 +1713,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workcapsule_causal_artifact_qualified_host_envelope.py",
     "tests/test_aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py",
     "tests/test_aura_workcapsule_context_binding.py",
+    "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
     "tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py",
     "tests/test_aura_workcapsule_live_causal_corroboration.py",
     "tests/test_aura_workcapsule_observation_bound_closure.py",
@@ -1878,16 +1880,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1738,
-  "bytes": 27238561,
-  "tokens_est": 6800023,
+  "files": 1740,
+  "bytes": 27248430,
+  "tokens_est": 6802491,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 239,
     "native_accelerator": 19,
     "operator_script": 9,
-    "python_module": 1054,
-    "schema_or_lexicon": 304,
+    "python_module": 1055,
+    "schema_or_lexicon": 305,
     "support_file": 49
   }
 }

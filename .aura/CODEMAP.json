@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788156041,
+  "generated_at_unix": 1788156279,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1738,
+    "repo_file_count": 1740,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -151,6 +151,7 @@
       ".github/workflows/aura-workcapsule-canonical-temporal-lifecycle-equivalence.yml",
       ".github/workflows/aura-workcapsule-causal-artifact-qualified-host-envelope.yml",
       ".github/workflows/aura-workcapsule-causal-envelope-raw-slice-noninterchangeability.yml",
+      ".github/workflows/aura-workcapsule-corroboration-preserves-causal-envelope-class.yml",
       ".github/workflows/aura-workcapsule-current-recursive-target-raw-slice.yml",
       ".github/workflows/aura-workcapsule-observation-bound-closure.yml",
       ".github/workflows/aura-workcapsule-observation-bound-exact-closure.yml",
@@ -1694,6 +1695,7 @@
       "tests/test_aura_workcapsule_causal_artifact_qualified_host_envelope.py",
       "tests/test_aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py",
       "tests/test_aura_workcapsule_context_binding.py",
+      "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
       "tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py",
       "tests/test_aura_workcapsule_live_causal_corroboration.py",
       "tests/test_aura_workcapsule_observation_bound_closure.py",
@@ -1854,16 +1856,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1738,
-      "bytes": 27238561,
-      "tokens_est": 6800023,
+      "files": 1740,
+      "bytes": 27248430,
+      "tokens_est": 6802491,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 239,
         "native_accelerator": 19,
         "operator_script": 9,
-        "python_module": 1054,
-        "schema_or_lexicon": 304,
+        "python_module": 1055,
+        "schema_or_lexicon": 305,
         "support_file": 49
       }
     },
@@ -159278,6 +159280,96 @@
         "signature_hash": "f03c0f4a71082844"
       }
     ],
+    "CorroborationPreservesCausalEnvelopeClassTests": [
+      {
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "kind": "class",
+        "line": 21,
+        "end_line": 116,
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#class:CorroborationPreservesCausalEnvelopeClassTests:dc75f58a1f6ad785",
+        "signature_hash": "faeba241415e9e3b"
+      }
+    ],
+    "CorroborationPreservesCausalEnvelopeClassTests.kwargs": [
+      {
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "kind": "method",
+        "line": 22,
+        "end_line": 28,
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.kwargs:1832cdaa24850099",
+        "signature_hash": "a25bbc6b6239aa39"
+      }
+    ],
+    "CorroborationPreservesCausalEnvelopeClassTests.test_exact_parent_relations_preserve_causal_envelope_class": [
+      {
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "kind": "method",
+        "line": 30,
+        "end_line": 46,
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_exact_parent_relations_preserve_causal_envelope_class:3b52812fbbcedbb2",
+        "signature_hash": "ce7cb032495cbd38"
+      }
+    ],
+    "CorroborationPreservesCausalEnvelopeClassTests.test_each_corroborating_proof_object_is_not_causal_host_envelope": [
+      {
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 54,
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_each_corroborating_proof_object_is_not_causal_host_envelope:49ba75975dd76785",
+        "signature_hash": "70260da99a0fa1ab"
+      }
+    ],
+    "CorroborationPreservesCausalEnvelopeClassTests.test_pr577_world_drift_fails_before_type_preservation_credit": [
+      {
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 60,
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_pr577_world_drift_fails_before_type_preservation_credit:c2e3dd25cedf25ba",
+        "signature_hash": "c390319865cdc87f"
+      }
+    ],
+    "CorroborationPreservesCausalEnvelopeClassTests.test_pr583_parent_ceiling_widening_fails_before_composition": [
+      {
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 71,
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_pr583_parent_ceiling_widening_fails_before_composition:cda358fad7f2a26a",
+        "signature_hash": "5aac8bfff6532dc4"
+      }
+    ],
+    "CorroborationPreservesCausalEnvelopeClassTests.test_pr577_authority_widening_fails_before_composition": [
+      {
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 79,
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_pr577_authority_widening_fails_before_composition:9650b4d31285849c",
+        "signature_hash": "79e63312b446cc73"
+      }
+    ],
+    "CorroborationPreservesCausalEnvelopeClassTests.test_public_boundary_is_exactly_four_closed_parent_receipts": [
+      {
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "kind": "method",
+        "line": 81,
+        "end_line": 105,
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_public_boundary_is_exactly_four_closed_parent_receipts:74189f03cc14d695",
+        "signature_hash": "b85ab7aab3eaa263"
+      }
+    ],
+    "CorroborationPreservesCausalEnvelopeClassTests.test_admission_is_deterministic": [
+      {
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 116,
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_admission_is_deterministic:3ad1d66e4540a8a2",
+        "signature_hash": "e0a17cfd167757e0"
+      }
+    ],
     "WorkCapsuleCurrentRecursiveTargetRawSliceBindingTests": [
       {
         "file": "tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py",
@@ -175035,6 +175127,53 @@
         -0.205855,
         -0.282571,
         -0.144482
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-workcapsule-corroboration-preserves-causal-envelope-class.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 4954,
+      "lines": 91,
+      "tokens_est": 1239,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5e2946334fa47b97",
+      "vector": [
+        0.141614,
+        -0.146455,
+        -0.12951,
+        -0.020576,
+        0.306224,
+        -0.131931,
+        0.294121,
+        0.26023,
+        -0.049625,
+        -0.255389,
+        0.022997,
+        0.112565,
+        0.059308,
+        0.042363,
+        0.035101,
+        -0.236023,
+        0.250547,
+        -0.066571,
+        -0.219078,
+        0.124668,
+        -0.286859,
+        -0.006052,
+        -0.279596,
+        0.219078,
+        0.035101,
+        0.209395,
+        -0.19487,
+        0.243285,
+        -0.052046,
+        -0.018156,
+        0.190029,
+        0.110144
       ]
     },
     {
@@ -272357,6 +272496,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4915,
+      "lines": 121,
+      "tokens_est": 1229,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0308d4dfb30b2668",
+      "vector": [
+        0.27116,
+        -0.058485,
+        -0.10102,
+        0.045725,
+        -0.145682,
+        0.252019,
+        0.262653,
+        0.215865,
+        -0.135048,
+        0.252019,
+        0.113781,
+        0.143555,
+        0.235005,
+        -0.198851,
+        0.015951,
+        -0.098894,
+        -0.113781,
+        0.256273,
+        -0.249893,
+        -0.064866,
+        -0.237132,
+        0.198851,
+        0.118034,
+        0.054232,
+        -0.079753,
+        -0.149936,
+        -0.152062,
+        -0.08826,
+        0.175456,
+        -0.262653,
+        -0.252019,
+        0.096767
+      ]
+    },
+    {
       "path": "tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py",
       "role": "python_module",
       "binary": false,
@@ -298047,16 +298233,16 @@
     }
   },
   "summary": {
-    "file_count": 1738,
-    "total_bytes": 27238561,
-    "text_tokens_est": 6800023,
+    "file_count": 1740,
+    "total_bytes": 27248430,
+    "text_tokens_est": 6802491,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 239,
       "native_accelerator": 19,
       "operator_script": 9,
-      "python_module": 1054,
-      "schema_or_lexicon": 304,
+      "python_module": 1055,
+      "schema_or_lexicon": 305,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -298217,6 +298403,7 @@
       ".github/workflows/aura-workcapsule-canonical-temporal-lifecycle-equivalence.yml",
       ".github/workflows/aura-workcapsule-causal-artifact-qualified-host-envelope.yml",
       ".github/workflows/aura-workcapsule-causal-envelope-raw-slice-noninterchangeability.yml",
+      ".github/workflows/aura-workcapsule-corroboration-preserves-causal-envelope-class.yml",
       ".github/workflows/aura-workcapsule-current-recursive-target-raw-slice.yml",
       ".github/workflows/aura-workcapsule-observation-bound-closure.yml",
       ".github/workflows/aura-workcapsule-observation-bound-exact-closure.yml",
@@ -299760,6 +299947,7 @@
       "tests/test_aura_workcapsule_causal_artifact_qualified_host_envelope.py",
       "tests/test_aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py",
       "tests/test_aura_workcapsule_context_binding.py",
+      "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
       "tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py",
       "tests/test_aura_workcapsule_live_causal_corroboration.py",
       "tests/test_aura_workcapsule_observation_bound_closure.py",
@@ -459004,6 +459192,96 @@
         "file_digest8": "d9d4e992ea8d217b"
       },
       {
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#class:CorroborationPreservesCausalEnvelopeClassTests:dc75f58a1f6ad785",
+        "name": "CorroborationPreservesCausalEnvelopeClassTests",
+        "kind": "class",
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "line": 21,
+        "end_line": 116,
+        "signature_hash": "faeba241415e9e3b",
+        "file_digest8": "0308d4dfb30b2668"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.kwargs:1832cdaa24850099",
+        "name": "CorroborationPreservesCausalEnvelopeClassTests.kwargs",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "line": 22,
+        "end_line": 28,
+        "signature_hash": "a25bbc6b6239aa39",
+        "file_digest8": "0308d4dfb30b2668"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_admission_is_deterministic:3ad1d66e4540a8a2",
+        "name": "CorroborationPreservesCausalEnvelopeClassTests.test_admission_is_deterministic",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "line": 107,
+        "end_line": 116,
+        "signature_hash": "e0a17cfd167757e0",
+        "file_digest8": "0308d4dfb30b2668"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_each_corroborating_proof_object_is_not_causal_host_envelope:49ba75975dd76785",
+        "name": "CorroborationPreservesCausalEnvelopeClassTests.test_each_corroborating_proof_object_is_not_causal_host_envelope",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "line": 48,
+        "end_line": 54,
+        "signature_hash": "70260da99a0fa1ab",
+        "file_digest8": "0308d4dfb30b2668"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_exact_parent_relations_preserve_causal_envelope_class:3b52812fbbcedbb2",
+        "name": "CorroborationPreservesCausalEnvelopeClassTests.test_exact_parent_relations_preserve_causal_envelope_class",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "line": 30,
+        "end_line": 46,
+        "signature_hash": "ce7cb032495cbd38",
+        "file_digest8": "0308d4dfb30b2668"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_pr577_authority_widening_fails_before_composition:9650b4d31285849c",
+        "name": "CorroborationPreservesCausalEnvelopeClassTests.test_pr577_authority_widening_fails_before_composition",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "line": 73,
+        "end_line": 79,
+        "signature_hash": "79e63312b446cc73",
+        "file_digest8": "0308d4dfb30b2668"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_pr577_world_drift_fails_before_type_preservation_credit:c2e3dd25cedf25ba",
+        "name": "CorroborationPreservesCausalEnvelopeClassTests.test_pr577_world_drift_fails_before_type_preservation_credit",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "line": 56,
+        "end_line": 60,
+        "signature_hash": "c390319865cdc87f",
+        "file_digest8": "0308d4dfb30b2668"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_pr583_parent_ceiling_widening_fails_before_composition:cda358fad7f2a26a",
+        "name": "CorroborationPreservesCausalEnvelopeClassTests.test_pr583_parent_ceiling_widening_fails_before_composition",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "line": 62,
+        "end_line": 71,
+        "signature_hash": "5aac8bfff6532dc4",
+        "file_digest8": "0308d4dfb30b2668"
+      },
+      {
+        "semantic_id": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py#method:CorroborationPreservesCausalEnvelopeClassTests.test_public_boundary_is_exactly_four_closed_parent_receipts:74189f03cc14d695",
+        "name": "CorroborationPreservesCausalEnvelopeClassTests.test_public_boundary_is_exactly_four_closed_parent_receipts",
+        "kind": "method",
+        "file": "tests/test_aura_workcapsule_corroboration_preserves_causal_envelope_class.py",
+        "line": 81,
+        "end_line": 105,
+        "signature_hash": "b85ab7aab3eaa263",
+        "file_digest8": "0308d4dfb30b2668"
+      },
+      {
         "semantic_id": "tests/test_aura_workcapsule_current_recursive_target_raw_slice_binding.py#class:WorkCapsuleCurrentRecursiveTargetRawSliceBindingTests:6eea453e48a5871e",
         "name": "WorkCapsuleCurrentRecursiveTargetRawSliceBindingTests",
         "kind": "class",
@@ -464774,7 +465052,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "9f968c114e3ffda10941b415938df0f5",
-    "payload_hash": "64464b00eafbb40ce77abf80b7a18808"
+    "record_fingerprint": "1c53e534bf166c6c29dee3cde8997cb1",
+    "payload_hash": "932d9ec0a06347cf6dcc96578f488407"
   }
 }
