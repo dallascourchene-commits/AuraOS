@@ -1,8 +1,8 @@
 mod common;
 
 use aura_k27_astge_post_edit_canonical_projection::{
-    CanonicalDefinitionTargetProjectionV1, CANONICALIZATION_PROFILE_V1, PROJECTION_SCHEMA_V1,
-    ProjectionErrorV1, project_canonical_definition_target, verify_projection,
+    project_canonical_definition_target, verify_projection, CanonicalDefinitionTargetProjectionV1,
+    ProjectionErrorV1, CANONICALIZATION_PROFILE_V1, PROJECTION_SCHEMA_V1,
 };
 use common::{owner_receipt, setup};
 use serde_json::Value;
@@ -52,7 +52,9 @@ fn owner_relation_and_authority_substitutions_fail_closed() {
     );
 
     let mut semantic_local_id = receipt.clone();
-    semantic_local_id.relation.local_scope_id_is_semantic_identity = true;
+    semantic_local_id
+        .relation
+        .local_scope_id_is_semantic_identity = true;
     assert_eq!(
         project_canonical_definition_target(&semantic_local_id),
         Err(ProjectionErrorV1::LocalScopeSemanticIdentity)
@@ -75,7 +77,10 @@ fn payload_tamper_and_schema_widening_are_detected() {
 
     let mut tampered = projection.clone();
     tampered.payload.definition_name.push_str("_tampered");
-    assert_eq!(verify_projection(&tampered), Err(ProjectionErrorV1::DigestMismatch));
+    assert_eq!(
+        verify_projection(&tampered),
+        Err(ProjectionErrorV1::DigestMismatch)
+    );
 
     let mut value: Value = serde_json::to_value(&projection).unwrap();
     value
