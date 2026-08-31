@@ -13,17 +13,15 @@ use aura_k27_astge_current_syntax::{
     CurrentSyntaxHydrationError, CurrentSyntaxHydrationIdentityV1, admit_current_syntax_hydration,
     canonical_source_generation_ref,
 };
-use aura_k27_astge_generation_domain::{
-    GenerationCoordinateV1, SourceGenerationV1,
-};
+use aura_k27_astge_generation_domain::{GenerationCoordinateV1, SourceGenerationV1};
 use aura_k27_astge_profiled_scopes::{
     PYTHON_GRAMMAR_ABI_VERSION, PYTHON_GRAMMAR_NAME, PYTHON_GRAMMAR_VERSION,
     PYTHON_NAMED_PROFILE_REF, PYTHON_PARSER_BINDING_NAME, PYTHON_PARSER_BINDING_VERSION,
     ProfiledPythonScopesV1, ProfiledScopeError, build_profiled_python_scopes,
 };
 use aura_k27_astge_syntax_profile::{
-    NodeSelectionPolicyV1, NormalizationProfileV1, ParserGrammarBindingV1,
-    SyntaxEdgeProjectionV1, SyntaxGraphIdentityV1, SyntaxNodeProjectionV1,
+    NodeSelectionPolicyV1, NormalizationProfileV1, ParserGrammarBindingV1, SyntaxEdgeProjectionV1,
+    SyntaxGraphIdentityV1, SyntaxNodeProjectionV1,
 };
 use std::collections::HashMap;
 use std::error::Error;
@@ -225,8 +223,8 @@ fn project_named_preorder(
                 child_index,
             }
         })?;
-        let child_local_node_id =
-            u64::try_from(nodes.len()).map_err(|_| CurrentProfiledScopeError::SyntaxOrdinalOverflow)?;
+        let child_local_node_id = u64::try_from(nodes.len())
+            .map_err(|_| CurrentProfiledScopeError::SyntaxOrdinalOverflow)?;
         edges.push(SyntaxEdgeProjectionV1 {
             parent_local_node_id: local_node_id,
             child_local_node_id,
