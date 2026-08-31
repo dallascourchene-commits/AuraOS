@@ -79,7 +79,7 @@ class WorkCapsuleLiveCausalArtifactCausalHostEnvelopeTests(
         )
         return _seal_causal(receipt)
 
-    def child_kwargs(self, *, host=None) -> dict:
+    def o42_kwargs(self, *, host=None) -> dict:
         kwargs = self.o38_kwargs()
         kwargs["causal_host_admission_receipt"] = (
             host if host is not None else self.causal_host_receipt()
@@ -87,7 +87,7 @@ class WorkCapsuleLiveCausalArtifactCausalHostEnvelopeTests(
         return kwargs
 
     def test_exact_causal_envelope_binds_to_exact_live_artifact_and_world(self) -> None:
-        kwargs = self.child_kwargs()
+        kwargs = self.o42_kwargs()
         self.assertEqual([], verify_live_causal_artifact_causal_host_envelope(**kwargs))
         out = admit_live_causal_artifact_causal_host_envelope(**kwargs)
         self.assertTrue(out["live_causal_artifact_reproved"])
@@ -108,7 +108,7 @@ class WorkCapsuleLiveCausalArtifactCausalHostEnvelopeTests(
         _seal_causal(host)
         self.assertEqual([], verify_causal_host_admission_envelope(host))
         violations = verify_live_causal_artifact_causal_host_envelope(
-            **self.child_kwargs(host=host)
+            **self.o42_kwargs(host=host)
         )
         self.assertIn(CAUSAL_CLOSURE_IDENTITY_MISMATCH, violations)
 
@@ -121,16 +121,16 @@ class WorkCapsuleLiveCausalArtifactCausalHostEnvelopeTests(
         self.assertNotEqual(old_ref, live_ref)
         host = self.causal_host_receipt(target_ref=old_ref)
         violations = verify_live_causal_artifact_causal_host_envelope(
-            **self.child_kwargs(host=host)
+            **self.o42_kwargs(host=host)
         )
         self.assertIn(f"{TARGET_REF_MISMATCH}:U_HEAD", violations)
 
     def test_artifact_ref_is_invariant_to_host_observation_state(self) -> None:
         partial = admit_live_causal_artifact_causal_host_envelope(
-            **self.child_kwargs(host=self.causal_host_receipt())
+            **self.o42_kwargs(host=self.causal_host_receipt())
         )
         complete = admit_live_causal_artifact_causal_host_envelope(
-            **self.child_kwargs(host=self.causal_host_receipt(all_pass=True))
+            **self.o42_kwargs(host=self.causal_host_receipt(all_pass=True))
         )
         self.assertNotEqual(
             partial["host_observation_set_complete"],
@@ -147,7 +147,7 @@ class WorkCapsuleLiveCausalArtifactCausalHostEnvelopeTests(
         host["unknown_mask"] = 0
         _seal_causal(host)
         violations = verify_live_causal_artifact_causal_host_envelope(
-            **self.child_kwargs(host=host)
+            **self.o42_kwargs(host=host)
         )
         self.assertTrue(
             any(item.startswith("CAUSAL_HOST_ENVELOPE_") for item in violations)
@@ -155,7 +155,7 @@ class WorkCapsuleLiveCausalArtifactCausalHostEnvelopeTests(
 
     def test_all_pass_for_live_artifact_remains_nonauthorizing(self) -> None:
         out = admit_live_causal_artifact_causal_host_envelope(
-            **self.child_kwargs(host=self.causal_host_receipt(all_pass=True))
+            **self.o42_kwargs(host=self.causal_host_receipt(all_pass=True))
         )
         self.assertTrue(out["all_host_gates_pass_for_live_artifact"])
         self.assertTrue(out["host_observation_set_complete"])
