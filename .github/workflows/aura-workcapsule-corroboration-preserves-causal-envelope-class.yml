@@ -1,0 +1,90 @@
+name: Aura WorkCapsule Corroboration Preserves Causal Envelope Class
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-corroboration-causal-envelope-class:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact pull-request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Prove exact PR583 x PR577 convergence
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git show -s --format=%P 623c66356dd6b68964801dba5c0653e65da9cc01)" = "3eab7c21cb242643d09eb5fb86324d24aaee1c71 1dd21e248d0925297d52a8067f1ded35fbba9cbf"
+          git merge-base --is-ancestor 623c66356dd6b68964801dba5c0653e65da9cc01 HEAD
+          test "$(git rev-parse 3eab7c21cb242643d09eb5fb86324d24aaee1c71:scripts/aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py)" = "735cc981c1e87802e7a0a3971c7b248dcdfe9fb4"
+          test "$(git rev-parse 3eab7c21cb242643d09eb5fb86324d24aaee1c71:tests/test_aura_workcapsule_causal_envelope_raw_slice_noninterchangeability.py)" = "12edb5da22e8e36cd5afd1dc0f39b0894a7ff050"
+          test "$(git rev-parse 1dd21e248d0925297d52a8067f1ded35fbba9cbf:scripts/aura_workcapsule_live_causal_corroboration.py)" = "ea56321ab6ebd06a74a22d8ee4736d362a561b16"
+          test "$(git rev-parse 1dd21e248d0925297d52a8067f1ded35fbba9cbf:tests/test_aura_workcapsule_live_causal_corroboration.py)" = "e28d017a1706419e7203d5c4e7056a732fa9fb1c"
+
+      - name: Re-prove exact PR583 causal-envelope boundary
+        run: python -m unittest tests.test_aura_workcapsule_causal_envelope_raw_slice_noninterchangeability
+
+      - name: Re-prove exact PR577 corroboration owner
+        run: python -m unittest tests.test_aura_workcapsule_live_causal_corroboration
+
+      - name: Prove O49 corroboration class adversarials
+        run: python -m unittest tests.test_aura_workcapsule_corroboration_preserves_causal_envelope_class
+
+      - name: Prove fixed public boundary and owner reuse
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import inspect
+          from scripts import aura_workcapsule_corroboration_preserves_causal_envelope_class as m
+          expected = {
+              'causal_artifact_host_receipt',
+              'causal_raw_slice_host_separation_receipt',
+              'pr568_receipt',
+              'pr572_receipt',
+          }
+          assert set(inspect.signature(m.verify_corroboration_preserves_causal_envelope_class).parameters) == expected
+          assert set(inspect.signature(m.admit_corroboration_preserves_causal_envelope_class).parameters) == {'kwargs'}
+          forbidden = {'resolver','host_rank','evidence_class_override','corroboration_override','semantic_truth','effect_authority'}
+          assert not (expected & forbidden)
+          PY
+
+      - name: Execute exact parent fixtures through O49
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from scripts.aura_workcapsule_corroboration_preserves_causal_envelope_class import admit_corroboration_preserves_causal_envelope_class
+          from tests.test_aura_workcapsule_causal_envelope_raw_slice_noninterchangeability import pr573_receipt, pr574_receipt
+          from tests.test_aura_workcapsule_live_causal_corroboration import pr568_receipt, pr572_receipt
+          out = admit_corroboration_preserves_causal_envelope_class(
+              causal_artifact_host_receipt=pr573_receipt(),
+              causal_raw_slice_host_separation_receipt=pr574_receipt(),
+              pr568_receipt=pr568_receipt(),
+              pr572_receipt=pr572_receipt(),
+          )
+          assert out['pr583_noninterchangeability_owner_reproved'] is True
+          assert out['pr577_corroboration_owner_reproved'] is True
+          assert out['proof_artifact_refs_distinct'] is True
+          assert out['pr568_proof_is_causal_host_envelope'] is False
+          assert out['pr572_proof_is_causal_host_envelope'] is False
+          assert out['corroboration_converts_proof_to_causal_host_envelope'] is False
+          assert out['causal_raw_slice_promoted_to_host_rank'] is False
+          assert out['producer_authenticated'] is False
+          assert out['semantic_truth_proven'] is False
+          assert out['host_observation_authority_proven'] is False
+          assert out['effect_authority_proven'] is False
+          assert not any(out['authority'].values())
+          PY
+
+      - name: Emit consequence ceiling
+        run: |
+          echo 'Corroboration != causal-host-envelope type conversion.'
+          echo 'No producer authentication, semantic truth, resolver trust, host observation authority, continuation, effect authority, semantic K27 authority, native/private transformer KV access, merge, promotion, provider/public/human authority, or Gate-10 action is established.'
