@@ -1,0 +1,94 @@
+name: Aura GLM53 G1 Prefetch Abstention Addendum
+
+on:
+  pull_request:
+    paths:
+      - 'tools/awj032/glm53_router_separated_prefetch.py'
+      - 'tools/awj032/test_glm53_router_separated_prefetch.py'
+      - 'tools/awj032/test_glm53_router_separated_prefetch_abstention.py'
+      - '.github/workflows/aura-glm53-g1-prefetch-abstention-addendum.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  prefetch-abstention-addendum:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Exact authenticated checkout
+        uses: actions/checkout@v4
+      - name: Compile canonical and addendum surfaces
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/awj032/glm53_router_separated_prefetch.py \
+            tools/awj032/test_glm53_router_separated_prefetch.py \
+            tools/awj032/test_glm53_router_separated_prefetch_abstention.py
+      - name: Reexecute canonical G1 adversarial contract
+        run: python -m unittest tools.awj032.test_glm53_router_separated_prefetch -v
+      - name: Execute abstention addendum adversarial contract
+        run: python -m unittest tools.awj032.test_glm53_router_separated_prefetch_abstention -v
+      - name: Prove abstention and claim ceiling
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from tools.awj032.glm53_router_separated_prefetch import (
+              LAWS, NATIVE_ROUTE_SCHEMA, PREFETCH_SCHEMA,
+              NativeRoute, PrefetchPrediction, build_prefetch_trace,
+          )
+          binding = 'binding:abstention-proof'
+          prediction = PrefetchPrediction(
+              schema=PREFETCH_SCHEMA,
+              predictor_generation='predictor:abstain',
+              layer_id='layer:proof',
+              binding_digest=binding,
+              predicted_experts=(),
+          )
+          route = NativeRoute(
+              schema=NATIVE_ROUTE_SCHEMA,
+              router_generation='native:proof',
+              layer_id='layer:proof',
+              binding_digest=binding,
+              top_k=2,
+              selected_experts=(1, 3),
+          )
+          trace = build_prefetch_trace(
+              prediction=prediction,
+              native_route=route,
+              num_experts=8,
+              logical_bytes_by_expert={i: 100 for i in range(8)},
+          )
+          assert trace.predicted_experts == ()
+          assert trace.demand_misses == (1, 3)
+          assert trace.executed_experts == (1, 3)
+          assert trace.logical_prefetch_bytes == 0
+          assert trace.prediction_precision_numerator == 0
+          assert trace.prediction_precision_denominator == 0
+          assert trace.physical_io_attested is False
+          assert trace.physical_total_bytes is None
+          required = {
+              'PredictionAbstention!=RoutingFailure',
+              'EmptyTransferPlan!=EmptyExecutionPlan',
+              'NoPrefetchPrediction=>DemandLoadExactNativeRoute',
+              'PredictorMayAbstainNativeRouterMayNot',
+              'Abstention!=PhysicalIOSavingsProof',
+          }
+          assert required <= set(LAWS), required - set(LAWS)
+          for field in (
+              'routing_mutated_by_predictor',
+              'output_semantics_changed_by_prediction',
+              'g2_admitted',
+              'execution_authorized',
+              'provider_effect_authorized',
+              'native_private_transformer_kv_accessed',
+              'semantic_k27_authority_minted',
+              'gate10_promoted',
+              'merge_deploy_spend_public_financial_human_effect',
+          ):
+              assert getattr(trace, field) is False, field
+          print('PREFETCH_ABSTENTION_ADDENDUM=PASS')
+          print('NATIVE_ROUTE_REMAINS_AUTHORITATIVE=true')
+          print('PHYSICAL_IO_SAVINGS_CLAIMED=false')
+          PY
