@@ -29,8 +29,14 @@ jobs:
       PROV_SOURCE_BLOB: "98db548b6e8f7443b79d979eb0e177ac6aa68534"
       PROV_RUN: "33416248604"
       PROV_JOB: "99567478616"
+      C2_HANDOFF_HEAD: "24a5404ee3b987dee12192917e40b35d3a43e81c"
+      C2_HANDOFF_SOURCE_BLOB: "91da9f6f5c9c8175fbe123634e53e14bc9ba3cbe"
+      C2_HANDOFF_RUN: "33360061584"
+      LIFECYCLE_RETURN_HEAD: "aa3fcd9a4cefd18dbc991c3e8a450fcfbbb6726b"
+      LIFECYCLE_RETURN_SOURCE_BLOB: "8e57494c1c77eb41d6a402aa7dceb43121512863"
+      LIFECYCLE_RETURN_RUN: "33360529366"
     steps:
-      - name: Fetch exact candidate and terminal parents
+      - name: Fetch exact candidate, terminal parents and canonical return-path owners
         env:
           GH_TOKEN: ${{ github.token }}
           TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -38,36 +44,50 @@ jobs:
           set -euo pipefail
           git init .
           git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git fetch --no-tags origin "$TARGET_SHA" "$REUSE_HEAD" "$PROV_HEAD"
+          git fetch --no-tags origin "$TARGET_SHA" "$REUSE_HEAD" "$PROV_HEAD" "$C2_HANDOFF_HEAD" "$LIFECYCLE_RETURN_HEAD"
           git checkout --detach "$TARGET_SHA"
           test "$(git rev-parse HEAD)" = "$TARGET_SHA"
 
-      - name: Authenticate exact parent semantic blobs
+      - name: Authenticate exact parent and canonical owner semantic blobs
         run: |
           set -euo pipefail
           test "$(git rev-parse "$REUSE_HEAD:tools/aura_generation_bound_admission_reuse.py")" = "$REUSE_SOURCE_BLOB"
           test "$(git rev-parse "$REUSE_HEAD:tests/test_aura_generation_bound_admission_reuse.py")" = "$REUSE_TEST_BLOB"
           test "$(git rev-parse "$PROV_HEAD:tools/awj032/airllm_secure_fixture_observation_envelope.py")" = "$PROV_SOURCE_BLOB"
-          echo "G6_V2_EXACT_PARENT_BLOBS=true"
+          test "$(git rev-parse "$C2_HANDOFF_HEAD:tools/awj032/glm53_owner_host_c2_handoff.py")" = "$C2_HANDOFF_SOURCE_BLOB"
+          test "$(git rev-parse "$LIFECYCLE_RETURN_HEAD:tools/awj032/glm53_owner_host_lifecycle_return_packet.py")" = "$LIFECYCLE_RETURN_SOURCE_BLOB"
+          echo "G6_V2_EXACT_PARENT_AND_RETURN_OWNER_BLOBS=true"
 
-      - name: Revalidate terminal hosted parent proofs
+      - name: Revalidate terminal hosted parent proofs and canonical downstream owners
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json,os,urllib.request
+          import json, os, urllib.request
           repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']
           headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'}
-          expected=((int(os.environ['REUSE_RUN']),int(os.environ['REUSE_JOB']),os.environ['REUSE_HEAD'],'Aura Generation Bound Admission Reuse Proof'),(int(os.environ['PROV_RUN']),int(os.environ['PROV_JOB']),os.environ['PROV_HEAD'],'AWJ032 Secure Fixture Observation Envelope'))
-          for run_id,job_id,head,name in expected:
-            req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers)
-            with urllib.request.urlopen(req,timeout=30) as r: run=json.load(r)
+          def get(url):
+            req=urllib.request.Request(url,headers=headers)
+            with urllib.request.urlopen(req,timeout=30) as r: return json.load(r)
+          parents=(
+            (int(os.environ['REUSE_RUN']),int(os.environ['REUSE_JOB']),os.environ['REUSE_HEAD'],'Aura Generation Bound Admission Reuse Proof'),
+            (int(os.environ['PROV_RUN']),int(os.environ['PROV_JOB']),os.environ['PROV_HEAD'],'AWJ032 Secure Fixture Observation Envelope'),
+          )
+          for run_id,job_id,head,name in parents:
+            run=get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}')
             assert run['head_sha']==head and run['name']==name and run['status']=='completed' and run['conclusion']=='success',run
-            req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}',headers=headers)
-            with urllib.request.urlopen(req,timeout=30) as r: job=json.load(r)
+            job=get(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}')
             assert job['head_sha']==head and job['status']=='completed' and job['conclusion']=='success',job
+          owners=(
+            (int(os.environ['C2_HANDOFF_RUN']),os.environ['C2_HANDOFF_HEAD'],'AWJ032 GLM53 Owner Host C2 Handoff'),
+            (int(os.environ['LIFECYCLE_RETURN_RUN']),os.environ['LIFECYCLE_RETURN_HEAD'],'AWJ032 GLM53 Owner Host Lifecycle Return Packet'),
+          )
+          for run_id,head,name in owners:
+            run=get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}')
+            assert run['head_sha']==head and run['name']==name and run['status']=='completed' and run['conclusion']=='success',run
           print('G6_V2_TERMINAL_PARENTS_REVALIDATED=true')
+          print('G6_V2_CANONICAL_RETURN_PATH_REVALIDATED=true')
           PY
 
       - name: Compile and execute G6 W3 adversarials
@@ -85,14 +105,17 @@ jobs:
           print('G6_V2_DIFFERENT_J_512=PASS')
           PY
 
-      - name: Enforce Gate10 and provenance nonpromotion laws
+      - name: Enforce Gate10, source-currentness and provenance nonpromotion laws
         run: |
           set -euo pipefail
           grep -q 'AdmissionValidAtProduce!=AdmissionReusableAtUse' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
           grep -q 'CallerWitness!=BackendObservationProvenance' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
           grep -q 'PhysicalAttestationBoolean!=PhysicalObservationProvenance' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          grep -q 'SourceRequestIdentity!=SourceCurrentnessTruth' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          grep -q 'CanonicalC2ReturnPath!=ProducerAuthentication' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
           grep -q 'Gate10DebtMustRemainExplicitUntilObserved' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
           grep -q 'CoordinateMemory!=MODEL_PREFIX_KV' tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py
+          echo "SOURCE_CURRENTNESS_PROVEN=false"
           echo "OWNER_HOST_EXECUTION_OBSERVED=false"
           echo "AUTHENTICATED_PHYSICAL_OBSERVATION=false"
           echo "FULL_FLAGSHIP_MODEL_LOADED=false"
