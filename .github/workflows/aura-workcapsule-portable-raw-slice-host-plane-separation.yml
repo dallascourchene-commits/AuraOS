@@ -1,0 +1,165 @@
+name: Aura WorkCapsule Portable Raw Slice Host Plane Separation
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_k27_astge_portable_raw_slice_causal_handoff.py'
+      - 'scripts/aura_workcapsule_raw_slice_host_plane_separation.py'
+      - 'scripts/aura_workcapsule_portable_raw_slice_host_plane_separation.py'
+      - 'tests/test_aura_workcapsule_raw_slice_host_plane_separation.py'
+      - 'tests/test_aura_workcapsule_portable_raw_slice_host_plane_separation.py'
+      - '.github/workflows/aura-workcapsule-portable-raw-slice-host-plane-separation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR566_SHA: 282f8932a191544124096a0387b3ab16405a1cbf
+  PR563_SHA: 53370ed9570d14cd90b43b815d10b887bd73ef57
+  CONVERGENCE_SHA: 12324d5fd0a3a50f1444c6cb86447ec3ddd63074
+  PR563_CONSUMER_BLOB: d2f06ac046b0ec114a74372cb40153b9dfd2e21b
+
+jobs:
+  portable-evidence-host-plane-separation:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - name: Fetch exact child and prove PR566 plus PR563 convergence
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=220 origin "$TARGET_SHA" "$CONVERGENCE_SHA" "$PR566_SHA" "$PR563_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test "$(git show -s --format=%P "$CONVERGENCE_SHA")" = "$PR566_SHA $PR563_SHA"
+          git merge-base --is-ancestor "$PR566_SHA" HEAD
+          git merge-base --is-ancestor "$PR563_SHA" HEAD
+          test "$(git hash-object scripts/aura_k27_astge_portable_raw_slice_causal_handoff.py)" = "$PR563_CONSUMER_BLOB"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+          echo 'TRUE_TWO_PARENT_CONVERGENCE=true'
+          echo 'EXACT_PR563_PORTABLE_CONSUMER_BLOB=true'
+
+      - name: Re-prove PR566 raw-slice host-plane owner unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_raw_slice_host_plane_separation.py
+          python3 -m unittest -v tests.test_aura_workcapsule_raw_slice_host_plane_separation
+
+      - name: Fetch and re-prove exact PR563 portable transport in isolation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/pr563 && mkdir -p /tmp/pr563
+          git -C /tmp/pr563 init .
+          git -C /tmp/pr563 remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -C /tmp/pr563 -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$PR563_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git -C /tmp/pr563 checkout --detach FETCH_HEAD
+          test "$(git -C /tmp/pr563 rev-parse HEAD)" = "$PR563_SHA"
+          test -z "$(git -C /tmp/pr563 config --local --get-all http.https://github.com/.extraheader || true)"
+          cd /tmp/pr563
+          cargo fmt --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml
+          cargo clippy --manifest-path crates/aura-k27-astge-portable-target-raw-slice-projection/Cargo.toml --all-targets -- -D warnings
+          python3 -m py_compile scripts/aura_k27_astge_portable_raw_slice_causal_handoff.py
+          python3 -m unittest -v tests.test_aura_k27_astge_portable_raw_slice_causal_handoff
+
+      - name: Pass portable-envelope host-plane adversarials
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/aura_workcapsule_portable_raw_slice_host_plane_separation.py
+          python3 -m unittest -v tests.test_aura_workcapsule_portable_raw_slice_host_plane_separation
+
+      - name: Prove exact PR563 fixture remains below PR566 host rank
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          from scripts.aura_workcapsule_portable_raw_slice_host_plane_separation import (
+              admit_portable_raw_slice_host_plane_separation,
+              portable_projection_to_raw_slice_receipt,
+          )
+          from scripts.aura_workcapsule_raw_slice_host_plane_separation import verify_raw_slice_receipt
+          from tests.test_aura_workcapsule_raw_slice_host_plane_separation import local_temporal_owner
+
+          projection = json.loads(
+              Path('/tmp/pr563/tests/fixtures/o30_portable_raw_slice_projection.json').read_text()
+          )
+          view = portable_projection_to_raw_slice_receipt(projection)
+          assert verify_raw_slice_receipt(view) == []
+          with local_temporal_owner():
+              out = admit_portable_raw_slice_host_plane_separation(
+                  raw_slice_projection=projection,
+                  host_observations={},
+              )
+          assert out['portable_raw_slice_projection_verified'] is True
+          assert out['raw_slice_receipt_view_derived'] is True
+          assert set(out['host_gate_states'].values()) == {'UNKNOWN'}
+          assert out['host_disposition'] == 'HOST_OBSERVATION_REQUIRED'
+          assert out['portable_envelope_promoted_to_host_rank'] is False
+          assert out['portable_envelope_accepted_as_host_resolution'] is False
+          assert out['host_resolution_required_for_rank_change'] is True
+          assert out['host_effect_ready'] is False
+          assert out['producer_authenticated'] is False
+          assert not any(out['authority'].values())
+          print('EXACT_PR563_PORTABLE_FIXTURE_BELOW_PR566_HOST_RANK=true')
+          PY
+
+      - name: Assert owner delegation and full consequence ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          child=scripts/aura_workcapsule_portable_raw_slice_host_plane_separation.py
+          grep -q 'verify_portable_raw_slice_projection' "$child"
+          grep -q 'verify_raw_slice_host_plane_separation' "$child"
+          grep -q 'portable_envelope_promoted_to_host_rank": False' "$child"
+          if grep -q '^def _resolve_host_gates' "$child"; then
+            echo 'child duplicated host resolver owner' >&2
+            exit 1
+          fi
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_portable_raw_slice_host_plane_separation import (
+              admit_portable_raw_slice_host_plane_separation,
+          )
+          params = set(inspect.signature(admit_portable_raw_slice_host_plane_separation).parameters)
+          assert 'raw_slice_projection' in params
+          assert 'raw_slice_receipt' not in params
+          for forbidden in ('portable_host_pass','promote_portable_to_host','host_effect_ready','execution_authorized','provider_effect_authorized'):
+              assert forbidden not in params
+          PY
+          cat <<'EOF'
+          PORTABLE_RAW_SLICE_TRANSPORT_VERIFIED=true
+          PR566_HOST_PLANE_OWNER_REUSED=true
+          PORTABLE_ENVELOPE_CAN_SATISFY_HOST_GATE_WITHOUT_RESOLVER=false
+          PORTABLE_ENVELOPE_CAN_IMPERSONATE_HOST_RESOLUTION=false
+          HOST_RANK_CHANGE_REQUIRES_EXPLICIT_HOST_RESOLVER=true
+          HOST_OBSERVATION_AUTHORITY_PROVEN=false
+          PORTABLE_PRODUCER_AUTHENTICATED=false
+          SEMANTIC_HANDLE_DERIVED_FROM_RAW_SLICE=false
+          SEMANTIC_IDENTITY_PROVEN_BY_RAW_SLICE=false
+          SEMANTIC_REPAIR_CORRECTNESS=false
+          TRUSTED_CONTINUATION_READY=false
+          HOST_EFFECT_READY=false
+          REVIEW_EXECUTION_COMMIT_MERGE_PROMOTION_PROVIDER_PUBLIC_HUMAN_AUTHORITY=false
+          SEMANTIC_K27_AUTHORITY=false
+          NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false
+          GATE10_PROMOTION=false
+          EOF
