@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788207936,
+  "generated_at_unix": 1788212619,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1690,
+    "repo_file_count": 1699,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -141,6 +141,8 @@
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-glm53-g3-abstention-safe-transfer-admission.yml",
       ".github/workflows/aura-glm53-g4-prefetch-plan-revalidation.yml",
+      ".github/workflows/aura-glm53-g5-recompute-admission.yml",
+      ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
@@ -1117,6 +1119,9 @@
       "docs/arena/AWJ032_G3_EXTERNAL_COORDINATE_DELTA_20260831.md",
       "docs/arena/AWJ032_G3_HOSTED_PROOF_EXPECTATIONS_20260831.md",
       "docs/arena/AWJ032_G4_PREFETCH_PLAN_REVALIDATION_20260831.md",
+      "docs/arena/AWJ032_G5_RECOMPUTE_PROGRESS_VERSION_ADMISSION_20260831.md",
+      "docs/arena/AWJ032_G6_EXTERNAL_COORDINATE_DELTA_20260831.md",
+      "docs/arena/AWJ032_G6_GATE10_OWNER_HOST_EVIDENCE_REQUEST_20260831.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -1666,6 +1671,8 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+      "tools/awj032/glm53_g5_recompute_admission.py",
+      "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
       "tools/awj032/glm53_io_feasibility.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
@@ -1676,6 +1683,8 @@
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
       "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+      "tools/awj032/test_glm53_g5_recompute_admission.py",
+      "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
       "tools/awj032/test_glm53_io_feasibility.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
@@ -1806,16 +1815,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1690,
-      "bytes": 26684852,
-      "tokens_est": 6661613,
+      "files": 1699,
+      "bytes": 26778534,
+      "tokens_est": 6685032,
       "roles": {
         "interface_surface": 64,
-        "knowledge_artifact": 248,
+        "knowledge_artifact": 251,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1027,
-        "schema_or_lexicon": 281,
+        "python_module": 1031,
+        "schema_or_lexicon": 283,
         "support_file": 49
       }
     },
@@ -3996,6 +4005,22 @@
         "signature_hash": "8d5bf5695239b859"
       },
       {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 88,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:_canonical:e4a09764b8a143bc",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 78,
+        "end_line": 81,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_canonical:5e1da816ffbc1496",
+        "signature_hash": "8e43409cca322220"
+      },
+      {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
         "kind": "function",
         "line": 50,
@@ -4460,6 +4485,14 @@
         "end_line": 31,
         "semantic_id": "tests/test_aura_project_context_acceptance.py#function:_digest:c9743298013a7987",
         "signature_hash": "2dd9cb4d1e7f8c01"
+      },
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 94,
+        "end_line": 98,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_digest:e3ef2b4f8689d9a4",
+        "signature_hash": "2d7f5021f157b2bf"
       },
       {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
@@ -8206,6 +8239,22 @@
         "end_line": 56,
         "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:_sha:ff4f3be033d12cab",
         "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "function",
+        "line": 91,
+        "end_line": 92,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:_sha:94478e50071f98fa",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 84,
+        "end_line": 85,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_sha:7775483b686e43dc",
+        "signature_hash": "cf49278c1a659696"
       },
       {
         "file": "tools/awj032/glm53_prefetch_transfer_admission.py",
@@ -13878,6 +13927,14 @@
         "end_line": 69,
         "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:_sha256:794633af6ae98cb3",
         "signature_hash": "a46cbd439e4d33c2"
+      },
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "function",
+        "line": 101,
+        "end_line": 105,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:_sha256:54294e6aa7a15269",
+        "signature_hash": "a46cbd439e4d33c2"
       }
     ],
     "PullRequestRouteBinding": [
@@ -14832,6 +14889,14 @@
         "end_line": 62,
         "semantic_id": "tools/awj032/glm53_g4_prefetch_plan_revalidation.py#function:_text:7ffc2125743d278e",
         "signature_hash": "dc3769a64f0c5af1"
+      },
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 91,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_text:29111ae985285760",
+        "signature_hash": "262610e90f103d1f"
       },
       {
         "file": "tools/awj032/glm53_per_expert_index_pager.py",
@@ -15952,6 +16017,14 @@
         "end_line": 81,
         "semantic_id": "aura_unified_memory_continuity_toolchain.py#function:_required:fd9913556df96604",
         "signature_hash": "8b28cfce6f68b96b"
+      },
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "function",
+        "line": 95,
+        "end_line": 98,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:_required:9b0a86455b078467",
+        "signature_hash": "9737d32c1db83273"
       }
     ],
     "_hash": [
@@ -126324,6 +126397,14 @@
         "end_line": 12,
         "semantic_id": "tests/test_aura_construction_contracts.py#function:evidence:a7e99cea64606d49",
         "signature_hash": "4be851cb61f4aeb9"
+      },
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 57,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:evidence:362d60ff2dec9da2",
+        "signature_hash": "968bacd5cb8e70f6"
       }
     ],
     "claim": [
@@ -158462,6 +158543,326 @@
         "signature_hash": "31ba3c1bba6f8e1d"
       }
     ],
+    "G4RevalidationProjection": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "class",
+        "line": 109,
+        "end_line": 139,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#class:G4RevalidationProjection:d6da0eaa3e4133e4",
+        "signature_hash": "df9716382e0c78d8"
+      }
+    ],
+    "G4RevalidationProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 134,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:G4RevalidationProjection.validate:e811e163d28eca49",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "G4RevalidationProjection.source_binding_changed": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 137,
+        "end_line": 139,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:G4RevalidationProjection.source_binding_changed:1eeda516c7d729e8",
+        "signature_hash": "e3b6e00200e5d1d8"
+      }
+    ],
+    "RetrievalProgressProjection": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "class",
+        "line": 143,
+        "end_line": 156,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#class:RetrievalProgressProjection:67d2e285e51ddb08",
+        "signature_hash": "222f3ec1f82c2bd9"
+      }
+    ],
+    "RetrievalProgressProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 156,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:RetrievalProgressProjection.validate:9ea4e5edf00ebfae",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "VersionTransitionProjection": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "class",
+        "line": 160,
+        "end_line": 180,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#class:VersionTransitionProjection:17c23feae2e36104",
+        "signature_hash": "94ce31c791982053"
+      }
+    ],
+    "VersionTransitionProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 169,
+        "end_line": 180,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:VersionTransitionProjection.validate:b93c0af2f4341f9c",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SourceReadCurrentnessProjection": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "class",
+        "line": 184,
+        "end_line": 198,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#class:SourceReadCurrentnessProjection:0763fce9b9e1e5b8",
+        "signature_hash": "9178520bd7216058"
+      }
+    ],
+    "SourceReadCurrentnessProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 191,
+        "end_line": 198,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:SourceReadCurrentnessProjection.validate:c7c5342ea6631998",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "G5RecomputeAdmissionReceipt": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "class",
+        "line": 202,
+        "end_line": 267,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#class:G5RecomputeAdmissionReceipt:abc13b9f356f0885",
+        "signature_hash": "8f8eac3d2a0fa69d"
+      }
+    ],
+    "G5RecomputeAdmissionReceipt.validate_claim_ceiling": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 232,
+        "end_line": 262,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:G5RecomputeAdmissionReceipt.validate_claim_ceiling:b7818ddf55f345eb",
+        "signature_hash": "d379bda2928aaff4"
+      }
+    ],
+    "G5RecomputeAdmissionReceipt.receipt_digest": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 265,
+        "end_line": 267,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:G5RecomputeAdmissionReceipt.receipt_digest:b1c74dd05aadd81f",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "_validate_join": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "function",
+        "line": 270,
+        "end_line": 288,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:_validate_join:91a80220977bde95",
+        "signature_hash": "07e93e9fd695e413"
+      }
+    ],
+    "disposition_tree": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "function",
+        "line": 291,
+        "end_line": 310,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:disposition_tree:d1ce907bb22d7250",
+        "signature_hash": "f3dbaa2dd6dc379c"
+      }
+    ],
+    "disposition_table": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "function",
+        "line": 313,
+        "end_line": 334,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:disposition_table:ab7fc2e872f7ac59",
+        "signature_hash": "60a4635a75ce4c1d"
+      }
+    ],
+    "assess_g3_recompute_admission": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "function",
+        "line": 337,
+        "end_line": 369,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:assess_g3_recompute_admission:87c7c4e92284ab93",
+        "signature_hash": "2a3acaad2b5fbc9c"
+      }
+    ],
+    "prove_finite_recompute_lattice": [
+      {
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "kind": "function",
+        "line": 372,
+        "end_line": 435,
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:prove_finite_recompute_lattice:8bb5598da57402bf",
+        "signature_hash": "fbac4aed21990d7b"
+      }
+    ],
+    "AdmissionReuseProjection": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 102,
+        "end_line": 165,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:AdmissionReuseProjection:5df8df9f92425297",
+        "signature_hash": "c475a0d20ae1d4de"
+      }
+    ],
+    "AdmissionReuseProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 129,
+        "end_line": 165,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:AdmissionReuseProjection.validate:de566af175250c42",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ObservationProvenanceContractProjection": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 169,
+        "end_line": 194,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:ObservationProvenanceContractProjection:2fd3fa01ca7188e3",
+        "signature_hash": "517fdabb13a328d4"
+      }
+    ],
+    "ObservationProvenanceContractProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 181,
+        "end_line": 194,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:ObservationProvenanceContractProjection.validate:572ca8d851abd4fb",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "OwnerHostTargetProjection": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 198,
+        "end_line": 226,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:OwnerHostTargetProjection:75f4ba1b37cf5ce4",
+        "signature_hash": "29b83ef6fc2ad20c"
+      }
+    ],
+    "OwnerHostTargetProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 210,
+        "end_line": 226,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:OwnerHostTargetProjection.validate:173071f6e92cfa04",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "EvidenceContractProjection": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 230,
+        "end_line": 261,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:EvidenceContractProjection:7756d45fb246ef46",
+        "signature_hash": "4d4b7ae1288f3b5f"
+      }
+    ],
+    "EvidenceContractProjection.validate": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 242,
+        "end_line": 261,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:EvidenceContractProjection.validate:f00148be7bdc8bdd",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "G6RequestReceipt": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 265,
+        "end_line": 332,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:G6RequestReceipt:b6638f43a15d06e5",
+        "signature_hash": "86675ba5a58ddff9"
+      }
+    ],
+    "G6RequestReceipt.validate_claim_ceiling": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 301,
+        "end_line": 332,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:G6RequestReceipt.validate_claim_ceiling:51ace9404e5db458",
+        "signature_hash": "d379bda2928aaff4"
+      }
+    ],
+    "_Flags": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 336,
+        "end_line": 345,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:_Flags:ea511a704cf2cfde",
+        "signature_hash": "6754dd6b70f543bc"
+      }
+    ],
+    "_tree": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 348,
+        "end_line": 367,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_tree:71ea88ad64b938ca",
+        "signature_hash": "20c7d8f6de0c5886"
+      }
+    ],
+    "_table": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 370,
+        "end_line": 383,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_table:abc8a79fe540ad58",
+        "signature_hash": "0a30856aac750af8"
+      }
+    ],
+    "prove_different_j": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 386,
+        "end_line": 393,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:prove_different_j:ca88bf318d666903",
+        "signature_hash": "545054efddc8fb30"
+      }
+    ],
+    "compile_gate10_owner_host_evidence_request": [
+      {
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 396,
+        "end_line": 514,
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:compile_gate10_owner_host_evidence_request:ed4fda159095aa4e",
+        "signature_hash": "badcecaadf27a85e"
+      }
+    ],
     "TargetClass": [
       {
         "file": "tools/awj032/glm53_io_feasibility.py",
@@ -160096,6 +160497,14 @@
         "end_line": 21,
         "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#function:d:576a781baff44827",
         "signature_hash": "20548e4956440a9b"
+      },
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 35,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#function:d:092f6a8c57a7c8c1",
+        "signature_hash": "20548e4956440a9b"
       }
     ],
     "GLM53G4PrefetchPlanRevalidationTests": [
@@ -160326,6 +160735,456 @@
         "end_line": 209,
         "semantic_id": "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py#method:GLM53G4PrefetchPlanRevalidationTests.test_unchanged_receipt_cannot_claim_recompute:c8f671adc9b3e38d",
         "signature_hash": "472b4cfa6eebda77"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "class",
+        "line": 38,
+        "end_line": 234,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#class:GLM53G5RecomputeAdmissionTests:7fdc9947caa596c8",
+        "signature_hash": "b14c4bd65d939c59"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.g4": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 39,
+        "end_line": 54,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.g4:eaa454e7caefb89a",
+        "signature_hash": "e1ad06ee0e8a5a23"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.progress": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 63,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.progress:d790452e16cbd581",
+        "signature_hash": "65c41a4696584b3a"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.version": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 65,
+        "end_line": 72,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.version:04cfd36c334240ab",
+        "signature_hash": "df78ffca36ffbf3b"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.currentness": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 74,
+        "end_line": 80,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.currentness:c765fd1e5dbe9cba",
+        "signature_hash": "e0d5627c2967e9f9"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.assess": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 82,
+        "end_line": 88,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.assess:13b1226ce19e9752",
+        "signature_hash": "6d504f71d76c6656"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_unchanged_g4_plan_makes_recompute_not_applicable": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 90,
+        "end_line": 97,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_unchanged_g4_plan_makes_recompute_not_applicable:d2879de0f800152a",
+        "signature_hash": "cb8be629a2ee67eb"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_no_progress_first_repeat_holds_before_recompute": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 101,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_no_progress_first_repeat_holds_before_recompute:2bbd7782eecac4dd",
+        "signature_hash": "ba35afdb4ab7889d"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_repeated_no_progress_collapses_recompute_cone": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 105,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_repeated_no_progress_collapses_recompute_cone:ddd5e8df6fb2d5d3",
+        "signature_hash": "e0c11a41515681fb"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_non_source_runtime_drift_with_independent_progress_admits_bounded_attempt": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 107,
+        "end_line": 113,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_non_source_runtime_drift_with_independent_progress_admits_bounded_attempt:25792b3c83acbf25",
+        "signature_hash": "8163fdb1e8d65f82"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_source_drift_without_version_transition_holds": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 115,
+        "end_line": 117,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_source_drift_without_version_transition_holds:a01f475ebcc59a8b",
+        "signature_hash": "c84604190b404b5c"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_source_version_transition_without_read_currentness_holds": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 119,
+        "end_line": 121,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_source_version_transition_without_read_currentness_holds:d5f5271410cfd625",
+        "signature_hash": "e6656cf84e576ea3"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_stale_or_unknown_read_currentness_cannot_pay_future_read_debt": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 123,
+        "end_line": 131,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_stale_or_unknown_read_currentness_cannot_pay_future_read_debt:0e4a2ce5d20db849",
+        "signature_hash": "d4e93b2676337683"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_source_drift_with_version_edge_and_current_read_witness_admits": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 139,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_source_drift_with_version_edge_and_current_read_witness_admits:ccd5a19ad855f26e",
+        "signature_hash": "4d10935b735385e9"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_no_progress_dominates_version_currentness_surplus": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 141,
+        "end_line": 148,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_no_progress_dominates_version_currentness_surplus:2b7a7698bd8b2b9d",
+        "signature_hash": "a62fb35003cb6ce5"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_source_version_binding_must_match_g4_transition": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 150,
+        "end_line": 155,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_source_version_binding_must_match_g4_transition:aceeb9eea27fae6a",
+        "signature_hash": "f86988a6d4df5236"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_currentness_witness_must_bind_current_source_generation": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 157,
+        "end_line": 163,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_currentness_witness_must_bind_current_source_generation:04bfe110afc52c1b",
+        "signature_hash": "e93581b1709a2c5c"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_g4_source_drift_declaration_cannot_be_inconsistent": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 165,
+        "end_line": 171,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_g4_source_drift_declaration_cannot_be_inconsistent:7459445f2c09271b",
+        "signature_hash": "ba4836378249e929"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_version_transition_must_carry_future_read_debt": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 173,
+        "end_line": 175,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_version_transition_must_carry_future_read_debt:f200adf4864db469",
+        "signature_hash": "04089c95b297e594"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_version_projection_cannot_self_authenticate_source": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 177,
+        "end_line": 181,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_version_projection_cannot_self_authenticate_source:f1adfa375845ed90",
+        "signature_hash": "0525e5b5fef3777a"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_currentness_projection_cannot_self_authenticate_owner": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 183,
+        "end_line": 185,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_currentness_projection_cannot_self_authenticate_owner:b45369c5b46d78c5",
+        "signature_hash": "b402f0a4715d258e"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_different_j_classifiers_commute": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 187,
+        "end_line": 194,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_different_j_classifiers_commute:9fe9e383df8448b8",
+        "signature_hash": "d83df38c275f7f27"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_finite_recompute_lattice_exhausts_90_valid_states": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 196,
+        "end_line": 202,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_finite_recompute_lattice_exhausts_90_valid_states:4d855e0df9c34711",
+        "signature_hash": "8fe2fcfd7925f827"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_receipt_is_deterministic": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 204,
+        "end_line": 213,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_receipt_is_deterministic:634bd1cf045fe9fc",
+        "signature_hash": "4676c27ccb236b1c"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_claim_ceiling_cannot_be_widened": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 215,
+        "end_line": 230,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_claim_ceiling_cannot_be_widened:4b972f2c156c4264",
+        "signature_hash": "0f48844797a18e53"
+      }
+    ],
+    "GLM53G5RecomputeAdmissionTests.test_bad_digest_rejected": [
+      {
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "kind": "method",
+        "line": 232,
+        "end_line": 234,
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_bad_digest_rejected:985c7f72f487c153",
+        "signature_hash": "01e1ca40dfc06764"
+      }
+    ],
+    "reuse": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 16,
+        "end_line": 32,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:reuse:5a38b1fc7ce9c538",
+        "signature_hash": "386fd276e6e02fc0"
+      }
+    ],
+    "provenance": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 38,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:provenance:db4a953df6190dd1",
+        "signature_hash": "d3b68f6ee2730b96"
+      }
+    ],
+    "owner": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 51,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:owner:9c17350a4f73fdf6",
+        "signature_hash": "a36bb6a09d15f0af"
+      }
+    ],
+    "G6Tests": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "class",
+        "line": 60,
+        "end_line": 289,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#class:G6Tests:5b7bf6d6ef639b34",
+        "signature_hash": "8277261bd2f7d703"
+      }
+    ],
+    "G6Tests.test_exact_inputs_compile_nonexecuting_request": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 83,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_exact_inputs_compile_nonexecuting_request:8a70bb9f6f61c8a2",
+        "signature_hash": "34009fb90f75572e"
+      }
+    ],
+    "G6Tests.test_exact_glm53_reuse_family_required": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 99,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_exact_glm53_reuse_family_required:6794f40f78beca6a",
+        "signature_hash": "b9a0a9505dbb66ad"
+      }
+    ],
+    "G6Tests.test_reuse_must_be_candidate_only": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 115,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_reuse_must_be_candidate_only:09c492774383428d",
+        "signature_hash": "10e5ac30edd95662"
+      }
+    ],
+    "G6Tests.test_pr769_identity_vector_cannot_be_collapsed_or_omitted": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 139,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_pr769_identity_vector_cannot_be_collapsed_or_omitted:0d722f12f69e7414",
+        "signature_hash": "aef7b7985a25766c"
+      }
+    ],
+    "G6Tests.test_every_reuse_identity_axis_changes_request_identity": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 141,
+        "end_line": 162,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_every_reuse_identity_axis_changes_request_identity:843c20f6afc34482",
+        "signature_hash": "6b5386cbe6151202"
+      }
+    ],
+    "G6Tests.test_reuse_cannot_self_mint_truth_or_execution": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 164,
+        "end_line": 172,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_reuse_cannot_self_mint_truth_or_execution:abdf86b868bcce6d",
+        "signature_hash": "9ca7ff915ea14cb9"
+      }
+    ],
+    "G6Tests.test_provenance_contract_requires_operation_observer_backend_and_producer_gates": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 174,
+        "end_line": 186,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_provenance_contract_requires_operation_observer_backend_and_producer_gates:3b3bed324a656ee4",
+        "signature_hash": "caf4d7d39bd2d9ed"
+      }
+    ],
+    "G6Tests.test_tiny_fixture_and_structural_provenance_never_become_glm_truth": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 188,
+        "end_line": 200,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_tiny_fixture_and_structural_provenance_never_become_glm_truth:5dcad2b27874cdd6",
+        "signature_hash": "77b5e585e914daf1"
+      }
+    ],
+    "G6Tests.test_owner_target_is_not_authentication_or_authority": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 202,
+        "end_line": 213,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_owner_target_is_not_authentication_or_authority:dadf281e7fc5b149",
+        "signature_hash": "fdc4847cfdb916d6"
+      }
+    ],
+    "G6Tests.test_exact_evidence_axes_debt_and_revision_revalidation_are_mandatory": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 215,
+        "end_line": 228,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_exact_evidence_axes_debt_and_revision_revalidation_are_mandatory:b5222f5b96953ccd",
+        "signature_hash": "6736549dd3285866"
+      }
+    ],
+    "G6Tests.test_request_cannot_claim_future_observation": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 230,
+        "end_line": 242,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_request_cannot_claim_future_observation:2d4c6705e6697a98",
+        "signature_hash": "c32491c3a06094a9"
+      }
+    ],
+    "G6Tests.test_parent_proof_substitution_rejected": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 244,
+        "end_line": 258,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_parent_proof_substitution_rejected:9fac137944977b89",
+        "signature_hash": "3a1e83ea3e5a9944"
+      }
+    ],
+    "G6Tests.test_receipt_deterministic_and_generation_sensitive": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 260,
+        "end_line": 274,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_receipt_deterministic_and_generation_sensitive:c228c932d718a450",
+        "signature_hash": "f7723c8855797795"
+      }
+    ],
+    "G6Tests.test_different_j_512": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 276,
+        "end_line": 277,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_different_j_512:0dba5d683d0e42af",
+        "signature_hash": "abc8e2e8b18e08b6"
+      }
+    ],
+    "G6Tests.test_laws": [
+      {
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "kind": "method",
+        "line": 279,
+        "end_line": 289,
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_laws:52de5898771f01e6",
+        "signature_hash": "e422ade0fcede286"
       }
     ],
     "IOFeasibilityTests": [
@@ -162894,10 +163753,13 @@
     ],
     "python3 -m py_compile": [
       ".github/workflows/aura-glm53-g4-prefetch-plan-revalidation.yml",
+      ".github/workflows/aura-glm53-g5-recompute-admission.yml",
+      ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python3 -m unittest": [
+      ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
@@ -172267,53 +173129,163 @@
       "path": ".github/workflows/aura-glm53-g4-prefetch-plan-revalidation.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 5114,
-      "lines": 135,
-      "tokens_est": 1279,
+      "bytes": 5185,
+      "lines": 136,
+      "tokens_est": 1297,
       "symbol_count": 0,
       "commands": [
         "python3 -m py_compile"
       ],
       "command_lines": {
         "python3 -m py_compile": [
-          76
+          77
         ]
       },
       "topology": {},
-      "digest8": "982f331cf9f48214",
+      "digest8": "9882051ebd447773",
       "vector": [
-        -0.110081,
-        -0.150694,
-        -0.204132,
-        -0.159244,
-        0.084431,
-        0.182757,
-        -0.174207,
-        0.270394,
-        -0.045956,
-        -0.223369,
-        -0.133594,
-        0.045956,
-        0.242607,
-        -0.182757,
-        -0.150694,
-        -0.154969,
-        -0.088706,
-        0.163519,
-        -0.176344,
-        -0.022444,
-        0.234057,
-        0.270394,
-        -0.272532,
-        0.172069,
-        0.176344,
-        -0.105806,
-        0.263982,
-        0.107944,
-        0.197719,
-        -0.086569,
-        0.122906,
-        -0.244744
+        -0.010384,
+        -0.123452,
+        -0.017306,
+        0.100377,
+        -0.188062,
+        0.098069,
+        0.132682,
+        0.148834,
+        0.102684,
+        -0.2919,
+        -0.174217,
+        0.259594,
+        -0.231904,
+        -0.084224,
+        0.194984,
+        -0.268825,
+        0.091147,
+        -0.199599,
+        -0.068071,
+        -0.289592,
+        0.227289,
+        -0.086531,
+        0.183447,
+        0.049611,
+        0.144219,
+        -0.167294,
+        0.208829,
+        -0.185754,
+        0.227289,
+        -0.033459,
+        0.250364,
+        0.224982
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-g5-recompute-admission.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6541,
+      "lines": 160,
+      "tokens_est": 1636,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          107
+        ]
+      },
+      "topology": {},
+      "digest8": "02fe753a78a44c74",
+      "vector": [
+        0.091147,
+        -0.099933,
+        -0.200964,
+        -0.084558,
+        -0.181197,
+        -0.064792,
+        -0.018669,
+        -0.062595,
+        -0.084558,
+        -0.097736,
+        0.251479,
+        -0.277835,
+        0.24489,
+        -0.277835,
+        0.159233,
+        -0.064792,
+        -0.047221,
+        -0.023061,
+        0.168019,
+        -0.091147,
+        0.150448,
+        0.258068,
+        0.143859,
+        0.218534,
+        0.194375,
+        -0.093344,
+        -0.115307,
+        0.266853,
+        -0.146055,
+        0.277835,
+        -0.273442,
+        0.260264
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 6219,
+      "lines": 113,
+      "tokens_est": 1555,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          82
+        ],
+        "python3 -m unittest": [
+          83
+        ]
+      },
+      "topology": {},
+      "digest8": "511c999b1a59773b",
+      "vector": [
+        0.121849,
+        -0.178087,
+        0.073645,
+        0.156663,
+        0.167375,
+        0.314664,
+        0.116493,
+        -0.2129,
+        0.234324,
+        0.089713,
+        0.287884,
+        0.108459,
+        0.001339,
+        0.124527,
+        -0.2129,
+        0.271816,
+        0.255748,
+        -0.309308,
+        0.065611,
+        0.274494,
+        0.033475,
+        -0.097747,
+        -0.237002,
+        0.119171,
+        0.022763,
+        0.057577,
+        -0.084357,
+        0.175409,
+        -0.191476,
+        0.170053,
+        0.084357,
+        0.095069
       ]
     },
     {
@@ -240139,6 +241111,147 @@
       ]
     },
     {
+      "path": "docs/arena/AWJ032_G5_RECOMPUTE_PROGRESS_VERSION_ADMISSION_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 10156,
+      "lines": 165,
+      "tokens_est": 2535,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a2267cd33e776c98",
+      "vector": [
+        -0.071705,
+        0.182645,
+        0.16641,
+        0.323349,
+        0.05547,
+        -0.012176,
+        -0.012176,
+        0.252997,
+        0.052764,
+        0.136645,
+        0.182645,
+        -0.293584,
+        -0.031117,
+        -0.188056,
+        -0.090646,
+        -0.131234,
+        -0.12041,
+        0.163704,
+        -0.215115,
+        0.171821,
+        -0.252997,
+        -0.063587,
+        0.32876,
+        -0.142057,
+        0.101469,
+        -0.317937,
+        0.112293,
+        0.079822,
+        0.225938,
+        -0.05547,
+        -0.236762,
+        -0.071705
+      ]
+    },
+    {
+      "path": "docs/arena/AWJ032_G6_EXTERNAL_COORDINATE_DELTA_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 4101,
+      "lines": 43,
+      "tokens_est": 1025,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a32e986a245a9889",
+      "vector": [
+        -0.248022,
+        0.140505,
+        0.062311,
+        -0.164941,
+        0.184489,
+        -0.120956,
+        0.150279,
+        0.152723,
+        -0.240691,
+        -0.059867,
+        0.120956,
+        -0.26024,
+        0.277345,
+        -0.248022,
+        -0.160053,
+        -0.255352,
+        0.074529,
+        -0.155166,
+        -0.098964,
+        0.309111,
+        0.108739,
+        -0.076972,
+        0.194263,
+        0.15761,
+        0.292006,
+        -0.042762,
+        -0.067198,
+        -0.230917,
+        -0.050093,
+        0.194263,
+        0.084303,
+        -0.111182
+      ]
+    },
+    {
+      "path": "docs/arena/AWJ032_G6_GATE10_OWNER_HOST_EVIDENCE_REQUEST_20260831.md",
+      "role": "knowledge_artifact",
+      "binary": false,
+      "bytes": 5472,
+      "lines": 85,
+      "tokens_est": 1367,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "171ff1560efe0858",
+      "vector": [
+        -0.199785,
+        -0.095439,
+        -0.22778,
+        0.001273,
+        -0.115799,
+        0.286316,
+        -0.2176,
+        0.148884,
+        -0.113254,
+        0.17688,
+        -0.120889,
+        -0.082714,
+        0.011453,
+        0.19724,
+        -0.075078,
+        0.082714,
+        0.260866,
+        -0.296496,
+        -0.125979,
+        -0.271046,
+        0.204875,
+        -0.069988,
+        -0.293951,
+        0.169245,
+        -0.179425,
+        -0.23796,
+        -0.013998,
+        0.131069,
+        0.296496,
+        -0.090349,
+        0.075078,
+        -0.044538
+      ]
+    },
+    {
       "path": "docs/aura_substrate_manifest.files.01.json",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -268712,6 +269825,100 @@
       ]
     },
     {
+      "path": "tools/awj032/glm53_g5_recompute_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 19317,
+      "lines": 436,
+      "tokens_est": 4830,
+      "symbol_count": 21,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "997d49787c0a50a1",
+      "vector": [
+        0.043557,
+        -0.147669,
+        0.245406,
+        -0.181664,
+        -0.132795,
+        0.253905,
+        -0.194413,
+        -0.151918,
+        -0.079677,
+        -0.177415,
+        0.147669,
+        -0.25178,
+        -0.026559,
+        0.107299,
+        -0.241157,
+        -0.266653,
+        -0.054181,
+        0.234782,
+        0.015935,
+        0.168916,
+        0.241157,
+        -0.192288,
+        -0.147669,
+        -0.066929,
+        0.202912,
+        -0.009561,
+        -0.196537,
+        0.21141,
+        0.21566,
+        -0.168916,
+        -0.192288,
+        0.17529
+      ]
+    },
+    {
+      "path": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 19609,
+      "lines": 533,
+      "tokens_est": 4903,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1c4177f8851a13e5",
+      "vector": [
+        0.062814,
+        0.05296,
+        0.274656,
+        0.269729,
+        -0.087446,
+        -0.05296,
+        -0.176124,
+        0.038181,
+        0.277119,
+        0.284509,
+        -0.035718,
+        -0.176124,
+        -0.274656,
+        -0.119469,
+        0.279582,
+        -0.08252,
+        0.247559,
+        0.190904,
+        0.06035,
+        0.134249,
+        0.05296,
+        0.109616,
+        0.144102,
+        -0.023401,
+        -0.23278,
+        -0.291898,
+        0.252486,
+        -0.107153,
+        0.112079,
+        0.008621,
+        0.156418,
+        0.173661
+      ]
+    },
+    {
       "path": "tools/awj032/glm53_io_feasibility.py",
       "role": "python_module",
       "binary": false,
@@ -269179,6 +270386,100 @@
         -0.188704,
         -0.160668,
         0.141258
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_g5_recompute_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10273,
+      "lines": 239,
+      "tokens_est": 2569,
+      "symbol_count": 27,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "68229a67116265a8",
+      "vector": [
+        0.244954,
+        -0.034052,
+        -0.099959,
+        -0.187835,
+        0.012083,
+        -0.190031,
+        0.258135,
+        -0.198819,
+        0.029658,
+        0.025264,
+        -0.201016,
+        0.181244,
+        0.157078,
+        -0.183441,
+        0.236166,
+        -0.220788,
+        0.073596,
+        -0.01428,
+        -0.229576,
+        0.174653,
+        0.262529,
+        0.181244,
+        0.242757,
+        0.225182,
+        -0.1417,
+        0.082384,
+        -0.194425,
+        0.251544,
+        -0.207607,
+        -0.075793,
+        -0.157078,
+        0.108746
+      ]
+    },
+    {
+      "path": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11923,
+      "lines": 294,
+      "tokens_est": 2981,
+      "symbol_count": 20,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "00f230e2cc38c1c1",
+      "vector": [
+        -0.049427,
+        0.026615,
+        -0.290228,
+        0.264881,
+        -0.02408,
+        0.150817,
+        -0.044358,
+        -0.198977,
+        -0.105192,
+        0.019011,
+        0.044358,
+        -0.031684,
+        -0.196443,
+        0.130539,
+        -0.16856,
+        -0.105192,
+        0.252207,
+        0.21672,
+        0.277554,
+        -0.320645,
+        -0.153352,
+        0.001267,
+        0.171095,
+        -0.204047,
+        0.242068,
+        -0.059566,
+        0.178699,
+        0.041823,
+        -0.206581,
+        -0.135609,
+        0.292763,
+        -0.201512
       ]
     },
     {
@@ -293462,16 +294763,16 @@
     }
   },
   "summary": {
-    "file_count": 1690,
-    "total_bytes": 26684852,
-    "text_tokens_est": 6661613,
+    "file_count": 1699,
+    "total_bytes": 26778534,
+    "text_tokens_est": 6685032,
     "role_counts": {
       "interface_surface": 64,
-      "knowledge_artifact": 248,
+      "knowledge_artifact": 251,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1027,
-      "schema_or_lexicon": 281,
+      "python_module": 1031,
+      "schema_or_lexicon": 283,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -293622,6 +294923,8 @@
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
       ".github/workflows/aura-glm53-g3-abstention-safe-transfer-admission.yml",
       ".github/workflows/aura-glm53-g4-prefetch-plan-revalidation.yml",
+      ".github/workflows/aura-glm53-g5-recompute-admission.yml",
+      ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
       ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
       ".github/workflows/aura-glm53-router-separated-prefetch.yml",
@@ -294598,6 +295901,9 @@
       "docs/arena/AWJ032_G3_EXTERNAL_COORDINATE_DELTA_20260831.md",
       "docs/arena/AWJ032_G3_HOSTED_PROOF_EXPECTATIONS_20260831.md",
       "docs/arena/AWJ032_G4_PREFETCH_PLAN_REVALIDATION_20260831.md",
+      "docs/arena/AWJ032_G5_RECOMPUTE_PROGRESS_VERSION_ADMISSION_20260831.md",
+      "docs/arena/AWJ032_G6_EXTERNAL_COORDINATE_DELTA_20260831.md",
+      "docs/arena/AWJ032_G6_GATE10_OWNER_HOST_EVIDENCE_REQUEST_20260831.md",
       "docs/aura_substrate_manifest.files.01.json",
       "docs/aura_substrate_manifest.files.02.json",
       "docs/aura_substrate_manifest.files.03.json",
@@ -295147,6 +296453,8 @@
       "tools/awj032/airllm_source_admission.py",
       "tools/awj032/glm53_compatibility_probe.py",
       "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+      "tools/awj032/glm53_g5_recompute_admission.py",
+      "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
       "tools/awj032/glm53_io_feasibility.py",
       "tools/awj032/glm53_packed_expert_pager.py",
       "tools/awj032/glm53_pager_cache_telemetry.py",
@@ -295157,6 +296465,8 @@
       "tools/awj032/test_glm53_compatibility_probe.py",
       "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
       "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+      "tools/awj032/test_glm53_g5_recompute_admission.py",
+      "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
       "tools/awj032/test_glm53_io_feasibility.py",
       "tools/awj032/test_glm53_packed_expert_pager.py",
       "tools/awj032/test_glm53_pager_cache_telemetry.py",
@@ -453671,6 +454981,406 @@
         "file_digest8": "c79bc07a0f6658e1"
       },
       {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#class:G4RevalidationProjection:d6da0eaa3e4133e4",
+        "name": "G4RevalidationProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 109,
+        "end_line": 139,
+        "signature_hash": "df9716382e0c78d8",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#class:G5RecomputeAdmissionReceipt:abc13b9f356f0885",
+        "name": "G5RecomputeAdmissionReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 202,
+        "end_line": 267,
+        "signature_hash": "8f8eac3d2a0fa69d",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#class:RetrievalProgressProjection:67d2e285e51ddb08",
+        "name": "RetrievalProgressProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 143,
+        "end_line": 156,
+        "signature_hash": "222f3ec1f82c2bd9",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#class:SourceReadCurrentnessProjection:0763fce9b9e1e5b8",
+        "name": "SourceReadCurrentnessProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 184,
+        "end_line": 198,
+        "signature_hash": "9178520bd7216058",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#class:VersionTransitionProjection:17c23feae2e36104",
+        "name": "VersionTransitionProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 160,
+        "end_line": 180,
+        "signature_hash": "94ce31c791982053",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:_canonical:e4a09764b8a143bc",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 87,
+        "end_line": 88,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:_required:9b0a86455b078467",
+        "name": "_required",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 95,
+        "end_line": 98,
+        "signature_hash": "9737d32c1db83273",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:_sha256:54294e6aa7a15269",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 101,
+        "end_line": 105,
+        "signature_hash": "a46cbd439e4d33c2",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:_sha:94478e50071f98fa",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 91,
+        "end_line": 92,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:_validate_join:91a80220977bde95",
+        "name": "_validate_join",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 270,
+        "end_line": 288,
+        "signature_hash": "07e93e9fd695e413",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:assess_g3_recompute_admission:87c7c4e92284ab93",
+        "name": "assess_g3_recompute_admission",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 337,
+        "end_line": 369,
+        "signature_hash": "2a3acaad2b5fbc9c",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:disposition_table:ab7fc2e872f7ac59",
+        "name": "disposition_table",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 313,
+        "end_line": 334,
+        "signature_hash": "60a4635a75ce4c1d",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:disposition_tree:d1ce907bb22d7250",
+        "name": "disposition_tree",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 291,
+        "end_line": 310,
+        "signature_hash": "f3dbaa2dd6dc379c",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#function:prove_finite_recompute_lattice:8bb5598da57402bf",
+        "name": "prove_finite_recompute_lattice",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 372,
+        "end_line": 435,
+        "signature_hash": "fbac4aed21990d7b",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:G4RevalidationProjection.source_binding_changed:1eeda516c7d729e8",
+        "name": "G4RevalidationProjection.source_binding_changed",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 137,
+        "end_line": 139,
+        "signature_hash": "e3b6e00200e5d1d8",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:G4RevalidationProjection.validate:e811e163d28eca49",
+        "name": "G4RevalidationProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 116,
+        "end_line": 134,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:G5RecomputeAdmissionReceipt.receipt_digest:b1c74dd05aadd81f",
+        "name": "G5RecomputeAdmissionReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 265,
+        "end_line": 267,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:G5RecomputeAdmissionReceipt.validate_claim_ceiling:b7818ddf55f345eb",
+        "name": "G5RecomputeAdmissionReceipt.validate_claim_ceiling",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 232,
+        "end_line": 262,
+        "signature_hash": "d379bda2928aaff4",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:RetrievalProgressProjection.validate:9ea4e5edf00ebfae",
+        "name": "RetrievalProgressProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 150,
+        "end_line": 156,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:SourceReadCurrentnessProjection.validate:c7c5342ea6631998",
+        "name": "SourceReadCurrentnessProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 191,
+        "end_line": 198,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g5_recompute_admission.py#method:VersionTransitionProjection.validate:b93c0af2f4341f9c",
+        "name": "VersionTransitionProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g5_recompute_admission.py",
+        "line": 169,
+        "end_line": 180,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "997d49787c0a50a1"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:AdmissionReuseProjection:5df8df9f92425297",
+        "name": "AdmissionReuseProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 102,
+        "end_line": 165,
+        "signature_hash": "c475a0d20ae1d4de",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:EvidenceContractProjection:7756d45fb246ef46",
+        "name": "EvidenceContractProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 230,
+        "end_line": 261,
+        "signature_hash": "4d4b7ae1288f3b5f",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:G6RequestReceipt:b6638f43a15d06e5",
+        "name": "G6RequestReceipt",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 265,
+        "end_line": 332,
+        "signature_hash": "86675ba5a58ddff9",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:ObservationProvenanceContractProjection:2fd3fa01ca7188e3",
+        "name": "ObservationProvenanceContractProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 169,
+        "end_line": 194,
+        "signature_hash": "517fdabb13a328d4",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:OwnerHostTargetProjection:75f4ba1b37cf5ce4",
+        "name": "OwnerHostTargetProjection",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 198,
+        "end_line": 226,
+        "signature_hash": "29b83ef6fc2ad20c",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#class:_Flags:ea511a704cf2cfde",
+        "name": "_Flags",
+        "kind": "class",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 336,
+        "end_line": 345,
+        "signature_hash": "6754dd6b70f543bc",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_canonical:5e1da816ffbc1496",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 78,
+        "end_line": 81,
+        "signature_hash": "8e43409cca322220",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_digest:e3ef2b4f8689d9a4",
+        "name": "_digest",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 94,
+        "end_line": 98,
+        "signature_hash": "2d7f5021f157b2bf",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_sha:7775483b686e43dc",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 84,
+        "end_line": 85,
+        "signature_hash": "cf49278c1a659696",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_table:abc8a79fe540ad58",
+        "name": "_table",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 370,
+        "end_line": 383,
+        "signature_hash": "0a30856aac750af8",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_text:29111ae985285760",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 88,
+        "end_line": 91,
+        "signature_hash": "262610e90f103d1f",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:_tree:71ea88ad64b938ca",
+        "name": "_tree",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 348,
+        "end_line": 367,
+        "signature_hash": "20c7d8f6de0c5886",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:compile_gate10_owner_host_evidence_request:ed4fda159095aa4e",
+        "name": "compile_gate10_owner_host_evidence_request",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 396,
+        "end_line": 514,
+        "signature_hash": "badcecaadf27a85e",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#function:prove_different_j:ca88bf318d666903",
+        "name": "prove_different_j",
+        "kind": "function",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 386,
+        "end_line": 393,
+        "signature_hash": "545054efddc8fb30",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:AdmissionReuseProjection.validate:de566af175250c42",
+        "name": "AdmissionReuseProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 129,
+        "end_line": 165,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:EvidenceContractProjection.validate:f00148be7bdc8bdd",
+        "name": "EvidenceContractProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 242,
+        "end_line": 261,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:G6RequestReceipt.validate_claim_ceiling:51ace9404e5db458",
+        "name": "G6RequestReceipt.validate_claim_ceiling",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 301,
+        "end_line": 332,
+        "signature_hash": "d379bda2928aaff4",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:ObservationProvenanceContractProjection.validate:572ca8d851abd4fb",
+        "name": "ObservationProvenanceContractProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 181,
+        "end_line": 194,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
+        "semantic_id": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py#method:OwnerHostTargetProjection.validate:173071f6e92cfa04",
+        "name": "OwnerHostTargetProjection.validate",
+        "kind": "method",
+        "file": "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 210,
+        "end_line": 226,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "1c4177f8851a13e5"
+      },
+      {
         "semantic_id": "tools/awj032/glm53_io_feasibility.py#class:IOFeasibilityReceipt:6d9e8e12da87a4af",
         "name": "IOFeasibilityReceipt",
         "kind": "class",
@@ -455629,6 +457339,476 @@
         "end_line": 209,
         "signature_hash": "472b4cfa6eebda77",
         "file_digest8": "e2c2353bcf53f51a"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#class:GLM53G5RecomputeAdmissionTests:7fdc9947caa596c8",
+        "name": "GLM53G5RecomputeAdmissionTests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 38,
+        "end_line": 234,
+        "signature_hash": "b14c4bd65d939c59",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#function:d:092f6a8c57a7c8c1",
+        "name": "d",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 34,
+        "end_line": 35,
+        "signature_hash": "20548e4956440a9b",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.assess:13b1226ce19e9752",
+        "name": "GLM53G5RecomputeAdmissionTests.assess",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 82,
+        "end_line": 88,
+        "signature_hash": "6d504f71d76c6656",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.currentness:c765fd1e5dbe9cba",
+        "name": "GLM53G5RecomputeAdmissionTests.currentness",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 74,
+        "end_line": 80,
+        "signature_hash": "e0d5627c2967e9f9",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.g4:eaa454e7caefb89a",
+        "name": "GLM53G5RecomputeAdmissionTests.g4",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 39,
+        "end_line": 54,
+        "signature_hash": "e1ad06ee0e8a5a23",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.progress:d790452e16cbd581",
+        "name": "GLM53G5RecomputeAdmissionTests.progress",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 56,
+        "end_line": 63,
+        "signature_hash": "65c41a4696584b3a",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_bad_digest_rejected:985c7f72f487c153",
+        "name": "GLM53G5RecomputeAdmissionTests.test_bad_digest_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 232,
+        "end_line": 234,
+        "signature_hash": "01e1ca40dfc06764",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_claim_ceiling_cannot_be_widened:4b972f2c156c4264",
+        "name": "GLM53G5RecomputeAdmissionTests.test_claim_ceiling_cannot_be_widened",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 215,
+        "end_line": 230,
+        "signature_hash": "0f48844797a18e53",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_currentness_projection_cannot_self_authenticate_owner:b45369c5b46d78c5",
+        "name": "GLM53G5RecomputeAdmissionTests.test_currentness_projection_cannot_self_authenticate_owner",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 183,
+        "end_line": 185,
+        "signature_hash": "b402f0a4715d258e",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_currentness_witness_must_bind_current_source_generation:04bfe110afc52c1b",
+        "name": "GLM53G5RecomputeAdmissionTests.test_currentness_witness_must_bind_current_source_generation",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 157,
+        "end_line": 163,
+        "signature_hash": "e93581b1709a2c5c",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_different_j_classifiers_commute:9fe9e383df8448b8",
+        "name": "GLM53G5RecomputeAdmissionTests.test_different_j_classifiers_commute",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 187,
+        "end_line": 194,
+        "signature_hash": "d83df38c275f7f27",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_finite_recompute_lattice_exhausts_90_valid_states:4d855e0df9c34711",
+        "name": "GLM53G5RecomputeAdmissionTests.test_finite_recompute_lattice_exhausts_90_valid_states",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 196,
+        "end_line": 202,
+        "signature_hash": "8fe2fcfd7925f827",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_g4_source_drift_declaration_cannot_be_inconsistent:7459445f2c09271b",
+        "name": "GLM53G5RecomputeAdmissionTests.test_g4_source_drift_declaration_cannot_be_inconsistent",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 165,
+        "end_line": 171,
+        "signature_hash": "ba4836378249e929",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_no_progress_dominates_version_currentness_surplus:2b7a7698bd8b2b9d",
+        "name": "GLM53G5RecomputeAdmissionTests.test_no_progress_dominates_version_currentness_surplus",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 141,
+        "end_line": 148,
+        "signature_hash": "a62fb35003cb6ce5",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_no_progress_first_repeat_holds_before_recompute:2bbd7782eecac4dd",
+        "name": "GLM53G5RecomputeAdmissionTests.test_no_progress_first_repeat_holds_before_recompute",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 99,
+        "end_line": 101,
+        "signature_hash": "ba35afdb4ab7889d",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_non_source_runtime_drift_with_independent_progress_admits_bounded_attempt:25792b3c83acbf25",
+        "name": "GLM53G5RecomputeAdmissionTests.test_non_source_runtime_drift_with_independent_progress_admits_bounded_attempt",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 107,
+        "end_line": 113,
+        "signature_hash": "8163fdb1e8d65f82",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_receipt_is_deterministic:634bd1cf045fe9fc",
+        "name": "GLM53G5RecomputeAdmissionTests.test_receipt_is_deterministic",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 204,
+        "end_line": 213,
+        "signature_hash": "4676c27ccb236b1c",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_repeated_no_progress_collapses_recompute_cone:ddd5e8df6fb2d5d3",
+        "name": "GLM53G5RecomputeAdmissionTests.test_repeated_no_progress_collapses_recompute_cone",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 103,
+        "end_line": 105,
+        "signature_hash": "e0c11a41515681fb",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_source_drift_with_version_edge_and_current_read_witness_admits:ccd5a19ad855f26e",
+        "name": "GLM53G5RecomputeAdmissionTests.test_source_drift_with_version_edge_and_current_read_witness_admits",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 133,
+        "end_line": 139,
+        "signature_hash": "4d10935b735385e9",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_source_drift_without_version_transition_holds:a01f475ebcc59a8b",
+        "name": "GLM53G5RecomputeAdmissionTests.test_source_drift_without_version_transition_holds",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 115,
+        "end_line": 117,
+        "signature_hash": "c84604190b404b5c",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_source_version_binding_must_match_g4_transition:aceeb9eea27fae6a",
+        "name": "GLM53G5RecomputeAdmissionTests.test_source_version_binding_must_match_g4_transition",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 150,
+        "end_line": 155,
+        "signature_hash": "f86988a6d4df5236",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_source_version_transition_without_read_currentness_holds:d5f5271410cfd625",
+        "name": "GLM53G5RecomputeAdmissionTests.test_source_version_transition_without_read_currentness_holds",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 119,
+        "end_line": 121,
+        "signature_hash": "e6656cf84e576ea3",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_stale_or_unknown_read_currentness_cannot_pay_future_read_debt:0e4a2ce5d20db849",
+        "name": "GLM53G5RecomputeAdmissionTests.test_stale_or_unknown_read_currentness_cannot_pay_future_read_debt",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 123,
+        "end_line": 131,
+        "signature_hash": "d4e93b2676337683",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_unchanged_g4_plan_makes_recompute_not_applicable:d2879de0f800152a",
+        "name": "GLM53G5RecomputeAdmissionTests.test_unchanged_g4_plan_makes_recompute_not_applicable",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 90,
+        "end_line": 97,
+        "signature_hash": "cb8be629a2ee67eb",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_version_projection_cannot_self_authenticate_source:f1adfa375845ed90",
+        "name": "GLM53G5RecomputeAdmissionTests.test_version_projection_cannot_self_authenticate_source",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 177,
+        "end_line": 181,
+        "signature_hash": "0525e5b5fef3777a",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.test_version_transition_must_carry_future_read_debt:f200adf4864db469",
+        "name": "GLM53G5RecomputeAdmissionTests.test_version_transition_must_carry_future_read_debt",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 173,
+        "end_line": 175,
+        "signature_hash": "04089c95b297e594",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g5_recompute_admission.py#method:GLM53G5RecomputeAdmissionTests.version:04cfd36c334240ab",
+        "name": "GLM53G5RecomputeAdmissionTests.version",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g5_recompute_admission.py",
+        "line": 65,
+        "end_line": 72,
+        "signature_hash": "df78ffca36ffbf3b",
+        "file_digest8": "68229a67116265a8"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#class:G6Tests:5b7bf6d6ef639b34",
+        "name": "G6Tests",
+        "kind": "class",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 60,
+        "end_line": 289,
+        "signature_hash": "8277261bd2f7d703",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:evidence:362d60ff2dec9da2",
+        "name": "evidence",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 54,
+        "end_line": 57,
+        "signature_hash": "968bacd5cb8e70f6",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:owner:9c17350a4f73fdf6",
+        "name": "owner",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 41,
+        "end_line": 51,
+        "signature_hash": "a36bb6a09d15f0af",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:provenance:db4a953df6190dd1",
+        "name": "provenance",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 35,
+        "end_line": 38,
+        "signature_hash": "d3b68f6ee2730b96",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#function:reuse:5a38b1fc7ce9c538",
+        "name": "reuse",
+        "kind": "function",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 16,
+        "end_line": 32,
+        "signature_hash": "386fd276e6e02fc0",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_different_j_512:0dba5d683d0e42af",
+        "name": "G6Tests.test_different_j_512",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 276,
+        "end_line": 277,
+        "signature_hash": "abc8e2e8b18e08b6",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_every_reuse_identity_axis_changes_request_identity:843c20f6afc34482",
+        "name": "G6Tests.test_every_reuse_identity_axis_changes_request_identity",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 141,
+        "end_line": 162,
+        "signature_hash": "6b5386cbe6151202",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_exact_evidence_axes_debt_and_revision_revalidation_are_mandatory:b5222f5b96953ccd",
+        "name": "G6Tests.test_exact_evidence_axes_debt_and_revision_revalidation_are_mandatory",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 215,
+        "end_line": 228,
+        "signature_hash": "6736549dd3285866",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_exact_glm53_reuse_family_required:6794f40f78beca6a",
+        "name": "G6Tests.test_exact_glm53_reuse_family_required",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 85,
+        "end_line": 99,
+        "signature_hash": "b9a0a9505dbb66ad",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_exact_inputs_compile_nonexecuting_request:8a70bb9f6f61c8a2",
+        "name": "G6Tests.test_exact_inputs_compile_nonexecuting_request",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 61,
+        "end_line": 83,
+        "signature_hash": "34009fb90f75572e",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_laws:52de5898771f01e6",
+        "name": "G6Tests.test_laws",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 279,
+        "end_line": 289,
+        "signature_hash": "e422ade0fcede286",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_owner_target_is_not_authentication_or_authority:dadf281e7fc5b149",
+        "name": "G6Tests.test_owner_target_is_not_authentication_or_authority",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 202,
+        "end_line": 213,
+        "signature_hash": "fdc4847cfdb916d6",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_parent_proof_substitution_rejected:9fac137944977b89",
+        "name": "G6Tests.test_parent_proof_substitution_rejected",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 244,
+        "end_line": 258,
+        "signature_hash": "3a1e83ea3e5a9944",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_pr769_identity_vector_cannot_be_collapsed_or_omitted:0d722f12f69e7414",
+        "name": "G6Tests.test_pr769_identity_vector_cannot_be_collapsed_or_omitted",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 117,
+        "end_line": 139,
+        "signature_hash": "aef7b7985a25766c",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_provenance_contract_requires_operation_observer_backend_and_producer_gates:3b3bed324a656ee4",
+        "name": "G6Tests.test_provenance_contract_requires_operation_observer_backend_and_producer_gates",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 174,
+        "end_line": 186,
+        "signature_hash": "caf4d7d39bd2d9ed",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_receipt_deterministic_and_generation_sensitive:c228c932d718a450",
+        "name": "G6Tests.test_receipt_deterministic_and_generation_sensitive",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 260,
+        "end_line": 274,
+        "signature_hash": "f7723c8855797795",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_request_cannot_claim_future_observation:2d4c6705e6697a98",
+        "name": "G6Tests.test_request_cannot_claim_future_observation",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 230,
+        "end_line": 242,
+        "signature_hash": "c32491c3a06094a9",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_reuse_cannot_self_mint_truth_or_execution:abdf86b868bcce6d",
+        "name": "G6Tests.test_reuse_cannot_self_mint_truth_or_execution",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 164,
+        "end_line": 172,
+        "signature_hash": "9ca7ff915ea14cb9",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_reuse_must_be_candidate_only:09c492774383428d",
+        "name": "G6Tests.test_reuse_must_be_candidate_only",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 101,
+        "end_line": 115,
+        "signature_hash": "10e5ac30edd95662",
+        "file_digest8": "00f230e2cc38c1c1"
+      },
+      {
+        "semantic_id": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py#method:G6Tests.test_tiny_fixture_and_structural_provenance_never_become_glm_truth:5dcad2b27874cdd6",
+        "name": "G6Tests.test_tiny_fixture_and_structural_provenance_never_become_glm_truth",
+        "kind": "method",
+        "file": "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
+        "line": 188,
+        "end_line": 200,
+        "signature_hash": "77b5e585e914daf1",
+        "file_digest8": "00f230e2cc38c1c1"
       },
       {
         "semantic_id": "tools/awj032/test_glm53_io_feasibility.py#class:IOFeasibilityTests:592a54c05aff6953",
@@ -458051,7 +460231,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "df82a9e6184e16f6e50a1e4ebc4d0d52",
-    "payload_hash": "b627edace86d8b348a4fc5b5cb496167"
+    "record_fingerprint": "2ea735e9628ba35d6e42dc9f141c1ff4",
+    "payload_hash": "d12594ef18597c5e2696c23df36addaa"
   }
 }

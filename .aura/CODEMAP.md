@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1690
-- **total_bytes**: 26684852
-- **text_tokens_est**: 6661613
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 248, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1027, 'schema_or_lexicon': 281, 'support_file': 49}
+- **file_count**: 1699
+- **total_bytes**: 26778534
+- **text_tokens_est**: 6685032
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 251, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1031, 'schema_or_lexicon': 283, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1690,
+  "repo_file_count": 1699,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -159,6 +159,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-construction-runtime-diagnostic.yml",
     ".github/workflows/aura-glm53-g3-abstention-safe-transfer-admission.yml",
     ".github/workflows/aura-glm53-g4-prefetch-plan-revalidation.yml",
+    ".github/workflows/aura-glm53-g5-recompute-admission.yml",
+    ".github/workflows/aura-glm53-g6-gate10-owner-host-evidence-request.yml",
     ".github/workflows/aura-glm53-prefetch-transfer-admission-w3-rebase.yml",
     ".github/workflows/aura-glm53-prefetch-transfer-admission.yml",
     ".github/workflows/aura-glm53-router-separated-prefetch.yml",
@@ -1135,6 +1137,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "docs/arena/AWJ032_G3_EXTERNAL_COORDINATE_DELTA_20260831.md",
     "docs/arena/AWJ032_G3_HOSTED_PROOF_EXPECTATIONS_20260831.md",
     "docs/arena/AWJ032_G4_PREFETCH_PLAN_REVALIDATION_20260831.md",
+    "docs/arena/AWJ032_G5_RECOMPUTE_PROGRESS_VERSION_ADMISSION_20260831.md",
+    "docs/arena/AWJ032_G6_EXTERNAL_COORDINATE_DELTA_20260831.md",
+    "docs/arena/AWJ032_G6_GATE10_OWNER_HOST_EVIDENCE_REQUEST_20260831.md",
     "docs/aura_substrate_manifest.files.01.json",
     "docs/aura_substrate_manifest.files.02.json",
     "docs/aura_substrate_manifest.files.03.json",
@@ -1684,6 +1689,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/airllm_source_admission.py",
     "tools/awj032/glm53_compatibility_probe.py",
     "tools/awj032/glm53_g4_prefetch_plan_revalidation.py",
+    "tools/awj032/glm53_g5_recompute_admission.py",
+    "tools/awj032/glm53_g6_gate10_owner_host_evidence_request.py",
     "tools/awj032/glm53_io_feasibility.py",
     "tools/awj032/glm53_packed_expert_pager.py",
     "tools/awj032/glm53_pager_cache_telemetry.py",
@@ -1694,6 +1701,8 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/awj032/test_glm53_compatibility_probe.py",
     "tools/awj032/test_glm53_g3_abstention_safe_transfer_admission.py",
     "tools/awj032/test_glm53_g4_prefetch_plan_revalidation.py",
+    "tools/awj032/test_glm53_g5_recompute_admission.py",
+    "tools/awj032/test_glm53_g6_gate10_owner_host_evidence_request.py",
     "tools/awj032/test_glm53_io_feasibility.py",
     "tools/awj032/test_glm53_packed_expert_pager.py",
     "tools/awj032/test_glm53_pager_cache_telemetry.py",
@@ -1830,16 +1839,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1690,
-  "bytes": 26684852,
-  "tokens_est": 6661613,
+  "files": 1699,
+  "bytes": 26778534,
+  "tokens_est": 6685032,
   "roles": {
     "interface_surface": 64,
-    "knowledge_artifact": 248,
+    "knowledge_artifact": 251,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1027,
-    "schema_or_lexicon": 281,
+    "python_module": 1031,
+    "schema_or_lexicon": 283,
     "support_file": 49
   }
 }
