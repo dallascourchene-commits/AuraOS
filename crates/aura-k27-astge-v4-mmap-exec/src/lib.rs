@@ -2,10 +2,10 @@ use aura_k27_astge::{
     admit_data_serving_backend_v2, BackendAdmissionReasonV2, DataServingBackendAdmissionV2,
     DataServingBackendV2, GenerationBoundGraphReader, GenerationStorageError, HydratedConeV1,
     MmapAdmissionErrorV2, MmapBackendAdmissionReceiptV2, MmapCandidateLeaseV2, NodeIndexRecordV1,
-    PhysicalPageV1, StorageGenerationBindingV1, BLOCK_SIZE, NODE_INDEX_RECORD_SIZE,
+    PageSource, PhysicalPageV1, SPlaneGraphReader, StorageError, StorageGenerationBindingV1,
+    BLOCK_SIZE, NODE_INDEX_RECORD_SIZE,
 };
 use memmap2::{Mmap, MmapOptions};
-use std::collections::{HashMap, HashSet, VecDeque};
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 use std::fs::File;
@@ -14,7 +14,8 @@ use std::path::{Path, PathBuf};
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum V4ExecutionError {
     Admission(MmapAdmissionErrorV2),
-    Storage(GenerationStorageError),
+    ReadSeek(GenerationStorageError),
+    Mmap(StorageError),
     ReceiptIncoherent,
     ZeroLengthMapping,
 }
@@ -32,7 +33,12 @@ impl From<MmapAdmissionErrorV2> for V4ExecutionError {
 }
 impl From<GenerationStorageError> for V4ExecutionError {
     fn from(value: GenerationStorageError) -> Self {
-        Self::Storage(value)
+        Self::ReadSeek(value)
+    }
+}
+impl From<StorageError> for V4ExecutionError {
+    fn from(value: StorageError) -> Self {
+        Self::Mmap(value)
     }
 }
 
@@ -68,19 +74,19 @@ impl CanonicalDataServingReaderV2 {
         match self {
             Self::ReadSeek { reader, .. } => reader
                 .query_cone(root_id, max_depth, max_nodes, edge_kind_filter)
-                .map_err(Into::into),
+                .map_err(V4ExecutionError::ReadSeek),
             Self::Mmap { reader, .. } => reader
                 .query_cone(root_id, max_depth, max_nodes, edge_kind_filter)
-                .map_err(Into::into),
+                .map_err(V4ExecutionError::Mmap),
         }
     }
 }
 
 /// Canonical V4 execution boundary.
 ///
-/// Callers provide current paths + the independent snapshot and placement binding inputs only.
-/// They cannot provide a capability, registry, lease, trusted boolean, opened file or mmap token.
-/// Production therefore remains ReadSeekSafeDefault while the V4 source-owned registry is empty.
+/// Callers provide current paths plus independent snapshot and placement inputs only.
+/// They cannot provide a capability, registry, lease, opened File, trust flag, or mmap token.
+/// Production therefore stays on ReadSeekSafeDefault while PR489's V4 registry is empty.
 pub fn open_canonical_data_serving_reader_v2(
     storage_root: impl AsRef<Path>,
     node_index_path: impl AsRef<Path>,
@@ -154,16 +160,53 @@ fn require_positive_receipt(
     Ok(())
 }
 
-pub struct LeaseBoundMmapReaderV2 {
+struct BoundMmapPagesV2 {
+    mmap: Mmap,
     binding: StorageGenerationBindingV1,
-    index: HashMap<u64, NodeIndexRecordV1>,
+}
+
+impl PageSource for BoundMmapPagesV2 {
+    fn read_page(&mut self, pbn: u64) -> Result<[u8; BLOCK_SIZE], StorageError> {
+        if pbn >= self.binding.page_count {
+            return Err(StorageError::Io("PAGE_OUT_OF_RANGE".to_string()));
+        }
+        let offset = usize::try_from(pbn)
+            .map_err(|_| StorageError::Io("PAGE_OFFSET_OVERFLOW".to_string()))?
+            .checked_mul(BLOCK_SIZE)
+            .ok_or_else(|| StorageError::Io("PAGE_OFFSET_OVERFLOW".to_string()))?;
+        let end = offset
+            .checked_add(BLOCK_SIZE)
+            .ok_or_else(|| StorageError::Io("PAGE_OFFSET_OVERFLOW".to_string()))?;
+        let raw: [u8; BLOCK_SIZE] = self.mmap[offset..end]
+            .try_into()
+            .map_err(|_| StorageError::Io("PAGE_LENGTH_MISMATCH".to_string()))?;
+        let page = PhysicalPageV1::decode(&raw)?;
+        if page.pbn != pbn {
+            return Err(StorageError::PageNumberMismatch {
+                requested: pbn,
+                encoded: page.pbn,
+            });
+        }
+        if page.placement_generation != self.binding.placement_generation {
+            return Err(StorageError::Io(
+                "PLACEMENT_GENERATION_MISMATCH".to_string(),
+            ));
+        }
+        if page.placement_scheme_digest != self.binding.placement_scheme_digest {
+            return Err(StorageError::Io("PLACEMENT_SCHEME_MISMATCH".to_string()));
+        }
+        Ok(raw)
+    }
+}
+
+pub struct LeaseBoundMmapReaderV2 {
     _node_mmap: Mmap,
-    pages_mmap: Mmap,
+    reader: SPlaneGraphReader<BoundMmapPagesV2>,
 }
 
 impl LeaseBoundMmapReaderV2 {
-    /// The only public mmap constructor consumes the opaque V4 lease. External code cannot
-    /// manufacture that lease because PR489 keeps its fields private and owns the sole minting path.
+    /// The sole public mmap constructor consumes PR489's opaque V4 lease.
+    /// External code cannot manufacture that lease because its fields are private.
     pub fn from_lease(
         lease: MmapCandidateLeaseV2,
         binding: StorageGenerationBindingV1,
@@ -175,106 +218,14 @@ impl LeaseBoundMmapReaderV2 {
     }
 
     pub fn query_cone(
-        &self,
+        &mut self,
         root_id: u64,
         max_depth: usize,
         max_nodes: usize,
         edge_kind_filter: Option<u8>,
-    ) -> Result<HydratedConeV1, GenerationStorageError> {
-        if max_nodes == 0 {
-            return Err(GenerationStorageError::ConeBudgetExceeded { max_nodes });
-        }
-        if !self.index.contains_key(&root_id) {
-            return Err(GenerationStorageError::MissingRoot(root_id));
-        }
-
-        let mut queue = VecDeque::from([(root_id, 0usize)]);
-        let mut visited = HashSet::from([root_id]);
-        let mut node_ids = Vec::new();
-        let mut unique_pages = HashSet::new();
-        let mut edges_traversed = 0usize;
-
-        while let Some((node_id, depth)) = queue.pop_front() {
-            if node_ids.len() >= max_nodes {
-                return Err(GenerationStorageError::ConeBudgetExceeded { max_nodes });
-            }
-            let record = self
-                .index
-                .get(&node_id)
-                .cloned()
-                .ok_or(GenerationStorageError::MissingTarget(node_id))?;
-            node_ids.push(node_id);
-            if depth >= max_depth || record.out_degree == 0 {
-                continue;
-            }
-
-            let page = self.decode_page(record.pbn)?;
-            unique_pages.insert(record.pbn);
-            let row_index = record.row as usize;
-            if row_index >= page.rows.len() {
-                return Err(GenerationStorageError::InvalidRowIndex {
-                    node_id,
-                    row: row_index,
-                    row_count: page.rows.len(),
-                });
-            }
-            let row = page.rows[row_index];
-            if row.degree != record.out_degree {
-                return Err(GenerationStorageError::NodeDegreeMismatch {
-                    node_id,
-                    index_degree: record.out_degree,
-                    page_degree: row.degree,
-                });
-            }
-            let start = row.first_edge as usize;
-            let end = start + row.degree as usize;
-            for edge_index in start..end {
-                let kind = page.edge_kinds[edge_index];
-                if edge_kind_filter.is_some_and(|wanted| kind != wanted) {
-                    continue;
-                }
-                edges_traversed += 1;
-                let target = page.targets[edge_index];
-                if !self.index.contains_key(&target) {
-                    return Err(GenerationStorageError::MissingTarget(target));
-                }
-                if visited.insert(target) {
-                    queue.push_back((target, depth + 1));
-                }
-            }
-        }
-
-        Ok(HydratedConeV1 {
-            root_id,
-            node_ids,
-            unique_pages: unique_pages.len(),
-            edges_traversed,
-        })
-    }
-
-    fn decode_page(&self, pbn: u64) -> Result<PhysicalPageV1, GenerationStorageError> {
-        if pbn >= self.binding.page_count {
-            return Err(GenerationStorageError::PageOutOfRange {
-                pbn,
-                page_count: self.binding.page_count,
-            });
-        }
-        let offset = usize::try_from(pbn)
-            .map_err(|_| GenerationStorageError::LengthOverflow)?
-            .checked_mul(BLOCK_SIZE)
-            .ok_or(GenerationStorageError::LengthOverflow)?;
-        let end = offset
-            .checked_add(BLOCK_SIZE)
-            .ok_or(GenerationStorageError::LengthOverflow)?;
-        let raw: [u8; BLOCK_SIZE] = self.pages_mmap[offset..end]
-            .try_into()
-            .map_err(|_| GenerationStorageError::PageFileLengthMismatch {
-                expected: exact_len(self.binding.page_count, BLOCK_SIZE)?,
-                actual: self.pages_mmap.len() as u64,
-            })?;
-        let page = PhysicalPageV1::decode(&raw)?;
-        bind_page(&page, pbn, &self.binding)?;
-        Ok(page)
+    ) -> Result<HydratedConeV1, StorageError> {
+        self.reader
+            .query_cone(root_id, max_depth, max_nodes, edge_kind_filter)
     }
 }
 
@@ -285,8 +236,14 @@ fn map_verified_files(
 ) -> Result<LeaseBoundMmapReaderV2, V4ExecutionError> {
     let expected_nodes = exact_len(binding.node_count, NODE_INDEX_RECORD_SIZE)?;
     let expected_pages = exact_len(binding.page_count, BLOCK_SIZE)?;
-    let node_len = node_file.metadata()?.len();
-    let page_len = page_file.metadata()?.len();
+    let node_len = node_file
+        .metadata()
+        .map_err(|error| StorageError::Io(error.to_string()))?
+        .len();
+    let page_len = page_file
+        .metadata()
+        .map_err(|error| StorageError::Io(error.to_string()))?
+        .len();
     if node_len != expected_nodes {
         return Err(GenerationStorageError::NodeIndexLengthMismatch {
             expected: expected_nodes,
@@ -305,78 +262,60 @@ fn map_verified_files(
         return Err(V4ExecutionError::ZeroLengthMapping);
     }
 
-    // SAFETY: the public mmap path can reach this point only after consuming a V4 opaque lease.
-    // `into_verified_files()` performs the final same-handle identity revalidation immediately
-    // before transfer. PR489's source-owned capability owns replacement-only/no-in-place-mutation
-    // and mapped-lifetime assertions. This crate does not generalize that into intrinsic mmap safety.
-    let node_mmap = unsafe { MmapOptions::new().map(&node_file)? };
-    // SAFETY: same exact-handle / source-owned lifetime invariant as the node mapping above.
-    let pages_mmap = unsafe { MmapOptions::new().map(&page_file)? };
-    let index = decode_index(&node_mmap, &binding)?;
-    Ok(LeaseBoundMmapReaderV2 {
+    // SAFETY: the public mmap path reaches this helper only after PR489 mints an opaque lease and
+    // `into_verified_files()` revalidates the same opened handles at handoff. PR489's source-owned
+    // capability owns replacement-only/no-in-place-mutation and bounded-lifetime assertions.
+    // This crate does not generalize those conditions into intrinsic mmap safety.
+    let node_mmap = unsafe {
+        MmapOptions::new()
+            .map(&node_file)
+            .map_err(|error| StorageError::Io(error.to_string()))?
+    };
+    // SAFETY: same exact-handle and source-owned lifetime invariant as the node map above.
+    let page_mmap = unsafe {
+        MmapOptions::new()
+            .map(&page_file)
+            .map_err(|error| StorageError::Io(error.to_string()))?
+    };
+
+    let records = decode_records(&node_mmap, &binding)?;
+    let pages = BoundMmapPagesV2 {
+        mmap: page_mmap,
         binding,
-        index,
+    };
+    let reader = SPlaneGraphReader::new(records, pages)?;
+    Ok(LeaseBoundMmapReaderV2 {
         _node_mmap: node_mmap,
-        pages_mmap,
+        reader,
     })
 }
 
-fn decode_index(
+fn decode_records(
     bytes: &[u8],
     binding: &StorageGenerationBindingV1,
-) -> Result<HashMap<u64, NodeIndexRecordV1>, GenerationStorageError> {
+) -> Result<Vec<NodeIndexRecordV1>, V4ExecutionError> {
     let expected = exact_len(binding.node_count, NODE_INDEX_RECORD_SIZE)?;
     if bytes.len() as u64 != expected {
         return Err(GenerationStorageError::NodeIndexLengthMismatch {
             expected,
             actual: bytes.len() as u64,
-        });
+        }
+        .into());
     }
-    let mut out = HashMap::with_capacity(binding.node_count as usize);
+    let mut records = Vec::with_capacity(binding.node_count as usize);
     for chunk in bytes.chunks_exact(NODE_INDEX_RECORD_SIZE) {
-        let raw: &[u8; NODE_INDEX_RECORD_SIZE] = chunk
-            .try_into()
-            .map_err(|_| GenerationStorageError::NodeIndexLengthMismatch {
-                expected,
-                actual: bytes.len() as u64,
-            })?;
-        let record = NodeIndexRecordV1::decode(raw)?;
+        let record = NodeIndexRecordV1::decode(chunk)?;
         if record.pbn >= binding.page_count {
             return Err(GenerationStorageError::IndexPageOutOfRange {
                 node_id: record.node_id,
                 pbn: record.pbn,
                 page_count: binding.page_count,
-            });
+            }
+            .into());
         }
-        let node_id = record.node_id;
-        if out.insert(node_id, record).is_some() {
-            return Err(GenerationStorageError::DuplicateNodeId(node_id));
-        }
+        records.push(record);
     }
-    Ok(out)
-}
-
-fn bind_page(
-    page: &PhysicalPageV1,
-    pbn: u64,
-    binding: &StorageGenerationBindingV1,
-) -> Result<(), GenerationStorageError> {
-    if page.pbn != pbn {
-        return Err(GenerationStorageError::PageNumberMismatch {
-            requested: pbn,
-            encoded: page.pbn,
-        });
-    }
-    if page.placement_generation != binding.placement_generation {
-        return Err(GenerationStorageError::PlacementGenerationMismatch {
-            expected: binding.placement_generation,
-            observed: page.placement_generation,
-        });
-    }
-    if page.placement_scheme_digest != binding.placement_scheme_digest {
-        return Err(GenerationStorageError::PlacementSchemeMismatch);
-    }
-    Ok(())
+    Ok(records)
 }
 
 fn exact_len(count: u64, width: usize) -> Result<u64, GenerationStorageError> {
@@ -479,17 +418,14 @@ mod tests {
     fn production_route_remains_readseek_without_source_owned_capability() {
         let root = root("safe-default");
         let (binding, node, pages) = fixture(&root);
-        let mut reader = open_canonical_data_serving_reader_v2(
-            &root,
-            &node,
-            &pages,
-            binding,
-            41,
-            [0x44; 32],
-        )
-        .unwrap();
+        let mut reader =
+            open_canonical_data_serving_reader_v2(&root, &node, &pages, binding, 41, [0x44; 32])
+                .unwrap();
         assert_eq!(reader.backend(), DataServingBackendV2::ReadSeekSafeDefault);
-        assert_eq!(reader.receipt().reason, BackendAdmissionReasonV2::CapabilityUnavailable);
+        assert_eq!(
+            reader.receipt().reason,
+            BackendAdmissionReasonV2::CapabilityUnavailable
+        );
         let cone = reader.query_cone(0, 1, 10, None).unwrap();
         assert_eq!(cone.node_ids, vec![0, 1, 2]);
         assert_eq!(cone.edges_traversed, 2);
@@ -502,7 +438,12 @@ mod tests {
         let (binding, node, pages) = fixture(&root);
         let mut safe = GenerationBoundGraphReader::open(&node, &pages, binding.clone()).unwrap();
         let expected = safe.query_cone(0, 2, 10, None).unwrap();
-        let mapped = map_verified_files(File::open(&node).unwrap(), File::open(&pages).unwrap(), binding).unwrap();
+        let mut mapped = map_verified_files(
+            File::open(&node).unwrap(),
+            File::open(&pages).unwrap(),
+            binding,
+        )
+        .unwrap();
         let observed = mapped.query_cone(0, 2, 10, None).unwrap();
         assert_eq!(observed, expected);
         fs::remove_dir_all(root).unwrap();
@@ -517,8 +458,11 @@ mod tests {
         let page_file = File::open(&pages).unwrap();
         fs::rename(&node, root.join("nodes.old")).unwrap();
         fs::rename(&pages, root.join("pages.old")).unwrap();
-        let mapped = map_verified_files(node_file, page_file, binding).unwrap();
-        assert_eq!(mapped.query_cone(0, 1, 10, None).unwrap().node_ids, vec![0, 1, 2]);
+        let mut mapped = map_verified_files(node_file, page_file, binding).unwrap();
+        assert_eq!(
+            mapped.query_cone(0, 1, 10, None).unwrap().node_ids,
+            vec![0, 1, 2]
+        );
         fs::remove_dir_all(root).unwrap();
     }
 }
