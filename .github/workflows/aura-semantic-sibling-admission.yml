@@ -16,11 +16,13 @@ permissions:
 
 jobs:
   semantic-sibling-admission:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
-      - name: Checkout exact pull-request tree
+      - name: Checkout exact child head
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
 
       - name: Set up Python
@@ -28,14 +30,24 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Assert checked-out generation is exact pull-request head
+        if: github.event_name == 'pull_request'
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+
       - name: Verify exact PR648 code parent ancestry
         run: |
+          set -euo pipefail
           git merge-base --is-ancestor bba262fbcca45f729486f204d5413d396d2c1609 HEAD
 
       - name: Revalidate exact-green PR648 and PR649 hosted generations
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           python - <<'PY'
           import json
           import os
@@ -54,7 +66,7 @@ jobs:
                       "X-GitHub-Api-Version": "2022-11-28",
                   },
               )
-              with urllib.request.urlopen(req) as response:
+              with urllib.request.urlopen(req, timeout=30) as response:
                   run = json.load(response)
               assert run["head_sha"] == head, (run_id, run["head_sha"], head)
               assert run["status"] == "completed", (run_id, run["status"])
@@ -63,18 +75,24 @@ jobs:
 
       - name: Compile exact identity and sibling gates
         run: |
-          python -m py_compile tools/aura_dual_key_evidence_generation.py
-          python -m py_compile tools/aura_semantic_sibling_admission.py
+          set -euo pipefail
+          python -m py_compile \
+            tools/aura_dual_key_evidence_generation.py \
+            tools/aura_semantic_sibling_admission.py \
+            tests/test_aura_dual_key_evidence_generation.py \
+            tests/test_aura_semantic_sibling_admission.py
 
       - name: Run dual-key and semantic-sibling adversarials
         run: |
-          python -m unittest \
+          set -euo pipefail
+          python -m unittest -v \
             tests.test_aura_dual_key_evidence_generation \
             tests.test_aura_semantic_sibling_admission
 
       - name: Emit deterministic semantic-sibling receipt
         run: |
-          python tools/aura_semantic_sibling_admission.py > /tmp/aura-semantic-sibling-receipt.json
+          set -euo pipefail
+          python -m tools.aura_semantic_sibling_admission > /tmp/aura-semantic-sibling-receipt.json
           python - <<'PY'
           import json
           with open("/tmp/aura-semantic-sibling-receipt.json", "r", encoding="utf-8") as fh:
