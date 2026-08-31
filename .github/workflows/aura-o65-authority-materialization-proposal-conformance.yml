@@ -1,0 +1,294 @@
+name: Aura O65 Authority Materialization Proposal Conformance
+
+on:
+  pull_request:
+    paths:
+      - 'tools/aura_authority_materialization_proposal_conformance.py'
+      - 'tests/test_aura_authority_materialization_proposal_conformance.py'
+      - '.github/workflows/aura-o65-authority-materialization-proposal-conformance.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  o65-authority-materialization-conformance:
+    runs-on: ubuntu-24.04
+    env:
+      REPO: dallascourchene-commits/AuraOS
+      SEMANTIC_HEAD: fff1e38f78c54c387c1131543ce332d115ad7f5c
+      SEMANTIC_SOURCE_BLOB: bdaa9b0338cdab05c48dc0337ab46522b40ac42f
+      SEMANTIC_TEST_BLOB: d71563cbfa3e0a29b86056fbd5ac27916e039624
+      Q20_HEAD: 8122131047477c65030af8a3dce97a7881a42c28
+      Q20_RUN: '33408333739'
+      Q20_JOB: '99541395341'
+      Q20_SOURCE_BLOB: 0aa60aadcc73522aa124e8a36628ff1bbbbbb0ac
+      Q20_TEST_BLOB: 8501a3e31704c2425527368915d10ee7f17eccdd
+      O64_HEAD: 860b6cb41774e31c1f1ba1942d2f5c91914af0c3
+      O64_RUN: '33408498622'
+      O64_JOB: '99541935417'
+      O64_SOURCE_BLOB: f4874e53b80987da8d3248778d64e419d676309e
+      O64_TEST_BLOB: b0e57c12c10c02d5fe40cc7275261c10694a4e31
+      PR_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Checkout exact pull-request proof generation
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir repo
+          cd repo
+          git init -q
+          git remote add origin "https://github.com/${REPO}.git"
+          git fetch -q --no-tags --depth=1 origin "${PR_HEAD}"
+          git checkout -q --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "${PR_HEAD}"
+
+      - name: Authenticate immutable O65 semantic blobs and exact parent blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd repo
+          for sha in "${SEMANTIC_HEAD}" "${Q20_HEAD}" "${O64_HEAD}"; do
+            git fetch -q --no-tags --depth=1 origin "${sha}"
+          done
+          test "$(git rev-parse "${SEMANTIC_HEAD}:tools/aura_authority_materialization_proposal_conformance.py")" = "${SEMANTIC_SOURCE_BLOB}"
+          test "$(git rev-parse "${SEMANTIC_HEAD}:tests/test_aura_authority_materialization_proposal_conformance.py")" = "${SEMANTIC_TEST_BLOB}"
+          test "$(git rev-parse HEAD:tools/aura_authority_materialization_proposal_conformance.py)" = "${SEMANTIC_SOURCE_BLOB}"
+          test "$(git rev-parse HEAD:tests/test_aura_authority_materialization_proposal_conformance.py)" = "${SEMANTIC_TEST_BLOB}"
+          test "$(git rev-parse "${Q20_HEAD}:tools/quantization/aura_glm53_q20_materialization_bound_proposal.py")" = "${Q20_SOURCE_BLOB}"
+          test "$(git rev-parse "${Q20_HEAD}:tests/test_aura_glm53_q20_materialization_bound_proposal.py")" = "${Q20_TEST_BLOB}"
+          test "$(git rev-parse "${O64_HEAD}:tools/aura_authority_scoped_evidence_admission.py")" = "${O64_SOURCE_BLOB}"
+          test "$(git rev-parse "${O64_HEAD}:tests/test_aura_authority_scoped_evidence_admission.py")" = "${O64_TEST_BLOB}"
+          git show "${Q20_HEAD}:tools/quantization/aura_glm53_q20_materialization_bound_proposal.py" > /tmp/q20_parent.py
+          git show "${O64_HEAD}:tools/aura_authority_scoped_evidence_admission.py" > /tmp/o64_parent.py
+
+      - name: Revalidate exact hosted parent runs and producer jobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+
+          repo = os.environ['REPO']
+          token = os.environ['GH_TOKEN']
+          expected = [
+              (int(os.environ['Q20_RUN']), int(os.environ['Q20_JOB']), os.environ['Q20_HEAD'], 'GLM53 Q20 Materialization Bound Proposal'),
+              (int(os.environ['O64_RUN']), int(os.environ['O64_JOB']), os.environ['O64_HEAD'], 'Aura O64 Authority Representation Evidence Proof'),
+          ]
+
+          def get(url):
+              req = urllib.request.Request(url, headers={
+                  'Authorization': f'Bearer {token}',
+                  'Accept': 'application/vnd.github+json',
+                  'X-GitHub-Api-Version': '2022-11-28',
+              })
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  return json.load(r)
+
+          for run_id, job_id, head, workflow_name in expected:
+              run = get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}')
+              assert run['head_sha'] == head, (run_id, run['head_sha'], head)
+              assert run['name'] == workflow_name, (run_id, run['name'], workflow_name)
+              assert run['status'] == 'completed' and run['conclusion'] == 'success', run
+              jobs = get(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}/jobs?per_page=100')['jobs']
+              job = next(j for j in jobs if j['id'] == job_id)
+              assert job['status'] == 'completed' and job['conclusion'] == 'success', job
+              assert job['head_sha'] == head, (job_id, job['head_sha'], head)
+              print(f'parent_run_ok run={run_id} job={job_id} head={head}')
+          PY
+
+      - name: Compile exact semantic and parent surfaces
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd repo
+          python -m py_compile \
+            tools/aura_authority_materialization_proposal_conformance.py \
+            tests/test_aura_authority_materialization_proposal_conformance.py \
+            /tmp/q20_parent.py /tmp/o64_parent.py
+
+      - name: Run focused O65 adversarial suite
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd repo
+          python -m unittest discover -s tests -p 'test_aura_authority_materialization_proposal_conformance.py' -v
+
+      - name: Execute both parent implementations through O65 conformance
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd repo
+          python - <<'PY'
+          import hashlib, importlib.util, json
+          from dataclasses import asdict
+          from tools import aura_authority_materialization_proposal_conformance as o65
+
+          def load(name, path):
+              spec = importlib.util.spec_from_file_location(name, path)
+              mod = importlib.util.module_from_spec(spec)
+              spec.loader.exec_module(mod)
+              return mod
+
+          def h(label):
+              return hashlib.sha256(label.encode('utf-8')).hexdigest()
+
+          q20 = load('q20_parent', '/tmp/q20_parent.py')
+          o64 = load('o64_parent', '/tmp/o64_parent.py')
+
+          # Execute Q20's exact fixture and prove O65 independently reconstructs its lineage.
+          q20_receipt = q20.exact_terminal_fixture()
+          assert q20_receipt.materialization_relation_digest == o65.q20_materialization_relation_digest()
+          assert q20_receipt.materialization_bound_proposal_basis_digest == o65.q20_materialization_bound_basis_digest()
+          assert q20_receipt.execution_authority_granted is False
+          assert q20_receipt.effect_authority_granted is False
+
+          # Execute PR #702's real admission API against the exact Q20-derived representation projection.
+          rep = o64.RepresentationIdentity(
+              schema_version=o64.REPRESENTATION_SCHEMA,
+              representation_family=o65.Q20_REPRESENTATION_FAMILY,
+              representation_digest=o65.Q20_Q19_REPRESENTATION_IDENTITY,
+              accounting_domain=o65.Q20_ACCOUNTING_DOMAIN,
+              accounting_contract_digest=o65.q20_accounting_contract_digest(),
+              rate_numerator=225,
+              rate_denominator=100,
+              bounded_scope_digest=o65.q20_scope_digest(),
+          )
+          route = h('o65:exact-evidence-route')
+          authority = o64.AuthorityBindingRef(
+              schema_version=o64.AUTHORITY_SCHEMA,
+              owner_ref='owner:o65-evidence-host:v1',
+              policy_generation_ref='authority-policy:o65:v1',
+              binding_receipt_digest=h('o65:authority-binding'),
+              authority_state='VERIFIED_BOUNDED',
+              authority_scope='D0_O65_BOUNDED_EVIDENCE',
+              execution_required=True,
+              expected_route_fingerprint=route,
+              expected_observer_identity='O65_HOST_OBSERVER',
+              expected_source_verifier_identity='O65_SOURCE_VERIFIER',
+          )
+          policy = o64.EvidenceAdmissionPolicy(
+              schema_version=o64.POLICY_SCHEMA,
+              policy_owner_ref='owner:o65-evidence-admission:v1',
+              policy_generation_ref='admission-policy:o65:v1',
+              expected_authority_owner_ref=authority.owner_ref,
+              expected_authority_policy_generation_ref=authority.policy_generation_ref,
+              expected_authority_scope=authority.authority_scope,
+              require_execution_authority=True,
+              allowed_accounting_domains=(o65.Q20_ACCOUNTING_DOMAIN,),
+              allowed_representation_families=(o65.Q20_REPRESENTATION_FAMILY,),
+          )
+          candidate = o64.EvidenceAdmissionCandidate(
+              schema_version=o64.CANDIDATE_SCHEMA,
+              evidence_id='evidence:q20:materialization-bound:2p25',
+              evidence_generation=o65.Q20_PROOF_HEAD,
+              evidence_receipt_digest=h('o65:q20-evidence-receipt'),
+              evidence_scope_digest=o65.q20_scope_digest(),
+              source_generation=o65.Q20_Q19_SOURCE_GATE_GENERATION,
+              source_receipt_digest=h('o65:q20-source-receipt'),
+              source_scope_digest=h('o65:q20-source-scope'),
+              route_fingerprint=route,
+              observer_identity='O65_HOST_OBSERVER',
+              source_verifier_identity='O65_SOURCE_VERIFIER',
+              outcome='SUPPORTS',
+              representation=rep,
+              currentness_roots=(
+                  f'q20-proof:{o65.Q20_PROOF_HEAD}',
+                  f'q20-source:{o65.Q20_Q19_SOURCE_GATE_GENERATION}',
+                  f'o64-proof:{o65.O64_PROOF_HEAD}',
+                  'authority-policy:o65:v1',
+                  'admission-policy:o65:v1',
+              ),
+          )
+          admitted = o64.admit_evidence(candidate=candidate, authority=authority, policy=policy)
+          assert admitted.disposition == 'VERIFIED_BOUNDED'
+          assert admitted.score_mass_eligible and admitted.proposal_mass_eligible
+          assert admitted.execution_authorized is False
+          assert admitted.provider_effect_authorized is False
+          assert admitted.gate10_promoted is False
+          assert admitted.representation_fingerprint == o65.q20_representation_fingerprint()
+
+          evidence = o65.AuthorityScopedEvidenceProjection(
+              proof_head=o65.O64_PROOF_HEAD,
+              semantic_head=o65.O64_SEMANTIC_HEAD,
+              run_id=o65.O64_RUN,
+              job_id=o65.O64_JOB,
+              workflow_name=o65.O64_WORKFLOW,
+              authority_fingerprint=admitted.authority_fingerprint,
+              admission_policy_fingerprint=admitted.admission_policy_fingerprint,
+              evidence_admission_fingerprint=admitted.evidence_admission_fingerprint,
+              representation_fingerprint=admitted.representation_fingerprint,
+              representation_family=rep.representation_family,
+              representation_digest=rep.representation_digest,
+              accounting_domain=rep.accounting_domain,
+              accounting_contract_digest=rep.accounting_contract_digest,
+              rate_numerator=rep.rate_numerator,
+              rate_denominator=rep.rate_denominator,
+              bounded_scope_digest=rep.bounded_scope_digest,
+              evidence_scope_digest=candidate.evidence_scope_digest,
+              currentness_roots=candidate.currentness_roots,
+              disposition=admitted.disposition,
+              score_mass_eligible=admitted.score_mass_eligible,
+              proposal_mass_eligible=admitted.proposal_mass_eligible,
+          )
+          result = o65.prove_proposal_evidence_conformance(
+              proposal=o65.exact_q20_projection(), evidence=evidence
+          )
+          assert result.disposition == 'CONFORMANT_BOUNDED_SUPPORT'
+          assert result.bounded_evidence_supports_exact_proposal is True
+          assert result.live_proposal_currentness_resolved is False
+          assert not any((result.execution_authorized, result.provider_effect_authorized,
+                          result.semantic_k27_authority, result.native_private_transformer_kv_accessed,
+                          result.gate10_promoted, result.merge_or_deployment_authorized))
+
+          receipt = {
+              'schema': o65.SCHEMA,
+              'parent_q20': {'head': o65.Q20_PROOF_HEAD, 'run': o65.Q20_RUN, 'job': o65.Q20_JOB},
+              'parent_o64_evidence': {'head': o65.O64_PROOF_HEAD, 'run': o65.O64_RUN, 'job': o65.O64_JOB},
+              'q20_receipt_digest': q20_receipt.receipt_digest,
+              'authority_fingerprint': admitted.authority_fingerprint,
+              'admission_policy_fingerprint': admitted.admission_policy_fingerprint,
+              'evidence_admission_fingerprint': admitted.evidence_admission_fingerprint,
+              'representation_fingerprint': admitted.representation_fingerprint,
+              'materialization_relation_digest': result.materialization_relation_digest,
+              'materialization_bound_proposal_basis_digest': result.proposal_basis_digest,
+              'proposal_evidence_support_digest': result.proposal_evidence_support_digest,
+              'conformance_receipt_digest': result.receipt_digest,
+              'claim_ceiling': {
+                  'live_proposal_currentness_resolved': False,
+                  'execution_authorized': False,
+                  'provider_effect_authorized': False,
+                  'semantic_k27_authority': False,
+                  'native_private_transformer_kv_accessed': False,
+                  'gate10_promoted': False,
+                  'merge_or_deployment_authorized': False,
+              },
+          }
+          print(json.dumps(receipt, sort_keys=True, indent=2))
+          with open('/tmp/o65-r-receipt.json', 'w', encoding='utf-8') as f:
+              json.dump(receipt, f, sort_keys=True, indent=2)
+              f.write('\n')
+          PY
+
+      - name: Consequence ceiling and proof summary
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd repo
+          python tools/aura_authority_materialization_proposal_conformance.py
+          {
+            echo '## O65-R exact proof'
+            echo
+            echo '- Exact Q20 hosted parent: revalidated'
+            echo '- Exact O64 evidence-admission hosted parent: revalidated'
+            echo '- Q20 materialization fixture: executed'
+            echo '- O64 authority-scoped evidence admission: executed'
+            echo '- O65 representation/materialization/authority conformance: executed'
+            echo '- Live proposal currentness: NOT resolved here'
+            echo '- Execution/effect/K27/Gate-10/merge authority: NOT granted'
+            echo
+            echo '```json'
+            cat /tmp/o65-r-receipt.json
+            echo '```'
+          } >> "${GITHUB_STEP_SUMMARY}"
