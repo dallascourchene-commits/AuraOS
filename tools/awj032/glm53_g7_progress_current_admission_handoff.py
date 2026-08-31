@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
-"""G7: progress-bound current-generation GLM-5.3 admission handoff.
+"""G7 v2: structurally bind GLM-5.3 progress handoff to admission reuse.
 
 D0 / HS1 / NONPROMOTING.
 
 Exactly two terminal-green semantic parents:
 - NAV-14 / PR #768: progress-bound hydrated version handoff candidate.
 - Generation-bound admission reuse / PR #769: historical bounded admission is
-  reusable only when identity-bearing current-use axes remain exact.
+  reusable only when identity-bearing presented use axes remain exact.
 
-This membrane joins those consequences without cross-casting either into
-source truth, read currentness, execution authority, or Gate-10 evidence.
+W3 repair:
+Caller-constructible parent projections and presented-use fields are not
+producer authentication or currentness truth. G7 therefore verifies the
+positive parent receipt digests for self-consistency, performs only a
+structural join, and leaves both parent-producer authentication and use-time
+currentness as explicit external debts.
 
 Laws:
+    SelfConsistentParentProjection != AuthenticatedParentReceipt
+    MatchingPresentedUseContext != AuthenticatedCurrentness
     ProgressBoundHandoffCandidate != AdmissionReuseCandidate
     HandoffMaterialContinuity != SourceReadCurrentness
     HistoricalAdmissionReuseCandidate != OwnerHostExecutionAuthority
@@ -28,21 +34,35 @@ NAV14_HEAD = "6cdd1be40428250bffba20e924f664c7be585469"
 NAV14_RUN = 33437542974
 NAV14_JOB = 99637538062
 NAV14_BLOB = "b1bdfb4c65281c314e658a6fb6fc8727a4b54245"
+NAV14_SCHEMA = "AURA-NAV14-PROGRESS-BOUND-HYDRATED-VERSION-HANDOFF-v1"
+NAV14_POSITIVE = "PROGRESS_BOUND_HANDOFF_CANDIDATE"
+NAV14_POSITIVE_REASON = (
+    "exact handoff material is bound to initial retrieval or an independent "
+    "provider/evidence state transition"
+)
+NAV14_ALLOWED_POSITIVE_RETRIEVAL_DECISIONS = frozenset(
+    {"ALLOW_INITIAL", "ALLOW_STATE_TRANSITION"}
+)
 
 ADMISSION_REUSE_HEAD = "d1a0f94255527835a59a70a0af7dc417ba1d023d"
 ADMISSION_REUSE_RUN = 33437612722
 ADMISSION_REUSE_JOB = 99637780915
 ADMISSION_REUSE_BLOB = "d171d0938e469a4383490d1a691750c2068f21e7"
+ADMISSION_REUSE_SCHEMA = "AURA-GENERATION-BOUND-ADMISSION-REUSE-v1"
+ADMISSION_REUSE_POSITIVE = "REUSE_CANDIDATE"
+ADMISSION_REUSE_POSITIVE_REASON = (
+    "all identity-bearing producer/source/evidence/owner/decision axes remain exact"
+)
 
 CONVERGENCE_COMMIT = "afadf96392b2a1fb0f32c488f1b240853b46462c"
-SCHEMA = "AURA-GLM53-G7-PROGRESS-CURRENT-ADMISSION-HANDOFF-v1"
+SCHEMA = "AURA-GLM53-G7-PROGRESS-ADMISSION-STRUCTURAL-HANDOFF-v2"
 REQUIRED_ADMISSION_FAMILY = "GLM53_BOUNDED_C2_PROPOSAL"
 HEX = frozenset("0123456789abcdef")
 
 
 class G7Disposition(str, Enum):
-    CURRENT_PROGRESS_BOUND_ADMISSION_HANDOFF_CANDIDATE = (
-        "CURRENT_PROGRESS_BOUND_ADMISSION_HANDOFF_CANDIDATE"
+    STRUCTURAL_PROGRESS_ADMISSION_MATCH_EXTERNAL_AUTH_REQUIRED = (
+        "STRUCTURAL_PROGRESS_ADMISSION_MATCH_EXTERNAL_AUTH_REQUIRED"
     )
     HOLD_PARENT_GENERATION = "HOLD_PARENT_GENERATION"
     HOLD_PROGRESS_HANDOFF_NOT_READY = "HOLD_PROGRESS_HANDOFF_NOT_READY"
@@ -51,9 +71,9 @@ class G7Disposition(str, Enum):
     HOLD_CLAIM_CEILING = "HOLD_CLAIM_CEILING"
     HOLD_SUBJECT_IDENTITY_MISMATCH = "HOLD_SUBJECT_IDENTITY_MISMATCH"
     HOLD_EVIDENCE_GENERATION_MISMATCH = "HOLD_EVIDENCE_GENERATION_MISMATCH"
-    HOLD_PROGRESS_RECEIPT_CHANGED = "HOLD_PROGRESS_RECEIPT_CHANGED"
-    HOLD_MATERIAL_CHANGED = "HOLD_MATERIAL_CHANGED"
-    HOLD_SOURCE_VIEW_CHANGED = "HOLD_SOURCE_VIEW_CHANGED"
+    HOLD_PRESENTED_PROGRESS_RECEIPT_CHANGED = "HOLD_PRESENTED_PROGRESS_RECEIPT_CHANGED"
+    HOLD_PRESENTED_MATERIAL_CHANGED = "HOLD_PRESENTED_MATERIAL_CHANGED"
+    HOLD_PRESENTED_SOURCE_VIEW_CHANGED = "HOLD_PRESENTED_SOURCE_VIEW_CHANGED"
 
 
 def _canonical(value: object) -> bytes:
@@ -85,9 +105,12 @@ def _digest(value: str, code: str) -> str:
 
 
 @dataclass(frozen=True)
-class ProgressBoundHandoffProjectionV1:
+class ProgressBoundHandoffProjectionV2:
     parent_head: str
     progress_handoff_digest: str
+    handoff_digest: str
+    retrieval_receipt_digest: str
+    retrieval_decision: str
     disposition: str
     subject_identity: str
     evidence_generation_key: str
@@ -106,9 +129,12 @@ class ProgressBoundHandoffProjectionV1:
     def validate_shape(self) -> None:
         _text(self.parent_head, "PROGRESS_PARENT_HEAD_REQUIRED")
         _digest(self.progress_handoff_digest, "PROGRESS_HANDOFF_DIGEST_REQUIRED")
+        _digest(self.handoff_digest, "NAV14_HANDOFF_DIGEST_REQUIRED")
+        _digest(self.retrieval_receipt_digest, "NAV14_RETRIEVAL_RECEIPT_DIGEST_REQUIRED")
+        _text(self.retrieval_decision, "NAV14_RETRIEVAL_DECISION_REQUIRED")
         _text(self.disposition, "PROGRESS_DISPOSITION_REQUIRED")
-        _text(self.subject_identity, "PROGRESS_SUBJECT_REQUIRED")
-        _text(self.evidence_generation_key, "PROGRESS_EVIDENCE_GENERATION_REQUIRED")
+        _digest(self.subject_identity, "PROGRESS_SUBJECT_DIGEST_REQUIRED")
+        _digest(self.evidence_generation_key, "PROGRESS_EVIDENCE_GENERATION_DIGEST_REQUIRED")
         _digest(self.material_digest, "PROGRESS_MATERIAL_DIGEST_REQUIRED")
         _text(self.exact_source_uri, "PROGRESS_SOURCE_URI_REQUIRED")
         for value, code in (
@@ -124,10 +150,15 @@ class ProgressBoundHandoffProjectionV1:
         ):
             if not isinstance(value, bool):
                 raise ValueError(code)
+        if self.disposition == NAV14_POSITIVE:
+            if self.retrieval_decision not in NAV14_ALLOWED_POSITIVE_RETRIEVAL_DECISIONS:
+                raise ValueError("NAV14_POSITIVE_RETRIEVAL_DECISION_INVALID")
+            if self.progress_handoff_digest != _expected_nav14_positive_digest(self):
+                raise ValueError("NAV14_PROGRESS_RECEIPT_SELF_INTEGRITY_MISMATCH")
 
 
 @dataclass(frozen=True)
-class AdmissionReuseProjectionV1:
+class AdmissionReuseProjectionV2:
     parent_head: str
     reuse_digest: str
     disposition: str
@@ -173,10 +204,13 @@ class AdmissionReuseProjectionV1:
         ):
             if not isinstance(value, bool):
                 raise ValueError(code)
+        if self.disposition == ADMISSION_REUSE_POSITIVE:
+            if self.reuse_digest != _expected_admission_reuse_positive_digest(self):
+                raise ValueError("ADMISSION_REUSE_RECEIPT_SELF_INTEGRITY_MISMATCH")
 
 
 @dataclass(frozen=True)
-class CurrentHandoffUseContextV1:
+class PresentedHandoffUseContextV2:
     progress_handoff_digest: str
     subject_identity: str
     evidence_generation_key: str
@@ -184,15 +218,15 @@ class CurrentHandoffUseContextV1:
     exact_source_uri: str
 
     def validate_shape(self) -> None:
-        _digest(self.progress_handoff_digest, "CURRENT_PROGRESS_DIGEST_REQUIRED")
-        _text(self.subject_identity, "CURRENT_SUBJECT_REQUIRED")
-        _text(self.evidence_generation_key, "CURRENT_EVIDENCE_GENERATION_REQUIRED")
-        _digest(self.material_digest, "CURRENT_MATERIAL_DIGEST_REQUIRED")
-        _text(self.exact_source_uri, "CURRENT_SOURCE_URI_REQUIRED")
+        _digest(self.progress_handoff_digest, "PRESENTED_PROGRESS_DIGEST_REQUIRED")
+        _digest(self.subject_identity, "PRESENTED_SUBJECT_DIGEST_REQUIRED")
+        _digest(self.evidence_generation_key, "PRESENTED_EVIDENCE_GENERATION_DIGEST_REQUIRED")
+        _digest(self.material_digest, "PRESENTED_MATERIAL_DIGEST_REQUIRED")
+        _text(self.exact_source_uri, "PRESENTED_SOURCE_URI_REQUIRED")
 
 
 @dataclass(frozen=True)
-class G7HandoffReceiptV1:
+class G7HandoffReceiptV2:
     disposition: G7Disposition
     reason: str
     progress_handoff_digest: str
@@ -207,8 +241,13 @@ class G7HandoffReceiptV1:
     decision_context_key: str | None
     handoff_receipt_digest: str
     candidate_only: bool = True
+    parent_projection_authentication_required: bool = True
+    parent_projection_authenticated_by_this_contract: bool = False
+    presented_currentness_authentication_required: bool = True
+    presented_currentness_authenticated_by_this_contract: bool = False
     future_read_currentness_required: bool = True
     future_read_currentness_proven: bool = False
+    reuse_authorized_by_this_contract: bool = False
     tensor_payload_bound: bool = False
     source_truth_proven: bool = False
     evidence_admitted: bool = False
@@ -221,16 +260,69 @@ class G7HandoffReceiptV1:
     native_private_transformer_kv_accessed: bool = False
 
     @property
-    def ready(self) -> bool:
+    def structural_candidate(self) -> bool:
         return (
             self.disposition
-            is G7Disposition.CURRENT_PROGRESS_BOUND_ADMISSION_HANDOFF_CANDIDATE
+            is G7Disposition.STRUCTURAL_PROGRESS_ADMISSION_MATCH_EXTERNAL_AUTH_REQUIRED
         )
 
 
+def _expected_nav14_positive_digest(progress: ProgressBoundHandoffProjectionV2) -> str:
+    body = {
+        "schema": NAV14_SCHEMA,
+        "disposition": NAV14_POSITIVE,
+        "reason": NAV14_POSITIVE_REASON,
+        "handoff_digest": progress.handoff_digest,
+        "retrieval_receipt_digest": progress.retrieval_receipt_digest,
+        "retrieval_decision": progress.retrieval_decision,
+        "subject_key": progress.subject_identity,
+        "evidence_generation_key": progress.evidence_generation_key,
+        "material_digest": progress.material_digest,
+        "exact_source_uri": progress.exact_source_uri,
+        "claim_ceiling": {
+            "candidate_only": True,
+            "persistent_write_authorized": False,
+            "evidence_admitted": False,
+            "source_truth_proven": False,
+            "source_currentness_proven": False,
+            "read_currentness_proven": False,
+            "effect_authorized": False,
+            "semantic_k27_authority": False,
+            "native_private_transformer_kv_accessed": False,
+        },
+    }
+    return _sha(body)
+
+
+def _expected_admission_reuse_positive_digest(reuse: AdmissionReuseProjectionV2) -> str:
+    body = {
+        "schema": ADMISSION_REUSE_SCHEMA,
+        "disposition": ADMISSION_REUSE_POSITIVE,
+        "reason": ADMISSION_REUSE_POSITIVE_REASON,
+        "family": reuse.family,
+        "admission_receipt_digest": reuse.admission_receipt_digest,
+        "subject_identity": reuse.subject_identity,
+        "source_generation_key": reuse.source_generation_key,
+        "evidence_generation_key": reuse.evidence_generation_key,
+        "owner_context_key": reuse.owner_context_key,
+        "decision_context_key": reuse.decision_context_key,
+        "claim_ceiling": {
+            "candidate_only": True,
+            "admission_reused_as_authority": False,
+            "execution_authorized": False,
+            "effect_authorized": False,
+            "source_currentness_proven": False,
+            "semantic_truth_proven": False,
+            "semantic_k27_authority": False,
+            "native_private_transformer_kv_accessed": False,
+        },
+    }
+    return _sha(body)
+
+
 def _ceiling_breached(
-    progress: ProgressBoundHandoffProjectionV1,
-    reuse: AdmissionReuseProjectionV1,
+    progress: ProgressBoundHandoffProjectionV2,
+    reuse: AdmissionReuseProjectionV2,
 ) -> bool:
     return any(
         (
@@ -256,15 +348,15 @@ def _ceiling_breached(
 
 
 def _classify_tree(
-    progress: ProgressBoundHandoffProjectionV1,
-    reuse: AdmissionReuseProjectionV1,
-    current: CurrentHandoffUseContextV1,
+    progress: ProgressBoundHandoffProjectionV2,
+    reuse: AdmissionReuseProjectionV2,
+    presented: PresentedHandoffUseContextV2,
 ) -> G7Disposition:
     if progress.parent_head != NAV14_HEAD or reuse.parent_head != ADMISSION_REUSE_HEAD:
         return G7Disposition.HOLD_PARENT_GENERATION
-    if progress.disposition != "PROGRESS_BOUND_HANDOFF_CANDIDATE":
+    if progress.disposition != NAV14_POSITIVE:
         return G7Disposition.HOLD_PROGRESS_HANDOFF_NOT_READY
-    if reuse.disposition != "REUSE_CANDIDATE":
+    if reuse.disposition != ADMISSION_REUSE_POSITIVE:
         return G7Disposition.HOLD_ADMISSION_REUSE_NOT_READY
     if reuse.family != REQUIRED_ADMISSION_FAMILY:
         return G7Disposition.HOLD_ADMISSION_FAMILY
@@ -274,23 +366,23 @@ def _classify_tree(
         return G7Disposition.HOLD_SUBJECT_IDENTITY_MISMATCH
     if progress.evidence_generation_key != reuse.evidence_generation_key:
         return G7Disposition.HOLD_EVIDENCE_GENERATION_MISMATCH
-    if current.progress_handoff_digest != progress.progress_handoff_digest:
-        return G7Disposition.HOLD_PROGRESS_RECEIPT_CHANGED
-    if current.subject_identity != progress.subject_identity:
+    if presented.progress_handoff_digest != progress.progress_handoff_digest:
+        return G7Disposition.HOLD_PRESENTED_PROGRESS_RECEIPT_CHANGED
+    if presented.subject_identity != progress.subject_identity:
         return G7Disposition.HOLD_SUBJECT_IDENTITY_MISMATCH
-    if current.evidence_generation_key != progress.evidence_generation_key:
+    if presented.evidence_generation_key != progress.evidence_generation_key:
         return G7Disposition.HOLD_EVIDENCE_GENERATION_MISMATCH
-    if current.material_digest != progress.material_digest:
-        return G7Disposition.HOLD_MATERIAL_CHANGED
-    if current.exact_source_uri != progress.exact_source_uri:
-        return G7Disposition.HOLD_SOURCE_VIEW_CHANGED
-    return G7Disposition.CURRENT_PROGRESS_BOUND_ADMISSION_HANDOFF_CANDIDATE
+    if presented.material_digest != progress.material_digest:
+        return G7Disposition.HOLD_PRESENTED_MATERIAL_CHANGED
+    if presented.exact_source_uri != progress.exact_source_uri:
+        return G7Disposition.HOLD_PRESENTED_SOURCE_VIEW_CHANGED
+    return G7Disposition.STRUCTURAL_PROGRESS_ADMISSION_MATCH_EXTERNAL_AUTH_REQUIRED
 
 
 def _classify_table(
-    progress: ProgressBoundHandoffProjectionV1,
-    reuse: AdmissionReuseProjectionV1,
-    current: CurrentHandoffUseContextV1,
+    progress: ProgressBoundHandoffProjectionV2,
+    reuse: AdmissionReuseProjectionV2,
+    presented: PresentedHandoffUseContextV2,
 ) -> G7Disposition:
     ordered = (
         (
@@ -299,11 +391,11 @@ def _classify_table(
             G7Disposition.HOLD_PARENT_GENERATION,
         ),
         (
-            progress.disposition != "PROGRESS_BOUND_HANDOFF_CANDIDATE",
+            progress.disposition != NAV14_POSITIVE,
             G7Disposition.HOLD_PROGRESS_HANDOFF_NOT_READY,
         ),
         (
-            reuse.disposition != "REUSE_CANDIDATE",
+            reuse.disposition != ADMISSION_REUSE_POSITIVE,
             G7Disposition.HOLD_ADMISSION_REUSE_NOT_READY,
         ),
         (reuse.family != REQUIRED_ADMISSION_FAMILY, G7Disposition.HOLD_ADMISSION_FAMILY),
@@ -317,64 +409,73 @@ def _classify_table(
             G7Disposition.HOLD_EVIDENCE_GENERATION_MISMATCH,
         ),
         (
-            current.progress_handoff_digest != progress.progress_handoff_digest,
-            G7Disposition.HOLD_PROGRESS_RECEIPT_CHANGED,
+            presented.progress_handoff_digest != progress.progress_handoff_digest,
+            G7Disposition.HOLD_PRESENTED_PROGRESS_RECEIPT_CHANGED,
         ),
         (
-            current.subject_identity != progress.subject_identity,
+            presented.subject_identity != progress.subject_identity,
             G7Disposition.HOLD_SUBJECT_IDENTITY_MISMATCH,
         ),
         (
-            current.evidence_generation_key != progress.evidence_generation_key,
+            presented.evidence_generation_key != progress.evidence_generation_key,
             G7Disposition.HOLD_EVIDENCE_GENERATION_MISMATCH,
         ),
-        (current.material_digest != progress.material_digest, G7Disposition.HOLD_MATERIAL_CHANGED),
-        (current.exact_source_uri != progress.exact_source_uri, G7Disposition.HOLD_SOURCE_VIEW_CHANGED),
+        (
+            presented.material_digest != progress.material_digest,
+            G7Disposition.HOLD_PRESENTED_MATERIAL_CHANGED,
+        ),
+        (
+            presented.exact_source_uri != progress.exact_source_uri,
+            G7Disposition.HOLD_PRESENTED_SOURCE_VIEW_CHANGED,
+        ),
     )
     for predicate, disposition in ordered:
         if predicate:
             return disposition
-    return G7Disposition.CURRENT_PROGRESS_BOUND_ADMISSION_HANDOFF_CANDIDATE
+    return G7Disposition.STRUCTURAL_PROGRESS_ADMISSION_MATCH_EXTERNAL_AUTH_REQUIRED
 
 
-def bind_progress_current_admission_handoff(
+def bind_progress_admission_structural_handoff(
     *,
-    progress: ProgressBoundHandoffProjectionV1,
-    reuse: AdmissionReuseProjectionV1,
-    current: CurrentHandoffUseContextV1,
-) -> G7HandoffReceiptV1:
+    progress: ProgressBoundHandoffProjectionV2,
+    reuse: AdmissionReuseProjectionV2,
+    presented: PresentedHandoffUseContextV2,
+) -> G7HandoffReceiptV2:
     progress.validate_shape()
     reuse.validate_shape()
-    current.validate_shape()
-    a = _classify_tree(progress, reuse, current)
-    b = _classify_table(progress, reuse, current)
+    presented.validate_shape()
+    a = _classify_tree(progress, reuse, presented)
+    b = _classify_table(progress, reuse, presented)
     if a is not b:
         raise RuntimeError("DIFFERENT_J_G7_HANDOFF_CLASSIFIERS_DIVERGED")
 
-    ready = a is G7Disposition.CURRENT_PROGRESS_BOUND_ADMISSION_HANDOFF_CANDIDATE
+    ready = (
+        a
+        is G7Disposition.STRUCTURAL_PROGRESS_ADMISSION_MATCH_EXTERNAL_AUTH_REQUIRED
+    )
     reason = {
-        G7Disposition.CURRENT_PROGRESS_BOUND_ADMISSION_HANDOFF_CANDIDATE:
-            "progress-bound material and generation-bound admission reuse commute at the current handoff identity while future read-currentness remains unpaid",
+        G7Disposition.STRUCTURAL_PROGRESS_ADMISSION_MATCH_EXTERNAL_AUTH_REQUIRED:
+            "self-consistent parent projections and presented handoff continuity match structurally; external producer and currentness authentication remain required",
         G7Disposition.HOLD_PARENT_GENERATION:
-            "one or both parent semantic proof generations changed",
+            "one or both presented parent semantic proof generations changed",
         G7Disposition.HOLD_PROGRESS_HANDOFF_NOT_READY:
-            "NAV-14 progress-bound handoff is not candidate-ready",
+            "presented NAV-14 progress-bound handoff is not candidate-ready",
         G7Disposition.HOLD_ADMISSION_REUSE_NOT_READY:
-            "generation-bound admission is not reusable at this use cut",
+            "presented generation-bound admission is not reuse-candidate shaped",
         G7Disposition.HOLD_ADMISSION_FAMILY:
             "reuse candidate is not the GLM-5.3 bounded C2 proposal family",
         G7Disposition.HOLD_CLAIM_CEILING:
-            "upstream projection widened beyond the nonpromotion ceiling",
+            "upstream projection exceeds the nonpromotion ceiling",
         G7Disposition.HOLD_SUBJECT_IDENTITY_MISMATCH:
             "progress handoff and admission reuse do not bind the same subject",
         G7Disposition.HOLD_EVIDENCE_GENERATION_MISMATCH:
             "progress handoff and admission reuse do not bind the same evidence generation",
-        G7Disposition.HOLD_PROGRESS_RECEIPT_CHANGED:
-            "current use does not bind the exact progress-handoff receipt",
-        G7Disposition.HOLD_MATERIAL_CHANGED:
-            "hydrated material changed after progress-bound handoff",
-        G7Disposition.HOLD_SOURCE_VIEW_CHANGED:
-            "exact source view changed after progress-bound handoff",
+        G7Disposition.HOLD_PRESENTED_PROGRESS_RECEIPT_CHANGED:
+            "presented use context does not bind the exact progress-handoff receipt",
+        G7Disposition.HOLD_PRESENTED_MATERIAL_CHANGED:
+            "presented hydrated material differs from the progress-bound handoff",
+        G7Disposition.HOLD_PRESENTED_SOURCE_VIEW_CHANGED:
+            "presented source view differs from the progress-bound handoff",
     }[a]
 
     body = {
@@ -398,8 +499,13 @@ def bind_progress_current_admission_handoff(
         "decision_context_key": reuse.decision_context_key if ready else None,
         "claim_ceiling": {
             "candidate_only": True,
+            "parent_projection_authentication_required": True,
+            "parent_projection_authenticated_by_this_contract": False,
+            "presented_currentness_authentication_required": True,
+            "presented_currentness_authenticated_by_this_contract": False,
             "future_read_currentness_required": True,
             "future_read_currentness_proven": False,
+            "reuse_authorized_by_this_contract": False,
             "tensor_payload_bound": False,
             "source_truth_proven": False,
             "evidence_admitted": False,
@@ -412,7 +518,7 @@ def bind_progress_current_admission_handoff(
             "native_private_transformer_kv_accessed": False,
         },
     }
-    return G7HandoffReceiptV1(
+    return G7HandoffReceiptV2(
         disposition=a,
         reason=reason,
         progress_handoff_digest=progress.progress_handoff_digest,
@@ -430,24 +536,31 @@ def bind_progress_current_admission_handoff(
 
 
 def fixture() -> tuple[
-    ProgressBoundHandoffProjectionV1,
-    AdmissionReuseProjectionV1,
-    CurrentHandoffUseContextV1,
+    ProgressBoundHandoffProjectionV2,
+    AdmissionReuseProjectionV2,
+    PresentedHandoffUseContextV2,
 ]:
-    d0, d1, d2, d3 = ("0" * 64, "1" * 64, "2" * 64, "3" * 64)
-    progress = ProgressBoundHandoffProjectionV1(
+    d0, d1, d2, d3, d4, d5, d6, d7 = tuple(str(i) * 64 for i in range(8))
+    progress = ProgressBoundHandoffProjectionV2(
         parent_head=NAV14_HEAD,
         progress_handoff_digest=d0,
-        disposition="PROGRESS_BOUND_HANDOFF_CANDIDATE",
-        subject_identity="glm53:flagship:c2",
-        evidence_generation_key="evidence-generation:glm53:c2:1",
+        handoff_digest=d6,
+        retrieval_receipt_digest=d7,
+        retrieval_decision="ALLOW_INITIAL",
+        disposition=NAV14_POSITIVE,
+        subject_identity=d4,
+        evidence_generation_key=d5,
         material_digest=d1,
         exact_source_uri="https://huggingface.co/zai-org/GLM-5.3",
     )
-    reuse = AdmissionReuseProjectionV1(
+    progress = replace(
+        progress,
+        progress_handoff_digest=_expected_nav14_positive_digest(progress),
+    )
+    reuse = AdmissionReuseProjectionV2(
         parent_head=ADMISSION_REUSE_HEAD,
         reuse_digest=d2,
-        disposition="REUSE_CANDIDATE",
+        disposition=ADMISSION_REUSE_POSITIVE,
         family=REQUIRED_ADMISSION_FAMILY,
         admission_receipt_digest=d3,
         subject_identity=progress.subject_identity,
@@ -456,50 +569,45 @@ def fixture() -> tuple[
         owner_context_key="owner-context:glm53:c2:1",
         decision_context_key="decision-context:glm53:c2:1",
     )
-    current = CurrentHandoffUseContextV1(
+    reuse = replace(reuse, reuse_digest=_expected_admission_reuse_positive_digest(reuse))
+    presented = PresentedHandoffUseContextV2(
         progress_handoff_digest=progress.progress_handoff_digest,
         subject_identity=progress.subject_identity,
         evidence_generation_key=progress.evidence_generation_key,
         material_digest=progress.material_digest,
         exact_source_uri=progress.exact_source_uri,
     )
-    return progress, reuse, current
+    return progress, reuse, presented
 
 
 def prove_different_j() -> int:
-    progress, reuse, current = fixture()
+    progress, reuse, presented = fixture()
     checked = 0
     for mask in range(512):
         p = replace(
             progress,
-            disposition=(
-                "PROGRESS_BOUND_HANDOFF_CANDIDATE"
-                if not (mask & 1)
-                else "HOLD_RETRIEVAL_AXIS_CHANGE_REQUIRED"
-            ),
+            disposition=NAV14_POSITIVE if not (mask & 1) else "HOLD_RETRIEVAL_AXIS_CHANGE_REQUIRED",
             source_truth_proven=bool(mask & 256),
         )
         r = replace(
             reuse,
-            disposition="REUSE_CANDIDATE" if not (mask & 2) else "HOLD_SOURCE_GENERATION_CHANGED",
+            disposition=ADMISSION_REUSE_POSITIVE if not (mask & 2) else "HOLD_SOURCE_GENERATION_CHANGED",
             family=REQUIRED_ADMISSION_FAMILY if not (mask & 4) else "HYDRATION_TRANSACTION",
-            subject_identity=reuse.subject_identity if not (mask & 8) else reuse.subject_identity + ":drift",
+            subject_identity=reuse.subject_identity if not (mask & 8) else "8" * 64,
             evidence_generation_key=(
-                reuse.evidence_generation_key
-                if not (mask & 16)
-                else reuse.evidence_generation_key + ":drift"
+                reuse.evidence_generation_key if not (mask & 16) else "9" * 64
             ),
         )
         c = replace(
-            current,
+            presented,
             progress_handoff_digest=(
-                current.progress_handoff_digest if not (mask & 32) else "4" * 64
+                presented.progress_handoff_digest if not (mask & 32) else "a" * 64
             ),
-            material_digest=current.material_digest if not (mask & 64) else "5" * 64,
+            material_digest=presented.material_digest if not (mask & 64) else "b" * 64,
             exact_source_uri=(
-                current.exact_source_uri
+                presented.exact_source_uri
                 if not (mask & 128)
-                else current.exact_source_uri + "#drift"
+                else presented.exact_source_uri + "#drift"
             ),
         )
         if _classify_tree(p, r, c) is not _classify_table(p, r, c):
@@ -509,13 +617,14 @@ def prove_different_j() -> int:
 
 
 LAWS = (
+    "SelfConsistentParentProjection!=AuthenticatedParentReceipt",
+    "MatchingPresentedUseContext!=AuthenticatedCurrentness",
     "ProgressBoundHandoffCandidate!=AdmissionReuseCandidate",
     "AdmissionReuseCandidate!=OwnerHostExecutionAuthority",
     "HandoffMaterialContinuity!=SourceReadCurrentness",
     "FutureReadCurrentnessDebtSurvivesG7",
     "SameSubjectAndEvidenceGeneration!=TensorPayloadBinding",
-    "AnyProgressMaterialSourceViewDrift=>Hold",
-    "CurrentGenerationAdmissionReuseMustCommuteWithCurrentProgressHandoff",
+    "AnyPresentedProgressMaterialSourceViewDrift=>Hold",
     "K27Placement!=SemanticIdentity!=Currentness!=Authority",
     "CoordinateMemory!=MODEL_PREFIX_KV",
 )
