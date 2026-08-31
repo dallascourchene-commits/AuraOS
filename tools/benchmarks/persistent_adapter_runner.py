@@ -10,6 +10,11 @@ import time
 from pathlib import Path
 from typing import Any, Sequence
 
+from tools.benchmarks.long_horizon_preregistration import (
+    command_digest,
+    get_preregistered_arm,
+    validate_preregistration,
+)
 from tools.benchmarks.long_horizon_state_benchmark import build_workload
 from tools.benchmarks.persistent_adapter_protocol import make_turn_request, validate_handshake, validate_turn_response
 
@@ -77,12 +82,11 @@ def _startup_failure_report(
     *,
     startup_disposition: str,
     startup_error: str,
-    rounds: int,
-    seed: int,
-    startup_timeout_seconds: float,
-    turn_timeout_seconds: float,
-    workload_digest: str,
+    preregistration: dict[str, Any],
+    blinded_label: str,
+    arm: dict[str, str],
     adapter_command_digest: str,
+    adapter_generation: str | None,
     teardown: dict[str, Any],
     stderr_lines: list[str],
 ) -> dict[str, Any]:
@@ -91,16 +95,19 @@ def _startup_failure_report(
         "campaign_disposition": "INCONCLUSIVE",
         "startup_disposition": startup_disposition,
         "startup_error": startup_error,
+        "preregistration_digest": preregistration["preregistration_digest"],
+        "blinded_label": blinded_label,
+        "condition_commitment": arm["condition_commitment"],
         "handshake": None,
-        "adapter_generation": None,
+        "adapter_generation": adapter_generation,
         "adapter_command_digest": adapter_command_digest,
-        "rounds": rounds,
-        "seed": seed,
-        "startup_timeout_seconds": startup_timeout_seconds,
-        "turn_timeout_seconds": turn_timeout_seconds,
-        "workload_digest": workload_digest,
+        "rounds": preregistration["rounds"],
+        "seed": preregistration["seed"],
+        "startup_timeout_seconds": preregistration["startup_timeout_seconds"],
+        "turn_timeout_seconds": preregistration["timeout_seconds"],
+        "workload_digest": preregistration["workload_digest"],
         "state_drift_detected": False,
-        "inconclusive_turns": rounds,
+        "inconclusive_turns": preregistration["rounds"],
         "disposition_counts": {name: 0 for name in sorted(TURN_DISPOSITIONS)},
         "turns": [],
         "teardown": teardown,
@@ -113,22 +120,25 @@ def _startup_failure_report(
 def run_persistent_adapter(
     command: Sequence[str],
     *,
-    rounds: int,
-    seed: int = 17,
-    startup_timeout_seconds: float = 10.0,
-    turn_timeout_seconds: float = 120.0,
+    preregistration: dict[str, Any],
+    blinded_label: str,
     cwd: Path | None = None,
 ) -> dict[str, Any]:
-    if not command or any(not isinstance(part, str) or not part for part in command):
-        raise ValueError("ADAPTER_COMMAND_REQUIRED")
-    if startup_timeout_seconds <= 0:
-        raise ValueError("STARTUP_TIMEOUT_SECONDS_MUST_BE_POSITIVE")
-    if turn_timeout_seconds <= 0:
-        raise ValueError("TURN_TIMEOUT_SECONDS_MUST_BE_POSITIVE")
+    preregistration = validate_preregistration(preregistration)
+    arm = get_preregistered_arm(preregistration, blinded_label)
+    adapter_command_digest = command_digest(command)
+    if adapter_command_digest != arm["adapter_command_digest"]:
+        raise ValueError("ADAPTER_COMMAND_DIGEST_MISMATCH")
 
+    rounds = preregistration["rounds"]
+    seed = preregistration["seed"]
+    startup_timeout_seconds = preregistration["startup_timeout_seconds"]
+    turn_timeout_seconds = preregistration["timeout_seconds"]
     workload = build_workload(rounds, seed=seed)
     workload_digest = _canonical_digest(workload)
-    adapter_command_digest = _canonical_digest(list(command))
+    if workload_digest != preregistration["workload_digest"]:
+        raise ValueError("WORKLOAD_DIGEST_MISMATCH")
+
     process = subprocess.Popen(
         list(command),
         stdin=subprocess.PIPE,
@@ -160,12 +170,11 @@ def run_persistent_adapter(
         return _startup_failure_report(
             startup_disposition="TIMEOUT",
             startup_error=str(exc),
-            rounds=rounds,
-            seed=seed,
-            startup_timeout_seconds=startup_timeout_seconds,
-            turn_timeout_seconds=turn_timeout_seconds,
-            workload_digest=workload_digest,
+            preregistration=preregistration,
+            blinded_label=blinded_label,
+            arm=arm,
             adapter_command_digest=adapter_command_digest,
+            adapter_generation=None,
             teardown=teardown,
             stderr_lines=stderr_lines,
         )
@@ -174,17 +183,30 @@ def run_persistent_adapter(
         return _startup_failure_report(
             startup_disposition="PROTOCOL_ERROR",
             startup_error=str(exc),
-            rounds=rounds,
-            seed=seed,
-            startup_timeout_seconds=startup_timeout_seconds,
-            turn_timeout_seconds=turn_timeout_seconds,
-            workload_digest=workload_digest,
+            preregistration=preregistration,
+            blinded_label=blinded_label,
+            arm=arm,
             adapter_command_digest=adapter_command_digest,
+            adapter_generation=None,
             teardown=teardown,
             stderr_lines=stderr_lines,
         )
 
     generation = handshake["adapter_generation"]
+    if generation != arm["adapter_generation"]:
+        teardown = _terminate(process)
+        return _startup_failure_report(
+            startup_disposition="PROTOCOL_ERROR",
+            startup_error="ADAPTER_GENERATION_MISMATCH",
+            preregistration=preregistration,
+            blinded_label=blinded_label,
+            arm=arm,
+            adapter_command_digest=adapter_command_digest,
+            adapter_generation=generation,
+            teardown=teardown,
+            stderr_lines=stderr_lines,
+        )
+
     turns: list[dict[str, Any]] = []
     adapter_failed = False
     for item in workload:
@@ -306,6 +328,9 @@ def run_persistent_adapter(
         "schema_id": RUNNER_SCHEMA_ID,
         "campaign_disposition": campaign_disposition,
         "startup_disposition": "PASS",
+        "preregistration_digest": preregistration["preregistration_digest"],
+        "blinded_label": blinded_label,
+        "condition_commitment": arm["condition_commitment"],
         "handshake": handshake,
         "adapter_generation": generation,
         "rounds": rounds,
@@ -327,21 +352,18 @@ def run_persistent_adapter(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run one persistent benchmark adapter over a deterministic state workload.")
+    parser = argparse.ArgumentParser(description="Run one preregistered persistent benchmark adapter.")
     parser.add_argument("--adapter-cmd", nargs="+", required=True)
-    parser.add_argument("--rounds", type=int, default=25)
-    parser.add_argument("--seed", type=int, default=17)
-    parser.add_argument("--startup-timeout-seconds", type=float, default=10.0)
-    parser.add_argument("--turn-timeout-seconds", type=float, default=120.0)
+    parser.add_argument("--preregistration", type=Path, required=True)
+    parser.add_argument("--blinded-label", required=True)
     parser.add_argument("--cwd", type=Path)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    preregistration = json.loads(args.preregistration.read_text(encoding="utf-8"))
     report = run_persistent_adapter(
         args.adapter_cmd,
-        rounds=args.rounds,
-        seed=args.seed,
-        startup_timeout_seconds=args.startup_timeout_seconds,
-        turn_timeout_seconds=args.turn_timeout_seconds,
+        preregistration=preregistration,
+        blinded_label=args.blinded_label,
         cwd=args.cwd,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
