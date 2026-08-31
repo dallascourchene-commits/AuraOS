@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788159623,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1654,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -149,6 +149,11 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-eye-pose-common-cut.yml",
+      ".github/workflows/k27-optics-candidate-falsifier.yml",
+      ".github/workflows/k27-phase-mask-artifact-identity.yml",
+      ".github/workflows/k27-spatial-display-sim-benchmark.yml",
+      ".github/workflows/k27-spatial-frame-transition.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -1623,6 +1628,11 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_eye_pose_observation_contract.py",
+      "tests/test_k27_optics_candidate_falsifier.py",
+      "tests/test_k27_phase_mask_artifact_contract.py",
+      "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+      "tests/test_k27_spatial_frame_transition_contract.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -1633,6 +1643,11 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/k27_eye_pose_observation_contract.py",
+      "tools/k27_optics_candidate_falsifier.py",
+      "tools/k27_phase_mask_artifact_contract.py",
+      "tools/k27_spatial_display_sim_benchmark_contract.py",
+      "tools/k27_spatial_frame_transition_contract.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -1755,16 +1770,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1654,
+      "bytes": 26494734,
+      "tokens_est": 6614039,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 1007,
+        "schema_or_lexicon": 276,
         "support_file": 49
       }
     },
@@ -8057,6 +8072,46 @@
         "end_line": 161,
         "semantic_id": "aura_review_lessons_contracts.py#function:_canonical_json:986e3ee6617aeebf",
         "signature_hash": "caa6df7371712507"
+      },
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 211,
+        "end_line": 212,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_canonical_json:ad18b204d8799926",
+        "signature_hash": "c6d0368c0d268d56"
+      },
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "function",
+        "line": 226,
+        "end_line": 227,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:_canonical_json:bba38b8c77b0616c",
+        "signature_hash": "c6d0368c0d268d56"
+      },
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 46,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:_canonical_json:42b96fbf4886af4c",
+        "signature_hash": "c6d0368c0d268d56"
+      },
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "function",
+        "line": 27,
+        "end_line": 28,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#function:_canonical_json:e765f05e8a3bf82d",
+        "signature_hash": "c6d0368c0d268d56"
+      },
+      {
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 26,
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#function:_canonical_json:90a1d232dabb9fb3",
+        "signature_hash": "c6d0368c0d268d56"
       }
     ],
     "_sha": [
@@ -8067,6 +8122,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "function",
+        "line": 31,
+        "end_line": 38,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#function:_sha:7db15258f10fa173",
+        "signature_hash": "68b08d7c34cebd61"
       }
     ],
     "_repo": [
@@ -13707,6 +13770,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 36,
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#function:_sha256:3f786d1d3c9de2c3",
+        "signature_hash": "0e172a41a478a19f"
       }
     ],
     "PullRequestRouteBinding": [
@@ -26327,6 +26398,14 @@
         "end_line": 68,
         "semantic_id": "aura_spatial_importers/contracts.py#function:_positive_int:cb9f2b4384fccde6",
         "signature_hash": "5cca323f428421e2"
+      },
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 36,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:_positive_int:cb40c77e75f42269",
+        "signature_hash": "3b7bd9eb822e7406"
       }
     ],
     "_span_line_bounds": [
@@ -30695,6 +30774,14 @@
         "end_line": 388,
         "semantic_id": "aura_spatial_projection.py#function:_nonnegative_int:268b62b5575eb7c0",
         "signature_hash": "da3b10c24c5b5036"
+      },
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "function",
+        "line": 39,
+        "end_line": 42,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:_nonnegative_int:b1d8c09cf9fdc047",
+        "signature_hash": "af41151bb978c8ca"
       }
     ],
     "WorkbenchState": [
@@ -31875,6 +31962,14 @@
         "end_line": 103,
         "semantic_id": "scripts/aura_ifc_storey_index.py#function:_finite:e26559cf2b618e2f",
         "signature_hash": "ee2fd2b67e42aa60"
+      },
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 30,
+        "end_line": 33,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_finite:57c75e2e8e1c5514",
+        "signature_hash": "c71561197bc4f764"
       }
     ],
     "_optional_bounded": [
@@ -50181,6 +50276,14 @@
         "end_line": 159,
         "semantic_id": "aura_gate.py#function:_strict_int:1c15cc17c380a686",
         "signature_hash": "d86483c91b7880b7"
+      },
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 31,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:_strict_int:0f5242a26fea5a21",
+        "signature_hash": "9d0291a64ecf7729"
       }
     ],
     "_strict_float": [
@@ -85143,6 +85246,14 @@
         "end_line": 173,
         "semantic_id": "aura_spatial_foundry_projection.py#function:_hex_digest:ccb82b009034ea36",
         "signature_hash": "3b12753eb14deab6"
+      },
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "function",
+        "line": 23,
+        "end_line": 30,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:_hex_digest:f384fa34591f5b31",
+        "signature_hash": "e7a67bfe2ad0b630"
       }
     ],
     "_state_digest": [
@@ -85503,6 +85614,14 @@
         "end_line": 626,
         "semantic_id": "aura_spatial_importers/contracts.py#function:build_import_receipt:95a53d42aa4fe3f5",
         "signature_hash": "b3f622e6952893dd"
+      },
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "function",
+        "line": 230,
+        "end_line": 264,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:build_import_receipt:5232d8dc92e7a177",
+        "signature_hash": "2b74789feee06f31"
       }
     ],
     "canonical_receipt_json": [
@@ -118309,6 +118428,30 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_showcase_live_repair_server.py#function:sha:617c8de82318335f",
         "signature_hash": "71ab04e06cf55736"
+      },
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#function:sha:a8bf7285519eeaff",
+        "signature_hash": "4e09542ccd6d5aec"
+      },
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "function",
+        "line": 18,
+        "end_line": 19,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#function:sha:b5278ead8448f5e7",
+        "signature_hash": "4e09542ccd6d5aec"
+      },
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "function",
+        "line": 20,
+        "end_line": 21,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#function:sha:b63197ee0c68f35e",
+        "signature_hash": "4e09542ccd6d5aec"
       }
     ],
     "git_oid": [
@@ -133527,6 +133670,14 @@
         "end_line": 29,
         "semantic_id": "tests/test_aura_qdkt_projection_hardening.py#function:observation:231f671c5509f472",
         "signature_hash": "b6d2f925be861055"
+      },
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "function",
+        "line": 54,
+        "end_line": 63,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#function:observation:5d248e29c66e5bdd",
+        "signature_hash": "61d98d33f2ab3b16"
       }
     ],
     "expected_project_refs": [
@@ -136151,6 +136302,14 @@
         "end_line": 223,
         "semantic_id": "tests/test_aura_gate.py#function:request:7c151532eef8bfd3",
         "signature_hash": "9045b73142116e1c"
+      },
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "function",
+        "line": 22,
+        "end_line": 32,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#function:request:d802ac7f84b0cc4d",
+        "signature_hash": "aa30402c5be12ee6"
       }
     ],
     "test_prepare_compiles_exact_evidence_contract": [
@@ -156921,6 +157080,586 @@
         "signature_hash": "b87770abb7ee24ea"
       }
     ],
+    "calibration": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 30,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:calibration:28e9abcc04967ab2",
+        "signature_hash": "f59fac0cedb002c5"
+      }
+    ],
+    "frame": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 33,
+        "end_line": 47,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:frame:d1556235ca21c7d0",
+        "signature_hash": "d986bf8a8e22e32d"
+      }
+    ],
+    "EyePoseObservationContractTests": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 170,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#class:EyePoseObservationContractTests:92ccf178978891ad",
+        "signature_hash": "0ab6a0fdc72f2159"
+      }
+    ],
+    "EyePoseObservationContractTests.test_assumed_ipd_geometry_is_estimate_not_metric_truth": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 51,
+        "end_line": 60,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_assumed_ipd_geometry_is_estimate_not_metric_truth:8090cd72d39540fd",
+        "signature_hash": "e1a978586c6c2d51"
+      }
+    ],
+    "EyePoseObservationContractTests.test_stale_frame_fails_closed": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 71,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_stale_frame_fails_closed:43d5bd63bbdba56c",
+        "signature_hash": "b5047fe9314a0d6e"
+      }
+    ],
+    "EyePoseObservationContractTests.test_sensor_aba_runtime_change_fails_common_cut": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 83,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_sensor_aba_runtime_change_fails_common_cut:350757c7aa36354d",
+        "signature_hash": "79da1579c48d4265"
+      }
+    ],
+    "EyePoseObservationContractTests.test_calibration_generation_movement_reopens_gate": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 85,
+        "end_line": 95,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_calibration_generation_movement_reopens_gate:14cb16b4df918966",
+        "signature_hash": "4cb88962c7068094"
+      }
+    ],
+    "EyePoseObservationContractTests.test_landmark_model_generation_movement_reopens_gate": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 97,
+        "end_line": 107,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_landmark_model_generation_movement_reopens_gate:c2349f7d2edd384c",
+        "signature_hash": "a9cf4c2a286afa11"
+      }
+    ],
+    "EyePoseObservationContractTests.test_low_tracking_confidence_fails_closed": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 109,
+        "end_line": 119,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_low_tracking_confidence_fails_closed:e28597e01d6c9e7c",
+        "signature_hash": "7a579e0b94dd3d95"
+      }
+    ],
+    "EyePoseObservationContractTests.test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 132,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized:81ca910e14a753d1",
+        "signature_hash": "050365dd551d50e3"
+      }
+    ],
+    "EyePoseObservationContractTests.test_receipt_is_two_parent_source_bound_and_tamper_evident": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 153,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_receipt_is_two_parent_source_bound_and_tamper_evident:591790535fd26ecf",
+        "signature_hash": "8377b91b4d42debe"
+      }
+    ],
+    "EyePoseObservationContractTests.test_receipt_requires_exactly_two_distinct_parents": [
+      {
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 155,
+        "end_line": 170,
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_receipt_requires_exactly_two_distinct_parents:bb0476af135e5cfd",
+        "signature_hash": "a37f9709b3c30236"
+      }
+    ],
+    "K27OpticsCandidateFalsifierTests": [
+      {
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 113,
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#class:K27OpticsCandidateFalsifierTests:4f6f0449a359c4e1",
+        "signature_hash": "10097a7ef384dcc2"
+      }
+    ],
+    "K27OpticsCandidateFalsifierTests.test_k27_is_exact_27_cell_bijection": [
+      {
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 23,
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_k27_is_exact_27_cell_bijection:527477c41f519a7e",
+        "signature_hash": "be1d816a34579872"
+      }
+    ],
+    "K27OpticsCandidateFalsifierTests.test_k27_rejects_bool_and_nonternary": [
+      {
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 29,
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_k27_rejects_bool_and_nonternary:e6a933108db76c46",
+        "signature_hash": "d6defffef8379f75"
+      }
+    ],
+    "K27OpticsCandidateFalsifierTests.test_imported_shift_packing_is_not_k27_cell": [
+      {
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "kind": "method",
+        "line": 31,
+        "end_line": 34,
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_imported_shift_packing_is_not_k27_cell:47de09fc0a080265",
+        "signature_hash": "c78674b048d29e4d"
+      }
+    ],
+    "K27OpticsCandidateFalsifierTests.test_phase_steering_is_explicitly_approximate_and_nonauthorizing": [
+      {
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 50,
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_phase_steering_is_explicitly_approximate_and_nonauthorizing:ac54b81416de25e0",
+        "signature_hash": "61ba409fc4351b46"
+      }
+    ],
+    "K27OpticsCandidateFalsifierTests.test_asm_propagating_mode_has_unit_transfer_but_no_system_claim": [
+      {
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "kind": "method",
+        "line": 52,
+        "end_line": 62,
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_asm_propagating_mode_has_unit_transfer_but_no_system_claim:ca682c53c930ca4f",
+        "signature_hash": "b41e09714cf3742d"
+      }
+    ],
+    "K27OpticsCandidateFalsifierTests.test_asm_evanescent_mode_is_bandlimited": [
+      {
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 73,
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_asm_evanescent_mode_is_bandlimited:a611ae7606739460",
+        "signature_hash": "fbab0dc5c83fdd38"
+      }
+    ],
+    "K27OpticsCandidateFalsifierTests.test_candidate_findings_reject_unearned_claims": [
+      {
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 84,
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_candidate_findings_reject_unearned_claims:976fd7bdfdb9798f",
+        "signature_hash": "a8ef6bdcf0de9aa6"
+      }
+    ],
+    "K27OpticsCandidateFalsifierTests.test_receipt_is_deterministic_source_bound_and_closed": [
+      {
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "kind": "method",
+        "line": 86,
+        "end_line": 102,
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_receipt_is_deterministic_source_bound_and_closed:fa2fee608c8b6806",
+        "signature_hash": "a53cee020c5ad918"
+      }
+    ],
+    "K27OpticsCandidateFalsifierTests.test_receipt_ceiling_remains_all_false": [
+      {
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "kind": "method",
+        "line": 104,
+        "end_line": 113,
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_receipt_ceiling_remains_all_false:3934c8706ad17c01",
+        "signature_hash": "4a96c3b30ebca273"
+      }
+    ],
+    "artifact": [
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "function",
+        "line": 25,
+        "end_line": 38,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#function:artifact:d4c5c418ffa8a576",
+        "signature_hash": "d84be0cabdfa68b2"
+      }
+    ],
+    "plan": [
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 51,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#function:plan:cd67a3780141d34d",
+        "signature_hash": "95131f80d668731b"
+      }
+    ],
+    "PhaseMaskArtifactContractTests": [
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "class",
+        "line": 66,
+        "end_line": 156,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#class:PhaseMaskArtifactContractTests:d50188ac8b75c2f3",
+        "signature_hash": "283bb624f130111c"
+      }
+    ],
+    "PhaseMaskArtifactContractTests.test_exact_retrieval_admits_semantic_reuse_only": [
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 67,
+        "end_line": 75,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_exact_retrieval_admits_semantic_reuse_only:5a03b2acabf29f79",
+        "signature_hash": "df2e332c08b99584"
+      }
+    ],
+    "PhaseMaskArtifactContractTests.test_same_coordinate_wrong_payload_rejects": [
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 86,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_same_coordinate_wrong_payload_rejects:e878f21a3e445592",
+        "signature_hash": "4550fecddebd9505"
+      }
+    ],
+    "PhaseMaskArtifactContractTests.test_reused_offset_new_storage_generation_rejects_aba": [
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 88,
+        "end_line": 97,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_reused_offset_new_storage_generation_rejects_aba:59c2adae16fa019a",
+        "signature_hash": "92f876d1eb3c274a"
+      }
+    ],
+    "PhaseMaskArtifactContractTests.test_scene_generation_change_changes_artifact_identity": [
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 106,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_scene_generation_change_changes_artifact_identity:5e5de2da6a766115",
+        "signature_hash": "a1a039ec5a661f13"
+      }
+    ],
+    "PhaseMaskArtifactContractTests.test_optical_model_generation_change_changes_artifact_identity": [
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 114,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_optical_model_generation_change_changes_artifact_identity:433584bbf2b331fb",
+        "signature_hash": "e4506b50fecf4dd9"
+      }
+    ],
+    "PhaseMaskArtifactContractTests.test_storage_plan_change_rebinds_materialization": [
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 123,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_storage_plan_change_rebinds_materialization:a119ff1032c78982",
+        "signature_hash": "3129aec2480483ec"
+      }
+    ],
+    "PhaseMaskArtifactContractTests.test_coordinate_is_not_identity": [
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 125,
+        "end_line": 131,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_coordinate_is_not_identity:fc74d83e335479d0",
+        "signature_hash": "da96196c89cae8c7"
+      }
+    ],
+    "PhaseMaskArtifactContractTests.test_receipt_is_two_parent_tamper_evident_and_nonauthorizing": [
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 145,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_receipt_is_two_parent_tamper_evident_and_nonauthorizing:f2ab301d26b9fc00",
+        "signature_hash": "d22933290386fa39"
+      }
+    ],
+    "PhaseMaskArtifactContractTests.test_exactly_two_distinct_parent_artifacts_required": [
+      {
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 147,
+        "end_line": 156,
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_exactly_two_distinct_parent_artifacts_required:1d3f62c3f7eaa29c",
+        "signature_hash": "b7e2bae789c5e6b3"
+      }
+    ],
+    "samples": [
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 60,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#function:samples:d83c4e277b0f775f",
+        "signature_hash": "3a57aa40791a0003"
+      }
+    ],
+    "SpatialDisplaySimulationBenchmarkTests": [
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 133,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#class:SpatialDisplaySimulationBenchmarkTests:0e54591b79b3ff7b",
+        "signature_hash": "6395243f95caf04c"
+      }
+    ],
+    "SpatialDisplaySimulationBenchmarkTests.test_exact_three_phase_fixture_admits_software_measurement_only": [
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 64,
+        "end_line": 71,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_exact_three_phase_fixture_admits_software_measurement_only:b83ede9b3762d121",
+        "signature_hash": "820643769a4a3c3b"
+      }
+    ],
+    "SpatialDisplaySimulationBenchmarkTests.test_phase_order_mismatch_rejects": [
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 78,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_phase_order_mismatch_rejects:e0debd60bae7cac1",
+        "signature_hash": "122b4393e900ae67"
+      }
+    ],
+    "SpatialDisplaySimulationBenchmarkTests.test_cold_and_warm_must_share_process": [
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 80,
+        "end_line": 85,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_cold_and_warm_must_share_process:7fe256f8c7b3980d",
+        "signature_hash": "aa00cd7272251cdf"
+      }
+    ],
+    "SpatialDisplaySimulationBenchmarkTests.test_restart_must_use_new_process": [
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 87,
+        "end_line": 92,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_restart_must_use_new_process:1be3ae878df0646d",
+        "signature_hash": "a3d0fe277a089db0"
+      }
+    ],
+    "SpatialDisplaySimulationBenchmarkTests.test_request_identity_mismatch_rejects": [
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 99,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_request_identity_mismatch_rejects:5a1d1964f92e2e42",
+        "signature_hash": "1261748bc1f89518"
+      }
+    ],
+    "SpatialDisplaySimulationBenchmarkTests.test_iteration_count_mismatch_rejects": [
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 101,
+        "end_line": 106,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_iteration_count_mismatch_rejects:86554db373927ebd",
+        "signature_hash": "4381bc27245bb4f1"
+      }
+    ],
+    "SpatialDisplaySimulationBenchmarkTests.test_runtime_generation_mismatch_rejects": [
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 108,
+        "end_line": 114,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_runtime_generation_mismatch_rejects:d0139b3aeddefb51",
+        "signature_hash": "d2ee1b983b8fb38c"
+      }
+    ],
+    "SpatialDisplaySimulationBenchmarkTests.test_threshold_is_local_software_result_not_hardware_claim": [
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 116,
+        "end_line": 120,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_threshold_is_local_software_result_not_hardware_claim:2de5d94c7fb2bf6f",
+        "signature_hash": "4cb5b60fa4be83d0"
+      }
+    ],
+    "SpatialDisplaySimulationBenchmarkTests.test_receipt_is_two_parent_tamper_evident_and_closed": [
+      {
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 122,
+        "end_line": 133,
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_receipt_is_two_parent_tamper_evident_and_closed:53f9b5dce365ba38",
+        "signature_hash": "fc365f752b6dcbd9"
+      }
+    ],
+    "make_eye_receipt": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 50,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#function:make_eye_receipt:3a65fb545a2d4ff9",
+        "signature_hash": "40859d1a6214f127"
+      }
+    ],
+    "make_phase_receipt": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 79,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#function:make_phase_receipt:02be9077703c7eaf",
+        "signature_hash": "a383cf911bb9cbcc"
+      }
+    ],
+    "intent": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "function",
+        "line": 82,
+        "end_line": 92,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#function:intent:1de19599c6ab2e91",
+        "signature_hash": "9456e7b10f9df25b"
+      }
+    ],
+    "SpatialFrameTransitionTests": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "class",
+        "line": 95,
+        "end_line": 169,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#class:SpatialFrameTransitionTests:4120e849d0bcb88b",
+        "signature_hash": "01596bcb54448b39"
+      }
+    ],
+    "SpatialFrameTransitionTests.test_exact_eye_and_mask_bind_to_same_transition_evidence": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "method",
+        "line": 96,
+        "end_line": 101,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_exact_eye_and_mask_bind_to_same_transition_evidence:030de07fb11e680a",
+        "signature_hash": "3c68ed28e4595e24"
+      }
+    ],
+    "SpatialFrameTransitionTests.test_foreign_eye_receipt_identity_rejected": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "method",
+        "line": 103,
+        "end_line": 110,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_foreign_eye_receipt_identity_rejected:85e927322c3eb280",
+        "signature_hash": "2d5f9cbaf81427a0"
+      }
+    ],
+    "SpatialFrameTransitionTests.test_foreign_phase_receipt_identity_rejected": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "method",
+        "line": 112,
+        "end_line": 119,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_foreign_phase_receipt_identity_rejected:5a9ed747ceca2ee9",
+        "signature_hash": "432b1dc9cdebd6af"
+      }
+    ],
+    "SpatialFrameTransitionTests.test_eye_frame_stale_at_presentation_cut_rejected": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 125,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_eye_frame_stale_at_presentation_cut_rejected:b8229e425af061b9",
+        "signature_hash": "8698fc781bca6a2e"
+      }
+    ],
+    "SpatialFrameTransitionTests.test_eye_frame_from_future_at_presentation_cut_rejected": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "method",
+        "line": 127,
+        "end_line": 131,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_eye_frame_from_future_at_presentation_cut_rejected:85832fb23d70f3c2",
+        "signature_hash": "99543380893adde0"
+      }
+    ],
+    "SpatialFrameTransitionTests.test_eye_evidence_gate_must_be_admissible": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "method",
+        "line": 133,
+        "end_line": 137,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_eye_evidence_gate_must_be_admissible:c3b8b1410db74eb1",
+        "signature_hash": "d8f7b8219f3efb7a"
+      }
+    ],
+    "SpatialFrameTransitionTests.test_phase_semantic_reuse_gate_must_be_admissible": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "method",
+        "line": 139,
+        "end_line": 143,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_phase_semantic_reuse_gate_must_be_admissible:de112f93cd1a35a1",
+        "signature_hash": "1a5710c4a5db8783"
+      }
+    ],
+    "SpatialFrameTransitionTests.test_transition_receipt_is_two_parent_and_tamper_evident": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "method",
+        "line": 145,
+        "end_line": 158,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_transition_receipt_is_two_parent_and_tamper_evident:fb00398d7374e723",
+        "signature_hash": "4183ea991feb75b4"
+      }
+    ],
+    "SpatialFrameTransitionTests.test_exactly_two_distinct_parent_artifacts_required": [
+      {
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "kind": "method",
+        "line": 160,
+        "end_line": 169,
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_exactly_two_distinct_parent_artifacts_required:4bb5a3832ccdc137",
+        "signature_hash": "b7e2bae789c5e6b3"
+      }
+    ],
     "make_decision": [
       {
         "file": "tests/test_p1_1_adversarial_review.py",
@@ -157179,6 +157918,536 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "_finite_positive": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 24,
+        "end_line": 27,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_finite_positive:74809e1755678bd8",
+        "signature_hash": "c763af4e62e0138d"
+      }
+    ],
+    "CameraCalibration": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "class",
+        "line": 37,
+        "end_line": 59,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:CameraCalibration:ee4d07347dc14a11",
+        "signature_hash": "960d15363264b4f7"
+      }
+    ],
+    "CameraCalibration.validate": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 59,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:CameraCalibration.validate:07aebbb2da45c3d9",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "IrisFrameObservation": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "class",
+        "line": 63,
+        "end_line": 96,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:IrisFrameObservation:c87bd3bb37e8f341",
+        "signature_hash": "b403f130812ee23a"
+      }
+    ],
+    "IrisFrameObservation.validate": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 96,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:IrisFrameObservation.validate:e0f6472f6af3e0fe",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "EyePoseEstimate": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "class",
+        "line": 100,
+        "end_line": 107,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:EyePoseEstimate:f11cf7a67b7578f7",
+        "signature_hash": "4426a584e1b24e0e"
+      }
+    ],
+    "SteeringGate": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "class",
+        "line": 111,
+        "end_line": 118,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:SteeringGate:96d323032a7c0afa",
+        "signature_hash": "f942ccb186596668"
+      }
+    ],
+    "estimate_eye_pose_from_assumed_ipd": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 121,
+        "end_line": 152,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:estimate_eye_pose_from_assumed_ipd:6b4d707dff063222",
+        "signature_hash": "a55deab9508aba9c"
+      }
+    ],
+    "gate_eye_pose_for_steering": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 155,
+        "end_line": 208,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:gate_eye_pose_for_steering:60cb74a522fb06ee",
+        "signature_hash": "c6d9f9a477e7e240"
+      }
+    ],
+    "build_eye_pose_receipt": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 215,
+        "end_line": 250,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:build_eye_pose_receipt:42d8ae9df25ff7d0",
+        "signature_hash": "d27cdddecd456503"
+      }
+    ],
+    "verify_eye_pose_receipt": [
+      {
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "kind": "function",
+        "line": 253,
+        "end_line": 275,
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:verify_eye_pose_receipt:df451dd0d0d41e8b",
+        "signature_hash": "447e8c7de4f26e0d"
+      }
+    ],
+    "k27_cell": [
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "function",
+        "line": 34,
+        "end_line": 42,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:k27_cell:d689cd982d37f567",
+        "signature_hash": "e403721236f40413"
+      }
+    ],
+    "imported_packed_coordinate": [
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 60,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:imported_packed_coordinate:7735c52134a3ecb8",
+        "signature_hash": "e73a5622c0b3f84c"
+      }
+    ],
+    "wrap_phase_radians": [
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "function",
+        "line": 63,
+        "end_line": 67,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:wrap_phase_radians:4e39e6eb36318d1b",
+        "signature_hash": "ea1991a195e4c3f6"
+      }
+    ],
+    "SteeringSample": [
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "class",
+        "line": 71,
+        "end_line": 76,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#class:SteeringSample:1fc0d43159fb1537",
+        "signature_hash": "2974a4c49d2f6a6d"
+      }
+    ],
+    "phase_steering_sample": [
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "function",
+        "line": 79,
+        "end_line": 117,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:phase_steering_sample:bff179d4e3c7a706",
+        "signature_hash": "0e7068b0117e81c4"
+      }
+    ],
+    "AngularSpectrumSample": [
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "class",
+        "line": 121,
+        "end_line": 126,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#class:AngularSpectrumSample:f657fc84ee47feef",
+        "signature_hash": "061bbfcd9e9622c1"
+      }
+    ],
+    "angular_spectrum_transfer": [
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "function",
+        "line": 129,
+        "end_line": 158,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:angular_spectrum_transfer:c438c22eb5928ab3",
+        "signature_hash": "c9d1e2bf9f841b5a"
+      }
+    ],
+    "ClaimFinding": [
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "class",
+        "line": 162,
+        "end_line": 165,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#class:ClaimFinding:30a1e48840599e55",
+        "signature_hash": "c16f973d53a1d36d"
+      }
+    ],
+    "imported_candidate_findings": [
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "function",
+        "line": 168,
+        "end_line": 206,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:imported_candidate_findings:dfad3791a50ca087",
+        "signature_hash": "1b7b2519e7d8b296"
+      }
+    ],
+    "verify_import_receipt": [
+      {
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "kind": "function",
+        "line": 267,
+        "end_line": 291,
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:verify_import_receipt:7883defce1c64da7",
+        "signature_hash": "561a1fa4ab2a2431"
+      }
+    ],
+    "PhaseMaskArtifactIdentity": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 77,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#class:PhaseMaskArtifactIdentity:1068e8dc1bfb8bad",
+        "signature_hash": "78703f6b59ae67f2"
+      }
+    ],
+    "PhaseMaskArtifactIdentity.validate": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 61,
+        "end_line": 73,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactIdentity.validate:cc58dada3f8b96ae",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "PhaseMaskArtifactIdentity.identity_digest": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 75,
+        "end_line": 77,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactIdentity.identity_digest:3d96e4e577465276",
+        "signature_hash": "c693ea685ee9d854"
+      }
+    ],
+    "PlannedMaterialization": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "class",
+        "line": 81,
+        "end_line": 102,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#class:PlannedMaterialization:dd00757f17b5e7ad",
+        "signature_hash": "70c4de3b6fbe4fa1"
+      }
+    ],
+    "PlannedMaterialization.validate": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 89,
+        "end_line": 98,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#method:PlannedMaterialization.validate:4896104193bdd343",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "PlannedMaterialization.plan_binding_digest": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 100,
+        "end_line": 102,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#method:PlannedMaterialization.plan_binding_digest:8b31a25542d6c171",
+        "signature_hash": "7f0048d4ca050573"
+      }
+    ],
+    "K27PhaseMaskHandle": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "class",
+        "line": 106,
+        "end_line": 117,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#class:K27PhaseMaskHandle:8f06088ff4bf37da",
+        "signature_hash": "18eebb6379322c86"
+      }
+    ],
+    "K27PhaseMaskHandle.validate": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 111,
+        "end_line": 117,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#method:K27PhaseMaskHandle.validate:c1e73d4575779696",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "RetrievalObservation": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "class",
+        "line": 121,
+        "end_line": 133,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#class:RetrievalObservation:9a18e2ed9d17f8a0",
+        "signature_hash": "dd0c8c83013279f0"
+      }
+    ],
+    "RetrievalObservation.validate": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "method",
+        "line": 128,
+        "end_line": 133,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#method:RetrievalObservation.validate:c42cdba87fe1f801",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "RetrievalGate": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "class",
+        "line": 137,
+        "end_line": 145,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#class:RetrievalGate:055b53a526f02fce",
+        "signature_hash": "7c347f9b364ff572"
+      }
+    ],
+    "make_handle": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "function",
+        "line": 148,
+        "end_line": 162,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:make_handle:6ea64b4b719393c8",
+        "signature_hash": "8b220f5045d9213f"
+      }
+    ],
+    "validate_retrieval": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "function",
+        "line": 165,
+        "end_line": 197,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:validate_retrieval:f26892583631f38a",
+        "signature_hash": "573b1d95d78c5a4e"
+      }
+    ],
+    "build_phase_mask_receipt": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "function",
+        "line": 200,
+        "end_line": 236,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:build_phase_mask_receipt:92a57b08a2ca5e99",
+        "signature_hash": "c8ca6b94033063b7"
+      }
+    ],
+    "verify_phase_mask_receipt": [
+      {
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "kind": "function",
+        "line": 239,
+        "end_line": 260,
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:verify_phase_mask_receipt:e431b5f2e4a4e4c3",
+        "signature_hash": "6056f2419cf4ea89"
+      }
+    ],
+    "_positive": [
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "function",
+        "line": 41,
+        "end_line": 44,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#function:_positive:cb4bad6776efbe8d",
+        "signature_hash": "ac399d4f5f699139"
+      }
+    ],
+    "SimulationBenchmarkRequest": [
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "class",
+        "line": 48,
+        "end_line": 80,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#class:SimulationBenchmarkRequest:b7755356b63dc286",
+        "signature_hash": "b373d0d23a955aa9"
+      }
+    ],
+    "SimulationBenchmarkRequest.validate": [
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 63,
+        "end_line": 76,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#method:SimulationBenchmarkRequest.validate:90360bfc08449fad",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SimulationBenchmarkRequest.digest": [
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 78,
+        "end_line": 80,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#method:SimulationBenchmarkRequest.digest:50a927c8806944e4",
+        "signature_hash": "78cc05eff2137397"
+      }
+    ],
+    "SimulationPhaseSample": [
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "class",
+        "line": 84,
+        "end_line": 107,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#class:SimulationPhaseSample:7d7e73af4becd11c",
+        "signature_hash": "2537e26ec89cecca"
+      }
+    ],
+    "SimulationPhaseSample.validate": [
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 94,
+        "end_line": 103,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#method:SimulationPhaseSample.validate:5b3017bf6f7ef81d",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SimulationPhaseSample.average_latency_ns": [
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 107,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#method:SimulationPhaseSample.average_latency_ns:bf580dc2b5408fd8",
+        "signature_hash": "260bb678f9117a11"
+      }
+    ],
+    "SimulationBenchmarkGate": [
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "class",
+        "line": 111,
+        "end_line": 122,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#class:SimulationBenchmarkGate:bb606f14f0fa65fb",
+        "signature_hash": "6343c3a83dd57c33"
+      }
+    ],
+    "validate_simulation_samples": [
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "function",
+        "line": 125,
+        "end_line": 181,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#function:validate_simulation_samples:bd4993561d726598",
+        "signature_hash": "5ec591cecf9b68b0"
+      }
+    ],
+    "build_simulation_benchmark_receipt": [
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "function",
+        "line": 184,
+        "end_line": 222,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#function:build_simulation_benchmark_receipt:6c4febe307043807",
+        "signature_hash": "c9d3465fbc08dc42"
+      }
+    ],
+    "verify_simulation_benchmark_receipt": [
+      {
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "kind": "function",
+        "line": 225,
+        "end_line": 244,
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#function:verify_simulation_benchmark_receipt:f4e53e5516dc65f5",
+        "signature_hash": "af07927b8ab9ed97"
+      }
+    ],
+    "SpatialFrameIntent": [
+      {
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "kind": "class",
+        "line": 40,
+        "end_line": 58,
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#class:SpatialFrameIntent:a47116e969597475",
+        "signature_hash": "b1953203b6d2e7e4"
+      }
+    ],
+    "SpatialFrameIntent.validate": [
+      {
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 58,
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#method:SpatialFrameIntent.validate:11667e439ab09fce",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "SpatialFrameGate": [
+      {
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "kind": "class",
+        "line": 62,
+        "end_line": 70,
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#class:SpatialFrameGate:84980378c3721a2d",
+        "signature_hash": "b1f72a5367f15375"
+      }
+    ],
+    "bind_spatial_frame_transition": [
+      {
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "kind": "function",
+        "line": 73,
+        "end_line": 124,
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#function:bind_spatial_frame_transition:2735d1f5fe792963",
+        "signature_hash": "fb87e1100a3adf82"
+      }
+    ],
+    "build_spatial_frame_receipt": [
+      {
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "kind": "function",
+        "line": 127,
+        "end_line": 160,
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#function:build_spatial_frame_receipt:8d560a5e771657c5",
+        "signature_hash": "a5f9bda3219fefd4"
+      }
+    ],
+    "verify_spatial_frame_receipt": [
+      {
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "kind": "function",
+        "line": 163,
+        "end_line": 181,
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#function:verify_spatial_frame_receipt:9d652d155521864e",
+        "signature_hash": "6c5ba50510bb1ee1"
       }
     ],
     "_coordinates": [
@@ -168530,6 +169799,241 @@
         0.193092,
         -0.001409,
         -0.102888
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-eye-pose-common-cut.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 607,
+      "lines": 24,
+      "tokens_est": 152,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "5e1fd222693908e7",
+      "vector": [
+        0.062932,
+        -0.176922,
+        0.122302,
+        0.150799,
+        0.013061,
+        -0.153174,
+        0.295662,
+        0.072431,
+        -0.153174,
+        0.250541,
+        -0.219668,
+        0.105678,
+        0.089055,
+        0.236292,
+        0.191171,
+        -0.14605,
+        0.150799,
+        -0.074806,
+        -0.274289,
+        0.1413,
+        -0.233917,
+        -0.26479,
+        0.233917,
+        0.167423,
+        -0.138925,
+        -0.110428,
+        -0.172173,
+        -0.015436,
+        0.067682,
+        0.238667,
+        0.26479,
+        0.138925
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-optics-candidate-falsifier.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 600,
+      "lines": 24,
+      "tokens_est": 150,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cc88b8ccb605df2c",
+      "vector": [
+        0.021317,
+        0.249534,
+        0.262074,
+        0.086522,
+        -0.003762,
+        0.003762,
+        -0.267089,
+        0.086522,
+        -0.094046,
+        0.221947,
+        -0.264581,
+        0.249534,
+        0.126648,
+        -0.259566,
+        -0.061443,
+        -0.312231,
+        0.086522,
+        -0.011285,
+        -0.174298,
+        -0.209408,
+        -0.196869,
+        -0.166774,
+        -0.204392,
+        0.247026,
+        0.274613,
+        0.109093,
+        0.214424,
+        0.018809,
+        0.001254,
+        0.023825,
+        -0.031349,
+        -0.144203
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-phase-mask-artifact-identity.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 609,
+      "lines": 24,
+      "tokens_est": 153,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "9a842ebd8febbaf1",
+      "vector": [
+        0.148226,
+        0.107908,
+        -0.217003,
+        0.027274,
+        0.115023,
+        0.05099,
+        0.069963,
+        0.072334,
+        -0.250205,
+        0.193286,
+        0.03676,
+        -0.117395,
+        0.03676,
+        0.264435,
+        0.195658,
+        0.207516,
+        0.259692,
+        0.278665,
+        -0.264435,
+        -0.048618,
+        0.252577,
+        0.273921,
+        0.077077,
+        0.212259,
+        0.209888,
+        -0.217003,
+        0.013044,
+        0.029645,
+        0.19803,
+        0.176685,
+        -0.190915,
+        0.136368
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-spatial-display-sim-benchmark.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 690,
+      "lines": 24,
+      "tokens_est": 173,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "16f3618160ef52a7",
+      "vector": [
+        0.258924,
+        0.045692,
+        0.160509,
+        -0.235492,
+        0.066781,
+        -0.08787,
+        0.099586,
+        -0.21206,
+        0.15348,
+        -0.27064,
+        -0.291728,
+        0.235492,
+        -0.0949,
+        -0.296415,
+        -0.118332,
+        0.003515,
+        0.08787,
+        0.085527,
+        0.195657,
+        -0.090213,
+        -0.298758,
+        0.02929,
+        -0.062095,
+        0.172225,
+        0.247208,
+        -0.108959,
+        0.162852,
+        -0.265953,
+        0.038663,
+        0.08084,
+        -0.038663,
+        0.26361
+      ]
+    },
+    {
+      "path": ".github/workflows/k27-spatial-frame-transition.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 621,
+      "lines": 24,
+      "tokens_est": 156,
+      "symbol_count": 0,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "bb83726cd20fdf03",
+      "vector": [
+        -0.190247,
+        0.146624,
+        0.173283,
+        0.139353,
+        0.1442,
+        0.078765,
+        -0.071494,
+        -0.168435,
+        -0.236294,
+        0.241141,
+        0.233871,
+        0.134506,
+        -0.214483,
+        -0.202365,
+        0.003635,
+        -0.090882,
+        -0.163588,
+        0.107847,
+        0.163588,
+        -0.035141,
+        -0.018176,
+        -0.304153,
+        0.30173,
+        -0.151471,
+        -0.262953,
+        -0.0206,
+        0.100577,
+        -0.272647,
+        -0.238718,
+        0.141777,
+        0.202365,
+        -0.071494
       ]
     },
     {
@@ -262272,6 +263776,241 @@
       ]
     },
     {
+      "path": "tests/test_k27_eye_pose_observation_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7712,
+      "lines": 175,
+      "tokens_est": 1928,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a54da33860b95f00",
+      "vector": [
+        -0.022386,
+        0.201475,
+        -0.128426,
+        -0.15199,
+        0.298089,
+        -0.088366,
+        -0.159059,
+        0.114287,
+        -0.298089,
+        -0.123713,
+        0.156703,
+        0.111931,
+        0.111931,
+        -0.109574,
+        -0.100148,
+        0.229752,
+        0.083653,
+        -0.168485,
+        -0.133138,
+        -0.194406,
+        -0.005891,
+        0.286307,
+        -0.203832,
+        -0.187336,
+        0.276881,
+        0.029455,
+        0.241534,
+        0.121356,
+        -0.107218,
+        -0.229752,
+        0.274525,
+        0.126069
+      ]
+    },
+    {
+      "path": "tests/test_k27_optics_candidate_falsifier.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 4368,
+      "lines": 118,
+      "tokens_est": 1092,
+      "symbol_count": 10,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0013319cfd39dd34",
+      "vector": [
+        0.139481,
+        -0.134544,
+        0.006172,
+        -0.097513,
+        0.304883,
+        -0.201198,
+        0.267853,
+        0.267853,
+        -0.035796,
+        -0.129606,
+        -0.280197,
+        0.23576,
+        0.171574,
+        -0.243166,
+        -0.1222,
+        0.29254,
+        -0.018515,
+        -0.109857,
+        0.114794,
+        0.270322,
+        -0.129606,
+        -0.018515,
+        -0.213542,
+        0.099982,
+        0.077764,
+        0.139481,
+        -0.250572,
+        0.072826,
+        0.018515,
+        -0.19873,
+        -0.082701,
+        0.151825
+      ]
+    },
+    {
+      "path": "tests/test_k27_phase_mask_artifact_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6108,
+      "lines": 161,
+      "tokens_est": 1527,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2b92aaaa09df1f3f",
+      "vector": [
+        0.246854,
+        0.153516,
+        -0.283697,
+        0.097022,
+        -0.138778,
+        -0.101935,
+        0.082285,
+        -0.234572,
+        -0.30826,
+        0.082285,
+        0.197728,
+        0.082285,
+        -0.175622,
+        -0.256679,
+        0.148603,
+        -0.114216,
+        0.106847,
+        -0.273872,
+        -0.119128,
+        0.305804,
+        -0.052809,
+        0.136322,
+        0.11176,
+        0.133866,
+        0.055266,
+        -0.234572,
+        -0.006141,
+        0.028247,
+        -0.182991,
+        0.286154,
+        0.180535,
+        -0.042984
+      ]
+    },
+    {
+      "path": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5820,
+      "lines": 138,
+      "tokens_est": 1455,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "293e9d01267384ae",
+      "vector": [
+        -0.016273,
+        -0.279148,
+        -0.128934,
+        -0.038805,
+        0.26663,
+        -0.18902,
+        -0.25912,
+        0.143955,
+        0.023784,
+        -0.026287,
+        -0.078862,
+        -0.061337,
+        -0.316702,
+        -0.264127,
+        0.236587,
+        0.163984,
+        0.046316,
+        0.291666,
+        0.078862,
+        0.163984,
+        0.111409,
+        -0.038805,
+        -0.274141,
+        0.066345,
+        -0.148962,
+        -0.113912,
+        -0.16148,
+        -0.221566,
+        0.076359,
+        0.25912,
+        -0.216559,
+        -0.028791
+      ]
+    },
+    {
+      "path": "tests/test_k27_spatial_frame_transition_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 7607,
+      "lines": 174,
+      "tokens_est": 1902,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "d9f71e943222dfc7",
+      "vector": [
+        -0.185836,
+        -0.111034,
+        0.04792,
+        0.118047,
+        0.176486,
+        0.232587,
+        0.06662,
+        0.246612,
+        0.089996,
+        0.23025,
+        -0.129735,
+        0.274663,
+        -0.125059,
+        -0.185836,
+        0.262975,
+        -0.178823,
+        -0.024544,
+        0.188174,
+        -0.211549,
+        -0.244275,
+        -0.052595,
+        0.188174,
+        -0.267651,
+        -0.106359,
+        0.197524,
+        -0.054933,
+        0.022207,
+        -0.06662,
+        -0.211549,
+        0.272326,
+        0.218562,
+        0.080646
+      ]
+    },
+    {
       "path": "tests/test_p1_1_adversarial_review.py",
       "role": "python_module",
       "binary": false,
@@ -262739,6 +264478,241 @@
         -0.242578,
         0.019731,
         0.196151
+      ]
+    },
+    {
+      "path": "tools/k27_eye_pose_observation_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9814,
+      "lines": 276,
+      "tokens_est": 2454,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "2566cb9278c688d2",
+      "vector": [
+        0.342518,
+        0.076892,
+        -0.322946,
+        0.093668,
+        0.130017,
+        -0.032155,
+        -0.174754,
+        0.25584,
+        0.127221,
+        0.314558,
+        0.208307,
+        -0.308966,
+        -0.25584,
+        -0.001398,
+        0.113241,
+        -0.032155,
+        0.032155,
+        -0.00699,
+        0.160774,
+        -0.275413,
+        -0.138405,
+        -0.023767,
+        0.118833,
+        -0.088076,
+        0.14959,
+        0.043339,
+        0.065708,
+        -0.233472,
+        0.051727,
+        0.230676,
+        0.160774,
+        0.08528
+      ]
+    },
+    {
+      "path": "tools/k27_optics_candidate_falsifier.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10458,
+      "lines": 292,
+      "tokens_est": 2615,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "e6068cdbb8ce4f6f",
+      "vector": [
+        0.149553,
+        -0.080694,
+        0.078542,
+        0.220563,
+        0.145249,
+        0.171071,
+        0.119427,
+        0.220563,
+        -0.2636,
+        0.087149,
+        -0.257144,
+        0.199045,
+        -0.018291,
+        -0.23993,
+        -0.160312,
+        -0.220563,
+        0.259296,
+        0.220563,
+        -0.003228,
+        0.136642,
+        0.041961,
+        -0.190438,
+        0.093605,
+        -0.252841,
+        0.272207,
+        -0.147401,
+        -0.003228,
+        0.147401,
+        -0.209804,
+        -0.175375,
+        0.207652,
+        0.084998
+      ]
+    },
+    {
+      "path": "tools/k27_phase_mask_artifact_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 9130,
+      "lines": 261,
+      "tokens_est": 2283,
+      "symbol_count": 19,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "fbd77889705567d4",
+      "vector": [
+        0.24962,
+        0.150737,
+        -0.126619,
+        -0.085619,
+        0.201384,
+        0.261679,
+        0.022912,
+        -0.247208,
+        0.244797,
+        0.04703,
+        0.242385,
+        -0.010853,
+        -0.20862,
+        0.075971,
+        0.150737,
+        -0.080795,
+        0.259267,
+        0.095266,
+        -0.044618,
+        -0.08803,
+        -0.198973,
+        0.293032,
+        0.015677,
+        -0.196561,
+        -0.148325,
+        -0.293032,
+        -0.148325,
+        0.018088,
+        0.11456,
+        -0.025324,
+        0.24962,
+        -0.254444
+      ]
+    },
+    {
+      "path": "tools/k27_spatial_display_sim_benchmark_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8760,
+      "lines": 245,
+      "tokens_est": 2190,
+      "symbol_count": 13,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "a78f04602a283524",
+      "vector": [
+        0.216249,
+        0.263587,
+        0.024745,
+        -0.181821,
+        -0.125876,
+        -0.26789,
+        -0.001076,
+        0.209793,
+        -0.134483,
+        0.117269,
+        0.065628,
+        -0.265738,
+        -0.138786,
+        0.201186,
+        -0.259283,
+        0.145242,
+        -0.009683,
+        -0.181821,
+        0.216249,
+        0.14309,
+        -0.265738,
+        0.007531,
+        -0.001076,
+        -0.046262,
+        0.026897,
+        -0.082841,
+        -0.138786,
+        -0.270042,
+        -0.261435,
+        0.259283,
+        0.231311,
+        0.039807
+      ]
+    },
+    {
+      "path": "tools/k27_spatial_frame_transition_contract.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6782,
+      "lines": 182,
+      "tokens_est": 1696,
+      "symbol_count": 8,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "72ab30ae34fc5e8c",
+      "vector": [
+        -0.18721,
+        -0.147675,
+        0.138373,
+        0.082559,
+        -0.268606,
+        -0.019768,
+        -0.294188,
+        0.212792,
+        0.277908,
+        0.28256,
+        -0.173257,
+        0.056977,
+        0.28256,
+        -0.052326,
+        0.003488,
+        -0.250001,
+        0.201164,
+        -0.189536,
+        0.110466,
+        0.015116,
+        -0.077907,
+        -0.201164,
+        0.094187,
+        0.126745,
+        -0.05,
+        -0.191862,
+        -0.043023,
+        -0.152326,
+        0.012791,
+        -0.291862,
+        0.229071,
+        -0.122094
       ]
     },
     {
@@ -286646,16 +288620,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1654,
+    "total_bytes": 26494734,
+    "text_tokens_est": 6614039,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 1007,
+      "schema_or_lexicon": 276,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286814,6 +288788,11 @@
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
+      ".github/workflows/k27-eye-pose-common-cut.yml",
+      ".github/workflows/k27-optics-candidate-falsifier.yml",
+      ".github/workflows/k27-phase-mask-artifact-identity.yml",
+      ".github/workflows/k27-spatial-display-sim-benchmark.yml",
+      ".github/workflows/k27-spatial-frame-transition.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
       ".github/workflows/model-cognome-governed-routing.yml",
       ".github/workflows/model-cognome-replay-probes.yml",
@@ -288288,6 +290267,11 @@
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
       "tests/test_huggingface_space_deployment.py",
+      "tests/test_k27_eye_pose_observation_contract.py",
+      "tests/test_k27_optics_candidate_falsifier.py",
+      "tests/test_k27_phase_mask_artifact_contract.py",
+      "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+      "tests/test_k27_spatial_frame_transition_contract.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
       "third_party/pascal/LICENSE",
@@ -288298,6 +290282,11 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/k27_eye_pose_observation_contract.py",
+      "tools/k27_optics_candidate_falsifier.py",
+      "tools/k27_phase_mask_artifact_contract.py",
+      "tools/k27_spatial_display_sim_benchmark_contract.py",
+      "tools/k27_spatial_frame_transition_contract.py",
       "travel_extractors/__init__.py",
       "travel_extractors/option_b.py",
       "travel_media_assets.py",
@@ -445354,6 +447343,636 @@
         "file_digest8": "3fff377989b5898c"
       },
       {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#class:EyePoseObservationContractTests:92ccf178978891ad",
+        "name": "EyePoseObservationContractTests",
+        "kind": "class",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 50,
+        "end_line": 170,
+        "signature_hash": "0ab6a0fdc72f2159",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:calibration:28e9abcc04967ab2",
+        "name": "calibration",
+        "kind": "function",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 17,
+        "end_line": 30,
+        "signature_hash": "f59fac0cedb002c5",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#function:frame:d1556235ca21c7d0",
+        "name": "frame",
+        "kind": "function",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 33,
+        "end_line": 47,
+        "signature_hash": "d986bf8a8e22e32d",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_assumed_ipd_geometry_is_estimate_not_metric_truth:8090cd72d39540fd",
+        "name": "EyePoseObservationContractTests.test_assumed_ipd_geometry_is_estimate_not_metric_truth",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 51,
+        "end_line": 60,
+        "signature_hash": "e1a978586c6c2d51",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_calibration_generation_movement_reopens_gate:14cb16b4df918966",
+        "name": "EyePoseObservationContractTests.test_calibration_generation_movement_reopens_gate",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 85,
+        "end_line": 95,
+        "signature_hash": "4cb88962c7068094",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized:81ca910e14a753d1",
+        "name": "EyePoseObservationContractTests.test_current_common_cut_can_be_evidence_admissible_but_not_effect_authorized",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 121,
+        "end_line": 132,
+        "signature_hash": "050365dd551d50e3",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_landmark_model_generation_movement_reopens_gate:c2349f7d2edd384c",
+        "name": "EyePoseObservationContractTests.test_landmark_model_generation_movement_reopens_gate",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 97,
+        "end_line": 107,
+        "signature_hash": "a9cf4c2a286afa11",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_low_tracking_confidence_fails_closed:e28597e01d6c9e7c",
+        "name": "EyePoseObservationContractTests.test_low_tracking_confidence_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 109,
+        "end_line": 119,
+        "signature_hash": "7a579e0b94dd3d95",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_receipt_is_two_parent_source_bound_and_tamper_evident:591790535fd26ecf",
+        "name": "EyePoseObservationContractTests.test_receipt_is_two_parent_source_bound_and_tamper_evident",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 134,
+        "end_line": 153,
+        "signature_hash": "8377b91b4d42debe",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_receipt_requires_exactly_two_distinct_parents:bb0476af135e5cfd",
+        "name": "EyePoseObservationContractTests.test_receipt_requires_exactly_two_distinct_parents",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 155,
+        "end_line": 170,
+        "signature_hash": "a37f9709b3c30236",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_sensor_aba_runtime_change_fails_common_cut:350757c7aa36354d",
+        "name": "EyePoseObservationContractTests.test_sensor_aba_runtime_change_fails_common_cut",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 73,
+        "end_line": 83,
+        "signature_hash": "79da1579c48d4265",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_eye_pose_observation_contract.py#method:EyePoseObservationContractTests.test_stale_frame_fails_closed:43d5bd63bbdba56c",
+        "name": "EyePoseObservationContractTests.test_stale_frame_fails_closed",
+        "kind": "method",
+        "file": "tests/test_k27_eye_pose_observation_contract.py",
+        "line": 62,
+        "end_line": 71,
+        "signature_hash": "b5047fe9314a0d6e",
+        "file_digest8": "a54da33860b95f00"
+      },
+      {
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#class:K27OpticsCandidateFalsifierTests:4f6f0449a359c4e1",
+        "name": "K27OpticsCandidateFalsifierTests",
+        "kind": "class",
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "line": 15,
+        "end_line": 113,
+        "signature_hash": "10097a7ef384dcc2",
+        "file_digest8": "0013319cfd39dd34"
+      },
+      {
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_asm_evanescent_mode_is_bandlimited:a611ae7606739460",
+        "name": "K27OpticsCandidateFalsifierTests.test_asm_evanescent_mode_is_bandlimited",
+        "kind": "method",
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "line": 64,
+        "end_line": 73,
+        "signature_hash": "fbab0dc5c83fdd38",
+        "file_digest8": "0013319cfd39dd34"
+      },
+      {
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_asm_propagating_mode_has_unit_transfer_but_no_system_claim:ca682c53c930ca4f",
+        "name": "K27OpticsCandidateFalsifierTests.test_asm_propagating_mode_has_unit_transfer_but_no_system_claim",
+        "kind": "method",
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "line": 52,
+        "end_line": 62,
+        "signature_hash": "b41e09714cf3742d",
+        "file_digest8": "0013319cfd39dd34"
+      },
+      {
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_candidate_findings_reject_unearned_claims:976fd7bdfdb9798f",
+        "name": "K27OpticsCandidateFalsifierTests.test_candidate_findings_reject_unearned_claims",
+        "kind": "method",
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "line": 75,
+        "end_line": 84,
+        "signature_hash": "a8ef6bdcf0de9aa6",
+        "file_digest8": "0013319cfd39dd34"
+      },
+      {
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_imported_shift_packing_is_not_k27_cell:47de09fc0a080265",
+        "name": "K27OpticsCandidateFalsifierTests.test_imported_shift_packing_is_not_k27_cell",
+        "kind": "method",
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "line": 31,
+        "end_line": 34,
+        "signature_hash": "c78674b048d29e4d",
+        "file_digest8": "0013319cfd39dd34"
+      },
+      {
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_k27_is_exact_27_cell_bijection:527477c41f519a7e",
+        "name": "K27OpticsCandidateFalsifierTests.test_k27_is_exact_27_cell_bijection",
+        "kind": "method",
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "line": 16,
+        "end_line": 23,
+        "signature_hash": "be1d816a34579872",
+        "file_digest8": "0013319cfd39dd34"
+      },
+      {
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_k27_rejects_bool_and_nonternary:e6a933108db76c46",
+        "name": "K27OpticsCandidateFalsifierTests.test_k27_rejects_bool_and_nonternary",
+        "kind": "method",
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "line": 25,
+        "end_line": 29,
+        "signature_hash": "d6defffef8379f75",
+        "file_digest8": "0013319cfd39dd34"
+      },
+      {
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_phase_steering_is_explicitly_approximate_and_nonauthorizing:ac54b81416de25e0",
+        "name": "K27OpticsCandidateFalsifierTests.test_phase_steering_is_explicitly_approximate_and_nonauthorizing",
+        "kind": "method",
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "line": 36,
+        "end_line": 50,
+        "signature_hash": "61ba409fc4351b46",
+        "file_digest8": "0013319cfd39dd34"
+      },
+      {
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_receipt_ceiling_remains_all_false:3934c8706ad17c01",
+        "name": "K27OpticsCandidateFalsifierTests.test_receipt_ceiling_remains_all_false",
+        "kind": "method",
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "line": 104,
+        "end_line": 113,
+        "signature_hash": "4a96c3b30ebca273",
+        "file_digest8": "0013319cfd39dd34"
+      },
+      {
+        "semantic_id": "tests/test_k27_optics_candidate_falsifier.py#method:K27OpticsCandidateFalsifierTests.test_receipt_is_deterministic_source_bound_and_closed:fa2fee608c8b6806",
+        "name": "K27OpticsCandidateFalsifierTests.test_receipt_is_deterministic_source_bound_and_closed",
+        "kind": "method",
+        "file": "tests/test_k27_optics_candidate_falsifier.py",
+        "line": 86,
+        "end_line": 102,
+        "signature_hash": "a53cee020c5ad918",
+        "file_digest8": "0013319cfd39dd34"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#class:PhaseMaskArtifactContractTests:d50188ac8b75c2f3",
+        "name": "PhaseMaskArtifactContractTests",
+        "kind": "class",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 66,
+        "end_line": 156,
+        "signature_hash": "283bb624f130111c",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#function:artifact:d4c5c418ffa8a576",
+        "name": "artifact",
+        "kind": "function",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 25,
+        "end_line": 38,
+        "signature_hash": "d84be0cabdfa68b2",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#function:observation:5d248e29c66e5bdd",
+        "name": "observation",
+        "kind": "function",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 54,
+        "end_line": 63,
+        "signature_hash": "61d98d33f2ab3b16",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#function:plan:cd67a3780141d34d",
+        "name": "plan",
+        "kind": "function",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 41,
+        "end_line": 51,
+        "signature_hash": "95131f80d668731b",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#function:sha:a8bf7285519eeaff",
+        "name": "sha",
+        "kind": "function",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "4e09542ccd6d5aec",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_coordinate_is_not_identity:fc74d83e335479d0",
+        "name": "PhaseMaskArtifactContractTests.test_coordinate_is_not_identity",
+        "kind": "method",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 125,
+        "end_line": 131,
+        "signature_hash": "da96196c89cae8c7",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_exact_retrieval_admits_semantic_reuse_only:5a03b2acabf29f79",
+        "name": "PhaseMaskArtifactContractTests.test_exact_retrieval_admits_semantic_reuse_only",
+        "kind": "method",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 67,
+        "end_line": 75,
+        "signature_hash": "df2e332c08b99584",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_exactly_two_distinct_parent_artifacts_required:1d3f62c3f7eaa29c",
+        "name": "PhaseMaskArtifactContractTests.test_exactly_two_distinct_parent_artifacts_required",
+        "kind": "method",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 147,
+        "end_line": 156,
+        "signature_hash": "b7e2bae789c5e6b3",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_optical_model_generation_change_changes_artifact_identity:433584bbf2b331fb",
+        "name": "PhaseMaskArtifactContractTests.test_optical_model_generation_change_changes_artifact_identity",
+        "kind": "method",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 108,
+        "end_line": 114,
+        "signature_hash": "e4506b50fecf4dd9",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_receipt_is_two_parent_tamper_evident_and_nonauthorizing:f2ab301d26b9fc00",
+        "name": "PhaseMaskArtifactContractTests.test_receipt_is_two_parent_tamper_evident_and_nonauthorizing",
+        "kind": "method",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 133,
+        "end_line": 145,
+        "signature_hash": "d22933290386fa39",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_reused_offset_new_storage_generation_rejects_aba:59c2adae16fa019a",
+        "name": "PhaseMaskArtifactContractTests.test_reused_offset_new_storage_generation_rejects_aba",
+        "kind": "method",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 88,
+        "end_line": 97,
+        "signature_hash": "92f876d1eb3c274a",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_same_coordinate_wrong_payload_rejects:e878f21a3e445592",
+        "name": "PhaseMaskArtifactContractTests.test_same_coordinate_wrong_payload_rejects",
+        "kind": "method",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 77,
+        "end_line": 86,
+        "signature_hash": "4550fecddebd9505",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_scene_generation_change_changes_artifact_identity:5e5de2da6a766115",
+        "name": "PhaseMaskArtifactContractTests.test_scene_generation_change_changes_artifact_identity",
+        "kind": "method",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 99,
+        "end_line": 106,
+        "signature_hash": "a1a039ec5a661f13",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactContractTests.test_storage_plan_change_rebinds_materialization:a119ff1032c78982",
+        "name": "PhaseMaskArtifactContractTests.test_storage_plan_change_rebinds_materialization",
+        "kind": "method",
+        "file": "tests/test_k27_phase_mask_artifact_contract.py",
+        "line": 116,
+        "end_line": 123,
+        "signature_hash": "3129aec2480483ec",
+        "file_digest8": "2b92aaaa09df1f3f"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#class:SpatialDisplaySimulationBenchmarkTests:0e54591b79b3ff7b",
+        "name": "SpatialDisplaySimulationBenchmarkTests",
+        "kind": "class",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 63,
+        "end_line": 133,
+        "signature_hash": "6395243f95caf04c",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#function:request:d802ac7f84b0cc4d",
+        "name": "request",
+        "kind": "function",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 22,
+        "end_line": 32,
+        "signature_hash": "aa30402c5be12ee6",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#function:samples:d83c4e277b0f775f",
+        "name": "samples",
+        "kind": "function",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 35,
+        "end_line": 60,
+        "signature_hash": "3a57aa40791a0003",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#function:sha:b5278ead8448f5e7",
+        "name": "sha",
+        "kind": "function",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 18,
+        "end_line": 19,
+        "signature_hash": "4e09542ccd6d5aec",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_cold_and_warm_must_share_process:7fe256f8c7b3980d",
+        "name": "SpatialDisplaySimulationBenchmarkTests.test_cold_and_warm_must_share_process",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 80,
+        "end_line": 85,
+        "signature_hash": "aa00cd7272251cdf",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_exact_three_phase_fixture_admits_software_measurement_only:b83ede9b3762d121",
+        "name": "SpatialDisplaySimulationBenchmarkTests.test_exact_three_phase_fixture_admits_software_measurement_only",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 64,
+        "end_line": 71,
+        "signature_hash": "820643769a4a3c3b",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_iteration_count_mismatch_rejects:86554db373927ebd",
+        "name": "SpatialDisplaySimulationBenchmarkTests.test_iteration_count_mismatch_rejects",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 101,
+        "end_line": 106,
+        "signature_hash": "4381bc27245bb4f1",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_phase_order_mismatch_rejects:e0debd60bae7cac1",
+        "name": "SpatialDisplaySimulationBenchmarkTests.test_phase_order_mismatch_rejects",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 73,
+        "end_line": 78,
+        "signature_hash": "122b4393e900ae67",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_receipt_is_two_parent_tamper_evident_and_closed:53f9b5dce365ba38",
+        "name": "SpatialDisplaySimulationBenchmarkTests.test_receipt_is_two_parent_tamper_evident_and_closed",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 122,
+        "end_line": 133,
+        "signature_hash": "fc365f752b6dcbd9",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_request_identity_mismatch_rejects:5a1d1964f92e2e42",
+        "name": "SpatialDisplaySimulationBenchmarkTests.test_request_identity_mismatch_rejects",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 94,
+        "end_line": 99,
+        "signature_hash": "1261748bc1f89518",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_restart_must_use_new_process:1be3ae878df0646d",
+        "name": "SpatialDisplaySimulationBenchmarkTests.test_restart_must_use_new_process",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 87,
+        "end_line": 92,
+        "signature_hash": "a3d0fe277a089db0",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_runtime_generation_mismatch_rejects:d0139b3aeddefb51",
+        "name": "SpatialDisplaySimulationBenchmarkTests.test_runtime_generation_mismatch_rejects",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 108,
+        "end_line": 114,
+        "signature_hash": "d2ee1b983b8fb38c",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_display_sim_benchmark_contract.py#method:SpatialDisplaySimulationBenchmarkTests.test_threshold_is_local_software_result_not_hardware_claim:2de5d94c7fb2bf6f",
+        "name": "SpatialDisplaySimulationBenchmarkTests.test_threshold_is_local_software_result_not_hardware_claim",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_display_sim_benchmark_contract.py",
+        "line": 116,
+        "end_line": 120,
+        "signature_hash": "4cb5b60fa4be83d0",
+        "file_digest8": "293e9d01267384ae"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#class:SpatialFrameTransitionTests:4120e849d0bcb88b",
+        "name": "SpatialFrameTransitionTests",
+        "kind": "class",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 95,
+        "end_line": 169,
+        "signature_hash": "01596bcb54448b39",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#function:intent:1de19599c6ab2e91",
+        "name": "intent",
+        "kind": "function",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 82,
+        "end_line": 92,
+        "signature_hash": "9456e7b10f9df25b",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#function:make_eye_receipt:3a65fb545a2d4ff9",
+        "name": "make_eye_receipt",
+        "kind": "function",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 24,
+        "end_line": 50,
+        "signature_hash": "40859d1a6214f127",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#function:make_phase_receipt:02be9077703c7eaf",
+        "name": "make_phase_receipt",
+        "kind": "function",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 53,
+        "end_line": 79,
+        "signature_hash": "a383cf911bb9cbcc",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#function:sha:b63197ee0c68f35e",
+        "name": "sha",
+        "kind": "function",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 20,
+        "end_line": 21,
+        "signature_hash": "4e09542ccd6d5aec",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_exact_eye_and_mask_bind_to_same_transition_evidence:030de07fb11e680a",
+        "name": "SpatialFrameTransitionTests.test_exact_eye_and_mask_bind_to_same_transition_evidence",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 96,
+        "end_line": 101,
+        "signature_hash": "3c68ed28e4595e24",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_exactly_two_distinct_parent_artifacts_required:4bb5a3832ccdc137",
+        "name": "SpatialFrameTransitionTests.test_exactly_two_distinct_parent_artifacts_required",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 160,
+        "end_line": 169,
+        "signature_hash": "b7e2bae789c5e6b3",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_eye_evidence_gate_must_be_admissible:c3b8b1410db74eb1",
+        "name": "SpatialFrameTransitionTests.test_eye_evidence_gate_must_be_admissible",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 133,
+        "end_line": 137,
+        "signature_hash": "d8f7b8219f3efb7a",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_eye_frame_from_future_at_presentation_cut_rejected:85832fb23d70f3c2",
+        "name": "SpatialFrameTransitionTests.test_eye_frame_from_future_at_presentation_cut_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 127,
+        "end_line": 131,
+        "signature_hash": "99543380893adde0",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_eye_frame_stale_at_presentation_cut_rejected:b8229e425af061b9",
+        "name": "SpatialFrameTransitionTests.test_eye_frame_stale_at_presentation_cut_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 121,
+        "end_line": 125,
+        "signature_hash": "8698fc781bca6a2e",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_foreign_eye_receipt_identity_rejected:85e927322c3eb280",
+        "name": "SpatialFrameTransitionTests.test_foreign_eye_receipt_identity_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 103,
+        "end_line": 110,
+        "signature_hash": "2d5f9cbaf81427a0",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_foreign_phase_receipt_identity_rejected:5a9ed747ceca2ee9",
+        "name": "SpatialFrameTransitionTests.test_foreign_phase_receipt_identity_rejected",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 112,
+        "end_line": 119,
+        "signature_hash": "432b1dc9cdebd6af",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_phase_semantic_reuse_gate_must_be_admissible:de112f93cd1a35a1",
+        "name": "SpatialFrameTransitionTests.test_phase_semantic_reuse_gate_must_be_admissible",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 139,
+        "end_line": 143,
+        "signature_hash": "1a5710c4a5db8783",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
+        "semantic_id": "tests/test_k27_spatial_frame_transition_contract.py#method:SpatialFrameTransitionTests.test_transition_receipt_is_two_parent_and_tamper_evident:fb00398d7374e723",
+        "name": "SpatialFrameTransitionTests.test_transition_receipt_is_two_parent_and_tamper_evident",
+        "kind": "method",
+        "file": "tests/test_k27_spatial_frame_transition_contract.py",
+        "line": 145,
+        "end_line": 158,
+        "signature_hash": "4183ea991feb75b4",
+        "file_digest8": "d9f71e943222dfc7"
+      },
+      {
         "semantic_id": "tests/test_p1_1_adversarial_review.py#function:make_attestation:53580d1846a1123f",
         "name": "make_attestation",
         "kind": "function",
@@ -445632,6 +448251,666 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:CameraCalibration:ee4d07347dc14a11",
+        "name": "CameraCalibration",
+        "kind": "class",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 37,
+        "end_line": 59,
+        "signature_hash": "960d15363264b4f7",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:EyePoseEstimate:f11cf7a67b7578f7",
+        "name": "EyePoseEstimate",
+        "kind": "class",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 100,
+        "end_line": 107,
+        "signature_hash": "4426a584e1b24e0e",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:IrisFrameObservation:c87bd3bb37e8f341",
+        "name": "IrisFrameObservation",
+        "kind": "class",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 63,
+        "end_line": 96,
+        "signature_hash": "b403f130812ee23a",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#class:SteeringGate:96d323032a7c0afa",
+        "name": "SteeringGate",
+        "kind": "class",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 111,
+        "end_line": 118,
+        "signature_hash": "f942ccb186596668",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_canonical_json:ad18b204d8799926",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 211,
+        "end_line": 212,
+        "signature_hash": "c6d0368c0d268d56",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_finite:57c75e2e8e1c5514",
+        "name": "_finite",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 30,
+        "end_line": 33,
+        "signature_hash": "c71561197bc4f764",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:_finite_positive:74809e1755678bd8",
+        "name": "_finite_positive",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 24,
+        "end_line": 27,
+        "signature_hash": "c763af4e62e0138d",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:build_eye_pose_receipt:42d8ae9df25ff7d0",
+        "name": "build_eye_pose_receipt",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 215,
+        "end_line": 250,
+        "signature_hash": "d27cdddecd456503",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:estimate_eye_pose_from_assumed_ipd:6b4d707dff063222",
+        "name": "estimate_eye_pose_from_assumed_ipd",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 121,
+        "end_line": 152,
+        "signature_hash": "a55deab9508aba9c",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:gate_eye_pose_for_steering:60cb74a522fb06ee",
+        "name": "gate_eye_pose_for_steering",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 155,
+        "end_line": 208,
+        "signature_hash": "c6d9f9a477e7e240",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#function:verify_eye_pose_receipt:df451dd0d0d41e8b",
+        "name": "verify_eye_pose_receipt",
+        "kind": "function",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 253,
+        "end_line": 275,
+        "signature_hash": "447e8c7de4f26e0d",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:CameraCalibration.validate:07aebbb2da45c3d9",
+        "name": "CameraCalibration.validate",
+        "kind": "method",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 48,
+        "end_line": 59,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_eye_pose_observation_contract.py#method:IrisFrameObservation.validate:e0f6472f6af3e0fe",
+        "name": "IrisFrameObservation.validate",
+        "kind": "method",
+        "file": "tools/k27_eye_pose_observation_contract.py",
+        "line": 75,
+        "end_line": 96,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "2566cb9278c688d2"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#class:AngularSpectrumSample:f657fc84ee47feef",
+        "name": "AngularSpectrumSample",
+        "kind": "class",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 121,
+        "end_line": 126,
+        "signature_hash": "061bbfcd9e9622c1",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#class:ClaimFinding:30a1e48840599e55",
+        "name": "ClaimFinding",
+        "kind": "class",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 162,
+        "end_line": 165,
+        "signature_hash": "c16f973d53a1d36d",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#class:SteeringSample:1fc0d43159fb1537",
+        "name": "SteeringSample",
+        "kind": "class",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 71,
+        "end_line": 76,
+        "signature_hash": "2974a4c49d2f6a6d",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:_canonical_json:bba38b8c77b0616c",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 226,
+        "end_line": 227,
+        "signature_hash": "c6d0368c0d268d56",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:_strict_int:0f5242a26fea5a21",
+        "name": "_strict_int",
+        "kind": "function",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 28,
+        "end_line": 31,
+        "signature_hash": "9d0291a64ecf7729",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:angular_spectrum_transfer:c438c22eb5928ab3",
+        "name": "angular_spectrum_transfer",
+        "kind": "function",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 129,
+        "end_line": 158,
+        "signature_hash": "c9d1e2bf9f841b5a",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:build_import_receipt:5232d8dc92e7a177",
+        "name": "build_import_receipt",
+        "kind": "function",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 230,
+        "end_line": 264,
+        "signature_hash": "2b74789feee06f31",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:imported_candidate_findings:dfad3791a50ca087",
+        "name": "imported_candidate_findings",
+        "kind": "function",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 168,
+        "end_line": 206,
+        "signature_hash": "1b7b2519e7d8b296",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:imported_packed_coordinate:7735c52134a3ecb8",
+        "name": "imported_packed_coordinate",
+        "kind": "function",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 45,
+        "end_line": 60,
+        "signature_hash": "e73a5622c0b3f84c",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:k27_cell:d689cd982d37f567",
+        "name": "k27_cell",
+        "kind": "function",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 34,
+        "end_line": 42,
+        "signature_hash": "e403721236f40413",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:phase_steering_sample:bff179d4e3c7a706",
+        "name": "phase_steering_sample",
+        "kind": "function",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 79,
+        "end_line": 117,
+        "signature_hash": "0e7068b0117e81c4",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:verify_import_receipt:7883defce1c64da7",
+        "name": "verify_import_receipt",
+        "kind": "function",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 267,
+        "end_line": 291,
+        "signature_hash": "561a1fa4ab2a2431",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_optics_candidate_falsifier.py#function:wrap_phase_radians:4e39e6eb36318d1b",
+        "name": "wrap_phase_radians",
+        "kind": "function",
+        "file": "tools/k27_optics_candidate_falsifier.py",
+        "line": 63,
+        "end_line": 67,
+        "signature_hash": "ea1991a195e4c3f6",
+        "file_digest8": "e6068cdbb8ce4f6f"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#class:K27PhaseMaskHandle:8f06088ff4bf37da",
+        "name": "K27PhaseMaskHandle",
+        "kind": "class",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 106,
+        "end_line": 117,
+        "signature_hash": "18eebb6379322c86",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#class:PhaseMaskArtifactIdentity:1068e8dc1bfb8bad",
+        "name": "PhaseMaskArtifactIdentity",
+        "kind": "class",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 50,
+        "end_line": 77,
+        "signature_hash": "78703f6b59ae67f2",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#class:PlannedMaterialization:dd00757f17b5e7ad",
+        "name": "PlannedMaterialization",
+        "kind": "class",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 81,
+        "end_line": 102,
+        "signature_hash": "70c4de3b6fbe4fa1",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#class:RetrievalGate:055b53a526f02fce",
+        "name": "RetrievalGate",
+        "kind": "class",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 137,
+        "end_line": 145,
+        "signature_hash": "7c347f9b364ff572",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#class:RetrievalObservation:9a18e2ed9d17f8a0",
+        "name": "RetrievalObservation",
+        "kind": "class",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 121,
+        "end_line": 133,
+        "signature_hash": "dd0c8c83013279f0",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:_canonical_json:42b96fbf4886af4c",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 45,
+        "end_line": 46,
+        "signature_hash": "c6d0368c0d268d56",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:_hex_digest:f384fa34591f5b31",
+        "name": "_hex_digest",
+        "kind": "function",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 23,
+        "end_line": 30,
+        "signature_hash": "e7a67bfe2ad0b630",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:_nonnegative_int:b1d8c09cf9fdc047",
+        "name": "_nonnegative_int",
+        "kind": "function",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 39,
+        "end_line": 42,
+        "signature_hash": "af41151bb978c8ca",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:_positive_int:cb40c77e75f42269",
+        "name": "_positive_int",
+        "kind": "function",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 33,
+        "end_line": 36,
+        "signature_hash": "3b7bd9eb822e7406",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:build_phase_mask_receipt:92a57b08a2ca5e99",
+        "name": "build_phase_mask_receipt",
+        "kind": "function",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 200,
+        "end_line": 236,
+        "signature_hash": "c8ca6b94033063b7",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:make_handle:6ea64b4b719393c8",
+        "name": "make_handle",
+        "kind": "function",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 148,
+        "end_line": 162,
+        "signature_hash": "8b220f5045d9213f",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:validate_retrieval:f26892583631f38a",
+        "name": "validate_retrieval",
+        "kind": "function",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 165,
+        "end_line": 197,
+        "signature_hash": "573b1d95d78c5a4e",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#function:verify_phase_mask_receipt:e431b5f2e4a4e4c3",
+        "name": "verify_phase_mask_receipt",
+        "kind": "function",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 239,
+        "end_line": 260,
+        "signature_hash": "6056f2419cf4ea89",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#method:K27PhaseMaskHandle.validate:c1e73d4575779696",
+        "name": "K27PhaseMaskHandle.validate",
+        "kind": "method",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 111,
+        "end_line": 117,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactIdentity.identity_digest:3d96e4e577465276",
+        "name": "PhaseMaskArtifactIdentity.identity_digest",
+        "kind": "method",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 75,
+        "end_line": 77,
+        "signature_hash": "c693ea685ee9d854",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#method:PhaseMaskArtifactIdentity.validate:cc58dada3f8b96ae",
+        "name": "PhaseMaskArtifactIdentity.validate",
+        "kind": "method",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 61,
+        "end_line": 73,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#method:PlannedMaterialization.plan_binding_digest:8b31a25542d6c171",
+        "name": "PlannedMaterialization.plan_binding_digest",
+        "kind": "method",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 100,
+        "end_line": 102,
+        "signature_hash": "7f0048d4ca050573",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#method:PlannedMaterialization.validate:4896104193bdd343",
+        "name": "PlannedMaterialization.validate",
+        "kind": "method",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 89,
+        "end_line": 98,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_phase_mask_artifact_contract.py#method:RetrievalObservation.validate:c42cdba87fe1f801",
+        "name": "RetrievalObservation.validate",
+        "kind": "method",
+        "file": "tools/k27_phase_mask_artifact_contract.py",
+        "line": 128,
+        "end_line": 133,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "fbd77889705567d4"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#class:SimulationBenchmarkGate:bb606f14f0fa65fb",
+        "name": "SimulationBenchmarkGate",
+        "kind": "class",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 111,
+        "end_line": 122,
+        "signature_hash": "6343c3a83dd57c33",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#class:SimulationBenchmarkRequest:b7755356b63dc286",
+        "name": "SimulationBenchmarkRequest",
+        "kind": "class",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 48,
+        "end_line": 80,
+        "signature_hash": "b373d0d23a955aa9",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#class:SimulationPhaseSample:7d7e73af4becd11c",
+        "name": "SimulationPhaseSample",
+        "kind": "class",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 84,
+        "end_line": 107,
+        "signature_hash": "2537e26ec89cecca",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#function:_canonical_json:e765f05e8a3bf82d",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 27,
+        "end_line": 28,
+        "signature_hash": "c6d0368c0d268d56",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#function:_positive:cb4bad6776efbe8d",
+        "name": "_positive",
+        "kind": "function",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 41,
+        "end_line": 44,
+        "signature_hash": "ac399d4f5f699139",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#function:_sha:7db15258f10fa173",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 31,
+        "end_line": 38,
+        "signature_hash": "68b08d7c34cebd61",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#function:build_simulation_benchmark_receipt:6c4febe307043807",
+        "name": "build_simulation_benchmark_receipt",
+        "kind": "function",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 184,
+        "end_line": 222,
+        "signature_hash": "c9d3465fbc08dc42",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#function:validate_simulation_samples:bd4993561d726598",
+        "name": "validate_simulation_samples",
+        "kind": "function",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 125,
+        "end_line": 181,
+        "signature_hash": "5ec591cecf9b68b0",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#function:verify_simulation_benchmark_receipt:f4e53e5516dc65f5",
+        "name": "verify_simulation_benchmark_receipt",
+        "kind": "function",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 225,
+        "end_line": 244,
+        "signature_hash": "af07927b8ab9ed97",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#method:SimulationBenchmarkRequest.digest:50a927c8806944e4",
+        "name": "SimulationBenchmarkRequest.digest",
+        "kind": "method",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 78,
+        "end_line": 80,
+        "signature_hash": "78cc05eff2137397",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#method:SimulationBenchmarkRequest.validate:90360bfc08449fad",
+        "name": "SimulationBenchmarkRequest.validate",
+        "kind": "method",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 63,
+        "end_line": 76,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#method:SimulationPhaseSample.average_latency_ns:bf580dc2b5408fd8",
+        "name": "SimulationPhaseSample.average_latency_ns",
+        "kind": "method",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 106,
+        "end_line": 107,
+        "signature_hash": "260bb678f9117a11",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_display_sim_benchmark_contract.py#method:SimulationPhaseSample.validate:5b3017bf6f7ef81d",
+        "name": "SimulationPhaseSample.validate",
+        "kind": "method",
+        "file": "tools/k27_spatial_display_sim_benchmark_contract.py",
+        "line": 94,
+        "end_line": 103,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "a78f04602a283524"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#class:SpatialFrameGate:84980378c3721a2d",
+        "name": "SpatialFrameGate",
+        "kind": "class",
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "line": 62,
+        "end_line": 70,
+        "signature_hash": "b1f72a5367f15375",
+        "file_digest8": "72ab30ae34fc5e8c"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#class:SpatialFrameIntent:a47116e969597475",
+        "name": "SpatialFrameIntent",
+        "kind": "class",
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "line": 40,
+        "end_line": 58,
+        "signature_hash": "b1953203b6d2e7e4",
+        "file_digest8": "72ab30ae34fc5e8c"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#function:_canonical_json:90a1d232dabb9fb3",
+        "name": "_canonical_json",
+        "kind": "function",
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "line": 25,
+        "end_line": 26,
+        "signature_hash": "c6d0368c0d268d56",
+        "file_digest8": "72ab30ae34fc5e8c"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#function:_sha256:3f786d1d3c9de2c3",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "line": 29,
+        "end_line": 36,
+        "signature_hash": "0e172a41a478a19f",
+        "file_digest8": "72ab30ae34fc5e8c"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#function:bind_spatial_frame_transition:2735d1f5fe792963",
+        "name": "bind_spatial_frame_transition",
+        "kind": "function",
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "line": 73,
+        "end_line": 124,
+        "signature_hash": "fb87e1100a3adf82",
+        "file_digest8": "72ab30ae34fc5e8c"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#function:build_spatial_frame_receipt:8d560a5e771657c5",
+        "name": "build_spatial_frame_receipt",
+        "kind": "function",
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "line": 127,
+        "end_line": 160,
+        "signature_hash": "a5f9bda3219fefd4",
+        "file_digest8": "72ab30ae34fc5e8c"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#function:verify_spatial_frame_receipt:9d652d155521864e",
+        "name": "verify_spatial_frame_receipt",
+        "kind": "function",
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "line": 163,
+        "end_line": 181,
+        "signature_hash": "6c5ba50510bb1ee1",
+        "file_digest8": "72ab30ae34fc5e8c"
+      },
+      {
+        "semantic_id": "tools/k27_spatial_frame_transition_contract.py#method:SpatialFrameIntent.validate:11667e439ab09fce",
+        "name": "SpatialFrameIntent.validate",
+        "kind": "method",
+        "file": "tools/k27_spatial_frame_transition_contract.py",
+        "line": 48,
+        "end_line": 58,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "72ab30ae34fc5e8c"
       },
       {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
@@ -446884,7 +450163,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "8d3921d15695e1f86280d430b436650c",
+    "payload_hash": "74d3b6b3d3643cbaa4580be76b64c194"
   }
 }
