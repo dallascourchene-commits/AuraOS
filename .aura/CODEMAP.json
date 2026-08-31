@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788181687,
+  "generated_at_unix": 1788182022,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1650,
+    "repo_file_count": 1652,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -149,6 +149,7 @@
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/glm53-lattice-quantization-feasibility.yml",
+      ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml",
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -1626,6 +1627,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -1766,16 +1768,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1650,
-      "bytes": 26496493,
-      "tokens_est": 6614477,
+      "files": 1652,
+      "bytes": 26511951,
+      "tokens_est": 6618342,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1004,
-        "schema_or_lexicon": 274,
+        "python_module": 1005,
+        "schema_or_lexicon": 275,
         "support_file": 49
       }
     },
@@ -156980,6 +156982,96 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "LiveGateFP8CanonicalF32IdentityTests": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 136,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#class:LiveGateFP8CanonicalF32IdentityTests:5ed7d9e5b88c98b5",
+        "signature_hash": "fece22df7c53dd3f"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_e4m3fn_exact_known_codes": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 27,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_e4m3fn_exact_known_codes:e2fe7395a43a9ff8",
+        "signature_hash": "2051fc65f9ea1a60"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_outer_nan_codes_and_invalid_inputs_fail_closed": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 35,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_outer_nan_codes_and_invalid_inputs_fail_closed:4e97f9480d79478d",
+        "signature_hash": "f55ad7c949552049"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_lookup_table_matches_scalar_oracle_except_nan_codes": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 45,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_lookup_table_matches_scalar_oracle_except_nan_codes:e8eeef2efab5149c",
+        "signature_hash": "13a7b6746daa8818"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_blockwise_dequantization_orientation_and_canonical_bytes": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 70,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_blockwise_dequantization_orientation_and_canonical_bytes:7a03f9bb6053d034",
+        "signature_hash": "6cbd1610c4d65eb8"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_non_128_block_geometry_fails_closed": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 81,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_non_128_block_geometry_fails_closed:c92057d7d909b0af",
+        "signature_hash": "2e3fbc21143e4031"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_payload_length_nan_code_and_bad_scale_fail_closed": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 103,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_payload_length_nan_code_and_bad_scale_fail_closed:d46cd41239437e0b",
+        "signature_hash": "175e1b434790b025"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_exact_parent_and_byte_domain_constants": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 115,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_exact_parent_and_byte_domain_constants:02c483bf82f918b7",
+        "signature_hash": "dbfeac0c9bfe2c51"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_receipt_ceiling_cannot_be_laundered_by_canonical_hash": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 136,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_receipt_ceiling_cannot_be_laundered_by_canonical_hash:c6ba8cf8bf2c57f6",
+        "signature_hash": "fa0818ef17f54a4e"
+      }
+    ],
     "test_space_app_card_declares_public_docker_runtime": [
       {
         "file": "tests/test_huggingface_space_deployment.py",
@@ -159259,6 +159351,7 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -159591,6 +159684,13 @@
       ".github/workflows/glm53-lattice-quantization-feasibility.yml",
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python -m unittest": [
+      ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
+    "python -m tools.quantization.aura_glm53_live_gate_fp8_canonical_f32_identity": [
+      ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml"
     ],
     "python3 -m unittest": [
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml"
@@ -160260,9 +160360,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -169482,6 +169579,67 @@
         -0.064364,
         0.180948,
         -0.027932
+      ]
+    },
+    {
+      "path": ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 9299,
+      "lines": 179,
+      "tokens_est": 2325,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest",
+        "python -m tools.quantization.aura_glm53_live_gate_fp8_canonical_f32_identity"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          91
+        ],
+        "python -m unittest": [
+          92
+        ],
+        "python -m tools.quantization.aura_glm53_live_gate_fp8_canonical_f32_identity": [
+          97
+        ]
+      },
+      "topology": {},
+      "digest8": "01f5fb545f9eac75",
+      "vector": [
+        -0.123113,
+        0.200499,
+        0.291954,
+        -0.181739,
+        0.092628,
+        -0.094973,
+        0.158289,
+        -0.268504,
+        0.284919,
+        0.083248,
+        -0.090283,
+        -0.094973,
+        0.130148,
+        -0.184084,
+        0.012898,
+        -0.195809,
+        -0.155944,
+        0.153599,
+        -0.111388,
+        0.275539,
+        -0.094973,
+        -0.160634,
+        0.010553,
+        0.263814,
+        0.048073,
+        -0.268504,
+        0.083248,
+        0.062143,
+        -0.202844,
+        -0.275539,
+        -0.188774,
+        0.195809
       ]
     },
     {
@@ -263400,6 +263558,53 @@
       ]
     },
     {
+      "path": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6186,
+      "lines": 141,
+      "tokens_est": 1547,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1cd7ebb79a8c74cd",
+      "vector": [
+        0.262995,
+        0.25863,
+        -0.079662,
+        -0.044742,
+        -0.153869,
+        -0.125496,
+        -0.26736,
+        0.262995,
+        0.206249,
+        -0.057837,
+        0.204067,
+        0.217162,
+        -0.114583,
+        -0.160416,
+        0.193154,
+        0.199702,
+        0.254265,
+        -0.040377,
+        0.073115,
+        -0.025099,
+        -0.018552,
+        -0.273908,
+        0.129861,
+        0.206249,
+        -0.127678,
+        -0.132043,
+        0.260813,
+        0.06002,
+        -0.188789,
+        0.040377,
+        -0.009821,
+        -0.273908
+      ]
+    },
+    {
       "path": "tests/test_huggingface_space_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -264014,47 +264219,47 @@
       "path": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 10841,
+      "bytes": 10814,
       "lines": 274,
-      "tokens_est": 2711,
+      "tokens_est": 2704,
       "symbol_count": 11,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "92d78f24db84287f",
+      "digest8": "0ef90e5ef43dcdab",
       "vector": [
-        0.239615,
-        0.190463,
-        0.097075,
-        -0.038093,
-        -0.106905,
-        -0.084787,
-        -0.296139,
-        -0.114278,
-        -0.003686,
-        0.18309,
-        -0.224869,
-        0.033177,
-        0.242072,
-        -0.09216,
-        -0.310885,
-        0.028262,
-        -0.04055,
-        0.281394,
-        -0.256818,
-        -0.052838,
-        -0.239615,
-        0.094617,
-        0.023347,
-        -0.077414,
-        0.16343,
-        0.283851,
-        -0.266648,
-        -0.03072,
-        -0.219954,
-        -0.200293,
-        -0.09216,
-        -0.165887
+        0.137887,
+        -0.163815,
+        -0.154387,
+        -0.133173,
+        -0.281667,
+        0.218027,
+        -0.220384,
+        -0.128459,
+        -0.083675,
+        -0.291096,
+        -0.078961,
+        0.291096,
+        -0.182671,
+        0.123745,
+        0.043605,
+        -0.010607,
+        0.210956,
+        -0.156744,
+        0.038891,
+        -0.1756,
+        -0.020035,
+        0.29581,
+        -0.154387,
+        0.029463,
+        0.170886,
+        0.218027,
+        -0.104889,
+        0.107246,
+        0.272239,
+        0.024749,
+        0.274596,
+        -0.154387
       ]
     },
     {
@@ -288150,16 +288355,16 @@
     }
   },
   "summary": {
-    "file_count": 1650,
-    "total_bytes": 26496493,
-    "text_tokens_est": 6614477,
+    "file_count": 1652,
+    "total_bytes": 26511951,
+    "text_tokens_est": 6618342,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1004,
-      "schema_or_lexicon": 274,
+      "python_module": 1005,
+      "schema_or_lexicon": 275,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288318,6 +288523,7 @@
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
       ".github/workflows/glm53-lattice-quantization-feasibility.yml",
+      ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml",
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -289795,6 +290001,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -446829,6 +447036,96 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#class:LiveGateFP8CanonicalF32IdentityTests:5ed7d9e5b88c98b5",
+        "name": "LiveGateFP8CanonicalF32IdentityTests",
+        "kind": "class",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 10,
+        "end_line": 136,
+        "signature_hash": "fece22df7c53dd3f",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_blockwise_dequantization_orientation_and_canonical_bytes:7a03f9bb6053d034",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_blockwise_dequantization_orientation_and_canonical_bytes",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 47,
+        "end_line": 70,
+        "signature_hash": "6cbd1610c4d65eb8",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_e4m3fn_exact_known_codes:e2fe7395a43a9ff8",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_e4m3fn_exact_known_codes",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 11,
+        "end_line": 27,
+        "signature_hash": "2051fc65f9ea1a60",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_exact_parent_and_byte_domain_constants:02c483bf82f918b7",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_exact_parent_and_byte_domain_constants",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 105,
+        "end_line": 115,
+        "signature_hash": "dbfeac0c9bfe2c51",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_lookup_table_matches_scalar_oracle_except_nan_codes:e8eeef2efab5149c",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_lookup_table_matches_scalar_oracle_except_nan_codes",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 37,
+        "end_line": 45,
+        "signature_hash": "13a7b6746daa8818",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_non_128_block_geometry_fails_closed:c92057d7d909b0af",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_non_128_block_geometry_fails_closed",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 72,
+        "end_line": 81,
+        "signature_hash": "2e3fbc21143e4031",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_outer_nan_codes_and_invalid_inputs_fail_closed:4e97f9480d79478d",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_outer_nan_codes_and_invalid_inputs_fail_closed",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 29,
+        "end_line": 35,
+        "signature_hash": "f55ad7c949552049",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_payload_length_nan_code_and_bad_scale_fail_closed:d46cd41239437e0b",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_payload_length_nan_code_and_bad_scale_fail_closed",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 83,
+        "end_line": 103,
+        "signature_hash": "175e1b434790b025",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_receipt_ceiling_cannot_be_laundered_by_canonical_hash:c6ba8cf8bf2c57f6",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_receipt_ceiling_cannot_be_laundered_by_canonical_hash",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 117,
+        "end_line": 136,
+        "signature_hash": "fa0818ef17f54a4e",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "name": "test_deployment_docs_have_submission_field_and_no_localhost_url_claim",
         "kind": "function",
@@ -447606,7 +447903,7 @@
         "line": 46,
         "end_line": 47,
         "signature_hash": "b3cbe8669aac4c01",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#class:LiveGateCanonicalF32IdentityReceipt:560229372bf67b21",
@@ -447616,7 +447913,7 @@
         "line": 148,
         "end_line": 198,
         "signature_hash": "54ee25b625f58661",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:_canonical:a7ac65c68dc34c45",
@@ -447626,7 +447923,7 @@
         "line": 54,
         "end_line": 55,
         "signature_hash": "707d518dafca1a42",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:_read_live_gate_pair:618620c1bcb5b01b",
@@ -447636,7 +447933,7 @@
         "line": 133,
         "end_line": 144,
         "signature_hash": "bdf25a1d29244050",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:_sha256:ee3a6670c50fd2f4",
@@ -447646,7 +447943,7 @@
         "line": 50,
         "end_line": 51,
         "signature_hash": "f9c2d48c5f8c2866",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:current_live_gate_identity:dc925ada847e3887",
@@ -447656,7 +447953,7 @@
         "line": 201,
         "end_line": 264,
         "signature_hash": "275627e0400f7451",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:decode_e4m3fn_byte:57f701bbc9eb9806",
@@ -447666,7 +447963,7 @@
         "line": 58,
         "end_line": 78,
         "signature_hash": "c42679d2561cc04b",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:dequantize_blockwise_to_canonical_f32:ea5d11e1dfcfc256",
@@ -447676,7 +447973,7 @@
         "line": 91,
         "end_line": 130,
         "signature_hash": "1cd58805f1e6a76a",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:e4m3fn_lookup_table:c18304f2aed8b404",
@@ -447686,7 +447983,7 @@
         "line": 81,
         "end_line": 88,
         "signature_hash": "756666c63b2719eb",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:main:a98c663d77b9a37f",
@@ -447696,7 +447993,7 @@
         "line": 267,
         "end_line": 269,
         "signature_hash": "1107cedc597d81be",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateCanonicalF32IdentityReceipt.receipt_digest:06f861bd914c70cd",
@@ -447706,7 +448003,7 @@
         "line": 197,
         "end_line": 198,
         "signature_hash": "1a6a05eb2610184a",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_official_tensor_payload_canary.py#class:LiveOfficialTensorPayloadCanaryReceipt:63c06eb26001e05a",
@@ -449369,7 +449666,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "e7157bd1d758dafed2b3d1f64a491855",
-    "payload_hash": "24f36548d636c5e0b3aba38738f51803"
+    "record_fingerprint": "dc83fc24352e7b4a7e14646ebf4749fb",
+    "payload_hash": "f44401e56f464b2ad96e81abba7aa901"
   }
 }
