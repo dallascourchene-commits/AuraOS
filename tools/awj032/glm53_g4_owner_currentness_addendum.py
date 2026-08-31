@@ -2,17 +2,23 @@
 
 D0 / HS1 / NONPROMOTING / STACKED ADDENDUM.
 
-PR #757 owns the G4 generation-bound plan-revalidation semantics.  This module
+PR #757 owns the G4 generation-bound plan-revalidation semantics. This module
 owns only a post-authoring W3 residual: ``CurrentReuseContext`` is a plain value
 object, so direct caller construction cannot itself prove that the eight
 use-time generations came from their respective owners or coexisted in one
 state generation.
 
-The addendum therefore accepts no direct use-time context.  It requires an
+The addendum therefore accepts no direct use-time context. It requires an
 owner resolver, brackets the consequence-bearing read with one stable owner
 state epoch, obtains a plan-bound owner observation, delegates the actual
 changed-axis decision to G4 unchanged, and fails closed on any missing,
 malformed, exceptional, mismatched, or drifting owner state.
+
+The resolver is a trusted integration boundary supplied by the owning
+runtime/control plane. This pure contract does not authenticate the resolver
+producer or independently prove source/runtime truth. It records those limits
+explicitly so resolver injection cannot be laundered into producer-authentication
+or effect authority.
 
 It never executes a transfer, mutates native routing, proves physical I/O, or
 grants execution/effect/Gate-10/K27/native-KV authority.
@@ -74,7 +80,12 @@ def _sha256(value: str, name: str) -> None:
 
 @dataclass(frozen=True)
 class OwnerReuseStateObservation:
-    """Owner-produced projection for one exact G4 plan identity and epoch."""
+    """Resolver projection for one exact G4 plan identity and epoch.
+
+    ``owner`` describes the integration responsibility, not producer
+    authentication by this contract. The resolver implementation must be bound
+    by the trusted runtime/control plane outside this pure membrane.
+    """
 
     plan_identity_digest: str
     owner_state_epoch: str
@@ -106,9 +117,13 @@ class OwnerReuseStateObservation:
 class G4OwnerReuseStateResolver(Protocol):
     """Trusted integration boundary for G4 use-time state.
 
-    Implementations are supplied by the owning runtime/control plane.  The
+    Implementations are supplied by the owning runtime/control plane. The
     membrane deliberately has no API accepting raw currentness strings from a
-    caller.  The same nonempty epoch must bracket the full owner observation.
+    caller. The same nonempty epoch must bracket the full owner observation.
+
+    Trust in the resolver implementation is external to this contract. Merely
+    satisfying this Python protocol does not cryptographically authenticate a
+    producer and does not itself prove source/runtime truth.
     """
 
     def resolve_g4_state_epoch(self, *, plan_identity_digest: str) -> str | None: ...
@@ -133,6 +148,8 @@ class G4OwnerCurrentnessReceipt:
     owner_state_epoch_stable: bool
     reusable_without_recompute: bool
     recompute_g3_required: bool
+    owner_resolver_authenticated_by_this_contract: bool = False
+    owner_currentness_truth_proven_by_this_contract: bool = False
     revalidation_required_at_effect_boundary: bool = True
     plan_executed_by_this_contract: bool = False
     transfer_effect_authorized: bool = False
@@ -181,6 +198,8 @@ class G4OwnerCurrentnessReceipt:
         if self.revalidation_required_at_effect_boundary is not True:
             raise ValueError("EFFECT_BOUNDARY_REVALIDATION_REQUIRED")
         forbidden = (
+            self.owner_resolver_authenticated_by_this_contract,
+            self.owner_currentness_truth_proven_by_this_contract,
             self.plan_executed_by_this_contract,
             self.transfer_effect_authorized,
             self.native_route_mutated,
@@ -191,7 +210,7 @@ class G4OwnerCurrentnessReceipt:
             self.merge_deploy_spend_public_financial_human_effect,
         )
         if any(value is not False for value in forbidden):
-            raise ValueError("G4_W3_CANNOT_WIDEN_EXECUTION_OR_EFFECT_AUTHORITY")
+            raise ValueError("G4_W3_CANNOT_SELF_AUTHENTICATE_OR_WIDEN_AUTHORITY")
 
     @property
     def receipt_digest(self) -> str:
@@ -250,10 +269,13 @@ def revalidate_g3_plan_owner_resolved(
     plan: G3PlanProjection,
     owner_resolver: G4OwnerReuseStateResolver | None,
 ) -> G4OwnerCurrentnessReceipt:
-    """Revalidate G4 through one owner-resolved, epoch-stable observation.
+    """Revalidate G4 through one resolver-obtained, epoch-stable observation.
 
     Raw ``CurrentReuseContext`` is intentionally absent from this public API.
-    Matching caller-created strings therefore cannot mint current reuse state.
+    Matching caller-created strings therefore cannot mint current reuse state
+    through this membrane directly. Resolver producer authenticity remains an
+    external runtime/control-plane obligation and is explicitly *not* proven by
+    the returned receipt.
     """
 
     plan.validate()
@@ -366,7 +388,7 @@ def revalidate_g3_plan_owner_resolved(
     receipt = G4OwnerCurrentnessReceipt(
         schema=SCHEMA,
         disposition=OWNER_REVALIDATED_UNCHANGED,
-        reason_code="OWNER_RESOLVED_CONTEXT_UNCHANGED_IN_ONE_STABLE_EPOCH",
+        reason_code="RESOLVER_CONTEXT_UNCHANGED_IN_ONE_STABLE_EPOCH",
         plan_identity_digest=plan_identity,
         owner_state_epoch=epoch_before,
         owner_resolver_generation=observation.resolver_generation,
