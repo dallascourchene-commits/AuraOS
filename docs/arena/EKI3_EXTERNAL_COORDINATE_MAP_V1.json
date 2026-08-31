@@ -1,0 +1,75 @@
+{
+  "schema": "AURA-EKI3-EXTERNAL-SOURCE-COORDINATE-MAP-v1",
+  "observed_on": "2026-08-31",
+  "purpose": "bounded Different-J falsification coordinates for EKI-3; routing/reopen metadata only",
+  "coordinate_recipe": "sha256(locator); k27_xyz = first_3_digest_bytes mod 27; projection_13d = sha256(locator) mod 3^13 rendered as 13 trits",
+  "entries": [
+    {
+      "id": "ARXIV_SUPERSEDE_2606.27472",
+      "locator": "arxiv:2606.27472",
+      "title": "Supersede: Diagnosing and Training the Memory-Update Gap in LLM Agents",
+      "evidence_class": "PRIMARY_RESEARCH_PRESSURE",
+      "source_digest": "54d36e8a48b7987346670c62d9d5a0401cedb8845bd8bb955e76c29efc3f2d54",
+      "projection_13d": "2020221121221",
+      "k27_xyz": [3, 22, 2],
+      "pressure": "memory update/supersession is a distinct failure mode; larger memory alone does not establish currentness"
+    },
+    {
+      "id": "ARXIV_TEMPORAL_VALIDITY_2606.26511",
+      "locator": "arxiv:2606.26511",
+      "title": "Temporal Validity in Retrieval Memory: Eliminating Stale-Fact Errors for AI Agents over Evolving Knowledge",
+      "evidence_class": "PRIMARY_RESEARCH_PRESSURE",
+      "source_digest": "b35b50a5a95e5d892658d17f27e06db200e9fda833aaeefe8ec06ba462a3ccaa",
+      "projection_13d": "0110011000221",
+      "k27_xyz": [17, 10, 26],
+      "pressure": "similarity does not reliably separate stale and current facts; explicit supersession is structurally useful"
+    },
+    {
+      "id": "ARXIV_VERSIONRAG_2510.08109",
+      "locator": "arxiv:2510.08109",
+      "title": "VersionRAG: Version-Aware Retrieval-Augmented Generation for Evolving Documents",
+      "evidence_class": "PRIMARY_RESEARCH_PRESSURE",
+      "source_digest": "fc89034a07f76754d56b3c62b75ae3390054ad20ecfe9615ebd757056c62d692",
+      "projection_13d": "1220211212121",
+      "k27_xyz": [9, 2, 3],
+      "pressure": "version sequences and change boundaries should be explicit rather than collapsed into semantic similarity"
+    },
+    {
+      "id": "REDDIT_LOCAL_LLM_STALE_FACTS_20260620",
+      "locator": "reddit:r/LocalLLM:1uauqo4",
+      "title": "How do you keep an agent from acting on facts that have since changed?",
+      "evidence_class": "COMMUNITY_FALSIFICATION_PRESSURE",
+      "source_digest": "fd60f3cff456b86015cfe42af862adc1bd769790f8b141d27b3ef7ae51920125",
+      "projection_13d": "1011102012111",
+      "k27_xyz": [10, 15, 0],
+      "pressure": "write-time supersession is discussed as preferable to trusting embedding similarity alone"
+    },
+    {
+      "id": "REDDIT_RAG_DOC_UPDATES_20260616",
+      "locator": "reddit:r/Rag:1u7oqfg",
+      "title": "for production RAG systems, how do you handle document updates?",
+      "evidence_class": "COMMUNITY_FALSIFICATION_PRESSURE",
+      "source_digest": "c3a6638a1af86a6ce085929dc665a882a98659e386146ffc91ee1b075144522e",
+      "projection_13d": "1000021002210",
+      "k27_xyz": [6, 4, 18],
+      "pressure": "community response explicitly recommends temporal versioning and superseded_by state"
+    },
+    {
+      "id": "GOOGLE_SCHOLAR_DIRECT_GAP_20260831",
+      "locator": "scholar:direct-gap:2026-08-31",
+      "title": "Direct task-specific Google Scholar retrieval gap",
+      "evidence_class": "DISCOVERY_GAP",
+      "source_digest": "12b96b74183f2a00a5eff30ea63ee2866bf1e7f4199f662bee90eed6dc5d019a",
+      "projection_13d": "2211012112211",
+      "k27_xyz": [18, 23, 26],
+      "pressure": "no stable stronger task-specific native Scholar record was returned; do not fabricate a Scholar provenance edge"
+    }
+  ],
+  "semantic_authority": false,
+  "currentness_witness": false,
+  "truth_authority": false,
+  "instruction_authority": false,
+  "write_authority": false,
+  "effect_authority": false,
+  "native_private_transformer_kv_accessed": false
+}
