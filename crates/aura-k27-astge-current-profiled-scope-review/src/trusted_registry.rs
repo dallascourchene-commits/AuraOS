@@ -14,7 +14,6 @@ use aura_k27_astge::NodeIndexRecordV1;
 use aura_k27_astge_materialize::AdmittedSourceCatalogV1;
 use aura_k27_astge_scope::{AuthorizedSpanV1, ReplacementV1};
 use sha2::{Digest, Sha256};
-use std::cmp::Ordering;
 use std::collections::HashMap;
 
 pub const HYDRATION_PRODUCER_TRUST_REGISTRY_GENERATION: &str =
