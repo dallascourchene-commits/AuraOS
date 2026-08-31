@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788193035,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-o67-proposal-support-lifecycle-lineage-proof.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1523,6 +1524,7 @@
       "tests/test_aura_prepare_construction_demo_assets_temp_cleanup.py",
       "tests/test_aura_project_context_acceptance.py",
       "tests/test_aura_project_context_compiler.py",
+      "tests/test_aura_proposal_support_lifecycle_lineage.py",
       "tests/test_aura_provider_routing.py",
       "tests/test_aura_qdkt_compatibility.py",
       "tests/test_aura_qdkt_compatibility_hardening.py",
@@ -1631,6 +1633,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_proposal_support_lifecycle_lineage.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26448777,
+      "tokens_est": 6602547,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3461,6 +3464,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "function",
+        "line": 346,
+        "end_line": 351,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:main:8aa4161777999855",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -3895,6 +3906,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "function",
+        "line": 45,
+        "end_line": 48,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:_canonical:0344c1168fee5e22",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -8067,6 +8086,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "function",
+        "line": 51,
+        "end_line": 52,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:_sha:8ea93dc23671305b",
+        "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
     "_repo": [
@@ -13707,6 +13734,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 58,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:_sha256:eca665c047486247",
+        "signature_hash": "fda5827e1e9021fd"
       }
     ],
     "PullRequestRouteBinding": [
@@ -15764,6 +15799,14 @@
         "line": 77,
         "end_line": 81,
         "semantic_id": "aura_unified_memory_continuity_toolchain.py#function:_required:fd9913556df96604",
+        "signature_hash": "8b28cfce6f68b96b"
+      },
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "function",
+        "line": 61,
+        "end_line": 64,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:_required:fd35132e5fb92ae4",
         "signature_hash": "8b28cfce6f68b96b"
       }
     ],
@@ -145289,6 +145332,96 @@
         "signature_hash": "faa6d593407c8ebc"
       }
     ],
+    "O67ProposalSupportLifecycleLineageTests": [
+      {
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "kind": "class",
+        "line": 14,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#class:O67ProposalSupportLifecycleLineageTests:5c01361cdcb41a3e",
+        "signature_hash": "71f066b57e081ac5"
+      }
+    ],
+    "O67ProposalSupportLifecycleLineageTests.test_exact_relation_is_deterministic_and_nonpromoting": [
+      {
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "kind": "method",
+        "line": 15,
+        "end_line": 36,
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_exact_relation_is_deterministic_and_nonpromoting:69e4bb0dc282765a",
+        "signature_hash": "8261d6f4d223af29"
+      }
+    ],
+    "O67ProposalSupportLifecycleLineageTests.test_proposal_basis_substitution_becomes_review_not_support": [
+      {
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "kind": "method",
+        "line": 38,
+        "end_line": 46,
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_proposal_basis_substitution_becomes_review_not_support:ae3968155731efc6",
+        "signature_hash": "34ad5c364db21124"
+      }
+    ],
+    "O67ProposalSupportLifecycleLineageTests.test_o65r_parent_substitution_fails_closed": [
+      {
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "kind": "method",
+        "line": 48,
+        "end_line": 51,
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_o65r_parent_substitution_fails_closed:752d285b36346e46",
+        "signature_hash": "9c939f634a88e94c"
+      }
+    ],
+    "O67ProposalSupportLifecycleLineageTests.test_q21_parent_substitution_fails_closed": [
+      {
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "kind": "method",
+        "line": 53,
+        "end_line": 56,
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_q21_parent_substitution_fails_closed:d3bcff173b147a9f",
+        "signature_hash": "741489310ec6269b"
+      }
+    ],
+    "O67ProposalSupportLifecycleLineageTests.test_support_cannot_smuggle_currentness_or_effect_authority": [
+      {
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 71,
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_support_cannot_smuggle_currentness_or_effect_authority:fd97c737533d8948",
+        "signature_hash": "dabc4002e9933d22"
+      }
+    ],
+    "O67ProposalSupportLifecycleLineageTests.test_q21_lineage_cannot_smuggle_causal_or_effect_authority": [
+      {
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "kind": "method",
+        "line": 73,
+        "end_line": 90,
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_q21_lineage_cannot_smuggle_causal_or_effect_authority:9fb2aed618d750e5",
+        "signature_hash": "df8105778af27fcd"
+      }
+    ],
+    "O67ProposalSupportLifecycleLineageTests.test_q21_effect_boundary_revalidation_must_remain_required": [
+      {
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 97,
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_q21_effect_boundary_revalidation_must_remain_required:07b6e659371f7721",
+        "signature_hash": "d5ee0ca20178dfa6"
+      }
+    ],
+    "O67ProposalSupportLifecycleLineageTests.test_distinct_support_or_lineage_receipt_changes_relation_identity": [
+      {
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 113,
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_distinct_support_or_lineage_receipt_changes_relation_identity:aa78c93df8a35830",
+        "signature_hash": "bba4176e7621247f"
+      }
+    ],
     "test_provider_key_pool_collects_primary_plural_numbered_and_aliases": [
       {
         "file": "tests/test_aura_provider_routing.py",
@@ -157181,6 +157314,96 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "BoundedProposalSupportProjection": [
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "class",
+        "line": 68,
+        "end_line": 136,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#class:BoundedProposalSupportProjection:8edac1b45e60834e",
+        "signature_hash": "24a3f94863918f88"
+      }
+    ],
+    "BoundedProposalSupportProjection.validate": [
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 136,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#method:BoundedProposalSupportProjection.validate:a6dd456585356470",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "PreAttemptLifecycleLineageProjection": [
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "class",
+        "line": 140,
+        "end_line": 212,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#class:PreAttemptLifecycleLineageProjection:fcfa092592241307",
+        "signature_hash": "e1ecd688d44359a7"
+      }
+    ],
+    "PreAttemptLifecycleLineageProjection.validate": [
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "method",
+        "line": 171,
+        "end_line": 212,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#method:PreAttemptLifecycleLineageProjection.validate:e2eb0aa35091d707",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ProposalSupportLifecycleLineageDecision": [
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "class",
+        "line": 216,
+        "end_line": 240,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#class:ProposalSupportLifecycleLineageDecision:668e23b48431eafb",
+        "signature_hash": "8411b80c9e61b4cd"
+      }
+    ],
+    "ProposalSupportLifecycleLineageDecision.receipt_digest": [
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "method",
+        "line": 239,
+        "end_line": 240,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#method:ProposalSupportLifecycleLineageDecision.receipt_digest:b9c12a152f41e860",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "attach_bounded_support_to_lineage": [
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "function",
+        "line": 243,
+        "end_line": 300,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:attach_bounded_support_to_lineage:954001466cdf2770",
+        "signature_hash": "f35f3ae977aa1232"
+      }
+    ],
+    "example_support": [
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "function",
+        "line": 303,
+        "end_line": 320,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:example_support:c9cb4c4d3002148a",
+        "signature_hash": "e447f2ad3b13cde0"
+      }
+    ],
+    "example_lineage": [
+      {
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "kind": "function",
+        "line": 323,
+        "end_line": 343,
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:example_lineage:cf4deb5704d45557",
+        "signature_hash": "9a78be05fc5caa79"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158292,6 +158515,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-o67-proposal-support-lifecycle-lineage-proof.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -158584,6 +158808,10 @@
       "docs/AURA_ARCHITECTURE_HARNESS.md",
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
+    ],
+    "python -m unittest": [
+      ".github/workflows/aura-o67-proposal-support-lifecycle-lineage-proof.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
@@ -159293,9 +159521,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -167737,6 +167962,63 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-o67-proposal-support-lifecycle-lineage-proof.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 13395,
+      "lines": 272,
+      "tokens_est": 3349,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          111
+        ],
+        "python -m unittest": [
+          121
+        ]
+      },
+      "topology": {},
+      "digest8": "1ff80f2a33c613bd",
+      "vector": [
+        0.140087,
+        0.209571,
+        0.184915,
+        0.010086,
+        -0.252157,
+        0.146812,
+        0.227502,
+        0.052673,
+        0.030259,
+        0.231985,
+        -0.012328,
+        0.265606,
+        0.276813,
+        -0.254399,
+        -0.16026,
+        0.166984,
+        0.227502,
+        -0.124398,
+        -0.153536,
+        -0.17595,
+        0.14457,
+        -0.106466,
+        -0.227502,
+        0.101984,
+        0.229743,
+        0.106466,
+        0.095259,
+        0.191639,
+        0.267847,
+        -0.003362,
+        -0.06388,
+        0.200605
       ]
     },
     {
@@ -257572,6 +257854,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5813,
+      "lines": 118,
+      "tokens_est": 1454,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "cc060f9a468c174d",
+      "vector": [
+        -0.138519,
+        0.174655,
+        -0.295106,
+        0.090339,
+        -0.179473,
+        0.304742,
+        -0.138519,
+        0.092748,
+        -0.075884,
+        0.042158,
+        -0.239699,
+        -0.295106,
+        0.143337,
+        0.145746,
+        0.227653,
+        -0.032522,
+        -0.010841,
+        -0.015659,
+        -0.280652,
+        -0.107202,
+        0.049385,
+        0.006023,
+        -0.090339,
+        -0.26138,
+        -0.034931,
+        -0.160201,
+        0.307151,
+        0.220426,
+        -0.278243,
+        0.177064,
+        0.080703,
+        -0.027704
+      ]
+    },
+    {
       "path": "tests/test_aura_provider_routing.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +262974,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_proposal_support_lifecycle_lineage.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 14521,
+      "lines": 356,
+      "tokens_est": 3631,
+      "symbol_count": 14,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "f0f6e15c88d2f1b1",
+      "vector": [
+        0.051806,
+        0.063318,
+        -0.226795,
+        -0.242912,
+        0.003454,
+        -0.217585,
+        0.051806,
+        -0.18535,
+        0.208375,
+        -0.24982,
+        -0.219887,
+        -0.1393,
+        -0.13009,
+        -0.199165,
+        -0.074831,
+        0.196863,
+        -0.109368,
+        0.192258,
+        0.16693,
+        0.153115,
+        -0.005756,
+        0.24982,
+        -0.153115,
+        0.150813,
+        0.247517,
+        -0.219887,
+        0.224492,
+        0.169233,
+        0.22219,
+        0.100158,
+        0.180745,
+        0.18535
       ]
     },
     {
@@ -286646,16 +287022,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26448777,
+    "text_tokens_est": 6602547,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286801,6 +287177,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-o67-proposal-support-lifecycle-lineage-proof.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -288188,6 +288565,7 @@
       "tests/test_aura_prepare_construction_demo_assets_temp_cleanup.py",
       "tests/test_aura_project_context_acceptance.py",
       "tests/test_aura_project_context_compiler.py",
+      "tests/test_aura_proposal_support_lifecycle_lineage.py",
       "tests/test_aura_provider_routing.py",
       "tests/test_aura_qdkt_compatibility.py",
       "tests/test_aura_qdkt_compatibility_hardening.py",
@@ -288296,6 +288674,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_proposal_support_lifecycle_lineage.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -432884,6 +433263,96 @@
         "file_digest8": "7222033800a1bdcf"
       },
       {
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#class:O67ProposalSupportLifecycleLineageTests:5c01361cdcb41a3e",
+        "name": "O67ProposalSupportLifecycleLineageTests",
+        "kind": "class",
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "line": 14,
+        "end_line": 113,
+        "signature_hash": "71f066b57e081ac5",
+        "file_digest8": "cc060f9a468c174d"
+      },
+      {
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_distinct_support_or_lineage_receipt_changes_relation_identity:aa78c93df8a35830",
+        "name": "O67ProposalSupportLifecycleLineageTests.test_distinct_support_or_lineage_receipt_changes_relation_identity",
+        "kind": "method",
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "line": 99,
+        "end_line": 113,
+        "signature_hash": "bba4176e7621247f",
+        "file_digest8": "cc060f9a468c174d"
+      },
+      {
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_exact_relation_is_deterministic_and_nonpromoting:69e4bb0dc282765a",
+        "name": "O67ProposalSupportLifecycleLineageTests.test_exact_relation_is_deterministic_and_nonpromoting",
+        "kind": "method",
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "line": 15,
+        "end_line": 36,
+        "signature_hash": "8261d6f4d223af29",
+        "file_digest8": "cc060f9a468c174d"
+      },
+      {
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_o65r_parent_substitution_fails_closed:752d285b36346e46",
+        "name": "O67ProposalSupportLifecycleLineageTests.test_o65r_parent_substitution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "line": 48,
+        "end_line": 51,
+        "signature_hash": "9c939f634a88e94c",
+        "file_digest8": "cc060f9a468c174d"
+      },
+      {
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_proposal_basis_substitution_becomes_review_not_support:ae3968155731efc6",
+        "name": "O67ProposalSupportLifecycleLineageTests.test_proposal_basis_substitution_becomes_review_not_support",
+        "kind": "method",
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "line": 38,
+        "end_line": 46,
+        "signature_hash": "34ad5c364db21124",
+        "file_digest8": "cc060f9a468c174d"
+      },
+      {
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_q21_effect_boundary_revalidation_must_remain_required:07b6e659371f7721",
+        "name": "O67ProposalSupportLifecycleLineageTests.test_q21_effect_boundary_revalidation_must_remain_required",
+        "kind": "method",
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "line": 92,
+        "end_line": 97,
+        "signature_hash": "d5ee0ca20178dfa6",
+        "file_digest8": "cc060f9a468c174d"
+      },
+      {
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_q21_lineage_cannot_smuggle_causal_or_effect_authority:9fb2aed618d750e5",
+        "name": "O67ProposalSupportLifecycleLineageTests.test_q21_lineage_cannot_smuggle_causal_or_effect_authority",
+        "kind": "method",
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "line": 73,
+        "end_line": 90,
+        "signature_hash": "df8105778af27fcd",
+        "file_digest8": "cc060f9a468c174d"
+      },
+      {
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_q21_parent_substitution_fails_closed:d3bcff173b147a9f",
+        "name": "O67ProposalSupportLifecycleLineageTests.test_q21_parent_substitution_fails_closed",
+        "kind": "method",
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "line": 53,
+        "end_line": 56,
+        "signature_hash": "741489310ec6269b",
+        "file_digest8": "cc060f9a468c174d"
+      },
+      {
+        "semantic_id": "tests/test_aura_proposal_support_lifecycle_lineage.py#method:O67ProposalSupportLifecycleLineageTests.test_support_cannot_smuggle_currentness_or_effect_authority:fd97c737533d8948",
+        "name": "O67ProposalSupportLifecycleLineageTests.test_support_cannot_smuggle_currentness_or_effect_authority",
+        "kind": "method",
+        "file": "tests/test_aura_proposal_support_lifecycle_lineage.py",
+        "line": 58,
+        "end_line": 71,
+        "signature_hash": "dabc4002e9933d22",
+        "file_digest8": "cc060f9a468c174d"
+      },
+      {
         "semantic_id": "tests/test_aura_provider_routing.py#class:test_architect_model_callback_maps_cost_tier_to_role.FakeExternalLLM:437eaace1fcd07b5",
         "name": "test_architect_model_callback_maps_cost_tier_to_role.FakeExternalLLM",
         "kind": "class",
@@ -445634,6 +446103,146 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#class:BoundedProposalSupportProjection:8edac1b45e60834e",
+        "name": "BoundedProposalSupportProjection",
+        "kind": "class",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 68,
+        "end_line": 136,
+        "signature_hash": "24a3f94863918f88",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#class:PreAttemptLifecycleLineageProjection:fcfa092592241307",
+        "name": "PreAttemptLifecycleLineageProjection",
+        "kind": "class",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 140,
+        "end_line": 212,
+        "signature_hash": "e1ecd688d44359a7",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#class:ProposalSupportLifecycleLineageDecision:668e23b48431eafb",
+        "name": "ProposalSupportLifecycleLineageDecision",
+        "kind": "class",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 216,
+        "end_line": 240,
+        "signature_hash": "8411b80c9e61b4cd",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:_canonical:0344c1168fee5e22",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 45,
+        "end_line": 48,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:_required:fd35132e5fb92ae4",
+        "name": "_required",
+        "kind": "function",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 61,
+        "end_line": 64,
+        "signature_hash": "8b28cfce6f68b96b",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:_sha256:eca665c047486247",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 55,
+        "end_line": 58,
+        "signature_hash": "fda5827e1e9021fd",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:_sha:8ea93dc23671305b",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 51,
+        "end_line": 52,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:attach_bounded_support_to_lineage:954001466cdf2770",
+        "name": "attach_bounded_support_to_lineage",
+        "kind": "function",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 243,
+        "end_line": 300,
+        "signature_hash": "f35f3ae977aa1232",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:example_lineage:cf4deb5704d45557",
+        "name": "example_lineage",
+        "kind": "function",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 323,
+        "end_line": 343,
+        "signature_hash": "9a78be05fc5caa79",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:example_support:c9cb4c4d3002148a",
+        "name": "example_support",
+        "kind": "function",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 303,
+        "end_line": 320,
+        "signature_hash": "e447f2ad3b13cde0",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#function:main:8aa4161777999855",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 346,
+        "end_line": 351,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#method:BoundedProposalSupportProjection.validate:a6dd456585356470",
+        "name": "BoundedProposalSupportProjection.validate",
+        "kind": "method",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 92,
+        "end_line": 136,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#method:PreAttemptLifecycleLineageProjection.validate:e2eb0aa35091d707",
+        "name": "PreAttemptLifecycleLineageProjection.validate",
+        "kind": "method",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 171,
+        "end_line": 212,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
+        "semantic_id": "tools/aura_proposal_support_lifecycle_lineage.py#method:ProposalSupportLifecycleLineageDecision.receipt_digest:b9c12a152f41e860",
+        "name": "ProposalSupportLifecycleLineageDecision.receipt_digest",
+        "kind": "method",
+        "file": "tools/aura_proposal_support_lifecycle_lineage.py",
+        "line": 239,
+        "end_line": 240,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "f0f6e15c88d2f1b1"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447493,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "5cebddbd74c53166dd98000fe1fe13bc",
+    "payload_hash": "f90d8f36bca91623f0cdbf11cf592d70"
   }
 }
