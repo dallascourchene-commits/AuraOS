@@ -1,11 +1,11 @@
 use aura_k27_astge_materialize::{AdmittedSourceCatalogV1, MaterializeError, SourceLocatorV1};
 use aura_k27_astge_portable_target_raw_slice::{
-    PortableTargetRawSliceErrorV1, admit_portable_target_raw_slice,
+    admit_portable_target_raw_slice, PortableTargetRawSliceErrorV1,
 };
 use aura_k27_astge_post_edit_canonical_projection::{
-    CANONICALIZATION_PROFILE_V1, CanonicalDefinitionTargetPayloadV1,
-    CanonicalDefinitionTargetProjectionV1, PROJECTION_SCHEMA_V1, ProjectionErrorV1,
-    canonical_payload_bytes,
+    canonical_payload_bytes, CanonicalDefinitionTargetPayloadV1,
+    CanonicalDefinitionTargetProjectionV1, ProjectionErrorV1, CANONICALIZATION_PROFILE_V1,
+    PROJECTION_SCHEMA_V1,
 };
 use sha2::{Digest, Sha256};
 use std::fs;
@@ -103,8 +103,14 @@ fn exact_projection_materializes_exact_current_target_slice() {
     assert!(!receipt.semantic_handle_derived_from_raw_slice);
     assert!(!receipt.semantic_identity_proven_by_raw_slice);
     assert_eq!(6, receipt.target_slice_byte_len);
-    assert_eq!(hex(&Sha256::digest(b"TARGET")), receipt.target_slice_sha256_hex);
-    assert_eq!("ab".repeat(32), receipt.selected_target_semantic_handle_digest_hex);
+    assert_eq!(
+        hex(&Sha256::digest(b"TARGET")),
+        receipt.target_slice_sha256_hex
+    );
+    assert_eq!(
+        "ab".repeat(32),
+        receipt.selected_target_semantic_handle_digest_hex
+    );
     assert!(!receipt.producer_authenticated);
     assert!(!receipt.semantic_patch_correctness_proven);
     assert!(!receipt.commit_authorized);
@@ -142,7 +148,10 @@ fn independently_valid_catalog_for_other_path_is_rejected() {
     )
     .unwrap();
     let err = admit_portable_target_raw_slice(&catalog, &projection_for(SOURCE)).unwrap_err();
-    assert!(matches!(err, PortableTargetRawSliceErrorV1::RelativePathMismatch));
+    assert!(matches!(
+        err,
+        PortableTargetRawSliceErrorV1::RelativePathMismatch
+    ));
     fs::remove_dir_all(root).unwrap();
 }
 
@@ -158,7 +167,10 @@ fn independently_valid_catalog_for_other_body_is_rejected() {
     )
     .unwrap();
     let err = admit_portable_target_raw_slice(&catalog, &projection_for(SOURCE)).unwrap_err();
-    assert!(matches!(err, PortableTargetRawSliceErrorV1::SourceDigestMismatch));
+    assert!(matches!(
+        err,
+        PortableTargetRawSliceErrorV1::SourceDigestMismatch
+    ));
     fs::remove_dir_all(root).unwrap();
 }
 
