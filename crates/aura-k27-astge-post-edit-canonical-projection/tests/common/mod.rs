@@ -3,13 +3,12 @@ use aura_k27_astge_generation_domain::SourceGenerationV1;
 use aura_k27_astge_ingest::{encode_ast_to_splane, parse_python_named_ast};
 use aura_k27_astge_materialize::{AdmittedSourceCatalogV1, SourceLocatorV1};
 use aura_k27_astge_post_edit_canonical_scope::{
-    PostEditCanonicalDefinitionTargetCurrentV1,
-    admit_post_edit_canonical_definition_target_current,
+    admit_post_edit_canonical_definition_target_current, PostEditCanonicalDefinitionTargetCurrentV1,
 };
 use aura_k27_astge_post_edit_profiled_scope::CandidateProfiledScopeSelectorV1;
 use aura_k27_astge_profiled_scopes::build_profiled_python_scopes;
 use aura_k27_astge_scope::{AuthorizedSpanV1, ReplacementV1};
-use aura_k27_astge_scopes::{PythonLexicalScopeIndexV1, index_python_nested_scopes};
+use aura_k27_astge_scopes::{index_python_nested_scopes, PythonLexicalScopeIndexV1};
 use serde_json::json;
 use sha2::{Digest, Sha256};
 use std::collections::HashMap;
