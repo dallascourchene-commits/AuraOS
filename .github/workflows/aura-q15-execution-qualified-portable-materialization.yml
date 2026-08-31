@@ -43,8 +43,8 @@ jobs:
           set -euo pipefail
           git merge-base --is-ancestor 1801de258fa88075565e62bd8f2ce9dbe6663f09 10481aa76117c24e5fdf7f93752e7820713a8285
           git merge-base --is-ancestor 74e5ee32379ddabb498587b08ba40ff21cebf13d ee70934e0c45572588829e742e512a897b23863f
-          test "$(git show -s --format='%aI' 1801de258fa88075565e62bd8f2ce9dbe6663f09)" = "2026-08-31T13:44:56+00:00"
-          test "$(git show -s --format='%aI' 74e5ee32379ddabb498587b08ba40ff21cebf13d)" = "2026-08-31T13:43:26+00:00"
+          test "$(git show -s --format='%at' 1801de258fa88075565e62bd8f2ce9dbe6663f09)" = "1788183896"
+          test "$(git show -s --format='%at' 74e5ee32379ddabb498587b08ba40ff21cebf13d)" = "1788183806"
           cat > /tmp/generation.json <<'JSON'
           {
             "a7": {"head":"1801de258fa88075565e62bd8f2ce9dbe6663f09","generated_at":"2026-08-31T13:44:56Z","ancestor_of":"10481aa76117c24e5fdf7f93752e7820713a8285","ancestor_proven":true},
