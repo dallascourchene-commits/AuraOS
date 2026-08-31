@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1662
-- **total_bytes**: 26592496
-- **text_tokens_est**: 6638481
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1019, 'schema_or_lexicon': 272, 'support_file': 49}
+- **file_count**: 1668
+- **total_bytes**: 26655216
+- **text_tokens_est**: 6654162
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 237, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1023, 'schema_or_lexicon': 274, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1662,
+  "repo_file_count": 1668,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -160,7 +160,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/aura-spatial-s3-s4a.yml",
     ".github/workflows/aura-spatial-s4.yml",
     ".github/workflows/aura-spatial-s5-s6-construction.yml",
+    ".github/workflows/bughound-four-leaf-source-owned-trust.yml",
     ".github/workflows/bughound-seedlab.yml",
+    ".github/workflows/bughound-source-owned-reproduction-registry.yml",
     ".github/workflows/ci.yml",
     ".github/workflows/coderabbit-waboose-learning-persist.yml",
     ".github/workflows/coderabbit-waboose-learning.yml",
@@ -1646,8 +1648,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_bughound_blind_score_admission.py",
     "tests/test_bughound_bounty_candidate_admission.py",
     "tests/test_bughound_bounty_mission.py",
+    "tests/test_bughound_candidate_evidence_trust_join.py",
     "tests/test_bughound_cash_scheduler.py",
     "tests/test_bughound_envelope_lint.py",
+    "tests/test_bughound_four_leaf_human_review.py",
     "tests/test_bughound_human_submission_review.py",
     "tests/test_bughound_registered_reproduction_gate.py",
     "tests/test_bughound_seedlab_benchmark.py",
@@ -1666,8 +1670,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/bughound/blind_score_admission.py",
     "tools/bughound/bounty_candidate_admission.py",
     "tools/bughound/bounty_mission.py",
+    "tools/bughound/candidate_evidence_trust_join.py",
     "tools/bughound/cash_scheduler.py",
     "tools/bughound/envelope_lint.py",
+    "tools/bughound/four_leaf_human_review.py",
     "tools/bughound/human_submission_review.py",
     "tools/bughound/registered_reproduction_gate.py",
     "tools/bughound/seedlab_benchmark.py",
@@ -1802,16 +1808,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1662,
-  "bytes": 26592496,
-  "tokens_est": 6638481,
+  "files": 1668,
+  "bytes": 26655216,
+  "tokens_est": 6654162,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 237,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1019,
-    "schema_or_lexicon": 272,
+    "python_module": 1023,
+    "schema_or_lexicon": 274,
     "support_file": 49
   }
 }
