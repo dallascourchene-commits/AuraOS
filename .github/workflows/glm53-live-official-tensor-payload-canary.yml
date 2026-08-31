@@ -71,9 +71,12 @@ jobs:
           PY
           git show 131dd2a5fc8b4e2cf96c0bf598845d35e6706ef8:tools/awj032/glm53_safetensors_header_transport.py > /tmp/glm53_safetensors_header_transport.py
           python3 - <<'PY'
-          import importlib.util, json
+          import importlib.util, sys
           spec=importlib.util.spec_from_file_location('w2','/tmp/glm53_safetensors_header_transport.py')
-          mod=importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+          assert spec is not None and spec.loader is not None
+          mod=importlib.util.module_from_spec(spec)
+          sys.modules[spec.name]=mod
+          spec.loader.exec_module(mod)
           r=mod.collect_header_evidence(
               repo_id='zai-org/GLM-5.3',
               model_revision='7cda81930d6e4cef42f48555de830aa32ecdde28',
