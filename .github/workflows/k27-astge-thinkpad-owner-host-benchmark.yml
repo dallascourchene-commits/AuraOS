@@ -1,0 +1,154 @@
+name: K27 ASTGE ThinkPad Owner Host Benchmark Contract
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+  PR459_SHA: a71d1c55af84973a29b28fdfa3db157056780e92
+  PR459_RUN: '33343082922'
+  PR477_SHA: 3d8f1e83fff13e622042543ca23c486008e19944
+  PR477_RUN: '33344540826'
+
+jobs:
+  benchmark-contract:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Fetch exact child and benchmark reference generation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=260 origin "$TARGET_SHA" "$PR459_SHA" "$PR477_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach "$TARGET_SHA"
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          git merge-base --is-ancestor "$PR477_SHA" HEAD
+          git worktree add --detach /tmp/pr459 "$PR459_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.12'
+          check-latest: false
+
+      - name: Pin exact successful reference and safe-stack runs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          expected = {
+              os.environ["PR459_RUN"]: os.environ["PR459_SHA"],
+              os.environ["PR477_RUN"]: os.environ["PR477_SHA"],
+          }
+          for run_id, sha in expected.items():
+              req = urllib.request.Request(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{run_id}",
+                  headers={
+                      "Authorization": f"Bearer {token}",
+                      "Accept": "application/vnd.github+json",
+                  },
+              )
+              with urllib.request.urlopen(req, timeout=30) as response:
+                  data = json.load(response)
+              assert data["head_sha"] == sha, (run_id, data["head_sha"], sha)
+              assert data["status"] == "completed"
+              assert data["conclusion"] == "success"
+              print(f"PINNED_PARENT_RUN={run_id}@{sha}=SUCCESS")
+          PY
+
+      - name: Re-prove exact same-graph benchmark reference
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/pr459
+          python -m py_compile tools/k27_astge_reference.py tests/test_k27_astge_reference.py
+          PYTHONPATH=tools python -m unittest -v tests/test_k27_astge_reference.py
+          PYTHONPATH=tools python tools/k27_astge_reference.py self-test
+
+      - name: Re-prove exact current safe ASTGE stack
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          cargo test --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge/Cargo.toml --all-targets -- -D warnings
+          cargo fmt --manifest-path crates/aura-k27-astge-ingest/Cargo.toml -- --check
+          cargo test --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets
+          cargo clippy --manifest-path crates/aura-k27-astge-ingest/Cargo.toml --all-targets -- -D warnings
+          if grep -R --line-number -E 'unsafe\s*\{' crates/aura-k27-astge/src crates/aura-k27-astge-ingest/src; then
+            echo 'unsafe block found in safe current-stack ingestion path' >&2
+            exit 1
+          fi
+
+      - name: Prove ThinkPad benchmark evidence contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/k27_astge_thinkpad_owner_host_benchmark.py \
+            tests/test_k27_astge_thinkpad_owner_host_benchmark.py
+          python -m unittest -v tests.test_k27_astge_thinkpad_owner_host_benchmark
+
+      - name: Assert evidence layers and claim ceiling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import inspect
+          from tools.k27_astge_thinkpad_owner_host_benchmark import (
+              ThinkPadASTGEBenchmarkReceipt,
+              admit_thinkpad_owner_host_benchmark,
+          )
+
+          assert set(inspect.signature(admit_thinkpad_owner_host_benchmark).parameters) == {
+              "request", "samples", "host_observation_id", "runner_identity"
+          }
+          fields = ThinkPadASTGEBenchmarkReceipt.__dataclass_fields__
+          for name in (
+              "os_page_cache_cold_proven",
+              "device_cache_cold_proven",
+              "process_read_bytes_are_physical_nvme_bytes",
+              "astge_page_requests_are_physical_nvme_reads",
+              "device_counter_is_exclusive_to_benchmark",
+              "physical_io_attested",
+              "producer_authenticated",
+              "w4_admitted",
+              "real_performance_winner_proven",
+              "effect_authority_proven",
+          ):
+              assert fields[name].default is False, name
+          print("SAME_GRAPH_BENCHMARK_CONTRACT_PROVEN=true")
+          print("PROCESS_COLD_SCOPE=LOCAL_PROCESS_STATE_ONLY")
+          print("OS_PAGE_CACHE_COLD_PROVEN=false")
+          print("DEVICE_CACHE_COLD_PROVEN=false")
+          print("PROCESS_READ_BYTES_ARE_PHYSICAL_NVME_BYTES=false")
+          print("ASTGE_PAGE_REQUESTS_ARE_PHYSICAL_NVME_READS=false")
+          print("PHYSICAL_IO_ATTESTED=false")
+          print("THINKPAD_EXECUTED_BY_HOSTED_CI=false")
+          print("PRODUCER_AUTHENTICATED=false")
+          print("W4_ADMITTED=false")
+          print("REAL_PERFORMANCE_WINNER_PROVEN=false")
+          print("NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED=false")
+          print("SEMANTIC_K27_AUTHORITY=false")
+          print("EFFECT_AUTHORITY=false")
+          PY
