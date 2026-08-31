@@ -1,0 +1,104 @@
+name: Aura WorkCapsule Canonical Stale Lifecycle
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_astge_anchor_hydration.py'
+      - 'scripts/aura_workcapsule_context_binding.py'
+      - 'scripts/aura_workcapsule_reentry_invalidation.py'
+      - 'scripts/aura_workcapsule_reentry_exact_verifier.py'
+      - 'scripts/aura_workcapsule_source_reentry_observation.py'
+      - 'scripts/aura_workcapsule_source_bound_exact_reentry.py'
+      - 'scripts/aura_workcapsule_stale_exact_reentry.py'
+      - 'scripts/aura_workcapsule_raw_owner_stale_safe_reentry.py'
+      - 'scripts/aura_workcapsule_observation_bound_closure.py'
+      - 'scripts/aura_workcapsule_stale_observation_closure_exact_verifier.py'
+      - 'scripts/aura_workcapsule_canonical_stale_lifecycle.py'
+      - 'tests/test_aura_workcapsule_source_bound_exact_reentry.py'
+      - 'tests/test_aura_workcapsule_stale_exact_reentry.py'
+      - 'tests/test_aura_workcapsule_raw_owner_stale_safe_reentry.py'
+      - 'tests/test_aura_workcapsule_stale_observation_closure_exact_verifier.py'
+      - 'tests/test_aura_workcapsule_canonical_stale_lifecycle.py'
+      - '.github/workflows/aura-workcapsule-canonical-stale-lifecycle.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  canonical-stale-lifecycle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head without persisted credentials
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" \
+            fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+          test -z "$(git config --local --get-all http.https://github.com/.extraheader || true)"
+
+      - name: Re-prove PR522 raw-owner stale-safe path
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_source_bound_exact_reentry.py scripts/aura_workcapsule_raw_owner_stale_safe_reentry.py
+          python3 -m unittest -v tests.test_aura_workcapsule_source_bound_exact_reentry tests.test_aura_workcapsule_raw_owner_stale_safe_reentry
+
+      - name: Re-prove PR521 stale closure path
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_reentry_exact_verifier.py scripts/aura_workcapsule_stale_exact_reentry.py scripts/aura_workcapsule_stale_observation_closure_exact_verifier.py
+          python3 -m unittest -v tests.test_aura_workcapsule_reentry_exact_verifier tests.test_aura_workcapsule_stale_exact_reentry tests.test_aura_workcapsule_stale_observation_closure_exact_verifier
+
+      - name: Prove canonical cross-path lifecycle convergence
+        run: |
+          python3 -m py_compile scripts/aura_workcapsule_canonical_stale_lifecycle.py
+          python3 -m unittest -v tests.test_aura_workcapsule_canonical_stale_lifecycle
+
+      - name: Assert no caller projection or sibling-admission escape hatches
+        run: |
+          python3 - <<'PY'
+          import inspect
+          from scripts.aura_workcapsule_canonical_stale_lifecycle import compile_canonical_stale_lifecycle
+          params = inspect.signature(compile_canonical_stale_lifecycle).parameters
+          for forbidden in ('source_observation_receipt', 'observed_source_witnesses', 'raw_owner_admission', 'stale_safe_admission'):
+              assert forbidden not in params, forbidden
+          assert {'root', 'codemap', 'anchor_manifest', 'witness_manifest', 'previous_binding', 'reentry_receipt', 'observed_graph_witness', 'candidate_graph_witness', 'closure_receipt'} <= set(params)
+          print('CALLER_SOURCE_OBSERVATION_RECEIPT_ACCEPTED=false')
+          print('CALLER_SOURCE_WITNESSES_ACCEPTED=false')
+          print('CALLER_SIBLING_ADMISSIONS_ACCEPTED=false')
+          PY
+
+      - name: Emit canonical lifecycle consequence ceiling
+        run: |
+          echo 'ONE_RAW_EVIDENCE_WORLD_ONE_PR509_PROJECTION=true'
+          echo 'RAW_OWNER_PROJECTION_EQUALS_CLOSURE_PROJECTION=true'
+          echo 'DIRECT_PR517_DECISION_EQUALS_PR522_WRAPPED_DECISION=true'
+          echo 'REJECTED_CURRENTNESS_LIFECYCLE_REENTRY_REQUIRED=true'
+          echo 'REJECTED_CURRENTNESS_LIFECYCLE_CLOSURE_HOLD=true'
+          echo 'OBSERVED_GRAPH_ROLE_DISTINCT_FROM_CANDIDATE_GRAPH_ROLE=true'
+          echo 'SOURCE_CURRENTNESS_MINTED=false'
+          echo 'STALE_OBSERVED_BYTES_BOUND_TO_SOURCE_GENERATION=false'
+          echo 'UNKNOWN_IDENTITY_GUESSED=false'
+          echo 'PRODUCER_IDENTITY_AUTHENTICATED=false'
+          echo 'SOURCE_OBSERVATION_PRODUCER_AUTHENTICATED=false'
+          echo 'OBSERVED_GRAPH_PRODUCER_AUTHENTICATED=false'
+          echo 'CANDIDATE_GRAPH_PRODUCER_AUTHENTICATED=false'
+          echo 'SEMANTIC_TRUTH_MINTED=false'
+          echo 'SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=false'
+          echo 'NODE_LEVEL_INVALIDATION_CONE_PROVEN=false'
+          echo 'REVIEW_AUTHORIZED=false'
+          echo 'MUTATION_AUTHORIZED=false'
+          echo 'EXECUTION_AUTHORIZED=false'
+          echo 'COMMIT_AUTHORIZED=false'
+          echo 'MERGE_AUTHORIZED=false'
+          echo 'PROMOTION_AUTHORIZED=false'
+          echo 'PROVIDER_EFFECT_AUTHORIZED=false'
+          echo 'PUBLIC_EFFECT_AUTHORIZED=false'
+          echo 'HUMAN_AUTHORITY=false'
