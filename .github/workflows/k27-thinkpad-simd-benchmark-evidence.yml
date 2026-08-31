@@ -1,0 +1,159 @@
+name: K27 ThinkPad SIMD Benchmark Evidence
+
+on:
+  pull_request:
+    paths:
+      - "tools/k27/thinkpad_simd_benchmark_evidence.cpp"
+      - "tools/k27/thinkpad_simd_benchmark_admission.py"
+      - "docs/K27_THINKPAD_SIMD_BENCHMARK_EVIDENCE_V1.md"
+      - ".github/workflows/k27-thinkpad-simd-benchmark-evidence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  benchmark-evidence:
+    runs-on: ubuntu-latest
+    env:
+      PR608_HEAD: bb7d8849112c1c992c64b3078f3df0d84b8ff60b
+      PR608_BLOB: 96e523682b7d6a0b3e2c3d850bc4d8bafa58b97c
+      PR608_RUN: "33365196299"
+      PR654_HEAD: 26e377fe543b8c1906832b8c1e968dfe63480005
+      PR654_BLOB: 0b6a53612d4d2d9993da49180cfc74d5f4996548
+      PR654_RUN: "33375530171"
+    steps:
+      - name: Checkout exact child head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Bind exact child generation
+        shell: bash
+        env:
+          EXPECTED_CHILD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_CHILD_SHA"
+
+      - name: Revalidate exact non-self parent runs
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import os
+          import subprocess
+
+          repo = os.environ["GITHUB_REPOSITORY"]
+          checks = [
+              (os.environ["PR608_RUN"], os.environ["PR608_HEAD"]),
+              (os.environ["PR654_RUN"], os.environ["PR654_HEAD"]),
+          ]
+          for run_id, expected_sha in checks:
+              payload = subprocess.check_output(
+                  ["gh", "api", f"repos/{repo}/actions/runs/{run_id}"], text=True
+              )
+              run = json.loads(payload)
+              assert run["status"] == "completed", run
+              assert run["conclusion"] == "success", run
+              assert run["head_sha"] == expected_sha, (run["head_sha"], expected_sha)
+          PY
+
+      - name: Materialize exact PR608 implementation and PR654 owner
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL \
+            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${PR608_HEAD}/tools/k27/thinkpad_portable_simd_dispatch.cpp" \
+            -o /tmp/pr608.cpp
+          test "$(git hash-object /tmp/pr608.cpp)" = "$PR608_BLOB"
+
+          curl -fsSL \
+            "https://raw.githubusercontent.com/${GITHUB_REPOSITORY}/${PR654_HEAD}/tools/aura_hyperscale_work_admission.py" \
+            -o /tmp/pr654_hyperscale.py
+          test "$(git hash-object /tmp/pr654_hyperscale.py)" = "$PR654_BLOB"
+
+      - name: Prove HyperScale minimum evidence cone
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/k27/thinkpad_simd_benchmark_admission.py \
+            /tmp/pr654_hyperscale.py | tee admission.json
+          grep -q '"mode": "VERIFICATION"' admission.json
+          grep -q '"matched-hosted-simd-compute-benchmark"' admission.json
+          grep -q '"eligible_to_seek_new_sck": false' admission.json
+          grep -q '"eligible_to_add_new_egk": true' admission.json
+          grep -q '"automatic_effect_execution": false' admission.json
+
+      - name: Compile exact PR608 benchmark adapter at baseline target
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          text = Path("tools/k27/thinkpad_simd_benchmark_evidence.cpp").read_text()
+          forbidden = ("-march=native", "-mavx2", "-mavx512")
+          assert not any(flag in text for flag in forbidden)
+          PY
+          g++ -std=c++20 -O3 -Wall -Wextra -Werror \
+            -DK27_PR608_SOURCE='"/tmp/pr608.cpp"' \
+            tools/k27/thinkpad_simd_benchmark_evidence.cpp \
+            -o /tmp/k27-simd-bench
+
+      - name: Execute two matched hosted-runner observations
+        shell: bash
+        run: |
+          set -euo pipefail
+          /tmp/k27-simd-bench | tee benchmark-1.txt
+          /tmp/k27-simd-bench | tee benchmark-2.txt
+          python3 - <<'PY'
+          from pathlib import Path
+
+          def parse(path):
+              out = {}
+              for line in Path(path).read_text().splitlines():
+                  if "=" in line:
+                      key, value = line.split("=", 1)
+                      out[key] = value
+              return out
+
+          a = parse("benchmark-1.txt")
+          b = parse("benchmark-2.txt")
+          stable = (
+              "PR608_EXACT_HEAD",
+              "PR608_SOURCE_BLOB",
+              "WORKLOAD_ID",
+              "CENTROIDS",
+              "CENTROID_PAYLOAD_BYTES",
+              "SELECTED_PATH",
+              "SEMANTIC_CHECKSUM",
+          )
+          for key in stable:
+              assert a[key] == b[key], (key, a[key], b[key])
+          for receipt in (a, b):
+              assert receipt["MATCHED_WORKLOAD_CONSEQUENCE_EQUIVALENT"] == "true"
+              assert receipt["HOSTED_RUNNER_COMPUTE_TIMING_OBSERVED"] == "true"
+              assert receipt["OWNER_THINKPAD_HOST_AUTHENTICATED"] == "false"
+              assert receipt["THINKPAD_PERFORMANCE_PROVEN"] == "false"
+              assert receipt["PERFORMANCE_SUPERIORITY_PROVEN"] == "false"
+              assert receipt["P_CORE_ONLY_OBSERVED"] == "false"
+              assert receipt["CACHE_RESIDENCY_PROVEN"] == "false"
+              assert receipt["THERMAL_POWER_EFFECT_PROVEN"] == "false"
+              assert receipt["SEMANTIC_K27_AUTHORITY"] == "false"
+              assert receipt["NATIVE_PRIVATE_TRANSFORMER_KV_ACCESSED"] == "false"
+              assert receipt["GATE10_PROMOTED"] == "false"
+          PY
+
+      - name: Preserve evidence receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: k27-thinkpad-simd-benchmark-evidence
+          path: |
+            admission.json
+            benchmark-1.txt
+            benchmark-2.txt
