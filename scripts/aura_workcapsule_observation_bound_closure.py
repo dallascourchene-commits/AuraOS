@@ -20,9 +20,17 @@ from pathlib import Path
 from typing import Any
 
 from scripts.aura_workcapsule_context_binding import compile_workcapsule_context_binding
-from scripts.aura_workcapsule_reentry_closure import CLOSED, HOLD, compile_reentry_closure, verify_reentry_closure
+from scripts.aura_workcapsule_reentry_closure import (
+    CLOSED,
+    HOLD,
+    compile_reentry_closure,
+    verify_reentry_closure,
+)
 from scripts.aura_workcapsule_reentry_invalidation import verify_reentry_invalidation
-from scripts.aura_workcapsule_source_reentry_observation import compile_source_reentry_observations, verify_source_reentry_observations
+from scripts.aura_workcapsule_source_reentry_observation import (
+    compile_source_reentry_observations,
+    verify_source_reentry_observations,
+)
 
 VERSION = "AURA_WORKCAPSULE_OBSERVATION_BOUND_CLOSURE_V1"
 
@@ -42,26 +50,58 @@ def _identity(payload_without_identity: dict[str, Any]) -> dict[str, str]:
     }
 
 
-def compile_observation_bound_reentry_closure(*, root: Path, codemap: dict[str, Any], anchor_manifest: dict[str, Any], witness_manifest: dict[str, Any], previous_binding: dict[str, Any], reentry_receipt: dict[str, Any], candidate_graph_witness: dict[str, Any]) -> dict[str, Any]:
+def compile_observation_bound_reentry_closure(
+    *,
+    root: Path,
+    codemap: dict[str, Any],
+    anchor_manifest: dict[str, Any],
+    witness_manifest: dict[str, Any],
+    previous_binding: dict[str, Any],
+    reentry_receipt: dict[str, Any],
+    candidate_graph_witness: dict[str, Any],
+) -> dict[str, Any]:
+    """Derive candidate source basis from raw currentness inputs before closure.
+
+    There is intentionally no ``candidate_binding`` argument. Source witnesses are
+    regenerated through PR509 and the O7 candidate binding is compiled inside this
+    boundary. If that derived candidate is not independently CURRENT, the function
+    returns HOLD rather than allowing a caller to substitute a different current
+    candidate.
+    """
     reentry_violations = verify_reentry_invalidation(reentry_receipt)
     if reentry_violations:
         raise ValueError("reentry_receipt is not coherent: " + ",".join(reentry_violations))
     if reentry_receipt.get("previous_binding_identity") != previous_binding.get("binding_identity"):
         raise ValueError("reentry_receipt does not bind the supplied previous_binding")
 
-    source_observation = compile_source_reentry_observations(root=root, codemap=codemap, anchor_manifest=anchor_manifest, witness_manifest=witness_manifest, previous_binding=previous_binding)
+    source_observation = compile_source_reentry_observations(
+        root=root,
+        codemap=codemap,
+        anchor_manifest=anchor_manifest,
+        witness_manifest=witness_manifest,
+        previous_binding=previous_binding,
+    )
     source_violations = verify_source_reentry_observations(source_observation)
     if source_violations:
         raise ValueError("source observation is not coherent: " + ",".join(source_violations))
 
-    candidate_binding = compile_workcapsule_context_binding(capsule=previous_binding["capsule"], graph_witness=candidate_graph_witness, source_witnesses=source_observation["o7_source_witnesses"])
+    candidate_binding = compile_workcapsule_context_binding(
+        capsule=previous_binding["capsule"],
+        graph_witness=candidate_graph_witness,
+        source_witnesses=source_observation["o7_source_witnesses"],
+    )
+
     closure_receipt: dict[str, Any] | None = None
     closure_status = HOLD
     hold_reasons: list[str] = []
     if candidate_binding.get("context_admitted") is not True:
         hold_reasons.append("DERIVED_CANDIDATE_NOT_CURRENT")
     else:
-        closure_receipt = compile_reentry_closure(previous_binding=previous_binding, reentry_receipt=reentry_receipt, candidate_binding=candidate_binding)
+        closure_receipt = compile_reentry_closure(
+            previous_binding=previous_binding,
+            reentry_receipt=reentry_receipt,
+            candidate_binding=candidate_binding,
+        )
         closure_violations = verify_reentry_closure(closure_receipt)
         if closure_violations:
             raise ValueError("derived closure receipt is not coherent: " + ",".join(closure_violations))
@@ -104,6 +144,7 @@ def compile_observation_bound_reentry_closure(*, root: Path, codemap: dict[str, 
 
 
 def verify_observation_bound_reentry_closure(receipt: dict[str, Any]) -> list[str]:
+    """Return deterministic violations for one observation-bound closure receipt."""
     violations: list[str] = []
     if receipt.get("version") != VERSION:
         violations.append("UNSUPPORTED_VERSION")
