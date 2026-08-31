@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788197522,
+  "generated_at_unix": 1788197667,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1654,
+    "repo_file_count": 1656,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1479,6 +1479,7 @@
       "tests/test_aura_external_knowledge_store_reader_integration.py",
       "tests/test_aura_external_knowledge_store_writer.py",
       "tests/test_aura_external_llm_session.py",
+      "tests/test_aura_external_subject_identity_bridge.py",
       "tests/test_aura_fetch_construction_demo_source.py",
       "tests/test_aura_financial_contracts.py",
       "tests/test_aura_financial_contracts_regressions.py",
@@ -1646,6 +1647,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/aura_external_knowledge_ingress.py",
       "tools/aura_external_knowledge_store_writer.py",
+      "tools/aura_external_subject_identity_bridge.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1770,15 +1772,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1654,
-      "bytes": 26509585,
-      "tokens_est": 6617749,
+      "files": 1656,
+      "bytes": 26531208,
+      "tokens_est": 6623155,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1002,
+        "python_module": 1004,
         "schema_or_lexicon": 273,
         "support_file": 56
       }
@@ -3925,6 +3927,14 @@
         "line": 103,
         "end_line": 110,
         "semantic_id": "tools/aura_external_knowledge_ingress.py#function:_canonical:af142ecd08e466a2",
+        "signature_hash": "8d5bf5695239b859"
+      },
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "function",
+        "line": 55,
+        "end_line": 63,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:_canonical:37e8c2aa5c4f6b31",
         "signature_hash": "8d5bf5695239b859"
       }
     ],
@@ -8121,6 +8131,14 @@
         "line": 61,
         "end_line": 62,
         "semantic_id": "tools/aura_external_knowledge_store_writer.py#function:_sha:e19cf647fa7eed39",
+        "signature_hash": "e47bc2e8d0ade77b"
+      },
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "function",
+        "line": 66,
+        "end_line": 67,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:_sha:764d0195ab987649",
         "signature_hash": "e47bc2e8d0ade77b"
       }
     ],
@@ -13762,6 +13780,14 @@
         "end_line": 68,
         "semantic_id": "tests/test_aura_runtime_profile_v2_adapter.py#function:_sha256:589985db2f472180",
         "signature_hash": "8b2fe119650f5918"
+      },
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "function",
+        "line": 76,
+        "end_line": 80,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:_sha256:20911b7f9b0f116b",
+        "signature_hash": "fda5827e1e9021fd"
       }
     ],
     "PullRequestRouteBinding": [
@@ -14708,6 +14734,14 @@
         "end_line": 15,
         "semantic_id": "tests/test_aura_gate_deployment.py#function:_text:1f3bafa8e612af94",
         "signature_hash": "341a9ef31a78fe7b"
+      },
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "function",
+        "line": 70,
+        "end_line": 73,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:_text:97e38409c1baef54",
+        "signature_hash": "c410f907de926258"
       }
     ],
     "_bounded": [
@@ -136282,6 +136316,156 @@
         "signature_hash": "6ad272ce7a1924bf"
       }
     ],
+    "legacy": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "function",
+        "line": 17,
+        "end_line": 25,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#function:legacy:50cb2cf28372cec8",
+        "signature_hash": "2174c254b47043d8"
+      }
+    ],
+    "current": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "function",
+        "line": 28,
+        "end_line": 37,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#function:current:32eb4e84620d2fea",
+        "signature_hash": "156c8bc94f86a06e"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "class",
+        "line": 40,
+        "end_line": 156,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#class:ExternalSubjectIdentityBridgeTests:cac0269dc272032d",
+        "signature_hash": "8bd0563593d8f64d"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests.test_github_exact_mapping_matches_subject_but_not_generation": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 41,
+        "end_line": 54,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_github_exact_mapping_matches_subject_but_not_generation:9555718093509042",
+        "signature_hash": "f984c8fd021a73b4"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests.test_all_declared_vocabulary_rules_are_deterministically_bridgeable": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 56,
+        "end_line": 75,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_all_declared_vocabulary_rules_are_deterministically_bridgeable:210d13d8133b14a2",
+        "signature_hash": "51243c8c6f4de5a9"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests.test_unsupported_legacy_kind_holds": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 82,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_unsupported_legacy_kind_holds:4860af28e05092e6",
+        "signature_hash": "444309cbd9611e90"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests.test_provider_kind_crosscast_holds_even_with_same_canonical_id": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 90,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_provider_kind_crosscast_holds_even_with_same_canonical_id:8292a5234cbad00c",
+        "signature_hash": "f514f19d4760fc7f"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests.test_canonical_id_drift_holds": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 92,
+        "end_line": 97,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_canonical_id_drift_holds:90fc4675f141a264",
+        "signature_hash": "8c03b52c71b62e68"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests.test_canonical_uri_alias_drift_holds_even_when_both_parent_hashes_are_valid": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 99,
+        "end_line": 104,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_canonical_uri_alias_drift_holds_even_when_both_parent_hashes_are_valid:ea79e82c89480db0",
+        "signature_hash": "83e14fa69c265903"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests.test_legacy_digest_substitution_holds": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 106,
+        "end_line": 111,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_legacy_digest_substitution_holds:f88dcd5c7cdda018",
+        "signature_hash": "b6430f571c35d15e"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests.test_current_digest_substitution_holds": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 118,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_current_digest_substitution_holds:13f4f3f6b439cb34",
+        "signature_hash": "d4b95e3485d09739"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests.test_classification_and_sector_are_not_cross_schema_identity_inputs": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 120,
+        "end_line": 129,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_classification_and_sector_are_not_cross_schema_identity_inputs:e85cb6c332a285c6",
+        "signature_hash": "d3cfb9caf8ee9810"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests.test_generation_values_remain_visible_but_never_become_equivalent": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 131,
+        "end_line": 140,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_generation_values_remain_visible_but_never_become_equivalent:d48c3c7c6c6529c3",
+        "signature_hash": "d98d15ce80f8c599"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests.test_receipt_is_deterministic_and_k27_never_enters_relation": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 147,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_receipt_is_deterministic_and_k27_never_enters_relation:d333be63226f1f7c",
+        "signature_hash": "cae7da79efd86580"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeTests.test_matched_receipt_cannot_be_resealed_with_authority_or_current_version": [
+      {
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 149,
+        "end_line": 156,
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_matched_receipt_cannot_be_resealed_with_authority_or_current_version:0851fbdb2ead671b",
+        "signature_hash": "897f41ebfa40d6ee"
+      }
+    ],
     "_Response": [
       {
         "file": "tests/test_aura_fetch_construction_demo_source.py",
@@ -158548,6 +158732,126 @@
         "end_line": 528,
         "semantic_id": "tools/aura_external_knowledge_store_writer.py#function:_cli:93fd1fee1cd5a69c",
         "signature_hash": "9942606d5f7a2989"
+      }
+    ],
+    "IdentityBridgeDisposition": [
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "class",
+        "line": 45,
+        "end_line": 52,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#class:IdentityBridgeDisposition:a60657f60712fa09",
+        "signature_hash": "38d9cc23d298066d"
+      }
+    ],
+    "legacy_semantic_id": [
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "function",
+        "line": 83,
+        "end_line": 90,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:legacy_semantic_id:7f3a8607c8ab12bc",
+        "signature_hash": "4c18c8a45ba3ab28"
+      }
+    ],
+    "current_subject_key": [
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "function",
+        "line": 93,
+        "end_line": 101,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:current_subject_key:881381267a75ba16",
+        "signature_hash": "924b24151b5ffc26"
+      }
+    ],
+    "LegacyExternalIdentityProjectionV1": [
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "class",
+        "line": 105,
+        "end_line": 121,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#class:LegacyExternalIdentityProjectionV1:1582b496b51e2474",
+        "signature_hash": "6dd132366245d827"
+      }
+    ],
+    "LegacyExternalIdentityProjectionV1.validate": [
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 113,
+        "end_line": 121,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#method:LegacyExternalIdentityProjectionV1.validate:fc02ce0bbac02879",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "CurrentExternalSubjectProjectionV1": [
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "class",
+        "line": 125,
+        "end_line": 143,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#class:CurrentExternalSubjectProjectionV1:1c57f4b4316aa44d",
+        "signature_hash": "8289855b543e5856"
+      }
+    ],
+    "CurrentExternalSubjectProjectionV1.validate": [
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 134,
+        "end_line": 143,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#method:CurrentExternalSubjectProjectionV1.validate:2d8b11a70b9e9d7d",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeReceiptV1": [
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "class",
+        "line": 147,
+        "end_line": 226,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#class:ExternalSubjectIdentityBridgeReceiptV1:56d4ee74a4dd526f",
+        "signature_hash": "1feed368d1ab3102"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeReceiptV1.validate": [
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 175,
+        "end_line": 221,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeReceiptV1.validate:373bf9d0bf0f954a",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ExternalSubjectIdentityBridgeReceiptV1.receipt_digest": [
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 224,
+        "end_line": 226,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeReceiptV1.receipt_digest:75571261394ac30d",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "bridge_external_subject_identity": [
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "function",
+        "line": 229,
+        "end_line": 322,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:bridge_external_subject_identity:872d12023bbeb959",
+        "signature_hash": "b8c5f7579b9a1149"
+      }
+    ],
+    "bridge_external_subject_identity.hold": [
+      {
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "kind": "method",
+        "line": 248,
+        "end_line": 259,
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#method:bridge_external_subject_identity.hold:a17ac0b1b6f4a147",
+        "signature_hash": "05753cad4db22bd1"
       }
     ],
     "_coordinates": [
@@ -256906,6 +257210,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_external_subject_identity_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 8536,
+      "lines": 161,
+      "tokens_est": 2134,
+      "symbol_count": 15,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "da450df8de6dd56c",
+      "vector": [
+        0.071226,
+        -0.17369,
+        0.053732,
+        0.133704,
+        -0.238668,
+        -0.263659,
+        0.186186,
+        0.196183,
+        0.238668,
+        0.243666,
+        0.196183,
+        0.138702,
+        -0.1462,
+        0.026241,
+        -0.006248,
+        0.248665,
+        -0.263659,
+        0.271157,
+        0.168692,
+        0.016244,
+        0.226172,
+        -0.178689,
+        -0.228671,
+        0.196183,
+        -0.076224,
+        -0.021243,
+        -0.163694,
+        -0.168692,
+        0.258661,
+        -0.078723,
+        -0.073725,
+        -0.026241
+      ]
+    },
+    {
       "path": "tests/test_aura_fetch_construction_demo_source.py",
       "role": "python_module",
       "binary": false,
@@ -264752,6 +265103,53 @@
         -0.15247,
         -0.110324,
         -0.21197
+      ]
+    },
+    {
+      "path": "tools/aura_external_subject_identity_bridge.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 13087,
+      "lines": 335,
+      "tokens_est": 3272,
+      "symbol_count": 16,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "8d8dc937253f3576",
+      "vector": [
+        -0.253113,
+        0.040452,
+        -0.075125,
+        -0.146782,
+        0.149094,
+        0.156029,
+        0.107486,
+        0.026583,
+        0.183767,
+        -0.253113,
+        -0.084371,
+        0.047386,
+        -0.266982,
+        -0.056633,
+        -0.00809,
+        -0.151406,
+        0.287786,
+        0.276228,
+        0.112109,
+        0.255425,
+        -0.266982,
+        0.294721,
+        -0.075125,
+        0.142159,
+        -0.035829,
+        -0.114421,
+        -0.174521,
+        0.056633,
+        -0.234621,
+        0.197636,
+        0.253113,
+        -0.12829
       ]
     },
     {
@@ -288753,15 +289151,15 @@
     }
   },
   "summary": {
-    "file_count": 1654,
-    "total_bytes": 26509585,
-    "text_tokens_est": 6617749,
+    "file_count": 1656,
+    "total_bytes": 26531208,
+    "text_tokens_est": 6623155,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1002,
+      "python_module": 1004,
       "schema_or_lexicon": 273,
       "support_file": 56
     },
@@ -290251,6 +290649,7 @@
       "tests/test_aura_external_knowledge_store_reader_integration.py",
       "tests/test_aura_external_knowledge_store_writer.py",
       "tests/test_aura_external_llm_session.py",
+      "tests/test_aura_external_subject_identity_bridge.py",
       "tests/test_aura_fetch_construction_demo_source.py",
       "tests/test_aura_financial_contracts.py",
       "tests/test_aura_financial_contracts_regressions.py",
@@ -290418,6 +290817,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/aura_external_knowledge_ingress.py",
       "tools/aura_external_knowledge_store_writer.py",
+      "tools/aura_external_subject_identity_bridge.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -425406,6 +425806,156 @@
         "file_digest8": "9e4334abc2fa4d15"
       },
       {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#class:ExternalSubjectIdentityBridgeTests:cac0269dc272032d",
+        "name": "ExternalSubjectIdentityBridgeTests",
+        "kind": "class",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 40,
+        "end_line": 156,
+        "signature_hash": "8bd0563593d8f64d",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#function:current:32eb4e84620d2fea",
+        "name": "current",
+        "kind": "function",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 28,
+        "end_line": 37,
+        "signature_hash": "156c8bc94f86a06e",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#function:legacy:50cb2cf28372cec8",
+        "name": "legacy",
+        "kind": "function",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 17,
+        "end_line": 25,
+        "signature_hash": "2174c254b47043d8",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_all_declared_vocabulary_rules_are_deterministically_bridgeable:210d13d8133b14a2",
+        "name": "ExternalSubjectIdentityBridgeTests.test_all_declared_vocabulary_rules_are_deterministically_bridgeable",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 56,
+        "end_line": 75,
+        "signature_hash": "51243c8c6f4de5a9",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_canonical_id_drift_holds:90fc4675f141a264",
+        "name": "ExternalSubjectIdentityBridgeTests.test_canonical_id_drift_holds",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 92,
+        "end_line": 97,
+        "signature_hash": "8c03b52c71b62e68",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_canonical_uri_alias_drift_holds_even_when_both_parent_hashes_are_valid:ea79e82c89480db0",
+        "name": "ExternalSubjectIdentityBridgeTests.test_canonical_uri_alias_drift_holds_even_when_both_parent_hashes_are_valid",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 99,
+        "end_line": 104,
+        "signature_hash": "83e14fa69c265903",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_classification_and_sector_are_not_cross_schema_identity_inputs:e85cb6c332a285c6",
+        "name": "ExternalSubjectIdentityBridgeTests.test_classification_and_sector_are_not_cross_schema_identity_inputs",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 120,
+        "end_line": 129,
+        "signature_hash": "d3cfb9caf8ee9810",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_current_digest_substitution_holds:13f4f3f6b439cb34",
+        "name": "ExternalSubjectIdentityBridgeTests.test_current_digest_substitution_holds",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 113,
+        "end_line": 118,
+        "signature_hash": "d4b95e3485d09739",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_generation_values_remain_visible_but_never_become_equivalent:d48c3c7c6c6529c3",
+        "name": "ExternalSubjectIdentityBridgeTests.test_generation_values_remain_visible_but_never_become_equivalent",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 131,
+        "end_line": 140,
+        "signature_hash": "d98d15ce80f8c599",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_github_exact_mapping_matches_subject_but_not_generation:9555718093509042",
+        "name": "ExternalSubjectIdentityBridgeTests.test_github_exact_mapping_matches_subject_but_not_generation",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 41,
+        "end_line": 54,
+        "signature_hash": "f984c8fd021a73b4",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_legacy_digest_substitution_holds:f88dcd5c7cdda018",
+        "name": "ExternalSubjectIdentityBridgeTests.test_legacy_digest_substitution_holds",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 106,
+        "end_line": 111,
+        "signature_hash": "b6430f571c35d15e",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_matched_receipt_cannot_be_resealed_with_authority_or_current_version:0851fbdb2ead671b",
+        "name": "ExternalSubjectIdentityBridgeTests.test_matched_receipt_cannot_be_resealed_with_authority_or_current_version",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 149,
+        "end_line": 156,
+        "signature_hash": "897f41ebfa40d6ee",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_provider_kind_crosscast_holds_even_with_same_canonical_id:8292a5234cbad00c",
+        "name": "ExternalSubjectIdentityBridgeTests.test_provider_kind_crosscast_holds_even_with_same_canonical_id",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 84,
+        "end_line": 90,
+        "signature_hash": "f514f19d4760fc7f",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_receipt_is_deterministic_and_k27_never_enters_relation:d333be63226f1f7c",
+        "name": "ExternalSubjectIdentityBridgeTests.test_receipt_is_deterministic_and_k27_never_enters_relation",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 142,
+        "end_line": 147,
+        "signature_hash": "cae7da79efd86580",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
+        "semantic_id": "tests/test_aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeTests.test_unsupported_legacy_kind_holds:4860af28e05092e6",
+        "name": "ExternalSubjectIdentityBridgeTests.test_unsupported_legacy_kind_holds",
+        "kind": "method",
+        "file": "tests/test_aura_external_subject_identity_bridge.py",
+        "line": 77,
+        "end_line": 82,
+        "signature_hash": "444309cbd9611e90",
+        "file_digest8": "da450df8de6dd56c"
+      },
+      {
         "semantic_id": "tests/test_aura_fetch_construction_demo_source.py#class:_Opener:f6571662cc6ec3ca",
         "name": "_Opener",
         "kind": "class",
@@ -449126,6 +449676,166 @@
         "file_digest8": "c9e3a31674645088"
       },
       {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#class:CurrentExternalSubjectProjectionV1:1c57f4b4316aa44d",
+        "name": "CurrentExternalSubjectProjectionV1",
+        "kind": "class",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 125,
+        "end_line": 143,
+        "signature_hash": "8289855b543e5856",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#class:ExternalSubjectIdentityBridgeReceiptV1:56d4ee74a4dd526f",
+        "name": "ExternalSubjectIdentityBridgeReceiptV1",
+        "kind": "class",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 147,
+        "end_line": 226,
+        "signature_hash": "1feed368d1ab3102",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#class:IdentityBridgeDisposition:a60657f60712fa09",
+        "name": "IdentityBridgeDisposition",
+        "kind": "class",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 45,
+        "end_line": 52,
+        "signature_hash": "38d9cc23d298066d",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#class:LegacyExternalIdentityProjectionV1:1582b496b51e2474",
+        "name": "LegacyExternalIdentityProjectionV1",
+        "kind": "class",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 105,
+        "end_line": 121,
+        "signature_hash": "6dd132366245d827",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:_canonical:37e8c2aa5c4f6b31",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 55,
+        "end_line": 63,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:_sha256:20911b7f9b0f116b",
+        "name": "_sha256",
+        "kind": "function",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 76,
+        "end_line": 80,
+        "signature_hash": "fda5827e1e9021fd",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:_sha:764d0195ab987649",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 66,
+        "end_line": 67,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:_text:97e38409c1baef54",
+        "name": "_text",
+        "kind": "function",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 70,
+        "end_line": 73,
+        "signature_hash": "c410f907de926258",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:bridge_external_subject_identity:872d12023bbeb959",
+        "name": "bridge_external_subject_identity",
+        "kind": "function",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 229,
+        "end_line": 322,
+        "signature_hash": "b8c5f7579b9a1149",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:current_subject_key:881381267a75ba16",
+        "name": "current_subject_key",
+        "kind": "function",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 93,
+        "end_line": 101,
+        "signature_hash": "924b24151b5ffc26",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#function:legacy_semantic_id:7f3a8607c8ab12bc",
+        "name": "legacy_semantic_id",
+        "kind": "function",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 83,
+        "end_line": 90,
+        "signature_hash": "4c18c8a45ba3ab28",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#method:CurrentExternalSubjectProjectionV1.validate:2d8b11a70b9e9d7d",
+        "name": "CurrentExternalSubjectProjectionV1.validate",
+        "kind": "method",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 134,
+        "end_line": 143,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeReceiptV1.receipt_digest:75571261394ac30d",
+        "name": "ExternalSubjectIdentityBridgeReceiptV1.receipt_digest",
+        "kind": "method",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 224,
+        "end_line": 226,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#method:ExternalSubjectIdentityBridgeReceiptV1.validate:373bf9d0bf0f954a",
+        "name": "ExternalSubjectIdentityBridgeReceiptV1.validate",
+        "kind": "method",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 175,
+        "end_line": 221,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#method:LegacyExternalIdentityProjectionV1.validate:fc02ce0bbac02879",
+        "name": "LegacyExternalIdentityProjectionV1.validate",
+        "kind": "method",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 113,
+        "end_line": 121,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
+        "semantic_id": "tools/aura_external_subject_identity_bridge.py#method:bridge_external_subject_identity.hold:a17ac0b1b6f4a147",
+        "name": "bridge_external_subject_identity.hold",
+        "kind": "method",
+        "file": "tools/aura_external_subject_identity_bridge.py",
+        "line": 248,
+        "end_line": 259,
+        "signature_hash": "05753cad4db22bd1",
+        "file_digest8": "8d8dc937253f3576"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -450376,7 +451086,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "0e637ae69faf6ce398f3804e2e3dfdb7",
-    "payload_hash": "0c0a157ce13a9fdc01cafe046ba87e0d"
+    "record_fingerprint": "8ee6c65c6f5b4089f3710f7ebe9f7dd4",
+    "payload_hash": "1a0383d6adc02a6e74596c3cbb7bfceb"
   }
 }
