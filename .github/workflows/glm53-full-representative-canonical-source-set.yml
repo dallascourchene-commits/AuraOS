@@ -1,0 +1,184 @@
+name: GLM53 Full Representative Canonical Source Set
+
+on:
+  pull_request:
+    paths:
+      - "tools/quantization/aura_glm53_full_representative_canonical_source_set.py"
+      - "tests/test_glm53_full_representative_canonical_source_set.py"
+      - ".github/workflows/glm53-full-representative-canonical-source-set.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q13-full-canonical-source-set:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout exact Q13 head with parent history
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install exact numeric dependency
+        run: python -m pip install --disable-pip-version-check "numpy==2.3.5"
+
+      - name: Prove exact PR656 semantic-generation x PR641 convergence and green parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          convergence='6a1247b7ab091e67e52939e688f95bcc64139d4b'
+          pr656='ac3247ed75aa8646490db8d953b16aecd5ebec2d'
+          pr641='a8d4605a36e04d64cf03f43f457be4bde553e602'
+          parents=subprocess.check_output(['git','rev-list','--parents','-n','1',convergence],text=True).strip().split()
+          assert parents == [convergence,pr656,pr641], parents
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          for run_id, head in ((33395608248,pr656),(33370700852,pr641)):
+              req=urllib.request.Request(
+                  f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',
+                  headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+              )
+              with urllib.request.urlopen(req,timeout=30) as response: run=json.load(response)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+          print('Q13_EXACT_PARENT_SEMANTIC_GENERATIONS_GREEN=true')
+          PY
+
+      - name: Revalidate PR656 full raw cover and PR641 exact source-set grammar
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          token=os.environ['GH_TOKEN']; repo=os.environ['GH_REPO']
+          req=urllib.request.Request(
+              f'https://api.github.com/repos/{repo}/actions/jobs/99499276445',
+              headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28'},
+          )
+          with urllib.request.urlopen(req,timeout=30) as response: job=json.load(response)
+          assert job['run_id']==33395608248
+          assert job['head_sha']=='ac3247ed75aa8646490db8d953b16aecd5ebec2d'
+          assert job['conclusion']=='success'
+          steps={s['name']:s for s in job['steps']}
+          assert steps['Execute exact minimum live verification cone']['conclusion']=='success'
+          assert steps['Independently refetch the same four slices']['conclusion']=='success'
+          assert steps['Require exact reproduction, full representative raw coverage, and nonpromotion']['conclusion']=='success'
+          print('Q13_PR656_FULL_RAW_COVER_REVALIDATED=true')
+          PY
+          test "$(git rev-parse ac3247ed75aa8646490db8d953b16aecd5ebec2d:tools/quantization/aura_glm53_minimum_live_payload_cover_verification.py)" = "87e581cbe5a25c538a34eb3475bdd13bb52bd158"
+          test "$(git rev-parse a8d4605a36e04d64cf03f43f457be4bde553e602:tools/quantization/aura_glm53_e8_concrete_page_trial_binding.py)" = "157afcb2e457c630d03a8c72aef09f0a6ba04a4d"
+          git show a8d4605a36e04d64cf03f43f457be4bde553e602:tools/quantization/aura_glm53_e8_concrete_page_trial_binding.py | grep -F '"schema": "AURA_GLM53_E8_SOURCE_TENSOR_SET_V1", "entries": source_entries'
+          git show a8d4605a36e04d64cf03f43f457be4bde553e602:tools/quantization/aura_glm53_e8_concrete_page_trial_binding.py | grep -F 'entries.sort(key=lambda x: (x["layer_id"], x["expert_id"], x["tensor_role"], x["identity_digest"]))'
+          git show b8fd399ee0ca6b45a4ec7db58750e6d4105ae3ae:tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py | grep -F 'src = np.asarray(w, dtype="<f4").tobytes(order="C")'
+          echo 'Q13_PR641_PR628_SOURCE_GRAMMAR_PINNED=true'
+
+      - name: Compile and run Q13 adversarial contract
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/quantization/aura_glm53_full_representative_canonical_source_set.py tests/test_glm53_full_representative_canonical_source_set.py
+          python -m unittest -v tests.test_glm53_full_representative_canonical_source_set
+
+      - name: Reobserve all six raw slices and derive canonical source set
+        run: |
+          set -euo pipefail
+          python -m tools.quantization.aura_glm53_full_representative_canonical_source_set | tee /tmp/q13.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q13.json',encoding='utf-8'))
+          assert r['total_raw_payload_bytes_reobserved']==37_757_952
+          assert len(r['raw_slice_hashes'])==6
+          assert r['gate_up_source_shape']==[4096,6144]
+          assert r['down_source_shape']==[6144,2048]
+          assert r['source_set_schema']=='AURA_GLM53_E8_SOURCE_TENSOR_SET_V1'
+          assert [x['tensor_role'] for x in r['source_set_entries']]==['down_proj','gate_up_proj']
+          for key in ('gate_canonical_float32_sha256','up_canonical_float32_sha256','down_canonical_float32_sha256','gate_up_canonical_float32_sha256','source_tensor_set_digest','receipt_digest'):
+              assert len(r[key])==64,key
+          for key in ('full_representative_raw_payload_coverage_reobserved','fp8_dequantization_semantics_bound_for_all_three_projections','gate_up_source_layout_relation_bound','pr628_source_hash_byte_domain_matched','pr641_source_tensor_set_grammar_matched','full_representative_canonical_source_set_bound','representative_official_source_tensor_set_authenticated','representative_scope_only'):
+              assert r[key] is True,key
+          print('Q13_FULL_REPRESENTATIVE_CANONICAL_SOURCE_SET_BOUND=true')
+          print('Q13_GATE_F32_SHA256='+r['gate_canonical_float32_sha256'])
+          print('Q13_UP_F32_SHA256='+r['up_canonical_float32_sha256'])
+          print('Q13_DOWN_F32_SHA256='+r['down_canonical_float32_sha256'])
+          print('Q13_GATE_UP_F32_SHA256='+r['gate_up_canonical_float32_sha256'])
+          print('Q13_SOURCE_SET_DIGEST='+r['source_tensor_set_digest'])
+          PY
+
+      - name: Independently refetch and reproduce both source identities and set digest
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,math,struct,urllib.request
+          import numpy as np
+          expected=json.load(open('/tmp/q13.json',encoding='utf-8'))
+          url='https://huggingface.co/zai-org/GLM-5.3/resolve/7cda81930d6e4cef42f48555de830aa32ecdde28/model-00038-of-00141.safetensors?download=true'
+          specs={
+            'gate_w':((2048,6144),(4070207936,4082790848),12582912,'2d4e5f36478b598043431b3691ce6a48639e01b6f804b1db62ca4af4d14063e8'),
+            'gate_s':((16,48),(993728,996800),3072,'671dd3b32b3f4cc651b93f3420ae47957ae09c1f745d278c0795d56e5d511c55'),
+            'up_w':((2048,6144),(4082790848,4095373760),12582912,'cabf58cb2f5f63d4c12c9530a861686c18c9f5e1a716a3e560c0e6a963414421'),
+            'up_s':((16,48),(996800,999872),3072,'84ec09e9e009a48eb3deda92b20fa1f2cdf16fb38dfe2c9a8f1b47fe73562501'),
+            'down_w':((6144,2048),(4057625024,4070207936),12582912,'1626de120c6b7c58fe56c536653e4cb8b942a7e6a792c4af2f4eacf6a9d2d0b6'),
+            'down_s':((48,16),(990656,993728),3072,'cd80ffba7a858206f51153e81df635c9d488e38b1c89aef0d091a984a23a37a6'),
+          }
+          def fetch(start,length):
+              end=start+length-1
+              req=urllib.request.Request(url,headers={'User-Agent':'AuraOS-Q13-IndependentReplay/1','Range':f'bytes={start}-{end}','Accept-Encoding':'identity'})
+              with urllib.request.urlopen(req,timeout=120) as response:
+                  assert (getattr(response,'status',None) or response.getcode())==206
+                  raw=response.read(length+1)
+              assert len(raw)==length
+              return raw
+          header=fetch(0,8); hlen=struct.unpack('<Q',header)[0]; assert hlen==105424; base=8+hlen
+          raw={}
+          for name,(_,offs,n,sha) in specs.items():
+              x=fetch(base+offs[0],n); assert hashlib.sha256(x).hexdigest()==sha,name; raw[name]=x
+          table=np.empty(256,dtype='<f4')
+          for code in range(256):
+              sign=-1.0 if code&0x80 else 1.0; exp=(code>>3)&15; mant=code&7
+              table[code]=np.nan if (exp==15 and mant==7) else sign*(math.ldexp(float(mant),-9) if exp==0 else math.ldexp(1.0+mant/8.0,exp-7))
+          def deq(wname,sname,wshape,sshape):
+              codes=np.frombuffer(raw[wname],dtype=np.uint8); assert not np.any((codes==0x7f)|(codes==0xff))
+              s=np.frombuffer(raw[sname],dtype='<f4').reshape(sshape); assert np.all(np.isfinite(s)) and np.all(s>0)
+              rows,cols=wshape; sr,sc=sshape; assert (rows//sr,cols//sc)==(128,128)
+              q=table[codes].reshape(wshape)
+              out=(q.reshape(sr,128,sc,128)*s[:,None,:,None]).reshape(wshape)
+              return np.asarray(out,dtype='<f4',order='C').tobytes(order='C')
+          gate=deq('gate_w','gate_s',(2048,6144),(16,48)); up=deq('up_w','up_s',(2048,6144),(16,48)); down=deq('down_w','down_s',(6144,2048),(48,16))
+          assert hashlib.sha256(gate).hexdigest()==expected['gate_canonical_float32_sha256']
+          assert hashlib.sha256(up).hexdigest()==expected['up_canonical_float32_sha256']
+          assert hashlib.sha256(down).hexdigest()==expected['down_canonical_float32_sha256']
+          gu=hashlib.sha256(); gu.update(gate); gu.update(up); gate_up_sha=gu.hexdigest(); assert gate_up_sha==expected['gate_up_canonical_float32_sha256']
+          entries=[
+            {'layer_id':3,'expert_id':0,'tensor_role':'gate_up_proj','source_tensor_sha256':gate_up_sha,'source_shape':[4096,6144]},
+            {'layer_id':3,'expert_id':0,'tensor_role':'down_proj','source_tensor_sha256':hashlib.sha256(down).hexdigest(),'source_shape':[6144,2048]},
+          ]
+          entries.sort(key=lambda x:(x['layer_id'],x['expert_id'],x['tensor_role'],x['source_tensor_sha256']))
+          body={'schema':'AURA_GLM53_E8_SOURCE_TENSOR_SET_V1','entries':entries}
+          digest=hashlib.sha256(json.dumps(body,sort_keys=True,separators=(',',':'),ensure_ascii=True,allow_nan=False).encode('utf-8')).hexdigest()
+          assert digest==expected['source_tensor_set_digest'],(digest,expected['source_tensor_set_digest'])
+          print('Q13_INDEPENDENT_SOURCE_SET_REPLAY=true')
+          PY
+
+      - name: Consequence ceiling
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/q13.json',encoding='utf-8'))
+          for key in ('actual_e8_page_payload_materialized','official_tensor_to_e8_page_derivation_proven','candidate_page_materialization_owner_bound','baseline_same_official_source_tensor_set_proven','whole_model_coverage_proven','model_execution_observed','generalized_quality_proven','runtime_performance_proven','semantic_k27_authority','native_private_transformer_kv_accessed','gate10_promoted','merge_or_deployment_authorized'):
+              assert r[key] is False,key
+          print('Q13_NONPROMOTION_CEILING=true')
+          PY
