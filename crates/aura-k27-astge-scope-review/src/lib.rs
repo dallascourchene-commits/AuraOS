@@ -96,7 +96,9 @@ pub fn admit_nested_scope_source_review(
     }
     let ast_node_id = selected
         .ast_node_id
-        .ok_or(NestedScopeReviewError::ScopeAstAnchorMissing(selected_scope_id))?;
+        .ok_or(NestedScopeReviewError::ScopeAstAnchorMissing(
+            selected_scope_id,
+        ))?;
     let semantic_handle_digest = selected.semantic_handle_digest.ok_or(
         NestedScopeReviewError::ScopeSemanticHandleMissing(selected_scope_id),
     )?;
@@ -156,7 +158,9 @@ pub fn admit_nested_scope_source_review(
     let same_name_count = scope_index
         .scopes
         .iter()
-        .filter(|scope| scope.parent_scope_id == selected.parent_scope_id && scope.name == selected.name)
+        .filter(|scope| {
+            scope.parent_scope_id == selected.parent_scope_id && scope.name == selected.name
+        })
         .count();
 
     Ok(NestedScopeSourceReviewAdmissionV1 {
@@ -337,7 +341,10 @@ mod tests {
         .unwrap();
 
         assert_eq!(admission.selected_scope.scope_id, selected.scope_id);
-        assert_eq!(admission.source_review.node_id, selected.ast_node_id.unwrap());
+        assert_eq!(
+            admission.source_review.node_id,
+            selected.ast_node_id.unwrap()
+        );
         assert!(admission.pre_edit_scope_anchor_current);
         assert!(admission.higher_owner_authorization_required);
         assert!(admission.authorized_spans_confined_to_selected_scope);
@@ -380,7 +387,12 @@ mod tests {
     #[test]
     fn selecting_parent_scope_does_not_authorize_descendant_scope_edits() {
         let setup = setup("descendant", 103);
-        let outer = setup.index.scopes.iter().find(|scope| scope.name == "outer").unwrap();
+        let outer = setup
+            .index
+            .scopes
+            .iter()
+            .find(|scope| scope.name == "outer")
+            .unwrap();
         let record = record_for(&setup, outer);
         let (span, edit) = replacement(&setup.source, "return 2", b"return 8");
         let candidate = setup.source.replacen("return 2", "return 8", 1);
