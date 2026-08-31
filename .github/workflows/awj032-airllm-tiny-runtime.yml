@@ -1,0 +1,159 @@
+name: AWJ032 AirLLM Tiny Runtime Proof
+
+on:
+  push:
+    branches:
+      - awj032/airllm-source-admission-20260830
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  tiny-runtime-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          submodules: false
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Bind exact workflow head
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          mkdir -p .awj032
+          printf '%s\n' "$GITHUB_SHA" > .awj032/aura_head.txt
+
+      - name: Materialize pinned stock AirLLM v3.3.0
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --no-tags https://github.com/lyogavin/airllm.git airllm-upstream
+          git -C airllm-upstream checkout --detach c92cea691412715a218306acb01fc9c2c681a8f2
+          test "$(git -C airllm-upstream rev-parse HEAD)" = "c92cea691412715a218306acb01fc9c2c681a8f2"
+          printf '%s\n' "$(git -C airllm-upstream rev-parse HEAD)" > .awj032/airllm_head.txt
+
+      - name: Prove stock AirLLM is blocked by source gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          python tools/awj032/airllm_source_admission.py airllm-upstream/air_llm --expected-version 3.3.0 > .awj032/stock_source_admission.json
+          rc=$?
+          set -e
+          test "$rc" -eq 2
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r = json.loads(Path('.awj032/stock_source_admission.json').read_text())
+          assert r['status'] == 'BLOCKED', r
+          codes = {f['code'] for f in r['findings']}
+          assert any(code.startswith('REMOTE_CODE_') for code in codes), codes
+          print('STOCK_NEGATIVE_PROVEN', sorted(codes))
+          PY
+
+      - name: Apply exact pinned HARD_FALSE remediation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, 'tools/awj032')
+          from airllm_hard_false_remediation import PINNED_MUTATION_SPECS, remediate_pinned_policy_files
+
+          root = Path('airllm-upstream')
+          inputs = {path: (root / path).read_bytes() for path in PINNED_MUTATION_SPECS}
+          outputs, receipt = remediate_pinned_policy_files(inputs)
+          for path, raw in outputs.items():
+              (root / path).write_bytes(raw)
+          Path('.awj032/remediation_receipt.json').write_text(
+              json.dumps(receipt, sort_keys=True, indent=2), encoding='utf-8'
+          )
+          print('REMEDIATION_EDITS', receipt['total_edits'])
+          PY
+
+      - name: Prove remediated full source gate passes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/awj032/airllm_source_admission.py airllm-upstream/air_llm --expected-version 3.3.0 > .awj032/remediated_source_admission.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r = json.loads(Path('.awj032/remediated_source_admission.json').read_text())
+          assert r['status'] == 'PASS', r
+          assert not r['findings'], r
+          print('REMEDIATED_SOURCE_PASS', r['source_digest'])
+          PY
+
+      - name: Install isolated AirLLM runtime dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --upgrade pip
+          python -m pip install \
+            "torch>=2.4" \
+            "transformers>=4.49,<5.13" \
+            "accelerate>=1.0" \
+            safetensors \
+            huggingface-hub \
+            scipy \
+            sentencepiece \
+            tqdm
+          python -m pip install --no-deps -e ./airllm-upstream/air_llm
+          python -m pip freeze --all | sort > .awj032/dependency_freeze.txt
+
+      - name: Execute tiny safetensors AirLLM split-load-generate-reopen proof
+        shell: bash
+        run: |
+          set -euo pipefail
+          python tools/awj032/airllm_tiny_fixture_probe.py \
+            --device cpu \
+            --cache-dir .awj032/hf-cache \
+            --shard-dir .awj032/tiny-llama-split \
+            --receipt .awj032/AWJ032_TINY_RUNTIME_RECEIPT.json
+
+      - name: Display compact runtime receipt
+        if: always()
+        shell: bash
+        run: |
+          if [ -f .awj032/AWJ032_TINY_RUNTIME_RECEIPT.json ]; then
+            python - <<'PY'
+          import json
+          from pathlib import Path
+          r = json.loads(Path('.awj032/AWJ032_TINY_RUNTIME_RECEIPT.json').read_text())
+          compact = {
+              'status': r.get('status'),
+              'claim': r.get('claim'),
+              'error_type': r.get('error_type'),
+              'error': r.get('error'),
+              'versions': r.get('versions'),
+              'first_generation': r.get('first_generation'),
+              'reopen_generation': r.get('reopen_generation'),
+              'split_files': len(r.get('split_manifest', [])),
+          }
+          print(json.dumps(compact, sort_keys=True))
+          PY
+          fi
+
+      - name: Upload AWJ032 runtime evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: awj032-airllm-tiny-runtime-${{ github.sha }}
+          path: .awj032/
+          if-no-files-found: error
