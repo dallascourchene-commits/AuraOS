@@ -110,6 +110,9 @@ def classify(run: Any, jobs: Any) -> WorkflowExecutionEvidence:
     else:
         classification = "JOB_RECORD_PRESENT_NONDECISIVE"
 
+    # Job failure/success is execution evidence. It is intentionally not called
+    # semantic-test proof because this classifier cannot know a workflow job's
+    # domain meaning without a separate typed test-owner contract.
     return WorkflowExecutionEvidence(
         run_id=run["id"],
         workflow_name=run["name"],
