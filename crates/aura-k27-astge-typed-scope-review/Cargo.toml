@@ -1,0 +1,22 @@
+[package]
+name = "aura-k27-astge-typed-scope-review"
+version = "0.1.0"
+edition = "2021"
+description = "Typed SourceGeneration boundary for lexical-owner-aware ASTGE source review"
+license = "MIT"
+publish = false
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies]
+aura-k27-astge = { path = "../aura-k27-astge" }
+aura-k27-astge-generation-domain = { path = "../aura-k27-astge-generation-domain" }
+aura-k27-astge-materialize = { path = "../aura-k27-astge-materialize" }
+aura-k27-astge-scope = { path = "../aura-k27-astge-scope" }
+aura-k27-astge-scope-review = { path = "../aura-k27-astge-scope-review" }
+aura-k27-astge-typed-source-review = { path = "../aura-k27-astge-typed-source-review" }
+
+[dev-dependencies]
+aura-k27-astge-ingest = { path = "../aura-k27-astge-ingest" }
+aura-k27-astge-scopes = { path = "../aura-k27-astge-scopes" }
