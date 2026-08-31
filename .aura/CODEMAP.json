@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788184106,
+  "generated_at_unix": 1788186500,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1661,
+    "repo_file_count": 1662,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -1643,6 +1643,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_execution_qualified_portable_evidence_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
@@ -1777,15 +1778,15 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1661,
-      "bytes": 26597267,
-      "tokens_est": 6639675,
+      "files": 1662,
+      "bytes": 26612355,
+      "tokens_est": 6643447,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1011,
+        "python_module": 1012,
         "schema_or_lexicon": 278,
         "support_file": 49
       }
@@ -3480,6 +3481,14 @@
         "line": 544,
         "end_line": 570,
         "semantic_id": "test_aura_substrate.py#function:main:24a1a054d8389651",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
+        "file": "tools/aura_execution_qualified_portable_evidence_admission.py",
+        "kind": "function",
+        "line": 245,
+        "end_line": 260,
+        "semantic_id": "tools/aura_execution_qualified_portable_evidence_admission.py#function:main:317969f8049c19be",
         "signature_hash": "1107cedc597d81be"
       },
       {
@@ -8177,6 +8186,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/aura_execution_qualified_portable_evidence_admission.py",
+        "kind": "function",
+        "line": 37,
+        "end_line": 39,
+        "semantic_id": "tools/aura_execution_qualified_portable_evidence_admission.py#function:_sha:f622b11b2fd4c72f",
+        "signature_hash": "e47bc2e8d0ade77b"
       },
       {
         "file": "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
@@ -157767,6 +157784,46 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "ExecutionQualifiedPortableEvidenceReceipt": [
+      {
+        "file": "tools/aura_execution_qualified_portable_evidence_admission.py",
+        "kind": "class",
+        "line": 43,
+        "end_line": 85,
+        "semantic_id": "tools/aura_execution_qualified_portable_evidence_admission.py#class:ExecutionQualifiedPortableEvidenceReceipt:3e40fc7b87ba04a7",
+        "signature_hash": "0f51d7a878618d23"
+      }
+    ],
+    "ExecutionQualifiedPortableEvidenceReceipt.receipt_digest": [
+      {
+        "file": "tools/aura_execution_qualified_portable_evidence_admission.py",
+        "kind": "method",
+        "line": 84,
+        "end_line": 85,
+        "semantic_id": "tools/aura_execution_qualified_portable_evidence_admission.py#method:ExecutionQualifiedPortableEvidenceReceipt.receipt_digest:47af9b3bb43c958f",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "classify_execution_qualified_portable_evidence": [
+      {
+        "file": "tools/aura_execution_qualified_portable_evidence_admission.py",
+        "kind": "function",
+        "line": 88,
+        "end_line": 219,
+        "semantic_id": "tools/aura_execution_qualified_portable_evidence_admission.py#function:classify_execution_qualified_portable_evidence:843bd0ae90381d35",
+        "signature_hash": "acb8f87748fb8cc0"
+      }
+    ],
+    "historical_q6_fixture": [
+      {
+        "file": "tools/aura_execution_qualified_portable_evidence_admission.py",
+        "kind": "function",
+        "line": 222,
+        "end_line": 242,
+        "semantic_id": "tools/aura_execution_qualified_portable_evidence_admission.py#function:historical_q6_fixture:86dbcda8fc1812c1",
+        "signature_hash": "a4ad89a4b5f58054"
+      }
+    ],
     "_half_away": [
       {
         "file": "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
@@ -170506,9 +170563,9 @@
       "path": ".github/workflows/glm53-official-source-e8-materialization-canary.yml",
       "role": "schema_or_lexicon",
       "binary": false,
-      "bytes": 9581,
-      "lines": 167,
-      "tokens_est": 2396,
+      "bytes": 13656,
+      "lines": 226,
+      "tokens_est": 3414,
       "symbol_count": 0,
       "commands": [
         "python -m py_compile",
@@ -170517,50 +170574,50 @@
       ],
       "command_lines": {
         "python -m py_compile": [
-          73
+          130
         ],
         "python -m unittest": [
-          74
+          131
         ],
         "python -m tools.quantization.aura_glm53_official_source_e8_materialization_canary": [
-          79
+          136
         ]
       },
       "topology": {},
-      "digest8": "6a08c8d107b458b3",
+      "digest8": "3a2eaeaabc9ab89f",
       "vector": [
-        -0.096533,
-        0.181165,
-        0.305468,
-        -0.096533,
-        0.083309,
-        0.093888,
-        0.088599,
-        -0.241994,
-        0.141494,
-        -0.003967,
-        0.003967,
-        -0.109757,
-        0.218191,
-        -0.313402,
-        0.07802,
-        0.048928,
-        -0.107112,
-        0.107112,
-        0.152073,
-        0.263152,
-        -0.23406,
-        -0.199678,
-        0.236705,
-        -0.255218,
-        0.17852,
-        0.170586,
-        -0.255218,
-        -0.146783,
-        0.202323,
-        -0.194389,
-        0.006612,
-        0.170586
+        -0.121384,
+        0.086345,
+        -0.196466,
+        -0.153919,
+        -0.25403,
+        -0.286565,
+        0.026279,
+        -0.066323,
+        0.316598,
+        0.011262,
+        -0.093853,
+        0.161428,
+        0.296576,
+        -0.076334,
+        -0.269046,
+        -0.261538,
+        0.133897,
+        -0.028782,
+        0.00876,
+        -0.003754,
+        0.291571,
+        -0.299079,
+        -0.03629,
+        0.106367,
+        0.166433,
+        0.111373,
+        -0.118881,
+        0.073831,
+        0.191461,
+        -0.101362,
+        -0.28156,
+        -0.046301
       ]
     },
     {
@@ -265029,6 +265086,53 @@
       ]
     },
     {
+      "path": "tools/aura_execution_qualified_portable_evidence_admission.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 11013,
+      "lines": 265,
+      "tokens_est": 2754,
+      "symbol_count": 6,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4ecbe39cd1dc7dbc",
+      "vector": [
+        0.142106,
+        0.003205,
+        -0.033123,
+        -0.257501,
+        0.270323,
+        -0.25109,
+        -0.157065,
+        -0.125011,
+        0.253227,
+        -0.056629,
+        0.165613,
+        0.103641,
+        -0.073724,
+        0.095094,
+        0.25109,
+        -0.112189,
+        0.088683,
+        -0.009616,
+        -0.255364,
+        -0.191256,
+        -0.27246,
+        0.229721,
+        0.214762,
+        0.050218,
+        -0.208351,
+        -0.248953,
+        -0.253227,
+        -0.122874,
+        0.107915,
+        -0.172023,
+        0.150654,
+        0.080135
+      ]
+    },
+    {
       "path": "tools/construction_demo_assets/README.md",
       "role": "knowledge_artifact",
       "binary": false,
@@ -289497,15 +289601,15 @@
     }
   },
   "summary": {
-    "file_count": 1661,
-    "total_bytes": 26597267,
-    "text_tokens_est": 6639675,
+    "file_count": 1662,
+    "total_bytes": 26612355,
+    "text_tokens_est": 6643447,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1011,
+      "python_module": 1012,
       "schema_or_lexicon": 278,
       "support_file": 49
     },
@@ -291159,6 +291263,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_execution_qualified_portable_evidence_admission.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
@@ -448927,6 +449032,66 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_execution_qualified_portable_evidence_admission.py#class:ExecutionQualifiedPortableEvidenceReceipt:3e40fc7b87ba04a7",
+        "name": "ExecutionQualifiedPortableEvidenceReceipt",
+        "kind": "class",
+        "file": "tools/aura_execution_qualified_portable_evidence_admission.py",
+        "line": 43,
+        "end_line": 85,
+        "signature_hash": "0f51d7a878618d23",
+        "file_digest8": "4ecbe39cd1dc7dbc"
+      },
+      {
+        "semantic_id": "tools/aura_execution_qualified_portable_evidence_admission.py#function:_sha:f622b11b2fd4c72f",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/aura_execution_qualified_portable_evidence_admission.py",
+        "line": 37,
+        "end_line": 39,
+        "signature_hash": "e47bc2e8d0ade77b",
+        "file_digest8": "4ecbe39cd1dc7dbc"
+      },
+      {
+        "semantic_id": "tools/aura_execution_qualified_portable_evidence_admission.py#function:classify_execution_qualified_portable_evidence:843bd0ae90381d35",
+        "name": "classify_execution_qualified_portable_evidence",
+        "kind": "function",
+        "file": "tools/aura_execution_qualified_portable_evidence_admission.py",
+        "line": 88,
+        "end_line": 219,
+        "signature_hash": "acb8f87748fb8cc0",
+        "file_digest8": "4ecbe39cd1dc7dbc"
+      },
+      {
+        "semantic_id": "tools/aura_execution_qualified_portable_evidence_admission.py#function:historical_q6_fixture:86dbcda8fc1812c1",
+        "name": "historical_q6_fixture",
+        "kind": "function",
+        "file": "tools/aura_execution_qualified_portable_evidence_admission.py",
+        "line": 222,
+        "end_line": 242,
+        "signature_hash": "a4ad89a4b5f58054",
+        "file_digest8": "4ecbe39cd1dc7dbc"
+      },
+      {
+        "semantic_id": "tools/aura_execution_qualified_portable_evidence_admission.py#function:main:317969f8049c19be",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/aura_execution_qualified_portable_evidence_admission.py",
+        "line": 245,
+        "end_line": 260,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "4ecbe39cd1dc7dbc"
+      },
+      {
+        "semantic_id": "tools/aura_execution_qualified_portable_evidence_admission.py#method:ExecutionQualifiedPortableEvidenceReceipt.receipt_digest:47af9b3bb43c958f",
+        "name": "ExecutionQualifiedPortableEvidenceReceipt.receipt_digest",
+        "kind": "method",
+        "file": "tools/aura_execution_qualified_portable_evidence_admission.py",
+        "line": 84,
+        "end_line": 85,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "4ecbe39cd1dc7dbc"
+      },
+      {
         "semantic_id": "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py#class:Compressed:82229872a12fce78",
         "name": "Compressed",
         "kind": "class",
@@ -451497,7 +451662,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "c1b4f53a159646f4e596c6f14ba4301b",
-    "payload_hash": "1e9e8e73825c0188facc92fb44372788"
+    "record_fingerprint": "62865957ac90cfeb9a922e2bd14c1b8c",
+    "payload_hash": "85ed3036b8f600b498b056eb7dec29b8"
   }
 }
