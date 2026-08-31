@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1710
-- **total_bytes**: 26789944
-- **text_tokens_est**: 6687896
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 13, 'operator_script': 9, 'python_module': 1043, 'schema_or_lexicon': 287, 'support_file': 51}
+- **file_count**: 1712
+- **total_bytes**: 26822436
+- **text_tokens_est**: 6696019
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 243, 'native_accelerator': 13, 'operator_script': 9, 'python_module': 1045, 'schema_or_lexicon': 287, 'support_file': 51}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1710,
+  "repo_file_count": 1712,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -1679,6 +1679,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_spatial_calibration_temporal_scope.py",
     "tests/test_spatial_eye_calibration_contract.py",
     "tests/test_spatial_optical_invariant_witness.py",
+    "tests/test_temporal_evidence_scope_coordinate.py",
     "third_party/pascal/LICENSE",
     "third_party/pascal/package-metadata/core.package.json",
     "third_party/pascal/package-metadata/editor.package.json",
@@ -1722,6 +1723,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tools/spatial/eye_calibration_contract.py",
     "tools/spatial/optical_invariant_witness.py",
     "tools/spatial/requirements-optical.txt",
+    "tools/temporal_evidence_scope_coordinate.py",
     "travel_extractors/__init__.py",
     "travel_extractors/option_b.py",
     "travel_media_assets.py",
@@ -1850,15 +1852,15 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1710,
-  "bytes": 26789944,
-  "tokens_est": 6687896,
+  "files": 1712,
+  "bytes": 26822436,
+  "tokens_est": 6696019,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 243,
     "native_accelerator": 13,
     "operator_script": 9,
-    "python_module": 1043,
+    "python_module": 1045,
     "schema_or_lexicon": 287,
     "support_file": 51
   }
