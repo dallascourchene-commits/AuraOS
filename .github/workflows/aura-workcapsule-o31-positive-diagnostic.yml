@@ -1,0 +1,108 @@
+name: O31 Positive Composition Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_fully_raw_owner_hold_to_closed_transition.py'
+      - 'scripts/aura_workcapsule_owner_bound_reentry_closure.py'
+      - 'tests/test_aura_workcapsule_fully_raw_owner_hold_to_closed_transition.py'
+      - '.github/workflows/aura-workcapsule-o31-positive-diagnostic.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch exact head
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH_HEADER="$(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.https://github.com/.extraheader="AUTHORIZATION: basic $AUTH_HEADER" fetch --no-tags --depth=1 origin "$TARGET_SHA"
+          unset AUTH_HEADER GH_TOKEN
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Capture positive-path state
+        run: |
+          python3 - <<'PY'
+          import json, traceback
+          from tests.test_aura_workcapsule_fully_raw_owner_hold_to_closed_transition import WorkCapsuleFullyRawOwnerHoldToClosedTransitionTests
+          from scripts.aura_workcapsule_fully_raw_owner_hold_to_closed_transition import _derive_post_owner_closure, verify_fully_raw_owner_hold_to_closed_transition
+          from scripts.aura_workcapsule_raw_owner_hold_to_closed_transition import verify_raw_owner_hold_to_closed_transition
+          t = WorkCapsuleFullyRawOwnerHoldToClosedTransitionTests(methodName='test_o31_raw_pre_and_raw_post_derive_entire_hold_to_closed_transition')
+          out = {}
+          try:
+              t.setUp()
+              out['fixture_closure_status'] = t.closure.get('closure_status')
+              out['fixture_closure_identity'] = t.closure.get('receipt_identity')
+              try:
+                  owner, closure = _derive_post_owner_closure(
+                      post_root=t.post_root,
+                      post_codemap=t.codemap,
+                      post_anchor_manifest=t.anchors,
+                      post_witness_manifest=t.post_witness,
+                      previous_binding=t.previous,
+                      post_graph_witness=t.graph,
+                  )
+                  out['derived_owner_status'] = owner.get('closure_status')
+                  out['derived_owner_identity'] = owner.get('receipt_identity')
+                  out['derived_o8_scope'] = owner.get('owner_derived_reentry_scope')
+                  out['derived_o8_sources'] = owner.get('owner_derived_reentry_source_keys')
+                  out['derived_closure_status'] = closure.get('closure_status')
+                  out['derived_closure_identity'] = closure.get('receipt_identity')
+                  out['derived_candidate_identity'] = owner.get('derived_candidate_binding_identity')
+                  out['fixture_equals_derived_closure'] = t.closure == closure
+                  out['pr533_with_derived'] = verify_raw_owner_hold_to_closed_transition(
+                      pre_root=t.pre_root, pre_codemap=t.codemap,
+                      pre_anchor_manifest=t.anchors, pre_witness_manifest=t.pre_witness,
+                      previous_binding=t.previous, pre_graph_witness=t.graph,
+                      post_root=t.post_root, post_codemap=t.codemap,
+                      post_anchor_manifest=t.anchors, post_witness_manifest=t.post_witness,
+                      post_graph_witness=t.graph, post_closure_receipt=closure,
+                  )
+              except Exception as exc:
+                  out['derive_exception_type'] = type(exc).__name__
+                  out['derive_exception'] = str(exc)
+                  out['derive_traceback'] = traceback.format_exc()
+              try:
+                  out['o31_verify'] = verify_fully_raw_owner_hold_to_closed_transition(
+                      pre_root=t.pre_root, pre_codemap=t.codemap,
+                      pre_anchor_manifest=t.anchors, pre_witness_manifest=t.pre_witness,
+                      previous_binding=t.previous, pre_graph_witness=t.graph,
+                      post_root=t.post_root, post_codemap=t.codemap,
+                      post_anchor_manifest=t.anchors, post_witness_manifest=t.post_witness,
+                      post_graph_witness=t.graph,
+                  )
+              except Exception as exc:
+                  out['verify_exception_type'] = type(exc).__name__
+                  out['verify_exception'] = str(exc)
+                  out['verify_traceback'] = traceback.format_exc()
+          except Exception as exc:
+              out['setup_exception_type'] = type(exc).__name__
+              out['setup_exception'] = str(exc)
+              out['setup_traceback'] = traceback.format_exc()
+          finally:
+              try:
+                  t.tearDown()
+              except Exception:
+                  pass
+          with open('/tmp/o31-positive-diagnostic.json', 'w', encoding='utf-8') as fh:
+              json.dump(out, fh, indent=2, default=str)
+          print(json.dumps(out, indent=2, default=str))
+          PY
+
+      - name: Upload diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: o31-positive-diagnostic
+          path: /tmp/o31-positive-diagnostic.json
+          if-no-files-found: error
