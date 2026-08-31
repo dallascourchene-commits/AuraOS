@@ -3,10 +3,10 @@ name: Aura WorkCapsule Portable Higher-Owner POST Source Continuity
 on:
   pull_request:
     paths:
-      - 'scripts/aura_workcapsule_post_repair_source_projection_continuity.py'
-      - 'tests/test_aura_workcapsule_post_repair_source_projection_continuity.py'
-      - 'scripts/aura_workcapsule_post_source_portable_higher_owner_continuity.py'
-      - 'tests/test_aura_workcapsule_post_source_portable_higher_owner_continuity.py'
+      - 'scripts/aura_workcapsule_*.py'
+      - 'scripts/aura_astge_anchor_hydration.py'
+      - 'tests/test_aura_workcapsule_*.py'
+      - 'tests/test_aura_astge_anchor_hydration.py'
       - '.github/workflows/aura-workcapsule-post-source-portable-higher-owner-continuity.yml'
   workflow_dispatch:
 
