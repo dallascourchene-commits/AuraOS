@@ -1,0 +1,175 @@
+name: Aura O63 Hard Gate Proposal Capsule Proof
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_hard_gate_transition_admission.py"
+      - "tools/aura_bounded_proposal_capsule.py"
+      - "tests/test_aura_hard_gate_transition_admission.py"
+      - "tests/test_aura_bounded_proposal_capsule.py"
+      - ".github/workflows/aura-o63-hard-gate-proposal-proof.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  SEMANTIC_HEAD: f05b3918af3a39ca0c0d06b3d5487ec447b54968
+  Q15_CUT_EPOCH: "1788188632"
+
+jobs:
+  o63-hard-gate-proposal-proof:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact current proof generation
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Authenticate post-Q15 semantic generation and immutable semantic blobs
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor "$SEMANTIC_HEAD" HEAD
+          semantic_epoch="$(git show -s --format='%at' "$SEMANTIC_HEAD")"
+          test "$semantic_epoch" -gt "$Q15_CUT_EPOCH"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_hard_gate_transition_admission.py")" = "18ada65d0aca81ba915c4dc57c98414f38c3b068"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_bounded_proposal_capsule.py")" = "dbc223de381d2146e88769a7213455c57a27569d"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_hard_gate_transition_admission.py")" = "9e878769b1fae198035135a8ada3d8c6db3a787d"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_bounded_proposal_capsule.py")" = "21fa17aaf08fd1733c064ec049c35ac65b8c319b"
+          echo O63_POST_Q15_SEMANTIC_GENERATION=true
+
+      - name: Compile exact semantic surface
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            tools/aura_hard_gate_transition_admission.py \
+            tools/aura_bounded_proposal_capsule.py \
+            tests/test_aura_hard_gate_transition_admission.py \
+            tests/test_aura_bounded_proposal_capsule.py
+
+      - name: Run focused adversarial suites
+        run: |
+          set -euo pipefail
+          python -m unittest \
+            tests.test_aura_hard_gate_transition_admission \
+            tests.test_aura_bounded_proposal_capsule -v
+
+      - name: Independently prove transition-to-proposal nonpromotion
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from tools.aura_hard_gate_transition_admission import (
+              EvidenceDescriptorRef, GateEvidenceState, ProductState,
+              TransitionRequest, evaluate_hard_gate_transition,
+          )
+          from tools.aura_bounded_proposal_capsule import (
+              BASIS_SCHEMA, EligibilityReceiptRef, ProposalBasis,
+              create_bounded_proposal_capsule, revalidate_proposal_capsule,
+          )
+
+          A='a'*64; B='b'*64; C='c'*64; D='d'*64; E='e'*64; F='f'*64; G='1'*64; H='2'*64
+          def gate(gid, passed, gen, receipt, scope):
+              return GateEvidenceState(
+                  gate_id=gid, owner_ref='owner:'+gid+':v1', gate_scope_digest=scope,
+                  evidence_generation=gen, receipt_digest=receipt,
+                  verification_state='EXACT_GREEN' if passed else 'HOLD',
+                  blocker=None if passed else gid.upper()+'_BLOCKED', passed=passed,
+              )
+          ev=EvidenceDescriptorRef(descriptor_digest=C,evidence_generation='evidence-gen-4')
+          req=TransitionRequest(
+              schema_version='AURA-HARD-GATE-TRANSITION-v1',
+              transition_id='transition:source:hosted-proof',
+              domain_id='generic.bounded.proposal', target_gate_id='source',
+              before=ProductState((gate('source',False,'source-gen-1','1'*64,A),gate('authority',True,'authority-gen-1','2'*64,B))),
+              after=ProductState((gate('source',True,'source-gen-2','3'*64,A),gate('authority',True,'authority-gen-1','2'*64,B))),
+              evidence_before=ev, evidence_after=ev,
+              source_currentness_root='currentness-root-9',
+          )
+          transition=evaluate_hard_gate_transition(req)
+          assert transition.disposition == 'ELIGIBLE_BOUNDED_PROPOSAL'
+          assert transition.proposal_eligible is True
+          assert transition.execution_authorized is False
+          assert transition.provider_effect_authorized is False
+          assert transition.gate10_promoted is False
+
+          eligibility=EligibilityReceiptRef(
+              owner_ref='owner:hard-gate-transition:v1',
+              disposition='ELIGIBLE_BOUNDED_PROPOSAL',
+              receipt_digest=transition.transition_receipt_digest,
+              receipt_generation='transition-gen-hosted-1',
+              policy_generation_ref='eligibility-policy-gen-2',
+              proposal_eligible=True, execution_authorized=False,
+              provider_effect_authorized=False,
+          )
+          basis=ProposalBasis(
+              schema_version=BASIS_SCHEMA, domain_id='generic.bounded.c2',
+              action_kind='BOUNDED_C2_PROPOSAL', action_parameters_digest=B,
+              scientific_scope_digest=C, scientific_evidence_generation='science-gen-8',
+              scientific_evidence_receipt_digest=D, source_scope_digest=E,
+              source_admission_generation='source-gen-4', source_admission_receipt_digest=F,
+              request_id='request:c2:hosted-proof', request_digest=G,
+              resource_envelope_digest=H, eligibility=eligibility,
+              currentness_roots=('science-current:8','source-current:4','router-current:2'),
+              invalidators=('science-generation-change','source-generation-change','request-envelope-change'),
+              authority_scope='D0_NONPROMOTING',
+          )
+          p1=create_bounded_proposal_capsule(basis=basis, producer_identity='hosted-worker-a')
+          p2=create_bounded_proposal_capsule(basis=basis, producer_identity='hosted-worker-b')
+          assert p1.capsule.proposal_id == p2.capsule.proposal_id
+          assert p1.generation_receipt_digest != p2.generation_receipt_digest
+          p1.capsule.validate_integrity()
+          assert p1.capsule.execution_authorized is False
+          assert p1.capsule.provider_effect_authorized is False
+          assert p1.capsule.native_private_transformer_kv_accessed is False
+          assert p1.capsule.semantic_k27_authority is False
+          assert p1.capsule.gate10_promoted is False
+          exact=revalidate_proposal_capsule(capsule=p1.capsule,current_basis=basis)
+          assert exact.state == 'CURRENT_NONEXECUTABLE'
+          assert exact.execution_authorized is False
+
+          receipt={
+              'schema':'AURA-O63-HOSTED-PROOF-v1',
+              'semantic_head':'f05b3918af3a39ca0c0d06b3d5487ec447b54968',
+              'post_q15_semantic_generation':True,
+              'eligibility_owner_bound':True,
+              'capsule_self_integrity_reproved':True,
+              'gate_transition_disposition':transition.disposition,
+              'proposal_id':p1.capsule.proposal_id,
+              'same_basis_collapses_across_producers':True,
+              'generation_receipts_remain_producer_distinct':True,
+              'exact_revalidation_state':exact.state,
+              'execution_authorized':False,
+              'provider_effect_authorized':False,
+              'semantic_k27_authority':False,
+              'native_private_transformer_kv_accessed':False,
+              'gate10_promoted':False,
+              'merge_deploy_spend_public_human_effect':False,
+              'laws':[
+                  'PositiveEvidenceCannotPayHardGateDebt',
+                  'ProposalEligibility!=ProposalIdentity!=ExecutionAuthority',
+                  'SameBasisReplicaMayIncreaseImplementationSupportButNotSemanticConsequenceMass',
+                  'CurrentnessDrift=>InvalidateAndRecomputeMinimumAffectedCone',
+                  'K27Coordinate!=ProposalAuthority',
+              ],
+          }
+          with open('/tmp/o63.json','w',encoding='utf-8') as f:
+              json.dump(receipt,f,sort_keys=True,indent=2); f.write('\n')
+          print('O63_TRANSITION_TO_NONEXECUTABLE_PROPOSAL_PROVEN=true')
+          PY
+
+      - name: Preserve O63 proof receipt
+        uses: actions/upload-artifact@v4
+        with:
+          name: o63-hard-gate-proposal-proof
+          path: /tmp/o63.json
+          retention-days: 90
+
+      - name: Consequence ceiling
+        run: |
+          echo 'ProposalEligibility!=ProposalIdentity!=ExecutionAuthority'
+          echo 'K27Coordinate!=ProposalAuthority'
+          echo 'O63_COMPLETE=true'

@@ -1,0 +1,145 @@
+name: Aura Q20 Owner Resolved Proposal Lifecycle Bridge
+
+on:
+  pull_request:
+    paths:
+      - "tools/aura_owner_resolved_proposal_lifecycle_bridge.py"
+      - "tests/test_aura_owner_resolved_proposal_lifecycle_bridge.py"
+      - ".github/workflows/aura-q20-owner-resolved-proposal-lifecycle.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  q20-owner-resolved-lifecycle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      CONVERGENCE_COMMIT: "66c2522c45a6d0da13ff232ad8c9cb9707159321"
+      O63_SEMANTIC_HEAD: "1cdad597015615d1c34d236b271516196ac101cd"
+      O63_PROOF_HEAD: "70aa3db4f11d035b52a81992c05c052f59683377"
+      O63_RUN: "33407842585"
+      O63_JOB: "99539751642"
+      O63_SOURCE_BLOB: "11ac9fd37aede4902b3c1029eddcbad96a828f45"
+      O63_TEST_BLOB: "fb349a904ddb7f99d9e215a3f9d4210881a7a397"
+      O62_SEMANTIC_HEAD: "51a31f9df1b13636f9878a4dcbb9dc2e3f8c757f"
+      O62_TEST_HEAD: "87253e487f110d7f119262c3a6159b296f90d62b"
+      O62_PROOF_HEAD: "2b74b7ceecbde0f16c3c68d3e81fab3d28a6c078"
+      O62_RUN: "33408547754"
+      O62_JOB: "99542101386"
+      O62_SOURCE_BLOB: "f69becb5998701923e9e0e9aaac429fd291e9e55"
+      O62_TEST_BLOB: "0942f6a01471550fd0cb8e2a77afc2ecbff89094"
+    steps:
+      - name: Exact authenticated checkout without mutable actions
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "https://github.com/${GITHUB_REPOSITORY}.git"
+          AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=20 origin "$TARGET_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$TARGET_SHA"
+
+      - name: Authenticate true O63 x O62 convergence and exact owner blobs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.parse, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          token=os.environ['GH_TOKEN']
+          headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json'}
+          def get(path):
+              req=urllib.request.Request(f'https://api.github.com/repos/{repo}/{path}',headers=headers)
+              with urllib.request.urlopen(req,timeout=30) as r:
+                  return json.load(r)
+          convergence=os.environ['CONVERGENCE_COMMIT']
+          commit=get(f'commits/{convergence}')
+          parents=[p['sha'] for p in commit['parents']]
+          expected=[os.environ['O63_SEMANTIC_HEAD'],os.environ['O62_TEST_HEAD']]
+          assert parents == expected,(parents,expected)
+          paths={
+              'tools/aura_bounded_proposal_capsule.py':os.environ['O63_SOURCE_BLOB'],
+              'tests/test_aura_bounded_proposal_capsule.py':os.environ['O63_TEST_BLOB'],
+              'tools/aura_closed_world_result_lifecycle_gate.py':os.environ['O62_SOURCE_BLOB'],
+              'tests/test_aura_closed_world_result_lifecycle_gate.py':os.environ['O62_TEST_BLOB'],
+          }
+          for path,blob in paths.items():
+              encoded=urllib.parse.quote(path,safe='/')
+              obj=get(f'contents/{encoded}?ref={convergence}')
+              assert obj['sha']==blob,(path,obj['sha'],blob)
+          head=os.environ.get('GITHUB_SHA')
+          for path,blob in (
+              ('tools/aura_bounded_proposal_capsule.py',os.environ['O63_SOURCE_BLOB']),
+              ('tools/aura_closed_world_result_lifecycle_gate.py',os.environ['O62_SOURCE_BLOB']),
+          ):
+              encoded=urllib.parse.quote(path,safe='/')
+              obj=get(f'contents/{encoded}?ref={head}')
+              assert obj['sha']==blob,(path,obj['sha'],blob)
+          print('Q20_TRUE_TWO_PARENT_CONVERGENCE=true')
+          print('Q20_PROOF_PLUMBING_API_BOUND=true')
+          PY
+
+      - name: Revalidate exact O63 and O62 hosted proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, urllib.request
+          repo=os.environ['GITHUB_REPOSITORY']
+          headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'}
+          expected=(
+              (int(os.environ['O63_RUN']),int(os.environ['O63_JOB']),os.environ['O63_PROOF_HEAD']),
+              (int(os.environ['O62_RUN']),int(os.environ['O62_JOB']),os.environ['O62_PROOF_HEAD']),
+          )
+          for run_id,job_id,head in expected:
+              with urllib.request.urlopen(urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{run_id}',headers=headers),timeout=30) as r: run=json.load(r)
+              assert run['status']=='completed' and run['conclusion']=='success',(run_id,run['status'],run['conclusion'])
+              assert run['head_sha']==head,(run_id,run['head_sha'],head)
+              with urllib.request.urlopen(urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/jobs/{job_id}',headers=headers),timeout=30) as r: job=json.load(r)
+              assert job['status']=='completed' and job['conclusion']=='success',(job_id,job['status'],job['conclusion'])
+          print('Q20_PARENT_PROOFS_EXACT_GREEN=true')
+          PY
+
+      - name: Compile and run parent plus Q20 adversarial contracts
+        run: |
+          set -euo pipefail
+          python3 -m py_compile \
+            tools/aura_bounded_proposal_capsule.py \
+            tools/aura_closed_world_result_lifecycle_gate.py \
+            tools/aura_owner_resolved_proposal_lifecycle_bridge.py \
+            tests/test_aura_bounded_proposal_capsule.py \
+            tests/test_aura_closed_world_result_lifecycle_gate.py \
+            tests/test_aura_owner_resolved_proposal_lifecycle_bridge.py
+          python3 -m unittest -v \
+            tests.test_aura_bounded_proposal_capsule \
+            tests.test_aura_closed_world_result_lifecycle_gate \
+            tests.test_aura_owner_resolved_proposal_lifecycle_bridge
+
+      - name: Prove Q20 nonpromotion and coordinate separation
+        run: |
+          set -euo pipefail
+          python3 -m tools.aura_owner_resolved_proposal_lifecycle_bridge > /tmp/q20.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/q20.json',encoding='utf-8'))
+          laws=set(d['laws'])
+          required={
+              'CurrentProposalRequiresOwnerResolvedOperands',
+              'ProposalIdentityMustBindLifecycleConsequenceKey',
+              'TypedExternalWitnessesRemainOwnedByClosedWorldLifecycle',
+              'CurrentProposal!=ExecutionLease!=EffectAuthority',
+              'K27Coordinate!=ProposalCurrentness!=LifecycleEvidence!=Authority',
+          }
+          assert required <= laws, required-laws
+          assert all(v is False for v in d['claim_ceiling'].values()), d['claim_ceiling']
+          print('Q20_OWNER_RESOLVED_PROPOSAL_LIFECYCLE_CONTRACT=true')
+          print('Q20_EXECUTION_EFFECT_AUTHORITY=false')
+          PY
