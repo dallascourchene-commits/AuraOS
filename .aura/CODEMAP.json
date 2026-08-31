@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788066834,
+  "generated_at_unix": 1788166181,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1639,
+    "repo_file_count": 1642,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -136,6 +136,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-dual-key-evidence-generation.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -1443,6 +1444,7 @@
       "tests/test_aura_continuity_packet_merge_gate.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
+      "tests/test_aura_dual_key_evidence_generation.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_agent_bridge.py",
       "tests/test_aura_emergent_agent_bridge_mcp.py",
@@ -1631,6 +1633,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_dual_key_evidence_generation.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -1755,16 +1758,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1639,
-      "bytes": 26415048,
-      "tokens_est": 6594113,
+      "files": 1642,
+      "bytes": 26431664,
+      "tokens_est": 6598269,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 237,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 997,
-        "schema_or_lexicon": 271,
+        "python_module": 999,
+        "schema_or_lexicon": 272,
         "support_file": 49
       }
     },
@@ -3461,6 +3464,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "kind": "function",
+        "line": 170,
+        "end_line": 191,
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:main:32673a022a942d4b",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "unreal_bridge.py",
         "kind": "function",
         "line": 246,
@@ -3895,6 +3906,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "kind": "function",
+        "line": 29,
+        "end_line": 32,
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:_canonical:34351de47d6cb303",
+        "signature_hash": "8d5bf5695239b859"
       }
     ],
     "_digest": [
@@ -129895,6 +129914,96 @@
         "signature_hash": "94a018118917474f"
       }
     ],
+    "DualKeyEvidenceGenerationTests": [
+      {
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "kind": "class",
+        "line": 15,
+        "end_line": 183,
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#class:DualKeyEvidenceGenerationTests:0ecfb91e954ae49a",
+        "signature_hash": "8220888b3053679d"
+      }
+    ],
+    "DualKeyEvidenceGenerationTests.test_sck_is_stable_across_evidence_refresh": [
+      {
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "kind": "method",
+        "line": 16,
+        "end_line": 38,
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_sck_is_stable_across_evidence_refresh:ccf455d513d861dc",
+        "signature_hash": "f8aee33ec10cb3b3"
+      }
+    ],
+    "DualKeyEvidenceGenerationTests.test_independent_support_is_support_merge_not_new_semantic": [
+      {
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "kind": "method",
+        "line": 40,
+        "end_line": 69,
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_independent_support_is_support_merge_not_new_semantic:62d4225f4020d042",
+        "signature_hash": "a2b60ce7e5c02c75"
+      }
+    ],
+    "DualKeyEvidenceGenerationTests.test_process_retry_is_not_new_evidence": [
+      {
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "kind": "method",
+        "line": 71,
+        "end_line": 93,
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_process_retry_is_not_new_evidence:b75b9ea8b7908274",
+        "signature_hash": "2592ec314e687ba9"
+      }
+    ],
+    "DualKeyEvidenceGenerationTests.test_coordinate_growth_does_not_change_sck": [
+      {
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "kind": "method",
+        "line": 95,
+        "end_line": 119,
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_coordinate_growth_does_not_change_sck:673c69fd6004bf74",
+        "signature_hash": "cc4e9bb74451bbc7"
+      }
+    ],
+    "DualKeyEvidenceGenerationTests.test_changed_consequence_changes_sck": [
+      {
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "kind": "method",
+        "line": 121,
+        "end_line": 124,
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_changed_consequence_changes_sck:7206d3f84abf28ba",
+        "signature_hash": "a04fa5a78bfffc6d"
+      }
+    ],
+    "DualKeyEvidenceGenerationTests.test_pr646_historical_evidence_is_one_egk_not_current_bytes": [
+      {
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "kind": "method",
+        "line": 126,
+        "end_line": 140,
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_pr646_historical_evidence_is_one_egk_not_current_bytes:94f97f11bfb15cde",
+        "signature_hash": "0e4695b212856927"
+      }
+    ],
+    "DualKeyEvidenceGenerationTests.test_authority_change_changes_egk": [
+      {
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "kind": "method",
+        "line": 142,
+        "end_line": 157,
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_authority_change_changes_egk:2f762d5978ede9b7",
+        "signature_hash": "31777eb0f6895d45"
+      }
+    ],
+    "DualKeyEvidenceGenerationTests.test_order_does_not_change_generation_identity": [
+      {
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "kind": "method",
+        "line": 159,
+        "end_line": 183,
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_order_does_not_change_generation_identity:545cb79c88c5ee77",
+        "signature_hash": "8a9def8fbb365b0e"
+      }
+    ],
     "test_default_suite_loads": [
       {
         "file": "tests/test_aura_efficiency_benchmark.py",
@@ -157181,6 +157290,106 @@
         "signature_hash": "6f5207f898c299ef"
       }
     ],
+    "_domain_hash": [
+      {
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "kind": "function",
+        "line": 35,
+        "end_line": 40,
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:_domain_hash:aecf87276d6e565e",
+        "signature_hash": "e2ca58746d65c445"
+      }
+    ],
+    "_sorted_unique": [
+      {
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "kind": "function",
+        "line": 43,
+        "end_line": 46,
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:_sorted_unique:ce0938dff2df08be",
+        "signature_hash": "66558cb434804487"
+      }
+    ],
+    "EvidenceGeneration": [
+      {
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "kind": "class",
+        "line": 50,
+        "end_line": 63,
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#class:EvidenceGeneration:cbdfdc2f03d53eb5",
+        "signature_hash": "a8eb3a8c05c14125"
+      }
+    ],
+    "EvidenceGeneration.egk": [
+      {
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "kind": "method",
+        "line": 62,
+        "end_line": 63,
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#method:EvidenceGeneration.egk:8328a8ade19fd063",
+        "signature_hash": "fbc904d1babd8ff5"
+      }
+    ],
+    "ProcessIdentity": [
+      {
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "kind": "class",
+        "line": 67,
+        "end_line": 78,
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#class:ProcessIdentity:386145c27cad0345",
+        "signature_hash": "591b08a40e1c37d9"
+      }
+    ],
+    "ProcessIdentity.rik": [
+      {
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 78,
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#method:ProcessIdentity.rik:db4667141c750bb9",
+        "signature_hash": "3b9c982fbe5f1788"
+      }
+    ],
+    "semantic_consequence_key": [
+      {
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "kind": "function",
+        "line": 81,
+        "end_line": 84,
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:semantic_consequence_key:5e3fd0a47b0ce422",
+        "signature_hash": "412c063408748a35"
+      }
+    ],
+    "make_evidence_generation": [
+      {
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "kind": "function",
+        "line": 87,
+        "end_line": 119,
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:make_evidence_generation:d50c2aa8255ae28c",
+        "signature_hash": "3fd9ac522d5ed3a5"
+      }
+    ],
+    "classify_commit": [
+      {
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "kind": "function",
+        "line": 122,
+        "end_line": 133,
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:classify_commit:34ca100f2462b6e9",
+        "signature_hash": "243bc371283ee7d0"
+      }
+    ],
+    "historical_glm53_fixture": [
+      {
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "kind": "function",
+        "line": 136,
+        "end_line": 167,
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:historical_glm53_fixture:ec9a84ca29070d36",
+        "signature_hash": "d39a1373a1f61b90"
+      }
+    ],
     "_coordinates": [
       {
         "file": "travel_extractors/option_b.py",
@@ -158585,6 +158794,16 @@
       "docs/AURA_CONSTRUCTION_DEMO_OPERATOR_GUIDE.md",
       "docs/AURA_RUNTIME_REFACTOR_HARNESS.md"
     ],
+    "python3 -m py_compile": [
+      ".github/workflows/aura-dual-key-evidence-generation.yml",
+      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python3 -m unittest": [
+      ".github/workflows/aura-dual-key-evidence-generation.yml"
+    ],
+    "python3 -m tools.aura_dual_key_evidence_generation": [
+      ".github/workflows/aura-dual-key-evidence-generation.yml"
+    ],
     "python scripts/aura_review_learning_architect_harness.py \\": [
       ".github/workflows/aura-review-learning.yml"
     ],
@@ -159147,9 +159366,6 @@
     ],
     "python -m aura_agent_arena_mcp": [
       "docs/AURA_AGENT_ARENA_BRIDGE.md"
-    ],
-    "python3 -m py_compile": [
-      "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
     ],
     "python -m aura_relationship_atlas": [
       "docs/AURA_ARCHITECTURE_RELATIONSHIP_ATLAS.md"
@@ -167737,6 +167953,67 @@
         -0.044613,
         -0.170836,
         -0.099019
+      ]
+    },
+    {
+      "path": ".github/workflows/aura-dual-key-evidence-generation.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 3157,
+      "lines": 84,
+      "tokens_est": 790,
+      "symbol_count": 0,
+      "commands": [
+        "python3 -m py_compile",
+        "python3 -m unittest",
+        "python3 -m tools.aura_dual_key_evidence_generation"
+      ],
+      "command_lines": {
+        "python3 -m py_compile": [
+          56
+        ],
+        "python3 -m unittest": [
+          59
+        ],
+        "python3 -m tools.aura_dual_key_evidence_generation": [
+          60
+        ]
+      },
+      "topology": {},
+      "digest8": "bd33f960d6591261",
+      "vector": [
+        0.208293,
+        -0.180674,
+        0.049484,
+        -0.178373,
+        -0.242817,
+        -0.056389,
+        0.196785,
+        0.187579,
+        0.178373,
+        -0.231309,
+        0.134643,
+        0.031071,
+        -0.05869,
+        0.233611,
+        -0.265833,
+        -0.086309,
+        0.256626,
+        -0.024167,
+        0.157658,
+        -0.081706,
+        -0.081706,
+        -0.196785,
+        -0.20369,
+        0.095516,
+        -0.113928,
+        -0.229007,
+        0.2175,
+        -0.252023,
+        0.047182,
+        -0.143849,
+        -0.187579,
+        -0.29115
       ]
     },
     {
@@ -253812,6 +254089,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_dual_key_evidence_generation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6898,
+      "lines": 188,
+      "tokens_est": 1725,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "0502fc0daa13b588",
+      "vector": [
+        -0.25831,
+        0.033505,
+        0.210755,
+        0.24534,
+        0.21724,
+        0.20427,
+        -0.020535,
+        -0.243179,
+        -0.21724,
+        0.25831,
+        -0.221563,
+        0.223724,
+        -0.247502,
+        0.206432,
+        0.148069,
+        0.273441,
+        0.022697,
+        0.1632,
+        0.042151,
+        -0.1913,
+        -0.022697,
+        -0.161038,
+        -0.264794,
+        0.1913,
+        -0.091867,
+        -0.06809,
+        0.132938,
+        0.076736,
+        0.096191,
+        -0.001081,
+        -0.139422,
+        0.037828
+      ]
+    },
+    {
       "path": "tests/test_aura_efficiency_benchmark.py",
       "role": "python_module",
       "binary": false,
@@ -262645,6 +262969,53 @@
         -0.240893,
         0.089705,
         -0.144133
+      ]
+    },
+    {
+      "path": "tools/aura_dual_key_evidence_generation.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6561,
+      "lines": 196,
+      "tokens_est": 1641,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "aab53a63200e7853",
+      "vector": [
+        0.197658,
+        0.176852,
+        -0.158358,
+        -0.167605,
+        0.153734,
+        -0.230024,
+        -0.137552,
+        -0.218465,
+        -0.287818,
+        0.056639,
+        0.169917,
+        0.19997,
+        -0.262389,
+        -0.056639,
+        -0.216153,
+        0.146799,
+        0.012715,
+        0.098251,
+        0.183788,
+        -0.082069,
+        0.151423,
+        -0.209217,
+        -0.211529,
+        -0.248518,
+        0.121369,
+        0.216153,
+        -0.042768,
+        -0.246206,
+        0.095939,
+        -0.213841,
+        -0.10981,
+        0.153734
       ]
     },
     {
@@ -286646,16 +287017,16 @@
     }
   },
   "summary": {
-    "file_count": 1639,
-    "total_bytes": 26415048,
-    "text_tokens_est": 6594113,
+    "file_count": 1642,
+    "total_bytes": 26431664,
+    "text_tokens_est": 6598269,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 237,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 997,
-      "schema_or_lexicon": 271,
+      "python_module": 999,
+      "schema_or_lexicon": 272,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -286801,6 +287172,7 @@
       ".github/workflows/aura-construction-demo-g4-g6.yml",
       ".github/workflows/aura-construction-demo-g7-g8.yml",
       ".github/workflows/aura-construction-runtime-diagnostic.yml",
+      ".github/workflows/aura-dual-key-evidence-generation.yml",
       ".github/workflows/aura-review-learning.yml",
       ".github/workflows/aura-showcase.yml",
       ".github/workflows/aura-spatial-s0-s2.yml",
@@ -288108,6 +288480,7 @@
       "tests/test_aura_continuity_packet_merge_gate.py",
       "tests/test_aura_crucible_phase_b.py",
       "tests/test_aura_dikwp_router_pipeline.py",
+      "tests/test_aura_dual_key_evidence_generation.py",
       "tests/test_aura_efficiency_benchmark.py",
       "tests/test_aura_emergent_agent_bridge.py",
       "tests/test_aura_emergent_agent_bridge_mcp.py",
@@ -288296,6 +288669,7 @@
       "third_party/pascal/package-metadata/nodes.package.json",
       "third_party/pascal/package-metadata/viewer.package.json",
       "third_party/pascal/pascal-lock.json",
+      "tools/aura_dual_key_evidence_generation.py",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
       "travel_extractors/__init__.py",
@@ -417024,6 +417398,96 @@
         "file_digest8": "9555cd63aedd6df1"
       },
       {
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#class:DualKeyEvidenceGenerationTests:0ecfb91e954ae49a",
+        "name": "DualKeyEvidenceGenerationTests",
+        "kind": "class",
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "line": 15,
+        "end_line": 183,
+        "signature_hash": "8220888b3053679d",
+        "file_digest8": "0502fc0daa13b588"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_authority_change_changes_egk:2f762d5978ede9b7",
+        "name": "DualKeyEvidenceGenerationTests.test_authority_change_changes_egk",
+        "kind": "method",
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "line": 142,
+        "end_line": 157,
+        "signature_hash": "31777eb0f6895d45",
+        "file_digest8": "0502fc0daa13b588"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_changed_consequence_changes_sck:7206d3f84abf28ba",
+        "name": "DualKeyEvidenceGenerationTests.test_changed_consequence_changes_sck",
+        "kind": "method",
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "line": 121,
+        "end_line": 124,
+        "signature_hash": "a04fa5a78bfffc6d",
+        "file_digest8": "0502fc0daa13b588"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_coordinate_growth_does_not_change_sck:673c69fd6004bf74",
+        "name": "DualKeyEvidenceGenerationTests.test_coordinate_growth_does_not_change_sck",
+        "kind": "method",
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "line": 95,
+        "end_line": 119,
+        "signature_hash": "cc4e9bb74451bbc7",
+        "file_digest8": "0502fc0daa13b588"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_independent_support_is_support_merge_not_new_semantic:62d4225f4020d042",
+        "name": "DualKeyEvidenceGenerationTests.test_independent_support_is_support_merge_not_new_semantic",
+        "kind": "method",
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "line": 40,
+        "end_line": 69,
+        "signature_hash": "a2b60ce7e5c02c75",
+        "file_digest8": "0502fc0daa13b588"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_order_does_not_change_generation_identity:545cb79c88c5ee77",
+        "name": "DualKeyEvidenceGenerationTests.test_order_does_not_change_generation_identity",
+        "kind": "method",
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "line": 159,
+        "end_line": 183,
+        "signature_hash": "8a9def8fbb365b0e",
+        "file_digest8": "0502fc0daa13b588"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_pr646_historical_evidence_is_one_egk_not_current_bytes:94f97f11bfb15cde",
+        "name": "DualKeyEvidenceGenerationTests.test_pr646_historical_evidence_is_one_egk_not_current_bytes",
+        "kind": "method",
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "line": 126,
+        "end_line": 140,
+        "signature_hash": "0e4695b212856927",
+        "file_digest8": "0502fc0daa13b588"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_process_retry_is_not_new_evidence:b75b9ea8b7908274",
+        "name": "DualKeyEvidenceGenerationTests.test_process_retry_is_not_new_evidence",
+        "kind": "method",
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "line": 71,
+        "end_line": 93,
+        "signature_hash": "2592ec314e687ba9",
+        "file_digest8": "0502fc0daa13b588"
+      },
+      {
+        "semantic_id": "tests/test_aura_dual_key_evidence_generation.py#method:DualKeyEvidenceGenerationTests.test_sck_is_stable_across_evidence_refresh:ccf455d513d861dc",
+        "name": "DualKeyEvidenceGenerationTests.test_sck_is_stable_across_evidence_refresh",
+        "kind": "method",
+        "file": "tests/test_aura_dual_key_evidence_generation.py",
+        "line": 16,
+        "end_line": 38,
+        "signature_hash": "f8aee33ec10cb3b3",
+        "file_digest8": "0502fc0daa13b588"
+      },
+      {
         "semantic_id": "tests/test_aura_efficiency_benchmark.py#function:test_aura_full_mode_includes_grounding_metadata:36ad280e7568cec0",
         "name": "test_aura_full_mode_includes_grounding_metadata",
         "kind": "function",
@@ -445634,6 +446098,126 @@
         "file_digest8": "166505e13502651b"
       },
       {
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#class:EvidenceGeneration:cbdfdc2f03d53eb5",
+        "name": "EvidenceGeneration",
+        "kind": "class",
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "line": 50,
+        "end_line": 63,
+        "signature_hash": "a8eb3a8c05c14125",
+        "file_digest8": "aab53a63200e7853"
+      },
+      {
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#class:ProcessIdentity:386145c27cad0345",
+        "name": "ProcessIdentity",
+        "kind": "class",
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "line": 67,
+        "end_line": 78,
+        "signature_hash": "591b08a40e1c37d9",
+        "file_digest8": "aab53a63200e7853"
+      },
+      {
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:_canonical:34351de47d6cb303",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "line": 29,
+        "end_line": 32,
+        "signature_hash": "8d5bf5695239b859",
+        "file_digest8": "aab53a63200e7853"
+      },
+      {
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:_domain_hash:aecf87276d6e565e",
+        "name": "_domain_hash",
+        "kind": "function",
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "line": 35,
+        "end_line": 40,
+        "signature_hash": "e2ca58746d65c445",
+        "file_digest8": "aab53a63200e7853"
+      },
+      {
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:_sorted_unique:ce0938dff2df08be",
+        "name": "_sorted_unique",
+        "kind": "function",
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "line": 43,
+        "end_line": 46,
+        "signature_hash": "66558cb434804487",
+        "file_digest8": "aab53a63200e7853"
+      },
+      {
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:classify_commit:34ca100f2462b6e9",
+        "name": "classify_commit",
+        "kind": "function",
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "line": 122,
+        "end_line": 133,
+        "signature_hash": "243bc371283ee7d0",
+        "file_digest8": "aab53a63200e7853"
+      },
+      {
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:historical_glm53_fixture:ec9a84ca29070d36",
+        "name": "historical_glm53_fixture",
+        "kind": "function",
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "line": 136,
+        "end_line": 167,
+        "signature_hash": "d39a1373a1f61b90",
+        "file_digest8": "aab53a63200e7853"
+      },
+      {
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:main:32673a022a942d4b",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "line": 170,
+        "end_line": 191,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "aab53a63200e7853"
+      },
+      {
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:make_evidence_generation:d50c2aa8255ae28c",
+        "name": "make_evidence_generation",
+        "kind": "function",
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "line": 87,
+        "end_line": 119,
+        "signature_hash": "3fd9ac522d5ed3a5",
+        "file_digest8": "aab53a63200e7853"
+      },
+      {
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#function:semantic_consequence_key:5e3fd0a47b0ce422",
+        "name": "semantic_consequence_key",
+        "kind": "function",
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "line": 81,
+        "end_line": 84,
+        "signature_hash": "412c063408748a35",
+        "file_digest8": "aab53a63200e7853"
+      },
+      {
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#method:EvidenceGeneration.egk:8328a8ade19fd063",
+        "name": "EvidenceGeneration.egk",
+        "kind": "method",
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "line": 62,
+        "end_line": 63,
+        "signature_hash": "fbc904d1babd8ff5",
+        "file_digest8": "aab53a63200e7853"
+      },
+      {
+        "semantic_id": "tools/aura_dual_key_evidence_generation.py#method:ProcessIdentity.rik:db4667141c750bb9",
+        "name": "ProcessIdentity.rik",
+        "kind": "method",
+        "file": "tools/aura_dual_key_evidence_generation.py",
+        "line": 77,
+        "end_line": 78,
+        "signature_hash": "3b9c982fbe5f1788",
+        "file_digest8": "aab53a63200e7853"
+      },
+      {
         "semantic_id": "travel_extractors/option_b.py#class:NormalizedTravelRecord:e929944931c45624",
         "name": "NormalizedTravelRecord",
         "kind": "class",
@@ -446884,7 +447468,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "1537333abd50336c58c75e14ed98b5c5",
-    "payload_hash": "ee21b7e722531ce0d90cf8469066d7f9"
+    "record_fingerprint": "43968ce0d737af825ea3c30af43612c7",
+    "payload_hash": "de3aa208e1d0f5938a2256bd6ce2deea"
   }
 }
