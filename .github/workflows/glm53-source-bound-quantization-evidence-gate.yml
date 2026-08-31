@@ -24,12 +24,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Assert exact Q6 base and materialized source owners
+      - name: Assert exact parent and materialized owner generations
         run: |
           set -euo pipefail
           Q6=4137aabd972feff9c4412bb4786ef8fd4de207e0
           Q5_BLOB=7ed09c57699fe303f555a3b6bdaadb791c64223f
-          BRIDGE_BLOB=e4697103ac693996526a646ae46ff4bb35005397
+          BRIDGE_BLOB=77a90ea9f5a438aa438103acd4de05432fe7875a
           git merge-base --is-ancestor "$Q6" HEAD
           test "$(git rev-parse HEAD:tools/quantization/aura_glm53_official_source_admission.py)" = "$Q5_BLOB"
           test "$(git rev-parse HEAD:tools/quantization/aura_glm53_historical_official_w2_bridge.py)" = "$BRIDGE_BLOB"
@@ -37,6 +37,8 @@ jobs:
           from tools.quantization.aura_glm53_official_source_admission import current_public_state
           from tools.quantization.aura_glm53_source_bound_quantization_evidence_gate import (
               HISTORICAL_BRIDGE_OWNER_BLOB_SHA,
+              HISTORICAL_BRIDGE_OWNER_HEAD,
+              HISTORICAL_BRIDGE_OWNER_RUN,
               HISTORICAL_BRIDGE_VERSION,
               Q5_CURRENT_SOURCE_STATE_DIGEST,
               Q5_OWNER_BLOB_SHA,
@@ -47,14 +49,16 @@ jobs:
           bridge = _current_historical_bridge()
           assert source.digest() == Q5_CURRENT_SOURCE_STATE_DIGEST
           assert Q5_OWNER_BLOB_SHA == '7ed09c57699fe303f555a3b6bdaadb791c64223f'
-          assert HISTORICAL_BRIDGE_OWNER_BLOB_SHA == 'e4697103ac693996526a646ae46ff4bb35005397'
+          assert HISTORICAL_BRIDGE_OWNER_HEAD == '71d4816cf0702a39b57ecf7d6bae6298ec239800'
+          assert HISTORICAL_BRIDGE_OWNER_RUN == 33371459229
+          assert HISTORICAL_BRIDGE_OWNER_BLOB_SHA == '77a90ea9f5a438aa438103acd4de05432fe7875a'
           assert bridge.version == HISTORICAL_BRIDGE_VERSION
-          assert VERSION == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V4'
+          assert VERSION == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V5'
           print('Q5_EXACT_PRODUCER_TRAVERSAL=true')
-          print('HISTORICAL_BRIDGE_PRODUCER_TRAVERSAL=true')
+          print('PR646_EXACT_GREEN_OWNER_TRAVERSAL=true')
           PY
 
-      - name: Revalidate exact Q5 and Q6 hosted runs
+      - name: Revalidate exact Q5 Q6 and PR646 hosted runs
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -66,6 +70,7 @@ jobs:
           expected = {
               33369967425: ('730426b82235b0ff4e75fef1cff00707877a84ad', 'GLM53 Official Quantization Source Admission'),
               33370305329: ('4137aabd972feff9c4412bb4786ef8fd4de207e0', 'GLM53 Quantization Evidence Transfer'),
+              33371459229: ('71d4816cf0702a39b57ecf7d6bae6298ec239800', 'GLM53 Historical Official W2 Quant Source Bridge'),
           }
           for run_id, (sha, name) in expected.items():
               req = urllib.request.Request(
@@ -78,7 +83,7 @@ jobs:
               assert data['name'] == name, (run_id, data['name'], name)
               assert data['status'] == 'completed', data['status']
               assert data['conclusion'] == 'success', data['conclusion']
-          print('Q5_Q6_EXACT_HOSTED_SUCCESS=true')
+          print('Q5_Q6_PR646_EXACT_HOSTED_SUCCESS=true')
           PY
 
       - name: Revalidate historical official zero-payload producer
@@ -121,9 +126,10 @@ jobs:
           grep -q 'OFFICIAL_INDEX_BYTES_AND_REPRESENTATIVE_HEADERS_NOT_MATERIALIZED' /tmp/q5-state.json
           grep -q '"header_trial_eligible": false' /tmp/q5-state.json
 
-      - name: Re-prove materialized historical bridge owner
+      - name: Re-prove exact-green PR646 bridge owner
         run: |
           set -euo pipefail
+          test "$(git rev-parse HEAD:tools/quantization/aura_glm53_historical_official_w2_bridge.py)" = '77a90ea9f5a438aa438103acd4de05432fe7875a'
           python -m unittest tests.test_aura_glm53_historical_official_w2_bridge -v
           python tools/quantization/aura_glm53_historical_official_w2_bridge.py | tee /tmp/historical-bridge.json
           python - <<'PY'
@@ -136,7 +142,7 @@ jobs:
           assert x['current_consumer_raw_header_prefixes_materialized'] is False
           assert x['all_layers_experts_uniformity_proven'] is False
           assert x['source_tensor_payload_bound'] is False
-          print('HISTORICAL_BRIDGE_OWNER_REPROVED=true')
+          print('PR646_EXACT_GREEN_BRIDGE_REPROVED=true')
           PY
 
       - name: Re-prove Q6 and Q7 adversarials
@@ -152,9 +158,11 @@ jobs:
           python - <<'PY'
           import json
           x = json.load(open('/tmp/q7.json'))
-          assert x['version'] == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V4'
+          assert x['version'] == 'AURA_GLM53_SOURCE_BOUND_QUANTIZATION_EVIDENCE_GATE_V5'
           assert x['q5_source_owner_blob'] == '7ed09c57699fe303f555a3b6bdaadb791c64223f'
-          assert x['historical_bridge_owner_blob'] == 'e4697103ac693996526a646ae46ff4bb35005397'
+          assert x['historical_bridge_owner_head'] == '71d4816cf0702a39b57ecf7d6bae6298ec239800'
+          assert x['historical_bridge_owner_run'] == 33371459229
+          assert x['historical_bridge_owner_blob'] == '77a90ea9f5a438aa438103acd4de05432fe7875a'
           assert len(x['historical_bridge_digest']) == 64
           assert x['disposition'] == 'HOLD_CURRENT_SOURCE_TRANSPORT_AND_REPRESENTATION_EVIDENCE'
           assert x['historical_official_index_relation_observed'] is True
@@ -184,7 +192,8 @@ jobs:
           ):
               assert x[key] is False, key
           print('COPIED_PARENT_STATE_NE_PRODUCER_TRAVERSAL=true')
-          print('Q7_TRAVERSES_MATERIALIZED_HISTORICAL_BRIDGE_OWNER=true')
+          print('SEMANTICALLY_SIMILAR_OWNER_NE_EXACT_GREEN_OWNER_GENERATION=true')
+          print('Q7_TRAVERSES_EXACT_GREEN_PR646_OWNER=true')
           print('HISTORICAL_HEADER_PROOF_NE_CURRENT_BYTE_RESIDENCY=true')
           print('REPRESENTATIVE_HEADER_PROOF_NE_GLOBAL_LAYOUT_UNIFORMITY=true')
           print('SOURCE_IDENTITY_NE_CURRENT_SOURCE_BYTES=true')
