@@ -14,7 +14,7 @@ permissions:
   contents: read
 
 env:
-  SEMANTIC_HEAD: f05b3918af3a39ca0c0d06b3d5487ec447b54968
+  SEMANTIC_HEAD: 1cdad597015615d1c34d236b271516196ac101cd
   Q15_CUT_EPOCH: "1788188632"
 
 jobs:
@@ -35,9 +35,9 @@ jobs:
           semantic_epoch="$(git show -s --format='%at' "$SEMANTIC_HEAD")"
           test "$semantic_epoch" -gt "$Q15_CUT_EPOCH"
           test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_hard_gate_transition_admission.py")" = "18ada65d0aca81ba915c4dc57c98414f38c3b068"
-          test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_bounded_proposal_capsule.py")" = "dbc223de381d2146e88769a7213455c57a27569d"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tools/aura_bounded_proposal_capsule.py")" = "11ac9fd37aede4902b3c1029eddcbad96a828f45"
           test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_hard_gate_transition_admission.py")" = "9e878769b1fae198035135a8ada3d8c6db3a787d"
-          test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_bounded_proposal_capsule.py")" = "21fa17aaf08fd1733c064ec049c35ac65b8c319b"
+          test "$(git rev-parse "$SEMANTIC_HEAD:tests/test_aura_bounded_proposal_capsule.py")" = "fb349a904ddb7f99d9e215a3f9d4210881a7a397"
           echo O63_POST_Q15_SEMANTIC_GENERATION=true
 
       - name: Compile exact semantic surface
@@ -56,7 +56,7 @@ jobs:
             tests.test_aura_hard_gate_transition_admission \
             tests.test_aura_bounded_proposal_capsule -v
 
-      - name: Independently prove transition-to-proposal nonpromotion
+      - name: Independently prove owner-resolved transition-to-proposal nonpromotion
         shell: bash
         run: |
           set -euo pipefail
@@ -68,10 +68,11 @@ jobs:
           )
           from tools.aura_bounded_proposal_capsule import (
               BASIS_SCHEMA, EligibilityReceiptRef, ProposalBasis,
+              RequestOwnerState, ScientificEvidenceState, SourceAdmissionState,
               create_bounded_proposal_capsule, revalidate_proposal_capsule,
           )
 
-          A='a'*64; B='b'*64; C='c'*64; D='d'*64; E='e'*64; F='f'*64; G='1'*64; H='2'*64
+          A='a'*64; B='b'*64; C='c'*64; D='d'*64; E='e'*64; F='f'*64; G='1'*64; H='2'*64; I='3'*64
           def gate(gid, passed, gen, receipt, scope):
               return GateEvidenceState(
                   gate_id=gid, owner_ref='owner:'+gid+':v1', gate_scope_digest=scope,
@@ -83,11 +84,11 @@ jobs:
           req=TransitionRequest(
               schema_version='AURA-HARD-GATE-TRANSITION-v1',
               transition_id='transition:source:hosted-proof',
-              domain_id='generic.bounded.proposal', target_gate_id='source',
-              before=ProductState((gate('source',False,'source-gen-1','1'*64,A),gate('authority',True,'authority-gen-1','2'*64,B))),
-              after=ProductState((gate('source',True,'source-gen-2','3'*64,A),gate('authority',True,'authority-gen-1','2'*64,B))),
+              domain_id='generic.bounded.c2', target_gate_id='source',
+              before=ProductState((gate('source',False,'source-gen-1','1'*64,I),gate('authority',True,'authority-gen-1','2'*64,B))),
+              after=ProductState((gate('source',True,'source-gen-2','3'*64,I),gate('authority',True,'authority-gen-1','2'*64,B))),
               evidence_before=ev, evidence_after=ev,
-              source_currentness_root='currentness-root-9',
+              source_currentness_root='source-current:4',
           )
           transition=evaluate_hard_gate_transition(req)
           assert transition.disposition == 'ELIGIBLE_BOUNDED_PROPOSAL'
@@ -98,9 +99,13 @@ jobs:
 
           eligibility=EligibilityReceiptRef(
               owner_ref='owner:hard-gate-transition:v1',
+              transition_id=req.transition_id,
+              domain_id=req.domain_id,
+              gate_scope_digest=req.after.by_id()[req.target_gate_id].gate_scope_digest,
+              source_currentness_root=req.source_currentness_root,
               disposition='ELIGIBLE_BOUNDED_PROPOSAL',
               receipt_digest=transition.transition_receipt_digest,
-              receipt_generation='transition-gen-hosted-1',
+              receipt_generation=req.after.by_id()[req.target_gate_id].evidence_generation,
               policy_generation_ref='eligibility-policy-gen-2',
               proposal_eligible=True, execution_authorized=False,
               provider_effect_authorized=False,
@@ -117,26 +122,59 @@ jobs:
               invalidators=('science-generation-change','source-generation-change','request-envelope-change'),
               authority_scope='D0_NONPROMOTING',
           )
-          p1=create_bounded_proposal_capsule(basis=basis, producer_identity='hosted-worker-a')
-          p2=create_bounded_proposal_capsule(basis=basis, producer_identity='hosted-worker-b')
+
+          class HostedOwnerResolver:
+              def resolve_eligibility(self, *, owner_ref, transition_id):
+                  if owner_ref == eligibility.owner_ref and transition_id == eligibility.transition_id:
+                      return eligibility
+                  return None
+              def resolve_scientific_evidence(self, *, scope_digest):
+                  if scope_digest != basis.scientific_scope_digest: return None
+                  return ScientificEvidenceState(scope_digest, basis.scientific_evidence_generation, basis.scientific_evidence_receipt_digest)
+              def resolve_source_admission(self, *, scope_digest):
+                  if scope_digest != basis.source_scope_digest: return None
+                  return SourceAdmissionState(scope_digest, basis.source_admission_generation, basis.source_admission_receipt_digest)
+              def resolve_request(self, *, request_id):
+                  if request_id != basis.request_id: return None
+                  return RequestOwnerState(request_id, basis.request_digest, basis.action_parameters_digest, basis.resource_envelope_digest)
+              def currentness_root_is_current(self, *, root):
+                  return True if root in basis.currentness_roots else None
+              def invalidator_is_triggered(self, *, invalidator):
+                  return False if invalidator in basis.invalidators else None
+
+          resolver=HostedOwnerResolver()
+          p1=create_bounded_proposal_capsule(basis=basis, producer_identity='hosted-worker-a', owner_resolver=resolver)
+          p2=create_bounded_proposal_capsule(basis=basis, producer_identity='hosted-worker-b', owner_resolver=resolver)
           assert p1.capsule.proposal_id == p2.capsule.proposal_id
           assert p1.generation_receipt_digest != p2.generation_receipt_digest
-          p1.capsule.validate_integrity()
-          assert p1.capsule.execution_authorized is False
-          assert p1.capsule.provider_effect_authorized is False
-          assert p1.capsule.native_private_transformer_kv_accessed is False
-          assert p1.capsule.semantic_k27_authority is False
-          assert p1.capsule.gate10_promoted is False
-          exact=revalidate_proposal_capsule(capsule=p1.capsule,current_basis=basis)
+          exact=revalidate_proposal_capsule(capsule=p1.capsule,owner_resolver=resolver)
           assert exact.state == 'CURRENT_NONEXECUTABLE'
           assert exact.execution_authorized is False
+          absent=revalidate_proposal_capsule(capsule=p1.capsule,owner_resolver=None)
+          assert absent.state == 'INVALIDATED'
+
+          forged=EligibilityReceiptRef(
+              **{**eligibility.__dict__, 'receipt_digest':'9'*64}
+          )
+          forged_basis=ProposalBasis(**{**basis.__dict__, 'eligibility': forged})
+          try:
+              create_bounded_proposal_capsule(
+                  basis=forged_basis, producer_identity='attacker', owner_resolver=resolver
+              )
+          except ValueError as exc:
+              assert 'ELIGIBILITY_OWNER_RECEIPT_MISMATCH' in str(exc)
+          else:
+              raise AssertionError('caller-minted eligibility was admitted')
 
           receipt={
-              'schema':'AURA-O63-HOSTED-PROOF-v1',
-              'semantic_head':'f05b3918af3a39ca0c0d06b3d5487ec447b54968',
+              'schema':'AURA-O63-HOSTED-PROOF-v2',
+              'semantic_head':'1cdad597015615d1c34d236b271516196ac101cd',
               'post_q15_semantic_generation':True,
-              'eligibility_owner_bound':True,
-              'capsule_self_integrity_reproved':True,
+              'eligibility_owner_resolved':True,
+              'caller_minted_eligibility_rejected':True,
+              'raw_current_basis_api_absent':True,
+              'currentness_operands_owner_resolved':True,
+              'unavailable_currentness_invalidates':True,
               'gate_transition_disposition':transition.disposition,
               'proposal_id':p1.capsule.proposal_id,
               'same_basis_collapses_across_producers':True,
@@ -149,16 +187,16 @@ jobs:
               'gate10_promoted':False,
               'merge_deploy_spend_public_human_effect':False,
               'laws':[
-                  'PositiveEvidenceCannotPayHardGateDebt',
+                  'CallerAssertion!=OwnerResolvedEligibility',
+                  'StaleBasisReplay!=Currentness',
+                  'UnknownOwnerState=>Invalidated',
                   'ProposalEligibility!=ProposalIdentity!=ExecutionAuthority',
-                  'SameBasisReplicaMayIncreaseImplementationSupportButNotSemanticConsequenceMass',
-                  'CurrentnessDrift=>InvalidateAndRecomputeMinimumAffectedCone',
                   'K27Coordinate!=ProposalAuthority',
               ],
           }
           with open('/tmp/o63.json','w',encoding='utf-8') as f:
               json.dump(receipt,f,sort_keys=True,indent=2); f.write('\n')
-          print('O63_TRANSITION_TO_NONEXECUTABLE_PROPOSAL_PROVEN=true')
+          print('O63_OWNER_RESOLVED_PROPOSAL_PROVEN=true')
           PY
 
       - name: Preserve O63 proof receipt
@@ -170,6 +208,8 @@ jobs:
 
       - name: Consequence ceiling
         run: |
+          echo 'CallerAssertion!=OwnerResolvedEligibility'
+          echo 'StaleBasisReplay!=Currentness'
           echo 'ProposalEligibility!=ProposalIdentity!=ExecutionAuthority'
           echo 'K27Coordinate!=ProposalAuthority'
           echo 'O63_COMPLETE=true'
