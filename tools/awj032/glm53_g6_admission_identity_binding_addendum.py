@@ -6,6 +6,11 @@ Exactly two foreign semantic parents remain those of canonical G6-v2 / PR #782:
 - PR #769 generation-bound admission reuse.
 - PR #727 operation/observer/backend provenance contract.
 
+Q18 / PR #761 is transitive lineage inherited through PR #769, not a third
+Objective parent. Its exact bounded C2 proposal receipt digest is used only to
+prevent a different GLM53 bounded-C2 admission from being cross-cast into this
+Gate-10 request.
+
 PR #782 correctly requires a current bounded-C2 reuse candidate plus operation
 provenance before compiling an owner-host evidence request. Its base projection,
 however, reduces PR #769 to a generic family/disposition/current-context summary.
@@ -17,8 +22,9 @@ Critical W3 rule: an independently supplied compiled G6 request cannot simply be
 paired with an independently supplied exact reuse identity, because the base receipt
 does not carry enough information to prove that join. The public API therefore takes
 the exact reuse identity plus the base provenance/owner/evidence inputs and constructs
-the G6 base request internally after validating the exact GLM admission family. This
-prevents caller-supplied base-request cross-casting.
+the G6 base request internally after validating the exact GLM admission family and
+exact Q18 historical admission receipt. This prevents both caller-supplied base-request
+cross-casting and same-family different-admission substitution.
 
 The addendum still does not authenticate the producer of the reuse receipt; exact
 parent proof authentication stays in hosted CI and future owner/runtime receipt
@@ -48,7 +54,7 @@ from tools.awj032.glm53_g6_gate10_owner_host_evidence_request import (
     compile_gate10_owner_host_evidence_request,
 )
 
-SCHEMA = "AURA-GLM53-G6-ADMISSION-IDENTITY-BINDING-W3-v2"
+SCHEMA = "AURA-GLM53-G6-ADMISSION-IDENTITY-BINDING-W3-v3"
 
 REUSE_HEAD = "d1a0f94255527835a59a70a0af7dc417ba1d023d"
 REUSE_SOURCE_BLOB = "d171d0938e469a4383490d1a691750c2068f21e7"
@@ -57,6 +63,10 @@ REUSE_RUN = 33437612722
 REUSE_JOB = 99637780915
 REUSE_FAMILY = "GLM53_BOUNDED_C2_PROPOSAL"
 REUSE_DISPOSITION = "REUSE_CANDIDATE"
+
+# Transitive Q18 lineage inherited through PR #769. Zero additional Objective-parent credit.
+Q18_RECEIPT_DIGEST = "c53acb3ff471dbe3971ee4e7a75b28c4316b50fba88a414f406b93c271c90230"
+Q18_ELIGIBLE_DISPOSITION = "BOUNDED_REPRESENTATIVE_E8_C2_REQUEST_PROPOSAL_ELIGIBLE"
 
 PROV_HEAD = "293c59d7260372ccd3b9e8130b12979b052c3ed9"
 PROV_SOURCE_BLOB = "98db548b6e8f7443b79d979eb0e177ac6aa68534"
@@ -67,6 +77,7 @@ IDENTITY_BOUND_EXTERNAL_AUTH_REQUIRED = "IDENTITY_BOUND_EXTERNAL_AUTH_REQUIRED"
 HOLD_BASE_G6_REQUEST_REQUIRED = "HOLD_BASE_G6_REQUEST_REQUIRED"
 HOLD_EXACT_REUSE_FAMILY_REQUIRED = "HOLD_EXACT_REUSE_FAMILY_REQUIRED"
 HOLD_REUSE_CANDIDATE_REQUIRED = "HOLD_REUSE_CANDIDATE_REQUIRED"
+HOLD_EXACT_Q18_ADMISSION_RECEIPT_REQUIRED = "HOLD_EXACT_Q18_ADMISSION_RECEIPT_REQUIRED"
 HOLD_REUSE_IDENTITY_REQUIRED = "HOLD_REUSE_IDENTITY_REQUIRED"
 
 
@@ -198,6 +209,7 @@ class G6AdmissionIdentityBindingReceipt:
     decision_context_key: str
     binding_digest: str
     exact_glm53_reuse_family_bound: bool
+    exact_q18_admission_receipt_bound: bool
     exact_reuse_candidate_identity_bound: bool
     base_g6_request_compiled: bool
     base_g6_request_constructed_by_this_contract: bool
@@ -239,7 +251,9 @@ class G6AdmissionIdentityBindingReceipt:
                 self.base_g6_request_compiled
                 and self.base_g6_request_constructed_by_this_contract
                 and self.exact_glm53_reuse_family_bound
+                and self.exact_q18_admission_receipt_bound
                 and self.exact_reuse_candidate_identity_bound
+                and self.admission_receipt_digest == Q18_RECEIPT_DIGEST
             ):
                 raise ValueError("IDENTITY_BOUND_POSITIVE_STATE_INVALID")
         else:
@@ -315,7 +329,7 @@ def _bind_internally_constructed_request(
     receipt = G6AdmissionIdentityBindingReceipt(
         schema=SCHEMA,
         disposition=IDENTITY_BOUND_EXTERNAL_AUTH_REQUIRED,
-        reason_code="EXACT_PR769_REUSE_IDENTITY_VECTOR_BOUND_DURING_INTERNAL_G6_REQUEST_CONSTRUCTION_EXTERNAL_RECEIPT_AUTH_REQUIRED",
+        reason_code="EXACT_Q18_PR769_REUSE_IDENTITY_BOUND_DURING_INTERNAL_G6_REQUEST_CONSTRUCTION_EXTERNAL_RECEIPT_AUTH_REQUIRED",
         base_g6_request_digest=base_request.request_digest,
         admission_reuse_identity_digest=identity_digest,
         admission_receipt_digest=reuse_identity.admission_receipt_digest,
@@ -327,6 +341,7 @@ def _bind_internally_constructed_request(
         decision_context_key=reuse_identity.decision_context_key,
         binding_digest=binding_digest,
         exact_glm53_reuse_family_bound=True,
+        exact_q18_admission_receipt_bound=True,
         exact_reuse_candidate_identity_bound=True,
         base_g6_request_compiled=True,
         base_g6_request_constructed_by_this_contract=True,
@@ -344,10 +359,11 @@ def compile_identity_bound_g6_request(
 ) -> G6AdmissionIdentityBindingReceipt:
     """Construct and identity-bind the G6 request without a caller-supplied base receipt.
 
-    The exact GLM reuse family and full identity vector are validated first. Only then
-    is the weaker base G6 reuse projection constructed internally. This prevents an
-    unrelated precompiled G6 request from being paired with an independent exact
-    identity after the fact.
+    Exact GLM family, exact Q18 historical admission receipt, and the full current-use
+    identity vector are validated first. Only then is the weaker base G6 reuse
+    projection constructed internally. This prevents an unrelated precompiled G6
+    request or a different same-family GLM admission from being paired with an
+    independent identity after the fact.
     """
 
     reuse_identity.validate_shape()
@@ -355,6 +371,8 @@ def compile_identity_bound_g6_request(
         raise ValueError(HOLD_EXACT_REUSE_FAMILY_REQUIRED)
     if reuse_identity.disposition != REUSE_DISPOSITION:
         raise ValueError(HOLD_REUSE_CANDIDATE_REQUIRED)
+    if reuse_identity.admission_receipt_digest != Q18_RECEIPT_DIGEST:
+        raise ValueError(HOLD_EXACT_Q18_ADMISSION_RECEIPT_REQUIRED)
 
     base_reuse = BaseAdmissionReuseProjection(
         proof_head=REUSE_HEAD,
@@ -386,8 +404,8 @@ def public_api_parameters() -> tuple[str, ...]:
 def prove_identity_binding_lattice() -> int:
     """Exhaust summary conditions; only all-true can reach identity-bound candidate."""
     checked = 0
-    for base_ok, family_ok, disposition_ok, identity_complete in itertools.product(
-        (False, True), repeat=4
+    for base_ok, family_ok, disposition_ok, q18_receipt_ok, identity_complete in itertools.product(
+        (False, True), repeat=5
     ):
         if not base_ok:
             expected = HOLD_BASE_G6_REQUEST_REQUIRED
@@ -395,6 +413,8 @@ def prove_identity_binding_lattice() -> int:
             expected = HOLD_EXACT_REUSE_FAMILY_REQUIRED
         elif not disposition_ok:
             expected = HOLD_REUSE_CANDIDATE_REQUIRED
+        elif not q18_receipt_ok:
+            expected = HOLD_EXACT_Q18_ADMISSION_RECEIPT_REQUIRED
         elif not identity_complete:
             expected = HOLD_REUSE_IDENTITY_REQUIRED
         else:
@@ -403,6 +423,7 @@ def prove_identity_binding_lattice() -> int:
             HOLD_BASE_G6_REQUEST_REQUIRED,
             HOLD_EXACT_REUSE_FAMILY_REQUIRED,
             HOLD_REUSE_CANDIDATE_REQUIRED,
+            HOLD_EXACT_Q18_ADMISSION_RECEIPT_REQUIRED,
             HOLD_REUSE_IDENTITY_REQUIRED,
             IDENTITY_BOUND_EXTERNAL_AUTH_REQUIRED,
         ):
@@ -415,6 +436,8 @@ LAWS = (
     "AdmissionValidAtProduce!=AdmissionReusableAtUse",
     "ReuseCandidateSummary!=AdmissionReuseReceiptIdentity",
     "GLM53AdmissionFamilyMustRemainExact",
+    "ExactQ18AdmissionReceiptMustRemainBound",
+    "Q18ReceiptIdentityInheritedThroughPR769Lineage",
     "AdmissionReceiptDigest+Subject+Source+Evidence+Owner+Decision+ReuseDigestMustSurviveProjection",
     "CallerSuppliedBaseRequest+IndependentIdentity!=JoinedRequestIdentity",
     "IdentityBoundWrapperMustConstructBaseRequest",
