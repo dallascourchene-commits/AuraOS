@@ -1,11 +1,11 @@
 {
   "status": "AURA_CODEMAP_ACTIVE",
   "generated_by": "aura_codebase_navigator",
-  "generated_at_unix": 1788181687,
+  "generated_at_unix": 1788183911,
   "root": "/home/runner/work/AuraOS/AuraOS",
   "intent_packet": "[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONSTRAINT:TOKEN_SPARING]",
   "coverage": {
-    "repo_file_count": 1650,
+    "repo_file_count": 1655,
     "all_included_paths_sorted": [
       ".aura/AFFORDANCE_MAP.json",
       ".aura/ARCHITECTURE.md",
@@ -148,7 +148,9 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-canonical-expert-source-set-transform-manifest.yml",
       ".github/workflows/glm53-lattice-quantization-feasibility.yml",
+      ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml",
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -1484,6 +1486,7 @@
       "tests/test_aura_gate_egress.py",
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
+      "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -1626,6 +1629,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -1637,6 +1641,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
       "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
       "tools/quantization/aura_glm53_lattice_quantization_feasibility.py",
       "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py",
@@ -1766,16 +1771,16 @@
   "rings": [
     {
       "ring": "repo",
-      "files": 1650,
-      "bytes": 26496493,
-      "tokens_est": 6614477,
+      "files": 1655,
+      "bytes": 26534075,
+      "tokens_est": 6623873,
       "roles": {
         "interface_surface": 64,
         "knowledge_artifact": 238,
         "native_accelerator": 12,
         "operator_script": 9,
-        "python_module": 1004,
-        "schema_or_lexicon": 274,
+        "python_module": 1007,
+        "schema_or_lexicon": 276,
         "support_file": 49
       }
     },
@@ -3472,6 +3477,14 @@
         "signature_hash": "1107cedc597d81be"
       },
       {
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "function",
+        "line": 242,
+        "end_line": 256,
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:main:5d5b98557fc73226",
+        "signature_hash": "1107cedc597d81be"
+      },
+      {
         "file": "tools/quantization/aura_glm53_lattice_quantization_feasibility.py",
         "kind": "function",
         "line": 227,
@@ -3930,6 +3943,14 @@
         "end_line": 39,
         "semantic_id": "tests/test_aura_gate_egress.py#function:_canonical:cc25ef87d8385027",
         "signature_hash": "711cdedc61c63424"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "function",
+        "line": 53,
+        "end_line": 54,
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:_canonical:feae1bf629564eec",
+        "signature_hash": "707d518dafca1a42"
       },
       {
         "file": "tools/quantization/aura_glm53_lattice_quantization_feasibility.py",
@@ -8126,6 +8147,14 @@
         "end_line": 143,
         "semantic_id": "aura_agent_arena_github_bridge.py#function:_sha:824a05d0149005cd",
         "signature_hash": "1921b9de96961362"
+      },
+      {
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "function",
+        "line": 57,
+        "end_line": 58,
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:_sha:b45193a8375953ea",
+        "signature_hash": "3c3bc3c037860fe9"
       },
       {
         "file": "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
@@ -138634,6 +138663,96 @@
         "signature_hash": "ee5f19dbb698e25c"
       }
     ],
+    "CanonicalExpertSourceSetTransformManifestTests": [
+      {
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "class",
+        "line": 9,
+        "end_line": 105,
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#class:CanonicalExpertSourceSetTransformManifestTests:27aa7909ab56a5c6",
+        "signature_hash": "6e7158bc02a6971c"
+      }
+    ],
+    "CanonicalExpertSourceSetTransformManifestTests.test_exact_pr652_six_slice_manifest_is_bound": [
+      {
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "method",
+        "line": 10,
+        "end_line": 23,
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_exact_pr652_six_slice_manifest_is_bound:cf05a59c7c5577ed",
+        "signature_hash": "0a40674e361d16c5"
+      }
+    ],
+    "CanonicalExpertSourceSetTransformManifestTests.test_transform_profile_is_structurally_bound_for_all_three_projections": [
+      {
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "method",
+        "line": 25,
+        "end_line": 34,
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_transform_profile_is_structurally_bound_for_all_three_projections:d995dd42fe30e85e",
+        "signature_hash": "2de2964f2644acc8"
+      }
+    ],
+    "CanonicalExpertSourceSetTransformManifestTests.test_only_gate_has_earned_canonical_identity": [
+      {
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "method",
+        "line": 36,
+        "end_line": 47,
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_only_gate_has_earned_canonical_identity:abfbc2b7d1d7d1ba",
+        "signature_hash": "a05835e325990fd5"
+      }
+    ],
+    "CanonicalExpertSourceSetTransformManifestTests.test_source_set_byte_sums_do_not_promote_gate_up_layout": [
+      {
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "method",
+        "line": 49,
+        "end_line": 56,
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_source_set_byte_sums_do_not_promote_gate_up_layout:0faeebcaf1c9ca5c",
+        "signature_hash": "6ceef45ed71eb149"
+      }
+    ],
+    "CanonicalExpertSourceSetTransformManifestTests.test_bad_range_shape_and_scale_contracts_fail_closed": [
+      {
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "method",
+        "line": 58,
+        "end_line": 66,
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_bad_range_shape_and_scale_contracts_fail_closed:d2da77b800c732a9",
+        "signature_hash": "b4bae1f898e59757"
+      }
+    ],
+    "CanonicalExpertSourceSetTransformManifestTests.test_unobserved_projection_cannot_reuse_gate_identity": [
+      {
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "method",
+        "line": 68,
+        "end_line": 75,
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_unobserved_projection_cannot_reuse_gate_identity:f6bfb47f0f904cb8",
+        "signature_hash": "e6ce797107abbd2d"
+      }
+    ],
+    "CanonicalExpertSourceSetTransformManifestTests.test_manifest_is_deterministic_and_tamper_sensitive": [
+      {
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "method",
+        "line": 77,
+        "end_line": 81,
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_manifest_is_deterministic_and_tamper_sensitive:736a874ebd32c0aa",
+        "signature_hash": "bd4fe12e4b330360"
+      }
+    ],
+    "CanonicalExpertSourceSetTransformManifestTests.test_public_boundary_and_claim_ceiling": [
+      {
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 105,
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_public_boundary_and_claim_ceiling:fba4a83ded69cafd",
+        "signature_hash": "11ebd3a755f9086f"
+      }
+    ],
     "_write_minimal_codemap": [
       {
         "file": "tests/test_aura_harness_issue_capsules.py",
@@ -156980,6 +157099,96 @@
         "signature_hash": "ca26359c48873c55"
       }
     ],
+    "LiveGateFP8CanonicalF32IdentityTests": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "class",
+        "line": 10,
+        "end_line": 136,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#class:LiveGateFP8CanonicalF32IdentityTests:5ed7d9e5b88c98b5",
+        "signature_hash": "fece22df7c53dd3f"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_e4m3fn_exact_known_codes": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 11,
+        "end_line": 27,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_e4m3fn_exact_known_codes:e2fe7395a43a9ff8",
+        "signature_hash": "2051fc65f9ea1a60"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_outer_nan_codes_and_invalid_inputs_fail_closed": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 29,
+        "end_line": 35,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_outer_nan_codes_and_invalid_inputs_fail_closed:4e97f9480d79478d",
+        "signature_hash": "f55ad7c949552049"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_lookup_table_matches_scalar_oracle_except_nan_codes": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 37,
+        "end_line": 45,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_lookup_table_matches_scalar_oracle_except_nan_codes:e8eeef2efab5149c",
+        "signature_hash": "13a7b6746daa8818"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_blockwise_dequantization_orientation_and_canonical_bytes": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 47,
+        "end_line": 70,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_blockwise_dequantization_orientation_and_canonical_bytes:7a03f9bb6053d034",
+        "signature_hash": "6cbd1610c4d65eb8"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_non_128_block_geometry_fails_closed": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 81,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_non_128_block_geometry_fails_closed:c92057d7d909b0af",
+        "signature_hash": "2e3fbc21143e4031"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_payload_length_nan_code_and_bad_scale_fail_closed": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 83,
+        "end_line": 103,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_payload_length_nan_code_and_bad_scale_fail_closed:d46cd41239437e0b",
+        "signature_hash": "175e1b434790b025"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_exact_parent_and_byte_domain_constants": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 105,
+        "end_line": 115,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_exact_parent_and_byte_domain_constants:02c483bf82f918b7",
+        "signature_hash": "dbfeac0c9bfe2c51"
+      }
+    ],
+    "LiveGateFP8CanonicalF32IdentityTests.test_receipt_ceiling_cannot_be_laundered_by_canonical_hash": [
+      {
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "kind": "method",
+        "line": 117,
+        "end_line": 136,
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_receipt_ceiling_cannot_be_laundered_by_canonical_hash:c6ba8cf8bf2c57f6",
+        "signature_hash": "fa0818ef17f54a4e"
+      }
+    ],
     "test_space_app_card_declares_public_docker_runtime": [
       {
         "file": "tests/test_huggingface_space_deployment.py",
@@ -157278,6 +157487,96 @@
         "end_line": 44,
         "semantic_id": "tests/test_render_four_tab_deployment.py#function:test_render_blueprint_targets_default_unified_container:023bb44a9c9f681b",
         "signature_hash": "6f5207f898c299ef"
+      }
+    ],
+    "SourceSlice": [
+      {
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "class",
+        "line": 62,
+        "end_line": 88,
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#class:SourceSlice:fff8c4e036c9516b",
+        "signature_hash": "a93b81b07d7191e5"
+      }
+    ],
+    "SourceSlice.validate": [
+      {
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "method",
+        "line": 72,
+        "end_line": 88,
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#method:SourceSlice.validate:3bda3c009b8f2bd8",
+        "signature_hash": "99559e6add5bcf3e"
+      }
+    ],
+    "ProjectionTransformState": [
+      {
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "class",
+        "line": 92,
+        "end_line": 106,
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#class:ProjectionTransformState:b633441f2c04610a",
+        "signature_hash": "de9ed3ef8b5a830d"
+      }
+    ],
+    "CanonicalExpertSourceSetTransformManifest": [
+      {
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "class",
+        "line": 110,
+        "end_line": 149,
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#class:CanonicalExpertSourceSetTransformManifest:10b79d7d2f9a0196",
+        "signature_hash": "55a2f9b078ded6e6"
+      }
+    ],
+    "CanonicalExpertSourceSetTransformManifest.receipt_digest": [
+      {
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "method",
+        "line": 148,
+        "end_line": 149,
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifest.receipt_digest:ed5ee9ec6af62403",
+        "signature_hash": "1a6a05eb2610184a"
+      }
+    ],
+    "source_slices": [
+      {
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "function",
+        "line": 152,
+        "end_line": 164,
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:source_slices:959e8641bdc9afc5",
+        "signature_hash": "a2b7dd842c9ba802"
+      }
+    ],
+    "_projection_state": [
+      {
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "function",
+        "line": 167,
+        "end_line": 187,
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:_projection_state:adcd425142432557",
+        "signature_hash": "ae4aefb7a553fddb"
+      }
+    ],
+    "build_manifest": [
+      {
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "function",
+        "line": 190,
+        "end_line": 235,
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:build_manifest:719b7e5ead8b6c26",
+        "signature_hash": "2b96dbb07fca2cb3"
+      }
+    ],
+    "public_api_has_promotion_inputs": [
+      {
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "kind": "function",
+        "line": 238,
+        "end_line": 239,
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:public_api_has_promotion_inputs:72f7767a7d70586b",
+        "signature_hash": "e9d90fbfd9a71e67"
       }
     ],
     "_half_away": [
@@ -159259,6 +159558,8 @@
       ".github/workflows/aura-spatial-s5-s6-construction.yml",
       ".github/workflows/ci.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-canonical-expert-source-set-transform-manifest.yml",
+      ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
       ".github/workflows/model-cognome-adaptive-router.yml",
@@ -159587,10 +159888,21 @@
     "python aura-runtime/aura_coderabbit_learning_cli.py \\": [
       ".github/workflows/coderabbit-waboose-learning-persist.yml"
     ],
+    "python -m unittest": [
+      ".github/workflows/glm53-canonical-expert-source-set-transform-manifest.yml",
+      ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml",
+      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
+    ],
+    "python -m tools.quantization.aura_glm53_canonical_expert_source_set_transform_manifest": [
+      ".github/workflows/glm53-canonical-expert-source-set-transform-manifest.yml"
+    ],
     "python3 -m py_compile": [
       ".github/workflows/glm53-lattice-quantization-feasibility.yml",
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
       "docs/AURA_AGENT_BRIDGE_GITHUB_PUBLICATION.md"
+    ],
+    "python -m tools.quantization.aura_glm53_live_gate_fp8_canonical_f32_identity": [
+      ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml"
     ],
     "python3 -m unittest": [
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml"
@@ -160260,9 +160572,6 @@
     ],
     "python3 aura_codebase_navigator.py --refresh path/to/changed_file.py --refresh-topology": [
       "docs/README_PRE_ARCHITECT_BENCHMARK.md"
-    ],
-    "python -m unittest": [
-      "docs/staging/bounties/READY_TO_SUBMIT/claude-hook/VERIFICATION.md"
     ],
     "python3 generate_ai_router.py": [
       "generate_ai_router.py"
@@ -169432,6 +169741,67 @@
       ]
     },
     {
+      "path": ".github/workflows/glm53-canonical-expert-source-set-transform-manifest.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 5816,
+      "lines": 115,
+      "tokens_est": 1454,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest",
+        "python -m tools.quantization.aura_glm53_canonical_expert_source_set_transform_manifest"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          70
+        ],
+        "python -m unittest": [
+          73
+        ],
+        "python -m tools.quantization.aura_glm53_canonical_expert_source_set_transform_manifest": [
+          78
+        ]
+      },
+      "topology": {},
+      "digest8": "94a4e2a0c0fb249d",
+      "vector": [
+        -0.302795,
+        0.092155,
+        0.116091,
+        0.001197,
+        0.13524,
+        -0.276465,
+        0.010771,
+        0.147208,
+        0.235773,
+        -0.180719,
+        0.278858,
+        0.247741,
+        0.02992,
+        0.154389,
+        -0.147208,
+        -0.05625,
+        0.140028,
+        -0.223805,
+        0.147208,
+        -0.061038,
+        0.128059,
+        -0.10891,
+        -0.247741,
+        0.276465,
+        0.130453,
+        0.116091,
+        0.195081,
+        -0.262103,
+        -0.190294,
+        -0.096942,
+        -0.219017,
+        0.02992
+      ]
+    },
+    {
       "path": ".github/workflows/glm53-lattice-quantization-feasibility.yml",
       "role": "schema_or_lexicon",
       "binary": false,
@@ -169482,6 +169852,67 @@
         -0.064364,
         0.180948,
         -0.027932
+      ]
+    },
+    {
+      "path": ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml",
+      "role": "schema_or_lexicon",
+      "binary": false,
+      "bytes": 9299,
+      "lines": 179,
+      "tokens_est": 2325,
+      "symbol_count": 0,
+      "commands": [
+        "python -m py_compile",
+        "python -m unittest",
+        "python -m tools.quantization.aura_glm53_live_gate_fp8_canonical_f32_identity"
+      ],
+      "command_lines": {
+        "python -m py_compile": [
+          91
+        ],
+        "python -m unittest": [
+          92
+        ],
+        "python -m tools.quantization.aura_glm53_live_gate_fp8_canonical_f32_identity": [
+          97
+        ]
+      },
+      "topology": {},
+      "digest8": "01f5fb545f9eac75",
+      "vector": [
+        -0.123113,
+        0.200499,
+        0.291954,
+        -0.181739,
+        0.092628,
+        -0.094973,
+        0.158289,
+        -0.268504,
+        0.284919,
+        0.083248,
+        -0.090283,
+        -0.094973,
+        0.130148,
+        -0.184084,
+        0.012898,
+        -0.195809,
+        -0.155944,
+        0.153599,
+        -0.111388,
+        0.275539,
+        -0.094973,
+        -0.160634,
+        0.010553,
+        0.263814,
+        0.048073,
+        -0.268504,
+        0.083248,
+        0.062143,
+        -0.202844,
+        -0.275539,
+        -0.188774,
+        0.195809
       ]
     },
     {
@@ -256726,6 +257157,53 @@
       ]
     },
     {
+      "path": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 5640,
+      "lines": 110,
+      "tokens_est": 1410,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "4420b790da208d91",
+      "vector": [
+        -0.025215,
+        0.162094,
+        0.214925,
+        -0.073242,
+        0.039623,
+        -0.008405,
+        -0.29417,
+        -0.303776,
+        0.039623,
+        -0.015609,
+        0.210122,
+        0.027616,
+        -0.205319,
+        -0.236537,
+        0.243741,
+        -0.106862,
+        0.054031,
+        0.243741,
+        0.202918,
+        0.140481,
+        0.272558,
+        -0.123672,
+        0.025215,
+        -0.020412,
+        -0.250945,
+        0.152488,
+        0.104461,
+        0.260551,
+        -0.178904,
+        -0.229333,
+        0.133277,
+        -0.210122
+      ]
+    },
+    {
       "path": "tests/test_aura_harness_issue_capsules.py",
       "role": "python_module",
       "binary": false,
@@ -263400,6 +263878,53 @@
       ]
     },
     {
+      "path": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 6186,
+      "lines": 141,
+      "tokens_est": 1547,
+      "symbol_count": 9,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "1cd7ebb79a8c74cd",
+      "vector": [
+        0.262995,
+        0.25863,
+        -0.079662,
+        -0.044742,
+        -0.153869,
+        -0.125496,
+        -0.26736,
+        0.262995,
+        0.206249,
+        -0.057837,
+        0.204067,
+        0.217162,
+        -0.114583,
+        -0.160416,
+        0.193154,
+        0.199702,
+        0.254265,
+        -0.040377,
+        0.073115,
+        -0.025099,
+        -0.018552,
+        -0.273908,
+        0.129861,
+        0.206249,
+        -0.127678,
+        -0.132043,
+        0.260813,
+        0.06002,
+        -0.188789,
+        0.040377,
+        -0.009821,
+        -0.273908
+      ]
+    },
+    {
       "path": "tests/test_huggingface_space_deployment.py",
       "role": "python_module",
       "binary": false,
@@ -263917,6 +264442,53 @@
       ]
     },
     {
+      "path": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+      "role": "python_module",
+      "binary": false,
+      "bytes": 10668,
+      "lines": 261,
+      "tokens_est": 2667,
+      "symbol_count": 12,
+      "commands": [],
+      "command_lines": {},
+      "topology": {},
+      "digest8": "09658fc3411a92ef",
+      "vector": [
+        0.149481,
+        0.170279,
+        -0.230071,
+        0.287264,
+        -0.113086,
+        -0.139083,
+        0.011699,
+        0.32366,
+        0.165079,
+        0.172878,
+        -0.131284,
+        0.235271,
+        -0.261267,
+        -0.201475,
+        0.250869,
+        0.016898,
+        0.014298,
+        0.24307,
+        -0.274266,
+        0.07929,
+        0.326259,
+        -0.006499,
+        0.035096,
+        -0.102687,
+        -0.055893,
+        -0.029896,
+        0.224872,
+        -0.089689,
+        -0.141682,
+        -0.014298,
+        -0.175478,
+        0.040295
+      ]
+    },
+    {
       "path": "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
       "role": "python_module",
       "binary": false,
@@ -264014,47 +264586,47 @@
       "path": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py",
       "role": "python_module",
       "binary": false,
-      "bytes": 10841,
+      "bytes": 10814,
       "lines": 274,
-      "tokens_est": 2711,
+      "tokens_est": 2704,
       "symbol_count": 11,
       "commands": [],
       "command_lines": {},
       "topology": {},
-      "digest8": "92d78f24db84287f",
+      "digest8": "0ef90e5ef43dcdab",
       "vector": [
-        0.239615,
-        0.190463,
-        0.097075,
-        -0.038093,
-        -0.106905,
-        -0.084787,
-        -0.296139,
-        -0.114278,
-        -0.003686,
-        0.18309,
-        -0.224869,
-        0.033177,
-        0.242072,
-        -0.09216,
-        -0.310885,
-        0.028262,
-        -0.04055,
-        0.281394,
-        -0.256818,
-        -0.052838,
-        -0.239615,
-        0.094617,
-        0.023347,
-        -0.077414,
-        0.16343,
-        0.283851,
-        -0.266648,
-        -0.03072,
-        -0.219954,
-        -0.200293,
-        -0.09216,
-        -0.165887
+        0.137887,
+        -0.163815,
+        -0.154387,
+        -0.133173,
+        -0.281667,
+        0.218027,
+        -0.220384,
+        -0.128459,
+        -0.083675,
+        -0.291096,
+        -0.078961,
+        0.291096,
+        -0.182671,
+        0.123745,
+        0.043605,
+        -0.010607,
+        0.210956,
+        -0.156744,
+        0.038891,
+        -0.1756,
+        -0.020035,
+        0.29581,
+        -0.154387,
+        0.029463,
+        0.170886,
+        0.218027,
+        -0.104889,
+        0.107246,
+        0.272239,
+        0.024749,
+        0.274596,
+        -0.154387
       ]
     },
     {
@@ -288150,16 +288722,16 @@
     }
   },
   "summary": {
-    "file_count": 1650,
-    "total_bytes": 26496493,
-    "text_tokens_est": 6614477,
+    "file_count": 1655,
+    "total_bytes": 26534075,
+    "text_tokens_est": 6623873,
     "role_counts": {
       "interface_surface": 64,
       "knowledge_artifact": 238,
       "native_accelerator": 12,
       "operator_script": 9,
-      "python_module": 1004,
-      "schema_or_lexicon": 274,
+      "python_module": 1007,
+      "schema_or_lexicon": 276,
       "support_file": 49
     },
     "topology_nodes": 11478,
@@ -288317,7 +288889,9 @@
       ".github/workflows/coderabbit-waboose-learning.yml",
       ".github/workflows/construction-demo-asset-foundation.yml",
       ".github/workflows/f1-financial-exact-contracts.yml",
+      ".github/workflows/glm53-canonical-expert-source-set-transform-manifest.yml",
       ".github/workflows/glm53-lattice-quantization-feasibility.yml",
+      ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml",
       ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
       ".github/workflows/huggingface-space-demo.yml",
       ".github/workflows/human-agent-emergent-research.yml",
@@ -289653,6 +290227,7 @@
       "tests/test_aura_gate_egress.py",
       "tests/test_aura_gate_oidc.py",
       "tests/test_aura_gate_server.py",
+      "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
       "tests/test_aura_harness_issue_capsules.py",
       "tests/test_aura_hermes_arena_mode.py",
       "tests/test_aura_human_agent_arena.py",
@@ -289795,6 +290370,7 @@
       "tests/test_aura_workflow_authority_bridge.py",
       "tests/test_aura_workflow_gates.py",
       "tests/test_bilateral_intent_pr1_evidence.py",
+      "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
       "tests/test_huggingface_space_deployment.py",
       "tests/test_p1_1_adversarial_review.py",
       "tests/test_render_four_tab_deployment.py",
@@ -289806,6 +290382,7 @@
       "third_party/pascal/pascal-lock.json",
       "tools/construction_demo_assets/README.md",
       "tools/construction_demo_assets/requirements.txt",
+      "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
       "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
       "tools/quantization/aura_glm53_lattice_quantization_feasibility.py",
       "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py",
@@ -427329,6 +427906,96 @@
         "file_digest8": "ada41f95735768a2"
       },
       {
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#class:CanonicalExpertSourceSetTransformManifestTests:27aa7909ab56a5c6",
+        "name": "CanonicalExpertSourceSetTransformManifestTests",
+        "kind": "class",
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 9,
+        "end_line": 105,
+        "signature_hash": "6e7158bc02a6971c",
+        "file_digest8": "4420b790da208d91"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_bad_range_shape_and_scale_contracts_fail_closed:d2da77b800c732a9",
+        "name": "CanonicalExpertSourceSetTransformManifestTests.test_bad_range_shape_and_scale_contracts_fail_closed",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 58,
+        "end_line": 66,
+        "signature_hash": "b4bae1f898e59757",
+        "file_digest8": "4420b790da208d91"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_exact_pr652_six_slice_manifest_is_bound:cf05a59c7c5577ed",
+        "name": "CanonicalExpertSourceSetTransformManifestTests.test_exact_pr652_six_slice_manifest_is_bound",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 10,
+        "end_line": 23,
+        "signature_hash": "0a40674e361d16c5",
+        "file_digest8": "4420b790da208d91"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_manifest_is_deterministic_and_tamper_sensitive:736a874ebd32c0aa",
+        "name": "CanonicalExpertSourceSetTransformManifestTests.test_manifest_is_deterministic_and_tamper_sensitive",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 77,
+        "end_line": 81,
+        "signature_hash": "bd4fe12e4b330360",
+        "file_digest8": "4420b790da208d91"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_only_gate_has_earned_canonical_identity:abfbc2b7d1d7d1ba",
+        "name": "CanonicalExpertSourceSetTransformManifestTests.test_only_gate_has_earned_canonical_identity",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 36,
+        "end_line": 47,
+        "signature_hash": "a05835e325990fd5",
+        "file_digest8": "4420b790da208d91"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_public_boundary_and_claim_ceiling:fba4a83ded69cafd",
+        "name": "CanonicalExpertSourceSetTransformManifestTests.test_public_boundary_and_claim_ceiling",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 83,
+        "end_line": 105,
+        "signature_hash": "11ebd3a755f9086f",
+        "file_digest8": "4420b790da208d91"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_source_set_byte_sums_do_not_promote_gate_up_layout:0faeebcaf1c9ca5c",
+        "name": "CanonicalExpertSourceSetTransformManifestTests.test_source_set_byte_sums_do_not_promote_gate_up_layout",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 49,
+        "end_line": 56,
+        "signature_hash": "6ceef45ed71eb149",
+        "file_digest8": "4420b790da208d91"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_transform_profile_is_structurally_bound_for_all_three_projections:d995dd42fe30e85e",
+        "name": "CanonicalExpertSourceSetTransformManifestTests.test_transform_profile_is_structurally_bound_for_all_three_projections",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 25,
+        "end_line": 34,
+        "signature_hash": "2de2964f2644acc8",
+        "file_digest8": "4420b790da208d91"
+      },
+      {
+        "semantic_id": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifestTests.test_unobserved_projection_cannot_reuse_gate_identity:f6bfb47f0f904cb8",
+        "name": "CanonicalExpertSourceSetTransformManifestTests.test_unobserved_projection_cannot_reuse_gate_identity",
+        "kind": "method",
+        "file": "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 68,
+        "end_line": 75,
+        "signature_hash": "e6ce797107abbd2d",
+        "file_digest8": "4420b790da208d91"
+      },
+      {
         "semantic_id": "tests/test_aura_harness_issue_capsules.py#function:_raise_secret:a2391cb47c115705",
         "name": "_raise_secret",
         "kind": "function",
@@ -446829,6 +447496,96 @@
         "file_digest8": "2de626ea11595299"
       },
       {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#class:LiveGateFP8CanonicalF32IdentityTests:5ed7d9e5b88c98b5",
+        "name": "LiveGateFP8CanonicalF32IdentityTests",
+        "kind": "class",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 10,
+        "end_line": 136,
+        "signature_hash": "fece22df7c53dd3f",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_blockwise_dequantization_orientation_and_canonical_bytes:7a03f9bb6053d034",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_blockwise_dequantization_orientation_and_canonical_bytes",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 47,
+        "end_line": 70,
+        "signature_hash": "6cbd1610c4d65eb8",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_e4m3fn_exact_known_codes:e2fe7395a43a9ff8",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_e4m3fn_exact_known_codes",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 11,
+        "end_line": 27,
+        "signature_hash": "2051fc65f9ea1a60",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_exact_parent_and_byte_domain_constants:02c483bf82f918b7",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_exact_parent_and_byte_domain_constants",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 105,
+        "end_line": 115,
+        "signature_hash": "dbfeac0c9bfe2c51",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_lookup_table_matches_scalar_oracle_except_nan_codes:e8eeef2efab5149c",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_lookup_table_matches_scalar_oracle_except_nan_codes",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 37,
+        "end_line": 45,
+        "signature_hash": "13a7b6746daa8818",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_non_128_block_geometry_fails_closed:c92057d7d909b0af",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_non_128_block_geometry_fails_closed",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 72,
+        "end_line": 81,
+        "signature_hash": "2e3fbc21143e4031",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_outer_nan_codes_and_invalid_inputs_fail_closed:4e97f9480d79478d",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_outer_nan_codes_and_invalid_inputs_fail_closed",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 29,
+        "end_line": 35,
+        "signature_hash": "f55ad7c949552049",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_payload_length_nan_code_and_bad_scale_fail_closed:d46cd41239437e0b",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_payload_length_nan_code_and_bad_scale_fail_closed",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 83,
+        "end_line": 103,
+        "signature_hash": "175e1b434790b025",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
+        "semantic_id": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateFP8CanonicalF32IdentityTests.test_receipt_ceiling_cannot_be_laundered_by_canonical_hash:c6ba8cf8bf2c57f6",
+        "name": "LiveGateFP8CanonicalF32IdentityTests.test_receipt_ceiling_cannot_be_laundered_by_canonical_hash",
+        "kind": "method",
+        "file": "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
+        "line": 117,
+        "end_line": 136,
+        "signature_hash": "fa0818ef17f54a4e",
+        "file_digest8": "1cd7ebb79a8c74cd"
+      },
+      {
         "semantic_id": "tests/test_huggingface_space_deployment.py#function:test_deployment_docs_have_submission_field_and_no_localhost_url_claim:408589f63789cd73",
         "name": "test_deployment_docs_have_submission_field_and_no_localhost_url_claim",
         "kind": "function",
@@ -447147,6 +447904,126 @@
         "end_line": 35,
         "signature_hash": "bb0e0adc93ee348c",
         "file_digest8": "166505e13502651b"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#class:CanonicalExpertSourceSetTransformManifest:10b79d7d2f9a0196",
+        "name": "CanonicalExpertSourceSetTransformManifest",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 110,
+        "end_line": 149,
+        "signature_hash": "55a2f9b078ded6e6",
+        "file_digest8": "09658fc3411a92ef"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#class:ProjectionTransformState:b633441f2c04610a",
+        "name": "ProjectionTransformState",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 92,
+        "end_line": 106,
+        "signature_hash": "de9ed3ef8b5a830d",
+        "file_digest8": "09658fc3411a92ef"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#class:SourceSlice:fff8c4e036c9516b",
+        "name": "SourceSlice",
+        "kind": "class",
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 62,
+        "end_line": 88,
+        "signature_hash": "a93b81b07d7191e5",
+        "file_digest8": "09658fc3411a92ef"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:_canonical:feae1bf629564eec",
+        "name": "_canonical",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 53,
+        "end_line": 54,
+        "signature_hash": "707d518dafca1a42",
+        "file_digest8": "09658fc3411a92ef"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:_projection_state:adcd425142432557",
+        "name": "_projection_state",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 167,
+        "end_line": 187,
+        "signature_hash": "ae4aefb7a553fddb",
+        "file_digest8": "09658fc3411a92ef"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:_sha:b45193a8375953ea",
+        "name": "_sha",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 57,
+        "end_line": 58,
+        "signature_hash": "3c3bc3c037860fe9",
+        "file_digest8": "09658fc3411a92ef"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:build_manifest:719b7e5ead8b6c26",
+        "name": "build_manifest",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 190,
+        "end_line": 235,
+        "signature_hash": "2b96dbb07fca2cb3",
+        "file_digest8": "09658fc3411a92ef"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:main:5d5b98557fc73226",
+        "name": "main",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 242,
+        "end_line": 256,
+        "signature_hash": "1107cedc597d81be",
+        "file_digest8": "09658fc3411a92ef"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:public_api_has_promotion_inputs:72f7767a7d70586b",
+        "name": "public_api_has_promotion_inputs",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 238,
+        "end_line": 239,
+        "signature_hash": "e9d90fbfd9a71e67",
+        "file_digest8": "09658fc3411a92ef"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#function:source_slices:959e8641bdc9afc5",
+        "name": "source_slices",
+        "kind": "function",
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 152,
+        "end_line": 164,
+        "signature_hash": "a2b7dd842c9ba802",
+        "file_digest8": "09658fc3411a92ef"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#method:CanonicalExpertSourceSetTransformManifest.receipt_digest:ed5ee9ec6af62403",
+        "name": "CanonicalExpertSourceSetTransformManifest.receipt_digest",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 148,
+        "end_line": 149,
+        "signature_hash": "1a6a05eb2610184a",
+        "file_digest8": "09658fc3411a92ef"
+      },
+      {
+        "semantic_id": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py#method:SourceSlice.validate:3bda3c009b8f2bd8",
+        "name": "SourceSlice.validate",
+        "kind": "method",
+        "file": "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
+        "line": 72,
+        "end_line": 88,
+        "signature_hash": "99559e6add5bcf3e",
+        "file_digest8": "09658fc3411a92ef"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py#class:Compressed:82229872a12fce78",
@@ -447606,7 +448483,7 @@
         "line": 46,
         "end_line": 47,
         "signature_hash": "b3cbe8669aac4c01",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#class:LiveGateCanonicalF32IdentityReceipt:560229372bf67b21",
@@ -447616,7 +448493,7 @@
         "line": 148,
         "end_line": 198,
         "signature_hash": "54ee25b625f58661",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:_canonical:a7ac65c68dc34c45",
@@ -447626,7 +448503,7 @@
         "line": 54,
         "end_line": 55,
         "signature_hash": "707d518dafca1a42",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:_read_live_gate_pair:618620c1bcb5b01b",
@@ -447636,7 +448513,7 @@
         "line": 133,
         "end_line": 144,
         "signature_hash": "bdf25a1d29244050",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:_sha256:ee3a6670c50fd2f4",
@@ -447646,7 +448523,7 @@
         "line": 50,
         "end_line": 51,
         "signature_hash": "f9c2d48c5f8c2866",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:current_live_gate_identity:dc925ada847e3887",
@@ -447656,7 +448533,7 @@
         "line": 201,
         "end_line": 264,
         "signature_hash": "275627e0400f7451",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:decode_e4m3fn_byte:57f701bbc9eb9806",
@@ -447666,7 +448543,7 @@
         "line": 58,
         "end_line": 78,
         "signature_hash": "c42679d2561cc04b",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:dequantize_blockwise_to_canonical_f32:ea5d11e1dfcfc256",
@@ -447676,7 +448553,7 @@
         "line": 91,
         "end_line": 130,
         "signature_hash": "1cd58805f1e6a76a",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:e4m3fn_lookup_table:c18304f2aed8b404",
@@ -447686,7 +448563,7 @@
         "line": 81,
         "end_line": 88,
         "signature_hash": "756666c63b2719eb",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#function:main:a98c663d77b9a37f",
@@ -447696,7 +448573,7 @@
         "line": 267,
         "end_line": 269,
         "signature_hash": "1107cedc597d81be",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py#method:LiveGateCanonicalF32IdentityReceipt.receipt_digest:06f861bd914c70cd",
@@ -447706,7 +448583,7 @@
         "line": 197,
         "end_line": 198,
         "signature_hash": "1a6a05eb2610184a",
-        "file_digest8": "92d78f24db84287f"
+        "file_digest8": "0ef90e5ef43dcdab"
       },
       {
         "semantic_id": "tools/quantization/aura_glm53_live_official_tensor_payload_canary.py#class:LiveOfficialTensorPayloadCanaryReceipt:63c06eb26001e05a",
@@ -449369,7 +450246,7 @@
         "file_digest8": "f40bf6bf485b6e97"
       }
     ],
-    "record_fingerprint": "e7157bd1d758dafed2b3d1f64a491855",
-    "payload_hash": "24f36548d636c5e0b3aba38738f51803"
+    "record_fingerprint": "030bac3d545df8aae4f94cf0db6b9cda",
+    "payload_hash": "57e3fc6ba4eb95f62e6a2b7940f132b1"
   }
 }

@@ -10,10 +10,10 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ## Summary
 
-- **file_count**: 1650
-- **total_bytes**: 26496493
-- **text_tokens_est**: 6614477
-- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1004, 'schema_or_lexicon': 274, 'support_file': 49}
+- **file_count**: 1655
+- **total_bytes**: 26534075
+- **text_tokens_est**: 6623873
+- **role_counts**: {'interface_surface': 64, 'knowledge_artifact': 238, 'native_accelerator': 12, 'operator_script': 9, 'python_module': 1007, 'schema_or_lexicon': 276, 'support_file': 49}
 - **topology_nodes**: 11478
 - **topology_edges**: 28068
 - **topology_source**: compiled_deep_topology
@@ -23,7 +23,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 
 ```json
 {
-  "repo_file_count": 1650,
+  "repo_file_count": 1655,
   "all_included_paths_sorted": [
     ".aura/AFFORDANCE_MAP.json",
     ".aura/ARCHITECTURE.md",
@@ -166,7 +166,9 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     ".github/workflows/coderabbit-waboose-learning.yml",
     ".github/workflows/construction-demo-asset-foundation.yml",
     ".github/workflows/f1-financial-exact-contracts.yml",
+    ".github/workflows/glm53-canonical-expert-source-set-transform-manifest.yml",
     ".github/workflows/glm53-lattice-quantization-feasibility.yml",
+    ".github/workflows/glm53-live-gate-fp8-canonical-f32-identity.yml",
     ".github/workflows/glm53-live-official-tensor-payload-canary.yml",
     ".github/workflows/huggingface-space-demo.yml",
     ".github/workflows/human-agent-emergent-research.yml",
@@ -1502,6 +1504,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_gate_egress.py",
     "tests/test_aura_gate_oidc.py",
     "tests/test_aura_gate_server.py",
+    "tests/test_aura_glm53_canonical_expert_source_set_transform_manifest.py",
     "tests/test_aura_harness_issue_capsules.py",
     "tests/test_aura_hermes_arena_mode.py",
     "tests/test_aura_human_agent_arena.py",
@@ -1644,6 +1647,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "tests/test_aura_workflow_authority_bridge.py",
     "tests/test_aura_workflow_gates.py",
     "tests/test_bilateral_intent_pr1_evidence.py",
+    "tests/test_glm53_live_gate_fp8_canonical_f32_identity.py",
     "tests/test_huggingface_space_deployment.py",
     "tests/test_p1_1_adversarial_review.py",
     "tests/test_render_four_tab_deployment.py",
@@ -1655,6 +1659,7 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
     "third_party/pascal/pascal-lock.json",
     "tools/construction_demo_assets/README.md",
     "tools/construction_demo_assets/requirements.txt",
+    "tools/quantization/aura_glm53_canonical_expert_source_set_transform_manifest.py",
     "tools/quantization/aura_glm53_e8_indexed_expert_page_reference.py",
     "tools/quantization/aura_glm53_lattice_quantization_feasibility.py",
     "tools/quantization/aura_glm53_live_gate_fp8_canonical_f32_identity.py",
@@ -1790,16 +1795,16 @@ Intent packet: `[OP:NAVIGATE][DOMAIN:TOPOLOGY][TARGET:CODEMAP][ENV:PYTHON][CONST
 ```json
 {
   "ring": "repo",
-  "files": 1650,
-  "bytes": 26496493,
-  "tokens_est": 6614477,
+  "files": 1655,
+  "bytes": 26534075,
+  "tokens_est": 6623873,
   "roles": {
     "interface_surface": 64,
     "knowledge_artifact": 238,
     "native_accelerator": 12,
     "operator_script": 9,
-    "python_module": 1004,
-    "schema_or_lexicon": 274,
+    "python_module": 1007,
+    "schema_or_lexicon": 276,
     "support_file": 49
   }
 }
