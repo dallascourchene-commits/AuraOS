@@ -15,8 +15,8 @@ jobs:
       Q14_SHA: ee70934e0c45572588829e742e512a897b23863f
       Q14_RUN: "33399560819"
       Q14_SOURCE_BLOB: ef26cf18731b2f6dfc3c63d08260fb64aded96f6
-      Q6_SEMANTIC_SHA: ded816ac542b4cd4a097ce4c5500aefbc4f34b10
-      Q6_SOURCE_BLOB: fd4bd2b8317f981c28e19cd77a193e1e65b8b261
+      Q6_SEMANTIC_SHA: 6403210cba7992b91ea855151e18aa79c2677f84
+      Q6_SOURCE_BLOB: d1784822445d7109d28ffa1aebc013e3feb5be75
     steps:
       - name: Exact authenticated checkout without legacy submodule traversal
         env:
@@ -51,8 +51,7 @@ jobs:
           print('Q14_EXACT_HOSTED_GREEN=true')
           PY
           AUTH="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
-          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$Q14_SHA"
-          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$Q6_SEMANTIC_SHA"
+          git -c http.extraheader="$AUTH" fetch --no-tags --depth=1 origin "$Q14_SHA" "$Q6_SEMANTIC_SHA"
           test "$(git ls-tree "$Q14_SHA" tools/quantization/aura_glm53_official_source_e8_materialization_canary.py | awk '{print $3}')" = "$Q14_SOURCE_BLOB"
           test "$(git ls-tree "$Q6_SEMANTIC_SHA" tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py | awk '{print $3}')" = "$Q6_SOURCE_BLOB"
           test "$(git hash-object tools/quantization/aura_glm53_official_e8_vs_optimized_scalar_canary.py)" = "$Q6_SOURCE_BLOB"
@@ -86,10 +85,18 @@ jobs:
           b=json.load(open('/tmp/q6b.json',encoding='utf-8'))
           assert a['receipt_digest']==b['receipt_digest'], (a['receipt_digest'],b['receipt_digest'])
           assert a['exact_codec_rate_bpw']==2.25
+          assert a['codec_rate_domain_only'] is True
+          assert a['container_rate_comparison_claimed'] is False
           assert len(a['roles'])==2
           assert all(x['equal_codec_rate'] for x in a['roles'])
+          assert all(x['equal_codec_payload_bytes'] for x in a['roles'])
           assert all(x['q14_e8_codec_bits_per_weight']==2.25 for x in a['roles'])
           assert all(x['scalar_codec_bits_per_weight']==2.25 for x in a['roles'])
+          assert all(x['q14_e8_codec_payload_bytes']==18 for x in a['roles'])
+          assert all(x['scalar_codec_payload_bytes']==18 for x in a['roles'])
+          assert all(x['q14_e8_container_bytes']>x['q14_e8_codec_payload_bytes'] for x in a['roles'])
+          assert all(x['q14_e8_serialized_bits_per_weight']>x['q14_e8_codec_bits_per_weight'] for x in a['roles'])
+          assert all(x['container_rate_comparison_claimed'] is False for x in a['roles'])
           assert a['aggregate_outcome'] in {'E8_WIN','SCALAR_WIN','TIE'}
           assert a['same_official_source_tiles_compared'] is True
           assert a['optimized_scalar_control_used'] is True
@@ -98,7 +105,8 @@ jobs:
               assert a[k] is False, (k,a[k])
           print(json.dumps(a,sort_keys=True,separators=(',',':')))
           print('DETERMINISTIC_RECEIPT=true')
-          print('EXACT_EQUAL_RATE_2P25=true')
+          print('EXACT_EQUAL_CODEC_RATE_2P25=true')
+          print('CONTAINER_RATE_CROSSCAST=false')
           print('OUTCOME_NE_PROMOTION=true')
           PY
 
@@ -106,6 +114,8 @@ jobs:
         run: |
           cat <<'EOF'
           REPRESENTATIVE_CANARY_SCOPE_ONLY=true
+          CODEC_RATE_DOMAIN_ONLY=true
+          CONTAINER_RATE_COMPARISON_CLAIMED=false
           GEOMETRY_PRIVILEGED=false
           FULL_ROLE_QUANTIZED=false
           WHOLE_MODEL_QUANTIZED=false
