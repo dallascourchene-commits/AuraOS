@@ -24,13 +24,13 @@ jobs:
           EXPECTED_HEAD: ${{ github.event.pull_request.head.sha }}
         run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
 
-      - name: Authenticate exact current G5-v2 semantic substrate
+      - name: Authenticate exact hardened G5-v2 semantic substrate
         run: |
-          git merge-base --is-ancestor cb17b979c07197765d1e38fcac0533bacce0e123 HEAD
-          test "$(git rev-parse cb17b979c07197765d1e38fcac0533bacce0e123:tools/awj032/glm53_g5_recompute_admission.py)" = 90c2a36352aafe34c65f131bfdbd1fb9ea4c4d1a
-          test "$(git rev-parse cb17b979c07197765d1e38fcac0533bacce0e123:tools/awj032/test_glm53_g5_recompute_admission.py)" = b388de02cd8f24ba063d4f323453119a0f94006f
+          git merge-base --is-ancestor 5c18883358d041846d7451bdcfa3a5739af675b1 HEAD
+          test "$(git rev-parse 5c18883358d041846d7451bdcfa3a5739af675b1:tools/awj032/glm53_g5_recompute_admission.py)" = 90c2a36352aafe34c65f131bfdbd1fb9ea4c4d1a
+          test "$(git rev-parse 5c18883358d041846d7451bdcfa3a5739af675b1:tools/awj032/test_glm53_g5_recompute_admission.py)" = cfbd0c1d99e2fb834bee4d6e3dfe6f4ed00c7b2e
           test "$(git rev-parse HEAD:tools/awj032/glm53_g5_recompute_admission.py)" = 90c2a36352aafe34c65f131bfdbd1fb9ea4c4d1a
-          test "$(git rev-parse HEAD:tools/awj032/test_glm53_g5_recompute_admission.py)" = b388de02cd8f24ba063d4f323453119a0f94006f
+          test "$(git rev-parse HEAD:tools/awj032/test_glm53_g5_recompute_admission.py)" = cfbd0c1d99e2fb834bee4d6e3dfe6f4ed00c7b2e
 
       - name: Authenticate exact O65 and PR769 terminal proofs
         env:
@@ -83,18 +83,18 @@ jobs:
             tools/awj032/test_glm53_g5_recompute_admission.py \
             tools/awj032/test_glm53_g5_owner_resolved_recompute_premise.py
 
-      - name: Reexecute current G5-v2 adversarial and finite-state contract
+      - name: Reexecute hardened G5-v2 adversarial and finite-state contract
         run: python3 -m unittest tools.awj032.test_glm53_g5_recompute_admission -v
 
       - name: Execute owner-resolved premise W3 adversarials
         run: python3 -m unittest tools.awj032.test_glm53_g5_owner_resolved_recompute_premise -v
 
-      - name: Prove raw drift projection no longer escapes strong wrapper
+      - name: Prove raw owner-unresolved drift cannot escape strong wrapper
         run: |
           python3 - <<'PY'
           from tools.awj032.glm53_g5_recompute_admission import (
               ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT,
-              ALLOW_INITIAL,
+              ALLOW_STATE_TRANSITION,
               G4_HOLD_RECOMPUTE,
               G4V2RevalidationProjection,
               AliasStableProgressProjection,
@@ -114,15 +114,17 @@ jobs:
           )
           progress = AliasStableProgressProjection(
               receipt_digest="b" * 64,
-              decision=ALLOW_INITIAL,
+              decision=ALLOW_STATE_TRANSITION,
               semantic_fingerprint_digest="c" * 64,
               source_sid="sid::glm53",
-              provider_state_generation="provider::17",
+              provider_state_generation="provider::18",
               evidence_digest="d" * 64,
               route_projection_changed=False,
               source_sid_same=True,
               alias_projection_required=False,
               alias_projection_consumed=False,
+              raw_decision=ALLOW_STATE_TRANSITION,
+              semantic_decision=ALLOW_STATE_TRANSITION,
           )
           raw = assess_g3_recompute_admission(g4=g4, progress=progress)
           if raw.disposition != ADMIT_BOUNDED_G3_RECOMPUTE_ATTEMPT:
