@@ -1,0 +1,79 @@
+name: WorkCapsule post-world-bound scoped rebind exact
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/aura_workcapsule_post_world_bound_scoped_rebind.py'
+      - 'scripts/aura_workcapsule_scoped_post_repair_rebind.py'
+      - 'scripts/aura_workcapsule_two_phase_observation_bound_exact.py'
+      - 'scripts/aura_workcapsule_two_phase_source_bound_closure.py'
+      - 'tests/test_aura_workcapsule_post_world_bound_scoped_rebind.py'
+      - 'tests/test_aura_workcapsule_scoped_post_repair_rebind.py'
+      - 'tests/test_aura_workcapsule_two_phase_observation_bound_exact.py'
+      - 'tests/test_aura_workcapsule_two_phase_source_bound_closure.py'
+      - '.github/workflows/workcapsule-post-world-bound-scoped-rebind-exact.yml'
+
+permissions:
+  contents: read
+
+env:
+  PYTHONPATH: ${{ github.workspace }}
+
+jobs:
+  exact-head-proof:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout exact event head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - name: Assert exact event head
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected='${{ github.event.pull_request.head.sha || github.sha }}'
+          actual="$(git rev-parse HEAD)"
+          echo "EXPECTED_HEAD=$expected"
+          echo "ACTUAL_HEAD=$actual"
+          test "$actual" = "$expected"
+
+      - name: Compile Objective 28 membrane
+        run: |
+          python -m py_compile \
+            scripts/aura_workcapsule_post_world_bound_scoped_rebind.py \
+            scripts/aura_workcapsule_scoped_post_repair_rebind.py \
+            scripts/aura_workcapsule_two_phase_observation_bound_exact.py \
+            scripts/aura_workcapsule_two_phase_source_bound_closure.py
+
+      - name: Re-prove PR529 two-phase exact POST-world owner
+        run: python -m unittest tests.test_aura_workcapsule_two_phase_observation_bound_exact
+
+      - name: Re-prove PR532 scoped post-repair rebind owner
+        run: python -m unittest tests.test_aura_workcapsule_scoped_post_repair_rebind
+
+      - name: Prove Objective 28 cross-world membrane
+        run: python -m unittest tests.test_aura_workcapsule_post_world_bound_scoped_rebind
+
+      - name: Emit D0 consequence ceiling
+        shell: bash
+        run: |
+          cat <<'EOF'
+          OBJECTIVE_28=POST_WORLD_BOUND_SCOPED_REBIND
+          POST_RAW_WORLD_EXACT_REPRODUCTION=PROVEN_BY_PARENT_REPLAY
+          POST_DEPENDENCY_GENERATION_BODY_LENGTH_BOUND=TRUE
+          CALLER_CLOSURE_ADMISSION_ACCEPTED=FALSE
+          CALLER_POST_SOURCE_WITNESS_ACCEPTED=FALSE
+          REENTRY_CLOSED=FALSE
+          REENTRY_SCOPE_NARROWED=FALSE
+          POST_EDIT_SCOPE_PRODUCER_AUTHENTICATED=FALSE
+          POST_EDIT_SCOPE_HANDLE_BOUND_TO_RAW_BYTES=FALSE
+          SOURCE_TO_GRAPH_DEPENDENCY_MAP_PROVEN=FALSE
+          NODE_LEVEL_INVALIDATION_CONE_PROVEN=FALSE
+          SEMANTIC_PATCH_CORRECTNESS_PROVEN=FALSE
+          SEMANTIC_TRUTH_MINTED=FALSE
+          REVIEW_MUTATION_EXECUTION_COMMIT_MERGE_PROMOTION_EFFECT_AUTHORITY=FALSE
+          GATE10_PROMOTION=FALSE
+          EOF
