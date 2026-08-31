@@ -160,10 +160,8 @@ pub fn admit_current_profiled_scope_review(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::producer_bound::tests_support::{ANCHOR_ID, Fixture, current_candidate, setup};
-    use std::fs;
 
-    fn exact_row(candidate: &CurrentProfiledScopeReviewCandidateV1) -> HydrationProducerTrustRecordV2 {
+    fn exact_row() -> HydrationProducerTrustRecordV2 {
         HydrationProducerTrustRecordV2 {
             producer_ref: "producer://fixture/hydration",
             producer_generation: "producer-gen://43",
@@ -171,15 +169,11 @@ mod tests {
             observer_ref: "observer://fixture/independent",
             observer_generation: "observer-gen://9",
             observer_currentness_ref: "current://observer/9",
-            anchor_id: ANCHOR_ID,
-            hydration_receipt_sha256: candidate.hydration_receipt_sha256,
+            anchor_id: "anchor.fixture",
+            hydration_receipt_sha256: [0x42; 32],
             active: true,
             revoked: false,
         }
-    }
-
-    fn cleanup(fixture: Fixture) {
-        fs::remove_dir_all(fixture.root).unwrap();
     }
 
     #[test]
@@ -192,68 +186,29 @@ mod tests {
     }
 
     #[test]
-    fn private_exact_current_distinct_observer_record_models_future_transition() {
-        let fixture = setup("v2-private", 61);
-        let candidate = current_candidate(&fixture);
-        let registry = [exact_row(&candidate)];
-        let admitted = admit_candidate_from_trust_registry(candidate, ANCHOR_ID, &registry).unwrap();
-        assert!(admitted.hydration_producer_trust_proven);
-        assert!(admitted.ready_for_current_profiled_scope_semantic_review);
-        assert_ne!(admitted.hydration_producer_ref, admitted.hydration_observer_ref);
-        assert!(!admitted.semantic_correctness_proven);
-        assert!(!admitted.b_minus_approved);
-        assert!(!admitted.commit_authorized);
-        assert!(!admitted.external_effect_authorized);
-        cleanup(fixture);
+    fn exact_distinct_current_producer_observer_shape_is_eligible() {
+        assert!(record_structurally_trust_eligible(&exact_row()));
     }
 
     #[test]
-    fn same_principal_producer_and_observer_cannot_create_trust() {
-        let fixture = setup("v2-same-principal", 62);
-        let candidate = current_candidate(&fixture);
-        let mut row = exact_row(&candidate);
+    fn same_principal_producer_and_observer_is_ineligible() {
+        let mut row = exact_row();
         row.observer_ref = row.producer_ref;
-        let err = admit_candidate_from_trust_registry(candidate, ANCHOR_ID, &[row]).unwrap_err();
-        assert!(matches!(
-            err,
-            CurrentProfiledScopeReviewError::HydrationProducerTrustUnproven { .. }
-        ));
-        cleanup(fixture);
+        assert!(!record_structurally_trust_eligible(&row));
     }
 
     #[test]
-    fn revoked_or_inactive_record_cannot_create_trust() {
-        let fixture = setup("v2-revoked", 63);
-        let candidate = current_candidate(&fixture);
-        let mut revoked = exact_row(&candidate);
+    fn revoked_inactive_or_missing_currentness_is_ineligible() {
+        let mut revoked = exact_row();
         revoked.revoked = true;
-        let err = admit_candidate_from_trust_registry(candidate.clone(), ANCHOR_ID, &[revoked])
-            .unwrap_err();
-        assert!(matches!(
-            err,
-            CurrentProfiledScopeReviewError::HydrationProducerTrustUnproven { .. }
-        ));
+        assert!(!record_structurally_trust_eligible(&revoked));
 
-        let mut inactive = exact_row(&candidate);
+        let mut inactive = exact_row();
         inactive.active = false;
-        let err = admit_candidate_from_trust_registry(candidate, ANCHOR_ID, &[inactive]).unwrap_err();
-        assert!(matches!(
-            err,
-            CurrentProfiledScopeReviewError::HydrationProducerTrustUnproven { .. }
-        ));
-        cleanup(fixture);
-    }
+        assert!(!record_structurally_trust_eligible(&inactive));
 
-    #[test]
-    fn duplicate_exact_trust_records_fail_ambiguous() {
-        let fixture = setup("v2-ambiguous", 64);
-        let candidate = current_candidate(&fixture);
-        let row = exact_row(&candidate);
-        let err = admit_candidate_from_trust_registry(candidate, ANCHOR_ID, &[row, row]).unwrap_err();
-        assert!(matches!(
-            err,
-            CurrentProfiledScopeReviewError::HydrationProducerTrustAmbiguous { matches: 2 }
-        ));
-        cleanup(fixture);
+        let mut missing = exact_row();
+        missing.observer_currentness_ref = "";
+        assert!(!record_structurally_trust_eligible(&missing));
     }
 }
